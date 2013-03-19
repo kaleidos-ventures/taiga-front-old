@@ -1,4 +1,4 @@
-var BacklogController = function($scope, $rootScope, $routeParams, url) {
+var DashboardController = function($scope, $rootScope, $routeParams, url) {
     $rootScope.pageSection = 'backlog';
     console.log($routeParams);
 
@@ -24,4 +24,4 @@ var BacklogController = function($scope, $rootScope, $routeParams, url) {
     ];
 };
 
-BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'url'];
+DashboardController.$inject = ['$scope', '$rootScope', '$routeParams', 'url'];
