@@ -1,0 +1,113 @@
+/* Generic structure */
+
+body {
+  padding-bottom: 40px;
+}
+
+.left{
+    float: left;
+}
+
+.right{
+    float: right;
+}
+
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
+
+
+
+progress {background-color: black; border-radius: 20px; -webkit-appearance: none;}
+progress::-webkit-progress-bar {
+    border-radius: 20px;
+}
+progress::-webkit-progress-bar-value, progress::-webkit-progress-value,
+progress::-moz-progress-bar {
+    background-color: #690;
+    border-radius: 20px;
+}
+
+.button{
+    padding: 4px 10px;
+    .border-radius(4px);
+    font-family: @DroidSansBold;
+    font-size: 12px;
+    border: 1px solid;
+    display: inline-block;
+    color: @black;
+    background-color: @white;
+    cursor: pointer;
+}
+
+.button-unbordered {
+    padding: 4px 10px;
+    .border-radius(4px);
+    font-family: @DroidSansBold;
+    font-size: 12px;
+    display: inline-block;
+    color: @black;
+    background-color: @white;
+    cursor: pointer;
+}
+
+
+.button-gray {
+    padding: 0px 10px;
+    font-family: @DroidSansBold;
+    font-size: 12px;
+    display: inline-block;
+    color: @black;
+    background-color: @white;
+    cursor: pointer;
+    background-color: #666666;
+    border: 0px;
+    line-height: 28px;
+
+    .border-radius(4px);
+
+    font-family: @DroidSansBold;
+    a {
+        color: @white;
+        padding: 2px 3px;
+        text-decoration: none;
+    }
+
+    &:hover{
+        background: @red;
+    }
+}
+
+// http://sharonminsuk.com/blog/2010/07/22/css3-text-truncation-and-ellipses-even-in-firefox-and-without-the-styling-constraints/
+
+.truncate-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    -moz-binding: url('ellipsis.xml#ellipsis');
+}
+
+.middle-container {
+    .main-box {
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-top: 20px;
+    }
+
+    #login {
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-top: 20px;
+    }
+}
+

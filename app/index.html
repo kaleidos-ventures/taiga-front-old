@@ -6,7 +6,7 @@
         <link rel="stylesheet/less" type="text/css" href="less/greenmine.less">
         <script src="js/lib/less-1.3.1.min.js"></script>
     </head>
-    <body class="login">
+    <body class="{{ pageSection }}">
         <div class="main" id="main">
             <div class="views" ng-view></div>
         </div>
@@ -28,6 +28,7 @@
         <script src="js/app/utils.js"></script>
         <script src="js/app/services/common.js"></script>
         <script src="js/app/controllers/login.js"></script>
+        <script src="js/app/controllers/register.js"></script>
         <script src="js/app/directives/common.js"></script>
 
         <!-- config.js -->

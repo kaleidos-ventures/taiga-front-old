@@ -1,5 +1,5 @@
-var LoginController = function(url) {
-
+var LoginController = function($rootScope, url) {
+    $rootScope.pageSection = 'login';
 };
 
-LoginController.$inject = ['url'];
+LoginController.$inject = ['$rootScope', 'url'];

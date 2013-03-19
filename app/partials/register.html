@@ -1,0 +1,44 @@
+<div id="login">
+    <div class="center-box">
+        <div class="logo-box">
+            <a href="">
+                <img src="img/logo.png"></img>
+            </a>
+        </div>
+        <div class="form-container">
+            <form id="register-form" method="post" action=""  >
+                <fieldset>
+                    <div class="form-field">
+                        <label>Username</label>
+                        <input type="text" ng-model="form.username" />
+                    </div>
+                    <div class="form-field">
+                        <label>First name</label>
+                        <input type="text" ng-model="form.first_name" />
+                    </div>
+                    <div class="form-field">
+                        <label>Last name</label>
+                        <input type="text" ng-model="form.last_name" />
+                    </div>
+                    <div class="form-field">
+                        <label>Email</label>
+                        <input type="email" ng-model="form.email" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>Password</label>
+                        <input type="password" ng-model="form.password" />
+                    </div>
+                    <div class="form-field">
+                        <label>Password again</label>
+                        <input type="password" />
+                    </div>
+                    <div class="form-field">
+                        <input class="btn01" type="submit" value="Register" />
+                        <span class="ajax-loader"></span>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
