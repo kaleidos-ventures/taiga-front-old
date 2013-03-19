@@ -6,15 +6,19 @@
             </a>
         </div>
         <div class="form-container">
-            <form id="login-form" method="post" action=""  >
+            <form id="login-form" method="post" action="" ui-parsley="submit()">
                 <fieldset>
                     <div class="form-field">
                         <label>Username: </label>
-                        <input type="text" ng-model="form.username" placeholder="username..." />
+                        <input type="text" ng-model="form.username"
+                            data-required="true" data-minlength="3"
+                            placeholder="username..." />
                     </div>
                     <div class="form-field">
                         <label>Password</label>
-                        <input type="password" ng-model="form.password" placeholder="password..." />
+                        <input type="password" ng-model="form.password"
+                            data-required="true" data-minlength="8"
+                            placeholder="password..." />
                     </div>
 
                     <p class="forgot-pass">

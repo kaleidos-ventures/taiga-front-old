@@ -125,7 +125,7 @@ angular.module('greenmine.directives.common', []).
             });
         };
     }]).
-    directive('uiParsley', ['$parse', '$http', '$urls', function($parse, $http, $urls) {
+    directive('uiParsley', ['$parse', '$http', 'url', function($parse, $http, url) {
         return function(scope, elm, attrs) {
             var fn = $parse(attrs.uiParsley);
 
@@ -140,15 +140,6 @@ angular.module('greenmine.directives.common', []).
             element.parsley({
                 listeners: {onFormSubmit: onFormSubmit},
                 validators: {
-                    pubkey: function(val) {
-                        try {
-                            var key = new safestore.crypt.RSAPubKey(val);
-                        } catch (e) {
-                            return false;
-                        }
-                        return true;
-                    },
-
                     remoteuserverify: function(val, opt, self) {
                         var result = null;
 
@@ -166,8 +157,8 @@ angular.module('greenmine.directives.common', []).
                             };
                         };
 
-                        var url = $urls.get("user") + "?" + jQuery.param({"username": val});
-                        $http.head(url).success(manage(false)).error(manage(true));
+                        var finalUrl = url("user") + "?" + jQuery.param({"username": val});
+                        $http.head(finalUrl).success(manage(false)).error(manage(true));
                         return result;
                     }
                 },

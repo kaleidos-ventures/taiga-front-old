@@ -1,19 +1,23 @@
-var LoginController = function($rootScope, url) {
+var LoginController = function($scope, $rootScope, url) {
+    $rootScope.pageSection = 'login';
+
+    $scope.submit = function() {
+        console.log("submit");
+    };
+};
+
+LoginController.$inject = ['$scope', '$rootScope', 'url'];
+
+
+var RegisterController = function($scope, $rootScope, url) {
     $rootScope.pageSection = 'login';
 };
 
-LoginController.$inject = ['$rootScope', 'url'];
+RegisterController.$inject = ['$scope', '$rootScope', 'url'];
 
 
-var RegisterController = function($rootScope, url) {
+var RecoveryController = function($scope, $rootScope, url) {
     $rootScope.pageSection = 'login';
 };
 
-RegisterController.$inject = ['$rootScope', 'url'];
-
-
-var RecoveryController = function($rootScope, url) {
-    $rootScope.pageSection = 'login';
-};
-
-RecoveryController.$inject = ['$rootScope', 'url'];
+RecoveryController.$inject = ['$scope', '$rootScope', 'url'];
