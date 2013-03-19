@@ -4,6 +4,7 @@
     var configCallback = function($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider) {
         $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: LoginController});
         $routeProvider.when('/register', {templateUrl: 'partials/register.html', controller: RegisterController});
+        $routeProvider.when('/recovery', {templateUrl: 'partials/recovery.html', controller: RecoveryController});
         $routeProvider.otherwise({redirectTo: '/login'});
         $locationProvider.hashPrefix('!');
 
