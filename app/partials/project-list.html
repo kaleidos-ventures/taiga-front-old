@@ -1,0 +1,29 @@
+<div class="header-container" ng-include="'partials/header.html'"></div>
+<div class="middle-container">
+    <div class="main-box">
+        <div class="project-list">
+            <div class="list-container">
+                <div class="list-item" ng-repeat="project in projects">
+                    <div class="meta right">
+                        <div class="button">
+                            <a href="{{ project.get_backlog_url }}">Detail</a>
+                        </div>
+                        <div class="button">
+                            <a href="{{ project.get_edit_url }}">Edit</a>
+                        </div>
+                        <div class="button">
+                            <a href="{{ project.get_edit_url }}">Delete</a>
+                        </div>
+                    </div>
+                    <div class="title">
+                        <a href="{{ project.get_backlog_url }}">{{ project.name }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="delete-project-dialog" style="display: none" title="Are you sure?">
+        <p>Are you sure you want to delete this project?</p>
+    </div>
+</div>

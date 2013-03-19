@@ -14,85 +14,8 @@
 @ArvoBold: 'ArvoBold';
 
 @import "greenmine-generic.less";
-
-/* Generic forms */
-
-.form-box {
-    .buttons-area {
-        padding: 5px;
-
-        .area-item {
-            margin-right: 3px;
-        }
-    }
-
-    .title-area {
-        padding: 5px;
-        color: @white;
-
-        .title {
-            padding: 4px 10px;
-            font-size: 12px;
-            display: inline-block;
-            font-family: @DroidSansBold;
-        }
-    }
-
-    .top-box-bar,
-    .bottom-box-bar {
-        background-color: @gray;
-    }
-
-    .form-container {
-        padding: 20px 10px;
-
-        .width100 {
-            width:100% !important;
-        }
-
-        .form-field {
-            width: 220px;
-        }
-
-        .inline-row {
-            .form-field {
-                float: left;
-                margin-left: 10px;
-                margin-bottom: 10px;
-            }
-        }
-    }
-}
-
-.markItUpHeader {
-    overflow: hidden;
-}
-
-.parsley-error-list {
-    padding: 0px;
-    margin: 0px;
-    li {
-        list-style: none;
-        color: red;
-        font-size: 12px;
-    }
-}
-
-select, textarea, input[type="text"],
-input[type="password"],
-input[type="datetime"],
-input[type="datetime-local"],
-input[type="date"], input[type="month"],
-input[type="time"], input[type="week"],
-input[type="number"],
-input[type="email"], input[type="url"],
-input[type="search"], input[type="tel"],
-input[type="color"], .uneditable-input {
-    margin-bottom: 0px;
-}
-
-
-
+@import "greenmine-header.less";
+@import "greenmine-backlog.less";
 
 /* Login */
 
@@ -151,5 +74,49 @@ body.login {
 
     input[type="text"], input[type="password"] {
         width: 310px;
+    }
+}
+
+/* Project List */
+
+body.projects {
+    background-color: @gray;
+}
+
+.project-list {
+    .list-item {
+        color: @black;
+        background-color: @white;
+        .border-radius(6px);
+        width: 800px;
+        padding: 10px;
+        font-size: 18px;
+        margin-bottom: 6px;
+        padding-left: 20px;
+
+        .title {
+            margin-right: 200px;
+            line-height: 30px;
+        }
+
+        .meta {
+            width: 200px;
+        }
+
+        .button {
+            background: none repeat scroll 0 0 #666666;
+            border: 0px;
+            .border-radius(4px);
+            font-family: @DroidSansBold;
+
+            a {
+                color: #ffffff;
+
+            }
+        }
+    }
+    .paginator-block {
+        padding: 5px;
+        color: @grayLighter;
     }
 }

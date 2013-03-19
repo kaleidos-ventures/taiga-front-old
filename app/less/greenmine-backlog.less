@@ -1,0 +1,265 @@
+.backlog {
+    .milestones {
+        width: 450px;
+        min-height: 200px;
+
+        .milestone-item.first {
+            background: @grayDark;
+            margin-bottom: 10px;
+            color: #FFFFFF;
+            padding: 10px;
+        }
+
+        .milestone-item {
+            background-color: @grayVeryLighter;
+            margin-bottom: 10px;
+            color: @grayDarker;
+            padding: 10px;
+
+            .header{
+                padding: 5px;
+
+                .title{
+                    float: left;
+                    font-size: 18px;
+                }
+                .meta{
+                    float:right;
+
+                    a {
+                        background: @grayLight;
+                        padding: 2px 3px;
+                        .border-radius(5px);
+                        margin-left: 5px;
+                        color: @white;
+
+                        &:hover{
+                            background: @red;
+                            text-decoration: none;
+                        }
+                    }
+                }
+                .stats{
+                    .number{
+                        font-size: 15px;
+                    }
+                    .text{
+                        font-size: 10px;
+                        color: @grayLight;
+                    }
+                    progress {
+                    }
+                }
+            }
+
+            .milestone-userstorys {
+                margin: 0px;
+                padding: 10px;
+                background: @white;
+                color: @black;
+                line-height: 30px;
+
+                hr{
+                    margin: 0px 0px;
+                }
+
+                .us-item{
+                    padding: 5px;
+
+                    &:hover{
+                        background:@grayLight;
+                        cursor: pointer;
+                    }
+
+                    .us-meta{
+                        float:right;
+                        text-align:right;
+                        width: 50px;
+                        color: @grayDark;
+                    }
+
+                    .us-title{
+                        margin-right: 60px;
+
+                        .status{
+                            width: 12px;
+                            height: 12px;
+                            background-color: @grayLight;
+                            -webkit-border-radius: 6px;
+                            float: left;
+                            margin: 8px 8px 0 0;
+                            &.completed{
+                                background-color: @green;
+                            }
+                        }
+
+                        .tag{
+                            background: @gray;
+                            padding: 5px;
+                            color: @white;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .backlog-container {
+        margin-right: 465px;
+        min-height: 200px;
+
+        .graph-box {
+            padding: 15px;
+            background-color: @grayDark;
+
+            .user-story-stats{
+                color: @white;
+                padding: 0 0 10px 0;
+
+                progress {
+                    height: 25px;
+                    width: 250px;
+                }
+
+                .number {
+                    font-size: 28px;
+                }
+
+                .text {
+                    color: @grayLight;
+                    font-size: 10px;
+                    width: 100px;
+                }
+            }
+
+            #burndown-graph, #burnup-graph {
+                min-height: 200px;
+                background-color: @white;
+            }
+
+        }
+        .show-hide-graphics{
+            padding: 0px 15px;
+            background-color: #666;
+
+            a {
+                color: @grayLighter;
+                font-size: 11px;
+            }
+
+        }
+
+        .uslist-box{
+            .head-title {
+                overflow: hidden;
+                border-bottom: 2px solid @gray;
+
+                a {
+                    color: @grayLight;
+                }
+            }
+
+            .filters-box {
+                display: none;
+                margin-top: 10px;
+
+                .category{
+                    min-width: 200px;
+                }
+            }
+
+            .filters-bar {
+                margin-top: 10px;
+
+                padding: 5px;
+                background-color: @grayLight;
+
+                .show-hide-filters-box{
+                    cursor: pointer;
+                    font-size: 16px;
+                    padding: 5px;
+                    color: @white;
+                    line-height: 30px;
+                }
+
+                .remove-filters{
+                    cursor: pointer;
+                    font-size: 15px;
+                    color: @white;
+                }
+
+                .bar-title {
+                    font-size: 16px;
+                    padding: 5px;
+                    color: @white;
+                    cursor: pointer;
+                }
+            }
+
+            .un-us-item{
+                overflow: hidden;
+                padding: 5px;
+                &:hover{
+                    background:@grayLight;
+                    cursor: pointer;
+                }
+            }
+
+            .row {
+                font-size: 14px;
+                float: right;
+                vertical-align: bottom;
+                padding: 5px 0px;
+                color: @black;
+
+                &.title{
+                    float: left;
+                    width: auto;
+                    margin-right: 100px;
+                    margin-left: 10px;
+
+                    }
+
+                &.priority, &.points {
+                    width: 60px;
+                    text-align: right;
+                }
+
+                &.meta{
+                    float:right;
+
+                    a {
+                        background: @gray;
+                        padding: 2px 3px;
+                        -webkit-border-radius: 5px;
+                        margin-left: 5px;
+                        color: @white;
+
+                        &:hover{
+                            background: @red;
+                            text-decoration: none;
+                        }
+                    }
+                }
+
+            }
+
+            hr{
+                margin: 0px 0px;
+            }
+        }
+
+    }
+}
+
+.row{
+    margin: auto;
+    display: block;
+    &:before {
+        display: block;
+        content: none;
+    }
+    &:after {
+        display: block;
+        content: none;
+    }
+}

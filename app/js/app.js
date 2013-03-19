@@ -5,6 +5,11 @@
         $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: LoginController});
         $routeProvider.when('/register', {templateUrl: 'partials/register.html', controller: RegisterController});
         $routeProvider.when('/recovery', {templateUrl: 'partials/recovery.html', controller: RecoveryController});
+        $routeProvider.when('/projects', {templateUrl: 'partials/project-list.html', controller: ProjectListController});
+
+        $routeProvider.when('/project/:pid/backlog',
+                {templateUrl: 'partials/backlog.html', controller: BacklogController});
+
         $routeProvider.otherwise({redirectTo: '/login'});
         $locationProvider.hashPrefix('!');
 
@@ -36,7 +41,11 @@
     if (this.greenmine === undefined) this.greenmine = {};
 
     var init = function($rootScope) {
-        // Entry point
+        $rootScope.auth = {
+            "id": "12345",
+            "username": "fouser",
+            "fullname": "Foo User"
+        };
     };
 
     angular.module('greenmine', modules)
