@@ -1,0 +1,314 @@
+@import "bootstrap.less";
+
+/* Typography */
+
+@font-face {
+    font-family: 'DroidSansRegular';
+    src: url('../fonts/DroidSans-webfont.eot');
+    src: url('../fonts/DroidSans-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/DroidSans-webfont.woff') format('woff'),
+         url('../fonts/DroidSans-webfont.ttf') format('truetype'),
+         url('../fonts/DroidSans-webfont.svg#DroidSansRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'DroidSansBold';
+    src: url('../fonts/DroidSans-Bold-webfont.eot');
+    src: url('../fonts/DroidSans-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/DroidSans-Bold-webfont.woff') format('woff'),
+         url('../fonts/DroidSans-Bold-webfont.ttf') format('truetype'),
+         url('../fonts/DroidSans-Bold-webfont.svg#DroidSansBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DroidSerifRegular';
+    src: url('../fonts/DroidSerif-Regular-webfont.eot');
+    src: url('../fonts/DroidSerif-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/DroidSerif-Regular-webfont.woff') format('woff'),
+         url('../fonts/DroidSerif-Regular-webfont.ttf') format('truetype'),
+         url('../fonts/DroidSerif-Regular-webfont.svg#DroidSerifRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'DroidSerifBold';
+    src: url('../fonts/DroidSerif-Bold-webfont.eot');
+    src: url('../fonts/DroidSerif-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/DroidSerif-Bold-webfont.woff') format('woff'),
+         url('../fonts/DroidSerif-Bold-webfont.ttf') format('truetype'),
+         url('../fonts/DroidSerif-Bold-webfont.svg#DroidSerifBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ArvoRegular';
+    src: url('../fonts/Arvo-Regular-webfont.eot');
+    src: url('../fonts/Arvo-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Arvo-Regular-webfont.woff') format('woff'),
+         url('../fonts/Arvo-Regular-webfont.ttf') format('truetype'),
+         url('../fonts/Arvo-Regular-webfont.svg#ArvoRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'ArvoBold';
+    src: url('../fonts/Arvo-Bold-webfont.eot');
+    src: url('../fonts/Arvo-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Arvo-Bold-webfont.woff') format('woff'),
+         url('../fonts/Arvo-Bold-webfont.ttf') format('truetype'),
+         url('../fonts/Arvo-Bold-webfont.svg#ArvoBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Variables */
+
+@green: #690;
+@grayVeryLighter:       #f2f2f2;
+
+@DroidSansRegular: 'DroidSansRegular';
+@DroidSansBold: 'DroidSansBold';
+@DroidSerifRegular: 'DroidSerifRegular';
+@DroidSerifBold: 'DroidSerifBold';
+@ArvoRegular: 'ArvoRegular';
+@ArvoBold: 'ArvoBold';
+
+/* Generic structure */
+
+body {
+  padding-bottom: 40px;
+}
+
+.left{
+    float: left;
+}
+
+.right{
+    float: right;
+}
+
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
+
+
+
+progress {background-color: black; border-radius: 20px; -webkit-appearance: none;}
+progress::-webkit-progress-bar {
+    border-radius: 20px;
+}
+progress::-webkit-progress-bar-value, progress::-webkit-progress-value,
+progress::-moz-progress-bar {
+    background-color: #690;
+    border-radius: 20px;
+}
+
+.button{
+    padding: 4px 10px;
+    .border-radius(4px);
+    font-family: @DroidSansBold;
+    font-size: 12px;
+    border: 1px solid;
+    display: inline-block;
+    color: @black;
+    background-color: @white;
+    cursor: pointer;
+}
+
+.button-unbordered {
+    padding: 4px 10px;
+    .border-radius(4px);
+    font-family: @DroidSansBold;
+    font-size: 12px;
+    display: inline-block;
+    color: @black;
+    background-color: @white;
+    cursor: pointer;
+}
+
+
+.button-gray {
+    padding: 0px 10px;
+    font-family: @DroidSansBold;
+    font-size: 12px;
+    display: inline-block;
+    color: @black;
+    background-color: @white;
+    cursor: pointer;
+    background-color: #666666;
+    border: 0px;
+    line-height: 28px;
+
+    .border-radius(4px);
+
+    font-family: @DroidSansBold;
+    a {
+        color: @white;
+        padding: 2px 3px;
+        text-decoration: none;
+    }
+
+    &:hover{
+        background: @red;
+    }
+}
+
+// http://sharonminsuk.com/blog/2010/07/22/css3-text-truncation-and-ellipses-even-in-firefox-and-without-the-styling-constraints/
+
+.truncate-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    -moz-binding: url('ellipsis.xml#ellipsis');
+}
+
+.middle-container {
+    .main-box {
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-top: 20px;
+    }
+
+    #login {
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-top: 20px;
+    }
+}
+
+
+/* Generic forms */
+
+.form-box {
+
+    .buttons-area {
+        padding: 5px;
+
+        .area-item {
+            margin-right: 3px;
+        }
+    }
+
+    .title-area {
+        padding: 5px;
+        color: @white;
+
+        .title {
+            padding: 4px 10px;
+            font-size: 12px;
+            display: inline-block;
+            font-family: @DroidSansBold;
+        }
+    }
+
+    .top-box-bar,
+    .bottom-box-bar {
+        background-color: @gray;
+    }
+
+    .form-container {
+        padding: 20px 10px;
+
+        .width100 {
+            width:100% !important;
+        }
+
+        .form-field {
+            width: 220px;
+        }
+
+        .inline-row {
+            .form-field {
+                float: left;
+                margin-left: 10px;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
+
+.markItUpHeader {
+    overflow: hidden;
+}
+
+
+
+/* Login */
+
+body.login {
+    background-color: @green;
+}
+
+#login {
+    .center-box {
+        margin: auto;
+        padding-top: 100px;
+        width: 370px;
+
+        .logo-box {
+            text-align: center;
+        }
+    }
+    .form-container {
+        margin-top: 10px;
+        padding: 20px 20px 0px 20px;
+        background: @white;
+        .border-radius(15px);
+        border: 2px solid @gray;
+
+        input.btn01 {
+            margin-top: 13px;
+            width: 100px;
+            background: none repeat scroll 0 0 #666666;
+            color: #ffffff;
+            border: 0px;
+            .border-radius(4px);
+            padding: 10px;
+            font-family: @DroidSansBold;
+        }
+
+        input#id_password {
+            margin-bottom: 0px;
+        }
+
+        p.forgot-pass {
+            float: right;
+        }
+
+        p.forgot-pass a{
+            color: #666666;
+        }
+
+        p.register {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #666666;
+            margin-bottom: 0px;
+            padding-bottom: 0px;
+        }
+    }
+
+    input[type="text"], input[type="password"] {
+        width: 310px;
+    }
+}

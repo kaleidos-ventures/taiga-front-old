@@ -1,0 +1,36 @@
+<div id="login">
+    <div class="center-box">
+        <div class="logo-box">
+            <a href="{% url 'projects' %}">
+                <img src="img/logo.png"></img>
+            </a>
+        </div>
+        <div class="form-container">
+            <form id="login-form" method="post" action=""  >
+                <fieldset>
+                    <div class="form-field">
+                        <label>Username: </label>
+                        <input type="text" ng-model="form.username" placeholder="username..." />
+                    </div>
+                    <div class="form-field">
+                        <label>Password</label>
+                        <input type="password" ng-model="form.password" placeholder="password..." />
+                    </div>
+
+                    <p class="forgot-pass">
+                        <a href="">Forgot your password?</a>
+                    </p>
+
+                    <div class="form-field">
+                        <input class="btn01" type="submit" value="Login" />
+                        <span class="ajax-loader"></span>
+                    </div>
+
+                    <p class="register">
+                        <a id="open-forgotten-password-form" href="">Join to greenmine</a>
+                    </p>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
