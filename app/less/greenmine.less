@@ -14,8 +14,97 @@
 @ArvoBold: 'ArvoBold';
 
 @import "greenmine-generic.less";
-@import "greenmine-header.less";
 @import "greenmine-backlog.less";
+
+
+/* Header */
+
+.header-container {
+    background-color: @green;
+    height: 105px;
+    border-bottom: 2px solid @black;
+    color: @grayDarker;
+
+    .header-row {
+        margin-top: 7px;
+    }
+
+    a {
+        color: @grayDarker;
+    }
+    .header-row {
+        .logo-box {
+            float: left;
+        }
+
+        .title-box {
+            line-height: 55px;
+            padding-left: 10px;
+            margin-left: 0px;
+            color: white;
+            font-size: 26px;
+            display: inline-block;
+
+            .title-item {
+                line-height: 15px;
+                display: inline-block;
+            }
+
+            .separator {
+                line-height: 10px;
+                color: @gray;
+                font-weight: bold;
+                width: 11px;
+                height: 16px;
+
+                display: inline-block;
+
+            }
+        }
+        .title-item{
+            a {
+                color: white;
+            }
+            a:hover {
+                color: #444;
+                text-decoration: none;
+            }
+        }
+    }
+    .right-top-menu {
+        font-weight: bold;
+
+        a {
+            text-decoration: underline;
+        }
+    }
+
+    .header-menu {
+        padding: 10px;
+        margin-top: 5px;
+
+        ul {
+            padding: 0px;
+            margin: 0px;
+            font-size: 14px;
+            font-family: @DroidSansBold;
+
+            li {
+                display: inline;
+                padding-right: 25px;
+            }
+
+            li a {
+                color: white;
+
+            }
+            li.selected a {
+                color: @black;
+            }
+        }
+    }
+}
+
 
 /* Login */
 

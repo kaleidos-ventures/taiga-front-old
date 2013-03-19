@@ -1,160 +1,132 @@
-<div class="header-container" ng-include="'partials/header.html'"></div>
-<div class="middle-container">
-    <div class="main-box">
-
-        <!--
-        <span class="separator"> &rsaquo; </span>
-        <span class="title-item"><a href="{{ project.get_backlog_url }}">{{ project.name }}</a></span>
-        <span class="separator"> &rsaquo; </span>
-        <span class="title-item">{% trans "Backlog" %}</span>
-        -->
-
-        <div class="backlog" id="backlog">
-            <div class="milestones right" id="backlog-right-block">
-
-                <div id="milestone-{{ml.id}}" class="milestone-item"
-                    ng-repeat="ml in milestones"
-                    ng-class="{first: $first, selected: ml.selected}">
-
-                    <div class="header clearfix">
-                        <div class="title">{{ ml.name }}</div>
-
-                        <div class="meta">
-                            <a href="">Detail</a>
-                            <a href="" class="mledit">Edit</a>
-                            <a href="" class="delete">Delete</a>
-                        </div>
-
-                        <div class="stats clearfix" style="clear:both">
-                            <progress max="100" value="{{ ml.percentage_completed }}">
-                                <strong>{{ ml.percentage_completed }}%</strong>
-                            </progress>
-
-                            <span class="number percenajte">
-                                {{ ml.percentage_completed }}%
-                            </span>
-
-                            <span class="number total-points">{{ ml.total_points }}</span>
-                            <span class="text">Total</span>
-
-                            <span class="number completed-points">{{ ml.completed_points }}</span>
-                            <span class="text">Completed</span>
-                        </div>
+<!--
+<span class="separator"> &rsaquo; </span>
+<span class="title-item"><a href="{{ project.get_backlog_url }}">{{ project.name }}</a></span>
+<span class="separator"> &rsaquo; </span>
+<span class="title-item">{% trans "Backlog" %}</span>
+-->
+<div class="header-container container-fluid" ng-include="'partials/header.html'"></div>
+<div class="middle-container container-fluid backlog">
+    <div class="row-fluid">
+        <div class="backlog-box span8">
+            <div class="graph-box">
+                <div class="user-story-stats" url=""></div>
+                <div id="graphs">
+                    <div id="burndown" url="">
+                        <div id="burndown-graph" style="display:none"></div>
                     </div>
-
-                    <div class="milestone-userstorys">
-                        <!-- Here will be milestone assigned user stories.
-                            partial template 'milestone-item.html' -->
-                        <div class="us-item-empty us-item">
-                            <div class="us-title">No user storys</div>
-                        </div>
+                    <div id="burnup" url="">
+                        <div id="burnup-graph" style="display:none"></div>
                     </div>
                 </div>
             </div>
-            <div class="backlog-container">
-                <div class="backlog-box" id="backlog-left-block">
-                    <div class="graph-box">
-                        <div class="user-story-stats" url=""></div>
-                        <div id="graphs">
-                            <div id="burndown" url="">
-                                <div id="burndown-graph" style="display:none"></div>
-                            </div>
-                            <div id="burnup" url="">
-                                <div id="burnup-graph" style="display:none"></div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="show-hide-graphics"><a href="#" >Hide graphics</a></div>
 
-                    <div class="show-hide-graphics"><a href="#" >Hide graphics</a></div>
-                    <div class="uslist-box">
-                        <div class="filters-box">
-                            <span class="category unselected" category="{{ tag.id }}"
-                                ng-repeat="tag in tags">
-                                {{ tag.name }} {{ tag.count }}
-                            </span>
-                        </div>
-
-                        <div class="filters-bar collapsed">
-                            <span class="show-hide-filters-box">Filters</span>
-                            <!-- Only selected tags -->
-                            <span class="category unselected" category="{{ tag.id }}"
-                                ng-repeat="tag in tags">
-                                {{ tag.name }} {{ tag.count }}
-                            </span>
-
-                            <span class="remove-filters" ng-show="tags.length">¡Filters out!</span>
-                            <div class="bar-button button right">
-                                <a href="{% url 'user-story-create' pslug=project.slug %}">New user story</a>
-                            </div>
-                        </div>
-
-
-                        <div class="head-title">
-                            <div class="row title">
-                                <span>
-                                    <a href="#" order_by="subject">User story</a>
-                                </span>
-                            </div>
-                            <div class="row points">
-                                <span>
-                                    <a href="#" order_by="points">Points</a>
-                                </span>
-                            </div>
-                            <div class="row priority">
-                                <span>
-                                    <a href="#" order_by="priority">Priority</a>
-                                </span>
-                            </div>
-                            <div class="row metaicon"></div>
-                        </div>
-
-                        <div class="un-us-item" draggable="true" id="un-us-item-{{ us.id }}" ref="{{ us.ref }}"
-                                assignurl="{{ us.get_assign_url }}" unassignurl="{{ us.get_unassign_url }}"
-                                ng-repeat="us in unassingedUs">
-                            <div class="row points">
-                                <span>{{ us.points }}</span>
-                            </div>
-                            <div class="row priority"><span>{{ us.priority }}</span></div>
-                            <div class="row milestone">
-                                <span><a rel="{{ us.ref }}" href=""></a></span>
-                            </div>
-
-                            <div class="row meta">
-                                <a href="{{ us.get_view_url }}">Detail</a>
-                                <a href="{{ us.get_edit_url }}" class="mledit">Edit</a>
-                                <a href="{{ us.get_delete_url }}" class="delete">Delete</a>
-                            </div>
-
-                            <div class="row title">
-                                <span class="category unselected" ng-repeat="tag in us.tags">
-                                    {{ tag.name }}
-                                </span>
-                                <span>{{ us.subject}}</span>
-                            </div>
-
-                            <div class="form-inline"></div>
-                        </div>
-                    </div>
+            <div class="us-container">
+                <div class="us-list">
+                    <table class="table table-striped ">
+                        <thead>
+                            <tr>
+                                <td>User story</td>
+                                <td>Points</td>
+                                <td>Priority</td>
+                                <td>Options</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="us in unassingedUs">
+                                <td>{{ us.subject }}</td>
+                                <td>{{ us.points }}</td>
+                                <td>{{ us.priority }}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+                <!--
+                <div class="un-us-item" draggable="true" id="un-us-item-{{ us.id }}" ref="{{ us.ref }}"
+                        assignurl="{{ us.get_assign_url }}" unassignurl="{{ us.get_unassign_url }}"
+                        ng-repeat="us in unassingedUs">
+                    <div class="row points">
+                        <span>{{ us.points }}</span>
+                    </div>
+                    <div class="row priority"><span>{{ us.priority }}</span></div>
+                    <div class="row milestone">
+                        <span><a rel="{{ us.ref }}" href=""></a></span>
+                    </div>
+
+                    <div class="row meta">
+                        <a href="{{ us.get_view_url }}">Detail</a>
+                        <a href="{{ us.get_edit_url }}" class="mledit">Edit</a>
+                        <a href="{{ us.get_delete_url }}" class="delete">Delete</a>
+                    </div>
+
+                    <div class="row title">
+                        <span class="category unselected" ng-repeat="tag in us.tags">
+                            {{ tag.name }}
+                        </span>
+                        <span>{{ us.subject}}</span>
+                    </div>
+
+                </div>
+                -->
             </div>
         </div>
 
+        <div class="milestones span4" id="backlog-right-block">
+            <div id="milestone-{{ml.id}}" class="milestone-item"
+                ng-repeat="ml in milestones"
+                ng-class="{first: $first, selected: ml.selected}">
 
-        <div class="unassign-dialog" style="display: none" title="{% trans "What do you do?" %}">
-            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
-                {% trans "Choose the appropriate option." %}
-            </p>
-        </div>
+                <div class="header clearfix">
+                    <div class="title">{{ ml.name }}</div>
 
-        <div class="assign-dialog" style="display: none" title="">
-        </div>
+                    <div class="meta">
+                        <a href="">Detail</a>
+                        <a href="" class="mledit">Edit</a>
+                        <a href="" class="delete">Delete</a>
+                    </div>
 
-        <div class="delete-milestone-dialog" style="display: none" title="{% trans "Are you sure?" %}">
-            <p>{% trans "Are you sure you want to delete this milestone?" %}
-        </div>
+                    <div class="stats clearfix" style="clear:both">
+                        <progress max="100" value="{{ ml.percentage_completed }}">
+                            <strong>{{ ml.percentage_completed }}%</strong>
+                        </progress>
 
-        <div class="delete-us-dialog" style="display: none" title="{% trans "Are you sure?" %}">
-            <p>{% trans "Are you sure you want to delete this US?" %}
+                        <span class="number percenajte">
+                            {{ ml.percentage_completed }}%
+                        </span>
+
+                        <span class="number total-points">{{ ml.total_points }}</span>
+                        <span class="text">Total</span>
+
+                        <span class="number completed-points">{{ ml.completed_points }}</span>
+                        <span class="text">Completed</span>
+                    </div>
+                </div>
+
+                <div class="milestone-userstorys">
+                    <!-- Here will be milestone assigned user stories.
+                        partial template 'milestone-item.html' -->
+                    <div class="us-item-empty us-item">
+                        <div class="us-title">No user storys</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
+<div class="unassign-dialog" style="display: none" title="{% trans "What do you do?" %}">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+        {% trans "Choose the appropriate option." %}
+    </p>
+</div>
+
+<div class="assign-dialog" style="display: none" title="">
+</div>
+
+<div class="delete-milestone-dialog" style="display: none" title="{% trans "Are you sure?" %}">
+    <p>{% trans "Are you sure you want to delete this milestone?" %}
+</div>
+
+<div class="delete-us-dialog" style="display: none" title="{% trans "Are you sure?" %}">
+    <p>{% trans "Are you sure you want to delete this US?" %}
 </div>
