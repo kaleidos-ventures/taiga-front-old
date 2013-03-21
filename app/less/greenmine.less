@@ -223,12 +223,17 @@
             }
 
             .flex-body {
+                min-height: 40px;
                 .us-item {
                     display: -webkit-box;
                     -webkit-box-orient: horizontal;
                     margin-top: 2px;
                     margin-bottom: 2px;
-                    background-color: #f2f2f2;
+                    border-bottom: 1px solid #eee;
+                    &:hover {
+                        background-color: #f9f9f9;
+                        border-bottom: 1px solid #f9f9f9;
+                    }
                 }
                 .us-item > div:nth-child(1) {
                     -webkit-box-flex: 1;
@@ -251,6 +256,9 @@
 
             .us-priority {
                 width: 70px;
+            }
+            .us-options {
+                width: 100px;
             }
         }
     }
