@@ -1,10 +1,20 @@
 var BacklogController = function($scope, $rootScope, $routeParams, url) {
     $rootScope.pageSection = 'backlog';
-    console.log($routeParams);
+
+    $scope.filtersOpened = false;
 
     $scope.tags = [
-        {name:"footag", count: 2, id: 1},
-        {name:"bartag", count: 3, id: 2},
+        {name:"footag1", id:1, count:2},
+        {name:"bartag2", id:2, count:1},
+        {name:"bartag3", id:3, count:2},
+        {name:"bartag4", id:4, count:2},
+        {name:"bartag5", id:5, count:2},
+        {name:"bartag6", id:6, count:2},
+        {name:"bartag7", id:7, count:2},
+        {name:"bartag8", id:8, count:2},
+        {name:"bartag9", id:9, count:2},
+        {name:"bartag10", id:10, count:2},
+        {name:"bartag11", id:11, count:2},
     ];
 
     $scope.unassingedUs = [
