@@ -2,6 +2,8 @@ var BacklogController = function($scope, $rootScope, $routeParams, url) {
     $rootScope.pageSection = 'backlog';
 
     $scope.filtersOpened = false;
+    $scope.usFormOpened = false;
+    $scope.sprintFormOpened = false;
 
     $scope.tags = [
         {name:"footag1", id:1, count:2},
@@ -18,12 +20,12 @@ var BacklogController = function($scope, $rootScope, $routeParams, url) {
     ];
 
     $scope.unassingedUs = [
-        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story"},
-        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story"},
-        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story"},
-        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story"},
-        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story"},
-        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story"}
+        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story 1", order:10},
+        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story 2", order:10},
+        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story 3", order:10},
+        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story 4", order:10},
+        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story 5", order:10},
+        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story 6", order:10}
     ];
 
     $scope.milestones = [

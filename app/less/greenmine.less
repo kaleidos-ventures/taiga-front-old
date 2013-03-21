@@ -118,17 +118,14 @@
 
     .filters-container {
         margin-top: 10px;
+        .ui-state-highlight,
+        .ui-sortable-placeholder {
+            background-color: red;
+        }
 
         .filters-visual-box {
             overflow: hidden;
-
-            .title-sbox {
-                float: left;
-                width: 90px;
-                min-height: 100px;
-                vertical-align: middle;
-                line-height: 100px
-            }
+            padding: 10px;
 
             .tags-list-sbox {
                 overflow: hidden;
@@ -168,7 +165,7 @@
             }
         }
 
-        .filters-bar-box {
+        .filters-bar-sbox {
             background-color: #666;
             color: #eee;
             padding: 5px;
@@ -185,6 +182,25 @@
 
             .buttons-sbox {
                 float: right;
+            }
+        }
+
+        .user-story-form-sbox {
+            background-color: #f2f2f2;
+            border: 1px solid #666;
+            padding: 10px;
+
+            textarea {
+                width: 98.5%;
+                height: 120px;
+            }
+
+            form {
+                margin-bottom: 0px;
+            }
+
+            fieldset:nth-child(2) {
+                margin-top: 10px;
             }
         }
     }
@@ -210,13 +226,21 @@
                 .us-item {
                     display: -webkit-box;
                     -webkit-box-orient: horizontal;
-                    border-bottom: 1px solid #c9c9c9;
+                    margin-top: 2px;
+                    margin-bottom: 2px;
+                    background-color: #f2f2f2;
                 }
                 .us-item > div:nth-child(1) {
                     -webkit-box-flex: 1;
                 }
                 .us-item > div {
                     padding: 5px;
+                }
+            }
+
+            .us-title {
+                .label {
+                    margin-left: 5px;
                 }
             }
 
@@ -235,7 +259,7 @@
         .header-box {
             overflow: hidden;
             padding: 5px;
-            background-color: #999999;
+            background-color: #666;
             color: #eee;
 
             .title-sbox > div { float: left; }
@@ -271,32 +295,156 @@
             }
         }
 
+        .milestone-form-box {
+            background-color: #f2f2f2;
+            border: 1px solid #666;
+            padding: 10px;
+
+            fieldset {
+                overflow: hidden;
+                padding-bottom: 10px;
+
+                div.subfield {
+                    float: left;
+                    margin-right: 20px;
+
+                    input[type="date"] {
+                        width: 117px;
+                    }
+                }
+            }
+
+            form {
+                margin-bottom: 0px;
+            }
+
+            .btn-group {
+                margin-top: 20px;
+            }
+        }
+
         .sprints-box {
             margin-top: 10px;
 
             .sprint-sbox {
                 .header {
+                    background-color: #666;
+
                     .title {
                         font-family: Helvetica LT Std;
-                        font-size: 18px;
+                        font-size: 14px;
                         font-weight: bold;
                         font-style: normal;
                         text-decoration: none;
                         color: #FFFFFF;
-                        background-color: #333;
+
                         padding: 5px;
+                        padding-bottom: 0px;
                     }
+
                     .stats {
                         padding: 5px;
+                        padding-bottom: 0px;
                         color: white;
+                        overflow: hidden;
 
+                        .sprint-progress > div { float: left; }
                         .sprint-progress {
+                            margin-right: 30px;
+                            float: left;
+                            overflow: hidden;
+
+
                             .progress {
-                                height: 5px;
+                                height: 9px;
                                 border-radius: 60px;
                                 width: 80px;
+                                margin-top: 5px;
+                                margin-right: 5px;
+                                margin-bottom: 0px;
+                            }
+
+                            .progress-indicator {
+                                font-family: Helvetica LT Std;
+                                font-size: 14px;
+                                font-weight: bold;
+                                font-style: normal;
+                                text-decoration: none;
+                                color: #FFFFFF;
                             }
                         }
+
+                        .sprint-status {
+                            overflow: hidden;
+                            float: left;
+
+                            .item > div { float: left; }
+                            .item {
+                                float: left;
+                                overflow: hidden;
+
+                                .indicator {
+                                    font-family: Helvetica LT Std;
+                                    font-size: 14px;
+                                    font-weight: bold;
+                                    font-style: normal;
+                                    text-decoration: none;
+                                    color: #FFFFFF;
+                                    margin-right: 4px;
+                                }
+                                .help {
+                                    font-family: Helvetica LT Std;
+                                    font-size: 10px;
+                                    font-weight: normal;
+                                    font-style: normal;
+                                    text-decoration: none;
+                                    color: #eee;
+
+                                    width: 57px;
+                                    vertical-align: bottom;
+                                    line-height: 19px;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .body {
+                    padding-left: 5px;
+                    padding-right: 5px;
+                    padding-bottom: 5px;
+                    background-color: #666;
+                    margin-bottom: 5px;
+
+                    .us-list {
+                        background-color: #f9f9f9;
+
+                        .us-table-list {
+                            .flex-body {
+                                .us-item {
+                                    display: -webkit-box;
+                                    -webkit-box-orient: horizontal;
+                                    border-bottom: 1px solid #c9c9c9;
+                                }
+                                .us-item > div:nth-child(1) {
+                                    -webkit-box-flex: 1;
+                                }
+                                .us-item > div {
+                                    padding: 5px;
+                                }
+                            }
+
+                            .us-points {
+                                width: 50px;
+                                text-align: center;
+                            }
+
+                            .us-priority {
+                                width: 70px;
+                            }
+                        }
+
+
                     }
                 }
             }

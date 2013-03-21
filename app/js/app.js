@@ -35,7 +35,8 @@
         //"greenmine.filters.common",
         "greenmine.services.common",
         //"greenmine.services.storage",
-        "greenmine.directives.common"
+        "greenmine.directives.common",
+        "greenmine.directives.jqueryui",
     ];
 
     if (this.greenmine === undefined) this.greenmine = {};
