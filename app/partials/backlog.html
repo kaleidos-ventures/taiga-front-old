@@ -50,7 +50,7 @@
             <div class="filters-container">
                 <div class="filters-visual-box" ng-show="filtersOpened">
                     <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in tags" ng-click="selected=!selected" ng-class="{selected: selected}">
+                        <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)" ng-class="{selected: tag.selected}">
                             <div class="icon">
                                 <i class="icon-remove icon-white" ng-hide="!selected"> </i>
                             </div>
@@ -100,7 +100,7 @@
                             <div class="us-title">
                                 <span class="title">{{ us.subject }}</span>
                                 <span class="tags">
-                                    <span ng-repeat="tag in us.tags" class="label">{{ tag }}</span>
+                                    <span ng-repeat="tag in us.tags" class="label">{{ tag.name }}</span>
                                 </span>
                             </div>
                             <div class="us-points">{{ us.points }}</div>
