@@ -5,18 +5,6 @@ var BacklogController = function($scope, $rootScope, $routeParams, url) {
     $scope.usFormOpened = false;
     $scope.sprintFormOpened = false;
 
-    $scope.tags = [
-        {name:"tag1", id:1, count:2},
-        {name:"tag2", id:2, count:1},
-        {name:"tag3", id:3, count:2},
-        {name:"tag4", id:4, count:2},
-        {name:"tag5", id:5, count:2},
-        {name:"tag6", id:6, count:2},
-        {name:"tag7", id:7, count:2},
-        {name:"tag8", id:8, count:2},
-        {name:"tag9", id:9, count:2}
-    ];
-
     $scope.allUnassingedUs = [
         {id:1, points:2, priority:"hight", tags:[{"name": "tag1", id:1}, {"name": "tag2", id:2}], subject:"Sample User story 1", order:10},
         {id:2, points:2, priority:"hight", tags:[{"name": "tag2", id:2}, {"name": "tag2", id:2}], subject:"Sample User story 2", order:10},
@@ -59,6 +47,22 @@ var BacklogController = function($scope, $rootScope, $routeParams, url) {
         $scope.filterUsBySelectedTags()
     }
 
+    $scope.generateTagList = function() {
+        var tagsDict = {};
+        var tags = [];
+
+        _.each($scope.allUnassingedUs, function(us) {
+            _.each(us.tags, function(tag) {
+                if (tagsDict[tag.id] === undefined) {
+                    tagsDict[tag.id] = true;
+                    tags.push(tag);
+                }
+            });
+        });
+
+        $scope.tags = tags;
+    };
+
     $scope.filterUsBySelectedTags = function() {
         var selectedTags = _.filter($scope.tags, function(item) { return item.selected });
         var selectedTagsIds = _.map(selectedTags, function(item) { return item.id });
@@ -78,6 +82,7 @@ var BacklogController = function($scope, $rootScope, $routeParams, url) {
         }
     };
 
+    $scope.generateTagList();
     $scope.filterUsBySelectedTags();
 };
 
