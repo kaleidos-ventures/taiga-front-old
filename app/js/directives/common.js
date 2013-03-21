@@ -167,4 +167,17 @@ angular.module('greenmine.directives.common', []).
                 }
             });
         };
+    }]).
+    directive("uiContentEditable", ["$parse", function($parse) {
+        return function(scope, elm, attrs) {
+            var element = $(elm);
+            element.attr('contenteditable', 'true');
+            element.attr('spellcheck', 'false');
+
+            element.on("keydown", function(event) {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                }
+            });
+        };
     }]);

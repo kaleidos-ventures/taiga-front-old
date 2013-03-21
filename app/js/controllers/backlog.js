@@ -15,6 +15,7 @@ var BacklogController = function($scope, $rootScope, $routeParams, url) {
     ];
 
     $scope.milestones = [
+        {name:"Milestone4", percentage_completed:20, total_points:100, completed_points:20, us: []},
         {name:"Milestone3", percentage_completed:20, total_points:100, completed_points:20, us: [
             {id:11, points:2, priority:"hight", tags:[{"name": "tag1", id:1}, {"name": "tag2", id:2}], subject:"Sample User story 1", order:10},
             {id:12, points:2, priority:"hight", tags:[{"name": "tag1", id:1}, {"name": "tag2", id:2}], subject:"Sample User story 2", order:10},
@@ -41,7 +42,7 @@ var BacklogController = function($scope, $rootScope, $routeParams, url) {
         ]},
     ];
 
-    $scope.selectTag= function(tag) {
+    $scope.selectTag = function(tag) {
         if (tag.selected) tag.selected = false;
         else tag.selected = true;
         $scope.filterUsBySelectedTags()

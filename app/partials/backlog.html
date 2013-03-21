@@ -149,7 +149,7 @@
             <div class="sprints-box">
                 <div class="sprint-sbox" ng-repeat="ml in milestones">
                     <div class="header">
-                        <div class="title">{{ ml.name }}</div>
+                        <div ui-content-editable class="title">{{ ml.name }}</div>
                         <div class="stats">
                             <div class="sprint-progress">
                                 <div class="progress progress-success">
@@ -172,15 +172,14 @@
                     <div class="body">
                         <div class="us-list">
                             <div class="us-table-list">
-                                <div class="flex-body" ui-sortable=".us-container .flex-body" ng-model="unassingedUs2">
-                                    <div class="us-item" ng-repeat="us in unassingedUs2">
+                                <div class="flex-body" ui-sortable=".us-container .flex-body" ng-model="milestones[$index].us">
+                                    <div class="us-item" ng-repeat="us in ml.us">
                                         <div class="us-title">{{ us.subject }}</div>
                                         <div class="us-points">{{ us.points }}</div>
                                         <div class="us-priority">{{ us.priority }}</div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
