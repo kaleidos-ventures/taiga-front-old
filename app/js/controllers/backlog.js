@@ -28,6 +28,15 @@ var BacklogController = function($scope, $rootScope, $routeParams, url) {
         {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story 6", order:10}
     ];
 
+    $scope.unassingedUs2 = [
+        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story 1", order:10},
+        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story 2", order:10},
+        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story 3", order:10},
+        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story 4", order:10},
+        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story 5", order:10},
+        {points:2, priority:"hight", tags:["kk", "bb"], subject:"Sample User story 6", order:10}
+    ];
+
     $scope.milestones = [
         {name:"Milestone1", percentage_completed:20, total_points:100, completed_points:20},
         {name:"Milestone1", percentage_completed:20, total_points:100, completed_points:20},

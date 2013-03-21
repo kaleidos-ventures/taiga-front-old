@@ -9,7 +9,8 @@ angular.module('greenmine.directives.jqueryui', []).
             link: function(scope, element, attrs, ngModel) {
                 var onReceive, onRemove, onStart, onUpdate, opts, onStop;
 
-                opts = angular.extend({}, uiConfig.sortable, scope.$eval(attrs.uiSortable));
+                opts = angular.extend({}, uiConfig.sortable);
+                opts.connectWith = attrs.uiSortable;
 
                 if (ngModel) {
                     ngModel.$render = function() {

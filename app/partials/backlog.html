@@ -95,7 +95,7 @@
                         <div class="us-priority">Priority</div>
                     </div>
                     <div class="flex-separator"></div>
-                    <div class="flex-body" ui-sortable ng-model="unassingedUs">
+                    <div class="flex-body" ui-sortable=".sprints-box .flex-body" ng-model="unassingedUs">
                         <div class="us-item" ng-repeat="us in unassingedUs|orderBy:'order'" ui-sortable-index="{{$index}}">
                             <div class="us-title">
                                 <span class="title">{{ us.subject }}</span>
@@ -172,8 +172,8 @@
                     <div class="body">
                         <div class="us-list">
                             <div class="us-table-list">
-                                <div class="flex-body">
-                                    <div class="us-item" ng-repeat="us in unassingedUs">
+                                <div class="flex-body" ui-sortable=".us-container .flex-body" ng-model="unassingedUs2">
+                                    <div class="us-item" ng-repeat="us in unassingedUs2">
                                         <div class="us-title">{{ us.subject }}</div>
                                         <div class="us-points">{{ us.points }}</div>
                                         <div class="us-priority">{{ us.priority }}</div>
