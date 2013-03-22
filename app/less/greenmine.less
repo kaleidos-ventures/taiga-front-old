@@ -17,6 +17,15 @@
 
 /* Backlog */
 
+
+@media (max-width: 1024px) {
+    .dashboard {
+        .stats-row {
+            display: none;
+        }
+    }
+}
+
 .dashboard {
     .tasks-container {
         .badge {
@@ -84,6 +93,9 @@
 
         .header {
             padding: 5px;
+            td {
+                text-align: center;
+            }
         }
 
         .body {
@@ -158,18 +170,18 @@
 
     .stats-container {
         overflow: hidden;
-        padding: 10px;
-        background-color: #666;
+        padding: 5px;
+        background-color: #333;
 
         .graphics-box {
-            height: 200px;
+            height: 155px;
             background-color: white;
         }
 
         .information-box {
             .info-header {
-                padding: 10px;
-                border-bottom: 1px solid black;
+                padding: 5px;
+                border-bottom: 1px solid #666;
 
                 font-family: Helvetica LT Std;
 
@@ -188,7 +200,7 @@
                         }
                     }
                     .indicator {
-                        margin-left: 10px;
+                        margin-left: 30px;
                         font-size: 28px;
                         color: #FFFFFF;
                         line-height: 25px;
@@ -207,8 +219,8 @@
                 .row-item {
                     display: -webkit-box;
                     -webkit-box-orient: horizontal;
-                    border-bottom: 1px solid black;
-                    padding: 7px;
+                    border-bottom: 1px solid #666;
+                    padding: 2px;
 
                     .row-label {
                         font-size: 18px;
