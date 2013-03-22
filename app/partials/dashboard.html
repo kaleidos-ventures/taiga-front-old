@@ -62,49 +62,74 @@
         <div class="span12">
             <div class="tasks-container">
                 <div class="header">
-                    <div class="table-row">
-                        <div class="row-us-description"></div>
-                        <div class="row-new-tasks">
-                            <div class="badge">New tasks</div>
-                        </div>
-                        <div class="row-inprogress-tasks">
-                            <div class="badge badge-inprogress">In progress</div>
-                        </div>
-                        <div class="row-readytest-tasks">
-                            <div class="badge badge-readytest">Ready for test</div>
-                        </div>
-                        <div class="row-finished-tasks">
-                            <div class="badge badge-finish">Finished tasks</div>
-                        </div>
-                    </div>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="row-us-description"></td>
+                                <td class="row-new-tasks">
+                                    <div class="badge">New tasks</div>
+                                </td>
+                                <td class="row-inprogress-tasks">
+                                    <div class="badge badge-inprogress">In progress</div>
+                                </td>
+                                <td class="row-readytest-tasks">
+                                    <div class="badge badge-readytest">Ready for test</div>
+                                </td>
+                                <td class="row-finished-tasks">
+                                    <div class="badge badge-finish">Finished tasks</div>
+                                </td>
+                                <td class="row-rejected-tasks">
+                                    <div class="badge badge-finish">Rejected tasks</diva>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
-                <div class="body">
-                    <div class="table-row" ng-repeat="us in userstories">
-                        <div class="row-us-description">
-                            <div class="description">
-                                <div class="title">
-                                    {{ us.subject }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row-new-tasks">
-                            <div class="tasks">
-                                <div class="task" ng-repeat="task in usTasks[us.id]['new']">
-                                    {{ task }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row-inprogress-tasks">
-                            <div class="badge badge-inprogress">In progress</div>
-                        </div>
-                        <div class="row-readytest-tasks">
-                            <div class="badge badge-readytest">Ready for test</div>
-                        </div>
-                        <div class="row-finished-tasks">
-                            <div class="badge badge-finish">Finished tasks</div>
-                        </div>
-                    </div>
+                <div class="body" ui-user-popover=".task-box-content .buttons a">
+                    <table ng-repeat="us in userstories">
+                        <tbody>
+                            <tr>
+                                <td class="row-us-description">
+                                    <div class="description">
+                                        <div class="title">
+                                            {{ us.subject }}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="row-new-tasks">
+                                    <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id]['new']">
+                                        <div class="task-box" ng-repeat="task in usTasks[us.id]['new']"
+                                            ng-include="'partials/dashboard-task.html'"></div>
+                                    </div>
+                                </td>
+                                <td class="row-inprogress-tasks">
+                                    <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id]['inprogress']">
+                                        <div class="task-box" ng-repeat="task in usTasks[us.id]['inprogress']"
+                                            ng-include="'partials/dashboard-task.html'"></div>
+                                    </div>
+                                </td>
+                                <td class="row-readytest-tasks">
+                                    <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id]['readytest']">
+                                        <div class="task-box" ng-repeat="task in usTasks[us.id]['readytest']"
+                                            ng-include="'partials/dashboard-task.html'"></div>
+                                    </div>
+                                </td>
+                                <td class="row-finished-tasks">
+                                    <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id]['finished']">
+                                        <div class="task-box" ng-repeat="task in usTasks[us.id]['finished']"
+                                            ng-include="'partials/dashboard-task.html'"></div>
+                                    </div>
+                                </td>
+                                <td class="row-rejected-tasks">
+                                    <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id]['rejected']">
+                                        <div class="task-box" ng-repeat="task in usTasks[us.id]['rejected']"
+                                            ng-include="'partials/dashboard-task.html'"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

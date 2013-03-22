@@ -54,6 +54,12 @@ angular.module('greenmine.directives.jqueryui', []).
                             // Reorder array and apply change to scope
                             ui.item.sortable.resort.$modelValue.splice(end, 0, ui.item.sortable.resort.$modelValue.splice(start, 1)[0]);
 
+                            var totalItems = ngModel.$modelValue.length * 10;
+                            var count = 0;
+                            _.each(ui.item.sortable.resort.$modelValue, function(item) {
+                                item.order = count;
+                                count = count +1;
+                            });
                         }
                         if (ui.item.sortable.resort || ui.item.sortable.relocate) {
                             scope.$apply();

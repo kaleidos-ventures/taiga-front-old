@@ -35,39 +35,125 @@
             background-color: #669900;
         }
 
-        .table-row {
-            display: -webkit-box;
-            -webkit-box-orient: horizontal;
+        td.row-new-tasks {
+            width: 19.5%;
+            width: 16.66%;
+            .task-box {
+                background-color: #999;
+            }
         }
 
-        .table-row > div {
-            -webkit-box-flex: 1;
+        td.row-inprogress-tasks {
+            width: 19.5%;
+            width: 16.66%;
+            .task-box {
+                background-color: #ff9900;
+            }
         }
 
-        .table-row > div:nth-child(1) {
-            -webkit-box-flex: 0;
-            width: 250px;
+        td.row-readytest-tasks {
+            width: 19.5%;
+            width: 16.66%;
+            .task-box {
+                background-color: #ffcc00;
+            }
         }
+
+        td.row-finished-tasks {
+            width: 19.5%;
+            width: 16.66%;
+            .task-box {
+                background-color: #669900;
+            }
+        }
+
+        td.row-rejected-tasks {
+            width: 19.5%;
+            width: 16.66%;
+            .task-box {
+                background-color: #669900;
+            }
+        }
+
+        td.row-us-description {
+            width: 22%;
+            width: 16.66%;
+        }
+
+        table { width: 100%; }
 
         .header {
-            .table-row > div {
-                text-align: center;
-            }
+            padding: 5px;
         }
 
         .body {
-            .table-row {
-                margin-bottom: 4px;
+            background-color: #333;
+            color: white;
+            padding: 5px;
 
-                .row-us-description {
-                    min-height: 200px;
-                    background-color: #eee;
+            table {
+                border-top: 1px solid #333;
+            }
 
-                    .description {
-                        padding: 10px;
+            td.row-us-description {
+                min-height: 200px;
+                vertical-align: top;
+                .description {
+                    padding: 10px;
+                }
+            }
+
+            td.row-new-tasks,
+            td.row-inprogress-tasks,
+            td.row-readytest-tasks,
+            td.row-finished-tasks,
+            td.row-rejected-tasks {
+                background-color: #434343;
+                vertical-align: top;
+            }
+
+            td.row-new-tasks,
+            td.row-inprogress-tasks,
+            td.row-readytest-tasks,
+            td.row-finished-tasks {
+                border-right: 1px solid #333;
+            }
+
+            /* Color definition */
+
+            .tasks {
+                padding: 3px;
+                background-color: #434343;
+                min-height: 100px;
+
+                .task-box {
+                    padding: 5px;
+                    margin-bottom: 5px;
+                    border-radius: 4px;
+
+                    .task-box-content {
+                        background-color: white;
+                        color: black;
+
+                        .title {
+                            padding: 10px;
+                            font-size: 11px;
+                            line-height: 13px;
+                        }
+                        .buttons {
+                            padding-left: 10px;
+                            padding-bottom: 3px;
+                            a {
+                                color: #333;
+                                text-decoration: none;
+                                font-size: 11px;
+                                line-height: 14px;
+                            }
+                        }
                     }
                 }
             }
+
         }
     }
 

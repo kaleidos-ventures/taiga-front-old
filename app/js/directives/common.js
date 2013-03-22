@@ -24,6 +24,17 @@ angular.module('greenmine.directives.common', []).
             }
         };
     }).
+    directive('uiUserPopover', function() {
+        return function(scope, elm, attrs) {
+            var element = angular.element(elm);
+            var selector = element.data('selector');
+
+            element.on('click', selector, function(event) {
+                var target = angular.element(event.target);
+                console.log(target.scope(), target);
+            });
+        };
+    }).
     directive('uiEvent', ['$parse', function ($parse) {
         return function(scope, elm, attrs) {
             var events = scope.$eval(attrs.uiEvent);
