@@ -18,6 +18,59 @@
 /* Backlog */
 
 .dashboard {
+    .tasks-container {
+        .badge {
+            color: black;
+        }
+
+        .badge-inprogress {
+            background-color: #ff9900;
+        }
+
+        .badge-readytest {
+            background-color: #ffcc00;
+        }
+
+        .badge-finish {
+            background-color: #669900;
+        }
+
+        .table-row {
+            display: -webkit-box;
+            -webkit-box-orient: horizontal;
+        }
+
+        .table-row > div {
+            -webkit-box-flex: 1;
+        }
+
+        .table-row > div:nth-child(1) {
+            -webkit-box-flex: 0;
+            width: 250px;
+        }
+
+        .header {
+            .table-row > div {
+                text-align: center;
+            }
+        }
+
+        .body {
+            .table-row {
+                margin-bottom: 4px;
+
+                .row-us-description {
+                    min-height: 200px;
+                    background-color: #eee;
+
+                    .description {
+                        padding: 10px;
+                    }
+                }
+            }
+        }
+    }
+
     .stats-container {
         overflow: hidden;
         padding: 10px;
