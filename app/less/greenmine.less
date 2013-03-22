@@ -17,8 +17,90 @@
 
 /* Backlog */
 
-.backlog {
+.dashboard {
+    .stats-container {
+        overflow: hidden;
+        padding: 10px;
+        background-color: #666;
 
+        .graphics-box {
+            height: 200px;
+            background-color: white;
+        }
+
+        .information-box {
+            .info-header {
+                padding: 10px;
+                border-bottom: 1px solid black;
+
+                font-family: Helvetica LT Std;
+
+                .sprint-progress > div { float: left; }
+                .sprint-progress {
+                    overflow: hidden;
+
+                    .progress {
+                        width: 200px;
+                        height: 25px;
+                        border-radius: 90px;
+                        margin-bottom: 0px;
+                        .bar {
+                            background-color: #669900;
+                            background-image: none;
+                        }
+                    }
+                    .indicator {
+                        margin-left: 10px;
+                        font-size: 28px;
+                        color: #FFFFFF;
+                        line-height: 25px;
+                    }
+                    .help {
+                        margin-left: 10px;
+                        font-size: 10px;
+                        color: #EEE;
+                        line-height: 11px;
+                    }
+                }
+            }
+            .info-rows {
+                font-family: Helvetica LT Std;
+
+                .row-item {
+                    display: -webkit-box;
+                    -webkit-box-orient: horizontal;
+                    border-bottom: 1px solid black;
+                    padding: 7px;
+
+                    .row-label {
+                        font-size: 18px;
+                        color: #eee;
+                        width: 80px;
+                    }
+                    .row-indiator {
+                        margin-left: 10px;
+                        font-size: 28px;
+                        color: #FFFFFF;
+                        line-height: 25px;
+                    }
+
+                    .row-help {
+                        margin-left: 10px;
+                        font-size: 10px;
+                        color: #EEE;
+                        line-height: 11px;
+                    }
+                }
+
+                .row-item > div {
+                    padding: 5px;
+                }
+            }
+        }
+    }
+}
+
+.backlog {
     .first-row {
         margin-top: 10px;
     }
