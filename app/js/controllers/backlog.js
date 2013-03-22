@@ -5,7 +5,7 @@ var BacklogController = function($scope, $rootScope, $routeParams, url) {
     $scope.usFormOpened = false;
     $scope.sprintFormOpened = false;
 
-    $scope.allUnassingedUs = [
+    $scope.unassingedUs = [
         {id:1, points:2, priority:"hight", tags:[{"name": "tag1", id:1}, {"name": "tag2", id:2}], subject:"Sample User story 1", order:10},
         {id:2, points:2, priority:"hight", tags:[{"name": "tag2", id:2}, {"name": "tag2", id:2}], subject:"Sample User story 2", order:10},
         {id:3, points:2, priority:"hight", tags:[{"name": "tag3", id:3}, {"name": "tag2", id:2}], subject:"Sample User story 3", order:10},
@@ -52,7 +52,7 @@ var BacklogController = function($scope, $rootScope, $routeParams, url) {
         var tagsDict = {};
         var tags = [];
 
-        _.each($scope.allUnassingedUs, function(us) {
+        _.each($scope.unassingedUs, function(us) {
             _.each(us.tags, function(tag) {
                 if (tagsDict[tag.id] === undefined) {
                     tagsDict[tag.id] = true;
@@ -68,17 +68,16 @@ var BacklogController = function($scope, $rootScope, $routeParams, url) {
         var selectedTags = _.filter($scope.tags, function(item) { return item.selected });
         var selectedTagsIds = _.map(selectedTags, function(item) { return item.id });
 
-        if (selectedTagsIds.length === 0) {
-            $scope.unassingedUs = $scope.allUnassingedUs;
-        } else {
-            $scope.unassingedUs = _.filter($scope.allUnassingedUs, function(item) {
+        if (selectedTagsIds.length > 0) {
+            _.each($scope.unassingedUs, function(item) {
                 var itemTagIds = _.map(item.tags, function(tag) { return tag.id; });
                 var intersection = _.intersection(selectedTagsIds, itemTagIds);
 
-                if (intersection.length > 0){
-                    return true;
+                if (intersection.length === 0) {
+                    item.hidden = true;
+                } else {
+                    item.hidden = false;
                 }
-                return false;
             });
         }
     };

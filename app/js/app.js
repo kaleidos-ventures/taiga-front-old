@@ -32,7 +32,7 @@
     };
 
     var modules = [
-        //"greenmine.filters.common",
+        "greenmine.filters.common",
         "greenmine.services.common",
         //"greenmine.services.storage",
         "greenmine.directives.common",

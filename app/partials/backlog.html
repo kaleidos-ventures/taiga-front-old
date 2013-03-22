@@ -97,7 +97,7 @@
                     </div>
                     <div class="flex-separator"></div>
                     <div class="flex-body" ui-sortable=".sprints-box .flex-body" ng-model="unassingedUs">
-                        <div class="us-item" ng-repeat="us in unassingedUs|orderBy:'order'" ui-sortable-index="{{$index}}">
+                        <div class="us-item" ng-repeat="us in unassingedUs|orderBy:'order'|onlyVisible" ui-sortable-index="{{$index}}">
                             <div class="us-title">
                                 <span class="title">{{ us.subject }}</span>
                                 <span class="tags">
