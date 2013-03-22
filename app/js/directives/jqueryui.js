@@ -31,6 +31,7 @@ angular.module('greenmine.directives.jqueryui', []).
                         ui.item.sortable.relocate = true;
                         // added item to array into correct position and set up flag
                         ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
+                        ui.item.sortable.moved.modified = true;
                     };
 
                     onRemove = function(e, ui) {
@@ -54,12 +55,13 @@ angular.module('greenmine.directives.jqueryui', []).
                             // Reorder array and apply change to scope
                             ui.item.sortable.resort.$modelValue.splice(end, 0, ui.item.sortable.resort.$modelValue.splice(start, 1)[0]);
 
-                            var totalItems = ngModel.$modelValue.length * 10;
+                            // Put new order to all items
                             var count = 0;
                             _.each(ui.item.sortable.resort.$modelValue, function(item) {
                                 item.order = count;
                                 count = count +1;
                             });
+
                         }
                         if (ui.item.sortable.resort || ui.item.sortable.relocate) {
                             scope.$apply();
