@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('greenmine.directives.dashboard', []).
-    directive('uiUserPopover', ["$parse", function($parse) {
+    directive('gmUserPopover', ["$parse", function($parse) {
         return function(scope, elm, attrs) {
             var fn = $parse(attrs.uiUserPopover);
             var element = angular.element(elm);
@@ -28,7 +28,7 @@ angular.module('greenmine.directives.dashboard', []).
             });
         };
     }]).
-    directive("uiNewtaskModal", ["$parse", function($parse) {
+    directive("gmNewtaskModal", ["$parse", function($parse) {
         return function(scope, elm, attrs) {
             var element = angular.element(elm);
             var modalElement = angular.element("#new-task-modal");
