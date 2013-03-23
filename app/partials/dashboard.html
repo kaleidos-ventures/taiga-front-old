@@ -86,15 +86,23 @@
                     </table>
                 </div>
 
-                <div class="body">
-                    <table ng-repeat="us in userstories">
+                <div class="body" ui-newtask-modal=".row-us-description .new-task">
+                    <table ng-repeat="us in userstories" ng-controller="DashboardUserStoryController">
                         <tbody>
                             <tr>
                                 <td class="row-us-description">
-                                    <div class="description">
-                                        <div class="title">
-                                            {{ us.subject }}
+                                    <div class="info">
+                                        <div class="title">{{ us.subject }}</div>
+                                        <div class="description">
+                                            <p>Helvetica keffiyeh consectetur, nesciunt biodiesel letterpress Austin pickled pour-over non aesthetic scenester sunt. Aesthetic brunch deserunt, beard flannel deep v pork belly laborum mollit tofu godard hoodie selvage semiotics. Esse kale chips viral eiusmod, officia selfies chambray nihil fugiat banjo culpa mlkshk id commodo beard.</p>
                                         </div>
+                                    </div>
+                                    <div class="options">
+                                        <ul>
+                                            <li><i class="icon-plus-sign icon-white"></i>
+                                                <a href="" class="new-task">New task</a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </td>
                                 <td class="row-new-tasks">
@@ -144,5 +152,28 @@
                 </li>
             </ul>
         </div>
+
+    </div>
+    <div class="new-task-modal modal hide fade" id="new-task-modal">
+        <div class="form-container">
+        <form ui-parsley="createNewTask()">
+            <h4>Create new tasks:</h4>
+            <p>Put one task title per line. You can use some indicators to automaticaly
+            put the task in some state.</p>
+            <ul>
+                <li><b>!inprogress</b> as a firt word in a line, indicates that task must be
+                    created on "inprogress" state.</li>
+            </ul>
+
+            <fieldset>
+                <input type="hidden" value="" class="us-id" ng-model="newtaskForm.usId"></input>
+                <textarea ng-model="newtaskForm.tasks"></textarea>
+            </fieldset>
+
+            <div class="buttons">
+                <input type="submit" class="btn btn-success" value="Save"></input>
+                <a class="btn cancel">Cancel</a>
+            </div>
+        </form>
     </div>
 </div>
