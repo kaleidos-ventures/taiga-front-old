@@ -743,90 +743,72 @@
 
 .header-container {
     background-color: @green;
-    height: 105px;
     border-bottom: 2px solid @black;
     color: @grayDarker;
 
-    .header-row {
-        margin-top: 7px;
+    .header-box {
+        overflow: hidden;
+
+        .logo-sbox {
+            padding: 2px;
+            float: left;
+        }
+
+        .header-path {
+            float: left;
+            color: white;
+            font-size: 20px;
+            vertical-align: middle;
+            line-height: 45px;
+            padding-left: 10px;
+        }
+
+        .top-menu-sbox > div {
+            display: inline;
+        }
+
+        .top-menu-sbox {
+            float: right;
+            padding: 2px;
+            padding-right: 10px;
+        }
+
+        margin-top: 2px;
+        margin-bottom: 5px;
+    }
+
+    .menu-box {
+        padding-left: 20px;
+
+        ul {
+            margin: 0px;
+            padding: 0px;
+
+            li {
+                list-style: none;
+                text-align: center;
+                display: inline-block;
+                padding: 2px;
+                padding-left: 15px;
+                padding-right: 15px;
+
+                a {
+                    color: white;
+                    text-decoration: none;
+                }
+
+                &.selected {
+                    a { color: #333; }
+                    background-color: white;
+                }
+            }
+        }
     }
 
     a {
         color: @grayDarker;
     }
-    .header-row {
-        .logo-box {
-            float: left;
-        }
-
-        .title-box {
-            line-height: 55px;
-            padding-left: 10px;
-            margin-left: 0px;
-            color: white;
-            font-size: 26px;
-            display: inline-block;
-
-            .title-item {
-                line-height: 15px;
-                display: inline-block;
-            }
-
-            .separator {
-                line-height: 10px;
-                color: @gray;
-                font-weight: bold;
-                width: 11px;
-                height: 16px;
-
-                display: inline-block;
-
-            }
-        }
-        .title-item{
-            a {
-                color: white;
-            }
-            a:hover {
-                color: #444;
-                text-decoration: none;
-            }
-        }
-    }
-    .right-top-menu {
-        font-weight: bold;
-
-        a {
-            text-decoration: underline;
-        }
-    }
-
-    .header-menu {
-        padding: 10px;
-        margin-top: 5px;
-
-        ul {
-            padding: 0px;
-            margin: 0px;
-            font-size: 14px;
-            font-family: @DroidSansBold;
-
-            li {
-                display: inline;
-                padding-right: 25px;
-            }
-
-            li a {
-                color: white;
-
-            }
-            li.selected a {
-                color: @black;
-            }
-        }
-    }
 }
-
 
 /* Login */
 
