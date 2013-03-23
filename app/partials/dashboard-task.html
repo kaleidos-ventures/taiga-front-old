@@ -1,6 +1,12 @@
-<div class="task-box-content">
+<div class="task-box-content" ui-user-popover="saveTask(task)" ng-controller="DashboardTaskController">
     <div class="title">{{ task.name }}</div>
     <div class="buttons">
-        <i class="icon-question-sign"></i> <a href="" class=""><span>Unassigned</span></a>
+
+        <div class="button-item" ng-show="task.assigned_to">
+            <i class="icon-user"></i> <a href="" class=""><span>{{ task.assigned_to.name }}</span></a>
+        </div>
+        <div class="button-item" ng-show="!task.assigned_to">
+            <i class="icon-question-sign"></i> <a href="" class=""><span>Unassigned</span></a>
+        </div>
     </div>
 </div>

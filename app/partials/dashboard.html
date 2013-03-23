@@ -86,7 +86,7 @@
                     </table>
                 </div>
 
-                <div class="body" ui-user-popover=".task-box-content .buttons a">
+                <div class="body">
                     <table ng-repeat="us in userstories">
                         <tbody>
                             <tr>
@@ -132,6 +132,17 @@
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="dialogs hidden">
+        <div class="developers-popover" id="developers-popover">
+            Select a developer:
+            <ul>
+                <li><a href="" data-dev-id="">Unassigned</a>
+                <li ng-repeat="dev in developers">
+                    <a href="" data-dev-id="{{ dev.id }}">{{ dev.name }}</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

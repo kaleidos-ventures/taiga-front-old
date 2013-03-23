@@ -1,5 +1,6 @@
 var DashboardController = function($scope, $rootScope, $routeParams, rs) {
-    $rootScope.pageSection = 'backlog';
+    var projectId = $routeParams.pid;
+    var sprintId = $routeParams.sid || 1;
 
     $scope.formatUserStoryTasks = function() {
         var usTasks = {};
@@ -18,17 +19,38 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
             });
         });
 
-        $scope.usTasks = usTasks
+        $scope.usTasks = usTasks;
     };
 
     /* Load user stories */
-    var projectId = $routeParams.pid;
-    rs.userStoriesByProject(projectId).then(function(data) {
+
+    var loadSuccess_userStoriesByProject = function(data) {
         $scope.userstories = data;
         $scope.formatUserStoryTasks();
-    }, function(data) {
-        console.log("Error loading user stories");
-    });
+    };
+
+    rs.userStoriesByProject(projectId, sprintId).
+        then(loadSuccess_userStoriesByProject);
+
+    /* Load developers list */
+
+    var loadSuccessProjectDevelopers = function(data) {
+        $scope.developers = data;
+    };
+
+    rs.projectDevelopers(projectId).
+        then(loadSuccessProjectDevelopers);
+
+    /* Global Scope Variables */
+    $rootScope.pageSection = 'backlog';
 };
 
 DashboardController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
+
+
+var DashboardTaskController = function($scope, $q) {
+    $scope.saveTask = function(task) {
+    };
+};
+
+DashboardTaskController.$inject = ['$scope', '$q'];

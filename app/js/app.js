@@ -41,6 +41,7 @@
         "greenmine.services.storage",
         "greenmine.directives.common",
         "greenmine.directives.jqueryui",
+        "greenmine.directives.dashboard"
     ];
 
     if (this.greenmine === undefined) this.greenmine = {};
