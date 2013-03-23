@@ -1,29 +1,11 @@
 'use strict';
 
-angular.module('greenmine.directives.common', []).
+angular.module('greenmine.directives.generic', []).
     directive('appVersion', ['version', function(version) {
         return function(scope, elm, attrs) {
             elm.text(version);
         };
     }]).
-    directive('uiDropdown', function() {
-        return function(scope, elm, attrs) { $(elm).dropdown(); };
-    }).
-    directive('uiPopover', function() {
-        return function(scope, elm, attrs) {
-            var element = $(elm);
-            var contentSelector = element.data('content-selector');
-
-            if (contentSelector) {
-                var config = {
-                    html: element.data('html') || false,
-                    placement: element.data('placement') || 'top',
-                    content: $(contentSelector).html()
-                };
-                element.popover(config);
-            }
-        };
-    }).
     directive('uiEvent', ['$parse', function ($parse) {
         return function(scope, elm, attrs) {
             var events = scope.$eval(attrs.uiEvent);
@@ -57,7 +39,6 @@ angular.module('greenmine.directives.common', []).
             });
 
             modal.on('click', '.btn-primary', function(event) {
-                //fn(targetScope);
                 modal.modal('hide');
                 _.delay(function() {
                     fn(targetScope);

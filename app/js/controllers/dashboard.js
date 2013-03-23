@@ -42,7 +42,7 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
         then(loadSuccessProjectDevelopers);
 
     /* Global Scope Variables */
-    $rootScope.pageSection = 'backlog';
+    $rootScope.pageSection = 'dashboard';
 
 
     $scope.newtaskForm = {};

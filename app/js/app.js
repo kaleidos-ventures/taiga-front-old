@@ -39,6 +39,7 @@
         "greenmine.services.common",
         "greenmine.services.resource",
         "greenmine.services.storage",
+        "greenmine.directives.generic",
         "greenmine.directives.common",
         "greenmine.directives.jqueryui",
         "greenmine.directives.dashboard"

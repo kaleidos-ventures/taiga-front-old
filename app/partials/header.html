@@ -1,33 +1,31 @@
-<div class="header-inner row-fluid">
+<div class="row-fluid">
     <div class="span12">
-        <div class="header-row">
-            <div class="right-top-menu right">
-                <a href="">{{ auth.fullname }}</a> |
-                <a href="">ettings</a> |
-                <a href="" class="logout">logout</a>
+        <div class="header-box">
+            <div class="logo-sbox">
+                <a href=""><img width="180" src="img/logo.png" /></a>
             </div>
-
-            <div class="logo-box">
-                <a href=""><img src="img/logo.png" /></a>
-            </div>
-            <div class="title-box">
-                <span class="separator"> &rsaquo; </span>
+            <div class="header-path">
                 <span class="title-item">Projects</span>
+                <span class="separator"> &rsaquo; </span>
+                <span class="title-item">Dashboard</span>
+            </div>
+            <div class="top-menu-sbox">
+                <div class="menu-item">
+                    <i class="icon-user"></i> <a href="">{{ auth.fullname }}</a>
+                </div> |
+                <div class="menu-item">
+                    <i class="icon-remove-sign"></i> <a href="">Logout</a>
+                </div>
             </div>
         </div>
-        <div class="clearfix"></div>
-        <div class="header-row">
-            <div class="header-menu left">
-                <ul>
-                    <li class=""><a href="">Backlog</a></li>
-                    <li class=""><a href="">Dashboard</a></li>
-                    <li class=""><a href="">Bugs</a></li>
-                    <li class=""><a href="">Wiki</a></li>
-                </ul>
-            </div>
-            <div class="search-form-box right" data-url="">
-                <input id="search-input" type="text" placeholder="Issue, User story, wiki..." />
-            </div>
+        <div class="menu-box" gm-header-menu>
+            <ul>
+                <li class="backlog"><a href=""><i class="icon-th-list"></i> Backlog</a></li>
+                <li class="bugs"><a href=""><i class="icon-list-alt"></i> Bugs</a></li>
+                <li class="wiki"><a href=""><i class="icon-book "></i> Wiki</a></li>
+                <li class="search"><a href=""><i class="icon-search "></i> Search</a></li>
+                <li class="admin"><a href=""><i class="icon-asterisk "></i> Admin</a></li>
+            </ul>
         </div>
     </div>
 </div>
