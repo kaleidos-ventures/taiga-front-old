@@ -37,23 +37,23 @@
     var modules = [
         "greenmine.filters.common",
         "greenmine.services.common",
-        //"greenmine.services.storage",
+        "greenmine.services.resource",
+        "greenmine.services.storage",
         "greenmine.directives.common",
         "greenmine.directives.jqueryui",
     ];
 
     if (this.greenmine === undefined) this.greenmine = {};
 
-    var init = function($rootScope) {
-        $rootScope.auth = {
-            "id": "12345",
-            "username": "fouser",
-            "fullname": "Foo User"
-        };
+    var init = function($rootScope, storage) {
+        // Initial hack
+        storage.set("userInfo", {"id": "12345", "username": "niwibe", "fullname": "Andrey Antukh"});
+
+        $rootScope.auth = storage.get('userInfo');
     };
 
     angular.module('greenmine', modules)
         .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', configCallback])
-        .run(['$rootScope', init]);
+        .run(['$rootScope', 'storage', init]);
 
 }).call(this);
