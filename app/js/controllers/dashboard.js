@@ -29,7 +29,7 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
         $scope.formatUserStoryTasks();
     };
 
-    rs.userStoriesByProject(projectId, sprintId).
+    rs.milestoneUserStories(projectId, sprintId).
         then(loadSuccess_userStoriesByProject);
 
     /* Load developers list */

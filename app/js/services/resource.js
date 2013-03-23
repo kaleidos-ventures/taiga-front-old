@@ -2,11 +2,10 @@
 
 angular.module('greenmine.services.resource', ['greenmine.config'], function($provide) {
     $provide.factory('resource', ['$q', '$http', 'storage', 'greenmine.config', function($q, $http, storage, config) {
-        /*
-         * Get a user stories list by projectId and sprintId.
-        */
+        var service = {};
 
-        var userStoriesByProject = function(projectId, sprintId) {
+        /* Get a user stories list by projectId and sprintId. */
+        service.milestoneUserStories = function(projectId, sprintId) {
             var defered = $q.defer();
 
             $http.get("tmpresources/dashboard-userstories.json").
@@ -20,12 +19,32 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return defered.promise;
         };
 
-        /*
-         * Obtain a users with role developer for
-         * one concret project.
-        */
+        /* Get unassigned user stories list for
+         * a project. */
+        service.getUnassignedUserStories = function(projectId) {
+            var defered = $q.defer();
+            $http.get("tmpresources/backlog-unassigned-us.json").
+                success(function(data, status) {
+                    defered.resolve(data);
+                });
 
-        var projectDevelopers = function(projectId) {
+            return defered.promise;
+        };
+
+        /* Get project milestones list */
+        service.getMilestones = function(projectId) {
+            var defered = $q.defer();
+            $http.get("tmpresources/backlog-milestones.json").
+                success(function(data, status) {
+                    defered.resolve(data);
+                });
+
+            return defered.promise;
+        };
+
+        /* Get a users with role developer for
+         * one concret project. */
+        service.projectDevelopers = function(projectId) {
             var defered = $q.defer();
 
             $http.get("tmpresources/project-developers.json").
@@ -35,10 +54,6 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
             return defered.promise;
         }
-
-        var service = {};
-        service.userStoriesByProject = userStoriesByProject;
-        service.projectDevelopers = projectDevelopers;
 
         return service;
     }]);
