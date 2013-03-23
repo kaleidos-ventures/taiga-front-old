@@ -43,7 +43,7 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
 
     /* Global Scope Variables */
     $rootScope.pageSection = 'dashboard';
-
+    $rootScope.pageBreadcrumb = ["Project", "Dashboard"];
 
     $scope.newtaskForm = {};
     $scope.createNewTask = function() {

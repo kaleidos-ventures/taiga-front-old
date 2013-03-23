@@ -1,5 +1,6 @@
 var BacklogController = function($scope, $rootScope, $routeParams, url) {
     $rootScope.pageSection = 'backlog';
+    $rootScope.pageBreadcrumb = ["Project", "Backlog"];
 
     $scope.filtersOpened = false;
     $scope.usFormOpened = false;
