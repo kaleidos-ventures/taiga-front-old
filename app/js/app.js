@@ -5,7 +5,7 @@
         $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: LoginController});
         $routeProvider.when('/register', {templateUrl: 'partials/register.html', controller: RegisterController});
         $routeProvider.when('/recovery', {templateUrl: 'partials/recovery.html', controller: RecoveryController});
-        $routeProvider.when('/projects', {templateUrl: 'partials/project-list.html', controller: ProjectListController});
+        $routeProvider.when('/', {templateUrl: 'partials/project-list.html', controller: ProjectListController});
 
         $routeProvider.when('/project/:pid/backlog',
                 {templateUrl: 'partials/backlog.html', controller: BacklogController});

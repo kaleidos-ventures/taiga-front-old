@@ -80,6 +80,8 @@ var BacklogController = function($scope, $rootScope, $routeParams, url) {
                     item.hidden = false;
                 }
             });
+        } else {
+            _.each($scope.unassingedUs, function(item) {  item.hidden = false; });
         }
     };
 
