@@ -42,6 +42,7 @@
         "greenmine.directives.generic",
         "greenmine.directives.common",
         "greenmine.directives.jqueryui",
+        "greenmine.directives.backlog",
         "greenmine.directives.dashboard"
     ];
 
@@ -52,6 +53,7 @@
         storage.set("userInfo", {"id": "12345", "username": "niwibe", "fullname": "Andrey Antukh"});
 
         $rootScope.auth = storage.get('userInfo');
+        $rootScope.points = ["?", "0", "1", "2", "3", "5", "8", "10", "15", "20", "40"];
     };
 
     angular.module('greenmine', modules)

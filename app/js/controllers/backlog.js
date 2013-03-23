@@ -73,3 +73,11 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
 };
 
 BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
+
+var BacklogUserStoryController = function($scope) {
+    $scope.saveUserStory = function(us) {
+        console.log("save us:", us);
+    };
+};
+
+BacklogUserStoryController.$inject = ['$scope'];
