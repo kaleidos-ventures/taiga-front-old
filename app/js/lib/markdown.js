@@ -1411,7 +1411,8 @@ function escapeHTML( text ) {
 function render_tree( jsonml ) {
   // basic case
   if ( typeof jsonml === "string" ) {
-    return escapeHTML( jsonml );
+    return jsonml;
+    //return escapeHTML( jsonml );
   }
 
   var tag = jsonml.shift(),
@@ -1426,9 +1427,14 @@ function render_tree( jsonml ) {
     content.push( arguments.callee( jsonml.shift() ) );
   }
 
+  //var tag_attrs = "";
+  //for ( var a in attributes ) {
+  //  tag_attrs += " " + a + '="' + escapeHTML( attributes[ a ] ) + '"';
+  //}
+
   var tag_attrs = "";
   for ( var a in attributes ) {
-    tag_attrs += " " + a + '="' + escapeHTML( attributes[ a ] ) + '"';
+    tag_attrs += " " + a + '="' + attributes[ a ] + '"';
   }
 
   // be careful about adding whitespace here for inline elements
