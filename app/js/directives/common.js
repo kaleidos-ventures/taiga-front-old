@@ -15,6 +15,8 @@ angular.module('greenmine.directives.common', []).
                 element.find("li.dashboard").show();
             } else if(menuSection == "issues") {
                 element.find("li.issues").addClass("selected");
+            } else if (menuSection === "wiki") {
+                element.find("li.wiki").addClass("selected");
             } else {
                 element.hide();
             }
