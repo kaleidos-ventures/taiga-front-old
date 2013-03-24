@@ -4,8 +4,8 @@ angular.module('greenmine.directives.wiki', []).
     directive('gmMarkitup', ["$parse", function($parse) {
         var markdownSettings = {
             nameSpace:          'markdown', // Useful to prevent multi-instances CSS conflict
-            previewParserPath:  '~/sets/markdown/preview.php',
             onShiftEnter:       {keepDefault:false, openWith:'\n\n'},
+            previewParser: function(content) { return markdown.toHTML(content); },
             markupSet: [
                 {name:'First Level Heading', key:"1", placeHolder:'Your title here...', closeWith:function(markItUp) { return markdownTitle(markItUp, '=') } },
                 {name:'Second Level Heading', key:"2", placeHolder:'Your title here...', closeWith:function(markItUp) { return markdownTitle(markItUp, '-') } },
