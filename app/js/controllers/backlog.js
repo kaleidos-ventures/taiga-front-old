@@ -70,6 +70,13 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
         }
     };
 
+    /* Directive event handlers */
+
+    $scope.$on("backlog-resort", function() {
+        // Assign new order to unassingedUs.
+        _.each($scope.unassingedUs, function(o, y) { o.order = y });
+        // TODO: make bulk save.
+    });
 };
 
 BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];

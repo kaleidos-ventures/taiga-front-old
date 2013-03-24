@@ -54,14 +54,7 @@ angular.module('greenmine.directives.jqueryui', []).
 
                             // Reorder array and apply change to scope
                             ui.item.sortable.resort.$modelValue.splice(end, 0, ui.item.sortable.resort.$modelValue.splice(start, 1)[0]);
-
-                            // Put new order to all items
-                            var count = 0;
-                            _.each(ui.item.sortable.resort.$modelValue, function(item) {
-                                item.order = count;
-                                count = count +1;
-                            });
-
+                            scope.$broadcast("backlog-resort");
                         }
                         if (ui.item.sortable.resort || ui.item.sortable.relocate) {
                             scope.$apply();
