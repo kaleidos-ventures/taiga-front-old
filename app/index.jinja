@@ -7,7 +7,7 @@
         <link href="less/greenmine.css" rel="stylesheet" type="text/css">
         {%- else %}
         <link rel="stylesheet/less" type="text/css" href="less/greenmine.less">
-        <script src="js/lib/less-1.3.1.min.js"></script>
+        <script src="js/lib/less-1.4.0-beta.min.js"></script>
         {%- endif %}
     </head>
     <body class="{{ '{{' }} pageSection {{ '}}' }}">
@@ -33,6 +33,7 @@
         <script src="js/lib/ui/jquery.ui.effect-transfer.js"></script>
         <script src="js/lib/ui/jquery.ui.position.js"></script>
         <script src="js/lib/ui/jquery.ui.sortable.js"></script>
+        <script src="js/lib/jquery.markitup.js"></script>
         <script src="js/lib/underscore.js"></script>
         <script src="js/lib/underscore.string.js"></script>
         <script src="js/lib/angular.js"></script>
@@ -54,12 +55,13 @@
         <script src="js/controllers/backlog.js"></script>
         <script src="js/controllers/dashboard.js"></script>
         <script src="js/controllers/issues.js"></script>
+        <script src="js/controllers/wiki.js"></script>
         <script src="js/directives/generic.js"></script>
         <script src="js/directives/common.js"></script>
-        <script src="js/directives/jqueryui.js"></script>
         <script src="js/directives/dashboard.js"></script>
         <script src="js/directives/backlog.js"></script>
         <script src="js/directives/issues.js"></script>
+        <script src="js/directives/wiki.js"></script>
         <script src="js/filters/common.js"></script>
         {%- endif %}
 

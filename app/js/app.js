@@ -16,6 +16,9 @@
         $routeProvider.when('/project/:pid/dashboard',
                 {templateUrl: 'partials/dashboard.html', controller: DashboardController});
 
+        $routeProvider.when('/project/:pid/wiki/:slug',
+                {templateUrl: 'partials/wiki.html', controller: WikiController});
+
         $routeProvider.otherwise({redirectTo: '/login'});
         $locationProvider.hashPrefix('!');
 
@@ -44,10 +47,10 @@
         "greenmine.services.storage",
         "greenmine.directives.generic",
         "greenmine.directives.common",
-        "greenmine.directives.jqueryui",
         "greenmine.directives.backlog",
         "greenmine.directives.dashboard",
-        "greenmine.directives.issues"
+        "greenmine.directives.issues",
+        "greenmine.directives.wiki"
     ];
 
     if (this.greenmine === undefined) this.greenmine = {};
