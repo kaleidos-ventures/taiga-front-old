@@ -46,7 +46,8 @@
         "greenmine.directives.common",
         "greenmine.directives.jqueryui",
         "greenmine.directives.backlog",
-        "greenmine.directives.dashboard"
+        "greenmine.directives.dashboard",
+        "greenmine.directives.issues"
     ];
 
     if (this.greenmine === undefined) this.greenmine = {};

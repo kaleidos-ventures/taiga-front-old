@@ -22,9 +22,12 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
 
     $scope.filteredItems = [];
     $scope.groupedItems = [];
-    $scope.itemsPerPage = 2;
+    $scope.itemsPerPage = 10;
     $scope.pagedItems = [];
     $scope.currentPage = 0;
+
+    $scope.sortingOrder = 'severity';
+    $scope.reverse = false;
 
     /* Pagination methods */
 

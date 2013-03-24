@@ -46,16 +46,24 @@
 
             <div class="issues-container">
                 <div class="issues-table-list">
-                    <div class="flex-header">
-                        <div class="issue-severity">Severity</div>
-                        <div class="issue-title">Subject</div>
-                        <div class="issue-state">State</div>
-                        <div class="issue-priority">Priority</div>
+                    <div class="flex-header" gm-issues-sort>
+                        <div data-field="severity" class="issue-sortable-field issue-severity">
+                            <i class="icon-chevron-down"></i> Severity</div>
+
+                        <div data-field="subject" class="issue-sortable-field issue-title">
+                            <i class="icon-chevron-down"></i> Subject</div>
+
+                        <div data-field="state" class="issue-sortable-field issue-state">
+                            <i class="icon-chevron-down"></i> State</div>
+
+                        <div data-field="priority" class="issue-sortable-field issue-priority">
+                            <i class="icon-chevron-down"></i> Priority</div>
+
                         <div class="issue-options">Options</div>
                     </div>
                     <div class="flex-separator"></div>
                     <div class="flex-body">
-                        <div class="issue-item" ng-repeat="issue in pagedItems[currentPage]">
+                        <div class="issue-item" ng-repeat="issue in pagedItems[currentPage]|orderBy:sortingOrder:reverse">
                             <div class="issue-severity">{{ issue.severity }}</div>
                             <div class="issue-title">
                                 <span class="title">{{ issue.subject }}</span>
