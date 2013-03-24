@@ -3,7 +3,7 @@
 angular.module('greenmine.directives.dashboard', []).
     directive('gmUserPopover', ["$parse", function($parse) {
         return function(scope, elm, attrs) {
-            var fn = $parse(attrs.uiUserPopover);
+            var fn = $parse(attrs.gmUserPopover);
             var element = angular.element(elm);
             var selectedTarget = element.find(".buttons a");
 
@@ -33,7 +33,7 @@ angular.module('greenmine.directives.dashboard', []).
             var element = angular.element(elm);
             var modalElement = angular.element("#new-task-modal");
 
-            element.on("click", attrs.uiNewtaskModal, function(event) {
+            element.on("click", attrs.gmNewtaskModal, function(event) {
                 event.preventDefault();
                 var target = angular.element(event.currentTarget);
 
