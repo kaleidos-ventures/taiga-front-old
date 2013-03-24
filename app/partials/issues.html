@@ -55,7 +55,7 @@
                     </div>
                     <div class="flex-separator"></div>
                     <div class="flex-body">
-                        <div class="issue-item" ng-repeat="issue in issues|orderBy:'order'|onlyVisible">
+                        <div class="issue-item" ng-repeat="issue in pagedItems[currentPage]">
                             <div class="issue-severity">{{ issue.severity }}</div>
                             <div class="issue-title">
                                 <span class="title">{{ issue.subject }}</span>
@@ -71,6 +71,22 @@
                                 <a class="btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></a>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="pagination pull-right pagination-small">
+                        <ul>
+                            <li ng-class="{disabled: currentPage == 0}">
+                                <a href ng-click="prevPage()">« Prev</a>
+                            </li>
+                            <li ng-repeat="n in range(pagedItems.length)"
+                                ng-class="{active: n == currentPage}"
+                            ng-click="setPage()">
+                                <a href ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                <a href ng-click="nextPage()">Next »</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
