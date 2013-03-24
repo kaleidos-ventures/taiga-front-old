@@ -13,6 +13,8 @@ angular.module('greenmine.directives.common', []).
             } else if(menuSection === "dashboard") {
                 element.find("li.dashboard").addClass("selected");
                 element.find("li.dashboard").show();
+            } else if(menuSection == "issues") {
+                element.find("li.issues").addClass("selected");
             } else {
                 element.hide();
             }

@@ -1,0 +1,86 @@
+<div class="header-container container-fluid" ng-include="'partials/header.html'"></div>
+<div class="middle-container container-fluid issues">
+    <div class="row-fluid first-row">
+        <div class="span12">
+            <div class="filters-container">
+                <div class="filters-visual-box" ng-show="filtersOpened">
+                    <div class="tags-list-sbox">
+                        <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
+                                ng-class="{selected: tag.selected}" gm-colorize-tag>
+                            <div class="icon">
+                                <i class="icon-remove icon-white" ng-hide="!tag.selected"> </i>
+                            </div>
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filters-bar-sbox">
+                    <div class="title-sbox">
+                        <i class="icon-chevron-down" ng-hide="filtersOpened"></i>
+                        <i class="icon-chevron-up" ng-hide="!filtersOpened"></i>
+
+                        <a href="" ng-click="filtersOpened=!filtersOpened">Filters</a>
+                    </div>
+                    <div class="buttons-sbox">
+                        <a class="btn btn-small" ng-click="issueFormOpened=!issueFormOpened">New issue</a>
+                    </div>
+                </div>
+
+                <div class="issue-form-sbox" ng-show="issueFormOpened">
+                    <form action="" ui-parsley="issueSubmit()">
+                        <fieldset>
+                            <div>Task text:</div>
+                            <textarea ng-model="issueForm.text" data-required="true"></textarea>
+                        </fieldset>
+                        <fieldset>
+                            <input type="submit" class="btn btn-success" value="Save" />
+                            <a href="" class="btn" ng-click="issueFormOpened=false">Close</a>
+                        </fieldset>
+                    </form>
+                </div>
+
+                <div class="filters-selected-box"></div>
+            </div>
+
+            <div class="issues-container">
+                <div class="issues-table-list">
+                    <div class="flex-header">
+                        <div class="issue-severity">Severity</div>
+                        <div class="issue-title">Subject</div>
+                        <div class="issue-state">State</div>
+                        <div class="issue-priority">Priority</div>
+                        <div class="issue-options">Options</div>
+                    </div>
+                    <div class="flex-separator"></div>
+                    <div class="flex-body">
+                        <div class="issue-item" ng-repeat="issue in issues|orderBy:'order'|onlyVisible">
+                            <div class="issue-severity">{{ issue.severity }}</div>
+                            <div class="issue-title">
+                                <span class="title">{{ issue.subject }}</span>
+                                <span class="tags">
+                                    <span ng-repeat="tag in issue.tags" class="label" gm-colorize-tag>{{ tag.name }}</span>
+                                </span>
+                            </div>
+                            <div class="issue-state">{{ issue.state_id }}</div>
+                            <div class="issue-priority">{{ issue.priority }}</div>
+                            <div class="issue-options">
+                                <a class="btn btn-mini btn-success"><i class="icon-eye-open icon-white"></i></a>
+                                <a class="btn btn-mini btn-success"><i class="icon-edit icon-white"></i></a>
+                                <a class="btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dialogs hidden">
+        <div class="points-popover" id="points-popover">
+            <div class="item" ng-repeat="p in points">
+                <a class="btn btn-mini" data-id="{{ p }}">{{ p }}</a>
+            </div>
+        </div>
+    </div>
+</div>

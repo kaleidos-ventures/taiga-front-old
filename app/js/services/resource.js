@@ -42,6 +42,17 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return defered.promise;
         };
 
+        /* Get project Issues list */
+        service.getIssues = function(projectId) {
+            var defered = $q.defer();
+            $http.get("tmpresources/issues.json").
+                success(function(data, status) {
+                    defered.resolve(data);
+                });
+
+            return defered.promise;
+        };
+
         /* Get a users with role developer for
          * one concret project. */
         service.projectDevelopers = function(projectId) {

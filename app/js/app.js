@@ -10,6 +10,9 @@
         $routeProvider.when('/project/:pid/backlog',
                 {templateUrl: 'partials/backlog.html', controller: BacklogController});
 
+        $routeProvider.when('/project/:pid/issues',
+                {templateUrl: 'partials/issues.html', controller: IssuesController});
+
         $routeProvider.when('/project/:pid/dashboard',
                 {templateUrl: 'partials/dashboard.html', controller: DashboardController});
 

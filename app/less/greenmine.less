@@ -26,6 +26,171 @@
     }
 }
 
+
+.issues {
+    .filters-container {
+        margin-top: 10px;
+        .ui-state-highlight,
+        .ui-sortable-placeholder {
+            background-color: red;
+        }
+
+        .filters-visual-box {
+            overflow: hidden;
+            padding: 10px;
+
+            .tags-list-sbox {
+                overflow: hidden;
+
+                .tag > div { float: left; }
+                .tag {
+                    position: relative;
+                    cursor: pointer;
+                    overflow: hidden;
+                    background-color: #f2f2f2;
+                    float: left;
+                    width: 150px;
+                    margin-bottom: 5px;
+                    margin-right: 5px;
+                    padding: 5px;
+
+                    font-family: Helvetica LT Std;
+                    font-size: 13px;
+                    font-weight: normal;
+                    font-style: normal;
+                    text-decoration: none;
+                    color: white;
+
+                    &.selected {
+                        background-color: #669900;
+                        color: #eee;
+                    }
+                    .icon {
+                        margin-right: 5px;
+                    }
+                    .count {
+                        position: absolute;
+                        top: 5px;
+                        right: 10px;
+                    }
+                }
+            }
+        }
+
+        .filters-bar-sbox {
+            background-color: #666;
+            color: #eee;
+            padding: 5px;
+            padding-left: 15px;
+            overflow: hidden;
+            line-height: 25px;
+
+            .title-sbox {
+                float: left;
+                a {
+                    color: #eee;
+                }
+            }
+
+            .buttons-sbox {
+                float: right;
+            }
+        }
+
+        .issue-form-sbox {
+            background-color: #f2f2f2;
+            border: 1px solid #666;
+            padding: 10px;
+
+            textarea {
+                width: 98.5%;
+                height: 120px;
+            }
+
+            form {
+                margin-bottom: 0px;
+            }
+
+            fieldset:nth-child(2) {
+                margin-top: 10px;
+            }
+        }
+    }
+
+    .issues-container {
+        margin-top: 10px;
+
+        .issues-table-list {
+            .flex-header {
+                display: -webkit-box;
+                display: -moz-box;
+                -webkit-box-orient: horizontal;
+                -moz-box-orient: horizontal;
+                border-bottom: 2px solid #666666;
+                width: 100%;
+            }
+
+            .flex-header > div:nth-child(2) {
+                -webkit-box-flex: 1;
+                -moz-box-flex: 1;
+            }
+
+            .flex-header > div {
+                padding: 5px;
+            }
+
+            .flex-body {
+                min-height: 40px;
+                .issue-item {
+                    display: -webkit-box;
+                    display: -moz-box;
+                    -webkit-box-orient: horizontal;
+                    -moz-box-orient: horizontal;
+                    margin-top: 2px;
+                    margin-bottom: 2px;
+                    border-bottom: 1px solid #eee;
+                    &:hover {
+                        background-color: #f9f9f9;
+                        border-bottom: 1px solid #f9f9f9;
+                    }
+                    width: 100%;
+                }
+
+                .issue-item > div:nth-child(2) {
+                    -webkit-box-flex: 1;
+                    -moz-box-flex: 1;
+                }
+                .issue-item > div {
+                    padding: 5px;
+                }
+            }
+
+            .issue-title {
+                .label {
+                    margin-left: 5px;
+                }
+            }
+
+            .issue-severity {
+                width: 70px;
+            }
+
+            .issue-state {
+                width: 50px;
+                a { color: #333; text-decoration: none; }
+            }
+
+            .issue-priority {
+                width: 70px;
+            }
+
+            .issue-options {
+                width: 120px;
+            }
+        }
+    }
+}
+
 .dashboard {
     .first-row {
         margin-top: 10px;
