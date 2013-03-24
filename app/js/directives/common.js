@@ -35,5 +35,23 @@ angular.module('greenmine.directives.common', []).
                 });
             }
         };
-    }]);
+    }]).
+    directive('gmColorizeTag', function() {
+        return function(scope, elm, attrs) {
+            var element = angular.element(elm);
+            var hash = hex_sha1(scope.tag.name);
+            var color = hash
+                .substring(0,6)
+                .replace('8','0')
+                .replace('9','1')
+                .replace('a','2')
+                .replace('b','3')
+                .replace('c','4')
+                .replace('d','5')
+                .replace('e','6')
+                .replace('f','7');
+
+            element.css('background-color', '#' + color);
+        };
+    });
 
