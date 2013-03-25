@@ -22,7 +22,9 @@ angular.module('greenmine.directives.generic', []).
                 var element = angular.element(elm);
 
                 ngModel.$render = function() {
-                    element.val(ngModel.$modelValue.join(","));
+                    if (ngModel.$modelValue) {
+                        element.val(ngModel.$modelValue.join(","));
+                    }
                     element.select2({tags:[], tokenSeparators: [",", " "], triggerChange:true});
                 };
 

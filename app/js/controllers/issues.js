@@ -142,17 +142,11 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, rs) {
     };
 
     $scope.form = _.extend({}, $scope.issue);
+    $scope.updateFormOpened = false;
+
     $scope.isSameAs = function(property, id) {
         return ($scope.issue[property] === parseInt(id, 10));
     };
-
-    $scope.save = function() {
-        console.log("save");
-    };
-
-    //$scope.$watch("form.tags", function() {
-    //    console.log("watch", arguments[0]);
-    //});
 
     /* Load developers list */
 
@@ -162,6 +156,11 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, rs) {
 
     rs.projectDevelopers($routeParams.pid).
         then(loadSuccessProjectDevelopers);
+
+
+    $scope.save = function() {
+        console.log("save");
+    };
 };
 
 IssuesViewController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];

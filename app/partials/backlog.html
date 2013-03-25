@@ -1,9 +1,3 @@
-<!--
-<span class="separator"> &rsaquo; </span>
-<span class="title-item"><a href="{{ project.get_backlog_url }}">{{ project.name }}</a></span>
-<span class="separator"> &rsaquo; </span>
-<span class="title-item">{% trans "Backlog" %}</span>
--->
 <div class="header-container container-fluid" ng-include="'partials/header.html'"></div>
 <div class="middle-container container-fluid backlog">
     <div class="row-fluid first-row">
@@ -73,15 +67,58 @@
                 </div>
 
                 <div class="user-story-form-sbox" ng-show="usFormOpened">
-                    <form action="" ui-parsley="usSubmit()">
-                        <fieldset>
-                            <div>User story text:</div>
-                            <textarea ng-model="usForm.text" data-required="true"></textarea>
-                        </fieldset>
-                        <fieldset>
-                            <input type="submit" class="btn btn-success" value="Save" />
-                            <a href="" class="btn" ng-click="usFormOpened=false">Close</a>
-                        </fieldset>
+                    <form class="form-horizontal" ui-parsley="usSubmit()">
+                        <div class="control-group">
+                            <label class="control-label" for="inputEmail">Status</label>
+                            <div class="controls">
+                                <select name="status" ng-model="form.status">
+                                    <option ng-repeat="(id, name) in constants.status"
+                                        ng-selected="isSameAs('status', id)" value="{{ id }}">{{ name }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="inputEmail">Priority</label>
+                            <div class="controls">
+                                <select name="status" ng-model="form.priority">
+                                    <option ng-repeat="(id, name) in constants.priority"
+                                        ng-selected="isSameAs('priority', id)" value="{{ id }}">{{ name }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="inputEmail">Assigned to</label>
+                            <div class="controls">
+                                <select name="status" ng-model="udform.assigned_to">
+                                    <option ng-repeat="dev in developers"
+                                        ng-selected="isSameAs('assigned_to', dev.id)" value="{{ dev.id }}">{{ dev.name }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="inputEmail">Subject</label>
+                            <div class="controls">
+                                <input class="input-subject" type="text" ng-model="form.subject"></input>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="inputEmail">Tags</label>
+                            <div class="controls">
+                                <input type="text" name="status" value="" ng-model="form.tags" ui-select2></input>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="inputEmail">Description</label>
+                            <div class="controls">
+                                <textarea ng-model="form.description"></textarea>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <input type="submit" class="btn btn-success" value="Save" />
+                                <a href="" class="btn" ng-click="usFormOpened=false">Close</a>
+                            </div>
+                        </div>
                     </form>
                 </div>
 

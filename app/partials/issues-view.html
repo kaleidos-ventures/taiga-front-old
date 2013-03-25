@@ -5,7 +5,7 @@
             <div class="view-header">
                 <div class="title">Issue #{{ issue.id }}</div>
                 <div class="buttons">
-                    <a class="btn btn-mini">Update issue</a>
+                    <a class="btn btn-mini" ng-click="updateFormOpened=true">Update issue</a>
                     <a class="btn btn-mini">Delete issue</a>
                 </div>
             </div>
@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <div class="row-fluid">
+    <div class="row-fluid" ng-show="updateFormOpened">
         <div class="span12">
             <div class="update-form">
                 <h4>Update issue</h4>
@@ -98,7 +98,7 @@
             <div class="view-footer">
                 <div class="title">Issue #{{ issue.id }}</div>
                 <div class="buttons">
-                    <a class="btn btn-mini">Update issue</a>
+                    <a class="btn btn-mini" ng-click="updateFormOpened=true">Update issue</a>
                     <a class="btn btn-mini">Delete issue</a>
                 </div>
             </div>

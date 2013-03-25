@@ -27,6 +27,16 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
     rs.getMilestones($routeParams.pid).
         then(onMilestonesLoaded);
 
+    /* Load developers list */
+
+    var loadSuccessProjectDevelopers = function(data) {
+        $scope.developers = data;
+    };
+
+    rs.projectDevelopers($routeParams.pid).
+        then(loadSuccessProjectDevelopers);
+
+    /* Scope methods */
 
     $scope.selectTag = function(tag) {
         if (tag.selected) tag.selected = false;
