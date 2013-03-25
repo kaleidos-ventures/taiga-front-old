@@ -68,6 +68,7 @@
 
                 <div class="user-story-form-sbox" ng-show="usFormOpened">
                     <form class="form-horizontal" ui-parsley="usSubmit()">
+                        <!--
                         <div class="control-group">
                             <label class="control-label" for="inputEmail">Status</label>
                             <div class="controls">
@@ -77,12 +78,13 @@
                                 </select>
                             </div>
                         </div>
+                        -->
                         <div class="control-group">
-                            <label class="control-label" for="inputEmail">Priority</label>
+                            <label class="control-label" for="inputEmail">Points</label>
                             <div class="controls">
                                 <select name="status" ng-model="form.priority">
-                                    <option ng-repeat="(id, name) in constants.priority"
-                                        ng-selected="isSameAs('priority', id)" value="{{ id }}">{{ name }}</option>
+                                    <option ng-repeat="id in constants.points"
+                                        ng-selected="isSameAs('priority', id)" value="{{ id }}">{{ id }}</option>
                                 </select>
                             </div>
                         </div>
@@ -231,7 +233,7 @@
     </div>
     <div class="dialogs hidden">
         <div class="points-popover" id="points-popover">
-            <div class="item" ng-repeat="p in points">
+            <div class="item" ng-repeat="p in constants.points">
                 <a class="btn btn-mini" data-id="{{ p }}">{{ p }}</a>
             </div>
         </div>
