@@ -4,7 +4,7 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
 
     $scope.formatUserStoryTasks = function() {
         var usTasks = {};
-        var statuses = ['new','inprogress', 'readytest', 'finished', 'rejected'];
+        var statuses = [1,2,3,4,5];
 
         _.each($scope.userstories, function(item) {
             if (usTasks[item.id] === undefined) {
@@ -15,7 +15,7 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
             }
 
             _.each(item.tasks, function(task) {
-                usTasks[item.id][task.status_id].push(task);
+                usTasks[item.id][task.status].push(task);
             });
         });
 
