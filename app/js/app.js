@@ -13,6 +13,12 @@
         $routeProvider.when('/project/:pid/issues',
                 {templateUrl: 'partials/issues.html', controller: IssuesController});
 
+        $routeProvider.when('/project/:pid/issues/:issueid',
+                {templateUrl: 'partials/issues-view.html', controller: IssuesViewController});
+
+        //$routeProvider.when('/project/:pid/tasks',
+        //        {templateUrl: 'partials/tasks.html', controller: TasksController});
+
         $routeProvider.when('/project/:pid/dashboard',
                 {templateUrl: 'partials/dashboard.html', controller: DashboardController});
 
@@ -82,12 +88,10 @@
         /* Global helpers */
 
         $rootScope.resolveStatus = function(name) {
-            console.log("status", name);
             return $rootScope.constants.status[name] || "";
         };
 
         $rootScope.resolvePriority = function(name) {
-            console.log("priority", name);
             return $rootScope.constants.priority[name] || "";
         };
 

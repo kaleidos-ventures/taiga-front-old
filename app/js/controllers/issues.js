@@ -17,7 +17,6 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
     rs.getIssues($routeParams.pid).
         then(onIssuesLoaded);
 
-
     /* Pagination variables */
 
     $scope.filteredItems = [];
@@ -118,10 +117,9 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
 
 IssuesController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
 
-//var BacklogUserStoryController = function($scope) {
-//    $scope.saveUserStory = function(us) {
-//        console.log("save us:", us);
-//    };
-//};
-//
-//BacklogUserStoryController.$inject = ['$scope'];
+
+var IssuesViewController = function($scope, $rootScope, $routeParams, resource) {
+
+};
+
+IssuesViewController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];

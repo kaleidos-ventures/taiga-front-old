@@ -13,6 +13,10 @@
                 "id": 2
             }
         ],
+        "assigned_to": {
+            "id": 1,
+            "name": "Andrey Antukh"
+        },
         "priority": 1,
         "status": 1,
         "severity": 1
@@ -31,6 +35,10 @@
                 "id": 4
             }
         ],
+        "assigned_to": {
+            "id": 1,
+            "name": "Andrey Antukh"
+        },
         "priority": 1,
         "status": 1,
         "severity": 2
@@ -49,6 +57,10 @@
                 "id": 5
             }
         ],
+        "assigned_to": {
+            "id": 1,
+            "name": "Andrey Antukh"
+        },
         "priority": 1,
         "status": 1,
         "severity": 3
@@ -67,6 +79,10 @@
                 "id": 2
             }
         ],
+        "assigned_to": {
+            "id": 1,
+            "name": "Andrey Antukh"
+        },
         "priority": 1,
         "status": 1,
         "severity": 2
@@ -85,6 +101,10 @@
                 "id": 2
             }
         ],
+        "assigned_to": {
+            "id": 1,
+            "name": "Andrey Antukh"
+        },
         "priority": 1,
         "status": 1,
         "severity": 2
