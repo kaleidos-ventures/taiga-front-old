@@ -6,7 +6,6 @@ angular.module('greenmine.directives.generic', []).
             elm.text(version);
         };
     }]).
-
     directive('uiSelected', ['$parse', function($parse) {
         return function(scope, elm, attrs) {
             var element = angular.element(elm);
@@ -15,6 +14,26 @@ angular.module('greenmine.directives.generic', []).
             console.log(currentValue, compareValue);
         };
     }]).
+    directive('uiSelect2', function() {
+        return {
+            require: "?ngModel",
+            restrict: "A",
+            link: function(scope, elm, attrs, ngModel) {
+                var element = angular.element(elm);
+
+                ngModel.$render = function() {
+                    element.val(ngModel.$modelValue.join(","));
+                    element.select2({tags:[], tokenSeparators: [",", " "], triggerChange:true});
+                };
+
+                element.on('change', function() {
+                    ngModel.$setViewValue(arguments[0].val);
+                    scope.$digest();
+                });
+
+            }
+        };
+    }).
     directive('uiEvent', ['$parse', function ($parse) {
         return function(scope, elm, attrs) {
             var events = scope.$eval(attrs.uiEvent);

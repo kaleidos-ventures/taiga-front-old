@@ -143,9 +143,16 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, rs) {
 
     $scope.form = _.extend({}, $scope.issue);
     $scope.isSameAs = function(property, id) {
-        console.log(property, id, $scope.issue[property], ($scope.issue[property] === id));
-        return ($scope.issue[property] === id);
+        return ($scope.issue[property] === parseInt(id, 10));
     };
+
+    $scope.save = function() {
+        console.log("save");
+    };
+
+    //$scope.$watch("form.tags", function() {
+    //    console.log("watch", arguments[0]);
+    //});
 
     /* Load developers list */
 

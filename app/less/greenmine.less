@@ -1,6 +1,7 @@
 @import "bootstrap.less";
 @import "greenmine-typografy.less";
 @import "greenmine-markitup.less";
+@import "greenmine-select2.less";
 
 /* Variables */
 
@@ -17,6 +18,9 @@
 @import "greenmine-generic.less";
 
 /* Backlog */
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input  {
+    border-radius: 0px;
+}
 
 
 @media (max-width: 1024px) {
@@ -62,11 +66,24 @@
 
     .update-form {
         padding: 15px;
-        border: 1px solid #aaa;
+        border: 1px solid #eee;
 
         h4 {
             border-bottom: 1px solid #666;
         }
+
+        input {
+            width: 90%;
+        }
+
+        textarea {
+            width: 90%;
+            min-height: 150px;
+        }
+        .select2-container {
+            width: 91%;
+        }
+
     }
 }
 

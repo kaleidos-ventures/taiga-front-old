@@ -36,12 +36,13 @@
             <div class="update-form">
                 <h4>Update issue</h4>
 
-                <form class="form-horizontal">
+                <form class="form-horizontal" ui-parsley="save()">
                     <div class="control-group">
                         <label class="control-label" for="inputEmail">Status</label>
                         <div class="controls">
                             <select name="status" ng-model="form.status">
-                                <option ng-repeat="(id, name) in constants.status" value="{{ id }}">{{ name }}</option>
+                                <option ng-repeat="(id, name) in constants.status"
+                                    ng-selected="isSameAs('status', id)" value="{{ id }}">{{ name }}</option>
                             </select>
                         </div>
                     </div>
@@ -49,7 +50,8 @@
                         <label class="control-label" for="inputEmail">Priority</label>
                         <div class="controls">
                             <select name="status" ng-model="form.priority">
-                                <option ng-repeat="(id, name) in constants.priority" ng-selected="isSameAs('priority', id)" value="{{ id }}">{{ name }}</option>
+                                <option ng-repeat="(id, name) in constants.priority"
+                                    ng-selected="isSameAs('priority', id)" value="{{ id }}">{{ name }}</option>
                             </select>
                         </div>
                     </div>
@@ -57,13 +59,32 @@
                         <label class="control-label" for="inputEmail">Assigned to</label>
                         <div class="controls">
                             <select name="status" ng-model="form.assigned_to">
-                                <option ng-repeat="dev in developers" ng-selected="isSameAs('assigned_to', dev.id)" value="{{ dev.id }}">{{ dev.name }}</option>
+                                <option ng-repeat="dev in developers"
+                                    ng-selected="isSameAs('assigned_to', dev.id)" value="{{ dev.id }}">{{ dev.name }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label" for="inputEmail">Subject</label>
                         <div class="controls">
-                            <button type="submit" class="btn">Sign in</button>
+                            <input type="text" ng-model="form.subject"></input>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputEmail">Tags</label>
+                        <div class="controls">
+                            <input type="text" name="status" value="" ng-model="form.tags" ui-select2></input>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputEmail">Description</label>
+                        <div class="controls">
+                            <textarea ng-model="form.description"></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn">Save</button>
                         </div>
                     </div>
                 </form>
