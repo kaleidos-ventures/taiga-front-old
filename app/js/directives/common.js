@@ -42,8 +42,13 @@ angular.module('greenmine.directives.common', []).
     }]).
     directive('gmColorizeTag', function() {
         return function(scope, elm, attrs) {
-            var element = angular.element(elm);
-            var hash = hex_sha1(scope.tag.name);
+            var element = angular.element(elm), hash;
+            if (_.isObject(scope.tag)) {
+                hash = hex_sha1(scope.tag.name);
+            } else {
+                hash = hex_sha1(scope.tag);
+            }
+
             var color = hash
                 .substring(0,6)
                 .replace('8','0')

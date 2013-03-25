@@ -111,15 +111,50 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
         else tag.selected = true;
 
         $scope.currentPage = 0;
-        $scope.filterIssues()
+        $scope.filterIssues();
     }
 };
 
 IssuesController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
 
 
-var IssuesViewController = function($scope, $rootScope, $routeParams, resource) {
+var IssuesViewController = function($scope, $rootScope, $routeParams, rs) {
+    $rootScope.pageSection = 'issues';
+    $rootScope.pageBreadcrumb = ["Project", "Issues", "#" + $routeParams.issueid];
 
+    $scope.issue = {
+        id: $routeParams.issueid,
+        subject: "Mcsweeney's shoreditch quis skateboard, 3 wolf moon selfies lo-fi stumptown",
+        tags: ["sartorial", "aliquip", "probably"],
+        description: "Sartorial aliquip you probably haven't heard of them, " +
+            "accusamus intelligentsia scenester culpa twee 3 wolf moon neutra et id. " +
+            "Post-ironic fap readymade, whatever small batch ut you probably haven't " +
+            "heard of them occupy proident dolore. Wayfarers fugiat nostrud ad " +
+            "semiotics, bushwick blog beard kale chips laborum labore aliquip vice " +
+            "mustache wolf. Occaecat fugiat culpa iphone cillum, magna incididunt " +
+            "90's authentic. Adipisicing deserunt echo park meggings, deep v enim " +
+            "pour-over hoodie. Chambray blog truffaut, cardigan before they sold out " +
+            "gentrify dolore. Jean shorts meh nostrud, incididunt skateboard godard " +
+            "ethnic shoreditch ullamco actually high life.",
+        status: 1,
+        assigned_to: 1,
+        priority: 1
+    };
+
+    $scope.form = _.extend({}, $scope.issue);
+    $scope.isSameAs = function(property, id) {
+        console.log(property, id, $scope.issue[property], ($scope.issue[property] === id));
+        return ($scope.issue[property] === id);
+    };
+
+    /* Load developers list */
+
+    var loadSuccessProjectDevelopers = function(data) {
+        $scope.developers = data;
+    };
+
+    rs.projectDevelopers($routeParams.pid).
+        then(loadSuccessProjectDevelopers);
 };
 
 IssuesViewController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];

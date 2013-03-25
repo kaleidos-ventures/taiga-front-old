@@ -6,6 +6,15 @@ angular.module('greenmine.directives.generic', []).
             elm.text(version);
         };
     }]).
+
+    directive('uiSelected', ['$parse', function($parse) {
+        return function(scope, elm, attrs) {
+            var element = angular.element(elm);
+            var currentValue = element.val();
+            var compareValue = scope.$eval(attrs.uiSelected);
+            console.log(currentValue, compareValue);
+        };
+    }]).
     directive('uiEvent', ['$parse', function ($parse) {
         return function(scope, elm, attrs) {
             var events = scope.$eval(attrs.uiEvent);

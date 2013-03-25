@@ -35,16 +35,20 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
     }
 
     $scope.generateTagList = function() {
-        var tagsDict = {};
-        var tags = [];
+        var tagsDict = {}, tags = [];
 
         _.each($scope.unassingedUs, function(us) {
             _.each(us.tags, function(tag) {
-                if (tagsDict[tag.id] === undefined) {
-                    tagsDict[tag.id] = true;
-                    tags.push(tag);
+                if (tagsDict[tag] === undefined) {
+                    tagsDict[tag] = 1;
+                } else {
+                    tagsDict[tag] += 1;
                 }
             });
+        });
+
+        _.each(tagsDict, function(val, key) {
+            tags.push({name:key, count:val});
         });
 
         $scope.tags = tags;
@@ -52,11 +56,11 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
 
     $scope.filterUsBySelectedTags = function() {
         var selectedTags = _.filter($scope.tags, function(item) { return item.selected });
-        var selectedTagsIds = _.map(selectedTags, function(item) { return item.id });
+        var selectedTagsIds = _.map(selectedTags, function(item) { return item.name });
 
         if (selectedTagsIds.length > 0) {
             _.each($scope.unassingedUs, function(item) {
-                var itemTagIds = _.map(item.tags, function(tag) { return tag.id; });
+                var itemTagIds = _.map(item.tags, function(tag) { return tag; });
                 var intersection = _.intersection(selectedTagsIds, itemTagIds);
 
                 if (intersection.length === 0) {

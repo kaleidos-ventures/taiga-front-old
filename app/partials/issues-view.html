@@ -1,0 +1,86 @@
+<div class="header-container container-fluid" ng-include="'partials/header.html'"></div>
+<div class="middle-container container-fluid issues-view">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="view-header">
+                <div class="title">Issue #{{ issue.id }}</div>
+                <div class="buttons">
+                    <a class="btn btn-mini">Update issue</a>
+                    <a class="btn btn-mini">Delete issue</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span8">
+            <div class="view-body">
+                <div class="tags-box">
+                    <div class="label" ng-repeat="tag in issue.tags" gm-colorize-tag>{{ tag }}</div>
+                </div>
+
+                <div class="title-box">
+                    <h4>{{ issue.subject }}</h4>
+                </div>
+                <div class="description-box">
+                    <p>{{ issue.description }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="span4">
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="update-form">
+                <h4>Update issue</h4>
+
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="inputEmail">Status</label>
+                        <div class="controls">
+                            <select name="status" ng-model="form.status">
+                                <option ng-repeat="(id, name) in constants.status" value="{{ id }}">{{ name }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputEmail">Priority</label>
+                        <div class="controls">
+                            <select name="status" ng-model="form.priority">
+                                <option ng-repeat="(id, name) in constants.priority" ng-selected="isSameAs('priority', id)" value="{{ id }}">{{ name }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputEmail">Assigned to</label>
+                        <div class="controls">
+                            <select name="status" ng-model="form.assigned_to">
+                                <option ng-repeat="dev in developers" ng-selected="isSameAs('assigned_to', dev.id)" value="{{ dev.id }}">{{ dev.name }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn">Sign in</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="view-footer">
+                <div class="title">Issue #{{ issue.id }}</div>
+                <div class="buttons">
+                    <a class="btn btn-mini">Update issue</a>
+                    <a class="btn btn-mini">Delete issue</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

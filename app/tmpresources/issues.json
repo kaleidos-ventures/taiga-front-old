@@ -3,16 +3,7 @@
         "id": 1,
         "subject": "Thundercats veniam occaecat, freegan keytar DIY readymade photo booth",
         "status_id": "new",
-        "tags": [
-            {
-                "name": "tag1",
-                "id": 1
-            },
-            {
-                "name": "tag2",
-                "id": 2
-            }
-        ],
+        "tags": ["tag1", "tag2"], 
         "assigned_to": {
             "id": 1,
             "name": "Andrey Antukh"
@@ -25,16 +16,7 @@
         "id": 1,
         "subject": "Fingerstache irure high life, chambray officia selvage before they sold out quinoa hashtag.",
         "status_id": "inprogress",
-        "tags": [
-            {
-                "name": "tag3",
-                "id": 3
-            },
-            {
-                "name": "tag4",
-                "id": 4
-            }
-        ],
+        "tags": ["tag1", "tag2"], 
         "assigned_to": {
             "id": 1,
             "name": "Andrey Antukh"
@@ -47,16 +29,7 @@
         "id": 1,
         "subject": "Odio bicycle rights sriracha irure meh messenger bag.",
         "status_id": "inprogress",
-        "tags": [
-            {
-                "name": "tag4",
-                "id": 4
-            },
-            {
-                "name": "tag5",
-                "id": 5
-            }
-        ],
+        "tags": ["tag1", "tag2"], 
         "assigned_to": {
             "id": 1,
             "name": "Andrey Antukh"
@@ -69,16 +42,7 @@
         "id": 1,
         "subject": "Do you need some dummy text?",
         "status_id": "readytest",
-        "tags": [
-            {
-                "name": "tag1",
-                "id": 1
-            },
-            {
-                "name": "tag2",
-                "id": 2
-            }
-        ],
+        "tags": ["tag1", "tag2"], 
         "assigned_to": {
             "id": 1,
             "name": "Andrey Antukh"
@@ -91,16 +55,7 @@
         "id": 1,
         "subject": "Gentrify excepteur williamsburg art party mixtape bicycle rights.",
         "status_id": "rejected",
-        "tags": [
-            {
-                "name": "tag1",
-                "id": 1
-            },
-            {
-                "name": "tag2",
-                "id": 2
-            }
-        ],
+        "tags": ["tag1", "tag2"], 
         "assigned_to": {
             "id": 1,
             "name": "Andrey Antukh"
