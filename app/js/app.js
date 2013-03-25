@@ -24,6 +24,8 @@
 
         $httpProvider.defaults.headers.delete = {"Content-Type": "application/json"};
         $httpProvider.defaults.headers.patch = {"Content-Type": "application/json"};
+        $httpProvider.defaults.headers.post = {"Content-Type": "application/json"};
+        $httpProvider.defaults.headers.put = {"Content-Type": "application/json"};
 
         $provide.factory("authHttpIntercept", ["$q", "$location", function($q, $location) {
             return function(promise) {
@@ -60,7 +62,38 @@
         storage.set("userInfo", {"id": "12345", "username": "niwibe", "fullname": "Andrey Antukh"});
 
         $rootScope.auth = storage.get('userInfo');
-        $rootScope.points = ["?", "0", "1", "2", "3", "5", "8", "10", "15", "20", "40"];
+
+        // TODO: obtain this values from api
+        $rootScope.constants = {};
+        $rootScope.constants.severity = {1:"Low", 2:"Medium", 3:"Hight", 4:"Critical"};
+        $rootScope.constants.priority = {1:"Low", 2:"Medium", 3:"Hight"};
+        $rootScope.constants.points = ["?", "0", "1", "2", "3", "5", "8", "10", "15", "20", "40"];
+
+        $rootScope.constants.status = {
+            1: "New",
+            2: "In progress",
+            3: "Needs Info",
+            4: "Ready for test",
+            5: "Closed",
+            6: "Rejected",
+            7: "Postponed"
+        };
+
+        /* Global helpers */
+
+        $rootScope.resolveStatus = function(name) {
+            console.log("status", name);
+            return $rootScope.constants.status[name] || "";
+        };
+
+        $rootScope.resolvePriority = function(name) {
+            console.log("priority", name);
+            return $rootScope.constants.priority[name] || "";
+        };
+
+        $rootScope.resolveSeverity = function(name) {
+            return $rootScope.constants.severity[name] || "";
+        };
     };
 
     angular.module('greenmine', modules)

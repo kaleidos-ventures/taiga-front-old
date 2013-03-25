@@ -13,7 +13,9 @@
                 "id": 2
             }
         ],
-        "severity":"urgent"
+        "priority": 1,
+        "status": 1,
+        "severity": 1
     },
     {
         "id": 1,
@@ -29,7 +31,9 @@
                 "id": 4
             }
         ],
-        "severity":"critical"
+        "priority": 1,
+        "status": 1,
+        "severity": 2
     },
     {
         "id": 1,
@@ -45,7 +49,9 @@
                 "id": 5
             }
         ],
-        "severity":"critical"
+        "priority": 1,
+        "status": 1,
+        "severity": 3
     },
     {
         "id": 1,
@@ -61,7 +67,9 @@
                 "id": 2
             }
         ],
-        "severity":"critical"
+        "priority": 1,
+        "status": 1,
+        "severity": 2
     },
     {
         "id": 1,
@@ -77,6 +85,8 @@
                 "id": 2
             }
         ],
-        "severity":"critical"
+        "priority": 1,
+        "status": 1,
+        "severity": 2
     }
 ]
