@@ -1,8 +1,31 @@
 "use strict";
 
 angular.module('greenmine.services.resource', ['greenmine.config'], function($provide) {
+   $provide.factory("url", ['greenmine.config', function(config) {
+        var urls = {
+            "auth": "/api/gm/actions/login/",
+            "projects": "/api/gm/project/",
+            "project": "/api/gm/project/%s"
+        }, host = config.host, scheme=config.scheme;
+
+        return function() {
+            var args = _.toArray(arguments);
+            var name = args.slice(0, 1);
+            var params = [urls[name]];
+
+            _.each(args.slice(1), function(item) {
+                params.push(item);
+            });
+
+            var url = _.str.sprintf.apply(null, params);
+            return _.str.sprintf("%s://%s%s", scheme, host, url);
+        };
+    }]);
+
     $provide.factory('resource', ['$q', '$http', 'storage', 'greenmine.config', function($q, $http, storage, config) {
         var service = {};
+
+        /* Login request */
 
         /* Get a user stories list by projectId and sprintId. */
         service.milestoneUserStories = function(projectId, sprintId) {
