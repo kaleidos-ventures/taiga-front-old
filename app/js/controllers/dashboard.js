@@ -24,22 +24,39 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
 
     /* Load user stories */
 
-    var loadSuccess_userStoriesByProject = function(data) {
-        $scope.userstories = data;
+    //var loadSuccess_userStoriesByProject = function(data) {
+    //    $scope.userstories = data;
+    //    $scope.formatUserStoryTasks();
+    //};
+
+    //rs.milestoneUserStories(projectId, sprintId).
+    //    then(loadSuccess_userStoriesByProject);
+
+    ///* Load developers list */
+
+    //var loadSuccessProjectDevelopers = function(data) {
+    //    $scope.developers = data;
+    //};
+
+    //rs.projectDevelopers(projectId).
+    //    then(loadSuccessProjectDevelopers);
+
+
+    Q.allResolved([
+        rs.milestoneUserStories(projectId, sprintId),
+        rs.projectDevelopers(projectId),
+        rs.getTaskStatuses(projectId)
+    ]).spread(function(userstories, developers, taskStatuses) {
+        $scope.userstories = userstories;
+        $scope.developers = developers;
+        $scope.statuses = taskStatuses;
+
+        console.log(arguments);
+
         $scope.formatUserStoryTasks();
-    };
+        $scope.$digest();
+    }).done();
 
-    rs.milestoneUserStories(projectId, sprintId).
-        then(loadSuccess_userStoriesByProject);
-
-    /* Load developers list */
-
-    var loadSuccessProjectDevelopers = function(data) {
-        $scope.developers = data;
-    };
-
-    rs.projectDevelopers(projectId).
-        then(loadSuccessProjectDevelopers);
 
     /* Global Scope Variables */
     $rootScope.pageSection = 'dashboard';

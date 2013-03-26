@@ -28,10 +28,15 @@
         $routeProvider.otherwise({redirectTo: '/login'});
         $locationProvider.hashPrefix('!');
 
-        $httpProvider.defaults.headers.delete = {"Content-Type": "application/json"};
-        $httpProvider.defaults.headers.patch = {"Content-Type": "application/json"};
-        $httpProvider.defaults.headers.post = {"Content-Type": "application/json"};
-        $httpProvider.defaults.headers.put = {"Content-Type": "application/json"};
+        var defaultHeaders = {
+            "Content-Type": "application/json",
+            "Accept-Encoding": "application/json"
+        };
+
+        $httpProvider.defaults.headers.delete = defaultHeaders;
+        $httpProvider.defaults.headers.patch = defaultHeaders;
+        $httpProvider.defaults.headers.post = defaultHeaders;
+        $httpProvider.defaults.headers.put = defaultHeaders;
 
         $provide.factory("authHttpIntercept", ["$q", "$location", function($q, $location) {
             return function(promise) {

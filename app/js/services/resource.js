@@ -5,7 +5,8 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         var urls = {
             "auth": "/api/gm/actions/login/",
             "projects": "/api/gm/project/",
-            "project": "/api/gm/project/%s"
+            "project": "/api/gm/project/%s",
+            "choices/task-status": "/api/gm/choices/task-status/",
         }, host = config.host, scheme=config.scheme;
 
         return function() {
@@ -22,10 +23,42 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         };
     }]);
 
-    $provide.factory('resource', ['$q', '$http', 'storage', 'greenmine.config', function($q, $http, storage, config) {
+    $provide.factory('resource', ['$q', '$http', 'storage', 'url', 'greenmine.config', function($q, $http, storage, url, config) {
         var service = {};
 
+        var headers = function() {
+            return {"X-SESSION-TOKEN": storage.get('token')};
+        };
+
         /* Login request */
+        service.login = function(username, password) {
+            var defered = $q.defer();
+
+            var onSuccess = function(data, status) {
+                storage.set("token", data["token"]);
+                defered.resolve(data);
+            };
+
+            var onError = function(data, status) {
+                defered.reject(data);
+            };
+
+            $http({method:'GET', url: url('auth')})
+                .success(onSuccess).error(onError);
+
+            return defered.promise;
+        };
+
+        /* Get available task statuses for a project. */
+        service.getTaskStatuses = function(projectId) {
+            var defered = $q.defer();
+
+            $http({method:"GET", url: url('choices/task-status'),
+                params: {project: projectId}, headers: headers()}).
+                success(function(data) { defered.resolve(data.objects); });
+
+            return defered.promise;
+        };
 
         /* Get a user stories list by projectId and sprintId. */
         service.milestoneUserStories = function(projectId, sprintId) {
