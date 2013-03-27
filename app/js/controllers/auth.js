@@ -1,14 +1,15 @@
-var LoginController = function($scope, $rootScope, rs) {
+var LoginController = function($scope, $rootScope, $location, rs) {
     $rootScope.pageSection = 'login';
     $scope.form = {};
 
     $scope.submit = function() {
-        rs.login($scope.form.username, $scope.form.password).
-            then(function(data) { console.log(data); });
+        rs.login($scope.form.username, $scope.form.password).then(function(data) {
+            $location.url("/");
+        });
     };
 };
 
-LoginController.$inject = ['$scope', '$rootScope', 'resource'];
+LoginController.$inject = ['$scope', '$rootScope', '$location', 'resource'];
 
 
 var RegisterController = function($scope, $rootScope, url) {
