@@ -121,6 +121,7 @@ IssuesController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
 var IssuesViewController = function($scope, $rootScope, $routeParams, rs) {
     $rootScope.pageSection = 'issues';
     $rootScope.pageBreadcrumb = ["Project", "Issues", "#" + $routeParams.issueid];
+    $rootScope.projectId = $routeParams.pid;
 
     $scope.issue = {
         id: $routeParams.issueid,

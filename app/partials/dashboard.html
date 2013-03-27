@@ -58,21 +58,9 @@
                     <table>
                         <tbody>
                             <tr>
-                                <td class="row-us-description"></td>
-                                <td class="row-new-tasks">
-                                    <div class="badge">New</div>
-                                </td>
-                                <td class="row-inprogress-tasks">
-                                    <div class="badge badge-inprogress">In progress</div>
-                                </td>
-                                <td class="row-readytest-tasks">
-                                    <div class="badge badge-readytest">Ready for test</div>
-                                </td>
-                                <td class="row-finished-tasks">
-                                    <div class="badge badge-finish">Closed</div>
-                                </td>
-                                <td class="row-rejected-tasks">
-                                    <div class="badge">Needs Info</div>
+                                <td class="row-us-description" style="width: {{ 100/(statuses.length+1) }}%"></td>
+                                <td class="" ng-repeat="status in statuses" style="width: {{ 100/(statuses.length+1) }}%">
+                                    <div class="badge" style="background-color: {{ status.color }}">{{ status.name }}</div>
                                 </td>
                             </tr>
                         </tbody>
@@ -83,7 +71,7 @@
                     <table ng-repeat="us in userstories" ng-controller="DashboardUserStoryController">
                         <tbody>
                             <tr>
-                                <td class="row-us-description">
+                                <td class="row-us-description" style="width: {{ 100/(statuses.length+1) }}%">
                                     <div class="info">
                                         <div class="title">{{ us.subject }}</div>
                                         <div class="description">
@@ -98,33 +86,9 @@
                                         </ul>
                                     </div>
                                 </td>
-                                <td class="row-new-tasks">
-                                    <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][1]">
-                                        <div class="task-box" ng-repeat="task in usTasks[us.id][1]"
-                                            ng-include="'partials/dashboard-task.html'"></div>
-                                    </div>
-                                </td>
-                                <td class="row-inprogress-tasks">
-                                    <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][2]">
-                                        <div class="task-box" ng-repeat="task in usTasks[us.id][2]"
-                                            ng-include="'partials/dashboard-task.html'"></div>
-                                    </div>
-                                </td>
-                                <td class="row-readytest-tasks">
-                                    <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][4]">
-                                        <div class="task-box" ng-repeat="task in usTasks[us.id][4]"
-                                            ng-include="'partials/dashboard-task.html'"></div>
-                                    </div>
-                                </td>
-                                <td class="row-finished-tasks">
-                                    <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][5]">
-                                        <div class="task-box" ng-repeat="task in usTasks[us.id][5]"
-                                            ng-include="'partials/dashboard-task.html'"></div>
-                                    </div>
-                                </td>
-                                <td class="row-needsinfo-tasks">
-                                    <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][3]">
-                                        <div class="task-box" ng-repeat="task in usTasks[us.id][3]"
+                                <td class="col-task-status col-task-{{ status.name|slugify }}" ng-repeat="status in statuses|orderBy:order" style="width: {{ 100/(statuses.length+1) }}%">
+                                    <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][status.id]">
+                                        <div class="task-box" ng-repeat="task in usTasks[us.id][status.id]"
                                             ng-include="'partials/dashboard-task.html'"></div>
                                     </div>
                                 </td>

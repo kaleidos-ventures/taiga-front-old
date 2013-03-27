@@ -3,10 +3,10 @@
 angular.module('greenmine.services.resource', ['greenmine.config'], function($provide) {
    $provide.factory("url", ['greenmine.config', function(config) {
         var urls = {
-            "auth": "/api/gm/actions/login/",
+            "auth": "/api/auth/login/",
             "projects": "/api/gm/project/",
             "project": "/api/gm/project/%s",
-            "choices/task-status": "/api/gm/choices/task-status/",
+            "choices/task-status": "/api/scrum/task_status/",
         }, host = config.host, scheme=config.scheme;
 
         return function() {
@@ -57,18 +57,18 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         /* Get available task statuses for a project. */
         service.getTaskStatuses = function(projectId) {
-            var defered = $q.defer();
+            var defered = Q.defer();
 
             $http({method:"GET", url: url('choices/task-status'),
                 params: {project: projectId}, headers: headers()}).
-                success(function(data) { defered.resolve(data.objects); });
+                success(function(data) { defered.resolve(data); });
 
             return defered.promise;
         };
 
         /* Get a user stories list by projectId and sprintId. */
-        service.milestoneUserStories = function(projectId, sprintId) {
-            var defered = $q.defer();
+        service.getMilestoneUserStories = function(projectId, sprintId) {
+            var defered = Q.defer();
 
             $http.get("tmpresources/dashboard-userstories.json").
                 success(function(data, status) {

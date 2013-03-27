@@ -5,4 +5,9 @@ angular.module('greenmine.filters.common', []).
                 return (item.hidden !== true);
             });
         };
+    }]).
+    filter('slugify', [function() {
+        return function(input) {
+            return _.str.slugify(input);
+        };
     }]);

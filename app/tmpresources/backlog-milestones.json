@@ -1,5 +1,6 @@
 [
     {
+        "id": 1,
         "name": "Milestone4",
         "percentage_completed": 20,
         "total_points": 100,
@@ -7,6 +8,7 @@
         "us": []
     },
     {
+        "id": 1,
         "name": "Milestone3",
         "percentage_completed": 20,
         "total_points": 100,
@@ -63,6 +65,7 @@
         ]
     },
     {
+        "id": 1,
         "name": "Milestone2",
         "percentage_completed": 20,
         "total_points": 100,
@@ -119,6 +122,7 @@
         ]
     },
     {
+        "id": 1,
         "name": "Milestone1",
         "percentage_completed": 20,
         "total_points": 100,

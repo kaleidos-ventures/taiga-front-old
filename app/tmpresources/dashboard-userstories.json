@@ -49,15 +49,15 @@
         "priority": "hight",
         "tags": [
             {
-                "name": "tag1",
+                "name": "tag3",
                 "id": 1
             },
             {
-                "name": "tag2",
+                "name": "tag4",
                 "id": 2
             }
         ],
-        "subject": "Sample User story 1",
+        "subject": "Sample User story 2",
         "order": 10,
         "tasks": [
             {

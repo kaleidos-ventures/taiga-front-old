@@ -2,15 +2,16 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
     var projectId = $routeParams.pid;
     var sprintId = $routeParams.sid || 1;
 
+    $scope.statuses = []
+
     $scope.formatUserStoryTasks = function() {
         var usTasks = {};
-        var statuses = [1,2,3,4,5];
 
         _.each($scope.userstories, function(item) {
             if (usTasks[item.id] === undefined) {
                 usTasks[item.id] = {};
-                _.each(statuses, function(statusname){
-                    usTasks[item.id][statusname] = [];
+                _.each($scope.statuses, function(status){
+                    usTasks[item.id][status.id] = [];
                 });
             }
 
@@ -23,19 +24,25 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
     };
 
     /* Load user stories */
-    rs.milestoneUserStories(projectId, sprintId).then(function(userstories) {
-        $scope.userstories = userstories;
+    var usPromise = rs.getMilestoneUserStories(projectId, sprintId).
+        then(function(userstories) {
+            $scope.userstories = userstories;
+        });
+
+    /* Load task statuses */
+    var statusesPromise = rs.getTaskStatuses(projectId).
+        then(function(statuses) {
+            $scope.statuses = statuses;
+        });
+
+    Q.allResolved([statusesPromise, usPromise]).then(function(promises) {
         $scope.formatUserStoryTasks();
+        $scope.$digest();
     });
 
     /* Load developers list */
     rs.projectDevelopers(projectId).then(function(developers) {
         $scope.developers = developers;
-    });
-
-    /* Load task statuses */
-    rs.getTaskStatuses(projectId).then(function(statuses) {
-        $scope.statuses = statuses;
     });
 
     /* Global Scope Variables */

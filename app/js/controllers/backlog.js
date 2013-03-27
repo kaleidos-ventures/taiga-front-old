@@ -2,6 +2,7 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
     /* Global Scope Variables */
     $rootScope.pageSection = 'backlog';
     $rootScope.pageBreadcrumb = ["Project", "Backlog"];
+    $rootScope.projectId = $routeParams.pid;
 
     $scope.filtersOpened = false;
     $scope.usFormOpened = false;
@@ -22,6 +23,10 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
 
     var onMilestonesLoaded = function(data) {
         $scope.milestones = data;
+
+        if (data.length > 0) {
+            $scope.sprintId = data[0].id;
+        }
     };
 
     rs.getMilestones($routeParams.pid).

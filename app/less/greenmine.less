@@ -296,52 +296,10 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
             background-color: #669900;
         }
 
-        td.row-new-tasks {
-            width: 19.5%;
-            width: 16.66%;
-            .task-box {
-                background-color: #999;
-            }
-        }
 
-        td.row-inprogress-tasks {
-            width: 19.5%;
-            width: 16.66%;
-            .task-box {
-                background-color: #ff9900;
-            }
+        table {
+            width: 100%;
         }
-
-        td.row-readytest-tasks {
-            width: 19.5%;
-            width: 16.66%;
-            .task-box {
-                background-color: #ffcc00;
-            }
-        }
-
-        td.row-finished-tasks {
-            width: 19.5%;
-            width: 16.66%;
-            .task-box {
-                background-color: #669900;
-            }
-        }
-
-        td.row-needsinfo-tasks {
-            width: 19.5%;
-            width: 16.66%;
-            .task-box {
-                background-color: #999;
-            }
-        }
-
-        td.row-us-description {
-            width: 22%;
-            width: 16.66%;
-        }
-
-        table { width: 100%; }
 
         .header {
             padding: 5px;
@@ -390,20 +348,14 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 }
             }
 
-            td.row-new-tasks,
-            td.row-inprogress-tasks,
-            td.row-readytest-tasks,
-            td.row-finished-tasks,
-            td.row-rejected-tasks {
+            td.col-task-status {
                 background-color: #434343;
                 vertical-align: top;
+                border-right: 1px solid #333;
             }
 
-            td.row-new-tasks,
-            td.row-inprogress-tasks,
-            td.row-readytest-tasks,
-            td.row-finished-tasks {
-                border-right: 1px solid #333;
+            td.col-task-status:last {
+                border-right: 0px;
             }
 
             /* Color definition */

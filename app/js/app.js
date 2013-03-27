@@ -19,7 +19,7 @@
         //$routeProvider.when('/project/:pid/tasks',
         //        {templateUrl: 'partials/tasks.html', controller: TasksController});
 
-        $routeProvider.when('/project/:pid/dashboard',
+        $routeProvider.when('/project/:pid/dashboard/:sid',
                 {templateUrl: 'partials/dashboard.html', controller: DashboardController});
 
         $routeProvider.when('/project/:pid/wiki/:slug',
@@ -102,6 +102,16 @@
 
         $rootScope.resolveSeverity = function(name) {
             return $rootScope.constants.severity[name] || "";
+        };
+
+        $rootScope.urls = {
+            backlogUrl: function(projectId) {
+                return _.str.sprintf("/#!/project/%s/backlog", projectId);
+            },
+
+            dashboardUrl: function(projectId, sprintId) {
+                return _.str.sprintf("/#!/project/%s/dashboard/%s", projectId, sprintId);
+            }
         };
     };
 
