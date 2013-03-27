@@ -1029,7 +1029,8 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 /* Login */
 
 body.login {
-    background-color: @green;
+    background: url("../img/login_bg.jpg") no-repeat center center fixed; 
+    background-size: cover; 
 }
 
 #login {
@@ -1037,41 +1038,72 @@ body.login {
         margin: auto;
         padding-top: 20px;
         width: 370px;
-
+        margin-top: 5%;
         .logo-box {
             text-align: center;
         }
     }
     .form-container {
-        margin-top: 10px;
-        padding: 20px 20px 0px 20px;
-        background: @white;
-        .border-radius(15px);
-        border: 2px solid @gray;
-
-        input.btn01 {
-            margin-top: 13px;
-            width: 100px;
-            background: none repeat scroll 0 0 #666666;
-            color: #ffffff;
-            border: 0px;
-            .border-radius(4px);
-            padding: 10px;
-            font-family: @DroidSansBold;
+        margin-top: 15px;
+        padding: 20px;
+        background: rgba(255,255,255,0.9);
+        box-shadow: 0px 2px 25px 1px #666;
+        .login-form{
+            margin: 0;
         }
-
-        input#id_password {
-            margin-bottom: 0px;
+        .form-field{
+            margin-bottom: 10px;
+            &:last-child{
+                margin-bottom: 0;
+            }
+            label{
+                font-family: @DroidSansBold;
+                color: #666;
+                margin-bottom: 2px;
+            }
+            input[type="text"], input[type="password"] {
+                width: 310px;
+                padding: 8px 6px;
+                font-family: @DroidSansRegular;
+                color: #ccc;
+                &:focus{
+                    box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
+                    border-color: rgba(102,154,51,.6);
+                    outline: 0;
+                    color: #000;
+                    -webkit-transition: .3s ease-in-out;  
+                    -moz-transition: .3s ease-in-out; 
+                }
+            }
+            input.btn01 {
+                width: 100px;
+                background: #999;
+                color: #ffffff;
+                border: 0px;
+                .border-radius(4px);
+                padding: 10px;
+                font-family: @DroidSansBold;
+                float: right;
+                opacity: 0.4;
+                &:hover{
+                    -webkit-transition: .3s ease-in-out;  
+                    -moz-transition: .3s ease-in-out; 
+                    background: @green;
+                    opacity: 1;
+                }
+            }
         }
-
-        p.forgot-pass {
-            float: right;
+        .forgot-pass {
+            a{
+                color: #ccc;
+                float: left;
+                font-size: 0.8em;
+                &:hover{
+                    text-decoration: none;
+                    color: @green;
+                }
+            }
         }
-
-        p.forgot-pass a{
-            color: #666666;
-        }
-
         p.register {
             margin-top: 15px;
             padding-top: 15px;
@@ -1079,10 +1111,43 @@ body.login {
             margin-bottom: 0px;
             padding-bottom: 0px;
         }
-    }
-
-    input[type="text"], input[type="password"] {
-        width: 310px;
+        .login-message{
+            margin-top: 10px;
+            .loading{
+                font-family: @DroidSansBold;
+                color: @green;
+                font-size: 11px;
+                margin: 0;
+                .loading-ico{
+                    width: 16px;
+                    height: 16px;
+                    background: url("../img/loading-mine-16x16.png") no-repeat 0 0;
+                    display: block;
+                    float: left;
+                    -webkit-animation: spin 4s infinite linear;
+                    -moz-animation: spin 4s infinite linear;
+                    -o-animation: spin 4s infinite linear;
+                    -ms-animation: spin 4s infinite linear;
+                    margin: 1px 6px 0 0;
+                }
+                @-webkit-keyframes spin {
+                    0% { -webkit-transform: rotate(0deg);}
+                    100% { -webkit-transform: rotate(360deg);}
+                }
+                @-moz-keyframes spin {
+                    0% { -moz-transform: rotate(0deg);}
+                    100% { -moz-transform: rotate(360deg);}
+                }
+                @-o-keyframes spin {
+                    0% { -o-transform: rotate(0deg);}
+                    100% { -o-transform: rotate(360deg);}
+                }
+                @-ms-keyframes spin {
+                    0% { -ms-transform: rotate(0deg);}
+                    100% { -ms-transform: rotate(360deg);}
+                }
+            }
+        }
     }
 }
 

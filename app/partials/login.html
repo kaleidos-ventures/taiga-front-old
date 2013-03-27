@@ -6,33 +6,41 @@
             </a>
         </div>
         <div class="form-container">
-            <form id="login-form" method="post" action="" ui-parsley="submit()">
-                <fieldset>
-                    <div class="form-field">
-                        <label>Username: </label>
-                        <input type="text" ng-model="form.username"
-                            data-required="true" data-minlength="3"
-                            placeholder="username..." />
-                    </div>
-                    <div class="form-field">
-                        <label>Password</label>
-                        <input type="password" ng-model="form.password"
-                            data-required="true" data-minlength="6"
-                            placeholder="password..." />
-                    </div>
-
-                    <p class="forgot-pass">
-                        <a href="#!/recovery">Forgot your password?</a>
-                    </p>
-
-                    <div class="form-field">
-                        <input class="btn01" type="submit" value="Login" />
-                    </div>
-
-                    <p class="register">
-                        <a id="open-forgotten-password-form" href="#!/register">Join to greenmine</a>
-                    </p>
+            <form id="login-form" class="login-form" method="post" action="" ui-parsley="submit()">
+                <fieldset class="form-field">
+                    <label>Username: </label>
+                    <input type="text" ng-model="form.username"
+                        data-required="true" data-minlength="3"
+                        placeholder="username..." />
                 </fieldset>
+                <fieldset class="form-field">
+                    <label>Password</label>
+                    <input type="password" ng-model="form.password"
+                        data-required="true" data-minlength="6"
+                        placeholder="password..." />
+                </fieldset>
+
+                <p class="forgot-pass">
+                    <a href="#!/recovery">Forgot your password?</a>
+                </p>
+
+                <fieldset class="form-field clearfix">
+                    <input class="btn01" type="submit" value="Login" />
+                </fieldset>
+
+                <!--
+                <p class="register">
+                    <a id="open-forgotten-password-form" href="#!/register">Join to greenmine</a>
+                </p>
+                -->
+                
+                <div class="login-message">
+                    <p class="loading"><span class="loading-ico"><!-- loading-ico --></span>Our Oompa Loompas are identifying you, please wait...</p>
+<!--
+                    <p class="error">Tu nombre de usuario o contraseña son incorrectos</p>
+-->
+                </div>
+                
             </form>
         </div>
     </div>
