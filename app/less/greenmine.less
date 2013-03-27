@@ -394,7 +394,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
             td.row-inprogress-tasks,
             td.row-readytest-tasks,
             td.row-finished-tasks,
-            td.row-needsinfo-tasks {
+            td.row-rejected-tasks {
                 background-color: #434343;
                 vertical-align: top;
             }
@@ -420,14 +420,27 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     .task-box-content {
                         background-color: white;
                         color: black;
+                        overflow: hidden;
 
                         .title {
                             padding: 10px;
                             font-size: 11px;
                             line-height: 13px;
                         }
-                        .buttons {
+                        .buttons-left {
+                            float: left;
                             padding-left: 10px;
+                            padding-bottom: 3px;
+                            a {
+                                color: #333;
+                                text-decoration: none;
+                                font-size: 11px;
+                                line-height: 14px;
+                            }
+                        }
+                        .buttons-right {
+                            float: right;
+                            padding-right: 10px;
                             padding-bottom: 3px;
                             a {
                                 color: #333;
