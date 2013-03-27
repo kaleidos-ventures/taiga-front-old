@@ -65,23 +65,35 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="inputEmail">Subject</label>
-                        <div class="controls">
-                            <input type="text" ng-model="form.subject"></input>
-                        </div>
-                    </div>
-                    <div class="control-group">
                         <label class="control-label" for="inputEmail">Tags</label>
                         <div class="controls">
                             <input type="text" name="status" value="" ng-model="form.tags" ui-select2></input>
                         </div>
                     </div>
-                    <div class="control-group">
+                    <div class="control-group" ng-hide="_showHiddenGroups">
+                        <div class="controls">
+                            <p style="cursor: pointer" ng-click="_showHiddenGroups=true">Edit <b>Subject</b> and <b>Description</b>...</p>
+                        </div>
+                    </div>
+                    <div class="control-group" ng-show="_showHiddenGroups">
+                        <label class="control-label" for="inputEmail">Subject</label>
+                        <div class="controls">
+                            <input type="text" ng-model="form.subject"></input>
+                        </div>
+                    </div>
+                    <div class="control-group" ng-show="_showHiddenGroups">
                         <label class="control-label" for="inputEmail">Description</label>
                         <div class="controls">
                             <textarea ng-model="form.description"></textarea>
                         </div>
                     </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputEmail">Comment</label>
+                        <div class="controls">
+                            <textarea ng-model="form.comment"></textarea>
+                        </div>
+                    </div>
+
                     <div class="control-group">
                         <div class="controls">
                             <button type="submit" class="btn">Save</button>

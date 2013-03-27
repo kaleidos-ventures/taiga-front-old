@@ -30,7 +30,7 @@
 
         var defaultHeaders = {
             "Content-Type": "application/json",
-            "Accept-Encoding": "application/json"
+            //"Accept-Encoding": "application/json"
         };
 
         $httpProvider.defaults.headers.delete = defaultHeaders;

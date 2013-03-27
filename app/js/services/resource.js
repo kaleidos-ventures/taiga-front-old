@@ -30,6 +30,10 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return {"X-SESSION-TOKEN": storage.get('token')};
         };
 
+        var toJson = function(data) {
+            return JSON.stringify(data);
+        };
+
         /* Login request */
         service.login = function(username, password) {
             var defered = $q.defer();
@@ -43,7 +47,9 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
                 defered.reject(data);
             };
 
-            $http({method:'GET', url: url('auth')})
+            var postData = {"username": username, "password":password};
+
+            $http({method:'POST', url: url('auth'), data: toJson(postData)})
                 .success(onSuccess).error(onError);
 
             return defered.promise;
