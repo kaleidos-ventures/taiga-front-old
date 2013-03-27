@@ -4,7 +4,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
    $provide.factory("url", ['greenmine.config', function(config) {
         var urls = {
             "auth": "/api/auth/login/",
-            "projects": "/api/gm/project/",
+            "projects": "/api/scrum/projects/",
             "project": "/api/gm/project/%s",
             "choices/task-status": "/api/scrum/task_status/",
         }, host = config.host, scheme=config.scheme;
@@ -51,6 +51,15 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
             $http({method:'POST', url: url('auth'), data: toJson(postData)})
                 .success(onSuccess).error(onError);
+
+            return defered.promise;
+        };
+
+        service.getProjects = function() {
+            var defered = Q.defer();
+
+            $http({method:"GET", url: url('projects')}).
+                success(function(data) { defered.resolve(data); });
 
             return defered.promise;
         };

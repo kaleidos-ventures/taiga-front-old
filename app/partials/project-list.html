@@ -4,19 +4,8 @@
         <div class="project-list">
             <div class="list-container">
                 <div class="list-item" ng-repeat="project in projects">
-                    <div class="meta right">
-                        <div class="button">
-                            <a href="{{ project.get_backlog_url }}">Detail</a>
-                        </div>
-                        <div class="button">
-                            <a href="{{ project.get_edit_url }}">Edit</a>
-                        </div>
-                        <div class="button">
-                            <a href="{{ project.get_edit_url }}">Delete</a>
-                        </div>
-                    </div>
                     <div class="title">
-                        <a href="{{ project.get_backlog_url }}">{{ project.name }}</a>
+                        <a href="{{ urls.backlogUrl(project.id) }}">{{ project.name }}</a>
                     </div>
                 </div>
             </div>
