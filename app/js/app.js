@@ -104,6 +104,9 @@
             return $rootScope.constants.severity[name] || "";
         };
 
+
+        /* Navigation url resolvers */
+
         $rootScope.urls = {
             backlogUrl: function(projectId) {
                 return _.str.sprintf("/#!/project/%s/backlog", projectId);
@@ -111,6 +114,18 @@
 
             dashboardUrl: function(projectId, sprintId) {
                 return _.str.sprintf("/#!/project/%s/dashboard/%s", projectId, sprintId);
+            },
+
+            issuesUrl: function(projectId, issueId) {
+                if (issueId === undefined) {
+                    return _.str.sprintf("/#!/project/%s/issues", projectId);
+                } else {
+                    return _.str.sprintf("/#!/project/%s/issues/%s", projectId, issueId);
+                }
+            },
+
+            wikiUrl: function(projectId, pageName) {
+                return _.str.sprintf("/#!/project/%s/wiki/%s", projectId, _.str.slugify(pageName));
             }
         };
     };

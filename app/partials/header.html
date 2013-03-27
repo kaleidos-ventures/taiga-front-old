@@ -19,8 +19,8 @@
                 <li class="backlog"><a href="{{ urls.backlogUrl(projectId) }}"><i class="icon-th-list"></i> Backlog</a></li>
                 <li class="dashboard" style="display: none">
                     <a href="{{ urls.dashboardUrl(projectId, sprintId) }}"><i class="icon-th"></i> Dashboard</a></li>
-                <li class="issues"><a href=""><i class="icon-list-alt"></i> Issues</a></li>
-                <li class="wiki"><a href=""><i class="icon-book "></i> Wiki</a></li>
+                <li class="issues"><a href="{{ urls.issuesUrl(projectId) }}"><i class="icon-list-alt"></i> Issues</a></li>
+                <li class="wiki"><a href="{{ urls.wikiUrl(projectId, 'home') }}"><i class="icon-book "></i> Wiki</a></li>
                 <li class="search"><a href=""><i class="icon-search "></i> Search</a></li>
                 <li class="admin"><a href=""><i class="icon-asterisk "></i> Admin</a></li>
             </ul>
