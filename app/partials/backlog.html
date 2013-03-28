@@ -206,7 +206,8 @@
                     <div class="body">
                         <div class="us-list">
                             <div class="us-table-list">
-                                <div class="flex-body" ui-sortable=".us-container .flex-body" ng-model="milestones[$index].user_stories">
+                                <div class="flex-body" ui-sortable=".us-container .flex-body"
+                                        ng-model="milestones[$index].user_stories">
                                     <div class="us-item" ng-repeat="us in ml.user_stories">
                                         <div class="us-title">{{ us.subject|truncate:50 }}</div>
                                         <div class="us-points">{{ us.points }}</div>

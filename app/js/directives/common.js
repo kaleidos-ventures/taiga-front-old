@@ -87,20 +87,20 @@ angular.module('greenmine.directives.common', []).
 
                     onUpdate = function(e, ui) {
                         // For some reason the reference to ngModel in stop() is wrong
-                        ui.item.sortable.resort = ngModel;
+                        //console.log("onUpdate");
+                        ui.item.sortable.model = ngModel;
+                        ui.item.sortable.scope = scope;
                     };
 
                     onReceive = function(e, ui) {
-                        //console.log("onReceive", scope, ui.item.sortable.moved);
-                        ui.item.sortable.relocate = true;
+                        //console.log("onReceive", ui.item.sortable.moved);
 
-                        if (scope.ml !== undefined) {
-                            scope.ml.user_stories.splice(ui.item.index(), 0, ui.item.sortable.moved);
-                        } else {
-                            scope.unassingedUs.splice(ui.item.index(), 0, ui.item.sortable.moved);
-                        }
-                        scope.$broadcast("backlog-resort");
-                        scope.$digest()
+                        ui.item.sortable.relocate = true;
+                        //ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
+                        //ngModel.$viewValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
+
+                        //scope.$digest()
+                        //scope.$broadcast("backlog-resort");
                     };
 
                     onRemove = function(e, ui) {
@@ -110,23 +110,36 @@ angular.module('greenmine.directives.common', []).
                             ui.item.sortable.moved =  ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0];
                         }
 
-                        //console.log("onRemove", scope, ui.item.sortable.moved);
+                        //console.log("onRemove", ui.item.sortable.moved);
                     };
 
                     onStop = function(e, ui) {
                         // digest all prepared changes
-                        if (ui.item.sortable.resort && !ui.item.sortable.relocate) {
+                        //console.log("onStop", ui.item.sortable.moved)
+                        if (ui.item.sortable.moved === undefined) {
+                            e.preventDefault();
+                            return false;
+                        }
+
+                        if (ui.item.sortable.model && !ui.item.sortable.relocate) {
                             // Fetch saved and current position of dropped element
                             var end, start;
                             start = ui.item.sortable.index;
                             end = ui.item.index();
 
                             // Reorder array and apply change to scope
-                            ui.item.sortable.resort.$modelValue.splice(end, 0, ui.item.sortable.resort.$modelValue.splice(start, 1)[0]);
+                            ui.item.sortable.model.$modelValue.splice(end, 0, ui.item.sortable.model.$modelValue.splice(start, 1)[0]);
                             scope.$broadcast("backlog-resort");
+                        } else {
+                            if (scope.status !== undefined) {
+                                ui.item.sortable.moved.status = scope.status.id;
+                            }
+                            ui.item.sortable.model.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
+                            ui.item.sortable.scope.$broadcast("backlog-resort");
                         }
 
-                        scope.$digest();
+                        scope.$broadcast("backlog-resort");
+                        scope.$apply();
                     };
 
                     // If user provided 'start' callback compose it with onStart function
