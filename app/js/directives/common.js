@@ -82,6 +82,7 @@ angular.module('greenmine.directives.common', []).
                     onStart = function(e, ui) {
                         // Save position of dragged item
                         ui.item.sortable = { index: ui.item.index() };
+                        //console.log("onStart", ui.item.index());
                     };
 
                     onUpdate = function(e, ui) {
@@ -90,25 +91,31 @@ angular.module('greenmine.directives.common', []).
                     };
 
                     onReceive = function(e, ui) {
+                        //console.log("onReceive", scope, ui.item.sortable.moved);
                         ui.item.sortable.relocate = true;
-                        // added item to array into correct position and set up flag
-                        ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
-                        ui.item.sortable.moved.modified = true;
+
+                        if (scope.ml !== undefined) {
+                            scope.ml.user_stories.splice(ui.item.index(), 0, ui.item.sortable.moved);
+                        } else {
+                            scope.unassingedUs.splice(ui.item.index(), 0, ui.item.sortable.moved);
+                        }
+                        scope.$broadcast("backlog-resort");
+                        scope.$digest()
                     };
 
                     onRemove = function(e, ui) {
-                        // copy data into item
                         if (ngModel.$modelValue.length === 1) {
                             ui.item.sortable.moved = ngModel.$modelValue.splice(0, 1)[0];
                         } else {
                             ui.item.sortable.moved =  ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0];
                         }
+
+                        //console.log("onRemove", scope, ui.item.sortable.moved);
                     };
 
                     onStop = function(e, ui) {
                         // digest all prepared changes
                         if (ui.item.sortable.resort && !ui.item.sortable.relocate) {
-
                             // Fetch saved and current position of dropped element
                             var end, start;
                             start = ui.item.sortable.index;
@@ -118,9 +125,8 @@ angular.module('greenmine.directives.common', []).
                             ui.item.sortable.resort.$modelValue.splice(end, 0, ui.item.sortable.resort.$modelValue.splice(start, 1)[0]);
                             scope.$broadcast("backlog-resort");
                         }
-                        if (ui.item.sortable.resort || ui.item.sortable.relocate) {
-                            scope.$apply();
-                        }
+
+                        scope.$digest();
                     };
 
                     // If user provided 'start' callback compose it with onStart function
