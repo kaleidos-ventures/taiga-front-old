@@ -10,36 +10,31 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
 
     /* Load unassigned user stories */
 
-    var onUnassignedUserstoriesLoaded = function(data) {
+    rs.getUnassignedUserStories($routeParams.pid).then(function(data) {
         $scope.unassingedUs = data;
         $scope.generateTagList();
         $scope.filterUsBySelectedTags();
-    };
-
-    rs.getUnassignedUserStories($routeParams.pid).
-        then(onUnassignedUserstoriesLoaded);
+        $scope.$digest();
+    });
 
     /* Load milestones */
 
-    var onMilestonesLoaded = function(data) {
-        $scope.milestones = data;
-
-        if (data.length > 0) {
-            $scope.sprintId = data[0].id;
-        }
-    };
-
     rs.getMilestones($routeParams.pid).
-        then(onMilestonesLoaded);
+        then(function(data) {
+            $scope.milestones = data;
+
+            if (data.length > 0) {
+                $scope.sprintId = data[0].id;
+            }
+
+            $scope.$digest();
+        });
 
     /* Load developers list */
 
-    var loadSuccessProjectDevelopers = function(data) {
+    rs.projectDevelopers($routeParams.pid).then(function(data) {
         $scope.developers = data;
-    };
-
-    rs.projectDevelopers($routeParams.pid).
-        then(loadSuccessProjectDevelopers);
+    });
 
     /* Scope methods */
 
