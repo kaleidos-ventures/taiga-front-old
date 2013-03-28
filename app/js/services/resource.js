@@ -6,6 +6,8 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             "auth": "/api/auth/login/",
             "projects": "/api/scrum/projects/",
             "project": "/api/gm/project/%s",
+            "unserstories": "/api/scrum/user_stories/",
+            "milestones": "/api/scrum/milestones/",
             "choices/task-status": "/api/scrum/task_status/",
         }, host = config.host, scheme=config.scheme;
 
@@ -58,7 +60,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         service.getProjects = function() {
             var defered = Q.defer();
 
-            $http({method:"GET", url: url('projects')}).
+            $http({method:"GET", url: url('projects'), headers: headers()}).
                 success(function(data) { defered.resolve(data); });
 
             return defered.promise;
@@ -90,22 +92,25 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return defered.promise;
         };
 
+        /* Get a milestone lines for a project. */
+        service.getMilestones = function(projectId) {
+            var defered = Q.defer();
+
+            $http({method:"GET", url: url('milestones'),
+                params: {project: projectId}, headers: headers()}).
+                success(function(data) { defered.resolve(data); });
+
+            return defered.promise;
+
+        };
+
         /* Get unassigned user stories list for
          * a project. */
         service.getUnassignedUserStories = function(projectId) {
-            var defered = $q.defer();
-            $http.get("tmpresources/backlog-unassigned-us.json").
-                success(function(data, status) {
-                    defered.resolve(data);
-                });
+            var defered = Q.defer();
 
-            return defered.promise;
-        };
-
-        /* Get project milestones list */
-        service.getMilestones = function(projectId) {
-            var defered = $q.defer();
-            $http.get("tmpresources/backlog-milestones.json").
+            $http({method: "GET", url: url("unserstories"), headers: headers(),
+                   params:{"project":projectId, "milestone": "null"}}).
                 success(function(data, status) {
                     defered.resolve(data);
                 });
