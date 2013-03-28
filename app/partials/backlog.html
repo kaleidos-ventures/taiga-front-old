@@ -68,17 +68,6 @@
 
                 <div class="user-story-form-sbox" ng-show="usFormOpened">
                     <form class="form-horizontal" ui-parsley="usSubmit()">
-                        <!--
-                        <div class="control-group">
-                            <label class="control-label" for="inputEmail">Status</label>
-                            <div class="controls">
-                                <select name="status" ng-model="form.status">
-                                    <option ng-repeat="(id, name) in constants.status"
-                                        ng-selected="isSameAs('status', id)" value="{{ id }}">{{ name }}</option>
-                                </select>
-                            </div>
-                        </div>
-                        -->
                         <div class="control-group">
                             <label class="control-label" for="inputEmail">Points</label>
                             <div class="controls">
@@ -139,10 +128,10 @@
                         <div class="us-item" ng-repeat="us in unassingedUs|orderBy:'order'|onlyVisible"
                                 ui-sortable-index="{{$index}}" ng-controller="BacklogUserStoryController">
                             <div class="us-title">
-                                <span class="title">{{ us.subject }}</span>
                                 <span class="tags">
                                     <span ng-repeat="tag in us.tags" class="label" gm-colorize-tag>{{ tag }}</span>
                                 </span>
+                                <span class="title">{{ us.subject|truncate:80 }}</span>
                             </div>
                             <div class="us-points"><a href="" gm-points-popover="saveUserStory(us)">{{ us.points }}</a></div>
                             <div class="us-options">
@@ -217,11 +206,10 @@
                     <div class="body">
                         <div class="us-list">
                             <div class="us-table-list">
-                                <div class="flex-body" ui-sortable=".us-container .flex-body" ng-model="milestones[$index].us">
-                                    <div class="us-item" ng-repeat="us in ml.us">
-                                        <div class="us-title">{{ us.subject }}</div>
+                                <div class="flex-body" ui-sortable=".us-container .flex-body" ng-model="milestones[$index].user_stories">
+                                    <div class="us-item" ng-repeat="us in ml.user_stories">
+                                        <div class="us-title">{{ us.subject|truncate:50 }}</div>
                                         <div class="us-points">{{ us.points }}</div>
-                                        <div class="us-priority">{{ us.priority }}</div>
                                     </div>
                                 </div>
                             </div>
