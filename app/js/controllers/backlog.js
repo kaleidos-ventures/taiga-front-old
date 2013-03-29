@@ -133,6 +133,19 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
 
 BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
 
+
+/* Backlog milestones controller. */
+
+var BacklogMilestonesController = function($scope) {
+    $scope.sprintSubmit = function() {
+        console.log($scope);
+    };
+};
+
+BacklogMilestonesController.$inject = ['$scope'];
+
+/* One backlog milestone controller */
+
 var BacklogMilestoneController = function($scope) {
     $scope.calculateStats = function() {
         var total = 0, completed = 0;
