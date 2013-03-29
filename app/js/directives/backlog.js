@@ -17,11 +17,11 @@ angular.module('greenmine.directives.backlog', []).
                 var target = angular.element(event.currentTarget);
                 var points = target.data('id');
 
-                scope.us.points = points;
-                fn(scope);
+                scope.$apply(function() {
+                    fn(scope, {"points": points});
+                });
 
                 element.popover('hide');
-                scope.$digest();
             });
         };
     }]);
