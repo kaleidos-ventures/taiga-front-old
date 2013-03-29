@@ -1,9 +1,3 @@
-var MyModelCtrl = function($scope) {
-    console.log("MyModelCtrl", $scope);
-};
-
-MyModelCtrl.$inject = ['$scope'];
-
 var BacklogController = function($scope, $rootScope, $routeParams, rs) {
     /* Global Scope Variables */
     $rootScope.pageSection = 'backlog';
@@ -126,6 +120,12 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
         // TODO: make bulk save.
         // console.log($scope.unassingedUs[0].subject)
         $scope.calculateStats();
+
+        //_.each($scope.unassingedUs, function(item) {
+        //    if (item.isModified()) {
+        //        console.log(item);
+        //    }
+        //});
     });
 };
 

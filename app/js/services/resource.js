@@ -1,12 +1,61 @@
 "use strict";
 
+/* Model */
+
+(function() {
+    this.Model = function(data, options) {
+        this._attrs = data;
+        this._modifiedAttrs = {};
+
+        if (options !== undefined) {
+            this.httpService = options.httpService;
+            this.resolveUrl = options.resolveUrl;
+            this.httpReady = true;
+        }
+
+        this.initialize();
+    };
+
+    var fn = this.Model.prototype;
+
+    fn.initialize = function() {
+        var self = this;
+
+        _.each(self._attrs, function(value, name) {
+            (function(name) {
+                Object.defineProperty(self, name, {
+                    get: function() {
+                        if (self._modifiedAttrs[name] !== undefined) {
+                            return self._modifiedAttrs[name];
+                        } else {
+                            return self._attrs[name];
+                        }
+                    },
+                    set: function(value) {
+                        this._modifiedAttrs[name] = value;
+                        this._isModified = true;
+                    },
+                    enumerable : true,
+                    configurable : true
+                });
+            })(name);
+        });
+    }
+
+
+    fn.isModified = function() {
+        return this._isModified;
+    };
+}).call(this);
+
 angular.module('greenmine.services.resource', ['greenmine.config'], function($provide) {
    $provide.factory("url", ['greenmine.config', function(config) {
         var urls = {
             "auth": "/api/auth/login/",
             "projects": "/api/scrum/projects/",
             "project": "/api/gm/project/%s",
-            "unserstories": "/api/scrum/user_stories/",
+            "userstories": "/api/scrum/user_stories/",
+            "userstory": "/api/scrum/user_stories/%s",
             "milestones": "/api/scrum/milestones/",
             "choices/task-status": "/api/scrum/task_status/",
         }, host = config.host, scheme=config.scheme;
@@ -58,47 +107,89 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         };
 
         service.getProjects = function() {
-            var defered = Q.defer();
+            var defered = Q.defer(), q, resolveUrl;
 
-            $http({method:"GET", url: url('projects'), headers: headers()}).
-                success(function(data) { defered.resolve(data); });
+            resolveUrl = function(id) {
+                return url("project", id);
+            };
+
+            q = $http({method:"GET", url: url('projects'), headers: headers()});
+            q.success(function(data, status) {
+                var objects = _.map(data, function(item) {
+                    return new Model(item, {
+                        resolveUrl: resolveUrl,
+                        httpService: $http
+                    });
+                });
+
+                defered.resolve(objects);
+            });
 
             return defered.promise;
         };
 
         /* Get available task statuses for a project. */
         service.getTaskStatuses = function(projectId) {
-            var defered = Q.defer();
+            var defered = Q.defer(), q;
 
-            $http({method:"GET", url: url('choices/task-status'),
-                params: {project: projectId}, headers: headers()}).
-                success(function(data) { defered.resolve(data); });
+            q = $http({method:"GET", url: url('choices/task-status'),
+                       params: {project: projectId}, headers: headers()});
+
+            q.success(function(data, status) {
+                var objects = _.map(data, function(item) {
+                    return new Model(item);
+                });
+
+                defered.resolve(objects);
+            });
 
             return defered.promise;
         };
 
         /* Get a user stories list by projectId and sprintId. */
         service.getMilestoneUserStories = function(projectId, sprintId) {
-            var defered = Q.defer();
+            var defered = Q.defer(), q, resolveUrl;
 
-            $http.get("tmpresources/dashboard-userstories.json").
-                success(function(data, status) {
-                    defered.resolve(data);
-                }).
-                error(function(data, status) {
-                    defered.reject(data);
+            resolveUrl = function(id) {
+                return url("userstory", id);
+            };
+
+            q = $http.get("tmpresources/dashboard-userstories.json");
+            q.success(function(data, status) {
+                var objects = _.map(data, function(item) {
+                    return new Model(item, {
+                        resolveUrl: resolveUrl,
+                        httpService: $http
+                    });
                 });
+
+                defered.resolve(objects);
+            });
 
             return defered.promise;
         };
 
         /* Get a milestone lines for a project. */
         service.getMilestones = function(projectId) {
-            var defered = Q.defer();
+            var defered = Q.defer(), q, resolveUrl
 
-            $http({method:"GET", url: url('milestones'),
-                params: {project: projectId}, headers: headers()}).
-                success(function(data) { defered.resolve(data); });
+            resolveUrl = function(id) {
+                return url("milestone", id);
+            };
+
+            q = $http({method:"GET", url: url('milestones'),
+                   params: {project: projectId}, headers: headers()});
+
+            q.success(function(data, status) {
+                var objects = _.map(data, function(item) {
+                    return new Model(item, {
+                        resolveUrl: resolveUrl,
+                        httpService: $http
+                    });
+                });
+
+                defered.resolve(objects);
+            });
 
             return defered.promise;
 
@@ -107,24 +198,46 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         /* Get unassigned user stories list for
          * a project. */
         service.getUnassignedUserStories = function(projectId) {
-            var defered = Q.defer();
+            var defered = Q.defer(), q, resolveUrl
 
-            $http({method: "GET", url: url("unserstories"), headers: headers(),
-                   params:{"project":projectId, "milestone": "null"}}).
-                success(function(data, status) {
-                    defered.resolve(data);
+            q = $http({method: "GET", url: url("userstories"), headers: headers(),
+                           params:{"project":projectId, "milestone": "null"}})
+
+            resolveUrl = function(id) {
+                return url("userstory", id);
+            };
+
+            q.success(function(data, status) {
+                var objects = _.map(data, function(item) {
+                    return new Model(item, {
+                        resolveUrl: resolveUrl,
+                        httpService: $http
+                    });
                 });
+
+                defered.resolve(objects);
+            });
 
             return defered.promise;
         };
 
         /* Get project Issues list */
         service.getIssues = function(projectId) {
-            var defered = Q.defer();
-            $http.get("tmpresources/issues.json").
-                success(function(data, status) {
-                    defered.resolve(data);
+            var defered = Q.defer(), q, resolveUrl;
+
+            resolveUrl = function(id) {
+                return url("issue", id);
+            };
+
+            q = $http.get("tmpresources/issues.json");
+            q.success(function(data, status) {
+                var objects = _.map(data, function(item) {
+                    return new Model(item, {
+                        resolveUrl: resolveUrl,
+                        httpService: $http
+                    });
                 });
+            });
 
             return defered.promise;
         };
