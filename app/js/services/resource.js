@@ -3,13 +3,19 @@
 /* Model */
 
 (function() {
+    var saveDefaults = {
+        patch: true,
+    };
+
     this.Model = function(data, options) {
         this._attrs = data;
         this._modifiedAttrs = {};
+        this._isModified = false;
 
         if (options !== undefined) {
             this.httpService = options.httpService;
             this.resolveUrl = options.resolveUrl;
+            this.headers = options.headers;
             this.httpReady = true;
         }
 
@@ -46,6 +52,48 @@
     fn.isModified = function() {
         return this._isModified;
     };
+
+    fn.revert = function() {
+        this._modifiedAttrs = {};
+        this._isModified = false;
+    };
+
+    fn.save = function(options) {
+        var self = this;
+        var defered = Q.defer(), postObject, q;
+
+        options = _.extend({}, saveDefaults, options || {});
+
+        if (!this.isModified()) {
+            defered.resolve(true);
+        } else {
+            if (options.patch) {
+                postObject = _.extend({id: this.id}, this._modifiedAttrs);
+            } else {
+                postObject = _.extend(this._attrs, this._modifiedAttrs);
+            }
+
+            var params = {
+                method: options.patch ? "PATCH" : "PUT",
+                url: this.resolveUrl(this.id),
+                headers: this.headers(),
+                data: JSON.stringify(postObject)
+            };
+
+            q = this.httpService(params);
+            q.success(function(data, status) {
+                self._isModified = false;
+                self._attrs = _.extend(self._attrs, self._modifiedAttrs);
+                self._modifiedAttrs = {};
+                defered.resolve(data, status);
+            });
+            q.error(function(data, status) {
+                defered.reject(data, status);
+            });
+        }
+
+        return defered.promise;
+    };
 }).call(this);
 
 angular.module('greenmine.services.resource', ['greenmine.config'], function($provide) {
@@ -53,9 +101,9 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         var urls = {
             "auth": "/api/auth/login/",
             "projects": "/api/scrum/projects/",
-            "project": "/api/gm/project/%s",
+            "project": "/api/gm/project/%s/",
             "userstories": "/api/scrum/user_stories/",
-            "userstory": "/api/scrum/user_stories/%s",
+            "userstory": "/api/scrum/user_stories/%s/",
             "milestones": "/api/scrum/milestones/",
             "choices/task-status": "/api/scrum/task_status/",
         }, host = config.host, scheme=config.scheme;
@@ -118,6 +166,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
                 var objects = _.map(data, function(item) {
                     return new Model(item, {
                         resolveUrl: resolveUrl,
+                        headers: headers,
                         httpService: $http
                     });
                 });
@@ -159,6 +208,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
                 var objects = _.map(data, function(item) {
                     return new Model(item, {
                         resolveUrl: resolveUrl,
+                        headers: headers,
                         httpService: $http
                     });
                 });
@@ -184,6 +234,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
                 var objects = _.map(data, function(item) {
                     return new Model(item, {
                         resolveUrl: resolveUrl,
+                        headers: headers,
                         httpService: $http
                     });
                 });
@@ -211,6 +262,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
                 var objects = _.map(data, function(item) {
                     return new Model(item, {
                         resolveUrl: resolveUrl,
+                        headers: headers,
                         httpService: $http
                     });
                 });
@@ -234,6 +286,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
                 var objects = _.map(data, function(item) {
                     return new Model(item, {
                         resolveUrl: resolveUrl,
+                        headers: headers,
                         httpService: $http
                     });
                 });

@@ -134,11 +134,16 @@ BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource']
 
 var BacklogUserStoryController = function($scope) {
     $scope.saveUserStory = function(us, points) {
-        // Change points value on a model
         us.points = points
-
-        // Calculate new stats
-        $scope.calculateStats();
+        us.save().then(function() {
+            $scope.$apply(function() {
+                $scope.calculateStats();
+            });
+        }, function(data, status) {
+            $scope.$apply(function() {
+                us.revert();
+            });
+        });
     };
 };
 
