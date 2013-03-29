@@ -6,24 +6,24 @@
                 <div class="user-story-stats" url="">
                     <div class="progress-box">
                         <div class="progress progress-success">
-                            <div class="bar" style="width: 20%;"></div>
+                            <div class="bar" style="width: {{ completedPercentage }}%;"></div>
                         </div>
-                        <div class="progress-indicator indicator">20%</div>
+                        <div class="progress-indicator indicator">{{ completedPercentage }}%</div>
                         <div class="progress-help help">completed points</div>
                     </div>
                     <div class="stats-box">
                         <div class="item">
-                            <div class="indicator">120</div>
+                            <div class="indicator">{{ totalPoints }}</div>
                             <div class="help">total <br />points</div>
                         </div>
 
                         <div class="item">
-                            <div class="indicator">30</div>
+                            <div class="indicator">{{ assignedPoints }}</div>
                             <div class="help">assigned points</div>
                         </div>
 
                         <div class="item">
-                            <div class="indicator">90</div>
+                            <div class="indicator">{{ notAssignedPoints }}</div>
                             <div class="help">not assigned points</div>
                         </div>
                     </div>

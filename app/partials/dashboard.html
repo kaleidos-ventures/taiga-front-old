@@ -86,7 +86,10 @@
                                         </ul>
                                     </div>
                                 </td>
-                                <td class="col-task-status col-task-{{ status.name|slugify }}" ng-repeat="status in statuses|orderBy:order" style="width: {{ 100/(statuses.length+1) }}%">
+                                <td class="col-task-status col-task-{{ status.name|slugify }}"
+                                        ng-repeat="status in statuses|orderBy:order"
+                                        style="width: {{ 100/(statuses.length+1) }}%">
+
                                     <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][status.id]">
                                         <div class="task-box" ng-repeat="task in usTasks[us.id][status.id]"
                                             ng-include="'partials/dashboard-task.html'"></div>

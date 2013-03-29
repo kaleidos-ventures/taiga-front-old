@@ -25,7 +25,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         };
     }]);
 
-    $provide.factory('resource', ['$q', '$http', 'storage', 'url', 'greenmine.config', function($q, $http, storage, url, config) {
+    $provide.factory('resource', ['$http', 'storage', 'url', 'greenmine.config', function($http, storage, url, config) {
         var service = {};
 
         var headers = function() {
@@ -38,7 +38,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         /* Login request */
         service.login = function(username, password) {
-            var defered = $q.defer();
+            var defered = Q.defer();
 
             var onSuccess = function(data, status) {
                 storage.set("token", data["token"]);
@@ -120,7 +120,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         /* Get project Issues list */
         service.getIssues = function(projectId) {
-            var defered = $q.defer();
+            var defered = Q.defer();
             $http.get("tmpresources/issues.json").
                 success(function(data, status) {
                     defered.resolve(data);
@@ -132,7 +132,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         /* Get a users with role developer for
          * one concret project. */
         service.projectDevelopers = function(projectId) {
-            var defered = $q.defer();
+            var defered = Q.defer();
 
             $http.get("tmpresources/project-developers.json").
                 success(function(data, status) {
