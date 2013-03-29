@@ -1,4 +1,6 @@
 var DashboardController = function($scope, $rootScope, $routeParams, rs) {
+    $rootScope.projectId = $routeParams.pid;
+
     var projectId = $routeParams.pid;
     var sprintId = $routeParams.sid || 1;
 
@@ -24,20 +26,23 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
     };
 
     /* Load user stories */
-    var usPromise = rs.getMilestoneUserStories(projectId, sprintId).
-        then(function(userstories) {
+    var usPromise = rs.getMilestoneUserStories(projectId, sprintId).then(function(userstories) {
+        $scope.$apply(function() {
             $scope.userstories = userstories;
         });
+    });
 
     /* Load task statuses */
-    var statusesPromise = rs.getTaskStatuses(projectId).
-        then(function(statuses) {
+    var statusesPromise = rs.getTaskStatuses(projectId).then(function(statuses) {
+        $scope.$apply(function() {
             $scope.statuses = statuses;
         });
+    });
 
     Q.allResolved([statusesPromise, usPromise]).then(function(promises) {
-        $scope.formatUserStoryTasks();
-        $scope.$digest();
+        $scope.$apply(function() {
+            $scope.formatUserStoryTasks();
+        });
     });
 
     /* Load developers list */

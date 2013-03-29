@@ -183,7 +183,7 @@
             <div class="sprints-box">
                 <div class="sprint-sbox" ng-repeat="ml in milestones">
                     <div class="header">
-                        <div ui-content-editable class="title">{{ ml.name }}</div>
+                        <div class="title"><a href="{{ urls.dashboardUrl(projectId, ml.id) }}">{{ ml.name }}</a></div>
                         <div class="stats">
                             <div class="sprint-progress">
                                 <div class="progress progress-success">
