@@ -60,10 +60,12 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
             });
         });
 
-        $scope.totalPoints = total;
-        $scope.assignedPoints = assigned;
-        $scope.notAssignedPoints = total - assigned;
-        $scope.completedPercentage = ((completed * 100) / total).toFixed(1);
+        $scope.stats = {
+            totalPoints: total,
+            assignedPoints: assigned,
+            notAssignedPoints: total - assigned,
+            completedPercentage: ((completed * 100) / total).toFixed(1)
+        };
     };
 
     /* Scope methods */
@@ -130,6 +132,30 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
 };
 
 BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
+
+var BacklogMilestoneController = function($scope) {
+    $scope.calculateStats = function() {
+        var total = 0, completed = 0;
+
+        _.each($scope.ml.user_stories, function(us) {
+            total += us.points;
+
+            if (us.is_closed) {
+                completed += us.points;
+            }
+        });
+
+        $scope.stats = {
+            total: total,
+            completed: completed,
+            percentage: ((completed * 100) / total).toFixed(1)
+        };
+    };
+
+    $scope.calculateStats();
+};
+
+BacklogMilestoneController.$inject = ['$scope'];
 
 
 var BacklogUserStoryController = function($scope) {

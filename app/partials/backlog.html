@@ -6,24 +6,24 @@
                 <div class="user-story-stats" url="">
                     <div class="progress-box">
                         <div class="progress progress-success">
-                            <div class="bar" style="width: {{ completedPercentage }}%;"></div>
+                            <div class="bar" style="width: {{ stats.completedPercentage }}%;"></div>
                         </div>
-                        <div class="progress-indicator indicator">{{ completedPercentage }}%</div>
+                        <div class="progress-indicator indicator">{{ stats.completedPercentage }}%</div>
                         <div class="progress-help help">completed points</div>
                     </div>
                     <div class="stats-box">
                         <div class="item">
-                            <div class="indicator">{{ totalPoints }}</div>
+                            <div class="indicator">{{ stats.totalPoints }}</div>
                             <div class="help">total <br />points</div>
                         </div>
 
                         <div class="item">
-                            <div class="indicator">{{ assignedPoints }}</div>
+                            <div class="indicator">{{ stats.assignedPoints }}</div>
                             <div class="help">assigned points</div>
                         </div>
 
                         <div class="item">
-                            <div class="indicator">{{ notAssignedPoints }}</div>
+                            <div class="indicator">{{ stats.notAssignedPoints }}</div>
                             <div class="help">not assigned points</div>
                         </div>
                     </div>
@@ -181,23 +181,23 @@
             </div>
 
             <div class="sprints-box">
-                <div class="sprint-sbox" ng-repeat="ml in milestones">
+                <div class="sprint-sbox" ng-repeat="ml in milestones" ng-controller="BacklogMilestoneController">
                     <div class="header">
                         <div class="title"><a href="{{ urls.dashboardUrl(projectId, ml.id) }}">{{ ml.name }}</a></div>
                         <div class="stats">
                             <div class="sprint-progress">
                                 <div class="progress progress-success">
-                                    <div class="bar" style="width: 20%"></div>
+                                    <div class="bar" style="width: {{ stats.percentage }}%"></div>
                                 </div>
-                                <div class="progress-indicator">20%</div>
+                                <div class="progress-indicator">{{ stats.percentage }}%</div>
                             </div>
                             <div class="sprint-status">
                                 <div class="item">
-                                    <div class="indicator">30.5</div>
+                                    <div class="indicator">{{ stats.total }}</div>
                                     <div class="help">total</div>
                                 </div>
                                 <div class="item">
-                                    <div class="indicator">15</div>
+                                    <div class="indicator">{{ stats.completed }}</div>
                                     <div class="help">completed</div>
                                 </div>
                             </div>
