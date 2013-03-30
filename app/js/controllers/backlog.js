@@ -2,25 +2,36 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
     /* Global Scope Variables */
     $rootScope.pageSection = 'backlog';
     $rootScope.pageBreadcrumb = ["Project", "Backlog"];
-    $rootScope.projectId = $routeParams.pid;
+    $rootScope.projectId = parseInt($routeParams.pid, 10);
 
     /* Local scope variables */
-    $scope.filtersOpened = false;
-    $scope.usFormOpened = false;
     $scope.sprintFormOpened = false;
 
     /* Load unassigned user stories */
-    var q1 = rs.getUnassignedUserStories($routeParams.pid).then(function(data) {
-        $scope.unassingedUs = data;
-        $scope.generateTagList();
-        $scope.filterUsBySelectedTags();
-        $scope.$apply();
+    var promise1 = rs.getUnassignedUserStories($routeParams.pid).then(function(data) {
+
+        // HACK: because django-filter does not works properly
+        // $scope.unassingedUs = data;
+        $scope.unassingedUs = _.filter(data, function(item) {
+            return (item.project === $rootScope.projectId && item.milestone === null);
+        });
+
+        $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order");
+
+        $scope.$apply(function() {
+            $scope.$broadcast("userstories-loaded");
+        });
     });
 
     /* Load milestones */
-    var q2 = rs.getMilestones($routeParams.pid).then(function(data) {
+    var promise2 = rs.getMilestones($routeParams.pid).then(function(data) {
         $scope.$apply(function() {
-            $scope.milestones = data;
+
+            // HACK: because django-filter does not works properly
+            // $scope.milestones = data;
+            $scope.milestones = _.filter(data, function(item) {
+                return item.project === $rootScope.projectId;
+            });
 
             if (data.length > 0) {
                 $scope.sprintId = data[0].id;
@@ -28,34 +39,35 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
         });
     });
 
-    Q.allResolved([q1,q2]).done(function() {
-        console.log("DONE");
+    var promise3 = rs.getUsPoints($scope.projectId).then(function(data) {
         $scope.$apply(function() {
-            $scope.calculateStats();
+            $rootScope.constants.points = {};
+
+            _.each(data, function(item) {
+                $rootScope.constants.points[item.id] = item;
+            });
         });
     });
 
-    /* Load developers list */
-    rs.projectDevelopers($routeParams.pid).then(function(data) {
-        $scope.$apply(function() {
-            $scope.developers = data;
-        });
+    Q.allResolved([promise1, promise2, promise3]).done(function() {
+        $scope.$apply(function() { $scope.calculateStats(); });
     });
 
     $scope.calculateStats = function() {
+        var pointIdToOrder = greenmine.utils.pointIdToOrder($rootScope);;
         var total = 0, assigned = 0, notAssigned = 0, completed = 0;
 
         _.each($scope.unassingedUs, function(us) {
-            total += us.points;
+            total += pointIdToOrder(us.points);
         });
 
         _.each($scope.milestones, function(ml) {
             _.each(ml.user_stories, function(us) {
-                total += us.points;
-                assigned += us.points;
+                total += pointIdToOrder(us.points);
+                assigned += pointIdToOrder(us.points);
 
                 if (us.is_closed) {
-                    completed += us.points;
+                    completed += pointIdToOrder(us.points);
                 }
             });
         });
@@ -67,13 +79,43 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
             completedPercentage: ((completed * 100) / total).toFixed(1)
         };
     };
+};
 
-    /* Scope methods */
+BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
+
+
+var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
+    /* Local scope variables */
+    $scope.filtersOpened = false;
+    $scope.usFormOpened = false;
+
+    /* Load developers list */
+    rs.projectDevelopers($scope.projectId).then(function(data) {
+        $scope.$apply(function() {
+            $scope.developers = data;
+        });
+    });
+
+
+    $scope.saveUserStory = function(us, points) {
+        console.log("saveUserStory", points);
+        us.points = points
+        us.save().then(function() {
+            $scope.$apply(function() {
+                $scope.calculateStats();
+            });
+        }, function(data, status) {
+            $scope.$apply(function() {
+                us.revert();
+            });
+        });
+    };
+
     $scope.selectTag = function(tag) {
         if (tag.selected) tag.selected = false;
         else tag.selected = true;
         $scope.filterUsBySelectedTags()
-    }
+    };
 
     $scope.generateTagList = function() {
         var tagsDict = {}, tags = [];
@@ -115,23 +157,34 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
         }
     };
 
-    /* Directive event handlers */
     $scope.$on("backlog-resort", function() {
-        // Assign new order to unassingedUs.
-        _.each($scope.unassingedUs, function(o, y) { o.order = y });
-        // TODO: make bulk save.
-        // console.log($scope.unassingedUs[0].subject)
+        // Normalize user stories array
+        _.each($scope.unassingedUs, function(item, index) {
+            item.order = index;
+            item.milestone = null;
+        });
+
+        // Sort again
+        $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order");
+
+        // Calculte new stats
         $scope.calculateStats();
 
-        //_.each($scope.unassingedUs, function(item) {
-        //    if (item.isModified()) {
-        //        console.log(item);
-        //    }
-        //});
+        _.each($scope.unassingedUs, function(item) {
+            if (item.isModified()) {
+                item.save();
+                //console.log(item.id, item.order, item.subject);
+            }
+        });
+    });
+
+    $scope.$on("userstories-loaded", function() {
+        $scope.generateTagList();
+        $scope.filterUsBySelectedTags();
     });
 };
 
-BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
+BacklogUserStoriesCtrl.$inject = ['$scope', '$rootScope', 'resource'];
 
 
 /* Backlog milestones controller. */
@@ -147,14 +200,16 @@ BacklogMilestonesController.$inject = ['$scope'];
 /* One backlog milestone controller */
 
 var BacklogMilestoneController = function($scope) {
+    var pointIdToOrder = greenmine.utils.pointIdToOrder($scope);
+
     $scope.calculateStats = function() {
         var total = 0, completed = 0;
 
         _.each($scope.ml.user_stories, function(us) {
-            total += us.points;
+            total += pointIdToOrder(us.points);
 
             if (us.is_closed) {
-                completed += us.points;
+                completed += pointIdToOrder(us.points);
             }
         });
 
@@ -166,24 +221,24 @@ var BacklogMilestoneController = function($scope) {
     };
 
     $scope.calculateStats();
+
+    $scope.$on("backlog-resort", function() {
+        _.each($scope.ml.user_stories, function(item, index) {
+            item.milestone = $scope.ml.id;
+        });
+
+        // Calculte new stats
+        $scope.calculateStats();
+
+        _.each($scope.ml.user_stories, function(item) {
+            if (item.isModified()) {
+                item.save();
+                //console.log(item.id, item.order, item.subject);
+            }
+        });
+    });
 };
 
 BacklogMilestoneController.$inject = ['$scope'];
 
 
-var BacklogUserStoryController = function($scope) {
-    $scope.saveUserStory = function(us, points) {
-        us.points = points
-        us.save().then(function() {
-            $scope.$apply(function() {
-                $scope.calculateStats();
-            });
-        }, function(data, status) {
-            $scope.$apply(function() {
-                us.revert();
-            });
-        });
-    };
-};
-
-BacklogUserStoryController.$inject = ['$scope'];

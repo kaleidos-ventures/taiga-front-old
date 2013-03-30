@@ -59,7 +59,7 @@
                         <tbody>
                             <tr>
                                 <td class="row-us-description" style="width: {{ 100/(statuses.length+1) }}%"></td>
-                                <td class="" ng-repeat="status in statuses" style="width: {{ 100/(statuses.length+1) }}%">
+                                <td class="" ng-repeat="status in statuses|orderBy:'order'" style="width: {{ 100/(statuses.length+1) }}%">
                                     <div class="badge" style="background-color: {{ status.color }}">{{ status.name }}</div>
                                 </td>
                             </tr>

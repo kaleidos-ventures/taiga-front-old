@@ -76,9 +76,9 @@
 
         // TODO: obtain this values from api
         $rootScope.constants = {};
+        $rootScope.constants.points = {};
         $rootScope.constants.severity = {1:"Low", 2:"Medium", 3:"Hight", 4:"Critical"};
         $rootScope.constants.priority = {1:"Low", 2:"Medium", 3:"Hight"};
-        $rootScope.constants.points = ["?", "0", "1", "2", "3", "5", "8", "10", "15", "20", "40"];
 
         $rootScope.constants.status = {
             1: "New",
@@ -91,6 +91,11 @@
         };
 
         /* Global helpers */
+
+        $rootScope.resolvePoints = function(id) {
+            var point = $rootScope.constants.points[id];
+            return point ? point.name : undefined;
+        };
 
         $rootScope.resolveStatus = function(name) {
             return $rootScope.constants.status[name] || "";

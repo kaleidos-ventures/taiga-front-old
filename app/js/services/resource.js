@@ -10,6 +10,8 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             "userstories": "/api/scrum/user_stories/",
             "milestones": "/api/scrum/milestones/",
             "choices/task-status": "/api/scrum/task_status/",
+            "choices/issue-status": "/api/scrum/issue_status/",
+            "choices/points": "/api/scrum/points/"
         }, host = config.host, scheme=config.scheme;
 
         return function() {
@@ -166,7 +168,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         /* Resource Action Helpers */
 
-        var itemUrlTemplate = "%(url)s(id)s/";
+        var itemUrlTemplate = "%(url)s%(id)s/";
 
         var queryMany = function(url, params) {
             var params = {"method":"GET", "headers": headers(), "url": url, params: params || {}};
@@ -233,6 +235,14 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         /* Get available task statuses for a project. */
         service.getTaskStatuses = function(projectId) {
             return queryMany(url('choices/task-status'), {project: projectId});
+        };
+
+        service.getUsPoints = function(projectId) {
+            return queryMany(url('choices/points'), {project: projectId});
+        };
+
+        service.getIssueStatuses = function(projectId) {
+            return queryMany(url("choices/issue-status"), {project: projectId});
         };
 
         /* Get a user stories list by projectId and sprintId. */

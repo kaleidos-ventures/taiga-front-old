@@ -1,7 +1,7 @@
 <div class="header-container container-fluid" ng-include="'partials/header.html'"></div>
 <div class="middle-container container-fluid backlog">
     <div class="row-fluid first-row">
-        <div class="span8">
+        <div class="span8" ng-controller="BacklogUserStoriesCtrl">
             <div class="graphincs-container">
                 <div class="user-story-stats" url="">
                     <div class="progress-box">
@@ -72,8 +72,8 @@
                             <label class="control-label" for="inputEmail">Points</label>
                             <div class="controls">
                                 <select name="status" ng-model="form.priority">
-                                    <option ng-repeat="id in constants.points"
-                                        ng-selected="isSameAs('priority', id)" value="{{ id }}">{{ id }}</option>
+                                    <option ng-repeat="obj in constants.points"
+                                        ng-selected="isSameAs('priority', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
                                 </select>
                             </div>
                         </div>
@@ -125,15 +125,15 @@
                     </div>
                     <div class="flex-separator"></div>
                     <div class="flex-body" ui-sortable=".sprints-box .flex-body" ng-model="unassingedUs">
-                        <div class="us-item" ng-repeat="us in unassingedUs|orderBy:'order'|onlyVisible"
-                                ui-sortable-index="{{$index}}" ng-controller="BacklogUserStoryController">
+                        <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
+                                ui-sortable-index="{{$index}}">
                             <div class="us-title">
                                 <span class="tags">
                                     <span ng-repeat="tag in us.tags" class="label" gm-colorize-tag>{{ tag }}</span>
                                 </span>
                                 <span class="title">{{ us.subject|truncate:80 }}</span>
                             </div>
-                            <div class="us-points"><a href="" gm-points-popover="saveUserStory(us, points)">{{ us.points }}</a></div>
+                            <div class="us-points"><a href="" gm-points-popover="saveUserStory(us, points)">{{ resolvePoints(us.points) }}</a></div>
                             <div class="us-options">
                                 <a class="btn btn-mini btn-success"><i class="icon-eye-open icon-white"></i></a>
                                 <a class="btn btn-mini btn-success"><i class="icon-edit icon-white"></i></a>
@@ -211,7 +211,7 @@
                                         ng-model="milestones[$index].user_stories">
                                     <div class="us-item" ng-repeat="us in ml.user_stories">
                                         <div class="us-title">{{ us.subject|truncate:50 }}</div>
-                                        <div class="us-points">{{ us.points }}</div>
+                                        <div class="us-points">{{ resolvePoints(us.points) }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -223,8 +223,8 @@
     </div>
     <div class="dialogs hidden">
         <div class="points-popover" id="points-popover">
-            <div class="item" ng-repeat="p in constants.points">
-                <a class="btn btn-mini" data-id="{{ p }}">{{ p }}</a>
+            <div class="item" ng-repeat="p in constants.points|orderBy:'order'">
+                <a class="btn btn-mini" data-id="{{ p.id }}">{{ p.name }}</a>
             </div>
         </div>
     </div>

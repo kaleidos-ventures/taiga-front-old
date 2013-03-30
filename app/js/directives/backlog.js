@@ -6,19 +6,26 @@ angular.module('greenmine.directives.backlog', []).
             var fn = $parse(attrs.gmPointsPopover);
             var element = angular.element(elm);
 
-            element.popover({
-                content: $("#points-popover").html(),
-                html:true
+            element.on("click", function(event) {
+                event.preventDefault();
+
+                element.popover({
+                    content: $("#points-popover").html(),
+                    html:true,
+                    trigger: "manual"
+                });
+
+                element.popover("show");
             });
 
             element.parent().on("click", ".popover-content a.btn", function(event) {
                 event.preventDefault();
 
                 var target = angular.element(event.currentTarget);
-                var points = target.data('id');
+                var pointId = target.data('id');
 
                 scope.$apply(function() {
-                    fn(scope, {"points": points});
+                    fn(scope, {"points": pointId});
                 });
 
                 element.popover('hide');
