@@ -2,100 +2,6 @@
 
 /* Model */
 
-(function() {
-    var saveDefaults = {
-        patch: true,
-    };
-
-    this.Model = function(data, options) {
-        this._attrs = data;
-        this._modifiedAttrs = {};
-        this._isModified = false;
-
-        if (options !== undefined) {
-            this.httpService = options.httpService;
-            this.resolveUrl = options.resolveUrl;
-            this.headers = options.headers;
-            this.httpReady = true;
-        }
-
-        this.initialize();
-    };
-
-    var fn = this.Model.prototype;
-
-    fn.initialize = function() {
-        var self = this;
-
-        _.each(self._attrs, function(value, name) {
-            (function(name) {
-                Object.defineProperty(self, name, {
-                    get: function() {
-                        if (self._modifiedAttrs[name] !== undefined) {
-                            return self._modifiedAttrs[name];
-                        } else {
-                            return self._attrs[name];
-                        }
-                    },
-                    set: function(value) {
-                        this._modifiedAttrs[name] = value;
-                        this._isModified = true;
-                    },
-                    enumerable : true,
-                    configurable : true
-                });
-            })(name);
-        });
-    }
-
-
-    fn.isModified = function() {
-        return this._isModified;
-    };
-
-    fn.revert = function() {
-        this._modifiedAttrs = {};
-        this._isModified = false;
-    };
-
-    fn.save = function(options) {
-        var self = this;
-        var defered = Q.defer(), postObject, q;
-
-        options = _.extend({}, saveDefaults, options || {});
-
-        if (!this.isModified()) {
-            defered.resolve(true);
-        } else {
-            if (options.patch) {
-                postObject = _.extend({id: this.id}, this._modifiedAttrs);
-            } else {
-                postObject = _.extend(this._attrs, this._modifiedAttrs);
-            }
-
-            var params = {
-                method: options.patch ? "PATCH" : "PUT",
-                url: this.resolveUrl(this.id),
-                headers: this.headers(),
-                data: JSON.stringify(postObject)
-            };
-
-            q = this.httpService(params);
-            q.success(function(data, status) {
-                self._isModified = false;
-                self._attrs = _.extend(self._attrs, self._modifiedAttrs);
-                self._modifiedAttrs = {};
-                defered.resolve(data, status);
-            });
-            q.error(function(data, status) {
-                defered.reject(data, status);
-            });
-        }
-
-        return defered.promise;
-    };
-}).call(this);
-
 angular.module('greenmine.services.resource', ['greenmine.config'], function($provide) {
    $provide.factory("url", ['greenmine.config', function(config) {
         var urls = {
@@ -133,6 +39,151 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return JSON.stringify(data);
         };
 
+        var interpolate = function(fmt, obj, named) {
+            if (named) {
+                return fmt.replace(/%\(\w+\)s/g, function(match){return String(obj[match.slice(2,-2)])});
+            } else {
+                return fmt.replace(/%s/g, function(match){return String(obj.shift())});
+            }
+        }
+
+        var Model = function(data, url) {
+            this._attrs = data;
+            this._modifiedAttrs = {};
+            this._isModified = false;
+            this.url = url;
+
+            this.initialize();
+        };
+
+        Model.prototype.initialize = function() {
+            var self = this;
+
+            var getter = function(name) {
+                return function() {
+                    if (self._modifiedAttrs[name] !== undefined) {
+                        return self._modifiedAttrs[name];
+                    } else {
+                        return self._attrs[name];
+                    }
+                };
+            };
+
+            var setter = function(name) {
+                return function(value) {
+                    self._modifiedAttrs[name] = value;
+                    self._isModified = true;
+                };
+            };
+
+            _.each(self._attrs, function(value, name) {
+                var propertyOptions = {
+                    get: getter(name),
+                    enumerable : true,
+                    configurable : true
+                };
+
+                /* Id field does not have setter */
+                if (name !== "id") {
+                    propertyOptions.set = setter(name);
+                }
+
+                Object.defineProperty(self, name, propertyOptions);
+            });
+        };
+
+        Model.prototype.isModified = function() {
+            return this._isModified;
+        };
+
+        Model.prototype.revert = function() {
+            this._modifiedAttrs = {};
+            this._isModified = false;
+        };
+
+        Model.prototype.delete = function() {
+            var params, defered = Q.defer();
+
+            params = {
+                method: "DELETE",
+                url: this.url,
+                headers: headers()
+            };
+
+            $http(params).success(function(data, status) {
+                defered.resolve(data, status);
+            }).error(function(data, status) {
+                defered.reject(data, status);
+            });
+
+            return defered.promise;
+        };
+
+        Model.prototype.save = function() {
+            var self = this, defered = Q.defer(), postObject;
+
+            if (!this.isModified()) {
+                defered.resolve(true);
+            } else {
+                postObject = _.extend({}, this._modifiedAttrs);
+
+                var params = {
+                    method: "PATCH",
+                    url: this.url,
+                    headers: headers(),
+                    data: toJson(postObject)
+                };
+
+
+                $http(params).success(function(data, status) {
+                    self._isModified = false;
+                    self._attrs = _.extend(self._attrs, self._modifiedAttrs);
+                    self._modifiedAttrs = {};
+                    defered.resolve(data, status);
+                }).error(function(data, status) {
+                    defered.reject(data, status);
+                });
+            }
+
+            return defered.promise;
+        };
+
+        var queryMany = function(url, params) {
+            var params = {"method":"GET", "headers": headers(), "url": url, params: params || {}};
+            var baseUrl, urlTemplate = "%(url)s/%(id)s/", defered = Q.defer();
+
+            baseUrl = (url.substr(-1) === "/") ? url.substr(0, url.length-1) : url
+
+            $http(params).success(function(data, status) {
+                var models = _.map(data, function(item) {
+                    var modelurl = interpolate(urlTemplate, {"url": baseUrl, "id": item.id}, true);
+                    return new Model(item, modelurl);
+                });
+
+                defered.resolve(models);
+            }).error(function(data, status) {
+                defered.reject(data, status);
+            });
+
+            return defered.promise;
+        };
+
+        var queryOne = function(url, params) {
+            var paramsDefault = {"method":"GET", "headers": headers(), "url": url};
+            var defered = Q.defer();
+
+            params = _.extend({}, paramsDefault, params || {});
+
+            $http(params).success(function(data, status) {
+                var model = new Model(item, {url: url});
+                defered.resolve(model);
+            }).error(function(data, status) {
+                defered.reject(data, status);
+            });
+
+            return defered.promise;
+        };
+
         /* Login request */
         service.login = function(username, password) {
             var defered = Q.defer();
@@ -154,45 +205,14 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return defered.promise;
         };
 
+        /* Get a project list */
         service.getProjects = function() {
-            var defered = Q.defer(), q, resolveUrl;
-
-            resolveUrl = function(id) {
-                return url("project", id);
-            };
-
-            q = $http({method:"GET", url: url('projects'), headers: headers()});
-            q.success(function(data, status) {
-                var objects = _.map(data, function(item) {
-                    return new Model(item, {
-                        resolveUrl: resolveUrl,
-                        headers: headers,
-                        httpService: $http
-                    });
-                });
-
-                defered.resolve(objects);
-            });
-
-            return defered.promise;
+            return queryMany(url('projects'));
         };
 
         /* Get available task statuses for a project. */
         service.getTaskStatuses = function(projectId) {
-            var defered = Q.defer(), q;
-
-            q = $http({method:"GET", url: url('choices/task-status'),
-                       params: {project: projectId}, headers: headers()});
-
-            q.success(function(data, status) {
-                var objects = _.map(data, function(item) {
-                    return new Model(item);
-                });
-
-                defered.resolve(objects);
-            });
-
-            return defered.promise;
+            return queryMany(url('choices/task-status'), {project: projectId});
         };
 
         /* Get a user stories list by projectId and sprintId. */
@@ -221,56 +241,13 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         /* Get a milestone lines for a project. */
         service.getMilestones = function(projectId) {
-            var defered = Q.defer(), q, resolveUrl
-
-            resolveUrl = function(id) {
-                return url("milestone", id);
-            };
-
-            q = $http({method:"GET", url: url('milestones'),
-                   params: {project: projectId}, headers: headers()});
-
-            q.success(function(data, status) {
-                var objects = _.map(data, function(item) {
-                    return new Model(item, {
-                        resolveUrl: resolveUrl,
-                        headers: headers,
-                        httpService: $http
-                    });
-                });
-
-                defered.resolve(objects);
-            });
-
-            return defered.promise;
-
+            return queryMany(url("milestones"), {project: projectId});
         };
 
-        /* Get unassigned user stories list for
-         * a project. */
+        /* Get unassigned user stories list for a project. */
         service.getUnassignedUserStories = function(projectId) {
-            var defered = Q.defer(), q, resolveUrl
-
-            q = $http({method: "GET", url: url("userstories"), headers: headers(),
-                           params:{"project":projectId, "milestone": "null"}})
-
-            resolveUrl = function(id) {
-                return url("userstory", id);
-            };
-
-            q.success(function(data, status) {
-                var objects = _.map(data, function(item) {
-                    return new Model(item, {
-                        resolveUrl: resolveUrl,
-                        headers: headers,
-                        httpService: $http
-                    });
-                });
-
-                defered.resolve(objects);
-            });
-
-            return defered.promise;
+            return queryMany(url("userstories"),
+                {"project":projectId, "milestone": "null"});
         };
 
         /* Get project Issues list */
