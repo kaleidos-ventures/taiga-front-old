@@ -12,41 +12,42 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
     $scope.formatUserStoryTasks = function() {
         var usTasks = {};
 
-        _.each($scope.userstories, function(item) {
-            if (usTasks[item.id] === undefined) {
-                usTasks[item.id] = {};
-                _.each($scope.statuses, function(status){
-                    usTasks[item.id][status.id] = [];
+        _.each($scope.tasks, function(task) {
+            if (usTasks[task.user_story] === undefined) {
+                usTasks[task.user_story] = {};
+
+                _.each($scope.statuses, function(status) {
+                    usTasks[task.user_story][status.id] = [];
                 });
             }
 
-            _.each(item.tasks, function(task) {
-                usTasks[item.id][task.status].push(task);
-            });
+            usTasks[task.user_story][task.status].push(task);
         });
 
         $scope.usTasks = usTasks;
     };
 
-    /* Load user stories */
-    var usPromise = rs.getMilestoneUserStories(projectId, sprintId).then(function(userstories) {
-        $scope.$apply(function() {
-            $scope.userstories = userstories;
+    /* Load resources */
+    rs.getTaskStatuses(projectId)
+        .then(function(statuses) {
+            $scope.$apply(function() {
+                $scope.statuses = statuses;
+            });
+        }).then(function() {
+            return rs.getMilestoneUserStories(projectId, sprintId);
+        }).then(function(userstories) {
+            $scope.$apply(function() {
+                $scope.userstories = userstories;
+            });
+        }).then(function() {
+            return rs.getTasks(projectId, sprintId);
+        }).then(function(tasks) {
+            $scope.$apply(function() {
+                $scope.tasks = tasks
+                $scope.formatUserStoryTasks();
+                // console.log(tasks);
+            });
         });
-    });
-
-    /* Load task statuses */
-    var statusesPromise = rs.getTaskStatuses(projectId).then(function(statuses) {
-        $scope.$apply(function() {
-            $scope.statuses = statuses;
-        });
-    });
-
-    Q.allResolved([statusesPromise, usPromise]).then(function(promises) {
-        $scope.$apply(function() {
-            $scope.formatUserStoryTasks();
-        });
-    });
 
     /* Load developers list */
     rs.projectDevelopers(projectId).then(function(developers) {
@@ -81,12 +82,26 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
          * for close all opened modals. */
         $scope.$broadcast("close-modals");
     };
+
+    $scope.$on("sortable:changed", function() {
+        _.each($scope.usTasks, function(statuses, usId) {
+            _.each(statuses, function(tasks, statusId) {
+                _.each(tasks, function(task) {
+                    task.user_story = parseInt(usId, 10);
+                    task.status = parseInt(statusId, 10);
+
+                    if (task.isModified()) {
+                        task.save();
+                    }
+                });
+            });
+        });
+    });
 };
 
 DashboardController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
 
 var DashboardUserStoryController = function($scope, $q) {
-
 };
 
 DashboardUserStoryController.$inject = ['$scope', '$q'];

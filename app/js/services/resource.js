@@ -9,6 +9,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             "projects": "/api/scrum/projects/",
             "userstories": "/api/scrum/user_stories/",
             "milestones": "/api/scrum/milestones/",
+            "tasks": "/api/scrum/tasks/",
             "choices/task-status": "/api/scrum/task_status/",
             "choices/issue-status": "/api/scrum/issue_status/",
             "choices/points": "/api/scrum/points/"
@@ -309,7 +310,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             if (sprintId !== undefined) {
                 params.milestone = sprintId;
             }
-            return queryMany(url("tasks"), patams);
+            return queryMany(url("tasks"), params);
         };
 
         /* Get project Issues list */

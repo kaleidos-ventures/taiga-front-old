@@ -127,19 +127,20 @@ angular.module('greenmine.directives.common', []).
 
                             // Reorder array and apply change to scope
                             ui.item.sortable.model.$modelValue.splice(end, 0, ui.item.sortable.model.$modelValue.splice(start, 1)[0]);
-                            scope.$broadcast("backlog-resort");
-                            console.log(1)
+                            //scope.$broadcast("sortable:changed");
+                            scope.$emit("sortable:changed");
                         } else {
-                            if (scope.status !== undefined) {
-                                ui.item.sortable.moved.status = scope.status.id;
-                            }
+                            //if (scope.status !== undefined) {
+                            //    ui.item.sortable.moved.status = scope.status.id;
+                            //}
 
                             scope.$apply(function() {
                                 ui.item.sortable.moved.order = ui.item.index();
                                 ui.item.sortable.model.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
                             });
                             scope.$apply(function() {
-                                ui.item.sortable.scope.$broadcast("backlog-resort");
+                                //ui.item.sortable.scope.$broadcast("sortable:changed");
+                                ui.item.sortable.scope.$emit("sortable:changed");
                             });
                         }
 

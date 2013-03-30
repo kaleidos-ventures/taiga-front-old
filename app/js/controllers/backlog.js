@@ -157,7 +157,7 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         }
     };
 
-    $scope.$on("backlog-resort", function() {
+    $scope.$on("sortable:changed", function() {
         // Normalize user stories array
         _.each($scope.unassingedUs, function(item, index) {
             item.order = index;
@@ -222,7 +222,7 @@ var BacklogMilestoneController = function($scope) {
 
     $scope.calculateStats();
 
-    $scope.$on("backlog-resort", function() {
+    $scope.$on("sortable:changed", function() {
         _.each($scope.ml.user_stories, function(item, index) {
             item.milestone = $scope.ml.id;
         });
