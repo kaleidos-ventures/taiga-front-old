@@ -7,9 +7,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         var urls = {
             "auth": "/api/auth/login/",
             "projects": "/api/scrum/projects/",
-            "project": "/api/gm/project/%s/",
             "userstories": "/api/scrum/user_stories/",
-            "userstory": "/api/scrum/user_stories/%s/",
             "milestones": "/api/scrum/milestones/",
             "choices/task-status": "/api/scrum/task_status/",
         }, host = config.host, scheme=config.scheme;
@@ -29,23 +27,30 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
     }]);
 
     $provide.factory('resource', ['$http', 'storage', 'url', 'greenmine.config', function($http, storage, url, config) {
-        var service = {};
+        var service = {}
+            , headers
+            , toJson
+            , interpolate;
 
-        var headers = function() {
+        /* Resource Utils */
+
+        headers = function() {
             return {"X-SESSION-TOKEN": storage.get('token')};
         };
 
-        var toJson = function(data) {
+        toJson = function(data) {
             return JSON.stringify(data);
         };
 
-        var interpolate = function(fmt, obj, named) {
+        interpolate = function(fmt, obj, named) {
             if (named) {
                 return fmt.replace(/%\(\w+\)s/g, function(match){return String(obj[match.slice(2,-2)])});
             } else {
                 return fmt.replace(/%s/g, function(match){return String(obj.shift())});
             }
         }
+
+        /* Resource Model */
 
         var Model = function(data, url) {
             this._attrs = data;
@@ -148,6 +153,8 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return defered.promise;
         };
 
+        /* Resource Actions */
+
         var queryMany = function(url, params) {
             var params = {"method":"GET", "headers": headers(), "url": url, params: params || {}};
             var baseUrl, urlTemplate = "%(url)s/%(id)s/", defered = Q.defer();
@@ -183,6 +190,9 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
             return defered.promise;
         };
+
+
+        /* Resource Methods */
 
         /* Login request */
         service.login = function(username, password) {
