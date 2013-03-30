@@ -7,6 +7,33 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
     /* Local scope variables */
     $scope.sprintFormOpened = false;
 
+    $scope.calculateStats = function() {
+        var pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.points);
+        var total = 0, assigned = 0, notAssigned = 0, completed = 0;
+
+        _.each($scope.unassingedUs, function(us) {
+            total += pointIdToOrder(us.points);
+        });
+
+        _.each($scope.milestones, function(ml) {
+            _.each(ml.user_stories, function(us) {
+                total += pointIdToOrder(us.points);
+                assigned += pointIdToOrder(us.points);
+
+                if (us.is_closed) {
+                    completed += pointIdToOrder(us.points);
+                }
+            });
+        });
+
+        $scope.stats = {
+            totalPoints: total,
+            assignedPoints: assigned,
+            notAssignedPoints: total - assigned,
+            completedPercentage: ((completed * 100) / total).toFixed(1)
+        };
+    };
+
     /* Obtain resources */
     rs.getUnassignedUserStories($routeParams.pid)
         .then(function(data) {
@@ -43,37 +70,12 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
                 _.each(data, function(item) {
                     $rootScope.constants.points[item.id] = item;
                 });
+
+                $scope.$broadcast("points:loaded");
             });
         }).then(function(data) {
             $scope.$apply(function() { $scope.calculateStats(); });
         });
-
-    $scope.calculateStats = function() {
-        var pointIdToOrder = greenmine.utils.pointIdToOrder($rootScope);;
-        var total = 0, assigned = 0, notAssigned = 0, completed = 0;
-
-        _.each($scope.unassingedUs, function(us) {
-            total += pointIdToOrder(us.points);
-        });
-
-        _.each($scope.milestones, function(ml) {
-            _.each(ml.user_stories, function(us) {
-                total += pointIdToOrder(us.points);
-                assigned += pointIdToOrder(us.points);
-
-                if (us.is_closed) {
-                    completed += pointIdToOrder(us.points);
-                }
-            });
-        });
-
-        $scope.stats = {
-            totalPoints: total,
-            assignedPoints: assigned,
-            notAssignedPoints: total - assigned,
-            completedPercentage: ((completed * 100) / total).toFixed(1)
-        };
-    };
 };
 
 BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
@@ -91,9 +93,7 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         });
     });
 
-
     $scope.saveUserStory = function(us, points) {
-        console.log("saveUserStory", points);
         us.points = points
         us.save().then(function() {
             $scope.$apply(function() {
@@ -192,12 +192,12 @@ var BacklogMilestonesController = function($scope) {
 
 BacklogMilestonesController.$inject = ['$scope'];
 
+
 /* One backlog milestone controller */
 
-var BacklogMilestoneController = function($scope) {
-    var pointIdToOrder = greenmine.utils.pointIdToOrder($scope);
-
-    $scope.calculateStats = function() {
+var BacklogMilestoneController = function($scope, rs) {
+    var calculateStats = function() {
+        var pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.points);
         var total = 0, completed = 0;
 
         _.each($scope.ml.user_stories, function(us) {
@@ -215,8 +215,7 @@ var BacklogMilestoneController = function($scope) {
         };
     };
 
-    $scope.calculateStats();
-
+    $scope.$on("points:loaded", calculateStats);
     $scope.$on("sortable:changed", function() {
         _.each($scope.ml.user_stories, function(item, index) {
             item.milestone = $scope.ml.id;

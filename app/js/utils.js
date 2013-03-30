@@ -3,9 +3,9 @@
 (function() {
     var utils = this.greenmine.utils = {};
 
-    utils.pointIdToOrder = function(scope) {
+    utils.pointIdToOrder = function(points) {
         return function(id) {
-            var point = scope.constants.points[id];
+            var point = points[id];
             if (point.order === -2) {
                 return 0.5;
             } else if (point.order === -1) {
