@@ -9,10 +9,15 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
 
     $scope.statuses = []
 
-    $scope.formatUserStoryTasks = function() {
+    var formatUserStoryTasks = function() {
         var usTasks = {};
 
         _.each($scope.tasks, function(task) {
+            // HACK: filters not works properly
+            if ($scope.userstoriesMap[task.user_story] === undefined) {
+                return true;
+            };
+
             if (usTasks[task.user_story] === undefined) {
                 usTasks[task.user_story] = {};
 
@@ -27,25 +32,107 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
         $scope.usTasks = usTasks;
     };
 
+    var calculateStats = function() {
+        var pointIdToOrder = greenmine.utils.pointIdToOrder($rootScope);
+        var totalTasks = $scope.tasks.length,
+            totalUss = $scope.userstories.length,
+            totalPoints = 0,
+            completedPoints = 0,
+            compledUss = 0,
+            completedTasks = 0;
+
+
+        _.each($scope.userstories, function(us) {
+            totalPoints += pointIdToOrder(us.points);
+        })
+
+        _.each($scope.tasks, function(task) {
+            if ($scope.statusesMap[task.status].is_closed) {
+                completedTasks += 1;
+            }
+        });
+
+        _.each($scope.usTasks, function(statuses, usId) {
+            var hasOpenTasks = false;
+
+            var completedTasks = 0;
+            var totalTasks = 0;
+
+            _.each(statuses, function(tasks, statusId) {
+                totalTasks += tasks.length;
+
+                if ($scope.statusesMap[statusId].is_closed) {
+                    completedTasks += tasks.length;
+                } else {
+                    if (tasks.length > 0) {
+                        hasOpenTasks = true;
+                    }
+                }
+            });
+
+            if (!hasOpenTasks) {
+                compledUss += 1;
+            }
+
+            var us = $scope.userstoriesMap[usId];
+            var points = pointIdToOrder(us.points);
+            completedPoints += ((completedTasks * points) / totalTasks);
+        });
+
+        $scope.stats = {
+            totalPoints: totalPoints,
+            completedPoints: completedPoints.toFixed(0),
+            percentageCompletedPoints: ((completedPoints*100) / totalPoints).toFixed(1),
+            totalUss: totalUss,
+            compledUss: compledUss.toFixed(0),
+            totalTasks: totalTasks,
+            completedTasks: completedTasks
+        };
+    };
+
     /* Load resources */
     rs.getTaskStatuses(projectId)
         .then(function(statuses) {
             $scope.$apply(function() {
                 $scope.statuses = statuses;
+                $scope.statusesMap = {};
+
+                _.each(statuses, function(status) {
+                    $scope.statusesMap[status.id] = status;
+                });
             });
         }).then(function() {
             return rs.getMilestoneUserStories(projectId, sprintId);
         }).then(function(userstories) {
             $scope.$apply(function() {
                 $scope.userstories = userstories;
+                $scope.userstoriesMap = {};
+
+                _.each(userstories, function(us) {
+                    $scope.userstoriesMap[us.id] = us;
+                });
+            });
+        }).then(function() {
+            return rs.getUsPoints(projectId);
+        }).then(function(points) {
+            $scope.$apply(function() {
+                _.each(points, function(item) {
+                    $rootScope.constants.points[item.id] = item;
+                });
             });
         }).then(function() {
             return rs.getTasks(projectId, sprintId);
         }).then(function(tasks) {
             $scope.$apply(function() {
                 $scope.tasks = tasks
-                $scope.formatUserStoryTasks();
-                // console.log(tasks);
+
+                // HACK:
+                $scope.tasks = _.filter(tasks, function(task) {
+                    return (task.milestone == sprintId && task.project == projectId);
+                });
+
+                formatUserStoryTasks();
+                calculateStats();
             });
         });
 
@@ -96,6 +183,8 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
                 });
             });
         });
+
+        calculateStats();
     });
 };
 
