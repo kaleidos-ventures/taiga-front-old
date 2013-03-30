@@ -245,30 +245,6 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return queryMany(url("choices/issue-status"), {project: projectId});
         };
 
-        /* Get a user stories list by projectId and sprintId. */
-        service.getMilestoneUserStories = function(projectId, sprintId) {
-            var defered = Q.defer(), q, resolveUrl;
-
-            resolveUrl = function(id) {
-                return url("userstory", id);
-            };
-
-            q = $http.get("tmpresources/dashboard-userstories.json");
-            q.success(function(data, status) {
-                var objects = _.map(data, function(item) {
-                    return new Model(item, {
-                        resolveUrl: resolveUrl,
-                        headers: headers,
-                        httpService: $http
-                    });
-                });
-
-                defered.resolve(objects);
-            });
-
-            return defered.promise;
-        };
-
         /* Get a milestone lines for a project. */
         service.getMilestones = function(projectId) {
             // First step: obtain data
@@ -320,6 +296,20 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         service.getUnassignedUserStories = function(projectId) {
             return queryMany(url("userstories"),
                 {"project":projectId, "milestone": "null"});
+        };
+
+        /* Get a user stories list by projectId and sprintId. */
+        service.getMilestoneUserStories = function(projectId, sprintId) {
+            return queryMany(url("userstories"),
+                {"project":projectId, "milestone": sprintId});
+        };
+
+        service.getTasks = function(projectId, sprintId) {
+            var params = {project:projectId}
+            if (sprintId !== undefined) {
+                params.milestone = sprintId;
+            }
+            return queryMany(url("tasks"), patams);
         };
 
         /* Get project Issues list */
