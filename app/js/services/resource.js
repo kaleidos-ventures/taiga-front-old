@@ -52,11 +52,11 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         /* Resource Model */
 
-        var Model = function(data, url) {
+        var Model = function(data, url, options) {
             this._attrs = data;
             this._modifiedAttrs = {};
             this._isModified = false;
-            this.url = url;
+            this._url = url;
 
             this.initialize();
         };
@@ -66,6 +66,10 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
             var getter = function(name) {
                 return function() {
+                    if (name.substr(0,2) === "__") {
+                        return self[name];
+                    }
+
                     if (self._modifiedAttrs[name] !== undefined) {
                         return self._modifiedAttrs[name];
                     } else {
@@ -76,8 +80,15 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
             var setter = function(name) {
                 return function(value) {
-                    self._modifiedAttrs[name] = value;
-                    self._isModified = true;
+                    // Ignore all attrs stats with "__"
+                    if (name.substr(0,2) === "__") {
+                        self[name] = value
+                    } else {
+                        if (self._attrs[name] !== value) {
+                            self._modifiedAttrs[name] = value;
+                            self._isModified = true;
+                        }
+                    }
                 };
             };
 
@@ -111,7 +122,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
             params = {
                 method: "DELETE",
-                url: this.url,
+                url: this._url,
                 headers: headers()
             };
 
@@ -134,7 +145,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
                 var params = {
                     method: "PATCH",
-                    url: this.url,
+                    url: this._url,
                     headers: headers(),
                     data: toJson(postObject)
                 };
@@ -153,20 +164,19 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return defered.promise;
         };
 
-        /* Resource Actions */
+        /* Resource Action Helpers */
+
+        var itemUrlTemplate = "%(url)s(id)s/";
 
         var queryMany = function(url, params) {
             var params = {"method":"GET", "headers": headers(), "url": url, params: params || {}};
-            var baseUrl, urlTemplate = "%(url)s/%(id)s/", defered = Q.defer();
-
-            baseUrl = (url.substr(-1) === "/") ? url.substr(0, url.length-1) : url
+            var defered = Q.defer();
 
             $http(params).success(function(data, status) {
                 var models = _.map(data, function(item) {
-                    var modelurl = interpolate(urlTemplate, {"url": baseUrl, "id": item.id}, true);
+                    var modelurl = interpolate(itemUrlTemplate, {"url": url, "id": item.id}, true);
                     return new Model(item, modelurl);
                 });
-
                 defered.resolve(models);
             }).error(function(data, status) {
                 defered.reject(data, status);
@@ -251,7 +261,49 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         /* Get a milestone lines for a project. */
         service.getMilestones = function(projectId) {
-            return queryMany(url("milestones"), {project: projectId});
+            // First step: obtain data
+            var _getMilestones = function() {
+                var defered = Q.defer();
+                var params = {"method":"GET", "headers": headers(), "url": url("milestones")};
+
+                $http(params).success(function(data, status) {
+                    defered.resolve(data);
+                }).error(function(data, status) {
+                    defered.reject(data, status);
+                })
+
+                return defered.promise;
+            }
+
+            // Second step: make user story models
+            var _makeUserStoryModels = function(objects) {
+                var baseUrl = url("userstories");
+
+                _.each(objects, function(milestone) {
+                    var user_stories = _.map(milestone.user_stories, function(item) {
+                        var modelurl = interpolate(itemUrlTemplate, {"url": baseUrl, "id": item.id}, true);
+                        return new Model(item, modelurl);
+                    });
+
+                    milestone.user_stories = user_stories;
+                });
+
+                return objects;
+            };
+
+            // Third step: make milestone models
+            var _makeModels = function(objects) {
+                var baseUrl = url("milestones");
+
+                return _.map(objects, function(item) {
+                    var modelurl = interpolate(itemUrlTemplate, {"url": baseUrl, "id": item.id}, true);
+                    return new Model(item, modelurl);
+                });
+            };
+
+            return _getMilestones()
+                        .then(_makeUserStoryModels)
+                        .then(_makeModels);
         };
 
         /* Get unassigned user stories list for a project. */

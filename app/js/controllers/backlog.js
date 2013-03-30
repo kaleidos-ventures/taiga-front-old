@@ -104,14 +104,14 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
                 var itemTagIds = _.map(item.tags, function(tag) { return tag; });
                 var intersection = _.intersection(selectedTagsIds, itemTagIds);
 
-                if (intersection.length === 0) {
-                    item.hidden = true;
+                if (interSection.length === 0) {
+                    item.__hidden = true;
                 } else {
-                    item.hidden = false;
+                    item.__hidden = false;
                 }
             });
         } else {
-            _.each($scope.unassingedUs, function(item) {  item.hidden = false; });
+            _.each($scope.unassingedUs, function(item) {  item.__hidden = false; });
         }
     };
 

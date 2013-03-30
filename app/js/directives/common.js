@@ -116,31 +116,28 @@ angular.module('greenmine.directives.common', []).
                     onStop = function(e, ui) {
                         // digest all prepared changes
                         // console.log("onStop", ui.item.sortable.moved)
-                        if (ui.item.sortable.moved === undefined) {
-                            e.preventDefault();
+                        //if (ui.item.sortable.moved === undefined) {
+                        //    scope.$broadcast("backlog-resort");
+                        //} else {
+                        if (ui.item.sortable.model && !ui.item.sortable.relocate) {
+                            // Fetch saved and current position of dropped element
+                            var end, start;
+                            start = ui.item.sortable.index;
+                            end = ui.item.index();
+
+                            // Reorder array and apply change to scope
+                            ui.item.sortable.model.$modelValue.splice(end, 0, ui.item.sortable.model.$modelValue.splice(start, 1)[0]);
                             scope.$broadcast("backlog-resort");
-                            return false;
                         } else {
-                            if (ui.item.sortable.model && !ui.item.sortable.relocate) {
-                                // Fetch saved and current position of dropped element
-                                var end, start;
-                                start = ui.item.sortable.index;
-                                end = ui.item.index();
-
-                                // Reorder array and apply change to scope
-                                ui.item.sortable.model.$modelValue.splice(end, 0, ui.item.sortable.model.$modelValue.splice(start, 1)[0]);
-                                scope.$broadcast("backlog-resort");
-                            } else {
-                                if (scope.status !== undefined) {
-                                    ui.item.sortable.moved.status = scope.status.id;
-                                }
-                                ui.item.sortable.model.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
-                                ui.item.sortable.scope.$broadcast("backlog-resort");
+                            if (scope.status !== undefined) {
+                                ui.item.sortable.moved.status = scope.status.id;
                             }
-
+                            ui.item.sortable.model.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
+                            ui.item.sortable.scope.$broadcast("backlog-resort");
                             scope.$broadcast("backlog-resort");
-                            scope.$apply();
                         }
+
+                        scope.$apply();
                     };
 
                     // If user provided 'start' callback compose it with onStart function
