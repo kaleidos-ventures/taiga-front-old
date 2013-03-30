@@ -7,51 +7,46 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
     /* Local scope variables */
     $scope.sprintFormOpened = false;
 
-    /* Load unassigned user stories */
-    var promise1 = rs.getUnassignedUserStories($routeParams.pid).then(function(data) {
-
-        // HACK: because django-filter does not works properly
-        // $scope.unassingedUs = data;
-        $scope.unassingedUs = _.filter(data, function(item) {
-            return (item.project === $rootScope.projectId && item.milestone === null);
-        });
-
-        $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order");
-
-        $scope.$apply(function() {
-            $scope.$broadcast("userstories-loaded");
-        });
-    });
-
-    /* Load milestones */
-    var promise2 = rs.getMilestones($routeParams.pid).then(function(data) {
-        $scope.$apply(function() {
-
+    /* Obtain resources */
+    rs.getUnassignedUserStories($routeParams.pid)
+        .then(function(data) {
             // HACK: because django-filter does not works properly
-            // $scope.milestones = data;
-            $scope.milestones = _.filter(data, function(item) {
-                return item.project === $rootScope.projectId;
+            // $scope.unassingedUs = data;
+            $scope.unassingedUs = _.filter(data, function(item) {
+                return (item.project === $rootScope.projectId && item.milestone === null);
             });
 
-            if (data.length > 0) {
-                $scope.sprintId = data[0].id;
-            }
-        });
-    });
-
-    var promise3 = rs.getUsPoints($scope.projectId).then(function(data) {
-        $scope.$apply(function() {
-            $rootScope.constants.points = {};
-
-            _.each(data, function(item) {
-                $rootScope.constants.points[item.id] = item;
+            $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order");
+            $scope.$apply(function() {
+                $scope.$broadcast("userstories-loaded");
             });
-        });
-    });
+        }).then(function() {
+            return rs.getMilestones($routeParams.pid);
+        }).then(function(data) {
+            $scope.$apply(function() {
+                // HACK: because django-filter does not works properly
+                // $scope.milestones = data;
+                $scope.milestones = _.filter(data, function(item) {
+                    return item.project === $rootScope.projectId;
+                });
 
-    Q.allResolved([promise1, promise2, promise3]).done(function() {
-        $scope.$apply(function() { $scope.calculateStats(); });
-    });
+                if (data.length > 0) {
+                    $scope.sprintId = data[0].id;
+                }
+            });
+        }).then(function() {
+            return rs.getUsPoints($scope.projectId);
+        }).then(function(data) {
+            $scope.$apply(function() {
+                $rootScope.constants.points = {};
+
+                _.each(data, function(item) {
+                    $rootScope.constants.points[item.id] = item;
+                });
+            });
+        }).then(function(data) {
+            $scope.$apply(function() { $scope.calculateStats(); });
+        });
 
     $scope.calculateStats = function() {
         var pointIdToOrder = greenmine.utils.pointIdToOrder($rootScope);;
