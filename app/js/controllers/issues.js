@@ -120,7 +120,6 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, rs) {
     $scope.$watch("sortingOrder", groupToPages);
     $scope.$watch("reverse", groupToPages);
 
-
     /* Load Resources */
     Q.allResolved([
         rs.getIssueTypes(projectId),
@@ -178,28 +177,34 @@ IssuesController.$inject = ['$scope', '$rootScope', '$routeParams', '$filter', '
 var IssuesViewController = function($scope, $rootScope, $routeParams, rs) {
     $rootScope.pageSection = 'issues';
     $rootScope.pageBreadcrumb = ["Project", "Issues", "#" + $routeParams.issueid];
-    $rootScope.projectId = $routeParams.pid;
+    $rootScope.projectId = parseInt($routeParams.pid, 10);
 
-    $scope.issue = {
-        id: $routeParams.issueid,
-        subject: "Mcsweeney's shoreditch quis skateboard, 3 wolf moon selfies lo-fi stumptown",
-        tags: ["sartorial", "aliquip", "probably"],
-        description: "Sartorial aliquip you probably haven't heard of them, " +
-            "accusamus intelligentsia scenester culpa twee 3 wolf moon neutra et id. " +
-            "Post-ironic fap readymade, whatever small batch ut you probably haven't " +
-            "heard of them occupy proident dolore. Wayfarers fugiat nostrud ad " +
-            "semiotics, bushwick blog beard kale chips laborum labore aliquip vice " +
-            "mustache wolf. Occaecat fugiat culpa iphone cillum, magna incididunt " +
-            "90's authentic. Adipisicing deserunt echo park meggings, deep v enim " +
-            "pour-over hoodie. Chambray blog truffaut, cardigan before they sold out " +
-            "gentrify dolore. Jean shorts meh nostrud, incididunt skateboard godard " +
-            "ethnic shoreditch ullamco actually high life.",
-        status: 1,
-        assigned_to: 1,
-        priority: 1
-    };
+    var projectId = $rootScope.projectId;
 
-    $scope.form = _.extend({}, $scope.issue);
+    /* Load Resources */
+    Q.allResolved([
+        rs.getIssueTypes(projectId),
+        rs.getIssueStatuses(projectId),
+        rs.getSeverities(projectId),
+        rs.getPriorities(projectId),
+        rs.projectDevelopers(projectId)
+    ]).spread(function(issueTypes, issueStatuses, severities, priorities, developers) {
+        $rootScope.constants.typeList = _.sortBy(issueTypes, "order");
+        $rootScope.constants.statusList = _.sortBy(issueStatuses, "order");
+        $rootScope.constants.severityList = _.sortBy(severities, "order");
+        $rootScope.constants.priorityList = _.sortBy(priorities, "order");
+        $scope.developers = developers;
+
+        return rs.getIssue($routeParams.issueid);
+    }).then(function(issue) {
+        $scope.$apply(function() {
+            $scope.issue = issue;
+            $scope.form = _.extend({}, $scope.issue);
+        });
+    });
+
+    $scope.issue = {};
+    $scope.form = {};
     $scope.updateFormOpened = false;
 
     $scope.isSameAs = function(property, id) {
@@ -215,9 +220,11 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, rs) {
     rs.projectDevelopers($routeParams.pid).
         then(loadSuccessProjectDevelopers);
 
-
     $scope.save = function() {
-        console.log("save");
+        _.each($scope.form, function(value, key) {
+            $scope.issue[key] = value;
+        });
+        $scope.issue.save()
     };
 };
 

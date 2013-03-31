@@ -41,22 +41,22 @@
                         <label class="control-label" for="inputEmail">Status</label>
                         <div class="controls">
                             <select name="status" ng-model="form.status">
-                                <option ng-repeat="(id, name) in constants.status"
-                                    ng-selected="isSameAs('status', id)" value="{{ id }}">{{ name }}</option>
+                                <option ng-repeat="obj in constants.statusList"
+                                    ng-selected="isSameAs('status', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="inputEmail">Priority</label>
+                        <label class="control-label">Priority</label>
                         <div class="controls">
                             <select name="status" ng-model="form.priority">
-                                <option ng-repeat="(id, name) in constants.priority"
-                                    ng-selected="isSameAs('priority', id)" value="{{ id }}">{{ name }}</option>
+                                <option ng-repeat="obj in constants.priorityList"
+                                    ng-selected="isSameAs('priority', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="inputEmail">Assigned to</label>
+                        <label class="control-label">Assigned to</label>
                         <div class="controls">
                             <select name="status" ng-model="form.assigned_to">
                                 <option ng-repeat="dev in developers"
@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="inputEmail">Tags</label>
+                        <label class="control-label">Tags</label>
                         <div class="controls">
                             <input type="text" name="status" value="" ng-model="form.tags" ui-select2></input>
                         </div>

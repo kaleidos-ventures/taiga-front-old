@@ -200,7 +200,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             params = _.extend({}, paramsDefault, params || {});
 
             $http(params).success(function(data, status) {
-                var model = new Model(item, {url: url});
+                var model = new Model(data, url);
                 defered.resolve(model);
             }).error(function(data, status) {
                 defered.reject(data, status);
@@ -338,6 +338,11 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         /* Get project Issues list */
         service.getIssues = function(projectId) {
             return queryMany(url("issues"), {project:projectId});
+        };
+
+        service.getIssue = function(issueId) {
+            var finalUrl = interpolate(itemUrlTemplate, {"url": url("issues"), "id": issueId}, true);
+            return queryOne(finalUrl);
         };
 
         /* Get a users with role developer for
