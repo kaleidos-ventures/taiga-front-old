@@ -1,10 +1,10 @@
-var IssuesController = function($scope, $rootScope, $routeParams, rs) {
+var IssuesController = function($scope, $rootScope, $routeParams, $filter, rs) {
     /* Global Scope Variables */
     $rootScope.pageSection = 'issues';
     $rootScope.pageBreadcrumb = ["Project", "Issues"];
-    $rootScope.projectId = $routeParams.pid;
+    $rootScope.projectId = parseInt($routeParams.pid, 10);
 
-    var projectId = $routeParams.pid;
+    var projectId = $rootScope.projectId;
 
     $scope.filtersOpened = false;
     $scope.issueFormOpened = false;
@@ -65,17 +65,19 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
     var groupToPages = function() {
         $scope.pagedItems = [];
 
-        _($scope.issues).
-            filter(function(issue) {
+        var issues = _.filter($scope.issues, function(issue) {
                 return (issue.__hidden !== true);
-            }).
-            each(function(issue, i) {
-                if (i % $scope.itemsPerPage === 0) {
-                    $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [ issue ];
-                } else {
-                    $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push(issue);
-                }
-            });
+        });
+
+        issues = $filter("orderBy")(issues, $scope.sortingOrder, $scope.reverse);
+
+        _.each(issues, function(issue, i) {
+            if (i % $scope.itemsPerPage === 0) {
+                $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [ issue ];
+            } else {
+                $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push(issue);
+            }
+        });
     };
 
     $scope.prevPage = function () {
@@ -114,6 +116,11 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
         filterIssues();
     };
 
+
+    $scope.$watch("sortingOrder", groupToPages);
+    $scope.$watch("reverse", groupToPages);
+
+
     /* Load Resources */
     Q.allResolved([
         rs.getIssueTypes(projectId),
@@ -149,14 +156,23 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
         $scope.$apply(function() {
             $scope.issues = issues;
 
+            // HACK: because filters not works correctly
+            $scope.issues = _.filter(issues, function(issue) {
+                return (issue.project === projectId);
+            });
+
             generateTagList();
             filterIssues();
         })
     });
 
+
+    $scope.saveIssue = function(issue) {
+        issue.save()
+    };
 };
 
-IssuesController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
+IssuesController.$inject = ['$scope', '$rootScope', '$routeParams', '$filter', 'resource'];
 
 
 var IssuesViewController = function($scope, $rootScope, $routeParams, rs) {

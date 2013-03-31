@@ -54,7 +54,7 @@
                             <i class="icon-chevron-down"></i> Subject</div>
 
                         <div data-field="state" class="issue-sortable-field issue-state">
-                            <i class="icon-chevron-down"></i> State</div>
+                            <i class="icon-chevron-down"></i> Status</div>
 
                         <div data-field="priority" class="issue-sortable-field issue-priority">
                             <i class="icon-chevron-down"></i> Priority</div>
@@ -66,7 +66,7 @@
                     </div>
                     <div class="flex-separator"></div>
                     <div class="flex-body">
-                        <div class="issue-item" ng-repeat="issue in pagedItems[currentPage]|orderBy:sortingOrder:reverse">
+                        <div class="issue-item" ng-repeat="issue in pagedItems[currentPage]">
                             <div class="issue-severity">
                                 <a href="" gm-issue-severity-popover="saveIssue(issue)">{{ resolveSeverity(issue.severity) }}</a>
                             </div>
@@ -82,12 +82,14 @@
                             <div class="issue-priority">
                                 <a href="" gm-issue-priority-popover="saveIssue(issue)">{{ resolvePriority(issue.priority) }}</a>
                             </div>
-                            <div class="issue-assignedto" gm-developer-popover="saveIssue(issue)">
-                                <div class="button-item" ng-show="issue.assigned_to">
-                                    <i class="icon-user"></i> <a href="" class=""><span>{{ issue.assigned_to }}</span></a>
-                                </div>
-                                <div class="button-item" ng-show="!issue.assigned_to">
-                                    <i class="icon-question-sign"></i> <a href="" class=""><span>Unassigned</span></a>
+                            <div class="issue-assignedto">
+                                <div gm-developer-popover="saveIssue(issue)">
+                                    <div class="button-item" ng-show="issue.assigned_to">
+                                        <i class="icon-user"></i> <a href="" class=""><span>{{ issue.assigned_to }}</span></a>
+                                    </div>
+                                    <div class="button-item" ng-show="!issue.assigned_to">
+                                        <i class="icon-question-sign"></i> <a href="" class=""><span>Unassigned</span></a>
+                                    </div>
                                 </div>
                             </div>
                             <div class="issue-options">
