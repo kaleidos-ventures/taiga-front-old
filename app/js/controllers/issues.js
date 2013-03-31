@@ -6,17 +6,6 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
     $scope.filtersOpened = false;
     $scope.issueFormOpened = false;
 
-    /* Load unassigned user stories */
-
-    var onIssuesLoaded = function(data) {
-        $scope.issues = data;
-        $scope.generateTagList();
-        $scope.filterIssues();
-    };
-
-    rs.getIssues($routeParams.pid).
-        then(onIssuesLoaded);
-
     /* Pagination variables */
 
     $scope.filteredItems = [];
@@ -30,7 +19,7 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
 
     /* Pagination methods */
 
-    $scope.generateTagList = function() {
+    var generateTagList = function() {
         var tagsDict = {};
         var tags = [];
 
@@ -46,7 +35,7 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
         $scope.tags = tags;
     };
 
-    $scope.filterIssues = function() {
+    var filterIssues = function() {
         var selectedTags = _.filter($scope.tags, function(item) { return item.selected });
         var selectedTagsIds = _.map(selectedTags, function(item) { return item.id });
 
@@ -111,8 +100,33 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
         else tag.selected = true;
 
         $scope.currentPage = 0;
-        $scope.filterIssues();
-    }
+        filterIssues();
+    };
+
+    /* Load Resources */
+    Q.allResolved([
+        rs.getIssueTypes($scope.projectId),
+        rs.getIssueStatuses($scope.projectId),
+        rs.getSeverities($scope.projectId),
+        rs.getPriorities($scope.projectId)
+    ]).spread(function(issueTypes, issueStatuses, severities, priorities) {
+        console.log(issueTypes);
+        console.log(issueStatuses);
+        console.log(severities);
+        console.log(priorities);
+
+        return rs.getIssues($scope.projectId);
+    }).then(function(issues) {
+        $scope.$apply(function() {
+            $scope.issues = issues;
+
+            generateTagList();
+            filterIssues();
+
+            console.log(issues);
+        })
+    });
+
 };
 
 IssuesController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];

@@ -10,9 +10,13 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             "userstories": "/api/scrum/user_stories/",
             "milestones": "/api/scrum/milestones/",
             "tasks": "/api/scrum/tasks/",
+            "issues": "/api/scrum/issues/",
             "choices/task-status": "/api/scrum/task_status/",
             "choices/issue-status": "/api/scrum/issue_status/",
+            "choices/issue-types": "/api/scrum/issue_types/",
             "choices/us-status": "/api/scrum/user_story_status/",
+            "choices/priorities": "/api/scrum/priorities/",
+            "choices/severities": "/api/scrum/severities/",
             "choices/points": "/api/scrum/points/"
         }, host = config.host, scheme=config.scheme;
 
@@ -243,8 +247,21 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return queryMany(url('choices/points'), {project: projectId});
         };
 
+        service.getPriorities = function(projectId) {
+            return queryMany(url("choices/priorities"), {project: projectId});
+        };
+
+
+        service.getSeverities = function(projectId) {
+            return queryMany(url("choices/severities"), {project: projectId});
+        };
+
         service.getIssueStatuses = function(projectId) {
             return queryMany(url("choices/issue-status"), {project: projectId});
+        };
+
+        service.getIssueTypes = function(projectId) {
+            return queryMany(url("choices/issue-types"), {project: projectId});
         };
 
         service.getUsStatuses = function(projectId) {
@@ -320,24 +337,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         /* Get project Issues list */
         service.getIssues = function(projectId) {
-            var defered = Q.defer(), q, resolveUrl;
-
-            resolveUrl = function(id) {
-                return url("issue", id);
-            };
-
-            q = $http.get("tmpresources/issues.json");
-            q.success(function(data, status) {
-                var objects = _.map(data, function(item) {
-                    return new Model(item, {
-                        resolveUrl: resolveUrl,
-                        headers: headers,
-                        httpService: $http
-                    });
-                });
-            });
-
-            return defered.promise;
+            return queryMany(url("issues"), {project:projectId});
         };
 
         /* Get a users with role developer for
