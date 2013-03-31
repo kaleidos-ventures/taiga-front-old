@@ -211,7 +211,7 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         });
     };
 
-    $scope.saveUserStory = function(us, points) {
+    $scope.saveUs = function(us, points) {
         us.points = points
         us.save().then(function() {
             $scope.$apply(function() {
