@@ -115,7 +115,7 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         if (selectedTagsIds.length > 0) {
             _.each($scope.unassingedUs, function(item) {
                 var itemTagIds = _.map(item.tags, function(tag) { return tag; });
-                var intersection = _.intersection(selectedTagsIds, itemTagIds);
+                var interSection = _.intersection(selectedTagsIds, itemTagIds);
 
                 if (interSection.length === 0) {
                     item.__hidden = true;
