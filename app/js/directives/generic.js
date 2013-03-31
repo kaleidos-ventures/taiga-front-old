@@ -11,7 +11,6 @@ angular.module('greenmine.directives.generic', []).
             var element = angular.element(elm);
             var currentValue = element.val();
             var compareValue = scope.$eval(attrs.uiSelected);
-            console.log(currentValue, compareValue);
         };
     }]).
     directive('uiSelect2', function() {

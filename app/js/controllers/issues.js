@@ -2,6 +2,9 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
     /* Global Scope Variables */
     $rootScope.pageSection = 'issues';
     $rootScope.pageBreadcrumb = ["Project", "Issues"];
+    $rootScope.projectId = $routeParams.pid;
+
+    var projectId = $routeParams.pid;
 
     $scope.filtersOpened = false;
     $scope.issueFormOpened = false;
@@ -113,11 +116,12 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
 
     /* Load Resources */
     Q.allResolved([
-        rs.getIssueTypes($scope.projectId),
-        rs.getIssueStatuses($scope.projectId),
-        rs.getSeverities($scope.projectId),
-        rs.getPriorities($scope.projectId)
-    ]).spread(function(issueTypes, issueStatuses, severities, priorities) {
+        rs.getIssueTypes(projectId),
+        rs.getIssueStatuses(projectId),
+        rs.getSeverities(projectId),
+        rs.getPriorities(projectId),
+        rs.projectDevelopers(projectId)
+    ]).spread(function(issueTypes, issueStatuses, severities, priorities, developers) {
         _.each(issueTypes, function(item) {
             $rootScope.constants.type[item.id] = item;
         });
@@ -138,16 +142,15 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
         $rootScope.constants.statusList = _.sortBy(issueStatuses, "order");
         $rootScope.constants.severityList = _.sortBy(severities, "order");
         $rootScope.constants.priorityList = _.sortBy(priorities, "order");
+        $scope.developers = developers;
 
-        return rs.getIssues($scope.projectId);
+        return rs.getIssues(projectId);
     }).then(function(issues) {
         $scope.$apply(function() {
             $scope.issues = issues;
 
             generateTagList();
             filterIssues();
-
-            console.log(issues);
         })
     });
 

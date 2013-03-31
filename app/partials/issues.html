@@ -67,16 +67,29 @@
                     <div class="flex-separator"></div>
                     <div class="flex-body">
                         <div class="issue-item" ng-repeat="issue in pagedItems[currentPage]|orderBy:sortingOrder:reverse">
-                            <div class="issue-severity">{{ resolveSeverity(issue.severity) }}</div>
+                            <div class="issue-severity">
+                                <a href="" gm-issue-severity-popover="saveIssue(issue)">{{ resolveSeverity(issue.severity) }}</a>
+                            </div>
                             <div class="issue-title">
                                 <span class="title">{{ issue.subject }}</span>
                                 <span class="tags">
                                     <span ng-repeat="tag in issue.tags" class="label" gm-colorize-tag>{{ tag.name }}</span>
                                 </span>
                             </div>
-                            <div class="issue-state">{{ resolveStatus(issue.status) }}</div>
-                            <div class="issue-priority">{{ resolvePriority(issue.priority) }}</div>
-                            <div class="issue-assignedto">{{ issue.assigned_to }}</div>
+                            <div class="issue-state">
+                                <a href="" gm-issue-status-popover="saveIssue(issue)">{{ resolveStatus(issue.status) }}</a>
+                            </div>
+                            <div class="issue-priority">
+                                <a href="" gm-issue-priority-popover="saveIssue(issue)">{{ resolvePriority(issue.priority) }}</a>
+                            </div>
+                            <div class="issue-assignedto" gm-developer-popover="saveIssue(issue)">
+                                <div class="button-item" ng-show="issue.assigned_to">
+                                    <i class="icon-user"></i> <a href="" class=""><span>{{ issue.assigned_to }}</span></a>
+                                </div>
+                                <div class="button-item" ng-show="!issue.assigned_to">
+                                    <i class="icon-question-sign"></i> <a href="" class=""><span>Unassigned</span></a>
+                                </div>
+                            </div>
                             <div class="issue-options">
                                 <a class="btn btn-mini btn-success" gm-preview-popover
                                     data-template-selector="#issue-preview-popover" data-context="issue">
@@ -141,6 +154,49 @@
                 <input type="button" class="btn btn-success btn-delete" value="Delete" />
                 <input type="button" class="btn btn-cancel" value="Cancel" />
             </section>
+        </div>
+    </script>
+    <script type="text/template" id="developers-popover">
+        <div class="developers-popover">
+            Select a developer:
+            <ul>
+                <li><a href="" data-dev-id="">Unassigned</a>
+                <% _.each(developers, function(dev) { %>
+                <li>
+                    <a href="" data-dev-id="<%= dev.id %>"><%= dev.name %></a>
+                </li>
+                <% }); %>
+            </ul>
+        </div>
+    </script>
+    <script type="text/template" id="severity-popover">
+        <div class="severity-popover">
+            Select severity:
+            <ul>
+                <% _.each(list, function(obj) { %>
+                <li><a href="" data-id="<%= obj.id %>"><%= obj.name %></a></li>
+                <% }); %>
+            </ul>
+        </div>
+    </script>
+    <script type="text/template" id="priority-popover">
+        <div class="priority-popover">
+            Select priority:
+            <ul>
+                <% _.each(list, function(obj) { %>
+                <li><a href="" data-id="<%= obj.id %>"><%= obj.name %></a></li>
+                <% }); %>
+            </ul>
+        </div>
+    </script>
+    <script type="text/template" id="status-popover">
+        <div class="status-popover">
+            Select status:
+            <ul>
+                <% _.each(list, function(obj) { %>
+                <li><a href="" data-id="<%= obj.id %>"><%= obj.name %></a></li>
+                <% }); %>
+            </ul>
         </div>
     </script>
 </div>
