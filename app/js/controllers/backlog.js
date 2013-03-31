@@ -4,9 +4,6 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
     $rootScope.pageBreadcrumb = ["Project", "Backlog"];
     $rootScope.projectId = parseInt($routeParams.pid, 10);
 
-    /* Local scope variables */
-    $scope.sprintFormOpened = false;
-
     $scope.calculateStats = function() {
         var pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.points);
         var total = 0, assigned = 0, notAssigned = 0, completed = 0;
@@ -245,13 +242,31 @@ BacklogUserStoriesCtrl.$inject = ['$scope', '$rootScope', 'resource'];
 
 /* Backlog milestones controller. */
 
-var BacklogMilestonesController = function($scope) {
+var BacklogMilestonesController = function($scope, rs) {
+    /* Local scope variables */
+    $scope.sprintFormOpened = false;
+
     $scope.sprintSubmit = function() {
-        console.log($scope);
+        if ($scope.form.save === undefined) {
+            rs.createMilestone($scope.projectId, $scope.form).then(function(milestone) {
+                $scope.$apply(function() {
+                    $scope.milestones.unshift(milestone);
+                    $scope.form = {};
+                    $scope.sprintFormOpened = false;
+                });
+            });
+        } else {
+            $scope.form.save().then(function() {
+                $scope.$apply(function() {
+                    $scope.form = {};
+                    $scope.sprintFormOpened = false;
+                });
+            });
+        }
     };
 };
 
-BacklogMilestonesController.$inject = ['$scope'];
+BacklogMilestonesController.$inject = ['$scope', 'resource'];
 
 
 /* One backlog milestone controller */

@@ -370,6 +370,23 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return defered.promise;
         };
 
+        service.createMilestone = function(projectId, form) {
+            var obj = _.extend({}, form, {project: projectId});
+            var defered = Q.defer();
+
+
+            $http.post(url("milestones"), obj, {headers:headers()}).
+                success(function(data, status) {
+                    var modelurl = interpolate(itemUrlTemplate, {"url": url("milestones"), "id": data.id}, true);
+                    defered.resolve(new Model(data, modelurl));
+                }).
+                error(function(data, status) {
+                    defered.reject(data, status);
+                });
+
+            return defered.promise;
+        };
+
         return service;
     }]);
 });
