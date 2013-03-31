@@ -63,6 +63,78 @@ angular.module('greenmine.directives.common', []).
             element.css('background-color', '#' + color);
         };
     }).
+    directive("gmRemovePopover", ["$parse", function($parse) {
+        return function(scope, elm, attrs) {
+            var element = angular.element(elm);
+            var fn = $parse(attrs.gmRemovePopover);
+            var templateSelector = element.data('template-selector');
+            var ctxLookup = element.data('context');
+            var placement = element.data('placement') || 'left';
+
+            element.on("click", function(event) {
+                event.preventDefault();
+
+                var template = _.template($(templateSelector).html())
+                var ctx = {}
+
+                ctx[ctxLookup] = scope[ctxLookup];
+
+                element.popover({
+                    content: template(ctx),
+                    html:true,
+                    trigger: "manual",
+                    placement: placement
+                });
+
+                element.popover("show");
+            });
+
+            var parentElement = element.parent();
+
+            parentElement.on("click", ".popover-content .btn-delete", function(event) {
+                scope.$apply(function() {fn(scope); });
+                element.popover('hide');
+            });
+
+            parentElement.on("click", ".popover-content .btn-cancel", function(event) {
+                element.popover('hide');
+            });
+        };
+    }]).
+    directive("gmPreviewPopover", ['$parse', function($parse) {
+        return function(scope, elm, attrs) {
+            var element = angular.element(elm);
+            var isOpened = false;
+
+            var templateSelector = element.data('template-selector');
+            var ctxLookup = element.data('context');
+            var placement = element.data('placement') || 'left';
+
+            element.on("click", function(event) {
+                event.preventDefault();
+
+                if (isOpened) {
+                    isOpened = false;
+                    element.popover("hide");
+                } else {
+                    var template = _.template($(templateSelector).html());
+                    isOpened = true;
+
+                    var ctx = {}
+                    ctx[ctxLookup] = scope[ctxLookup];
+
+                    element.popover({
+                        content: template(ctx),
+                        html:true,
+                        trigger: "manual",
+                        placement: placement
+                    });
+
+                    element.popover("show");
+                }
+            });
+        };
+    }]).
     directive("uiSortable", function() {
         var uiConfig = {};
 

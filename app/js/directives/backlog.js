@@ -87,6 +87,4 @@ angular.module('greenmine.directives.backlog', []).
                 element.popover('hide');
             });
         };
-
-
     }]);
