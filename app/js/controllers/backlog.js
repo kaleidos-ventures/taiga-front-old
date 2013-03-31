@@ -170,19 +170,33 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
     };
 
     $scope.submitUs = function() {
-        rs.createUserStory($scope.projectId, $scope.form).then(function(us) {
-            $scope.$apply(function() {
-                $scope.usFormOpened = false;
-                $scope.form = {};
+        if ($scope.form.save === undefined) {
+            rs.createUserStory($scope.projectId, $scope.form).
+                then(function(us) {
+                    $scope.$apply(function() {
+                        $scope.usFormOpened = false;
+                        $scope.form = {};
+                        $scope.unassingedUs.push(us);
 
-                $scope.unassingedUs.push(us);
-
-                generateTagList();
-                filterUsBySelectedTags();
-                resortUserStories();
+                        generateTagList();
+                        filterUsBySelectedTags();
+                        resortUserStories();
+                    });
+                });
+        } else {
+            $scope.form.save().then(function() {
+                $scope.$apply(function() {
+                    $scope.form = {};
+                    $scope.usFormOpened = false;
+                });
             });
-        });
+        }
     };
+
+    $scope.editUs = function(us) {
+        $scope.form = us;
+        $scope.usFormOpened = true;
+    }
 
     $scope.saveUserStory = function(us, points) {
         us.points = points

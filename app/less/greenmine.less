@@ -691,6 +691,15 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     .us-container {
         margin-top: 10px;
 
+        .popover { max-width: 400px; }
+        .us-preview-popover {
+            width: 370px;
+
+            section {
+                padding: 5px;
+            }
+        }
+
         .us-table-list {
             .flex-header {
                 display: -webkit-box;
@@ -1033,8 +1042,8 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 /* Login */
 
 body.login {
-    background: url("../img/login_bg.jpg") no-repeat center center fixed; 
-    background-size: cover; 
+    background: url("../img/login_bg.jpg") no-repeat center center fixed;
+    background-size: cover;
 }
 
 #login {
@@ -1075,8 +1084,8 @@ body.login {
                     border-color: rgba(102,154,51,.6);
                     outline: 0;
                     color: #000;
-                    -webkit-transition: .3s ease-in-out;  
-                    -moz-transition: .3s ease-in-out; 
+                    -webkit-transition: .3s ease-in-out;
+                    -moz-transition: .3s ease-in-out;
                 }
             }
             input.btn01 {
@@ -1090,8 +1099,8 @@ body.login {
                 float: right;
                 opacity: 0.4;
                 &:hover{
-                    -webkit-transition: .3s ease-in-out;  
-                    -moz-transition: .3s ease-in-out; 
+                    -webkit-transition: .3s ease-in-out;
+                    -moz-transition: .3s ease-in-out;
                     background: @green;
                     opacity: 1;
                 }
