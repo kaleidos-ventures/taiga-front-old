@@ -67,39 +67,39 @@
                 </div>
 
                 <div class="user-story-form-sbox" ng-show="usFormOpened">
-                    <form class="form-horizontal" ui-parsley="usSubmit()">
+                    <form class="form-horizontal" ui-parsley="submitUs()">
                         <div class="control-group">
-                            <label class="control-label" for="inputEmail">Points</label>
+                            <label class="control-label">Points</label>
                             <div class="controls">
-                                <select name="status" ng-model="form.priority">
-                                    <option ng-repeat="obj in constants.points"
-                                        ng-selected="isSameAs('priority', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
+                                <select name="status" ng-model="form.points">
+                                    <option ng-repeat="obj in constants.pointsList|orderBy:'order'"
+                                        ng-selected="isSameAs('points', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label" for="inputEmail">Assigned to</label>
+                            <label class="control-label">Status</label>
                             <div class="controls">
-                                <select name="status" ng-model="udform.assigned_to">
-                                    <option ng-repeat="dev in developers"
-                                        ng-selected="isSameAs('assigned_to', dev.id)" value="{{ dev.id }}">{{ dev.name }}</option>
+                                <select name="status" ng-model="form.status">
+                                    <option ng-repeat="obj in usstatuses|orderBy:'order'"
+                                        ng-selected="isSameAs('status', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label" for="inputEmail">Subject</label>
+                            <label class="control-label">Subject</label>
                             <div class="controls">
                                 <input class="input-subject" type="text" ng-model="form.subject"></input>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label" for="inputEmail">Tags</label>
+                            <label class="control-label">Tags</label>
                             <div class="controls">
                                 <input type="text" name="status" value="" ng-model="form.tags" ui-select2></input>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label" for="inputEmail">Description</label>
+                            <label class="control-label">Description</label>
                             <div class="controls">
                                 <textarea ng-model="form.description"></textarea>
                             </div>
@@ -116,7 +116,7 @@
                 <div class="filters-selected-box"></div>
             </div>
 
-            <div class="us-container">
+            <div class="us-container" ng-hide="usFormOpened">
                 <div class="us-table-list">
                     <div class="flex-header">
                         <div class="us-title">User Story</div>
@@ -223,7 +223,7 @@
     </div>
     <div class="dialogs hidden">
         <div class="points-popover" id="points-popover">
-            <div class="item" ng-repeat="p in constants.points|orderBy:'order'">
+            <div class="item" ng-repeat="p in constants.pointsList|orderBy:'order'">
                 <a class="btn btn-mini" data-id="{{ p.id }}">{{ p.name }}</a>
             </div>
         </div>

@@ -12,6 +12,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             "tasks": "/api/scrum/tasks/",
             "choices/task-status": "/api/scrum/task_status/",
             "choices/issue-status": "/api/scrum/issue_status/",
+            "choices/us-status": "/api/scrum/user_story_status/",
             "choices/points": "/api/scrum/points/"
         }, host = config.host, scheme=config.scheme;
 
@@ -246,6 +247,10 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return queryMany(url("choices/issue-status"), {project: projectId});
         };
 
+        service.getUsStatuses = function(projectId) {
+            return queryMany(url("choices/us-status"), {project: projectId});
+        };
+
         /* Get a milestone lines for a project. */
         service.getMilestones = function(projectId) {
             // First step: obtain data
@@ -347,6 +352,23 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
             return defered.promise;
         }
+
+        service.createUserStory = function(projectId, form) {
+            var obj = _.extend({}, form, {project: projectId});
+            var defered = Q.defer();
+
+
+            $http.post(url("userstories"), obj, {headers:headers()}).
+                success(function(data, status) {
+                    var modelurl = interpolate(itemUrlTemplate, {"url": url("userstories"), "id": data.id}, true);
+                    defered.resolve(new Model(data, modelurl));
+                }).
+                error(function(data, status) {
+                    defered.reject(data, status);
+                });
+
+            return defered.promise;
+        };
 
         return service;
     }]);

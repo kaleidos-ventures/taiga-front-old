@@ -66,6 +66,7 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
         }).then(function(data) {
             $scope.$apply(function() {
                 $rootScope.constants.points = {};
+                $rootScope.constants.pointsList = _.sortBy(data, "order");
 
                 _.each(data, function(item) {
                     $rootScope.constants.points[item.id] = item;
@@ -85,34 +86,9 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
     /* Local scope variables */
     $scope.filtersOpened = false;
     $scope.usFormOpened = false;
+    $scope.form = {};
 
-    /* Load developers list */
-    rs.projectDevelopers($scope.projectId).then(function(data) {
-        $scope.$apply(function() {
-            $scope.developers = data;
-        });
-    });
-
-    $scope.saveUserStory = function(us, points) {
-        us.points = points
-        us.save().then(function() {
-            $scope.$apply(function() {
-                $scope.calculateStats();
-            });
-        }, function(data, status) {
-            $scope.$apply(function() {
-                us.revert();
-            });
-        });
-    };
-
-    $scope.selectTag = function(tag) {
-        if (tag.selected) tag.selected = false;
-        else tag.selected = true;
-        $scope.filterUsBySelectedTags()
-    };
-
-    $scope.generateTagList = function() {
+    var generateTagList = function() {
         var tagsDict = {}, tags = [];
 
         _.each($scope.unassingedUs, function(us) {
@@ -132,7 +108,7 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         $scope.tags = tags;
     };
 
-    $scope.filterUsBySelectedTags = function() {
+    var filterUsBySelectedTags = function() {
         var selectedTags = _.filter($scope.tags, function(item) { return item.selected });
         var selectedTagsIds = _.map(selectedTags, function(item) { return item.name });
 
@@ -152,7 +128,7 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         }
     };
 
-    $scope.$on("sortable:changed", function() {
+    var resortUserStories = function() {
         // Normalize user stories array
         _.each($scope.unassingedUs, function(item, index) {
             item.order = index;
@@ -171,11 +147,69 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
                 //console.log(item.id, item.order, item.subject);
             }
         });
-    });
+    };
 
+
+    /* Load developers list */
+    rs.projectDevelopers($scope.projectId).
+        then(function(data) {
+            $scope.$apply(function() { $scope.developers = data; });
+        }).
+        then(function() {
+            return rs.getUsStatuses($scope.projectId);
+        }).
+        then(function(usstatuses) {
+            $scope.$apply(function() { $scope.usstatuses = usstatuses; });
+        });
+
+
+    /* User Story Form */
+
+    $scope.isSameAs = function(property, id) {
+        return ($scope.form[property] === parseInt(id, 10));
+    };
+
+    $scope.submitUs = function() {
+        rs.createUserStory($scope.projectId, $scope.form).then(function(us) {
+            $scope.$apply(function() {
+                $scope.usFormOpened = false;
+                $scope.form = {};
+
+                $scope.unassingedUs.push(us);
+
+                generateTagList();
+                filterUsBySelectedTags();
+                resortUserStories();
+            });
+        });
+    };
+
+    $scope.saveUserStory = function(us, points) {
+        us.points = points
+        us.save().then(function() {
+            $scope.$apply(function() {
+                $scope.calculateStats();
+            });
+        }, function(data, status) {
+            $scope.$apply(function() {
+                us.revert();
+            });
+        });
+    };
+
+    /* User Story Filters */
+    $scope.selectTag = function(tag) {
+        if (tag.selected) tag.selected = false;
+        else tag.selected = true;
+        filterUsBySelectedTags()
+    };
+
+    /* Signal Handlign */
+
+    $scope.$on("sortable:changed", resortUserStories);
     $scope.$on("userstories-loaded", function() {
-        $scope.generateTagList();
-        $scope.filterUsBySelectedTags();
+        generateTagList();
+        filterUsBySelectedTags();
     });
 };
 
@@ -215,8 +249,7 @@ var BacklogMilestoneController = function($scope, rs) {
         };
     };
 
-    $scope.$on("points:loaded", calculateStats);
-    $scope.$on("sortable:changed", function() {
+    var normalizeMilestones = function() {
         _.each($scope.ml.user_stories, function(item, index) {
             item.milestone = $scope.ml.id;
         });
@@ -230,7 +263,10 @@ var BacklogMilestoneController = function($scope, rs) {
                 //console.log(item.id, item.order, item.subject);
             }
         });
-    });
+    };
+
+    $scope.$on("points:loaded", calculateStats);
+    $scope.$on("sortable:changed", normalizeMilestones);
 };
 
 BacklogMilestoneController.$inject = ['$scope'];
