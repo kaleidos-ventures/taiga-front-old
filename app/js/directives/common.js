@@ -87,7 +87,7 @@ angular.module('greenmine.directives.common', []).
 
                     onUpdate = function(e, ui) {
                         // For some reason the reference to ngModel in stop() is wrong
-                        //console.log("onUpdate");
+                        // console.log("onUpdate", ngModel.$modelValue);
                         ui.item.sortable.model = ngModel;
                         ui.item.sortable.scope = scope;
                     };

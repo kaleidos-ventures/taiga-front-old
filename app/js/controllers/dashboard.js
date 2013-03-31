@@ -12,19 +12,19 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
     var formatUserStoryTasks = function() {
         var usTasks = {};
 
+        _.each($scope.userstories, function(us) {
+            usTasks[us.id] = {};
+
+            _.each($scope.statuses, function(status) {
+                usTasks[us.id][status.id] = [];
+            });
+        });
+
         _.each($scope.tasks, function(task) {
             // HACK: filters not works properly
             if ($scope.userstoriesMap[task.user_story] === undefined) {
                 return true;
             };
-
-            if (usTasks[task.user_story] === undefined) {
-                usTasks[task.user_story] = {};
-
-                _.each($scope.statuses, function(status) {
-                    usTasks[task.user_story][status.id] = [];
-                });
-            }
 
             usTasks[task.user_story][task.status].push(task);
         });
@@ -33,7 +33,7 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
     };
 
     var calculateStats = function() {
-        var pointIdToOrder = greenmine.utils.pointIdToOrder($rootScope);
+        var pointIdToOrder = greenmine.utils.pointIdToOrder($rootScope.constants.points);
         var totalTasks = $scope.tasks.length,
             totalUss = $scope.userstories.length,
             totalPoints = 0,
