@@ -121,7 +121,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             this._isModified = false;
         };
 
-        Model.prototype.delete = function() {
+        Model.prototype.remove = function() {
             var params, defered = Q.defer();
 
             params = {

@@ -133,11 +133,11 @@
                                 </span>
                                 <span class="title">{{ us.subject|truncate:80 }}</span>
                             </div>
-                            <div class="us-points"><a href="" gm-points-popover="saveUserStory(us, points)">{{ resolvePoints(us.points) }}</a></div>
+                            <div class="us-points"><a href="" gm-points-popover="saveUs(us, points)">{{ resolvePoints(us.points) }}</a></div>
                             <div class="us-options">
                                 <a class="btn btn-mini btn-success" gm-uspreview-popover><i class="icon-eye-open icon-white"></i></a>
                                 <a class="btn btn-mini btn-success" ng-click="editUs(us)"><i class="icon-edit icon-white"></i></a>
-                                <a class="btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></a>
+                                <a class="btn btn-mini btn-danger" gm-usremove-popover="removeUs(us)"><i class="icon-remove icon-white"></i></a>
                             </div>
                         </div>
                     </div>
@@ -236,6 +236,19 @@
             <section>
                 <strong>Description:</strong>
                 <p><%= us.description %></p>
+            </section>
+        </div>
+    </script>
+
+    <script type="text/template" id="us-remove-popover">
+        <div class="us-remove-popover">
+            <section>
+                <p>Are you sure you want to delete this user story:
+                    <strong><%= us.subject %></strong></p>
+            </section>
+            <section>
+                <input type="button" class="btn btn-success btn-delete" value="Delete" />
+                <input type="button" class="btn btn-cancel" value="Cancel" />
             </section>
         </div>
     </script>

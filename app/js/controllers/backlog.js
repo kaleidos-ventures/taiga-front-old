@@ -198,6 +198,19 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         $scope.usFormOpened = true;
     }
 
+    $scope.removeUs = function(us) {
+        us.remove().then(function() {
+            $scope.$apply(function() {
+                var index = $scope.unassingedUs.indexOf(us);
+                $scope.unassingedUs.splice(index, 1);
+                $scope.calculateStats();
+
+                generateTagList();
+                filterUsBySelectedTags();
+            });
+        });
+    };
+
     $scope.saveUserStory = function(us, points) {
         us.points = points
         us.save().then(function() {
