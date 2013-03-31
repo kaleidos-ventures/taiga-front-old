@@ -73,22 +73,12 @@
         storage.set("userInfo", {"id": "12345", "username": "niwibe", "fullname": "Andrey Antukh"});
 
         $rootScope.auth = storage.get('userInfo');
-
-        // TODO: obtain this values from api
         $rootScope.constants = {};
         $rootScope.constants.points = {};
-        $rootScope.constants.severity = {1:"Low", 2:"Medium", 3:"Hight", 4:"Critical"};
-        $rootScope.constants.priority = {1:"Low", 2:"Medium", 3:"Hight"};
-
-        $rootScope.constants.status = {
-            1: "New",
-            2: "In progress",
-            3: "Needs Info",
-            4: "Ready for test",
-            5: "Closed",
-            6: "Rejected",
-            7: "Postponed"
-        };
+        $rootScope.constants.severity = {};
+        $rootScope.constants.priority = {};
+        $rootScope.constants.status = {};
+        $rootScope.constants.type = {};
 
         /* Global helpers */
 
@@ -97,18 +87,25 @@
             return point ? point.name : undefined;
         };
 
-        $rootScope.resolveStatus = function(name) {
-            return $rootScope.constants.status[name] || "";
+        $rootScope.resolveStatus = function(id) {
+            var status = $rootScope.constants.status[id];
+            return status ? status.name : undefined;
         };
 
-        $rootScope.resolvePriority = function(name) {
-            return $rootScope.constants.priority[name] || "";
+        $rootScope.resolvePriority = function(id) {
+            var priority = $rootScope.constants.priority[id];
+            return priority ? priority.name : undefined;
         };
 
-        $rootScope.resolveSeverity = function(name) {
-            return $rootScope.constants.severity[name] || "";
+        $rootScope.resolveSeverity = function(id) {
+            var severity = $rootScope.constants.severity[id];
+            return severity ? severity.name : undefined;
         };
 
+        $rootScope.resolveType = function(id) {
+            var type = $rootScope.constants.type[id];
+            return type ? type.name : undefined;
+        };
 
         /* Navigation url resolvers */
 

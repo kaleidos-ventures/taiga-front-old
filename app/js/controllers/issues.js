@@ -17,19 +17,21 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
     $scope.sortingOrder = 'severity';
     $scope.reverse = false;
 
-    /* Pagination methods */
-
     var generateTagList = function() {
-        var tagsDict = {};
-        var tags = [];
+        var tagsDict = {}, tags = [];
 
-        _.each($scope.issues, function(us) {
-            _.each(us.tags, function(tag) {
-                if (tagsDict[tag.id] === undefined) {
-                    tagsDict[tag.id] = true;
-                    tags.push(tag);
+        _.each($scope.issues, function(iss) {
+            _.each(iss.tags, function(tag) {
+                if (tagsDict[tag] === undefined) {
+                    tagsDict[tag] = 1;
+                } else {
+                    tagsDict[tag] += 1;
                 }
             });
+        });
+
+        _.each(tagsDict, function(val, key) {
+            tags.push({name:key, count:val});
         });
 
         $scope.tags = tags;
@@ -37,34 +39,40 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
 
     var filterIssues = function() {
         var selectedTags = _.filter($scope.tags, function(item) { return item.selected });
-        var selectedTagsIds = _.map(selectedTags, function(item) { return item.id });
+        var selectedTagsIds = _.map(selectedTags, function(item) { return item.name });
 
         if (selectedTagsIds.length > 0) {
-            $scope.filteredIssues = _.filter($scope.issues, function(item) {
-                var itemTagIds = _.map(item.tags, function(tag) { return tag.id; });
-                var intersection = _.intersection(selectedTagsIds, itemTagIds);
+            _.each($scope.issues, function(item) {
+                var itemTagIds = _.map(item.tags, function(tag) { return tag; });
+                var interSection = _.intersection(selectedTagsIds, itemTagIds);
 
-                if (intersection.length === 0) return false;
-                else return true;
+                if (interSection.length === 0) {
+                    item.__hidden = true;
+                } else {
+                    item.__hidden = false;
+                }
             });
         } else {
-            $scope.filteredIssues = $scope.issues;
+            _.each($scope.issues, function(item) {  item.__hidden = false; });
         }
 
-        $scope.groupToPages();
+        groupToPages();
     };
 
-
-    $scope.groupToPages = function() {
+    var groupToPages = function() {
         $scope.pagedItems = [];
 
-        for (var i = 0; i < $scope.filteredIssues.length; i++) {
-            if (i % $scope.itemsPerPage === 0) {
-                $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [ $scope.filteredIssues[i] ];
-            } else {
-                $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredIssues[i]);
-            }
-        }
+        _($scope.issues).
+            filter(function(issue) {
+                return (issue.__hidden !== true);
+            }).
+            each(function(issue, i) {
+                if (i % $scope.itemsPerPage === 0) {
+                    $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [ issue ];
+                } else {
+                    $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push(issue);
+                }
+            });
     };
 
     $scope.prevPage = function () {
@@ -110,10 +118,26 @@ var IssuesController = function($scope, $rootScope, $routeParams, rs) {
         rs.getSeverities($scope.projectId),
         rs.getPriorities($scope.projectId)
     ]).spread(function(issueTypes, issueStatuses, severities, priorities) {
-        console.log(issueTypes);
-        console.log(issueStatuses);
-        console.log(severities);
-        console.log(priorities);
+        _.each(issueTypes, function(item) {
+            $rootScope.constants.type[item.id] = item;
+        });
+
+        _.each(issueStatuses, function(item) {
+            $rootScope.constants.status[item.id] = item;
+        });
+
+        _.each(severities, function(item) {
+            $rootScope.constants.severity[item.id] = item;
+        });
+
+        _.each(priorities, function(item) {
+            $rootScope.constants.priority[item.id] = item;
+        });
+
+        $rootScope.constants.typeList = _.sortBy(issueTypes, "order");
+        $rootScope.constants.statusList = _.sortBy(issueStatuses, "order");
+        $rootScope.constants.severityList = _.sortBy(severities, "order");
+        $rootScope.constants.priorityList = _.sortBy(priorities, "order");
 
         return rs.getIssues($scope.projectId);
     }).then(function(issues) {
