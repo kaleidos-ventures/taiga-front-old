@@ -11,7 +11,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             "milestones": "/api/scrum/milestones/",
             "tasks": "/api/scrum/tasks/",
             "issues": "/api/scrum/issues/",
-            "wiki": "/api/wiki/wiki_pages/",
+            "wikipages": "/api/wiki/wiki_pages/",
             "choices/task-status": "/api/scrum/task_status/",
             "choices/issue-status": "/api/scrum/issue_status/",
             "choices/issue-types": "/api/scrum/issue_types/",
@@ -395,8 +395,29 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         };
 
         service.getWikiPage = function(projectId, slug) {
-            var finalUrl = interpolate(itemUrlTemplate, {"url": url("wiki"), "id": slug}, true);
+            var finalUrl = interpolate(itemUrlTemplate, {"url": url("wikipages"), "id": slug}, true);
             return queryOne(finalUrl);
+        };
+
+        service.createWikiPage = function(projectId, slug, content) {
+            var obj = {
+                "content": content,
+                "slug": slug,
+                "project": projectId
+            };
+
+            var defered = Q.defer();
+
+            $http.post(url("wikipages"), obj, {headers:headers()}).
+                success(function(data, status) {
+                    var modelurl = interpolate(itemUrlTemplate, {"url": url("wikipages"), "id": data.slug}, true);
+                    defered.resolve(new Model(data, modelurl));
+                }).
+                error(function(data, status) {
+                    defered.reject([data, status]);
+                });
+
+            return defered.promise;
         };
 
         return service;

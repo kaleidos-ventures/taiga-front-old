@@ -1,14 +1,21 @@
 <div class="header-container container-fluid" ng-include="'partials/header.html'"></div>
 <div class="middle-container container-fluid wiki">
-    <div class="row-fluid" ng-show="page">
+    <div class="row-fluid" ng-show="!formOpened">
         <div class="span12">
             <div class="wiki-container" gm-render-markdown="page"></div>
+            <div clasS="wiki-buttons">
+                <a href="" class="edit" ng-click="editPage()">Edit</a>
+                <a href="" class="delete" ng-click="">Delete</a>
+            </div>
         </div>
     </div>
-    <div class="row-fluid" ng-hide="page">
+    <div class="row-fluid" ng-show="formOpened">
         <div class="span12">
             <div class="wikiform-container">
-                <textarea id="wiki" ng-model="pageContent" gm-markitup></textarea>
+                <textarea id="wiki" ng-model="form.content" gm-markitup></textarea>
+            </div>
+            <div clasS="wiki-buttons">
+                <a href="" class="edit" ng-click="savePage()">Save</a>
             </div>
         </div>
     </div>
