@@ -31,10 +31,24 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     }
 }
 .wiki {
+    .wiki-container {
+        padding: 5px;
+    }
+
     .wikiform-container {
+        padding: 5px;
         textarea#wiki {
             width: 98.5%;
         }
+    }
+    .wiki-buttons {
+        border-top: 1px solid #ddd;
+        padding: 5px;
+        padding-top: 2px;
+    }
+
+    textarea#wiki {
+        border: 1px solid #ddd;
     }
 }
 
@@ -1260,8 +1274,8 @@ form{
                 -webkit-box-shadow:  0 1px 1px #749a02;
                 -moz-box-shadow:  0 1px 1px #749a02;
                 box-shadow:  0 1px 1px #749a02;
-                &:hover { 
-                    background-color: #749a02; 
+                &:hover {
+                    background-color: #749a02;
                 }
             }
         }

@@ -24,13 +24,15 @@ var WikiController = function($scope, $rootScope, $location, $routeParams, rs) {
         if ($scope.form.id === undefined) {
             var content = $scope.form.content;
             rs.createWikiPage(projectId, slug, content).then(function(page) {
-                $scope.$apply(function() {
-                    var redirectUrl = $scope.urls.wikiUrl(projectId, page.slug);
-                    $location.url(redirectUrl.substr(3));
-                });
+                $scope.page = page;
+                $scope.formOpened = false;
+                $scope.$apply();
             });
         } else {
-            $scope.page.save();
+            $scope.page.save().then(function() {
+                $scope.formOpened = false;
+                $scope.$apply();
+            });
         }
     };
 
