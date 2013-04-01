@@ -20,7 +20,7 @@ var WikiController = function($scope, $rootScope, $location, $routeParams, rs) {
         });
 
     $scope.savePage = function() {
-        if ($scope.form.id === undefined) {
+        if ($scope.page === undefined) {
             var content = $scope.content;
 
             rs.createWikiPage(projectId, slug, content).then(function(page) {
