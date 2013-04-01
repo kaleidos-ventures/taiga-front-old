@@ -76,8 +76,10 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
 
             var us = $scope.userstoriesMap[usId];
             var points = pointIdToOrder(us.points);
-            completedPoints += ((completedTasks * points) / totalTasks);
+
+            completedPoints += ((completedTasks * points) / totalTasks) || 0;
         });
+
 
         $scope.stats = {
             totalPoints: totalPoints,
