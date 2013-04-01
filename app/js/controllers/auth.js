@@ -1,10 +1,25 @@
 var LoginController = function($scope, $rootScope, $location, rs) {
     $rootScope.pageSection = 'login';
-    $scope.form = {};
 
+    $scope.form = {};
     $scope.submit = function() {
-        rs.login($scope.form.username, $scope.form.password).then(function(data) {
-            $location.url("/");
+        var username = $scope.form.username;
+        var password = $scope.form.password;
+
+        $scope.loading = true
+
+        rs.login(username, password).then(function(data) {
+            $scope.$apply(function() {
+                $location.url("/");
+            });
+        }, function(data) {
+            $scope.$apply(function() {
+                $scope.error = true;
+                $scope.errorMessage = data.detail
+            });
+        }).fin(function() {
+            $scope.loading = false;
+            $scope.$apply();
         });
     };
 };
