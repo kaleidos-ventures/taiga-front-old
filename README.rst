@@ -9,9 +9,12 @@ Install requirements:
 .. code-block:: console
 
     pip install -r requirements.txt
+    python app/app.py
 
 
-Compile initial development template:
+Also, you can serve this congent over nginx, for this way you
+need compile a index.html from jinja2 template. Do this executing
+make on repo root directory:
 
 .. code-block:: console
 
