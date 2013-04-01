@@ -11,24 +11,27 @@ var WikiController = function($scope, $rootScope, $location, $routeParams, rs) {
 
     rs.getWikiPage(projectId, slug).
         then(function(page) {
-            $scope.$apply(function() {
-                $scope.page = page;
-            });
+            $scope.page = page;
+            $scope.content = page.content;
+            $scope.$apply();
         }, function() {
-            $scope.$apply(function() {
-                $scope.formOpened = true;
-            });
+            $scope.formOpened = true;
+            $scope.$apply();
         });
 
     $scope.savePage = function() {
         if ($scope.form.id === undefined) {
-            var content = $scope.form.content;
+            var content = $scope.content;
+
             rs.createWikiPage(projectId, slug, content).then(function(page) {
                 $scope.page = page;
+                $scope.content = page.content;
+
                 $scope.formOpened = false;
                 $scope.$apply();
             });
         } else {
+            $scope.page.content = $scope.content;
             $scope.page.save().then(function() {
                 $scope.formOpened = false;
                 $scope.$apply();
@@ -36,9 +39,14 @@ var WikiController = function($scope, $rootScope, $location, $routeParams, rs) {
         }
     };
 
-    $scope.editPage = function() {
+    $scope.openEditForm = function() {
         $scope.formOpened = true;
-        $scope.form = $scope.page;
+        $scope.content = $scope.page.content;
+    };
+
+    $scope.discartCurrentChanges = function() {
+        $scope.formOpened = false;
+        $scope.content = $scope.page.content;
     };
 };
 

@@ -51,11 +51,12 @@ angular.module('greenmine.directives.wiki', []).
         return function(scope, elm, attrs) {
             var element = angular.element(elm);
 
-            scope.$watch("page.content", function() {
-                console.log("changed", arguments[0], arguments[1]);
-                if (scope.page !== undefined) {
-                    element.html(markdown.toHTML(
-                        scope.page.content.replace("\r", "")));
+            scope.$watch(attrs.gmRenderMarkdown, function() {
+                var data = scope.$eval(attrs.gmRenderMarkdown);
+                if (data !== undefined) {
+                    // Regex for future page linking.
+                    // /^\s*\([ \t]*(\S+)(?:[ \t]+(["'])(.*?)\2)?[ \t]*\)/ );
+                    element.html(markdown.toHTML(data.replace("\r", "")));
                 }
             });
         };

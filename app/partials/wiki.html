@@ -2,9 +2,9 @@
 <div class="middle-container container-fluid wiki">
     <div class="row-fluid" ng-show="!formOpened">
         <div class="span12">
-            <div class="wiki-container" gm-render-markdown="page"></div>
-            <div clasS="wiki-buttons">
-                <a href="" class="edit" ng-click="editPage()">Edit</a>
+            <div class="wiki-container" gm-render-markdown="content"></div>
+            <div class="wiki-buttons">
+                <a href="" class="edit" ng-click="openEditForm()">Edit</a>
                 <a href="" class="delete" ng-click="">Delete</a>
             </div>
         </div>
@@ -12,10 +12,11 @@
     <div class="row-fluid" ng-show="formOpened">
         <div class="span12">
             <div class="wikiform-container">
-                <textarea id="wiki" ng-model="form.content" gm-markitup></textarea>
+                <textarea id="wiki" ng-model="content" gm-markitup></textarea>
             </div>
             <div class="wiki-buttons">
                 <a href="" class="edit" ng-click="savePage()">Save</a>
+                <a href="" class="edit" ng-click="discartCurrentChanges()">Cancel</a>
             </div>
         </div>
     </div>
