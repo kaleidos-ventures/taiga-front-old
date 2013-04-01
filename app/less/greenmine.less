@@ -664,27 +664,32 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
             background-color: #f2f2f2;
             border: 1px solid #666;
             padding: 10px;
-
             textarea {
-                width: 89%;
                 height: 120px;
             }
-            .input-subject {
-                width: 89%;
+            .select2-container-multi{
+                &.select2-container-active{
+                    .select2-choices{
+                        border: 1px solid rgba(102,154,51,0.6);
+                    }
+                }
             }
-
-            form {
-                margin-bottom: 0px;
+            .select2-container{
+                width: 97%;
+                .select2-choices{
+                    .select2-search-field{
+                        .select2-input{
+                            width: 100%;
+                            padding: 8px 6px;
+                            font-family: @DroidSansRegular;
+                            color: #999;
+                        }
+                    }
+                }
             }
-
-            fieldset:nth-child(2) {
-                margin-top: 10px;
+            .submit-button-container{
+                margin-right: 40px;
             }
-
-            .select2-container {
-                width: 91%;
-            }
-
         }
     }
 
@@ -1172,6 +1177,97 @@ body.login {
         }
     }
 }
+
+/* Forms */
+form{
+    margin: 0;
+    padding: 0;
+    fieldset{
+        border: none;
+        margin: 0;
+        padding: 0;
+        margin-bottom: 10px;
+        label{
+            font-family: @DroidSansBold;
+            color: #666;
+            margin-bottom: 2px;
+            display: block;
+            font-size: small;
+        }
+        input[type="text"], input[type="password"] {
+            width: 96%;
+            padding: 8px 6px;
+            font-family: @DroidSansRegular;
+            color: #999;
+            box-shadow:inset 3px 3px 6px -1px rgba(0, 0, 0, 0.2);
+            &:focus{
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
+                border-color: rgba(102,154,51,.6);
+                outline: 0;
+                color: #000;
+                -webkit-transition: .3s ease-in-out;
+                -moz-transition: .3s ease-in-out;
+            }
+        }
+        select{
+            width: 97%;
+            padding: 8px 6px;
+            font-family: @DroidSansRegular;
+            color: #000;
+            background: #fff;
+        }
+        textarea{
+            width: 96%;
+            padding: 8px 6px;
+            font-family: @DroidSansRegular;
+            color: #ccc;
+            border: none;
+            &:focus{
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
+                border-color: rgba(102,154,51,.6);
+                outline: 0;
+                color: #000;
+                -webkit-transition: .3s ease-in-out;
+                -moz-transition: .3s ease-in-out;
+            }
+        }
+        input, textarea{
+            box-shadow:inset 3px 3px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+        .button{
+            background: #CCC;
+            display: inline-block;
+            padding: 5px 10px 6px;
+            color: #fff;
+            border: none;
+            text-decoration: none;
+            -moz-border-radius: 6px;
+            -webkit-border-radius: 6px;
+            -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+            -moz-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+            box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+            border-bottom: 1px solid rgba(0,0,0,0.25);
+            position: relative;
+            cursor: pointer;
+            font-family: @DroidSansRegular;
+            padding: 10px 30px;
+            line-height: 1.2em;
+            &:hover{
+                background: #bbb;
+            }
+            &.button-success{
+                background-color: #91bd09;
+                -webkit-box-shadow:  0 1px 1px #749a02;
+                -moz-box-shadow:  0 1px 1px #749a02;
+                box-shadow:  0 1px 1px #749a02;
+                &:hover { 
+                    background-color: #749a02; 
+                }
+            }
+        }
+    }
+}
+
 
 /* Project List */
 

@@ -67,49 +67,39 @@
                 </div>
 
                 <div class="user-story-form-sbox" ng-show="usFormOpened">
-                    <form class="form-horizontal" ui-parsley="submitUs()">
-                        <div class="control-group">
-                            <label class="control-label">Points</label>
-                            <div class="controls">
-                                <select name="status" ng-model="form.points">
-                                    <option ng-repeat="obj in constants.pointsList|orderBy:'order'"
-                                        ng-selected="isSameAs('points', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
-                                </select>
+                    <form ui-parsley="submitUs()">
+                        <fieldset>
+                            <label>Points</label>
+                            <select name="status" ng-model="form.points">
+                                <option ng-repeat="obj in constants.pointsList|orderBy:'order'"
+                                    ng-selected="isSameAs('points', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
+                            </select>
+                        </fieldset>
+                        <fieldset>
+                            <label>Status</label>
+                            <select name="status" ng-model="form.status">
+                                <option ng-repeat="obj in usstatuses|orderBy:'order'"
+                                    ng-selected="isSameAs('status', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
+                            </select>
+                        </fieldset>
+                        <fieldset>
+                            <label>Subject</label>
+                            <input class="input-subject" type="text" ng-model="form.subject"></input>
+                        </fieldset>
+                        <fieldset>
+                            <label>Tags</label>
+                            <input type="text" name="status" value="" ng-model="form.tags" ui-select2></input>
+                        </fieldset>
+                        <fieldset>
+                            <label>Description</label>
+                            <textarea ng-model="form.description"></textarea>
+                        </fieldset>
+                        <fieldset>
+                            <div class="right submit-button-container">
+                                <input type="submit" class="button button-success" value="Save" />
+                                <a href="" class="button" ng-click="usFormOpened=false">Close</a>
                             </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Status</label>
-                            <div class="controls">
-                                <select name="status" ng-model="form.status">
-                                    <option ng-repeat="obj in usstatuses|orderBy:'order'"
-                                        ng-selected="isSameAs('status', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Subject</label>
-                            <div class="controls">
-                                <input class="input-subject" type="text" ng-model="form.subject"></input>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Tags</label>
-                            <div class="controls">
-                                <input type="text" name="status" value="" ng-model="form.tags" ui-select2></input>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Description</label>
-                            <div class="controls">
-                                <textarea ng-model="form.description"></textarea>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <input type="submit" class="btn btn-success" value="Save" />
-                                <a href="" class="btn" ng-click="usFormOpened=false">Close</a>
-                            </div>
-                        </div>
+                        </fieldset>
                     </form>
                 </div>
 
