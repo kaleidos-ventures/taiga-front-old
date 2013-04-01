@@ -46,4 +46,16 @@ angular.module('greenmine.directives.wiki', []).
             var element = angular.element(elm);
             element.markItUp(markdownSettings);
         };
+    }]).
+    directive("gmRenderMarkdown", ["$parse", function($parse) {
+        return function(scope, elm, attrs) {
+            var element = angular.element(elm);
+
+            scope.$watch(attrs.gmRenderMarkdown, function() {
+                var model = scope[attrs.gmRenderMarkdown];
+                if (model !== undefined) {
+                    element.html(markdown.toHTML(model.content.replace("\r", "")));
+                }
+            });
+        };
     }]);

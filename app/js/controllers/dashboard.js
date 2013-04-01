@@ -80,7 +80,6 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
             completedPoints += ((completedTasks * points) / totalTasks) || 0;
         });
 
-
         $scope.stats = {
             totalPoints: totalPoints,
             completedPoints: completedPoints.toFixed(0),

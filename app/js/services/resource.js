@@ -11,6 +11,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             "milestones": "/api/scrum/milestones/",
             "tasks": "/api/scrum/tasks/",
             "issues": "/api/scrum/issues/",
+            "wiki": "/api/wiki/wiki_pages/",
             "choices/task-status": "/api/scrum/task_status/",
             "choices/issue-status": "/api/scrum/issue_status/",
             "choices/issue-types": "/api/scrum/issue_types/",
@@ -203,7 +204,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
                 var model = new Model(data, url);
                 defered.resolve(model);
             }).error(function(data, status) {
-                defered.reject(data, status);
+                defered.reject([data, status]);
             });
 
             return defered.promise;
@@ -391,6 +392,11 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
                 });
 
             return defered.promise;
+        };
+
+        service.getWikiPage = function(projectId, slug) {
+            var finalUrl = interpolate(itemUrlTemplate, {"url": url("wiki"), "id": slug}, true);
+            return queryOne(finalUrl);
         };
 
         return service;
