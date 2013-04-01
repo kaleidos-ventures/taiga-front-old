@@ -1,4 +1,4 @@
-<div class="header-container container-fluid" ng-include="'partials/header.html'"></div>
+<div class="header-container container-fluid" ng-include="'/partials/header.html'"></div>
 <div class="middle-container container-fluid dashboard">
     <div class="row-fluid first-row stats-row">
         <div class="span12">
@@ -92,7 +92,7 @@
 
                                     <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][status.id]">
                                         <div class="task-box" ng-repeat="task in usTasks[us.id][status.id]"
-                                            ng-include="'partials/dashboard-task.html'"></div>
+                                            ng-include="'/partials/dashboard-task.html'"></div>
                                     </div>
                                 </td>
                             </tr>
