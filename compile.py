@@ -13,7 +13,7 @@ def compile(args):
     except ValueError:
         _env = "dev"
 
-    with io.open("app/index.jinja", "rt") as f:
+    with io.open("app/templates/index.jinja", "rt") as f:
         env = Environment(loader=DictLoader({"index.html": f.read()}))
 
     template = env.get_template("index.html")
