@@ -273,7 +273,8 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             // First step: obtain data
             var _getMilestones = function() {
                 var defered = Q.defer();
-                var params = {"method":"GET", "headers": headers(), "url": url("milestones")};
+                var params = {"method":"GET", "headers": headers(), "url": url("milestones"),
+                              "params": {"project": projectId}};
 
                 $http(params).success(function(data, status) {
                     defered.resolve(data);

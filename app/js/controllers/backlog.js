@@ -45,9 +45,10 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
                 $scope.$broadcast("userstories-loaded");
             });
         }).then(function() {
-            return rs.getMilestones($routeParams.pid);
+            return rs.getMilestones($rootScope.projectId);
         }).then(function(data) {
             $scope.$apply(function() {
+
                 // HACK: because django-filter does not works properly
                 // $scope.milestones = data;
                 $scope.milestones = _.filter(data, function(item) {
