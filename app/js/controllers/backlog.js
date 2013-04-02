@@ -325,7 +325,7 @@ var BacklogMilestoneController = function($scope, rs) {
         });
 
         // Calculte new stats
-        $scope.calculateStats();
+        calculateStats();
 
         _.each($scope.ml.user_stories, function(item) {
             if (item.isModified()) {
@@ -334,7 +334,8 @@ var BacklogMilestoneController = function($scope, rs) {
         });
     };
 
-    $scope.$on("points:loaded", calculateStats);
+    calculateStats()
+    //$scope.$on("points:loaded", calculateStats);
     $scope.$on("sortable:changed", normalizeMilestones);
 };
 
