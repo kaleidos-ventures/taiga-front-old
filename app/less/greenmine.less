@@ -26,9 +26,16 @@
 .header-container {
     background: #669933; /* Old browsers */
     color: @grayDarker;
-    background: linear-gradient(to bottom, #669933 0%,#004900 100%); /* W3C */
     .header-box {
         overflow: hidden;
+        background: #669933;
+        background: -moz-linear-gradient(top, #669933 0%, #116800 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#669933), color-stop(100%,#116800));
+        background: -webkit-linear-gradient(top, #669933 0%,#116800 100%);
+        background: -o-linear-gradient(top, #669933 0%,#116800 100%);
+        background: -ms-linear-gradient(top, #669933 0%,#116800 100%);
+        background: linear-gradient(to bottom, #669933 0%,#116800 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#669933', endColorstr='#116800',GradientType=0 );
         .logo-sbox {
             padding: 0px 15px;
             float: left;
@@ -47,8 +54,9 @@
                 &.user{
                     font-size: 16px;
                     color: #FFF;
-                    margin-top: 30px;
+                    margin-top: 45px;
                     padding: 0 10px;
+                    font-weight: bold;
                     &:hover{
                         color: #333;
                     }
@@ -63,51 +71,92 @@
             line-height: 45px;
             padding-left: 10px;
         }
-
-        .top-menu-sbox > div {
-            display: inline;
-        }
-
         .top-menu-sbox {
             float: right;
             padding: 2px;
             padding-right: 10px;
-        }
-
-        margin-top: 2px;
-        margin-bottom: 5px;
-    }
-
-    .menu-box {
-        padding-left: 20px;
-
-        ul {
-            margin: 0px;
-            padding: 0px;
-
-            li {
-                list-style: none;
-                text-align: center;
-                display: inline-block;
-                padding: 2px;
-                padding-left: 15px;
-                padding-right: 15px;
-
-                a {
-                    color: white;
-                    text-decoration: none;
-                }
-
-                &.selected {
-                    a { color: #333; }
-                    background-color: white;
+            margin-top: 10px;
+            color: @white;
+            div{
+                display: inline;
+                a{
+                    color: @white;
+                    background: url('../img/logout_ico.png') no-repeat center left;
+                    padding: 3px 0;
+                    padding-left: 23px;
                 }
             }
         }
     }
-
-    a {
-        color: @grayDarker;
+    .nav {
+        background-color: #333333;
+        ul {
+            margin: 0px;
+            padding: 0px 5px;
+            li {
+                list-style: none;
+                text-align: center;
+                display: inline-block;
+                border-right: 1px solid #444;
+                padding: 5px 0;
+                a{
+                    font-size: 14px;
+                    font-weight: bold;
+                    color: white;
+                    text-decoration: none;
+                    opacity: 0.6;
+                    padding: 30px 20px 5px 20px;
+                    display: inline-block;
+                    &:hover{
+                        opacity: 1;
+                    }
+                }
+                &.selected {
+                    a{
+                        opacity: 1;
+                    }
+                }
+                &.backlog{
+                    a{
+                        background: url('../img/nav_sprite.png') no-repeat 38px 4px;
+                    }
+                }
+                &.dashboard{
+                    a{
+                        background: url('../img/nav_sprite.png') no-repeat 43px -45px;
+                    }
+                }
+                &.issues{
+                    a{
+                        background: url('../img/nav_sprite.png') no-repeat 30px -94px;
+                    }
+                }
+                &.wiki{
+                    a{
+                        background: url('../img/nav_sprite.png') no-repeat 26px -143px;
+                    }
+                }
+                &.search{
+                    a{
+                        background: url('../img/nav_sprite.png') no-repeat 34px -193px;
+                    }
+                }
+                &.admin{
+                    a{
+                        background: url('../img/nav_sprite.png') no-repeat 27px -243px
+                    }
+                }
+            }
+        }
+    }
+    .breadcrumb{
+        .header-path{
+            background-color: #999;
+            padding: 5px 20px;
+            color: #333;
+            font-weight: bold;
+            font-size: small;
+        }
     }
 }
  
