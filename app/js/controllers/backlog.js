@@ -18,8 +18,6 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
             $scope.stats.assignedPoints = data.assignedPoints;
         }
 
-        console.log("stats:update", data);
-
         var total = ($scope.stats.notAssignedPoints || 0) +
                          ($scope.stats.assignedPoints || 0);
 
@@ -137,7 +135,7 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
             $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order");
 
             $scope.$apply(function() {
-                $scope.$emit("userstories:loaded");
+                $rootScope.$broadcast("userstories:loaded");
                 generateTagList();
                 filterUsBySelectedTags();
             });
@@ -153,8 +151,8 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
                     $rootScope.constants.points[item.id] = item;
                 });
 
-                $scope.$broadcast("points:loaded");
                 calculateStats();
+                $rootScope.$broadcast("points:loaded");
             });
         });
 
@@ -232,7 +230,7 @@ BacklogUserStoriesCtrl.$inject = ['$scope', '$rootScope', 'resource'];
 
 /* Backlog milestones controller. */
 
-var BacklogMilestonesController = function($scope, rs) {
+var BacklogMilestonesController = function($scope, $rootScope, rs) {
     /* Local scope variables */
     $scope.sprintFormOpened = false;
 
@@ -256,7 +254,6 @@ var BacklogMilestonesController = function($scope, rs) {
     };
 
     $scope.$on("points:loaded", function() {
-        console.log("points:loaded");
         rs.getMilestones($rootScope.projectId).
             then(function(data) {
                 $scope.$apply(function() {
@@ -297,7 +294,7 @@ var BacklogMilestonesController = function($scope, rs) {
     };
 };
 
-BacklogMilestonesController.$inject = ['$scope', 'resource'];
+BacklogMilestonesController.$inject = ['$scope', '$rootScope', 'resource'];
 
 
 /* One backlog milestone controller */
@@ -333,7 +330,6 @@ var BacklogMilestoneController = function($scope, rs) {
         _.each($scope.ml.user_stories, function(item) {
             if (item.isModified()) {
                 item.save();
-                //console.log(item.id, item.order, item.subject);
             }
         });
     };
