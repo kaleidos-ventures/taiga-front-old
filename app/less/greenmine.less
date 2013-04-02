@@ -8,14 +8,110 @@
 @green: #690;
 @grayVeryLighter:       #f2f2f2;
 
+/* Typography */
 @DroidSansRegular: 'DroidSansRegular';
 @DroidSansBold: 'DroidSansBold';
 @DroidSerifRegular: 'DroidSerifRegular';
 @DroidSerifBold: 'DroidSerifBold';
-@ArvoRegular: 'ArvoRegular';
-@ArvoBold: 'ArvoBold';
-
+@LeagueGothicRegular: 'LeagueGothicRegular';
+@LeagueGothicCondensed: 'LeagueGothicCondensed';
 @import "greenmine-generic.less";
+
+/* =============
+ * HEADER 
+ * =============*/
+ 
+ /* Header */
+
+.header-container {
+    background: #669933; /* Old browsers */
+    color: @grayDarker;
+    background: linear-gradient(to bottom, #669933 0%,#004900 100%); /* W3C */
+    .header-box {
+        overflow: hidden;
+        .logo-sbox {
+            padding: 0px 15px;
+            float: left;
+            overflow: hidden;
+            a{
+                display: block;
+                float: left;
+                &.greenmine-logo{
+                    font-size: 64px;
+                    color: #333;
+                    font-family: @LeagueGothicRegular;
+                    &:hover{
+                        text-decoration: none;
+                    }
+                }
+                &.user{
+                    font-size: 16px;
+                    color: #FFF;
+                    margin-top: 30px;
+                    padding: 0 10px;
+                    &:hover{
+                        color: #333;
+                    }
+                }
+            }
+        }
+        .header-path {
+            float: left;
+            color: white;
+            font-size: 20px;
+            vertical-align: middle;
+            line-height: 45px;
+            padding-left: 10px;
+        }
+
+        .top-menu-sbox > div {
+            display: inline;
+        }
+
+        .top-menu-sbox {
+            float: right;
+            padding: 2px;
+            padding-right: 10px;
+        }
+
+        margin-top: 2px;
+        margin-bottom: 5px;
+    }
+
+    .menu-box {
+        padding-left: 20px;
+
+        ul {
+            margin: 0px;
+            padding: 0px;
+
+            li {
+                list-style: none;
+                text-align: center;
+                display: inline-block;
+                padding: 2px;
+                padding-left: 15px;
+                padding-right: 15px;
+
+                a {
+                    color: white;
+                    text-decoration: none;
+                }
+
+                &.selected {
+                    a { color: #333; }
+                    background-color: white;
+                }
+            }
+        }
+    }
+
+    a {
+        color: @grayDarker;
+    }
+}
+ 
+ 
 
 /* Backlog */
 select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input  {
@@ -325,6 +421,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
         .body {
             background-color: #333;
             color: white;
+        
             padding: 5px;
 
             table {
@@ -987,75 +1084,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 }
 
 
-/* Header */
 
-.header-container {
-    background-color: @green;
-    border-bottom: 2px solid @black;
-    color: @grayDarker;
-    .header-box {
-        overflow: hidden;
-        padding: 10px 15px;
-        .logo-sbox {
-            padding: 2px;
-            float: left;
-        }
-
-        .header-path {
-            float: left;
-            color: white;
-            font-size: 20px;
-            vertical-align: middle;
-            line-height: 45px;
-            padding-left: 10px;
-        }
-
-        .top-menu-sbox > div {
-            display: inline;
-        }
-
-        .top-menu-sbox {
-            float: right;
-            padding: 2px;
-            padding-right: 10px;
-        }
-
-        margin-top: 2px;
-        margin-bottom: 5px;
-    }
-
-    .menu-box {
-        padding-left: 20px;
-
-        ul {
-            margin: 0px;
-            padding: 0px;
-
-            li {
-                list-style: none;
-                text-align: center;
-                display: inline-block;
-                padding: 2px;
-                padding-left: 15px;
-                padding-right: 15px;
-
-                a {
-                    color: white;
-                    text-decoration: none;
-                }
-
-                &.selected {
-                    a { color: #333; }
-                    background-color: white;
-                }
-            }
-        }
-    }
-
-    a {
-        color: @grayDarker;
-    }
-}
 
 /* Login */
 

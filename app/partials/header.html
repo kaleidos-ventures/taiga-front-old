@@ -2,19 +2,19 @@
     <div class="span12">
         <div class="header-box">
             <div class="logo-sbox">
-                <a href=""><img width="180" src="img/logo.png" /></a>
+                <a class="greenmine-logo" href="" title="greenmine">Greenmine</a>
+                <a class="user" href="" title="{{ auth.fullname }}">{{ auth.fullname }}</a>
             </div>
-            <div class="header-path" gm-breadcrumb></div>
             <div class="top-menu-sbox">
                 <div class="menu-item">
-                    <i class="icon-user"></i> <a href="">{{ auth.fullname }}</a>
-                </div> |
-                <div class="menu-item">
-                    <i class="icon-remove-sign"></i> <a href="">Logout</a>
+                    <a class="logout" href="">Logout</a>
                 </div>
             </div>
         </div>
-        <div class="menu-box" gm-header-menu>
+        <div class="breadcrumb">
+            <div class="header-path" gm-breadcrumb></div>
+        </div>
+        <div class="nav menu-box" gm-header-menu>
             <ul>
                 <li class="backlog"><a href="{{ urls.backlogUrl(projectId) }}"><i class="icon-th-list"></i> Backlog</a></li>
                 <li class="dashboard" style="display: none">
