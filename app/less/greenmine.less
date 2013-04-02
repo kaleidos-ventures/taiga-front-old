@@ -18,9 +18,9 @@
 @import "greenmine-generic.less";
 
 /* =============
- * HEADER 
+ * HEADER
  * =============*/
- 
+
  /* Header */
 
 .header-container {
@@ -159,8 +159,8 @@
         }
     }
 }
- 
- 
+
+
 
 /* Backlog */
 select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input  {
@@ -470,7 +470,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
         .body {
             background-color: #333;
             color: white;
-        
+
             padding: 5px;
 
             table {
@@ -1270,7 +1270,7 @@ body.login {
 }
 
 /* Forms */
-form{
+form {
     margin: 0;
     padding: 0;
     fieldset{
@@ -1323,41 +1323,87 @@ form{
         input, textarea{
             box-shadow:inset 0px 2px 9px -1px rgba(0, 0, 0, 0.2)
         }
-        .button{
-            background: #CCC;
-            display: inline-block;
-            padding: 5px 10px 6px;
-            border: none;
-            text-decoration: none;
-            -moz-border-radius: 6px;
-            -webkit-border-radius: 6px;
-            -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-            -moz-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-            box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-            border-bottom: 1px solid rgba(0,0,0,0.25);
-            position: relative;
-            cursor: pointer;
-            font-family: @DroidSansBold;
-            padding: 10px 30px;
-            text-shadow: -1px -1px #666, 1px 1px #ccc;
-            color: #fff;
-            line-height: 1.1em;
-            font-size: 1.1em;
-            &:hover{
-                background: #bbb;
-            }
-            &.button-success{
-                background-color: #91bd09;
-                -webkit-box-shadow:  0 1px 1px #749a02;
-                -moz-box-shadow:  0 1px 1px #749a02;
-                box-shadow:  0 1px 1px #749a02;
-                &:hover {
-                    background-color: #749a02;
-                }
+    }
+
+    .button{
+        background: #CCC;
+        display: inline-block;
+        padding: 5px 10px 6px;
+        border: none;
+        text-decoration: none;
+        -moz-border-radius: 6px;
+        -webkit-border-radius: 6px;
+        -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+        -moz-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+        box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+        border-bottom: 1px solid rgba(0,0,0,0.25);
+        position: relative;
+        cursor: pointer;
+        font-family: @DroidSansBold;
+        padding: 10px 30px;
+        text-shadow: -1px -1px #666, 1px 1px #ccc;
+        color: #fff;
+        line-height: 1.1em;
+        font-size: 1.1em;
+        &:hover{
+            background: #bbb;
+        }
+        &.button-success{
+            background-color: #91bd09;
+            -webkit-box-shadow:  0 1px 1px #749a02;
+            -moz-box-shadow:  0 1px 1px #749a02;
+            box-shadow:  0 1px 1px #749a02;
+            &:hover {
+                background-color: #749a02;
             }
         }
     }
 }
+
+.modal {
+    .inline-form {
+        input,
+        select {
+            width: 200px;
+        }
+
+        fieldset {
+            float: left;
+            padding: 5px;
+        }
+
+        .fieldset-row {
+            overflow: hidden;
+        }
+
+        .modal-body { padding: 10px; }
+    }
+
+    &.hide {
+        display: none;
+    }
+
+    .us-form {
+        select.points { width: 45px; }
+        select.status { width: 150px; }
+        input.subject { width: 455px; }
+
+        .select2-container {
+            width: 365px;
+
+            .select2-choices {
+                padding: 3px 2px;
+            }
+        }
+
+        textarea.description {
+            width: 515px;
+            height: 100px;
+        }
+    }
+
+}
+
 
 
 /* Project List */

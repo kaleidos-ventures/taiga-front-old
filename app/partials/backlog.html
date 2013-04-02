@@ -62,44 +62,53 @@
                         <a href="" ng-click="filtersOpened=!filtersOpened">Filters</a>
                     </div>
                     <div class="buttons-sbox">
-                        <a class="btn btn-small" ng-click="usFormOpened=!usFormOpened">New user story</a>
+                        <a class="btn btn-small" gm-new-us-modal="#new-us-modal">New user story</a>
                     </div>
                 </div>
 
-                <div class="user-story-form-sbox" ng-show="usFormOpened">
-                    <form ui-parsley="submitUs()">
-                        <fieldset>
-                            <label>Points</label>
-                            <select name="status" ng-model="form.points">
-                                <option ng-repeat="obj in constants.pointsList|orderBy:'order'"
-                                    ng-selected="isSameAs('points', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
-                            </select>
-                        </fieldset>
-                        <fieldset>
-                            <label>Status</label>
-                            <select name="status" ng-model="form.status">
-                                <option ng-repeat="obj in usstatuses|orderBy:'order'"
-                                    ng-selected="isSameAs('status', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
-                            </select>
-                        </fieldset>
-                        <fieldset>
-                            <label>Subject</label>
-                            <input class="input-subject" type="text" ng-model="form.subject"></input>
-                        </fieldset>
-                        <fieldset>
-                            <label>Tags</label>
-                            <input type="text" name="status" value="" ng-model="form.tags" ui-select2></input>
-                        </fieldset>
-                        <fieldset>
-                            <label>Description</label>
-                            <textarea ng-model="form.description"></textarea>
-                        </fieldset>
-                        <fieldset>
-                            <div class="right submit-button-container">
-                                <input type="submit" class="button button-success" value="Save" />
-                                <a href="" class="button" ng-click="usFormOpened=false">Close</a>
+                <div class="new-us-modal modal hide" id="new-us-modal">
+                    <form class="inline-form us-form" ui-parsley="submitUs()">
+                        <div class="modal-header">
+                            <h3>Modal title</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="fieldset-row">
+                                <fieldset>
+                                    <label>Subject</label>
+                                    <input class="subject" type="text" ng-model="form.subject"></input>
+                                </fieldset>
+                                <fieldset>
+                                    <label>Points</label>
+                                    <select name="status" class="points" ng-model="form.points">
+                                        <option ng-repeat="obj in constants.pointsList|orderBy:'order'"
+                                            ng-selected="isSameAs('points', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
+                                    </select>
+                                </fieldset>
                             </div>
-                        </fieldset>
+                            <div class="fieldset-row">
+                                <fieldset>
+                                    <label>Status</label>
+                                    <select class="status" name="status" ng-model="form.status">
+                                        <option ng-repeat="obj in usstatuses|orderBy:'order'"
+                                            ng-selected="isSameAs('status', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
+                                    </select>
+                                </fieldset>
+                                <fieldset>
+                                    <label>Tags</label>
+                                    <input type="text" class="tags" name="status" value="" ng-model="form.tags" ui-select2></input>
+                                </fieldset>
+                            </div>
+                            <div class="fieldset-row">
+                                <fieldset>
+                                    <label>Description</label>
+                                    <textarea class="description" ng-model="form.description"></textarea>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" class="button button-success" value="Save" />
+                            <a href="" class="button button-cancel">Close</a>
+                        </div>
                     </form>
                 </div>
 

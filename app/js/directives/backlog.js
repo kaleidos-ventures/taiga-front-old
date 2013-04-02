@@ -87,4 +87,26 @@ angular.module('greenmine.directives.backlog', []).
                 element.popover('hide');
             });
         };
+    }]).
+    directive("gmNewUsModal", ["$parse", function($parse) {
+        return function(scope, elm, attrs) {
+            var element = angular.element(elm);
+            var modalElement = angular.element(attrs.gmNewUsModal);
+
+            console.log(element, modalElement)
+
+            element.on("click", function(event) {
+                event.preventDefault();
+                modalElement.modal()
+            });
+
+            modalElement.on("click", ".buttons .cancel", function(event) {
+                event.preventDefault();
+                modalElement.modal('hide');
+            });
+
+            scope.$on('close-modals', function() {
+                modalElement.modal('hide');
+            });
+        };
     }]);
