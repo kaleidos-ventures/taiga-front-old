@@ -75,22 +75,23 @@
                             <div class="fieldset-row">
                                 <fieldset>
                                     <label>Subject</label>
-                                    <input class="subject" type="text" ng-model="form.subject"></input>
+                                    <input class="subject" type="text" data-required="true"
+                                        data-error-message="Required"
+                                        ng-model="form.subject"></input>
                                 </fieldset>
                                 <fieldset>
                                     <label>Points</label>
-                                    <select name="status" class="points" ng-model="form.points">
-                                        <option ng-repeat="obj in constants.pointsList|orderBy:'order'"
-                                            ng-selected="isSameAs('points', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
-                                    </select>
+                                    <select class="points" name="points" ng-model="form.points" data-required="true"
+                                        data-type="number" data-error-message="Required"
+                                        ng-options="c.id as c.name for c in constants.pointsList|orderBy:'order'"></select>
                                 </fieldset>
                             </div>
                             <div class="fieldset-row">
                                 <fieldset>
                                     <label>Status</label>
-                                    <select class="status" name="status" ng-model="form.status">
-                                        <option ng-repeat="obj in usstatuses|orderBy:'order'"
-                                            ng-selected="isSameAs('status', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
+                                    <select class="status" name="status" ng-model="form.status" data-required="true"
+                                        data-type="number" data-error-message="Required"
+                                        ng-options="c.id as c.name for c in usstatuses|orderBy:'order'"></select>
                                     </select>
                                 </fieldset>
                                 <fieldset>
@@ -132,10 +133,11 @@
                                 </span>
                                 <span class="title">{{ us.subject|truncate:80 }}</span>
                             </div>
-                            <div class="us-points"><a href="" gm-points-popover="saveUs(us, points)">{{ resolvePoints(us.points) }}</a></div>
+                            <div class="us-points"><a href="" gm-points-popover="saveUsPoints(us, points)">{{ resolvePoints(us.points) }}</a></div>
                             <div class="us-options">
                                 <a class="btn btn-mini btn-success" gm-uspreview-popover><i class="icon-eye-open icon-white"></i></a>
-                                <a class="btn btn-mini btn-success" ng-click="editUs(us)"><i class="icon-edit icon-white"></i></a>
+                                <a class="btn btn-mini btn-success"
+                                    gm-new-us-modal="#new-us-modal" data-initialize-callback="editUs(us)"><i class="icon-edit icon-white"></i></a>
                                 <a class="btn btn-mini btn-danger" gm-usremove-popover="removeUs(us)"><i class="icon-remove icon-white"></i></a>
                             </div>
                         </div>

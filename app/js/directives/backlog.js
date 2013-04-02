@@ -93,14 +93,15 @@ angular.module('greenmine.directives.backlog', []).
             var element = angular.element(elm);
             var modalElement = angular.element(attrs.gmNewUsModal);
 
-            console.log(element, modalElement)
+            // Run initialize callback
 
             element.on("click", function(event) {
+                $parse(element.data('initialize-callback'))(scope);
                 event.preventDefault();
                 modalElement.modal()
             });
 
-            modalElement.on("click", ".buttons .cancel", function(event) {
+            modalElement.on("click", ".button-cancel", function(event) {
                 event.preventDefault();
                 modalElement.modal('hide');
             });

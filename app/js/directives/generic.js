@@ -31,7 +31,6 @@ angular.module('greenmine.directives.generic', []).
                     ngModel.$setViewValue(arguments[0].val);
                     scope.$digest();
                 });
-
             }
         };
     }).

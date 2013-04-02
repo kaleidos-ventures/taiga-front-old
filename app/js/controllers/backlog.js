@@ -3,78 +3,31 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
     $rootScope.pageSection = 'backlog';
     $rootScope.pageBreadcrumb = ["Project", "Backlog"];
     $rootScope.projectId = parseInt($routeParams.pid, 10);
+    $scope.stats = {};
 
-    $scope.calculateStats = function() {
-        var pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.points);
-        var total = 0, assigned = 0, notAssigned = 0, completed = 0;
+    $scope.$on("stats:update", function(ctx, data) {
+        if (data.notAssignedPoints) {
+            $scope.stats.notAssignedPoints = data.notAssignedPoints;
+        }
 
-        _.each($scope.unassingedUs, function(us) {
-            total += pointIdToOrder(us.points);
-        });
+        if (data.completedPoints) {
+            $scope.stats.completedPoints = data.completedPoints;
+        }
 
-        _.each($scope.milestones, function(ml) {
-            _.each(ml.user_stories, function(us) {
-                total += pointIdToOrder(us.points);
-                assigned += pointIdToOrder(us.points);
+        if (data.assignedPoints) {
+            $scope.stats.assignedPoints = data.assignedPoints;
+        }
 
-                if (us.is_closed) {
-                    completed += pointIdToOrder(us.points);
-                }
-            });
-        });
+        console.log("stats:update", data);
 
-        $scope.stats = {
-            totalPoints: total,
-            assignedPoints: assigned,
-            notAssignedPoints: total - assigned,
-            completedPercentage: ((completed * 100) / total).toFixed(1)
-        };
-    };
+        var total = ($scope.stats.notAssignedPoints || 0) +
+                         ($scope.stats.assignedPoints || 0);
 
-    /* Obtain resources */
-    rs.getUnassignedUserStories($routeParams.pid)
-        .then(function(data) {
-            // HACK: because django-filter does not works properly
-            // $scope.unassingedUs = data;
-            $scope.unassingedUs = _.filter(data, function(item) {
-                return (item.project === $rootScope.projectId && item.milestone === null);
-            });
+        var completed = $scope.stats.completedPoints || 0;
 
-            $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order");
-            $scope.$apply(function() {
-                $scope.$broadcast("userstories-loaded");
-            });
-        }).then(function() {
-            return rs.getMilestones($rootScope.projectId);
-        }).then(function(data) {
-            $scope.$apply(function() {
-
-                // HACK: because django-filter does not works properly
-                // $scope.milestones = data;
-                $scope.milestones = _.filter(data, function(item) {
-                    return item.project === $rootScope.projectId;
-                });
-
-                if (data.length > 0) {
-                    $scope.sprintId = data[0].id;
-                }
-            });
-        }).then(function() {
-            return rs.getUsPoints($scope.projectId);
-        }).then(function(data) {
-            $scope.$apply(function() {
-                $rootScope.constants.points = {};
-                $rootScope.constants.pointsList = _.sortBy(data, "order");
-
-                _.each(data, function(item) {
-                    $rootScope.constants.points[item.id] = item;
-                });
-
-                $scope.$broadcast("points:loaded");
-            });
-        }).then(function(data) {
-            $scope.$apply(function() { $scope.calculateStats(); });
-        });
+        $scope.stats.completedPercentage = ((completed * 100) / total).toFixed(1)
+        $scope.stats.totalPoints = total;
+    });
 };
 
 BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
@@ -85,6 +38,19 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
     $scope.filtersOpened = false;
     $scope.usFormOpened = false;
     $scope.form = {};
+
+    var calculateStats = function() {
+        var pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.points);
+        var total = 0;
+
+        _.each($scope.unassingedUs, function(us) {
+            total += pointIdToOrder(us.points);
+        });
+
+        $scope.$emit("stats:update", {
+            "notAssignedPoints": total
+        });
+    };
 
     var generateTagList = function() {
         var tagsDict = {}, tags = [];
@@ -97,6 +63,7 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
                     tagsDict[tag] += 1;
                 }
             });
+
         });
 
         _.each(tagsDict, function(val, key) {
@@ -142,11 +109,9 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         _.each($scope.unassingedUs, function(item) {
             if (item.isModified()) {
                 item.save();
-                //console.log(item.id, item.order, item.subject);
             }
         });
     };
-
 
     /* Load developers list */
     rs.projectDevelopers($scope.projectId).
@@ -160,15 +125,43 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
             $scope.$apply(function() { $scope.usstatuses = usstatuses; });
         });
 
+    /* Obtain resources */
+    rs.getUnassignedUserStories($scope.projectId).
+        then(function(data) {
+            // HACK: because django-filter does not works properly
+            // $scope.unassingedUs = data;
+            $scope.unassingedUs = _.filter(data, function(item) {
+                return (item.project === $rootScope.projectId && item.milestone === null);
+            });
+
+            $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order");
+
+            $scope.$apply(function() {
+                $scope.$emit("userstories:loaded");
+                generateTagList();
+                filterUsBySelectedTags();
+            });
+
+            return rs.getUsPoints($scope.projectId);
+        }).
+        then(function(data) {
+            $scope.$apply(function() {
+                $rootScope.constants.points = {};
+                $rootScope.constants.pointsList = _.sortBy(data, "order");
+
+                _.each(data, function(item) {
+                    $rootScope.constants.points[item.id] = item;
+                });
+
+                $scope.$broadcast("points:loaded");
+                calculateStats();
+            });
+        });
+
 
     /* User Story Form */
-
-    $scope.isSameAs = function(property, id) {
-        return ($scope.form[property] === parseInt(id, 10));
-    };
-
     $scope.submitUs = function() {
-        if ($scope.form.save === undefined) {
+        if ($scope.form.id === undefined) {
             rs.createUserStory($scope.projectId, $scope.form).
                 then(function(us) {
                     $scope.$apply(function() {
@@ -209,7 +202,7 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         });
     };
 
-    $scope.saveUs = function(us, points) {
+    $scope.saveUsPoints = function(us, points) {
         us.points = points
         us.save().then(function() {
             $scope.$apply(function() {
@@ -232,10 +225,6 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
     /* Signal Handlign */
 
     $scope.$on("sortable:changed", resortUserStories);
-    $scope.$on("userstories-loaded", function() {
-        generateTagList();
-        filterUsBySelectedTags();
-    });
 };
 
 BacklogUserStoriesCtrl.$inject = ['$scope', '$rootScope', 'resource'];
@@ -246,6 +235,47 @@ BacklogUserStoriesCtrl.$inject = ['$scope', '$rootScope', 'resource'];
 var BacklogMilestonesController = function($scope, rs) {
     /* Local scope variables */
     $scope.sprintFormOpened = false;
+
+    var calculateStats = function() {
+        var pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.points);
+        var assigned = 0, completed = 0;
+
+        _.each($scope.milestones, function(ml) {
+            _.each(ml.user_stories, function(us) {
+                assigned += pointIdToOrder(us.points);
+
+                if (us.is_closed) {
+                    completed += pointIdToOrder(us.points);
+                }
+            });
+        });
+        $scope.$emit("stats:update", {
+            "assignedPoints": assigned,
+            "completedPoints": completed
+        });
+    };
+
+    $scope.$on("points:loaded", function() {
+        console.log("points:loaded");
+        rs.getMilestones($rootScope.projectId).
+            then(function(data) {
+                $scope.$apply(function() {
+
+                    // HACK: because django-filter does not works properly
+                    // $scope.milestones = data;
+                    $scope.milestones = _.filter(data, function(item) {
+                        return item.project === $rootScope.projectId;
+                    });
+
+                    if (data.length > 0) {
+                        $scope.sprintId = data[0].id;
+                    }
+
+                    $scope.$emit("milestones:loaded", $scope.milestones);
+                    calculateStats();
+                });
+            });
+    });
 
     $scope.sprintSubmit = function() {
         if ($scope.form.save === undefined) {
