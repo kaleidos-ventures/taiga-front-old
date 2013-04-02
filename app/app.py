@@ -14,6 +14,7 @@ app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
     '/img': os.path.join(os.path.dirname(__file__), 'img'),
     '/fonts': os.path.join(os.path.dirname(__file__), 'fonts'),
     '/partials': os.path.join(os.path.dirname(__file__), 'partials'),
+    '/tmpresources': os.path.join(os.path.dirname(__file__), 'tmpresources'),
 })
 
 
