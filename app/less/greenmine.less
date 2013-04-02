@@ -993,10 +993,9 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     background-color: @green;
     border-bottom: 2px solid @black;
     color: @grayDarker;
-
     .header-box {
         overflow: hidden;
-
+        padding: 10px 15px;
         .logo-sbox {
             padding: 2px;
             float: left;
@@ -1219,8 +1218,6 @@ form{
                 border-color: rgba(102,154,51,.6);
                 outline: 0;
                 color: #000;
-                -webkit-transition: .3s ease-in-out;
-                -moz-transition: .3s ease-in-out;
             }
         }
         select{
@@ -1229,6 +1226,7 @@ form{
             font-family: @DroidSansRegular;
             color: #000;
             background: #fff;
+            border: 1px solid #cfcfcf;
         }
         textarea{
             width: 96%;
@@ -1236,23 +1234,21 @@ form{
             font-family: @DroidSansRegular;
             color: #ccc;
             border: none;
+            border: 1px solid rgba(0,0,0,.2);
             &:focus{
                 box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
                 border-color: rgba(102,154,51,.6);
                 outline: 0;
                 color: #000;
-                -webkit-transition: .3s ease-in-out;
-                -moz-transition: .3s ease-in-out;
             }
         }
         input, textarea{
-            box-shadow:inset 3px 3px 6px -1px rgba(0, 0, 0, 0.2);
+            box-shadow:inset 0px 2px 9px -1px rgba(0, 0, 0, 0.2)
         }
         .button{
             background: #CCC;
             display: inline-block;
             padding: 5px 10px 6px;
-            color: #fff;
             border: none;
             text-decoration: none;
             -moz-border-radius: 6px;
@@ -1263,9 +1259,12 @@ form{
             border-bottom: 1px solid rgba(0,0,0,0.25);
             position: relative;
             cursor: pointer;
-            font-family: @DroidSansRegular;
+            font-family: @DroidSansBold;
             padding: 10px 30px;
-            line-height: 1.2em;
+            text-shadow: -1px -1px #666, 1px 1px #ccc;
+            color: #fff;
+            line-height: 1.1em;
+            font-size: 1.1em;
             &:hover{
                 background: #bbb;
             }
