@@ -102,7 +102,7 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order");
 
         // Calculte new stats
-        $scope.calculateStats();
+        calculateStats();
 
         _.each($scope.unassingedUs, function(item) {
             if (item.isModified()) {
@@ -192,8 +192,8 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
             $scope.$apply(function() {
                 var index = $scope.unassingedUs.indexOf(us);
                 $scope.unassingedUs.splice(index, 1);
-                $scope.calculateStats();
 
+                calculateStats();
                 generateTagList();
                 filterUsBySelectedTags();
             });
@@ -204,7 +204,7 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         us.points = points
         us.save().then(function() {
             $scope.$apply(function() {
-                $scope.calculateStats();
+                calculateStats();
             });
         }, function(data, status) {
             $scope.$apply(function() {
