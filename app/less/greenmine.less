@@ -123,12 +123,12 @@
                 }
                 &.dashboard{
                     a{
-                        background: url('../img/nav_sprite.png') no-repeat 43px -45px;
+                        background: url('../img/nav_sprite.png') no-repeat 43px -43px;
                     }
                 }
                 &.issues{
                     a{
-                        background: url('../img/nav_sprite.png') no-repeat 30px -94px;
+                        background: url('../img/nav_sprite.png') no-repeat 30px -93px;
                     }
                 }
                 &.wiki{
@@ -653,99 +653,114 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     }
 }
 
+/* ========================
+ *  BACKLOG VIEW
+ * ========================= */
+
 .backlog {
     .first-row {
         margin-top: 10px;
     }
-
-    .graphincs-container {
+    .graphics-container {
+        font-family: @DroidSansRegular;
         .user-story-stats {
-            background-color: #666;
-            color: #eee;
+            background-color: #444;
             padding: 10px;
             overflow: hidden;
-
-            .progress-box > div { float: left; }
+            color:@white;
+            div { 
+                float: left; 
+            }
             .progress-box {
                 float: left;
                 overflow: hidden;
                 line-height: 26px;
                 margin-right: 10px;
-
                 .progress {
                     width: 200px;
-                    margin-right: 10px;
-                    height: 24px;
-                    border-radius: 60px;
+                    height: 25px;
                     margin-bottom: 0px;
+                    margin-right: 10px;
+                    padding: 2px;
+                    background: rgba(255,255,255, 0.6);
+                    .bar {
+                        background-color: #669900;
+                        background-image: none;
+                        height: 23px;
+                        position: relative;
+                        top: 1px;
+                        left: 1px;
+                    }
                 }
-
                 .progress-indicator {
-                    font-family: Helvetica LT Std;
-                    font-size: 28px;
-                    font-weight: bold;
-                    font-style: normal;
-                    text-decoration: none;
+                    font-family: @LeagueGothicRegular;
+                    font-size: 33px;
                     color: #FFFFFF;
                     margin-right: 5px;
+                    margin-top: 2px;
                 }
-
                 .progress-help {
-                    font-family: Helvetica LT Std;
+                    font-family: @DroidSansRegular;
                     font-size: 10px;
-                    font-weight: normal;
-                    font-style: normal;
-                    text-decoration: none;
                     color: #EEE;
-
                     width: 67px;
                     line-height: 11px;
+                    margin-top: 3px;
                 }
             }
-
             .stats-box {
                 overflow: hidden;
                 line-height: 26px;
                 float: left;
-
-                .item > div { float: left; }
                 .item {
                     margin-right: 25px;
                     float: left;
-                    .indicator {
-                        font-family: Helvetica LT Std;
-                        font-size: 28px;
-                        font-weight: bold;
-                        font-style: normal;
-                        text-decoration: none;
+                    div{
+                        float: left;
+                    }
+                    .indicator {                       
+                        font-family: @LeagueGothicRegular;
+                        font-size: 33px;
                         color: #FFFFFF;
                         margin-right: 5px;
+                        margin-top: 2px;
                     }
-
                     .help {
-                        font-family: Helvetica LT Std;
+                        font-family: @DroidSansRegular;
                         font-size: 10px;
-                        font-weight: normal;
-                        font-style: normal;
-                        text-decoration: none;
                         color: #EEE;
-
-                        width: 57px;
+                        width: 67px;
                         line-height: 11px;
+                        margin-top: 3px;
                     }
                 }
-
             }
-        }
-        .show-hide-graphics {
-            font-size: 12px;
-            background-color: #888;
-            padding-right: 5px;
-            padding-left: 5px;
-            a {
+            .new-us-story{
+                float: right;
                 color: white;
-                &:hover {
-                    text-decoration: none;
+                padding: 7px 15px 7px 41px;
+                border-radius: 4px;
+                background: url('../img/backlog_graph.png') no-repeat 8px center #669933;
+                -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+                -moz-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+                box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+                cursor: pointer;
+                &:hover, &.active{
+                    background: url('../img/backlog_graph.png') no-repeat 8px center #333;
+                }
+            }
+            .show-hide-graphics {
+                float: right;
+                color: white;
+                padding: 7px 15px 7px 41px;
+                border-radius: 4px;
+                background: url('../img/backlog_graph.png') no-repeat 8px center #669933;
+                -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+                -moz-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+                box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+                cursor: pointer;
+                &:hover, &.active{
+                    background: url('../img/backlog_graph.png') no-repeat 8px center #333;
                 }
             }
         }

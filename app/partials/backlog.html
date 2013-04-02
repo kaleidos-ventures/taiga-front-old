@@ -2,7 +2,7 @@
 <div class="middle-container container-fluid backlog">
     <div class="row-fluid first-row">
         <div class="span8" ng-controller="BacklogUserStoriesCtrl">
-            <div class="graphincs-container">
+            <div class="graphics-container">
                 <div class="user-story-stats" url="">
                     <div class="progress-box">
                         <div class="progress progress-success">
@@ -27,6 +27,12 @@
                             <div class="help">not assigned points</div>
                         </div>
                     </div>
+                    <a class="button new-us-story" ng-click="usFormOpened=!usFormOpened">
+                        New user story
+                    </a>
+                    <a class="button show-hide-graphics">
+                        Show graphics
+                    </a>
                 </div>
                 <div class="graph-box">
                     <div id="graphs">
@@ -38,7 +44,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="show-hide-graphics"><a href="#" >Show graphics</a></div>
             </div>
 
             <div class="filters-container">
@@ -60,9 +65,6 @@
                         <i class="icon-chevron-up" ng-hide="!filtersOpened"></i>
 
                         <a href="" ng-click="filtersOpened=!filtersOpened">Filters</a>
-                    </div>
-                    <div class="buttons-sbox">
-                        <a class="btn btn-small" gm-new-us-modal="#new-us-modal">New user story</a>
                     </div>
                 </div>
 
