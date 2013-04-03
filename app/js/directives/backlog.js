@@ -12,6 +12,8 @@ angular.module('greenmine.directives.backlog', []).
                 element.popover({
                     content: $("#points-popover").html(),
                     html:true,
+                    animation: false,
+                    delay: 0,
                     trigger: "manual"
                 });
 
@@ -50,6 +52,8 @@ angular.module('greenmine.directives.backlog', []).
                     element.popover({
                         content: template({us: scope.us}),
                         html:true,
+                        animation: false,
+                        delay: 0,
                         trigger: "manual"
                     });
 
@@ -70,6 +74,8 @@ angular.module('greenmine.directives.backlog', []).
                 element.popover({
                     content: template({us: scope.us}),
                     html:true,
+                    animation: false,
+                    delay: 0,
                     trigger: "manual"
                 });
 
@@ -92,8 +98,6 @@ angular.module('greenmine.directives.backlog', []).
         return function(scope, elm, attrs) {
             var element = angular.element(elm);
             var modalElement = angular.element(attrs.gmNewUsModal);
-
-            // Run initialize callback
 
             element.on("click", function(event) {
                 $parse(element.data('initialize-callback'))(scope);

@@ -42,7 +42,9 @@ angular.module('greenmine.directives.issues', []).
                     content: template({"developers": scope.developers}),
                     html:true,
                     trigger: "manual",
-                    placement: "left"
+                    placement: "left",
+                    animation: false,
+                    delay: 0
                 });
 
                 element.popover("show");
@@ -75,7 +77,9 @@ angular.module('greenmine.directives.issues', []).
                     content: template({"list": scope.constants.severityList}),
                     html:true,
                     trigger: "manual",
-                    placement: "right"
+                    placement: "right",
+                    animation: false,
+                    delay: 0
                 });
 
                 element.popover("show");
@@ -106,9 +110,11 @@ angular.module('greenmine.directives.issues', []).
                 var template = _.template($("#status-popover").html());
                 element.popover({
                     content: template({"list": scope.constants.statusList}),
-                    html:true,
+                    html: true,
                     trigger: "manual",
-                    placement: "right"
+                    placement: "right",
+                    animation: false,
+                    delay: 0
                 });
 
                 element.popover("show");
@@ -141,7 +147,9 @@ angular.module('greenmine.directives.issues', []).
                     content: template({"list": scope.constants.priorityList}),
                     html:true,
                     trigger: "manual",
-                    placement: "right"
+                    placement: "right",
+                    animation: false,
+                    delay: 0
                 });
 
                 element.popover("show");
