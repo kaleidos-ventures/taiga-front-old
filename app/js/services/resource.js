@@ -162,11 +162,11 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
                 $http(params).success(function(data, status) {
                     self._isModified = false;
-                    self._attrs = _.extend(self._attrs, self._modifiedAttrs);
+                    self._attrs = _.extend(self._attrs, self._modifiedAttrs, data);
                     self._modifiedAttrs = {};
-                    defered.resolve(data, status);
+                    defered.resolve(self);
                 }).error(function(data, status) {
-                    defered.reject(data, status);
+                    defered.reject([self, data, status]);
                 });
             }
 

@@ -224,7 +224,11 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, rs) {
         _.each($scope.form, function(value, key) {
             $scope.issue[key] = value;
         });
-        $scope.issue.save()
+
+        $scope.issue.save().then(function() {
+            $scope.updateFormOpened = false;
+            $scope.$apply();
+        });
     };
 };
 
