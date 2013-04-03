@@ -168,4 +168,29 @@ angular.module('greenmine.directives.issues', []).
                 element.popover('hide');
             });
         };
-    }]);
+    }]).
+    directive("gmIssueChanges", function() {
+        var validFields = ["priority", "status", "severity", "tags"];
+        var template = _.template($("#change-template").html());
+
+        return function(scope, elm, attrs) {
+            var element = angular.element(elm);
+
+            var handleField = function(name, field) {
+                var ctx = {
+                    name: name,
+                    oldValue: field.old,
+                    newValue: field.new
+                };
+
+                return template(ctx);
+            };
+
+            _.each(validFields, function(fieldName) {
+                var field = scope.h[fieldName];
+                if (field !== undefined) {
+                    element.append(handleField(fieldName, field));
+                }
+            });
+        };
+    });

@@ -31,6 +31,25 @@
         </div>
     </div>
 
+    <div class="row-fluid" ng-show="issue.history">
+        <div class="span12">
+            <div class="history">
+                <h3>History</h3>
+
+                <ul class="history-items">
+                    <li class="history-item" ng-repeat="h in issue.history">
+                        <div class="title">By: {{ h.by }} on {{ h.modified_date }}</div>
+                        <div class="changes" gm-issue-changes>
+                        </div>
+                        <div class="comment" ng-show="h.comment">
+                            <strong>Commend:</strong><br />{{ h.comment }}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <div class="row-fluid" ng-show="updateFormOpened">
         <div class="span12">
             <div class="update-form">
@@ -116,4 +135,12 @@
             </div>
         </div>
     </div>
+
+    <script type="text/template" id="change-template">
+        <div class="change">
+            <strong><%= name %></strong>:
+                <span class="old"><%= oldValue %></span> &gt;
+                <span class="new"><%= newValue %></span>
+        </div>
+    </script>
 </div>
