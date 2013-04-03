@@ -47,27 +47,23 @@
             </div>
 
             <div class="filters-container">
-                <div class="filters-visual-box" ng-show="filtersOpened">
-                    <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
-                                ng-class="{selected: tag.selected}" gm-colorize-tag>
-                            <div class="icon">
-                                <i class="icon-remove icon-white" ng-hide="!tag.selected"> </i>
+                <div class="filters-bar-sbox">
+                    <div class="title-sbox">
+                        <a href="" ng-class="{ active: filtersOpened}" ng-click="filtersOpened=!filtersOpened">Filters</a>
+                    </div>
+                    <div class="filters-visual-box" ng-show="filtersOpened">
+                        <div class="tags-list-sbox">
+                            <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
+                                    ng-class="{selected: tag.selected}" gm-colorize-tag>
+                                <div class="icon">
+                                    <i class="icon-remove icon-white" ng-hide="!tag.selected"> </i>
+                                </div>
+                                <div class="name">{{ tag.name }}</div>
+                                <div class="count">{{ tag.count }}</div>
                             </div>
-                            <div class="name">{{ tag.name }}</div>
-                            <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
                 </div>
-                <div class="filters-bar-sbox">
-                    <div class="title-sbox">
-                        <i class="icon-chevron-down" ng-hide="filtersOpened"></i>
-                        <i class="icon-chevron-up" ng-hide="!filtersOpened"></i>
-
-                        <a href="" ng-click="filtersOpened=!filtersOpened">Filters</a>
-                    </div>
-                </div>
-
                 <div class="new-us-modal modal hide" id="new-us-modal">
                     <form class="inline-form us-form" ui-parsley="submitUs()">
                         <div class="modal-header">
@@ -125,7 +121,6 @@
                         <div class="us-points">Points</div>
                         <div class="us-options">Options</div>
                     </div>
-                    <div class="flex-separator"></div>
                     <div class="flex-body" ui-sortable=".sprints-box .flex-body" ng-model="unassingedUs">
                         <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
                                 ui-sortable-index="{{$index}}">
