@@ -177,11 +177,14 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         var itemUrlTemplate = "%(url)s%(id)s/";
 
-        var queryMany = function(url, params) {
-            var params = {"method":"GET", "headers": headers(), "url": url, params: params || {}};
+        var queryMany = function(url, params, options) {
+            var defauts = {method: "GET", headers:  headers() };
+            var current = {url: url, params: params || {}};
+
+            var httpParams = _.extend({}, defauts, options, current);
             var defered = Q.defer();
 
-            $http(params).success(function(data, status) {
+            $http(httpParams).success(function(data, status) {
                 var models = _.map(data, function(item) {
                     var modelurl = interpolate(itemUrlTemplate, {"url": url, "id": item.id}, true);
                     return new Model(item, modelurl);
