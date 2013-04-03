@@ -370,21 +370,20 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 -moz-box-orient: horizontal;
                 border-bottom: 2px solid #666666;
                 width: 100%;
+                font-family: @DroidSansBold;
+                color: #333;
 
                 .issue-sortable-field {
                     cursor: pointer;
                 }
             }
-
             .flex-header > div:nth-child(2) {
                 -webkit-box-flex: 1;
                 -moz-box-flex: 1;
             }
-
             .flex-header > div {
                 padding: 5px;
             }
-
             .flex-body {
                 min-height: 40px;
                 .issue-item {
@@ -392,16 +391,14 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     display: -moz-box;
                     -webkit-box-orient: horizontal;
                     -moz-box-orient: horizontal;
-                    margin-top: 2px;
-                    margin-bottom: 2px;
+                    padding: 2px 0;
                     border-bottom: 1px solid #eee;
+                    font-family: @DroidSansRegular;
                     &:hover {
                         background-color: #f9f9f9;
-                        border-bottom: 1px solid #f9f9f9;
                     }
                     width: 100%;
                 }
-
                 .issue-item > div:nth-child(2) {
                     -webkit-box-flex: 1;
                     -moz-box-flex: 1;
@@ -410,6 +407,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     padding: 5px;
                 }
             }
+
 
             .issue-title {
                 .label {
@@ -429,6 +427,46 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 width: 90px;
             }
 
+            .issue-options {
+                width: 80px;
+                a{
+                    position: relative;
+                    width: 16px;
+                    margin-right: 4px;
+                    height: 16px;
+                    background: #000;
+                    display: inline-block;
+                    padding: 1px;
+                    border-radius:2px;
+                    &.btn-small-preview {
+                        background: url( '../img/backlog_sprite.png' ) no-repeat center 2px #666666;
+                    }
+                    &.btn-small-edit {
+                        background: url( '../img/backlog_sprite.png' ) no-repeat center -20px #669933;
+                    }
+                    &.btn-small-remove {
+                        background: url( '../img/backlog_sprite.png' ) no-repeat center -40px #cc0000;
+                    }
+                    &:hover{
+                        background-color: #333;
+                        transition: all 0.3s ease-in;
+                        .help-box{
+                            display: block;
+                        }
+                    }
+                    .help-box{
+                        position: absolute;
+                        top: -29px;
+                        border: 1px solid #669933;
+                        left: -25px;
+                        padding: 4px;
+                        width: 57px;
+                        height: 13px;
+                        text-align:center;
+                        color: #fff;
+                    }
+                }
+            }
             .issue-options {
                 width: 120px;
                 a {
