@@ -132,10 +132,9 @@
                             </div>
                             <div class="us-points"><a href="" gm-points-popover="saveUsPoints(us, points)">{{ resolvePoints(us.points) }}</a></div>
                             <div class="us-options">
-                                <a class="btn btn-mini btn-success" gm-uspreview-popover><i class="icon-eye-open icon-white"></i></a>
-                                <a class="btn btn-mini btn-success"
-                                    gm-new-us-modal="#new-us-modal" data-initialize-callback="editUs(us)"><i class="icon-edit icon-white"></i></a>
-                                <a class="btn btn-mini btn-danger" gm-usremove-popover="removeUs(us)"><i class="icon-remove icon-white"></i></a>
+                                <a class="btn-small-us-preview" gm-uspreview-popover><span class="help-box">Us preview</span></a>
+                                <a class="btn-small-create-us" gm-new-us-modal="#new-us-modal" data-initialize-callback="editUs(us)"><span class="help-box">Create new US</span></a>
+                                <a class="btn-small-remove-us" gm-usremove-popover="removeUs(us)"><span class="help-box">Remove current US</span></a>
                             </div>
                         </div>
                     </div>
@@ -149,9 +148,7 @@
                     <div class="title">5</div>
                     <div class="help">sprints <br />planned</div>
                 </div>
-                <div class="buttons-sbox">
-                    <a href="" class="btn btn-small" ng-click="sprintFormOpened=!sprintFormOpened">New sprint</a>
-                </div>
+                <a href="" class="button new-sprint" ng-click="sprintFormOpened=!sprintFormOpened">New sprint</a>
             </div>
 
             <div class="milestone-form-box" ng-show="sprintFormOpened">
@@ -173,13 +170,14 @@
                         </div>
                     </fieldset>
                     <div class="btn-group">
-                        <input type="submit" class="btn btn-success" value="Save" />
-                        <a href="" class="btn" ng-click="sprintFormOpened=false">Close</a>
+                        <input type="submit" class="button button-success" value="Save" />
+                        <a href="" class="button" ng-click="sprintFormOpened=false">Close</a>
                     </div>
                 </form>
             </div>
 
             <div class="sprints-box">
+                <p class="sprints-box-title">Previous sprints</p>
                 <div class="sprint-sbox" ng-repeat="ml in milestones" ng-controller="BacklogMilestoneController">
                     <div class="header">
                         <div class="title"><a href="{{ urls.dashboardUrl(projectId, ml.id) }}">{{ ml.name }}</a></div>
