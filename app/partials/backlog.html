@@ -114,7 +114,7 @@
                 <div class="filters-selected-box"></div>
             </div>
 
-            <div class="us-container" ng-hide="usFormOpened">
+            <div class="us-container">
                 <div class="us-table-list">
                     <div class="flex-header">
                         <div class="us-title">User Story</div>
@@ -133,8 +133,7 @@
                             <div class="us-points"><a href="" gm-points-popover="saveUsPoints(us, points)">{{ resolvePoints(us.points) }}</a></div>
                             <div class="us-options">
                                 <a class="btn-small-preview" gm-uspreview-popover><span class="help-box">Preview</span></a>
-                                <a class="btn-small-edit" gm-new-us-modal="#new-us-modal" data-initialize-callback="editUs(us)">
-                                    <span class="help-box">Edit</span></a>
+                                <a class="btn-small-edit" gm-new-us-modal="#new-us-modal"><span class="help-box">Edit</span></a>
                                 <a class="btn-small-remove" gm-usremove-popover="removeUs(us)"><span class="help-box">Remove</span></a>
                             </div>
                         </div>

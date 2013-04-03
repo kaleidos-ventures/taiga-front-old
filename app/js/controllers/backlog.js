@@ -40,7 +40,6 @@ BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource']
 var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
     /* Local scope variables */
     $scope.filtersOpened = false;
-    $scope.usFormOpened = false;
     $scope.form = {};
 
     var calculateStats = function() {
@@ -169,7 +168,6 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
             rs.createUserStory($scope.projectId, $scope.form).
                 then(function(us) {
                     $scope.$apply(function() {
-                        $scope.usFormOpened = false;
                         $scope.form = {};
                         $scope.unassingedUs.push(us);
 
@@ -182,15 +180,15 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
             $scope.form.save().then(function() {
                 $scope.$apply(function() {
                     $scope.form = {};
-                    $scope.usFormOpened = false;
                 });
             });
         }
+
+        $rootScope.$broadcast("modals:close");
     };
 
     $scope.editUs = function(us) {
         $scope.form = us;
-        $scope.usFormOpened = true;
     }
 
     $scope.removeUs = function(us) {
