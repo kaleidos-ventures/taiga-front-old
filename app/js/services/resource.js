@@ -61,13 +61,28 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         /* Resource Model */
 
-        var Model = function(data, url, options) {
+        var Model = function(data, url) {
             this._attrs = data;
             this._modifiedAttrs = {};
             this._isModified = false;
             this._url = url;
 
             this.initialize();
+        };
+
+        Model.desSerialize = function(sdata) {
+            var ddata = JSON.parse(sdata);
+            var model = new Model(ddata.url, ddata.data)
+            return model;
+        };
+
+        Model.prototype.serialize = function() {
+            var data = {
+                "data":_.clone(this._attrs),
+                "url": this._url
+            };
+
+            return JSON.stringify(data);
         };
 
         Model.prototype.initialize = function() {
