@@ -207,7 +207,7 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
     };
 
     $scope.saveUsPoints = function(us, points) {
-        us.points = points
+        us.points = points;
         us.save().then(function() {
             $scope.$apply(function() {
                 calculateStats();

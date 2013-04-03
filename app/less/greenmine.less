@@ -438,6 +438,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     display: inline-block;
                     padding: 1px;
                     border-radius:2px;
+
                     &.btn-small-preview {
                         background: url( '../img/backlog_sprite.png' ) no-repeat center 2px #666666;
                     }
@@ -1038,12 +1039,12 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 text-align: center;
                 font-size: 14px;
                 font-family: @DroidSansBold;
-                a {
-                    color: #333;
-                    text-decoration: none;
-                    padding: 7px 16px;
-                    cursor: pointer;
-                }
+            }
+            .us-points > a {
+                color: #333;
+                text-decoration: none;
+                padding: 7px 16px;
+                cursor: pointer;
             }
 
             .us-options {
@@ -1057,13 +1058,13 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     display: inline-block;
                     padding: 1px;
                     border-radius:2px;
-                    &.btn-small-us-preview{
+                    &.btn-small-preview {
                         background: url( '../img/backlog_sprite.png' ) no-repeat center 2px #666666;
                     }
-                    &.btn-small-create-us{
+                    &.btn-small-edit {
                         background: url( '../img/backlog_sprite.png' ) no-repeat center -20px #669933;
                     }
-                    &.btn-small-remove-us{
+                    &.btn-small-remove {
                         background: url( '../img/backlog_sprite.png' ) no-repeat center -40px #cc0000;
                     }
                     &:hover{
