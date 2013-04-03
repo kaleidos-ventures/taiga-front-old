@@ -26,6 +26,12 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
         $scope.stats.completedPercentage = ((completed * 100) / total).toFixed(1)
         $scope.stats.totalPoints = total;
     });
+
+    $scope.$on("milestones:loaded", function(ctx, data) {
+        if (data.length > 0) {
+            $scope.sprintId = data[0].id;
+        }
+    });
 };
 
 BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
@@ -264,9 +270,6 @@ var BacklogMilestonesController = function($scope, $rootScope, rs) {
                         return item.project === $rootScope.projectId;
                     });
 
-                    if (data.length > 0) {
-                        $scope.sprintId = data[0].id;
-                    }
 
                     $scope.$emit("milestones:loaded", $scope.milestones);
                     calculateStats();

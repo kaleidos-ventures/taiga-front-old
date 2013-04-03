@@ -41,7 +41,6 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
             compledUss = 0,
             completedTasks = 0;
 
-
         _.each($scope.userstories, function(us) {
             totalPoints += pointIdToOrder(us.points);
         })
