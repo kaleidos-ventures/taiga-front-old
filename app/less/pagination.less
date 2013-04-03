@@ -2,9 +2,20 @@
 // Pagination (multiple pages)
 // --------------------------------------------------
 
+@paginationBackground:                #fff;
+@paginationBorder:                    #ddd;
+@paginationActiveBackground:          #f5f5f5;
+@paginationBorderRadius:      4px;
+@paginationBorderRadiusSmall:     3px;
+@paginationLineHeight:        20px;
+@paginationGrayLight:             #999;
+@paginationPaddingSmall: 2px 10px;
+@paginationFontSizeSmall: 14 * 0.85;
+
+
 // Space out pagination from surrounding content
 .pagination {
-  margin: @baseLineHeight 0;
+  margin: @paginationLineHeight 0;
 }
 
 .pagination ul {
@@ -15,7 +26,7 @@
   margin-left: 0;
   margin-bottom: 0;
   // Visuals
-  .border-radius(@baseBorderRadius);
+  .border-radius(@paginationBorderRadius);
   .box-shadow(0 1px 2px rgba(0,0,0,.05));
 }
 .pagination ul > li {
@@ -25,7 +36,7 @@
 .pagination ul > li > span {
   float: left; // Collapse white-space
   padding: 4px 12px;
-  line-height: @baseLineHeight;
+  line-height: @paginationLineHeight;
   text-decoration: none;
   background-color: @paginationBackground;
   border: 1px solid @paginationBorder;
@@ -39,25 +50,25 @@
 }
 .pagination ul > .active > a,
 .pagination ul > .active > span {
-  color: @grayLight;
+  color: @paginationGrayLight;
   cursor: default;
 }
 .pagination ul > .disabled > span,
 .pagination ul > .disabled > a,
 .pagination ul > .disabled > a:hover,
 .pagination ul > .disabled > a:focus {
-  color: @grayLight;
+  color: @paginationGrayLight;
   background-color: transparent;
   cursor: default;
 }
 .pagination ul > li:first-child > a,
 .pagination ul > li:first-child > span {
   border-left-width: 1px;
-  .border-left-radius(@baseBorderRadius);
+  .border-left-radius(@paginationBorderRadius);
 }
 .pagination ul > li:last-child > a,
 .pagination ul > li:last-child > span {
-  .border-right-radius(@baseBorderRadius);
+  .border-right-radius(@paginationBorderRadius);
 }
 
 
@@ -75,23 +86,6 @@
 // Sizing
 // --------------------------------------------------
 
-// Large
-.pagination-large {
-  ul > li > a,
-  ul > li > span {
-    padding: @paddingLarge;
-    font-size: @fontSizeLarge;
-  }
-  ul > li:first-child > a,
-  ul > li:first-child > span {
-    .border-left-radius(@borderRadiusLarge);
-  }
-  ul > li:last-child > a,
-  ul > li:last-child > span {
-    .border-right-radius(@borderRadiusLarge);
-  }
-}
-
 // Small and mini
 .pagination-mini,
 .pagination-small {
@@ -101,23 +95,14 @@
   }
   ul > li:last-child > a,
   ul > li:last-child > span {
-    .border-right-radius(@borderRadiusSmall);
+    .border-right-radius(@paginationBorderRadiusSmall);
   }
 }
 
-// Small
 .pagination-small {
   ul > li > a,
   ul > li > span {
-    padding: @paddingSmall;
-    font-size: @fontSizeSmall;
-  }
-}
-// Mini
-.pagination-mini {
-  ul > li > a,
-  ul > li > span {
-    padding: @paddingMini;
-    font-size: @fontSizeMini;
+    padding: @paginationPaddingSmall;
+    font-size: @paginationFontSizeSmall;
   }
 }
