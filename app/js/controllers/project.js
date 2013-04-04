@@ -3,7 +3,6 @@ var ProjectListController = function($scope, $rootScope, rs) {
 
     rs.getProjects().then(function(projects) {
         $scope.projects = projects;
-        $scope.$digest();
     });
 };
 
