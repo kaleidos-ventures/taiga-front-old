@@ -3,19 +3,24 @@
     <div class="row-fluid first-row">
         <div class="span12">
             <div class="filters-container">
-                <div class="filters-visual-box" ng-show="filtersOpened">
-                    <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
-                                ng-class="{selected: tag.selected}" gm-colorize-tag>
-                            <div class="icon">
-                                <i class="icon-remove icon-white" ng-hide="!tag.selected"> </i>
+                <div class="filters-bar-sbox">
+                    <div class="title-sbox">
+                        <a href="" ng-class="{active: filtersOpened}" ng-click="filtersOpened=!filtersOpened">Filters</a>
+                    </div>
+                    <div class="filters-visual-box" ng-show="filtersOpened">
+                        <div class="tags-list-sbox">
+                            <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
+                                    ng-class="{selected: tag.selected}" gm-colorize-tag>
+                                <div class="icon">
+                                    <i class="icon-remove icon-white" ng-hide="!tag.selected"> </i>
+                                </div>
+                                <div class="name">{{ tag.name }}</div>
+                                <div class="count">{{ tag.count }}</div>
                             </div>
-                            <div class="name">{{ tag.name }}</div>
-                            <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
                 </div>
-
+                <!-- old
                 <div class="filters-bar-sbox">
                     <div class="title-sbox">
                         <i class="icon-chevron-down" ng-hide="filtersOpened"></i>
@@ -27,6 +32,7 @@
                         <a class="btn btn-small" ng-click="issueFormOpened=!issueFormOpened">New issue</a>
                     </div>
                 </div>
+                -->
 
                 <div class="issue-form-sbox" ng-show="issueFormOpened">
                     <form action="" ui-parsley="issueSubmit()">

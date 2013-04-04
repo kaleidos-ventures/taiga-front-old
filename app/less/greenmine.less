@@ -277,35 +277,54 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     .filters-container {
         margin-top: 10px;
 
+        .filters-bar-sbox {
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            margin: 2px 0;
+            padding: 5px;
+            padding-left: 15px;
+            overflow: hidden;
+            .title-sbox {
+                a {
+                    color: #666;
+                    padding: 5px;
+                    padding-left: 20px;
+                    background: url('../img/filter_arrow.png') no-repeat 3px 8px;
+                    &.active{
+                        background: url('../img/filter_arrow.png') no-repeat 3px -15px;
+                    }
+                }
+            }
+            .buttons-sbox {
+                float: right;
+            }
+        }
         .filters-visual-box {
             overflow: hidden;
             padding: 10px;
-
             .tags-list-sbox {
                 overflow: hidden;
-
-                .tag > div { float: left; }
                 .tag {
                     position: relative;
                     cursor: pointer;
-                    overflow: hidden;
-                    background-color: #f2f2f2;
                     float: left;
                     width: 150px;
                     margin-bottom: 5px;
                     margin-right: 5px;
                     padding: 5px;
-
-                    font-family: Helvetica LT Std;
+                    font-family: @DroidSansRegular;
                     font-size: 13px;
-                    font-weight: normal;
-                    font-style: normal;
-                    text-decoration: none;
-                    color: white;
-
+                    color: @white;
+                    opacity: 0.3;
+                    border-radius: 4px;
                     &.selected {
-                        background-color: #669900;
-                        color: #eee;
+                        opacity: 1;
+                        box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+                        font-family: @DroidSansBold;
+                        -webkit-transition: all 0.3s ease-out;
+                        -moz-transition: all 0.3s ease-out;
+                        -o-transition: all 0.3s ease-out;
+                        transition: all 0.3s ease-out;
                     }
                     .icon {
                         margin-right: 5px;
@@ -313,29 +332,13 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     .count {
                         position: absolute;
                         top: 5px;
-                        right: 10px;
+                        right: 0px;
+                        background: rgba(255,255,255,.3);
+                        padding: 5px 8px;
+                        margin-top: -5px;
+                        border-radius: 0 4px 4px 0;
                     }
                 }
-            }
-        }
-
-        .filters-bar-sbox {
-            background-color: #666;
-            color: #eee;
-            padding: 5px;
-            padding-left: 15px;
-            overflow: hidden;
-            line-height: 25px;
-
-            .title-sbox {
-                float: left;
-                a {
-                    color: #eee;
-                }
-            }
-
-            .buttons-sbox {
-                float: right;
             }
         }
 
