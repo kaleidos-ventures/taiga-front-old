@@ -110,10 +110,12 @@ angular.module('greenmine.directives.backlog', []).
 
             modalElement.on("click", ".button-cancel", function(event) {
                 scope.$apply(function() {
-                    if (scope.form.revert !== undefined) {
-                        scope.form.revert();
-                    } else {
-                        scope.form = {};
+                    if (scope.form) {
+                        if (scope.form.revert !== undefined) {
+                            scope.form.revert();
+                        } else {
+                            scope.form = {};
+                        }
                     }
                 });
 
