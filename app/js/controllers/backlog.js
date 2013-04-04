@@ -119,13 +119,11 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
     /* Load developers list */
     rs.projectDevelopers($scope.projectId).
         then(function(data) {
-            $scope.$apply(function() { $scope.developers = data; });
-        }).
-        then(function() {
+            $scope.developers = data;
             return rs.getUsStatuses($scope.projectId);
         }).
         then(function(usstatuses) {
-            $scope.$apply(function() { $scope.usstatuses = usstatuses; });
+            $scope.usstatuses = usstatuses;
         });
 
     /* Obtain resources */
@@ -139,26 +137,22 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
 
             $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order");
 
-            $scope.$apply(function() {
-                $rootScope.$broadcast("userstories:loaded");
-                generateTagList();
-                filterUsBySelectedTags();
-            });
+            $rootScope.$broadcast("userstories:loaded");
+            generateTagList();
+            filterUsBySelectedTags();
 
             return rs.getUsPoints($scope.projectId);
         }).
         then(function(data) {
-            $scope.$apply(function() {
-                $rootScope.constants.points = {};
-                $rootScope.constants.pointsList = _.sortBy(data, "order");
+            $rootScope.constants.points = {};
+            $rootScope.constants.pointsList = _.sortBy(data, "order");
 
-                _.each(data, function(item) {
-                    $rootScope.constants.points[item.id] = item;
-                });
-
-                calculateStats();
-                $rootScope.$broadcast("points:loaded");
+            _.each(data, function(item) {
+                $rootScope.constants.points[item.id] = item;
             });
+
+            calculateStats();
+            $rootScope.$broadcast("points:loaded");
         });
 
 
@@ -167,23 +161,19 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         if ($scope.form.id === undefined) {
             rs.createUserStory($scope.projectId, $scope.form).
                 then(function(us) {
-                    $scope.$apply(function() {
-                        $scope.form = {};
-                        $scope.unassingedUs.push(us);
-
-                        generateTagList();
-                        filterUsBySelectedTags();
-                        resortUserStories();
-                    });
-                });
-        } else {
-            $scope.form.save().then(function() {
-                $scope.$apply(function() {
                     $scope.form = {};
+                    $scope.unassingedUs.push(us);
+
                     generateTagList();
                     filterUsBySelectedTags();
                     resortUserStories();
                 });
+        } else {
+            $scope.form.save().then(function() {
+                $scope.form = {};
+                generateTagList();
+                filterUsBySelectedTags();
+                resortUserStories();
             });
         }
 
@@ -196,27 +186,20 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
 
     $scope.removeUs = function(us) {
         us.remove().then(function() {
-            $scope.$apply(function() {
-                var index = $scope.unassingedUs.indexOf(us);
-                $scope.unassingedUs.splice(index, 1);
+            var index = $scope.unassingedUs.indexOf(us);
+            $scope.unassingedUs.splice(index, 1);
 
-                calculateStats();
-                generateTagList();
-                filterUsBySelectedTags();
-            });
+            calculateStats();
+            generateTagList();
+            filterUsBySelectedTags();
         });
     };
 
     $scope.saveUsPoints = function(us, points) {
         us.points = points;
-        us.save().then(function() {
-            $scope.$apply(function() {
-                calculateStats();
-            });
-        }, function(data, status) {
-            $scope.$apply(function() {
-                us.revert();
-            });
+
+        us.save().then(calculateStats, function(data, status) {
+            us.revert();
         });
     };
 
@@ -263,36 +246,28 @@ var BacklogMilestonesController = function($scope, $rootScope, rs) {
     $scope.$on("points:loaded", function() {
         rs.getMilestones($rootScope.projectId).
             then(function(data) {
-                $scope.$apply(function() {
-
-                    // HACK: because django-filter does not works properly
-                    // $scope.milestones = data;
-                    $scope.milestones = _.filter(data, function(item) {
-                        return item.project === $rootScope.projectId;
-                    });
-
-
-                    $scope.$emit("milestones:loaded", $scope.milestones);
-                    calculateStats();
+                // HACK: because django-filter does not works properly
+                // $scope.milestones = data;
+                $scope.milestones = _.filter(data, function(item) {
+                    return item.project === $rootScope.projectId;
                 });
+
+                $scope.$emit("milestones:loaded", $scope.milestones);
+                calculateStats();
             });
     });
 
     $scope.sprintSubmit = function() {
         if ($scope.form.save === undefined) {
             rs.createMilestone($scope.projectId, $scope.form).then(function(milestone) {
-                $scope.$apply(function() {
-                    $scope.milestones.unshift(milestone);
-                    $scope.form = {};
-                    $scope.sprintFormOpened = false;
-                });
+                $scope.milestones.unshift(milestone);
+                $scope.form = {};
+                $scope.sprintFormOpened = false;
             });
         } else {
             $scope.form.save().then(function() {
-                $scope.$apply(function() {
-                    $scope.form = {};
-                    $scope.sprintFormOpened = false;
-                });
+                $scope.form = {};
+                $scope.sprintFormOpened = false;
             });
         }
     };
@@ -344,5 +319,3 @@ var BacklogMilestoneController = function($scope, rs) {
 };
 
 BacklogMilestoneController.$inject = ['$scope'];
-
-

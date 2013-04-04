@@ -1,4 +1,4 @@
-var IssuesController = function($scope, $rootScope, $routeParams, $filter, rs) {
+var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, rs) {
     /* Global Scope Variables */
     $rootScope.pageSection = 'issues';
     $rootScope.pageBreadcrumb = ["Project", "Issues"];
@@ -120,14 +120,19 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, rs) {
     $scope.$watch("sortingOrder", groupToPages);
     $scope.$watch("reverse", groupToPages);
 
-    /* Load Resources */
-    Q.allResolved([
+    $q.all([
         rs.getIssueTypes(projectId),
         rs.getIssueStatuses(projectId),
         rs.getSeverities(projectId),
         rs.getPriorities(projectId),
         rs.projectDevelopers(projectId)
-    ]).spread(function(issueTypes, issueStatuses, severities, priorities, developers) {
+    ]).then(function(results) {
+        var issueTypes = results[0]
+          , issueStatuses = results[1]
+          , severities = results[2]
+          , priorities = results[3]
+          , developers = results[4];
+
         _.each(issueTypes, function(item) {
             $rootScope.constants.type[item.id] = item;
         });
@@ -152,17 +157,14 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, rs) {
 
         return rs.getIssues(projectId);
     }).then(function(issues) {
-        $scope.$apply(function() {
-            $scope.issues = issues;
+        $scope.issues = issues;
+        // HACK: because filters not works correctly
+        $scope.issues = _.filter(issues, function(issue) {
+            return (issue.project === projectId);
+        });
 
-            // HACK: because filters not works correctly
-            $scope.issues = _.filter(issues, function(issue) {
-                return (issue.project === projectId);
-            });
-
-            generateTagList();
-            filterIssues();
-        })
+        generateTagList();
+        filterIssues();
     });
 
 
@@ -171,24 +173,29 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, rs) {
     };
 };
 
-IssuesController.$inject = ['$scope', '$rootScope', '$routeParams', '$filter', 'resource'];
+IssuesController.$inject = ['$scope', '$rootScope', '$routeParams', '$filter', '$q', 'resource'];
 
 
-var IssuesViewController = function($scope, $rootScope, $routeParams, rs) {
+var IssuesViewController = function($scope, $rootScope, $routeParams, $q, rs) {
     $rootScope.pageSection = 'issues';
     $rootScope.pageBreadcrumb = ["Project", "Issues", "#" + $routeParams.issueid];
     $rootScope.projectId = parseInt($routeParams.pid, 10);
 
     var projectId = $rootScope.projectId;
 
-    /* Load Resources */
-    Q.allResolved([
+    $q.all([
         rs.getIssueTypes(projectId),
         rs.getIssueStatuses(projectId),
         rs.getSeverities(projectId),
         rs.getPriorities(projectId),
         rs.projectDevelopers(projectId)
-    ]).spread(function(issueTypes, issueStatuses, severities, priorities, developers) {
+    ]).then(function(results) {
+        var issueTypes = results[0]
+          , issueStatuses = results[1]
+          , severities = results[2]
+          , priorities = results[3]
+          , developers = results[4];
+
         $rootScope.constants.typeList = _.sortBy(issueTypes, "order");
         $rootScope.constants.statusList = _.sortBy(issueStatuses, "order");
         $rootScope.constants.severityList = _.sortBy(severities, "order");
@@ -197,10 +204,8 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, rs) {
 
         return rs.getIssue($routeParams.issueid);
     }).then(function(issue) {
-        $scope.$apply(function() {
-            $scope.issue = issue;
-            $scope.form = _.extend({}, $scope.issue);
-        });
+        $scope.issue = issue;
+        $scope.form = _.extend({}, $scope.issue);
     });
 
     $scope.issue = {};
@@ -211,15 +216,6 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, rs) {
         return ($scope.issue[property] === parseInt(id, 10));
     };
 
-    /* Load developers list */
-
-    var loadSuccessProjectDevelopers = function(data) {
-        $scope.developers = data;
-    };
-
-    rs.projectDevelopers($routeParams.pid).
-        then(loadSuccessProjectDevelopers);
-
     $scope.save = function() {
         _.each($scope.form, function(value, key) {
             $scope.issue[key] = value;
@@ -227,9 +223,8 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, rs) {
 
         $scope.issue.save().then(function() {
             $scope.updateFormOpened = false;
-            $scope.$apply();
         });
     };
 };
 
-IssuesViewController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
+IssuesViewController.$inject = ['$scope', '$rootScope', '$routeParams', '$q', 'resource'];

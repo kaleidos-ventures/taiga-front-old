@@ -35,7 +35,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         };
     }]);
 
-    $provide.factory('resource', ['$http', 'storage', 'url', 'greenmine.config', function($http, storage, url, config) {
+    $provide.factory('resource', ['$http', '$q', 'storage', 'url', 'greenmine.config', function($http, $q, storage, url, config) {
         var service = {}
             , headers
             , toJson
@@ -142,7 +142,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         };
 
         Model.prototype.remove = function() {
-            var params, defered = Q.defer();
+            var params, defered = $q.defer();
 
             params = {
                 method: "DELETE",
@@ -160,7 +160,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         };
 
         Model.prototype.save = function() {
-            var self = this, defered = Q.defer(), postObject;
+            var self = this, defered = $q.defer(), postObject;
 
             if (!this.isModified()) {
                 defered.resolve(true);
@@ -197,7 +197,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             var current = {url: url, params: params || {}};
 
             var httpParams = _.extend({}, defauts, options, current);
-            var defered = Q.defer();
+            var defered = $q.defer();
 
             $http(httpParams).success(function(data, status) {
                 var models = _.map(data, function(item) {
@@ -214,7 +214,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         var queryOne = function(url, params) {
             var paramsDefault = {"method":"GET", "headers": headers(), "url": url};
-            var defered = Q.defer();
+            var defered = $q.defer();
 
             params = _.extend({}, paramsDefault, params || {});
 
@@ -233,7 +233,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         /* Login request */
         service.login = function(username, password) {
-            var defered = Q.defer();
+            var defered = $q.defer();
 
             var onSuccess = function(data, status) {
                 storage.set("token", data["token"]);
@@ -291,7 +291,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         service.getMilestones = function(projectId) {
             // First step: obtain data
             var _getMilestones = function() {
-                var defered = Q.defer();
+                var defered = $q.defer();
                 var params = {"method":"GET", "headers": headers(), "url": url("milestones"),
                               "params": {"project": projectId}};
 
@@ -368,7 +368,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         /* Get a users with role developer for
          * one concret project. */
         service.projectDevelopers = function(projectId) {
-            var defered = Q.defer();
+            var defered = $q.defer();
 
             $http.get("tmpresources/project-developers.json").
                 success(function(data, status) {
@@ -380,7 +380,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         service.createUserStory = function(projectId, form) {
             var obj = _.extend({}, form, {project: projectId});
-            var defered = Q.defer();
+            var defered = $q.defer();
 
 
             $http.post(url("userstories"), obj, {headers:headers()}).
@@ -397,7 +397,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         service.createMilestone = function(projectId, form) {
             var obj = _.extend({}, form, {project: projectId});
-            var defered = Q.defer();
+            var defered = $q.defer();
 
 
             $http.post(url("milestones"), obj, {headers:headers()}).
@@ -424,7 +424,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
                 "project": projectId
             };
 
-            var defered = Q.defer();
+            var defered = $q.defer();
 
             $http.post(url("wikipages"), obj, {headers:headers()}).
                 success(function(data, status) {
