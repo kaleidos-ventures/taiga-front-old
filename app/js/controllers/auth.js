@@ -9,17 +9,12 @@ var LoginController = function($scope, $rootScope, $location, rs) {
         $scope.loading = true
 
         rs.login(username, password).then(function(data) {
-            $scope.$apply(function() {
-                $location.url("/");
-            });
+            $location.url("/");
         }, function(data) {
-            $scope.$apply(function() {
-                $scope.error = true;
-                $scope.errorMessage = data.detail
-            });
+            $scope.error = true;
+            $scope.errorMessage = data.detail
         }).fin(function() {
             $scope.loading = false;
-            $scope.$apply();
         });
     };
 };

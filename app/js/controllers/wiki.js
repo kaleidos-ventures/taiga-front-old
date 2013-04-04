@@ -13,10 +13,8 @@ var WikiController = function($scope, $rootScope, $location, $routeParams, rs) {
         then(function(page) {
             $scope.page = page;
             $scope.content = page.content;
-            $scope.$apply();
         }, function() {
             $scope.formOpened = true;
-            $scope.$apply();
         });
 
     $scope.savePage = function() {
@@ -28,13 +26,11 @@ var WikiController = function($scope, $rootScope, $location, $routeParams, rs) {
                 $scope.content = page.content;
 
                 $scope.formOpened = false;
-                $scope.$apply();
             });
         } else {
             $scope.page.content = $scope.content;
             $scope.page.save().then(function() {
                 $scope.formOpened = false;
-                $scope.$apply();
             });
         }
     };
