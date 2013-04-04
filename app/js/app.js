@@ -68,7 +68,7 @@
 
     if (this.greenmine === undefined) this.greenmine = {};
 
-    var init = function($rootScope, storage) {
+    var init = function($rootScope, $location, storage) {
         // Initial hack
         storage.set("userInfo", {"id": "12345", "username": "niwibe", "fullname": "Andrey Antukh"});
 
@@ -130,10 +130,15 @@
                 return _.str.sprintf("/#!/project/%s/wiki/%s", projectId, _.str.slugify(pageName));
             }
         };
+
+        $rootScope.logout = function() {
+            storage.clear();
+            $location.url("/login");
+        };
     };
 
     angular.module('greenmine', modules)
         .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', configCallback])
-        .run(['$rootScope', 'storage', init]);
+        .run(['$rootScope', '$location', 'storage', init]);
 
 }).call(this);

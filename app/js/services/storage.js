@@ -22,6 +22,15 @@ angular.module('greenmine.services.storage', ['greenmine.config'], function($pro
                 sessionStorage.setItem(key, JSON.stringify(val));
             }
         };
+
+        service.remove = function(key) {
+            sessionStorage.removeItem(key);
+        };
+
+        service.clear = function() {
+            sessionStorage.clear();
+        };
+
         return service;
     }]);
 });
