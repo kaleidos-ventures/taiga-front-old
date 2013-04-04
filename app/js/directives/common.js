@@ -135,6 +135,27 @@ angular.module('greenmine.directives.common', []).
             });
         };
     }]).
+    directive("gmKalendae", function() {
+        return {
+            require: "?ngModel",
+            link: function(scope, elm, attrs, ngModel) {
+                var element = angular.element(elm);
+                var options = {
+                    format: "YYYY-MM-DD"
+                };
+
+                var kalendae = new Kalendae.Input(element.get(0), options);
+                element.data('kalendae', kalendae);
+
+                kalendae.subscribe('change', function(date, action) {
+                    var self = this;
+                    scope.$apply(function() {
+                        ngModel.$setViewValue(self.getSelected())
+                    });
+                });
+            }
+        };
+    }).
     directive("uiSortable", function() {
         var uiConfig = {};
 
