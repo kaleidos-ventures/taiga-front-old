@@ -3,6 +3,7 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
     $rootScope.pageSection = 'dashboard';
     $rootScope.pageBreadcrumb = ["Project", "Dashboard"];
     $rootScope.projectId = $routeParams.pid;
+    $scope.sprintId = $routeParams.sid;
     $scope.statuses = []
 
     var projectId = $routeParams.pid;

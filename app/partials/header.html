@@ -14,7 +14,7 @@
         <div class="nav" gm-header-menu>
             <ul>
                 <li class="backlog"><a href="{{ urls.backlogUrl(projectId) }}" title="Backlog">Backlog</a></li>
-                <li class="dashboard"><a href="{{ urls.dashboardUrl(projectId, sprintId) }}" title="Dashboard">Dashboard</a></li>
+                <li class="dashboard" ng-show="sprintId"><a href="{{ urls.dashboardUrl(projectId, sprintId) }}" title="Dashboard">Dashboard</a></li>
                 <li class="issues"><a href="{{ urls.issuesUrl(projectId) }}" title="Issues">Issues</a></li>
                 <li class="wiki"><a href="{{ urls.wikiUrl(projectId, 'home') }}" title="wiki">Wiki</a></li>
                 <li class="search"><a href="" title="search">Search</a></li>
