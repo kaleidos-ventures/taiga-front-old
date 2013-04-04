@@ -44,9 +44,9 @@ angular.module('greenmine.directives.common', []).
         return function(scope, elm, attrs) {
             var element = angular.element(elm), hash;
             if (_.isObject(scope.tag)) {
-                hash = hex_sha1(scope.tag.name);
+                hash = hex_sha1(scope.tag.name.toLowerCase());
             } else {
-                hash = hex_sha1(scope.tag);
+                hash = hex_sha1(scope.tag.toLowerCase());
             }
 
             var color = hash
@@ -292,4 +292,3 @@ angular.module('greenmine.directives.common', []).
             }
         };
     });
-
