@@ -180,6 +180,9 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
             $scope.form.save().then(function() {
                 $scope.$apply(function() {
                     $scope.form = {};
+                    generateTagList();
+                    filterUsBySelectedTags();
+                    resortUserStories();
                 });
             });
         }
