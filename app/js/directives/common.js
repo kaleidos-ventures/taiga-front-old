@@ -234,6 +234,7 @@ angular.module('greenmine.directives.common', []).
                             scope.$apply(function() {
                                 //ui.item.sortable.scope.$broadcast("sortable:changed");
                                 ui.item.sortable.scope.$emit("sortable:changed");
+                                scope.$emit("sortable:changed");
                             });
                         }
 
