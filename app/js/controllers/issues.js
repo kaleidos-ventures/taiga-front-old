@@ -221,9 +221,10 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, $q, rs) {
             $scope.issue[key] = value;
         });
 
-        $scope.issue.save().then(function() {
+        $scope.issue.save().then(function(issue) {
             $scope.updateFormOpened = false;
-        });
+            return issue.refresh();
+        })
     };
 };
 

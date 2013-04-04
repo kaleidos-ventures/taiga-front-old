@@ -174,7 +174,6 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
                     data: toJson(postObject)
                 };
 
-
                 $http(params).success(function(data, status) {
                     self._isModified = false;
                     self._attrs = _.extend(self._attrs, self._modifiedAttrs, data);
@@ -184,6 +183,29 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
                     defered.reject([self, data, status]);
                 });
             }
+
+            return defered.promise;
+        };
+
+        Model.prototype.refresh = function() {
+            var defered = $q.defer();
+            var self = this;
+
+            var params = {
+                method: "GET",
+                url: this._url,
+                headers: headers()
+            };
+
+            $http(params).success(function(data, status) {
+                self._modifiedAttrs = {};
+                self._attrs = data;
+                self._isModified = false;
+
+                defered.resolve(self);
+            }).error(function(data, status) {
+                defered.reject([data, status]);
+            });
 
             return defered.promise;
         };
