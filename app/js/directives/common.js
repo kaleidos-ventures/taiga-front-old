@@ -291,4 +291,94 @@ angular.module('greenmine.directives.common', []).
                 element.sortable(opts);
             }
         };
-    });
+    }).
+    directive('gmPopover', ['$parse', function($parse) {
+        var createContext = function(scope, element) {
+            var context = (element.data('ctx') || "").split(",");
+            var data = {_scope: scope};
+
+            _.each(context, function(key) {
+                key = _.str.trim(key);
+                data[key] = scope[key];
+            });
+
+            return data;
+        };
+
+        return {
+            restrict: "A",
+            link: function(scope, elm, attrs) {
+                var fn = $parse(attrs.gmPopover);
+                var element = angular.element(elm);
+                var autoHide = element.data('auto-hide')
+
+                var closeHandler = function() {
+                    var state = element.data('state');
+
+                    if (state === "closing") {
+                        element.popover('hide');
+                        element.data('state', 'closed');
+                    }
+                };
+
+                element.on("click", function(event) {
+                    event.preventDefault();
+
+                    var template = _.template($(element.data('tmpl')).html());
+                    var context = createContext(scope, element);
+                    var htmlData = template(context);
+
+                    element.popover({
+                        content: htmlData,
+                        html:true,
+                        animation: false,
+                        delay: 0,
+                        trigger: "manual"
+                    });
+
+                    element.popover("show");
+
+                    if (autoHide !== undefined) {
+                        element.data('state', 'closing');
+                        _.delay(closeHandler, 2000);
+                    }
+                });
+
+                var parentElement = element.parent();
+                var acceptSelector = element.data('accept-selector') || '.popover-content .btn-accept';
+                var cancelSelector = element.data('cancel-selector') || '.popover-content .btn-cancel';
+
+                parentElement.on("click", acceptSelector, function(event) {
+                    var context = createContext(scope, element);
+                    var id = angular.element(event.currentTarget).data('id');
+
+                    if (id !== undefined) {
+                        context = _.extend(context, {"dataId": id});
+                    }
+
+                    scope.$apply(function() {
+                        fn(scope, context);
+                    });
+
+                    element.popover('hide');
+                });
+
+                parentElement.on("click", cancelSelector, function(event) {
+                    element.popover('hide');
+                });
+
+                if (autoHide) {
+                    parentElement.on("mouseleave", ".popover", function(event) {
+                        var target = angular.element(event.currentTarget);
+                        element.data('state', 'closing');
+                        _.delay(closeHandler, 1000);
+                    });
+
+                    parentElement.on("mouseenter", ".popover", function(event) {
+                        var target = angular.element(event.currentTarget);
+                        element.data('state', 'open');
+                    });
+                }
+            }
+        };
+    }]);

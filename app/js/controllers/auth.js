@@ -13,7 +13,7 @@ var LoginController = function($scope, $rootScope, $location, rs) {
         }, function(data) {
             $scope.error = true;
             $scope.errorMessage = data.detail
-        }).fin(function() {
+        }).then(function() {
             $scope.loading = false;
         });
     };

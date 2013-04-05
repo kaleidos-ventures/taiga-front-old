@@ -64,7 +64,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="new-us-modal modal hide" id="new-us-modal">
                     <form class="inline-form us-form" ui-parsley="submitUs()">
                         <div class="modal-header">
@@ -131,9 +131,16 @@
                                 </span>
                                 <span class="title">{{ us.subject|truncate:80 }}</span>
                             </div>
-                            <div class="us-points"><a href="" gm-points-popover="saveUsPoints(us, points)">{{ resolvePoints(us.points) }}</a></div>
+                            <div class="us-points">
+                                <a href="" gm-popover="saveUsPoints(us, dataId)"
+                                    data-accept-selector=".popover-content a.btn"
+                                    data-tmpl="#points-popover">{{ resolvePoints(us.points) }}</a>
+                            </div>
                             <div class="us-options">
-                                <a class="btn-small-preview" gm-uspreview-popover><span class="help-box">Preview</span></a>
+                                <a class="btn-small-preview" gm-popover
+                                    data-tmpl="#us-preview-popover"
+                                    data-auto-hide="true"><span class="help-box">Preview</span>
+                                </a>
                                 <a class="btn-small-edit" gm-new-us-modal="#new-us-modal"><span class="help-box">Edit</span></a>
                                 <a class="btn-small-remove" gm-usremove-popover="removeUs(us)"><span class="help-box">Remove</span></a>
                             </div>
@@ -222,21 +229,23 @@
             </div>
         </div>
     </div>
-    <div class="dialogs hidden">
-        <div class="points-popover" id="points-popover">
-            <div class="item" ng-repeat="p in constants.pointsList|orderBy:'order'">
-                <a class="btn btn-mini" data-id="{{ p.id }}">{{ p.name }}</a>
-            </div>
+
+    <script type="text/template" id="points-popover">
+        <% _.each(_scope.constants.pointsList, function(p) { %>
+        <div class="item">
+            <a class="btn btn-mini" data-id="<%= p.id %>"><%= p.name %></a>
         </div>
-    </div>
+        <% }); %>
+    </script>
+
     <script type="text/template" id="us-preview-popover">
         <div class="us-preview-popover">
             <section>
-                <strong>Subject:</strong><br /><%= us.subject %>
+                <strong>Subject:</strong><br /><%= _scope.us.subject %>
             </section>
             <section>
                 <strong>Description:</strong>
-                <p><%= us.description %></p>
+                <p><%= _scope.us.description %></p>
             </section>
         </div>
     </script>
