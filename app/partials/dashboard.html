@@ -11,39 +11,29 @@
                     <div class="span4">
                         <div class="information-box">
                             <div class="info-header">
-                                <div class="sprint-progress">
+                                <div class="progress-box">
                                     <div class="progress">
                                         <div class="bar" style="width: {{ stats.percentageCompletedPoints }}%"></div>
                                     </div>
 
-                                    <div class="indicator">{{ stats.percentageCompletedPoints }}%</div>
+                                    <div class="progress-indicator">{{ stats.percentageCompletedPoints }}%</div>
                                     <div class="help">completed<br />points</div>
                                 </div>
                             </div>
                             <div class="info-rows">
                                 <div class="row-item">
                                     <div class="row-label">Points</div>
-                                    <div class="row-indiator">{{ stats.totalPoints }}</div>
+                                    <div class="row-indicator">{{ stats.totalPoints }}</div>
                                     <div class="row-help">total <br />points</div>
-                                    <div class="row-indiator">{{ stats.completedPoints }}</div>
+                                    <div class="row-indicator">{{ stats.completedPoints }}</div>
                                     <div class="row-help">completed <br />points</div>
                                 </div>
 
-                                <!--
-                                <div class="row-item">
-                                    <div class="row-label">U Stories</div>
-                                    <div class="row-indiator">{{ stats.totalUss }}</div>
-                                    <div class="row-help">total <br />user stories</div>
-                                    <div class="row-indiator">{{ stats.compledUss }}</div>
-                                    <div class="row-help">completed <br />user stories</div>
-                                </div>
-                                -->
-
                                 <div class="row-item">
                                     <div class="row-label">Tasks</div>
-                                    <div class="row-indiator">{{ stats.totalTasks }}</div>
+                                    <div class="row-indicator">{{ stats.totalTasks }}</div>
                                     <div class="row-help">total <br />tasks</div>
-                                    <div class="row-indiator">{{ stats.completedTasks }}</div>
+                                    <div class="row-indicator">{{ stats.completedTasks }}</div>
                                     <div class="row-help">completed <br />tasks</div>
                                 </div>
                             </div>
@@ -83,7 +73,7 @@
                                     </div>
                                     <div class="options">
                                         <ul>
-                                            <li><i class="icon-plus-sign icon-white"></i>
+                                            <li>
                                                 <a href="" class="new-task">New task</a>
                                             </li>
                                         </ul>
