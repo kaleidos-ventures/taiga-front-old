@@ -381,4 +381,54 @@ angular.module('greenmine.directives.common', []).
                 }
             }
         };
+    }]).
+    directive("gmModal", ["$parse", "$compile", function($parse, $compile) {
+        return {
+            restrict: "A",
+            link: function(scope, elm, attrs) {
+                var modal, element = angular.element(elm);
+                var body = angular.element("body");
+
+                /* Callbacks */
+                var initCallback = $parse(element.data('init'));
+                var cancelCallback = $parse(element.data('end-cancel'));
+
+                element.on("click", function(event) {
+                    if (modal !== undefined) {
+                        scope.$apply(function() {
+                            modal.modal('hide')
+                            initCallback(scope);
+                            modal.modal("show");
+                        });
+                        //console.log(scope.form);
+                    } else {
+                        var modaltTmpl = _.str.trim(angular.element(attrs.gmModal).html());
+
+                        modal = angular.element($.parseHTML(modaltTmpl));
+                        modal.attr("id", _.uniqueId("modal-"));
+                        modal.on("click", ".button-cancel", function(event) {
+                            event.preventDefault();
+                            scope.$apply(function() {
+                                cancelCallback(scope);
+                            });
+
+                            modal.modal('hide');
+                        });
+
+                        body.append(modal);
+                        scope.$apply(function() {
+                            initCallback(scope);
+                            $compile(modal.contents())(scope);
+                        });
+                        modal.modal();
+                    }
+                });
+
+                scope.$on('modals:close', function() {
+                    if (modal !== undefined) {
+                        modal.modal('hide');
+                    }
+                });
+            }
+        };
     }]);

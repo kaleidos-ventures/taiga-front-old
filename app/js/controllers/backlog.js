@@ -180,9 +180,25 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         $rootScope.$broadcast("modals:close");
     };
 
-    $scope.editUs = function(us) {
-        $scope.form = us;
-    }
+    /* Pre edit user story hook. */
+    $scope.initEditUs = function(us) {
+        if (us !== undefined) {
+            $scope.form = us;
+        } else {
+            $scope.form = {tags: []};
+        }
+    };
+
+    /* Cancel edit user story hook. */
+    $scope.cancelEditUs = function() {
+        if ($scope.form) {
+            if ($scope.form.revert !== undefined) {
+                $scope.form.revert();
+            }
+
+            $scope.form = {};
+        }
+    };
 
     $scope.removeUs = function(us) {
         us.remove().then(function() {

@@ -32,38 +32,4 @@ angular.module('greenmine.directives.backlog', []).
                 element.popover('hide');
             });
         };
-    }]).
-    directive("gmNewUsModal", ["$parse", function($parse) {
-        return function(scope, elm, attrs) {
-            var element = angular.element(elm);
-            var modalElement = angular.element(attrs.gmNewUsModal);
-
-            element.on("click", function(event) {
-                scope.$apply(function() {
-                    scope.editUs(scope.us);
-                });
-
-                event.preventDefault();
-                modalElement.modal()
-            });
-
-            modalElement.on("click", ".button-cancel", function(event) {
-                scope.$apply(function() {
-                    if (scope.form) {
-                        if (scope.form.revert !== undefined) {
-                            scope.form.revert();
-                        } else {
-                            scope.form = {};
-                        }
-                    }
-                });
-
-                event.preventDefault();
-                modalElement.modal('hide');
-            });
-
-            scope.$on('modals:close', function() {
-                modalElement.modal('hide');
-            });
-        };
     }]);
