@@ -180,9 +180,19 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         $rootScope.$broadcast("modals:close");
     };
 
-    $scope.editUs = function(us) {
+    $scope.initEditUs = function(us) {
         $scope.form = us;
-    }
+    };
+
+    $scope.cancelEditUs = function() {
+        if ($scope.form) {
+            if ($scope.form.revert !== undefined) {
+                $scope.form.revert();
+            }
+
+            $scope.form = {};
+        }
+    };
 
     $scope.removeUs = function(us) {
         us.remove().then(function() {

@@ -40,26 +40,39 @@ angular.module('greenmine.directives.backlog', []).
                 var modal, element = angular.element(elm);
                 var body = angular.element("body");
 
+                /* Callbacks */
+                var initCallback = $parse(element.data('init'));
+                var cancelCallback = $parse(element.data('end-cancel'));
+
                 element.on("click", function(event) {
                     if (modal !== undefined) {
-                        modal.modal('hide')
-                        modal.remove();
+                        scope.$apply(function() {
+                            modal.modal('hide')
+                            initCallback(scope);
+                            modal.modal("show");
+                        });
+
+                    } else {
+                        var modaltTmpl = _.str.trim(angular.element(attrs.gmModal).html());
+
+                        modal = angular.element($.parseHTML(modaltTmpl));
+                        modal.attr("id", _.uniqueId("modal-"));
+                        modal.on("click", ".button-cancel", function(event) {
+                            event.preventDefault();
+                            scope.$apply(function() {
+                                cancelCallback(scope);
+                            });
+
+                            modal.modal('hide');
+                        });
+
+                        body.append(modal);
+                        scope.$apply(function() {
+                            initCallback(scope);
+                            $compile(modal.contents())(scope);
+                        });
+                        modal.modal();
                     }
-
-                    var modaltTmpl = _.str.trim(angular.element(attrs.gmModal).html());
-
-                    modal = angular.element($.parseHTML(modaltTmpl));
-                    modal.attr("id", _.uniqueId("modal-"));
-                    modal.addClass("modal-instance");
-
-                    body.append(modal);
-
-                    scope.$apply(function() {
-                        scope.editUs(scope.us);
-                        $compile(modal.contents())(scope);
-                    });
-
-                    modal.modal();
                 });
 
                 scope.$on('modals:close', function() {
@@ -68,39 +81,5 @@ angular.module('greenmine.directives.backlog', []).
                     }
                 });
             }
-        };
-    }]).
-    directive("gmNewUsModal", ["$parse", function($parse) {
-        return function(scope, elm, attrs) {
-            var element = angular.element(elm);
-            var modalElement = angular.element(attrs.gmNewUsModal);
-
-            element.on("click", function(event) {
-                scope.$apply(function() {
-                    scope.editUs(scope.us);
-                });
-
-                event.preventDefault();
-                modalElement.modal()
-            });
-
-            modalElement.on("click", ".button-cancel", function(event) {
-                scope.$apply(function() {
-                    if (scope.form) {
-                        if (scope.form.revert !== undefined) {
-                            scope.form.revert();
-                        } else {
-                            scope.form = {};
-                        }
-                    }
-                });
-
-                event.preventDefault();
-                modalElement.modal('hide');
-            });
-
-            scope.$on('modals:close', function() {
-                modalElement.modal('hide');
-            });
         };
     }]);

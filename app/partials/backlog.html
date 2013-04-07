@@ -27,7 +27,7 @@
                             <div class="help">not assigned points</div>
                         </div>
                     </div>
-                    <a class="button new-us-story" gm-new-us-modal="#new-us-modal">
+                    <a class="button new-us-story" gm-modal="#new-us-modal">
                         New user story
                     </a>
                     <a class="button show-hide-graphics">
@@ -95,7 +95,8 @@
                                     data-tmpl="#us-preview-popover"
                                     data-auto-hide="true"><span class="help-box">Preview</span>
                                 </a>
-                                <a class="btn-small-edit" gm-modal="#new-us-modal"><span class="help-box">Edit</span></a>
+                                <a class="btn-small-edit" gm-modal="#new-us-modal"
+                                    data-init="initEditUs(us)" data-end-cancel="cancelEditUs(us)"><span class="help-box">Edit</span></a>
                                 <a class="btn-small-remove" gm-usremove-popover="removeUs(us)"><span class="help-box">Remove</span></a>
                             </div>
                         </div>
