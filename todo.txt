@@ -1,3 +1,0 @@
-Choice notify system:
-http://needim.github.com/noty/
-http://wavded.github.com/humane-js/
