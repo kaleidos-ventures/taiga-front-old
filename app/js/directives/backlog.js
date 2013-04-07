@@ -38,6 +38,7 @@ angular.module('greenmine.directives.backlog', []).
             restrict: "A",
             link: function(scope, elm, attrs) {
                 var modal, element = angular.element(elm);
+                var body = angular.element("body");
 
                 element.on("click", function(event) {
                     if (modal !== undefined) {
@@ -45,12 +46,26 @@ angular.module('greenmine.directives.backlog', []).
                         modal.remove();
                     }
 
-                    var templateData = angular.element(attrs.gmModal).html();
+                    var modaltTmpl = _.str.trim(angular.element(attrs.gmModal).html());
 
+                    modal = angular.element($.parseHTML(modaltTmpl));
+                    modal.attr("id", _.uniqueId("modal-"));
+                    modal.addClass("modal-instance");
+
+                    body.append(modal);
+
+                    scope.$apply(function() {
+                        scope.editUs(scope.us);
+                        $compile(modal.contents())(scope);
+                    });
+
+                    modal.modal();
                 });
 
                 scope.$on('modals:close', function() {
-                    modalElement.modal('hide');
+                    if (modal !== undefined) {
+                        modal.modal('hide');
+                    }
                 });
             }
         };
