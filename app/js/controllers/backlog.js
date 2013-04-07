@@ -180,10 +180,16 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         $rootScope.$broadcast("modals:close");
     };
 
+    /* Pre edit user story hook. */
     $scope.initEditUs = function(us) {
-        $scope.form = us;
+        if (us !== undefined) {
+            $scope.form = us;
+        } else {
+            $scope.form = {tags: []};
+        }
     };
 
+    /* Cancel edit user story hook. */
     $scope.cancelEditUs = function() {
         if ($scope.form) {
             if ($scope.form.revert !== undefined) {
