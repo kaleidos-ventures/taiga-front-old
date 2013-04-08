@@ -31,6 +31,20 @@
         </div>
     </div>
 
+    <div class="row-fluid" ng-show="attachments">
+        <div class="span12">
+            <div class="attachments">
+                <h3>Attachments</h3>
+
+                <ul class="attachments-items">
+                    <li class="attachments-item" ng-repeat="attachment in attachments">
+                        <div class="title">{{ attachment.attached_file }}</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <div class="row-fluid" ng-show="issue.history">
         <div class="span12">
             <div class="history">

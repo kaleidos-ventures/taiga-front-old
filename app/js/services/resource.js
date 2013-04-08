@@ -383,7 +383,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return queryMany(url("issues"), {project:projectId});
         };
 
-        service.getIssue = function(issueId) {
+        service.getIssue = function(projectId, issueId) {
             var finalUrl = interpolate(itemUrlTemplate, {"url": url("issues"), "id": issueId}, true);
             return queryOne(finalUrl);
         };
@@ -461,18 +461,21 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return defered.promise;
         };
 
-        service.uploadIssueAttachmen = function(projectId, issueId, file) {
+        service.getIssueAttachments = function(projectId, issueId) {
+            return queryMany(url("issues/attachments"), {project:projectId, object_id: issueId});
+        };
+
+        service.uploadIssueAttachment = function(projectId, issueId, file, progress) {
             var defered = $q.defer();
 
-            var uploadProgress = function(evt) {
-                if (evt.lengthComputable) {
-                    scope.progress = Math.round(evt.loaded * 100 / evt.total)
-                } else {
-                    scope.progress = 'unable to compute'
-                }
-
-                console.log(scope.progress);
-            };
+            //var uploadProgress = function(evt) {
+            //    var progress;
+            //    if (evt.lengthComputable) {
+            //        progress = Math.round(evt.loaded * 100 / evt.total)
+            //    } else {
+            //        progress = 'unable to compute'
+            //    }
+            //};
 
             var uploadComplete = function(evt) {
                 var data = JSON.parse(evt.target.responseText);
@@ -485,11 +488,15 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
             var formData = new FormData();
             formData.append("project", projectId);
-            formData.append("issue", issueId);
+            formData.append("object_id", issueId);
             formData.append("attached_file", file);
 
             var xhr = new XMLHttpRequest();
-            xhr.upload.addEventListener("progress", uploadProgress, false);
+
+            if (progress !== undefined) {
+                xhr.upload.addEventListener("progress", uploadProgress, false);
+            }
+
             xhr.addEventListener("load", uploadComplete, false)
             xhr.addEventListener("error", uploadFailed, false)
             xhr.open("POST", url("issues/attachments"));

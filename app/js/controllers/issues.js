@@ -189,13 +189,17 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, $q, rs) {
         rs.getIssueStatuses(projectId),
         rs.getSeverities(projectId),
         rs.getPriorities(projectId),
-        rs.projectDevelopers(projectId)
+        rs.projectDevelopers(projectId),
+        rs.getIssueAttachments(projectId, issueId),
+        rs.getIssue(projectId, issueId)
     ]).then(function(results) {
         var issueTypes = results[0]
           , issueStatuses = results[1]
           , severities = results[2]
           , priorities = results[3]
-          , developers = results[4];
+          , developers = results[4]
+          , attachments = results[5]
+          , issue = results[6];
 
         $rootScope.constants.typeList = _.sortBy(issueTypes, "order");
         $rootScope.constants.statusList = _.sortBy(issueStatuses, "order");
@@ -203,8 +207,7 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, $q, rs) {
         $rootScope.constants.priorityList = _.sortBy(priorities, "order");
         $scope.developers = developers;
 
-        return rs.getIssue($routeParams.issueid);
-    }).then(function(issue) {
+        $scope.attachments = attachments
         $scope.issue = issue;
         $scope.form = _.extend({}, $scope.issue);
     });
@@ -218,21 +221,30 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, $q, rs) {
     };
 
     $scope.save = function() {
+        var defered = $q.defer();
+        var promise = defered.promise;
+
         if ($scope.attachment) {
-            console.log($scope.attachment);
-            rs.uploadIssueAttachmen(projectId, issueId, $scope.attachment).then(function(data) {
-                console.log(data);
-            });
+            rs.uploadIssueAttachment(projectId, issueId, $scope.attachment).
+                then(function(data) {
+                    defered.resolve(data);
+                });
+
+        } else {
+            defered.resolve(null);
         }
 
-        //_.each($scope.form, function(value, key) {
-        //    $scope.issue[key] = value;
-        //});
+        promise.then(function(data) {
+            _.each($scope.form, function(value, key) {
+                $scope.issue[key] = value;
+            });
 
-        //$scope.issue.save().then(function(issue) {
-        //    $scope.updateFormOpened = false;
-        //    return issue.refresh();
-        //})
+            return $scope.issue.save()
+        }).
+        then(function(issue) {
+            $scope.updateFormOpened = false;
+            return issue.refresh();
+        });
     };
 };
 
