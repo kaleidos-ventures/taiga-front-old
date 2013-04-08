@@ -11,6 +11,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             "milestones": "/api/scrum/milestones/",
             "tasks": "/api/scrum/tasks/",
             "issues": "/api/scrum/issues/",
+            "issues/attachments": "/api/scrum/issues/attachments/",
             "wikipages": "/api/wiki/wiki_pages/",
             "choices/task-status": "/api/scrum/tasks/statuses/",
             "choices/issue-status": "/api/scrum/issues/statuses/",
@@ -456,6 +457,44 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
                 error(function(data, status) {
                     defered.reject([data, status]);
                 });
+
+            return defered.promise;
+        };
+
+        service.uploadIssueAttachmen = function(projectId, issueId, file) {
+            var defered = $q.defer();
+
+            var uploadProgress = function(evt) {
+                if (evt.lengthComputable) {
+                    scope.progress = Math.round(evt.loaded * 100 / evt.total)
+                } else {
+                    scope.progress = 'unable to compute'
+                }
+
+                console.log(scope.progress);
+            };
+
+            var uploadComplete = function(evt) {
+                var data = JSON.parse(evt.target.responseText);
+                defered.resolve(data);
+            };
+
+            var uploadFailed = function(evt) {
+                defered.reject("fail");
+            };
+
+            var formData = new FormData();
+            formData.append("project", projectId);
+            formData.append("issue", issueId);
+            formData.append("attached_file", file);
+
+            var xhr = new XMLHttpRequest();
+            xhr.upload.addEventListener("progress", uploadProgress, false);
+            xhr.addEventListener("load", uploadComplete, false)
+            xhr.addEventListener("error", uploadFailed, false)
+            xhr.open("POST", url("issues/attachments"));
+            xhr.setRequestHeader("X-SESSION-TOKEN", storage.get('token'));
+            xhr.send(formData);
 
             return defered.promise;
         };

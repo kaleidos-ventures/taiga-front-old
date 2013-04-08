@@ -189,4 +189,22 @@ angular.module('greenmine.directives.generic', []).
                 }
             });
         };
+    }]).
+    directive('gmFile', ["$parse", function($parse) {
+        return {
+            require: "?ngModel",
+            restrict: "A",
+            link: function(scope, elm, attrs, ngModel) {
+                var element = angular.element(elm);
+                element.on('change', function(event) {
+                    var files = event.target.files;
+                    if (files.length === 1) {
+                        scope.$apply(function() {
+                            ngModel.$setViewValue(files[0]);
+                        });
+                        console.log(files[0], scope.attachment);
+                    }
+                });
+            }
+        };
     }]);

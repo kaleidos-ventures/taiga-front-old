@@ -182,6 +182,7 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, $q, rs) {
     $rootScope.projectId = parseInt($routeParams.pid, 10);
 
     var projectId = $rootScope.projectId;
+    var issueId = $routeParams.issueid;
 
     $q.all([
         rs.getIssueTypes(projectId),
@@ -217,14 +218,21 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, $q, rs) {
     };
 
     $scope.save = function() {
-        _.each($scope.form, function(value, key) {
-            $scope.issue[key] = value;
-        });
+        if ($scope.attachment) {
+            console.log($scope.attachment);
+            rs.uploadIssueAttachmen(projectId, issueId, $scope.attachment).then(function(data) {
+                console.log(data);
+            });
+        }
 
-        $scope.issue.save().then(function(issue) {
-            $scope.updateFormOpened = false;
-            return issue.refresh();
-        })
+        //_.each($scope.form, function(value, key) {
+        //    $scope.issue[key] = value;
+        //});
+
+        //$scope.issue.save().then(function(issue) {
+        //    $scope.updateFormOpened = false;
+        //    return issue.refresh();
+        //})
     };
 };
 
