@@ -7,18 +7,18 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         var urls = {
             "auth": "/api/auth/login/",
             "projects": "/api/scrum/projects/",
-            "userstories": "/api/scrum/user_stories/",
+            "userstories": "/api/scrum/user-stories/",
             "milestones": "/api/scrum/milestones/",
             "tasks": "/api/scrum/tasks/",
             "issues": "/api/scrum/issues/",
             "wikipages": "/api/wiki/wiki_pages/",
-            "choices/task-status": "/api/scrum/task_status/",
-            "choices/issue-status": "/api/scrum/issue_status/",
-            "choices/issue-types": "/api/scrum/issue_types/",
-            "choices/us-status": "/api/scrum/user_story_status/",
+            "choices/task-status": "/api/scrum/tasks/statuses/",
+            "choices/issue-status": "/api/scrum/issues/statuses/",
+            "choices/issue-types": "/api/scrum/issues/types/",
+            "choices/us-status": "/api/scrum/user-stories/statuses/",
+            "choices/points": "/api/scrum/user-stories/points/",
             "choices/priorities": "/api/scrum/priorities/",
             "choices/severities": "/api/scrum/severities/",
-            "choices/points": "/api/scrum/points/"
         }, host = config.host, scheme=config.scheme;
 
         return function() {
