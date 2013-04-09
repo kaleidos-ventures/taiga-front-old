@@ -19,6 +19,15 @@
 @import "greenmine-generic.less";
 
 /* =============
+ * MAIN STYLES
+ * ============= */
+ 
+.parsley-error-list{
+    padding: 5px 0;
+    font-weight: bold;
+}
+
+/* =============
  * HEADER
  * =============*/
 
@@ -577,31 +586,35 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
         .header {
             td {
                 text-align: center;
+                border-right: 1px solid;
             }
         }
         .body {
             background-color: #333;
             color: white;
-
-            padding: 5px;
-
             table {
-                border-top: 1px solid #333;
+                tr{
+                    &:first-child{
+                        border-top: 0;
+                    }
+                }
             }
             td.row-us-description {
                 min-height: 200px;
                 vertical-align: top;
-                border-right: 5px solid #333;
                 padding-bottom: 10px;
                 border-bottom: 1px solid #555;
                 .info {
                     .title {
-                        padding: 10px 5px;
+                        padding: 10px 15px;
                         font-family: @DroidSansBold;
                         color: @white;
                         font-size: 14px;
+                        text-align: center;
                     }
                     .description {
+                        text-align: center;
+                        padding: 10px 15px;
                         font-size: 12px;
                         line-height: 14px;
                         p{
@@ -623,6 +636,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                         padding: 5px 0;
                         text-align: center;
                         background: #888;
+                        border: none;
                         &:hover{
                             background: darken(#888, 20%);
                             transition: all 0.3s ease-in;
@@ -632,20 +646,18 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
             }
 
             td.col-task-status {
-                background-color: #434343;
+                background-color: #dfdfdf;
                 vertical-align: top;
                 border-right: 1px solid #333;
+                &:last-child{
+                    border-right: 0px;
+                }
             }
-
-            td.col-task-status:last {
-                border-right: 0px;
-            }
-
+            
             /* Color definition */
 
             .tasks {
                 padding: 3px;
-                background-color: #434343;
                 min-height: 100px;
 
                 .task-box {

@@ -52,8 +52,8 @@
                         <tbody>
                             <tr>
                                 <td class="row-us-description" style="width: {{ 100/(statuses.length+1) }}%"></td>
-                                <td class="" ng-repeat="status in statuses|orderBy:'order'" style="width: {{ 100/(statuses.length+1) }}%">
-                                    <div class="badge" style="background-color: {{ status.color }}">{{ status.name }}</div>
+                                <td class="" ng-repeat="status in statuses|orderBy:'order'" style="width: {{ 100/(statuses.length+1) }}%; border-right-color: {{ status.color }}">
+                                    <div class="badge" style="background-color: {{ status.color }};">{{ status.name }}</div>
                                 </td>
                             </tr>
                         </tbody>
@@ -74,7 +74,7 @@
                                     <div class="options">
                                         <ul>
                                             <li>
-                                                <a href="" class="new-task">New task</a>
+                                                <a href="" class="button">New task</a>
                                             </li>
                                         </ul>
                                     </div>
