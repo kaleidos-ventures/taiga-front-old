@@ -6,6 +6,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
    $provide.factory("url", ['greenmine.config', function(config) {
         var urls = {
             "auth": "/api/auth/login/",
+            "users": "/api/users/",
             "projects": "/api/scrum/projects/",
             "userstories": "/api/scrum/user-stories/",
             "milestones": "/api/scrum/milestones/",
@@ -390,15 +391,8 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
 
         /* Get a users with role developer for
          * one concret project. */
-        service.projectDevelopers = function(projectId) {
-            var defered = $q.defer();
-
-            $http.get("tmpresources/project-developers.json").
-                success(function(data, status) {
-                    defered.resolve(data);
-                });
-
-            return defered.promise;
+        service.getUsers = function(projectId) {
+            return queryMany(url("users"), {project: projectId});
         }
 
         service.createUserStory = function(projectId, form) {

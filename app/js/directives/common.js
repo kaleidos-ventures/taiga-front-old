@@ -292,7 +292,7 @@ angular.module('greenmine.directives.common', []).
             }
         };
     }).
-    directive('gmPopover', ['$parse', function($parse) {
+    directive('gmPopover', ['$parse', '$compile', function($parse, $compile) {
         var createContext = function(scope, element) {
             var context = (element.data('ctx') || "").split(",");
             var data = {_scope: scope};
@@ -329,7 +329,7 @@ angular.module('greenmine.directives.common', []).
                     var htmlData = template(context);
 
                     element.popover({
-                        content: htmlData,
+                        content: $(element.data('tmpl')).html(),
                         html:true,
                         animation: false,
                         delay: 0,
@@ -337,6 +337,10 @@ angular.module('greenmine.directives.common', []).
                     });
 
                     element.popover("show");
+
+                    scope.$apply(function() {
+                        $compile(element.parent().find(".popover").contents())(scope);
+                    });
 
                     if (autoHide !== undefined) {
                         element.data('state', 'closing');
@@ -349,13 +353,13 @@ angular.module('greenmine.directives.common', []).
                 var cancelSelector = element.data('cancel-selector') || '.popover-content .btn-cancel';
 
                 parentElement.on("click", acceptSelector, function(event) {
+                    event.preventDefault();
+
                     var context = createContext(scope, element);
+                    var target = angular.element(event.currentTarget);
                     var id = angular.element(event.currentTarget).data('id');
 
-                    if (id !== undefined) {
-                        context = _.extend(context, {"dataId": id});
-                    }
-
+                    context = _.extend(context, {"selectedObj": target.scope().obj});
                     scope.$apply(function() {
                         fn(scope, context);
                     });

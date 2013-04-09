@@ -37,7 +37,7 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
 BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
 
 
-var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
+var BacklogUserStoriesCtrl = function($scope, $rootScope, $q, rs) {
     /* Local scope variables */
     $scope.filtersOpened = false;
     $scope.form = {};
@@ -116,45 +116,43 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
         });
     };
 
-    /* Load developers list */
-    rs.projectDevelopers($scope.projectId).
-        then(function(data) {
-            $scope.developers = data;
-            return rs.getUsStatuses($scope.projectId);
-        }).
-        then(function(usstatuses) {
-            $scope.usstatuses = usstatuses;
+    $q.all([
+        rs.getUsers($scope.projectId),
+        rs.getUsStatuses($scope.projectId)
+    ]).then(function(results) {
+        $scope.users = results[0];
+        $scope.usstatuses = results[1];
+    });
+
+    $q.all([
+        rs.getUnassignedUserStories($scope.projectId),
+        rs.getUsPoints($scope.projectId),
+    ]).then(function(results) {
+        var unassingedUs = results[0]
+          , usPoints = results[1];
+
+        // HACK: because django-filter does not works properly
+        // $scope.unassingedUs = data;
+        $scope.unassingedUs = _.filter(unassingedUs, function(item) {
+            return (item.project === $rootScope.projectId && item.milestone === null);
         });
 
-    /* Obtain resources */
-    rs.getUnassignedUserStories($scope.projectId).
-        then(function(data) {
-            // HACK: because django-filter does not works properly
-            // $scope.unassingedUs = data;
-            $scope.unassingedUs = _.filter(data, function(item) {
-                return (item.project === $rootScope.projectId && item.milestone === null);
-            });
+        $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order");
 
-            $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order");
+        $rootScope.constants.points = {};
+        $rootScope.constants.pointsList = _.sortBy(usPoints, "order");
 
-            $rootScope.$broadcast("userstories:loaded");
-            generateTagList();
-            filterUsBySelectedTags();
-
-            return rs.getUsPoints($scope.projectId);
-        }).
-        then(function(data) {
-            $rootScope.constants.points = {};
-            $rootScope.constants.pointsList = _.sortBy(data, "order");
-
-            _.each(data, function(item) {
-                $rootScope.constants.points[item.id] = item;
-            });
-
-            calculateStats();
-            $rootScope.$broadcast("points:loaded");
+        _.each(usPoints, function(item) {
+            $rootScope.constants.points[item.id] = item;
         });
 
+        generateTagList();
+        filterUsBySelectedTags();
+        calculateStats();
+
+        $rootScope.$broadcast("points:loaded");
+        $rootScope.$broadcast("userstories:loaded");
+    });
 
     /* User Story Form */
     $scope.submitUs = function() {
@@ -231,7 +229,7 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, rs) {
     $scope.$on("sortable:changed", resortUserStories);
 };
 
-BacklogUserStoriesCtrl.$inject = ['$scope', '$rootScope', 'resource'];
+BacklogUserStoriesCtrl.$inject = ['$scope', '$rootScope', '$q', 'resource'];
 
 
 /* Backlog milestones controller. */

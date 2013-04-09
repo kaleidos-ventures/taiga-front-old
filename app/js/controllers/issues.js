@@ -125,13 +125,13 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
         rs.getIssueStatuses(projectId),
         rs.getSeverities(projectId),
         rs.getPriorities(projectId),
-        rs.projectDevelopers(projectId)
+        rs.getUsers(projectId)
     ]).then(function(results) {
         var issueTypes = results[0]
           , issueStatuses = results[1]
           , severities = results[2]
           , priorities = results[3]
-          , developers = results[4];
+          , users = results[4];
 
         _.each(issueTypes, function(item) {
             $rootScope.constants.type[item.id] = item;
@@ -149,11 +149,15 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
             $rootScope.constants.priority[item.id] = item;
         });
 
+        _.each(users, function(item) {
+            $rootScope.constants.users[item.id] = item;
+        });
+
         $rootScope.constants.typeList = _.sortBy(issueTypes, "order");
         $rootScope.constants.statusList = _.sortBy(issueStatuses, "order");
         $rootScope.constants.severityList = _.sortBy(severities, "order");
         $rootScope.constants.priorityList = _.sortBy(priorities, "order");
-        $scope.developers = developers;
+        $rootScope.constants.usersList = _.sortBy(users, "id");
 
         return rs.getIssues(projectId);
     }).then(function(issues) {
@@ -167,9 +171,24 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
         filterIssues();
     });
 
+    $scope.updateIssueAssignation = function(issue, obj) {
+        issue.assigned_to = obj.id;
+        issue.save();
+    };
 
-    $scope.saveIssue = function(issue) {
-        issue.save()
+    $scope.updateIssueStatus = function(issue, obj) {
+        issue.status = obj.id;
+        issue.save();
+    };
+
+    $scope.updateIssueSeverity = function(issue, obj) {
+        issue.severity = obj.id;
+        issue.save();
+    };
+
+    $scope.updateIssuePriority = function(issue, obj) {
+        issue.priority = obj.id;
+        issue.save();
     };
 };
 

@@ -38,7 +38,8 @@
 
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
-                        <div class="title">{{ attachment.attached_file }}</div>
+                        <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a> on
+                            <span>{{ attachment.created_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span>
                     </li>
                 </ul>
             </div>

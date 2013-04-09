@@ -16,4 +16,9 @@ angular.module('greenmine.filters.common', []).
         return function(input) {
             return _.str.slugify(input);
         };
+    }]).
+    filter("momentFormat", [function() {
+        return function(input, format) {
+            return moment(input).format(format);
+        };
     }]);

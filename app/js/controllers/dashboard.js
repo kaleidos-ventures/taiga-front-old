@@ -129,8 +129,8 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
         });
 
     /* Load developers list */
-    rs.projectDevelopers(projectId).then(function(developers) {
-        $scope.developers = developers;
+    rs.getUsers(projectId).then(function(users) {
+        $scope.users = users;
     });
 
     $scope.newtaskForm = {};

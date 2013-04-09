@@ -96,6 +96,7 @@
         $rootScope.constants.priority = {};
         $rootScope.constants.status = {};
         $rootScope.constants.type = {};
+        $rootScope.constants.users = {};
 
         /* Global helpers */
 
@@ -122,6 +123,11 @@
         $rootScope.resolveType = function(id) {
             var type = $rootScope.constants.type[id];
             return type ? type.name : undefined;
+        };
+
+        $rootScope.resolveUser = function(id) {
+            var user = $rootScope.constants.users[id];
+            return user ? user.username : "Unassigned";
         };
 
         /* Navigation url resolvers */
