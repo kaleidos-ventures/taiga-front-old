@@ -117,6 +117,48 @@
             </div>
         </form>
     </div>
+    <script type="text/template" id="new-task-modal">
+        <div class="new-us-modal modal hide">
+            <form class="inline-form task-form" ui-parsley="submitUs()">
+                <div class="modal-header">
+                    <h3>Modal title</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="fieldset-row">
+                        <fieldset>
+                            <label>Subject</label>
+                            <input class="subject" type="text" data-required="true"
+                                data-error-message="Required"
+                                ng-model="form.subject"></input>
+                        </fieldset>
+                        <fieldset>
+                            <label>Status</label>
+                            <select class="status" name="status" ng-model="form.status" data-required="true"
+                                data-type="number" data-error-message="Required"
+                                ng-options="c.id as c.name for c in statuses|orderBy:'order'"></select>
+                            </select>
+                        </fieldset>
+                    </div>
+                    <div class="fieldset-row">
+                        <fieldset>
+                            <label>Tags</label>
+                            <input type="text" class="tags" name="status" value="" ng-model="form.tags" ui-select2></input>
+                        </fieldset>
+                    </div>
+                    <div class="fieldset-row">
+                        <fieldset>
+                            <label>Description</label>
+                            <textarea class="description" ng-model="form.description"></textarea>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="button button-success" value="Save" />
+                    <a href="" class="button button-cancel">Close</a>
+                </div>
+            </form>
+        </div>
+    </script>
     <script type="text/template" id="developers-popover">
         <div class="developers-popover">
             Select a user:
