@@ -324,12 +324,17 @@ angular.module('greenmine.directives.common', []).
                 element.on("click", function(event) {
                     event.preventDefault();
 
-                    var template = _.template($(element.data('tmpl')).html());
                     var context = createContext(scope, element);
-                    var htmlData = template(context);
+                    var template = _.str.trim($(element.data('tmpl')).html());
+                    template = angular.element($.parseHTML(template));
+
+
+                    scope.$apply(function() {
+                        $compile(template)(scope);
+                    });
 
                     element.popover({
-                        content: $(element.data('tmpl')).html(),
+                        content: template,
                         html:true,
                         animation: false,
                         delay: 0,
@@ -337,10 +342,6 @@ angular.module('greenmine.directives.common', []).
                     });
 
                     element.popover("show");
-
-                    scope.$apply(function() {
-                        $compile(element.parent().find(".popover").contents())(scope);
-                    });
 
                     if (autoHide !== undefined) {
                         element.data('state', 'closing');
