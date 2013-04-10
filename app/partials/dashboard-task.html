@@ -2,13 +2,11 @@
 
     <div class="title">{{ task.subject }}</div>
 
-    <div class="assign-to" ng-show="task.assigned_to">
-        {{ task.assigned_to.name }}
-    </div>
-    <div class="assign-to" ng-show="!task.assigned_to">
-        <a href="">Unassigned</a>
+    <div class="assign-to">
+        <a href="" gm-popover="updateTaskAssignation(task, selectedObj)"
+            data-tmpl="#developers-popover">{{ resolveUser(task.assigned_to) }}</a>
     </div>
     <p class="desc">
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumyeirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed 
+        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumyeirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
     </p>
 </div>

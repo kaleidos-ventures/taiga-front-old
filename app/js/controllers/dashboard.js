@@ -1,4 +1,4 @@
-var DashboardController = function($scope, $rootScope, $routeParams, rs) {
+var DashboardController = function($scope, $rootScope, $routeParams, $q, rs) {
     /* Global Scope Variables */
     $rootScope.pageSection = 'dashboard';
     $rootScope.pageBreadcrumb = ["Project", "Dashboard"];
@@ -90,47 +90,39 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
         };
     };
 
-    /* Load resources */
-    rs.getTaskStatuses(projectId)
-        .then(function(statuses) {
-            $scope.statuses = statuses;
-            $scope.statusesMap = {};
+    $q.all([
+        rs.getTaskStatuses(projectId),
+        rs.getMilestoneUserStories(projectId, sprintId),
+        rs.getUsPoints(projectId),
+        rs.getTasks(projectId, sprintId),
+        rs.getUsers(projectId)
+    ]).then(function(results) {
+        var statuses = results[0]
+          , userstories = results[1]
+          , points = results[2]
+          , tasks = results[3]
+          , users = results[4];
 
-            _.each(statuses, function(status) {
-                $scope.statusesMap[status.id] = status;
-            });
+        $scope.statuses = statuses;
+        $scope.statusesMap = {};
+        $scope.userstories = userstories;
+        $scope.userstoriesMap = {};
 
-            return rs.getMilestoneUserStories(projectId, sprintId);
-        }).then(function(userstories) {
-            $scope.userstories = userstories;
-            $scope.userstoriesMap = {};
+        $rootScope.constants.usersList = _.sortBy(users, "id");
 
-            _.each(userstories, function(us) {
-                $scope.userstoriesMap[us.id] = us;
-            });
+        _.each(statuses, function(status) { $scope.statusesMap[status.id] = status; });
+        _.each(userstories, function(us) { $scope.userstoriesMap[us.id] = us; });
+        _.each(points, function(item) { $rootScope.constants.points[item.id] = item; });
+        _.each(users, function(item) { $rootScope.constants.users[item.id] = item; });
 
-            return rs.getUsPoints(projectId);
-        }).then(function(points) {
-            _.each(points, function(item) {
-                $rootScope.constants.points[item.id] = item;
-            });
-
-            return rs.getTasks(projectId, sprintId);
-        }).then(function(tasks) {
-            $scope.tasks = tasks
-
-            // HACK:
-            $scope.tasks = _.filter(tasks, function(task) {
-                return (task.milestone == sprintId && task.project == projectId);
-            });
-
-            formatUserStoryTasks();
-            calculateStats();
+        $scope.tasks = tasks
+        $scope.tasks = _.filter(tasks, function(task) {
+            // HACK
+            return (task.milestone == sprintId && task.project == projectId);
         });
 
-    /* Load developers list */
-    rs.getUsers(projectId).then(function(users) {
-        $scope.users = users;
+        formatUserStoryTasks();
+        calculateStats();
     });
 
     $scope.newtaskForm = {};
@@ -179,7 +171,7 @@ var DashboardController = function($scope, $rootScope, $routeParams, rs) {
     });
 };
 
-DashboardController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource'];
+DashboardController.$inject = ['$scope', '$rootScope', '$routeParams', '$q', 'resource'];
 
 var DashboardUserStoryController = function($scope, $q) {
 };
@@ -188,7 +180,9 @@ DashboardUserStoryController.$inject = ['$scope', '$q'];
 
 
 var DashboardTaskController = function($scope, $q) {
-    $scope.saveTask = function(task) {
+    $scope.updateTaskAssignation = function(task, obj) {
+        task.assigned_to = obj ? obj.id: null;
+        task.save();
     };
 };
 

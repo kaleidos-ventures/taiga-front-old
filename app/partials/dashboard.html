@@ -95,18 +95,6 @@
             </div>
         </div>
     </div>
-    <div class="dialogs hidden">
-        <div class="developers-popover" id="developers-popover">
-            Select a developer:
-            <ul>
-                <li><a href="" data-dev-id="">Unassigned</a>
-                <li ng-repeat="dev in developers">
-                    <a href="" data-dev-id="{{ dev.id }}">{{ dev.name }}</a>
-                </li>
-            </ul>
-        </div>
-
-    </div>
     <div class="new-task-modal modal hide fade" id="new-task-modal">
         <div class="form-container">
         <form ui-parsley="createNewTask()">
@@ -129,4 +117,15 @@
             </div>
         </form>
     </div>
+    <script type="text/template" id="developers-popover">
+        <div class="developers-popover">
+            Select a user:
+            <ul>
+                <li><a class="btn-accept" href="">Unassigned</a>
+                <li ng-repeat="obj in constants.usersList">
+                    <a class="btn-accept" href="">{{ obj.username }}</a>
+                </li>
+            </ul>
+        </div>
+    </script>
 </div>
