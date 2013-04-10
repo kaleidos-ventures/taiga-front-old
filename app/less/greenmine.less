@@ -658,43 +658,47 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 
             .tasks {
                 padding: 3px;
-                min-height: 100px;
-
+                min-height: 200px;
                 .task-box {
-                    padding: 2px;
-                    margin-bottom: 5px;
-
+                    width: 145px;
+                    height: 150px;
+                    float: left;
+                    margin: 4px;
+                    box-shadow: 0px 5px 12px -2px rgba(0,0,0,.2);
+                    &:hover{
+                        transition: all 0.1s ease-in;
+                        box-shadow: 0px 6px 15px -2px rgba(0,0,0,.3);
+                        -webkit-transform: rotate(-1.5deg); 
+                        -moz-transform: rotate(-1.5deg); 
+                        -ms-transform: rotate(-1.5deg); 
+                        -o-transform: rotate(-1.5deg); 
+                        transform: rotate(-1.5deg); 
+                    }
                     .task-box-content {
-                        background-color: white;
+                        background-color: #FFF5D8;
                         color: black;
                         overflow: hidden;
-
+                        width: 90%;
+                        height: 90%;
+                        padding: 7px;
+                        cursor: move;
                         .title {
-                            padding: 10px;
-                            font-size: 11px;
+                            font-family: 'DroidSerifBold';
+                            font-size: 14px;
+                            line-height: 15px;
+                            color: #333;
+                        }
+                        .assign-to{
+                            color: #999;
+                            padding: 5px 0;
+                        }
+                        .desc{
+                            height: 80px;
+                            overflow: hidden;
+                            font-family: 'DroidSerif';
+                            font-size: 12px;
                             line-height: 13px;
-                        }
-                        .buttons-left {
-                            float: left;
-                            padding-left: 10px;
-                            padding-bottom: 3px;
-                            a {
-                                color: #333;
-                                text-decoration: none;
-                                font-size: 11px;
-                                line-height: 14px;
-                            }
-                        }
-                        .buttons-right {
-                            float: right;
-                            padding-right: 10px;
-                            padding-bottom: 3px;
-                            a {
-                                color: #333;
-                                text-decoration: none;
-                                font-size: 11px;
-                                line-height: 14px;
-                            }
+                            margin: 0;
                         }
                     }
                 }
