@@ -310,6 +310,32 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 }
 
 .issues {
+    .new-issue{
+        display: block;
+        overflow: hidden;
+        margin: 5px 0;
+        a{
+            float: right;
+            margin-right: 2%;
+            float: right;
+            color: white;
+            padding: 7px 15px 7px 41px;
+            border-radius: 4px;
+            border: none;
+            background: url('http://127.0.0.1:5000/less/../img/issue.png') no-repeat 8px center #669933;
+            -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+            -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            &:hover{
+                background: url('http://127.0.0.1:5000/less/../img/issue.png') no-repeat 8px -30px #333333;
+                -webkit-transition: all 0.3s ease-out;
+                -moz-transition: all 0.3s ease-out;
+                -o-transition: all 0.3s ease-out;
+                transition: all 0.3s ease-out;
+            }
+        }
+    }
     .filters-container {
         margin-top: 10px;
 
@@ -400,7 +426,6 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 
     .issues-container {
         margin-top: 10px;
-
         .issues-table-list {
             .flex-header {
                 display: -webkit-box;
@@ -456,6 +481,21 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 
             .issue-severity {
                 width: 90px;
+                .severity-wishlist{
+                    color: #ccc;
+                }
+                .severity-minor{
+                    color: #669933;
+                }
+                .severity-normal{
+                    color: blue;
+                }
+                .severity-important{
+                    color: orange;
+                }
+                .severity-critical{
+                    color: #CC0000;
+                }
             }
 
             .issue-state {
@@ -464,6 +504,15 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 
             .issue-priority {
                 width: 90px;
+                .priority-low{
+                    color: #ccc;
+                }
+                .priority-normal{
+                    color: #669933;
+                }
+                .priority-high{
+                    color: #CC0000;
+                }
             }
 
             .issue-options {
@@ -522,9 +571,35 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 width: 160px;
             }
             a { color: #333; text-decoration: none; }
+            .issues-pagination{
+                ul{
+                    padding: 0;
+                    li{
+                        a{
+                            background: #669933;
+                            background: -moz-linear-gradient(top, #669933 0%, #116800 100%);
+                            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #669933), color-stop(100%, #116800));
+                            background: -webkit-linear-gradient(top, #669933 0%, #116800 100%);
+                            background: -o-linear-gradient(top, #669933 0%, #116800 100%);
+                            background: -ms-linear-gradient(top, #669933 0%, #116800 100%);
+                            background: linear-gradient(to bottom, #669933 0%, #116800 100%);
+                            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#669933', endColorstr='#116800', GradientType=0);
+                            color: #FFF;
+                            border-color: darken(#669933, 15%);;
+                            
+                        }
+                        &.active, &.disabled, &:hover{
+                            a{
+                                background: darken(#669933, 15%);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
+
 
 /**********************
  * DASHBOARD
@@ -666,13 +741,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     margin: 4px;
                     box-shadow: 0px 5px 12px -2px rgba(0,0,0,.2);
                     &:hover{
-                        //transition: all 0.1s ease-in;
                         box-shadow: 0px 6px 15px -2px rgba(0,0,0,.3);
-                        //-webkit-transform: rotate(-1.5deg);
-                        //-moz-transform: rotate(-1.5deg);
-                        //-ms-transform: rotate(-1.5deg);
-                        //-o-transform: rotate(-1.5deg);
-                        //transform: rotate(-1.5deg);
                     }
                     .task-box-content {
                         background-color: #FFF5D8;

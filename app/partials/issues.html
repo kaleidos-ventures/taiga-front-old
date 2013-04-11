@@ -2,6 +2,11 @@
 <div class="middle-container container-fluid issues">
     <div class="row-fluid first-row">
         <div class="span12">
+            <div class="new-issue">
+                <a class="button">
+                    New issue
+                </a>
+            </div>
             <div class="filters-container">
                 <div class="filters-bar-sbox">
                     <div class="title-sbox">
@@ -61,7 +66,7 @@
                         <div class="issue-item" ng-repeat="issue in pagedItems[currentPage]">
                             <div class="issue-severity">
                                 <a href="" gm-popover="updateIssueSeverity(issue, selectedObj)"
-                                    data-tmpl="#severity-popover" data-auto-hide="true">{{ resolveSeverity(issue.severity) }}</a>
+                                    data-tmpl="#severity-popover" data-auto-hide="true" class="severity-{{ resolveSeverity(issue.severity) | lowercase }}">{{ resolveSeverity(issue.severity) }}</a>
                             </div>
                             <div class="issue-title">
                                 <span class="title">{{ issue.subject }}</span>
@@ -74,7 +79,7 @@
                                             data-tmpl="#status-popover">{{ resolveStatus(issue.status) }}</a>
                             </div>
                             <div class="issue-priority">
-                                <a href="" gm-popover="updateIssuePriority(issue, selectedObj)"
+                                <a href="" gm-popover="updateIssuePriority(issue, selectedObj)" class="priority-{{ resolvePriority(issue.priority) | lowercase }}"
                                             data-tmpl="#priority-popover">{{ resolvePriority(issue.priority) }}</a>
                             </div>
                             <div class="issue-assignedto">
@@ -101,8 +106,7 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="pagination pull-right pagination-small">
+                    <div class="pagination issues-pagination">
                         <ul>
                             <li ng-class="{disabled: currentPage == 0}">
                                 <a href ng-click="prevPage()">« Prev</a>
@@ -149,8 +153,7 @@
 
     <script type="text/template" id="developers-popover">
         <div class="developers-popover">
-            Select a user:
-
+            <p class="title">Select a user:</p>
             <ul>
                 <li><a class="btn-accept" href="">Unassigned</a>
                 <li ng-repeat="obj in constants.usersList">
@@ -162,7 +165,7 @@
 
     <script type="text/template" id="severity-popover">
         <div class="severity-popover">
-            Select severity:
+            <p class="title">Select severity:</p>
             <ul>
                 <li ng-repeat="obj in constants.severityList">
                     <a class="btn-accept" href="">{{ obj.name }}</a>
@@ -173,7 +176,7 @@
 
     <script type="text/template" id="priority-popover">
         <div class="priority-popover">
-            Select priority:
+            <p class="title">Select priority:</p>
             <ul>
                 <li ng-repeat="obj in constants.priorityList">
                     <a href="" class="btn-accept">{{ obj.name }}</a>
@@ -184,7 +187,7 @@
 
     <script type="text/template" id="status-popover">
         <div class="status-popover">
-            Select status:
+            <p class="title">Select status:</p>
             <ul>
                 <li ng-repeat="obj in constants.statusList">
                     <a href="" class="btn-accept">{{ obj.name }}</a>

@@ -21,4 +21,9 @@ angular.module('greenmine.filters.common', []).
         return function(input, format) {
             return moment(input).format(format);
         };
+    }]).
+    filter("lowercase", [function() {
+        return function(input) {
+            return input.toLowerCase();
+        };
     }]);
