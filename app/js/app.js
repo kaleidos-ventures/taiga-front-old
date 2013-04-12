@@ -77,7 +77,6 @@
         "greenmine.services.storage",
         "greenmine.directives.generic",
         "greenmine.directives.common",
-        "greenmine.directives.backlog",
         "greenmine.directives.dashboard",
         "greenmine.directives.issues",
         "greenmine.directives.wiki"
