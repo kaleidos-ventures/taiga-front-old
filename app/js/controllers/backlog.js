@@ -29,7 +29,7 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
 
     $scope.$on("milestones:loaded", function(ctx, data) {
         if (data.length > 0) {
-            $scope.sprintId = data[0].id;
+            $rootScope.sprintId = data[0].id;
         }
     });
 };
