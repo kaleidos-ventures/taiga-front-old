@@ -125,32 +125,22 @@ var DashboardController = function($scope, $rootScope, $routeParams, $q, rs) {
         calculateStats();
     });
 
-    $scope.newtaskForm = {};
-    $scope.createNewTask = function() {
-        var tasksText = $scope.newtaskForm.tasks;
-        var tasksUsId = parseInt($scope.newtaskForm.usId, 10);
-        $scope.newtaskForm = {};
+    $scope.form = {};
+    $scope.submitTask = function() {
+        var form = _.extend({tags:[]}, $scope.form, {"user_story": this.us.id});
 
-        var tasks = _.map(tasksText.split("\n"), function(text) {
-            var task = {id: _.uniqueId(), name: text, status_id:"new"};
-            var tokens = text.split(" ");
+        rs.createTask(projectId, form).
+            then(function(model) {
+                $scope.tasks.push(model);
 
-            if (tokens[0][0] == "!") {
-                if (tokens[0] == "!inprogress") {
-                    task.status_id = "inprogress";
-                }
-                task.name = tokens.splice(1).join(" ");
-            }
-            return task;
-        });
-
-        _.each(tasks, function(task) {
-            $scope.usTasks[tasksUsId][task.status_id].push(task);
-        });
+                formatUserStoryTasks();
+                calculateStats();
+                $scope.form = {};
+            });
 
         /* Notify to all modal directives
          * for close all opened modals. */
-        $scope.$broadcast("close-modals");
+        $scope.$broadcast("modals:close");
     };
 
     $scope.$on("sortable:changed", function() {

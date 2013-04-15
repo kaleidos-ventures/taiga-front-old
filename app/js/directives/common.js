@@ -408,8 +408,6 @@ angular.module('greenmine.directives.common', []).
                     } else {
                         var modaltTmpl = _.str.trim(angular.element(attrs.gmModal).html());
 
-                        console.log(angular.element(attrs.gmModal));
-
                         modal = angular.element($.parseHTML(modaltTmpl));
                         modal.attr("id", _.uniqueId("modal-"));
                         modal.on("click", ".button-cancel", function(event) {
@@ -427,8 +425,6 @@ angular.module('greenmine.directives.common', []).
                             $compile(modal.contents())(scope);
                         });
                         modal.modal();
-
-                        console.log(modal);
                     }
                 });
 

@@ -632,7 +632,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                             filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#669933', endColorstr='#116800', GradientType=0);
                             color: #FFF;
                             border-color: darken(#669933, 15%);;
-                            
+
                         }
                         &.active, &.disabled, &:hover{
                             a{
@@ -1853,6 +1853,20 @@ form {
         }
     }
 
+    .task-form {
+        .select2-container {
+            width: 425px;
+
+            .select2-choices {
+                padding: 3px 2px;
+            }
+        }
+        textarea.description {
+            width: 440px;
+            height: 100px;
+        }
+    }
+
 }
 
 
@@ -1861,7 +1875,7 @@ form {
 
 .projects {
     background: /*url("../img/noisy_grid.png") repeat 0 0,*/
-                url(../img/desktop_bg.jpg) no-repeat center 5% fixed #555; 
+                url(../img/desktop_bg.jpg) no-repeat center 5% fixed #555;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -1955,7 +1969,7 @@ form {
             }
         }
     }
-    
+
 }
 
 .hidden {

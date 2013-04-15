@@ -395,6 +395,22 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return queryMany(url("users"), {project: projectId});
         }
 
+        service.createTask = function(projectId, form) {
+            var obj = _.extend({}, form, {project: projectId});
+            var defered = $q.defer();
+
+            $http.post(url("tasks"), obj, {headers:headers()}).
+                success(function(data, status) {
+                    var modelurl = interpolate(itemUrlTemplate, {"url": url("tasks"), "id": data.id}, true);
+                    defered.resolve(new Model(data, modelurl));
+                }).
+                error(function(data, status) {
+                    defered.reject([data, status]);
+                });
+
+            return defered.promise;
+        };
+
         service.createUserStory = function(projectId, form) {
             var obj = _.extend({}, form, {project: projectId});
             var defered = $q.defer();
@@ -406,7 +422,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
                     defered.resolve(new Model(data, modelurl));
                 }).
                 error(function(data, status) {
-                    defered.reject(data, status);
+                    defered.reject([data, status]);
                 });
 
             return defered.promise;
