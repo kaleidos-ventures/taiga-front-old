@@ -45,6 +45,10 @@ angular.module('greenmine.directives.wiki', []).
         return function(scope, elm, attrs) {
             var element = angular.element(elm);
             element.markItUp(markdownSettings);
+            element.on("keypress", function(event) {
+                scope.$apply();
+                //console.log(element.data());
+            });
         };
     }]).
     directive("gmRenderMarkdown", ["$parse", function($parse) {
@@ -55,7 +59,7 @@ angular.module('greenmine.directives.wiki', []).
                 var data = scope.$eval(attrs.gmRenderMarkdown);
                 if (data !== undefined) {
                     // Regex for future page linking.
-                    // /^\s*\([ \t]*(\S+)(?:[ \t]+(["'])(.*?)\2)?[ \t]*\)/ );
+                    // /^\s*\([ \t]*(\S+)(?:[ \t]+(["'])(.*?)\2)?[ \t]*\)/;
                     element.html(markdown.toHTML(data.replace("\r", "")));
                 }
             });
