@@ -27,6 +27,50 @@
     font-weight: bold;
 }
 
+.button{
+    background: #CCC;
+    display: inline-block;
+    padding: 5px 10px 6px;
+    border: none;
+    text-decoration: none;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+    -moz-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+    box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+    border-bottom: 1px solid rgba(0,0,0,0.25);
+    position: relative;
+    cursor: pointer;
+    font-family: @DroidSansBold;
+    padding: 10px 30px;
+    text-shadow: -1px -1px #666, 1px 1px #ccc;
+    color: #fff;
+    line-height: 1.1em;
+    font-size: 1.1em;
+    &:hover{
+        background: #bbb;
+        color: darken(#fff, 30%);
+    }
+    &.button-success, &.button-edit {
+        background-color: #91bd09;
+        -webkit-box-shadow:  0 1px 1px #749a02;
+        -moz-box-shadow:  0 1px 1px #749a02;
+        box-shadow:  0 1px 1px #749a02;
+            &:hover {
+            background-color: #749a02;
+        }
+    }
+    &.button-delete{
+        background-color: #cc0000;
+        -webkit-box-shadow:  0 1px 1px #749a02;
+        -moz-box-shadow:  0 1px 1px #749a02;
+        box-shadow:  0 1px 1px #749a02;
+            &:hover {
+            background-color: darken(#cc0000, 15%);
+        }
+    }
+}
+
 /* =============
  * HEADER
  * =============*/
@@ -197,13 +241,15 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
         }
     }
     .wiki-buttons {
-        border-top: 1px solid #ddd;
         padding: 5px;
         padding-top: 2px;
+        float: right;
+        margin-right: 1%;
     }
 
     textarea#wiki {
         border: 1px solid #ddd;
+        max-width: 99%;
     }
 }
 
@@ -1763,40 +1809,6 @@ form {
             box-shadow:inset 0px 2px 9px -1px rgba(0, 0, 0, 0.2)
         }
     }
-
-    .button{
-        background: #CCC;
-        display: inline-block;
-        padding: 5px 10px 6px;
-        border: none;
-        text-decoration: none;
-        -moz-border-radius: 6px;
-        -webkit-border-radius: 6px;
-        -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-        -moz-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-        box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-        border-bottom: 1px solid rgba(0,0,0,0.25);
-        position: relative;
-        cursor: pointer;
-        font-family: @DroidSansBold;
-        padding: 10px 30px;
-        text-shadow: -1px -1px #666, 1px 1px #ccc;
-        color: #fff;
-        line-height: 1.1em;
-        font-size: 1.1em;
-        &:hover{
-            background: #bbb;
-        }
-        &.button-success{
-            background-color: #91bd09;
-            -webkit-box-shadow:  0 1px 1px #749a02;
-            -moz-box-shadow:  0 1px 1px #749a02;
-            box-shadow:  0 1px 1px #749a02;
-            &:hover {
-                background-color: #749a02;
-            }
-        }
-    }
 }
 
 .modal {
@@ -1847,46 +1859,103 @@ form {
 
 /* Project List */
 
-body.projects {
-    background-color: @gray;
-}
+.projects {
+    background: /*url("../img/noisy_grid.png") repeat 0 0,*/
+                url(../img/desktop_bg.jpg) no-repeat center 5% fixed #555; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    .middle-container{
+        margin-top: 40px;
+        .project-list {
+            overflow: hidden;
+            .sidebar{
+                float: left;
+                width: 32%
+            }
+            .main{
+                float: right;
+                width: 65%;
+            }
+            .all-projects{
+                min-height: 90%;
+                ul{
+                    margin: 0;
+                    margin-left: 20px;
+                    list-style: none;
+                    padding: 0;
+                    li{
+                        margin: 1px 0;
+                        background: rgba(255,255,255,.3);
+                        a{
+                            display: block;
+                            padding: 10px;
+                            color: #669933;
+                            font-family: 'DroidSansBold';
+                            font-size: 14px;
+                            color: #333;
+                            &:hover{
+                                background: rgba(255,255,255,.1);
+                                color: #fff;
+                                transition: all 0.2s ease-in;
+                            }
+                        }
+                    }
+                }
+            }
+            .latest-projects{
+                ul{
+                    overflow: hidden;
+                    margin: 0;
+                    padding: 0;
+                    .list-item {
+                        //background-color: rgba(255,255,255,.6);
+                        .border-radius(6px);
+                        width: 32%;
+                        font-size: 18px;
+                        margin: 0 5px 0 5px;
+                        float: left;
+                        display: block;
+                        a{
+                            text-align: center;
+                            vertical-align: middle;
+                            padding: 80px 10px 15px;
+                            display: block;
+                            background: url(../img/project_ico.png) no-repeat center 10px rgba(0,0,0,.3);
+                            &:hover{
+                                background: url(../img/project_ico.png) no-repeat center 7px rgba(102,153,51,0.3);
+                                transition: all 0.2s ease-in;
+                                color: #fff;
+                            }
+                        }
+                        .meta {
+                            text-align: center;
+                            display: block;
+                            padding: 0 0 30px;
+                        }
+                        /*
+                        .button {
+                            background: none repeat scroll 0 0 #666666;
+                            border: 0px;
+                            .border-radius(4px);
+                            font-family: @DroidSansBold;
+                            a {
+                                color: #ffffff;
 
-.project-list {
-    .list-item {
-        color: @black;
-        background-color: @white;
-        .border-radius(6px);
-        width: 800px;
-        padding: 10px;
-        font-size: 18px;
-        margin-bottom: 6px;
-        padding-left: 20px;
-
-        .title {
-            margin-right: 200px;
-            line-height: 30px;
-        }
-
-        .meta {
-            width: 200px;
-        }
-
-        .button {
-            background: none repeat scroll 0 0 #666666;
-            border: 0px;
-            .border-radius(4px);
-            font-family: @DroidSansBold;
-
-            a {
-                color: #ffffff;
-
+                            }
+                        }
+                        */
+                    }
+                }
+            }
+            .paginator-block {
+                padding: 5px;
+                color: @grayLighter;
             }
         }
     }
-    .paginator-block {
-        padding: 5px;
-        color: @grayLighter;
-    }
+    
 }
 
 .hidden {

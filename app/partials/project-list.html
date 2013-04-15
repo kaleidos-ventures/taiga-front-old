@@ -1,15 +1,23 @@
 <div class="header-container" ng-include="'/partials/header.html'"></div>
 <div class="middle-container">
-    <div class="main-box">
-        <div class="project-list">
-            <div class="list-container">
-                <div class="list-item" ng-repeat="project in projects">
-                    <div class="title">
-                        <a href="{{ urls.backlogUrl(project.id) }}">{{ project.name }}</a>
-                    </div>
-                </div>
-            </div>
+    <div class="project-list">
+        
+        <div class="sidebar all-projects">
+            <ul>
+                <li ng-repeat="project in projects">
+                    <a href="{{ urls.backlogUrl(project.id) }}">{{ project.name }}</a>
+                </li>
+            </ul>
         </div>
+        
+        <div class="main latest-projects">
+            <ul>
+                <li class="list-item" ng-repeat="project in projects | limitTo:6 ">
+                    <a href="{{ urls.backlogUrl(project.id) }}">{{ project.name }}</a>
+                </li>
+            </ul>
+        </div>
+        
     </div>
 
     <div class="delete-project-dialog" style="display: none" title="Are you sure?">

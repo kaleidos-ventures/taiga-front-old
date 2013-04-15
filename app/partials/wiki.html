@@ -4,8 +4,8 @@
         <div class="span12">
             <div class="wiki-container" gm-render-markdown="content"></div>
             <div class="wiki-buttons">
-                <a href="" class="edit" ng-click="openEditForm()">Edit</a>
-                <a href="" class="delete" ng-click="">Delete</a>
+                <a href="" class="button button-edit" ng-click="openEditForm()">Edit</a>
+                <a href="" class="button button-delete" ng-click="">Delete</a>
             </div>
         </div>
     </div>
@@ -15,8 +15,8 @@
                 <textarea id="wiki" ng-model="content" gm-markitup></textarea>
             </div>
             <div class="wiki-buttons">
-                <a href="" class="edit" ng-click="savePage()">Save</a>
-                <a href="" class="edit" ng-click="discartCurrentChanges()">Cancel</a>
+                <a href="" class="button button-success" ng-click="savePage()">Save</a>
+                <a href="" class="button" ng-click="discartCurrentChanges()">Cancel</a>
             </div>
         </div>
     </div>
