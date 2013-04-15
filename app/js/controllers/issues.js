@@ -133,25 +133,11 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
           , priorities = results[3]
           , users = results[4];
 
-        _.each(issueTypes, function(item) {
-            $rootScope.constants.type[item.id] = item;
-        });
-
-        _.each(issueStatuses, function(item) {
-            $rootScope.constants.status[item.id] = item;
-        });
-
-        _.each(severities, function(item) {
-            $rootScope.constants.severity[item.id] = item;
-        });
-
-        _.each(priorities, function(item) {
-            $rootScope.constants.priority[item.id] = item;
-        });
-
-        _.each(users, function(item) {
-            $rootScope.constants.users[item.id] = item;
-        });
+        _.each(users, function(item) { $rootScope.constants.users[item.id] = item; });
+        _.each(issueTypes, function(item) { $rootScope.constants.type[item.id] = item;});
+        _.each(issueStatuses, function(item) {$rootScope.constants.status[item.id] = item; });
+        _.each(severities, function(item) { $rootScope.constants.severity[item.id] = item; });
+        _.each(priorities, function(item) { $rootScope.constants.priority[item.id] = item; });
 
         $rootScope.constants.typeList = _.sortBy(issueTypes, "order");
         $rootScope.constants.statusList = _.sortBy(issueStatuses, "order");
@@ -208,7 +194,7 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, $q, rs) {
         rs.getIssueStatuses(projectId),
         rs.getSeverities(projectId),
         rs.getPriorities(projectId),
-        rs.projectDevelopers(projectId),
+        rs.getUsers(projectId),
         rs.getIssueAttachments(projectId, issueId),
         rs.getIssue(projectId, issueId)
     ]).then(function(results) {
@@ -216,15 +202,21 @@ var IssuesViewController = function($scope, $rootScope, $routeParams, $q, rs) {
           , issueStatuses = results[1]
           , severities = results[2]
           , priorities = results[3]
-          , developers = results[4]
+          , users = results[4]
           , attachments = results[5]
           , issue = results[6];
+
+        _.each(users, function(item) { $rootScope.constants.users[item.id] = item; });
+        _.each(issueTypes, function(item) { $rootScope.constants.type[item.id] = item;});
+        _.each(issueStatuses, function(item) {$rootScope.constants.status[item.id] = item; });
+        _.each(severities, function(item) { $rootScope.constants.severity[item.id] = item; });
+        _.each(priorities, function(item) { $rootScope.constants.priority[item.id] = item; });
 
         $rootScope.constants.typeList = _.sortBy(issueTypes, "order");
         $rootScope.constants.statusList = _.sortBy(issueStatuses, "order");
         $rootScope.constants.severityList = _.sortBy(severities, "order");
         $rootScope.constants.priorityList = _.sortBy(priorities, "order");
-        $scope.developers = developers;
+        $rootScope.constants.usersList = _.sortBy(users, "id");
 
         $scope.attachments = attachments
         $scope.issue = issue;
