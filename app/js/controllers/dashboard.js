@@ -22,7 +22,7 @@ var DashboardController = function($scope, $rootScope, $routeParams, $q, rs) {
 
         _.each($scope.tasks, function(task) {
             // HACK: filters not works properly
-            if ($scope.userstoriesMap[task.user_story] === undefined) {
+            if ($scope.userstories[task.user_story] === undefined) {
                 return true;
             };
 
@@ -35,18 +35,18 @@ var DashboardController = function($scope, $rootScope, $routeParams, $q, rs) {
     var calculateStats = function() {
         var pointIdToOrder = greenmine.utils.pointIdToOrder($rootScope.constants.points);
         var totalTasks = $scope.tasks.length,
-            totalUss = $scope.userstories.length,
+            totalUss = $scope.userstoriesList.length,
             totalPoints = 0,
             completedPoints = 0,
             compledUss = 0,
             completedTasks = 0;
 
-        _.each($scope.userstories, function(us) {
+        _.each($scope.userstoriesList, function(us) {
             totalPoints += pointIdToOrder(us.points);
         })
 
         _.each($scope.tasks, function(task) {
-            if ($scope.statusesMap[task.status].is_closed) {
+            if ($scope.statuses[task.status].is_closed) {
                 completedTasks += 1;
             }
         });
@@ -60,7 +60,7 @@ var DashboardController = function($scope, $rootScope, $routeParams, $q, rs) {
             _.each(statuses, function(tasks, statusId) {
                 totalTasks += tasks.length;
 
-                if ($scope.statusesMap[statusId].is_closed) {
+                if ($scope.statuses[statusId].is_closed) {
                     completedTasks += tasks.length;
                 } else {
                     if (tasks.length > 0) {
@@ -73,7 +73,7 @@ var DashboardController = function($scope, $rootScope, $routeParams, $q, rs) {
                 compledUss += 1;
             }
 
-            var us = $scope.userstoriesMap[usId];
+            var us = $scope.userstories[usId];
             var points = pointIdToOrder(us.points);
 
             completedPoints += ((completedTasks * points) / totalTasks) || 0;
@@ -103,15 +103,17 @@ var DashboardController = function($scope, $rootScope, $routeParams, $q, rs) {
           , tasks = results[3]
           , users = results[4];
 
-        $scope.statuses = statuses;
-        $scope.statusesMap = {};
-        $scope.userstories = userstories;
-        $scope.userstoriesMap = {};
-
         $rootScope.constants.usersList = _.sortBy(users, "id");
 
-        _.each(statuses, function(status) { $scope.statusesMap[status.id] = status; });
-        _.each(userstories, function(us) { $scope.userstoriesMap[us.id] = us; });
+        $scope.statusesList = _.sortBy(statuses, 'id')
+        $scope.userstoriesList = _.sortBy(userstories, 'id');
+
+        $scope.userstories = {};
+        $scope.statuses = {};
+
+        _.each(statuses, function(status) { $scope.statuses[status.id] = status; });
+        _.each(userstories, function(us) { $scope.userstories[us.id] = us; });
+
         _.each(points, function(item) { $rootScope.constants.points[item.id] = item; });
         _.each(users, function(item) { $rootScope.constants.users[item.id] = item; });
 
@@ -176,4 +178,4 @@ var DashboardTaskController = function($scope, $q) {
     };
 };
 
-DashboardTaskController.$inject = ['$scope', '$q'];
+dashboardtaskcontroller.$inject = ['$scope', '$q'];
