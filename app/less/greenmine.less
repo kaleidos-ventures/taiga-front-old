@@ -1,30 +1,5 @@
-@import "bootstrap.less";
-@import "greenmine-typografy.less";
-@import "greenmine-markitup.less";
-@import "greenmine-select2.less";
-@import "greenmine-kalendae.less";
-
-/* Variables */
-
-@green: #690;
-@grayVeryLighter:       #f2f2f2;
-
-/* Typography */
-/*
-@DroidSansRegular: 'DroidSansRegular';
-@DroidSansBold: 'DroidSansBold';
-@DroidSerifRegular: 'DroidSerifRegular';
-@DroidSerifBold: 'DroidSerifBold';
-*/
-@LeagueGothicRegular: 'LeagueGothicRegular';
-@LeagueGothicCondensed: 'LeagueGothicCondensed';
-@ColabReg: 'ColabReg';
-@ColabThi: 'ColabThi';
-
-@import "greenmine-generic.less";   
-
 /* =============
- * MAIN STYLES
+ * MAIN STYLES FOR GREENMINE
  * ============= */
 
 .parsley-error-list{
@@ -76,25 +51,82 @@
     }
 }
 
-/* =============
- * HEADER
- * =============*/
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input  {
+    border-radius: 0px;
+}
 
- /* Header */
+/* =============================================
+ * MEDIA QUERIES
+ * ============================================= */
+ 
+@media (max-width: 1024px) {
+    .dashboard {
+        .stats-row {
+            display: none;
+        }
+    }
+}
+
+/* =========================
+ * PROGRESS INDICATOR
+ * ========================= */
+
+.progress-box {
+    float: left;
+    overflow: hidden;
+    line-height: 26px;
+    margin-right: 10px;
+    .progress {
+        height: 25px;
+        margin-bottom: 0px;
+        margin-right: 10px;
+        padding: 2px;
+        background: rgba(255,255,255, 0.6);
+        .bar {
+            background-color: #669900;
+            background-image: none;
+            height: 23px;
+            position: relative;
+            top: 1px;
+            left: 1px;
+        }
+    }
+    .progress-indicator {
+        font-family: @LeagueGothicRegular;
+        font-size: 2em;
+        color: #FFFFFF;
+        margin-right: 5px;
+        margin-top: 2px;
+    }
+    .progress-help {
+        font-family: @ColabThi;
+        font-size: .9em;
+        color: #EEE;
+        width: 67px;
+        line-height: 11px;
+        margin-top: 3px;
+    }
+}
+
+/* ========================================
+ * HEADER
+ * ======================================== */
 
 .header-container {
-    background: #669933; /* Old browsers */
+    background: #669933; /* Callback */
+    background: -moz-linear-gradient(top, #669933 0%, #116800 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#669933), color-stop(100%,#116800));
+    background: -webkit-linear-gradient(top, #669933 0%,#116800 100%);
+    background: -o-linear-gradient(top, #669933 0%,#116800 100%);
+    background: -ms-linear-gradient(top, #669933 0%,#116800 100%);
+    background: linear-gradient(to bottom, #669933 0%,#116800 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#669933', endColorstr='#116800',GradientType=0 );
     color: @grayDarker;
+    width: 100%;
+    overflow: hidden;
     .header-box {
+        width: 100%;
         overflow: hidden;
-        background: #669933;
-        background: -moz-linear-gradient(top, #669933 0%, #116800 100%);
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#669933), color-stop(100%,#116800));
-        background: -webkit-linear-gradient(top, #669933 0%,#116800 100%);
-        background: -o-linear-gradient(top, #669933 0%,#116800 100%);
-        background: -ms-linear-gradient(top, #669933 0%,#116800 100%);
-        background: linear-gradient(to bottom, #669933 0%,#116800 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#669933', endColorstr='#116800',GradientType=0 );
         .logo-sbox {
             padding: 0px 15px;
             float: left;
@@ -112,59 +144,47 @@
                 }
                 &.user{
                     font-size: 1em;
-                    color: #FFF;
+                    color: darken(#669933, 30%);
                     margin-top: 45px;
                     padding: 0 10px;
-                    font-weight: bold;
+                    font-family: @ColabThi;
                     &:hover{
-                        color: #333;
+                        color: darken(#669933, 50%);
+                        transition: all .2s ease-in;
                     }
                 }
             }
-        }
-        .header-path {
-            float: left;
-            color: white;
-            font-size: 1.2em;
-            vertical-align: middle;
-            line-height: 45px;
-            padding-left: 10px;
         }
         .top-menu-sbox {
             float: right;
             padding: 2px;
             padding-right: 10px;
             margin-top: 10px;
-            color: @white;
-            div{
-                display: inline;
-                a{
-                    color: @white;
-                    background: url('../img/logout_ico.png') no-repeat center left;
-                    padding: 3px 0;
-                    padding-left: 23px;
-                }
+            a{
+                color: #FFF;
+                background: url('../img/logout_ico.png') no-repeat center left;
+                padding: 3px 0;
+                padding-left: 23px;
+                font-size: .9em;
             }
         }
     }
     .nav {
         ul {
             margin: 0px;
-            background-color: #333333;
             padding:0;
-            display: block;
-            clear: both;
+            background-color: #333333;
             overflow: hidden;
+            list-style: none;
             li {
-                list-style: none;
                 text-align: center;
                 display: block;
                 float: left;
                 border-right: 1px solid #444;
                 padding: 5px 0;
-                background-color: #333333;
                 &:hover{
                     background-color: darken(#333333, 15%);
+                    transition: all .2s ease-in;
                 }
                 a{
                     font-family: 'ColabReg';
@@ -173,7 +193,7 @@
                     text-decoration: none;
                     opacity: 0.6;
                     padding: 30px 20px 5px 20px;
-                    display: inline-block;
+                    display: block;
                     &:hover{
                         opacity: 1;
                     }
@@ -221,32 +241,619 @@
             background-color: #999;
             padding: 5px 20px;
             color: #333;
-            font-weight: bold;
-            font-size: .7em;
+            font-family: @ColabReg;
+            font-size: .8em;
         }
     }
 }
 
+/* ========================
+ *  BACKLOG VIEW
+ * ========================= */
+
+.backlog-content{
+    width: 100%;
+    margin-top: 10px;
+    .graphics-container {
+        .user-story-stats {
+            background-color: #444;
+            padding: 10px;
+            overflow: hidden;
+            color:#fff;
+            div {
+                float: left;
+            }
+            .progress-box {
+                float: left;
+                overflow: hidden;
+                line-height: 26px;
+                width: 33%;
+                .progress {
+                    width: 66%;
+                    .bar {
+                        background-color: #669900;
+                        height: 23px;
+                        position: relative;
+                        top: 1px;
+                        left: 1px;
+                    }
+                }
+                .progress-indicator {
+                    font-family: @LeagueGothicRegular;
+                    font-size: 2em;
+                    color: #FFFFFF;
+                    margin-top: 2px;
+                }
+                .progress-help {
+                    font-family: @ColabThi;
+                    font-size: .8em;
+                    color: #EEE;
+                    width: 67px;
+                    line-height: 11px;
+                    margin-top: 3px;
+                }
+            }
+            .stats-box {
+                overflow: hidden;
+                line-height: 26px;
+                float: left;
+                .item {
+                    float: left;
+                    div{
+                        float: left;
+                        &.indicator {
+                            font-family: @LeagueGothicRegular;
+                            font-size: 2em;
+                            color: #FFFFFF;
+                            margin-right: 5px;
+                            margin-top: 2px;
+                        }
+                        &.help {
+                            font-family: @ColabThi;
+                            font-size: 0.9em;
+                            color: #EEE;
+                            width: 67px;
+                            line-height: 11px;
+                            margin-top: 3px;
+                        }
+                    }
+                }
+            }
+            .button{
+                text-shadow: -1px -1px #666, 1px 1px #888;
+                &.new-us-story{
+                    float: right;
+                    padding: 7px 15px 7px 41px;
+                    border-radius: 4px;
+                    border: none;
+                    background: url('../img/user_story.png') no-repeat 8px center #669933;
+                    -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
+                    -moz-box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
+                    box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
+                    cursor: pointer;
+                    &:hover, &.active{
+                        background: url('../img/user_story.png') no-repeat 8px center;
+                        background-color: #111;
+                    }
+                }
+                &.show-hide-graphics {
+                    float: right;
+                    color: white;
+                    border: none;
+                    margin-right: 10px;
+                    padding: 14px;
+                    border-radius: 4px;
+                    background: url('../img/backlog_graph.png') no-repeat center center #669933;
+                    -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
+                    -moz-box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
+                    box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
+                    cursor: pointer;
+                    &:hover, &.active{
+                        background: url('../img/backlog_graph.png') no-repeat center center;
+                        background-color: #111;
+                    }
+                }
+                &:hover, &.active{
+                    transition: all .3s ease-in;
+                    text-shadow: -1px -1px #333, 1px 1px #333;
+                }
+            }
+        }
+    } /* graphics-container */
+    .filters-container {
+        margin-top: 10px;
+        .filters-bar-sbox {
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            margin: 2px 0;
+            padding: 5px 5px 5px 15px;
+            overflow: hidden;
+            .title-sbox {
+                a {
+                    color: #666;
+                    padding: 5px;
+                    padding-left: 20px;
+                    background: url('../img/filter_arrow.png') no-repeat 3px 8px;
+                    &.active{
+                        background: url('../img/filter_arrow.png') no-repeat 3px -15px;
+                    }
+                }
+            }
+            .buttons-sbox {
+                float: right;
+            }
+        }
+        .filters-visual-box {
+            overflow: hidden;
+            padding: 10px;
+            .tags-list-sbox {
+                overflow: hidden;
+                .tag {
+                    position: relative;
+                    cursor: pointer;
+                    float: left;
+                    width: 150px;
+                    margin-bottom: 5px;
+                    margin-right: 5px;
+                    padding: 5px;
+                    font-family: @ColabThi;
+                    font-size: 1em;
+                    color: #FFF;
+                    opacity: .3;
+                    border-radius: 4px;
+                    &.selected {
+                        opacity: 1;
+                        box-shadow: 1px 1px 1px rgba(0,0,0,.2);
+                        font-family: @ColabReg;
+                        transition: all 0.3s ease-out;
+                    }
+                    .count {
+                        position: absolute;
+                        top: 5px;
+                        right: 0px;
+                        background: rgba(255,255,255,.3);
+                        padding: 5px 8px;
+                        margin-top: -5px;
+                        border-radius: 0 4px 4px 0;
+                    }
+                }
+            }
+        }
+        .user-story-form-sbox {
+            background-color: #f2f2f2;
+            border: 1px solid #666;
+            padding: 10px;
+            textarea {
+                height: 120px;
+            }
+            .select2-container-multi{
+                &.select2-container-active{
+                    .select2-choices{
+                        border: 1px solid rgba(102,154,51,.6);
+                    }
+                }
+            }
+            .select2-container{
+                width: 97%;
+                .select2-choices{
+                    .select2-search-field{
+                        .select2-input{
+                            width: 100%;
+                            padding: 8px 6px;
+                            font-family: @ColabThi;
+                            color: #999;
+                        }
+                    }
+                }
+            }
+            .submit-button-container{
+                margin-right: 40px;
+            }
+        }
+    }
+    /* backlog */
+    .us-container {
+        margin-top: 10px;
+        .popover { 
+            max-width: 400px; 
+        }
+        .us-preview-popover {
+            width: 370px;
+            section {
+                padding: 5px;
+            }
+        }
+        .us-table-list {
+            .flex-header {
+                display: -webkit-box;
+                display: -moz-box;
+                -webkit-box-orient: horizontal;
+                -moz-box-orient: horizontal;
+                border-bottom: 2px solid #666666;
+                width: 100%;
+                font-family: @ColabReg;
+                color: #333;
+                div {
+                    padding: 5px;
+                    &:nth-child(1) {
+                        -webkit-box-flex: 1;
+                        -moz-box-flex: 1;
+                    }
+                }
+            }
+            .flex-body {
+                min-height: 40px;
+                .us-item {
+                    display: -webkit-box;
+                    display: -moz-box;
+                    -webkit-box-orient: horizontal;
+                    -moz-box-orient: horizontal;
+                    padding: 2px 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: move;
+                    font-family: @ColabReg;
+                    font-size: .8em;
+                    width: 100%;
+                    &:hover {
+                        background-color: #f9f9f9;
+                    }
+                    div{
+                        padding: 5px;
+                        &:nth-child(1) {
+                            -webkit-box-flex: 1;
+                            -moz-box-flex: 1;
+                        }
+                    }
+                }
+            }
+
+            .us-title {
+                .label {
+                    margin-left: 5px;
+                    font-size: .9em;
+                    font-family: @ColabReg;
+                }
+            }
+
+            .us-points {
+                width: 50px;
+                text-align: center;
+                font-size: 1em;
+                font-family: @ColabReg;
+                &>a {
+                    color: #333;
+                    text-decoration: none;
+                    padding: 7px 16px;
+                    cursor: pointer;
+                    font-size: 1.4em;
+                }
+            }
+
+            .us-options {
+                width: 85px;
+                a{
+                    position: relative;
+                    width: 20px;
+                    margin-right: 4px;
+                    height: 20px;
+                    background: #000;
+                    display: inline-block;
+                    padding: 1px;
+                    border-radius:20px;
+                    &.btn-small-preview {
+                        background: url( '../img/backlog_sprite.png' ) no-repeat center 5px #666666;
+                    }
+                    &.btn-small-edit {
+                        background: url( '../img/backlog_sprite.png' ) no-repeat center -17px #669933;
+                    }
+                    &.btn-small-remove {
+                        background: url( '../img/backlog_sprite.png' ) no-repeat center -37px #cc0000;
+                    }
+                    &:hover{
+                        background-color: #333;
+                        transition: all 0.3s ease-in;
+                        .help-box{
+                            display: block;
+                        }
+                    }
+                    .help-box{
+                        position: absolute;
+                        top: -29px;
+                        border: 1px solid #669933;
+                        left: -25px;
+                        padding: 4px;
+                        width: 57px;
+                        height: 13px;
+                        text-align:center;
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }
+    .milestones {
+        .header-box {
+            background-color: #444;
+            padding: 10px;
+            overflow: hidden;
+            color: #ffffff;
+            .title-sbox > div { float: left; }
+            .title-sbox {
+                float: left;
+                overflow: hidden;
+                line-height: 26px;
+                .title {
+                    float: left;
+                    color: #FFFFFF;
+                    margin-right: 5px;
+                    font-family: 'LeagueGothicRegular';
+                    font-size: 2em;
+                    color: #FFFFFF;
+                    margin-right: 5px;
+                    margin-top: 2px;
+                }
+
+                .help {
+                    font-family: 'ColabThi';
+                    font-size: .8em;
+                    color: #EEE;
+                    width: 67px;
+                    line-height: 11px;
+                    margin-top: 3px;
+                }
+            }
+            .new-sprint{
+                float: right;
+                background: url('../img/sprint_ico.png') no-repeat 13px center #669933;
+                color: #fff;
+                padding: 7px 15px 7px 35px;
+                border: none;
+                box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+                cursor: pointer;
+                &:hover{
+                    background: url('../img/sprint_ico.png') no-repeat -30px center #333;
+                    -webkit-transition: all 0.3s ease-out;
+                    -moz-transition: all 0.3s ease-out;
+                    -o-transition: all 0.3s ease-out;
+                    transition: all 0.3s ease-out;
+                }
+            }
+        }
+
+        .milestone-form-box {
+            background-color: #f2f2f2;
+            border: 1px solid #666;
+            padding: 10px;
+            overflow: hidden;
+            form{
+                margin-bottom: 0px;
+                fieldset {
+                    overflow: hidden;
+                    padding-bottom: 10px;
+                    div.subfield {
+                        float: left;
+                        margin-right: 20px;
+                        input[type="date"] {
+                            width: 117px;
+                        }
+                    }
+                }
+                .btn-group {
+                    margin-top: 20px;
+                    float: right;
+                }
+            }
+        }
+        .sprints-box {
+            margin-top: 10px;
+            .sprints-box-title{
+                font-family: 'ColabReg';
+                font-size: 1em;
+                color: #333;
+                margin-top: 16px;
+                margin-bottom: 5px;
+                text-transform: uppercase;
+                  &:first-child{
+
+                }
+            }
+            .sprint-sbox {
+                margin-bottom: 15px;
+                opacity: 0.6;
+                .header {
+                    background-color: #d0d0d0;
+                    .title {
+                        padding: 5px;
+                        padding-bottom: 0px;
+                        a {
+                            text-decoration: none;
+                            color: #666;
+                            text-transform: uppercase;
+                            font-size: 1em;
+                            font-family: @ColabReg;
+                            &:hover{
+                                color: darken(#666, 20%);
+                            }
+                        }
+                    }
+                    .stats {
+                        padding: 3px 5px;
+                        color: white;
+                        overflow: hidden;
+
+                        .sprint-progress > div { float: left; }
+                        .sprint-progress {
+                            margin-right: 30px;
+                            float: left;
+                            overflow: hidden;
 
 
-/* Backlog */
-select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input  {
-    border-radius: 0px;
-}
+                            .progress {
+                                width: 80px;
+                                height: 15px;
+                                margin-bottom: 0px;
+                                margin-right: 10px;
+                                padding: 2px;
+                                background: rgba(255, 255, 255, 0.6);
+                                .bar{
+                                    background-color: #999;
+                                    height: 13px;
+                                    position: relative;
+                                    top: 1px;
+                                    left: 0;
+                                }
+                            }
 
+                            .progress-indicator {
+                                font-family: 'LeagueGothicRegular';
+                                font-size: 1.1em;
+                                font-weight: bold;
+                                color: #999;
+                            }
+                        }
+                        .sprint-status {
+                            overflow: hidden;
+                            float: left;
+                            font-family: @ColabThi;
+                            .item > div { float: left; }
+                            .item {
+                                float: left;
+                                overflow: hidden;
 
-@media (max-width: 1024px) {
-    .dashboard {
-        .stats-row {
-            display: none;
+                                .indicator {
+                                    font-family: 'LeagueGothicRegular';
+                                    font-size: 1.1em;
+                                    font-weight: bold;
+                                    color: #999;
+                                    margin-right: 5px;
+                                }
+                                .help {
+                                    color: #999;
+                                    width: 57px;
+                                    line-height: 19px;
+                                    font-family: 'ColabThi';
+                                    font-size: .8em;
+                                    margin-top: 3px;
+                                }
+                            }
+                        }
+                    }
+                }
+                .body {
+                    padding-left: 5px;
+                    padding-right: 5px;
+                    padding-bottom: 5px;
+                    background-color: #d0d0d0;
+                    margin-bottom: 5px;
+                    .us-list {
+                        background-color: #f9f9f9;
+
+                        .us-table-list {
+                            .flex-body {
+                                min-height: 20px;
+                                .us-item {
+                                    display: -webkit-box;
+                                    display: -moz-box;
+                                    -webkit-box-orient: horizontal;
+                                    -moz-box-orient: horizontal;
+                                    border-bottom: 1px solid #c9c9c9;
+                                    width: 100%;
+                                    color: #999;
+                                    cursor: move;
+                                }
+                                .us-item > div:nth-child(1) {
+                                    -webkit-box-flex: 1;
+                                    -moz-box-flex: 1;
+                                }
+                                .us-item > div:nth-child(2) {
+                                    width: 40px;
+                                }
+                                .us-item > div {
+                                    padding: 5px;
+                                }
+                            }
+
+                            .us-points {
+                                width: 50px;
+                                text-align: center;
+                                color: #333;
+                                text-align: center;
+                                font-family: 'ColabReg';
+                                color: #999;
+                            }
+
+                            .us-priority {
+                                width: 70px;
+                            }
+                        }
+                    }
+                }
+                &.first{
+                    opacity: 1;
+                    margin-bottom: 30px;
+                    box-shadow: 1px 1px 1px 1px rgba(0,0,0,.6);
+                    .header {
+                        background-color: #555;
+                        .title {
+                            background-color: #555;
+                            a {
+                                color: #FFF;
+                                &:hover{
+                                    color: darken(#FFF, 20%);
+                                }
+                            }
+                            span{
+                                float: right;
+                                color: #fff;
+                                font-size: .9em;
+                                font-family: @ColabThi;
+                            }
+                        }
+                        .stats {
+                            color: #FFF;
+                            background: #555;
+                            .sprint-progress {
+                                .progress {
+                                    background: rgba(255, 255, 255, 1);
+                                    .bar{
+                                        background-color: #669933;
+                                    }
+                                }
+                                .progress-indicator {
+                                    color: #ccc;
+                                }
+                            }
+                            .sprint-status {
+                                .item {
+                                    .indicator {
+                                        color: #ccc;
+                                    }
+                                    .help {
+                                        color: #ccc;
+                                        font-family: 'ColabThi';
+                                        font-size: .8em;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .body{
+                        background-color: #555;
+                    }
+                }
+            }
         }
     }
 }
+
+/* ================================
+ * WIKI
+ * ================================ */
+ 
 .wiki {
     .wiki-container {
         padding: 5px;
     }
-
     .wikiform-container {
         padding: 5px;
         textarea#wiki {
@@ -265,6 +872,10 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
         max-width: 99%;
     }
 }
+
+/* ================================
+ * BACKLOG
+ * ================================ */
 
 .issues-view {
     .view-header,
@@ -928,48 +1539,6 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 }
 
 /* =========================
- * PROGRESS INDICATOR
- * ========================= */
-
-.progress-box {
-    float: left;
-    overflow: hidden;
-    line-height: 26px;
-    margin-right: 10px;
-    .progress {
-        width: 200px;
-        height: 25px;
-        margin-bottom: 0px;
-        margin-right: 10px;
-        padding: 2px;
-        background: rgba(255,255,255, 0.6);
-        .bar {
-            background-color: #669900;
-            background-image: none;
-            height: 23px;
-            position: relative;
-            top: 1px;
-            left: 1px;
-        }
-    }
-    .progress-indicator {
-        font-family: @LeagueGothicRegular;
-        font-size: 2em;
-        color: #FFFFFF;
-        margin-right: 5px;
-        margin-top: 2px;
-    }
-    .progress-help {
-        font-family: @ColabThi;
-        font-size: .9em;
-        color: #EEE;
-        width: 67px;
-        line-height: 11px;
-        margin-top: 3px;
-    }
-}
-
-/* =========================
  * HELP BOX
  * ========================= */
 
@@ -1002,620 +1571,6 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
         margin-left: -6px;
     }
 }
-
-/* ========================
- *  BACKLOG VIEW
- * ========================= */
-
-.backlog {
-    .first-row {
-        margin-top: 10px;
-    }
-    .graphics-container {
-        font-family: @ColabThi;
-        .user-story-stats {
-            background-color: #444;
-            padding: 10px;
-            overflow: hidden;
-            color:@white;
-            div {
-                float: left;
-            }
-            .progress-box {
-                float: left;
-                overflow: hidden;
-                line-height: 26px;
-                margin-right: 10px;
-                .progress {
-                    width: 200px;
-                    height: 25px;
-                    margin-bottom: 0px;
-                    margin-right: 10px;
-                    padding: 2px;
-                    background: rgba(255,255,255, 0.6);
-                    .bar {
-                        background-color: #669900;
-                        background-image: none;
-                        height: 23px;
-                        position: relative;
-                        top: 1px;
-                        left: 1px;
-                    }
-                }
-                .progress-indicator {
-                    font-family: @LeagueGothicRegular;
-                    font-size: 2em;
-                    color: #FFFFFF;
-                    margin-right: 5px;
-                    margin-top: 2px;
-                }
-                .progress-help {
-                    font-family: @ColabThi;
-                    font-size: .8em;
-                    color: #EEE;
-                    width: 67px;
-                    line-height: 11px;
-                    margin-top: 3px;
-                }
-            }
-            .stats-box {
-                overflow: hidden;
-                line-height: 26px;
-                float: left;
-                .item {
-                    float: left;
-                    div{
-                        float: left;
-                    }
-                    .indicator {
-                        font-family: @LeagueGothicRegular;
-                        font-size: 2em;
-                        color: #FFFFFF;
-                        margin-right: 5px;
-                        margin-top: 2px;
-                    }
-                    .help {
-                        font-family: @ColabThi;
-                        font-size: 0.9em;
-                        color: #EEE;
-                        width: 67px;
-                        line-height: 11px;
-                        margin-top: 3px;
-                    }
-                }
-            }
-            .new-us-story{
-                float: right;
-                color: white;
-                padding: 7px 15px 7px 41px;
-                border-radius: 4px;
-                border: none;
-                background: url('../img/user_story.png') no-repeat 8px center #669933;
-                -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-                -moz-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-                box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-                cursor: pointer;
-                &:hover, &.active{
-                    background: url('../img/user_story.png') no-repeat 8px center #333;
-                }
-            }
-            .show-hide-graphics {
-                float: right;
-                color: white;
-                border: none;
-                margin-right: 10px;
-                padding: 14px;
-                border-radius: 4px;
-                background: url('../img/backlog_graph.png') no-repeat center center #669933;
-                -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-                -moz-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-                box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
-                cursor: pointer;
-                &:hover, &.active{
-                    background: url('../img/backlog_graph.png') no-repeat center center #333;
-                }
-            }
-        }
-    }
-    .filters-container {
-        margin-top: 10px;
-        .ui-state-highlight,
-        .ui-sortable-placeholder {
-            background-color: red;
-        }
-        .filters-bar-sbox {
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-            margin: 2px 0;
-            padding: 5px;
-            padding-left: 15px;
-            overflow: hidden;
-            .title-sbox {
-                a {
-                    color: #666;
-                    padding: 5px;
-                    padding-left: 20px;
-                    background: url('../img/filter_arrow.png') no-repeat 3px 8px;
-                    &.active{
-                        background: url('../img/filter_arrow.png') no-repeat 3px -15px;
-                    }
-                }
-            }
-            .buttons-sbox {
-                float: right;
-            }
-        }
-        .filters-visual-box {
-            overflow: hidden;
-            padding: 10px;
-            .tags-list-sbox {
-                overflow: hidden;
-                .tag {
-                    position: relative;
-                    cursor: pointer;
-                    float: left;
-                    width: 150px;
-                    margin-bottom: 5px;
-                    margin-right: 5px;
-                    padding: 5px;
-                    font-family: @ColabThi;
-                    font-size: 1.3em;
-                    color: @white;
-                    opacity: 0.3;
-                    border-radius: 4px;
-                    &.selected {
-                        opacity: 1;
-                        box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-                        font-family: @ColabReg;
-                        -webkit-transition: all 0.3s ease-out;
-                        -moz-transition: all 0.3s ease-out;
-                        -o-transition: all 0.3s ease-out;
-                        transition: all 0.3s ease-out;
-                    }
-                    .icon {
-                        margin-right: 5px;
-                    }
-                    .count {
-                        position: absolute;
-                        top: 5px;
-                        right: 0px;
-                        background: rgba(255,255,255,.3);
-                        padding: 5px 8px;
-                        margin-top: -5px;
-                        border-radius: 0 4px 4px 0;
-                    }
-                }
-            }
-        }
-
-        .user-story-form-sbox {
-            background-color: #f2f2f2;
-            border: 1px solid #666;
-            padding: 10px;
-            textarea {
-                height: 120px;
-            }
-            .select2-container-multi{
-                &.select2-container-active{
-                    .select2-choices{
-                        border: 1px solid rgba(102,154,51,0.6);
-                    }
-                }
-            }
-            .select2-container{
-                width: 97%;
-                .select2-choices{
-                    .select2-search-field{
-                        .select2-input{
-                            width: 100%;
-                            padding: 8px 6px;
-                            font-family: @ColabThi;
-                            color: #999;
-                        }
-                    }
-                }
-            }
-            .submit-button-container{
-                margin-right: 40px;
-            }
-        }
-    }
-
-    .us-container {
-        margin-top: 10px;
-        .popover { max-width: 400px; }
-        .us-preview-popover {
-            width: 370px;
-            section {
-                padding: 5px;
-            }
-        }
-
-        .us-table-list {
-            .flex-header {
-                display: -webkit-box;
-                display: -moz-box;
-                -webkit-box-orient: horizontal;
-                -moz-box-orient: horizontal;
-                border-bottom: 2px solid #666666;
-                width: 100%;
-                font-family: @ColabReg;
-                color: #333;
-            }
-            .flex-header > div:nth-child(1) {
-                -webkit-box-flex: 1;
-                -moz-box-flex: 1;
-            }
-            .flex-header > div {
-                padding: 5px;
-            }
-            .flex-body {
-                min-height: 40px;
-                .us-item {
-                    display: -webkit-box;
-                    display: -moz-box;
-                    -webkit-box-orient: horizontal;
-                    -moz-box-orient: horizontal;
-                    padding: 2px 0;
-                    border-bottom: 1px solid #eee;
-                    cursor: move;
-                    font-family: @ColabReg;
-                    font-size: .8em;
-                    &:hover {
-                        background-color: #f9f9f9;
-                    }
-                    width: 100%;
-                }
-                .us-item > div:nth-child(1) {
-                    -webkit-box-flex: 1;
-                    -moz-box-flex: 1;
-                }
-                .us-item > div {
-                    padding: 5px;
-                }
-            }
-
-            .us-title {
-                .label {
-                    margin-left: 5px;
-                    font-size: .9em;
-                    font-family: @ColabReg;
-                }
-            }
-
-            .us-points {
-                width: 50px;
-                text-align: center;
-                font-size: 1em;
-                font-family: @ColabReg;
-                &>a {
-                    color: #333;
-                    text-decoration: none;
-                    padding: 7px 16px;
-                    cursor: pointer;
-                    font-size: 1.4em;
-                }
-            }
-
-            .us-options {
-                width: 85px;
-                a{
-                    position: relative;
-                    width: 20px;
-                    margin-right: 4px;
-                    height: 20px;
-                    background: #000;
-                    display: inline-block;
-                    padding: 1px;
-                    border-radius:20px;
-                    &.btn-small-preview {
-                        background: url( '../img/backlog_sprite.png' ) no-repeat center 5px #666666;
-                    }
-                    &.btn-small-edit {
-                        background: url( '../img/backlog_sprite.png' ) no-repeat center -17px #669933;
-                    }
-                    &.btn-small-remove {
-                        background: url( '../img/backlog_sprite.png' ) no-repeat center -37px #cc0000;
-                    }
-                    &:hover{
-                        background-color: #333;
-                        transition: all 0.3s ease-in;
-                        .help-box{
-                            display: block;
-                        }
-                    }
-                    .help-box{
-                        position: absolute;
-                        top: -29px;
-                        border: 1px solid #669933;
-                        left: -25px;
-                        padding: 4px;
-                        width: 57px;
-                        height: 13px;
-                        text-align:center;
-                        color: #fff;
-                    }
-                }
-            }
-        }
-    }
-    .milestones {
-        .header-box {
-            background-color: #444;
-            padding: 10px;
-            overflow: hidden;
-            color: #ffffff;
-            .title-sbox > div { float: left; }
-            .title-sbox {
-                float: left;
-                overflow: hidden;
-                line-height: 26px;
-                .title {
-                    float: left;
-                    color: #FFFFFF;
-                    margin-right: 5px;
-                    font-family: 'LeagueGothicRegular';
-                    font-size: 2em;
-                    color: #FFFFFF;
-                    margin-right: 5px;
-                    margin-top: 2px;
-                }
-
-                .help {
-                    font-family: 'ColabThi';
-                    font-size: .8em;
-                    color: #EEE;
-                    width: 67px;
-                    line-height: 11px;
-                    margin-top: 3px;
-                }
-            }
-            .new-sprint{
-                float: right;
-                background: url('../img/sprint_ico.png') no-repeat 13px center #669933;
-                color: #fff;
-                padding: 7px 15px 7px 35px;
-                border: none;
-                box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-                cursor: pointer;
-                &:hover{
-                    background: url('../img/sprint_ico.png') no-repeat -30px center #333;
-                    -webkit-transition: all 0.3s ease-out;
-                    -moz-transition: all 0.3s ease-out;
-                    -o-transition: all 0.3s ease-out;
-                    transition: all 0.3s ease-out;
-                }
-            }
-        }
-
-        .milestone-form-box {
-            background-color: #f2f2f2;
-            border: 1px solid #666;
-            padding: 10px;
-            overflow: hidden;
-            form{
-                margin-bottom: 0px;
-                fieldset {
-                    overflow: hidden;
-                    padding-bottom: 10px;
-                    div.subfield {
-                        float: left;
-                        margin-right: 20px;
-                        input[type="date"] {
-                            width: 117px;
-                        }
-                    }
-                }
-                .btn-group {
-                    margin-top: 20px;
-                    float: right;
-                }
-            }
-        }
-        .sprints-box {
-            margin-top: 10px;
-            .sprints-box-title{
-                font-family: 'ColabReg';
-                font-size: 1em;
-                color: #333;
-                margin-top: 16px;
-                margin-bottom: 5px;
-                text-transform: uppercase;
-                  &:first-child{
-
-                }
-            }
-            .sprint-sbox {
-                margin-bottom: 15px;
-                opacity: 0.6;
-                .header {
-                    background-color: #d0d0d0;
-                    .title {
-                        padding: 5px;
-                        padding-bottom: 0px;
-                        a {
-                            text-decoration: none;
-                            color: #666;
-                            text-transform: uppercase;
-                            font-size: 1em;
-                            font-family: @ColabReg;
-                            &:hover{
-                                color: darken(#666, 20%);
-                            }
-                        }
-                    }
-                    .stats {
-                        padding: 3px 5px;
-                        color: white;
-                        overflow: hidden;
-
-                        .sprint-progress > div { float: left; }
-                        .sprint-progress {
-                            margin-right: 30px;
-                            float: left;
-                            overflow: hidden;
-
-
-                            .progress {
-                                width: 80px;
-                                height: 15px;
-                                margin-bottom: 0px;
-                                margin-right: 10px;
-                                padding: 2px;
-                                background: rgba(255, 255, 255, 0.6);
-                                .bar{
-                                    background-color: #999;
-                                    height: 13px;
-                                    position: relative;
-                                    top: 1px;
-                                    left: 0;
-                                }
-                            }
-
-                            .progress-indicator {
-                                font-family: 'LeagueGothicRegular';
-                                font-size: 1.1em;
-                                font-weight: bold;
-                                color: #999;
-                            }
-                        }
-                        .sprint-status {
-                            overflow: hidden;
-                            float: left;
-                            font-family: @ColabThi;
-                            .item > div { float: left; }
-                            .item {
-                                float: left;
-                                overflow: hidden;
-
-                                .indicator {
-                                    font-family: 'LeagueGothicRegular';
-                                    font-size: 1.1em;
-                                    font-weight: bold;
-                                    color: #999;
-                                    margin-right: 5px;
-                                }
-                                .help {
-                                    color: #999;
-                                    width: 57px;
-                                    line-height: 19px;
-                                    font-family: 'ColabThi';
-                                    font-size: .8em;
-                                    margin-top: 3px;
-                                }
-                            }
-                        }
-                    }
-                }
-                .body {
-                    padding-left: 5px;
-                    padding-right: 5px;
-                    padding-bottom: 5px;
-                    background-color: #d0d0d0;
-                    margin-bottom: 5px;
-                    .us-list {
-                        background-color: #f9f9f9;
-
-                        .us-table-list {
-                            .flex-body {
-                                min-height: 20px;
-                                .us-item {
-                                    display: -webkit-box;
-                                    display: -moz-box;
-                                    -webkit-box-orient: horizontal;
-                                    -moz-box-orient: horizontal;
-                                    border-bottom: 1px solid #c9c9c9;
-                                    width: 100%;
-                                    color: #999;
-                                    cursor: move;
-                                }
-                                .us-item > div:nth-child(1) {
-                                    -webkit-box-flex: 1;
-                                    -moz-box-flex: 1;
-                                }
-                                .us-item > div:nth-child(2) {
-                                    width: 40px;
-                                }
-                                .us-item > div {
-                                    padding: 5px;
-                                }
-                            }
-
-                            .us-points {
-                                width: 50px;
-                                text-align: center;
-                                color: #333;
-                                text-align: center;
-                                font-family: 'ColabReg';
-                                color: #999;
-                            }
-
-                            .us-priority {
-                                width: 70px;
-                            }
-                        }
-                    }
-                }
-                &.first{
-                    opacity: 1;
-                    margin-bottom: 30px;
-                    box-shadow: 1px 1px 1px 1px rgba(0,0,0,.6);
-                    .header {
-                        background-color: #555;
-                        .title {
-                            background-color: #555;
-                            a {
-                                color: #FFF;
-                                &:hover{
-                                    color: darken(#FFF, 20%);
-                                }
-                            }
-                            span{
-                                float: right;
-                                color: #fff;
-                                font-size: .9em;
-                                font-family: @ColabThi;
-                            }
-                        }
-                        .stats {
-                            color: #FFF;
-                            background: #555;
-                            .sprint-progress {
-                                .progress {
-                                    background: rgba(255, 255, 255, 1);
-                                    .bar{
-                                        background-color: #669933;
-                                    }
-                                }
-                                .progress-indicator {
-                                    color: #ccc;
-                                }
-                            }
-                            .sprint-status {
-                                .item {
-                                    .indicator {
-                                        color: #ccc;
-                                    }
-                                    .help {
-                                        color: #ccc;
-                                        font-family: 'ColabThi';
-                                        font-size: .8em;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    .body{
-                        background-color: #555;
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-
 
 /* Login */
 

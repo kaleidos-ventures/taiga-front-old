@@ -1,28 +1,22 @@
-<div class="row-fluid">
-    <div class="span12">
-        <div class="header-box">
-            <div class="logo-sbox">
-                <a class="greenmine-logo" href="" title="greenmine">Greenmine</a>
-                <a class="user" href="" title="{{ auth.fullname }}">{{ auth.fullname }}</a>
-            </div>
-            <div class="top-menu-sbox">
-                <div class="menu-item">
-                    <a class="logout" href="" ng-click="logout()">Logout</a>
-                </div>
-            </div>
-        </div>
-        <div class="nav" gm-header-menu>
-            <ul>
-                <li class="backlog"><a href="{{ urls.backlogUrl(projectId) }}" title="Backlog">Backlog</a></li>
-                <li class="dashboard" ng-show="sprintId"><a href="{{ urls.dashboardUrl(projectId, sprintId) }}" title="Dashboard">Dashboard</a></li>
-                <li class="issues"><a href="{{ urls.issuesUrl(projectId) }}" title="Issues">Issues</a></li>
-                <li class="wiki"><a href="{{ urls.wikiUrl(projectId, 'home') }}" title="wiki">Wiki</a></li>
-                <li class="search"><a href="" title="search">Search</a></li>
-                <li class="admin"><a href="" title="Administration panel">Admin</a></li>
-            </ul>
-        </div>
-        <div class="breadcrumb">
-            <div class="header-path" gm-breadcrumb></div>
-        </div>
+<div class="header-box">
+    <div class="logo-sbox">
+        <a class="greenmine-logo" href="" title="greenmine">Greenmine</a>
+        <a class="user" href="" title="{{ auth.fullname }}">{{ auth.fullname }}</a>
     </div>
+    <div class="top-menu-sbox">
+        <a class="logout" href="" ng-click="logout()">Logout</a>
+    </div>
+</div>
+<div class="nav" gm-header-menu>
+    <ul>
+        <li class="backlog"><a href="{{ urls.backlogUrl(projectId) }}" title="Backlog">Backlog</a></li>
+        <li class="dashboard" ng-show="sprintId"><a href="{{ urls.dashboardUrl(projectId, sprintId) }}" title="Dashboard">Dashboard</a></li>
+        <li class="issues"><a href="{{ urls.issuesUrl(projectId) }}" title="Issues">Issues</a></li>
+        <li class="wiki"><a href="{{ urls.wikiUrl(projectId, 'home') }}" title="wiki">Wiki</a></li>
+        <li class="search"><a href="" title="search">Search</a></li>
+        <li class="admin"><a href="" title="Administration panel">Admin</a></li>
+    </ul>
+</div>
+<div class="breadcrumb">
+    <div class="header-path" gm-breadcrumb></div>
 </div>
