@@ -55,9 +55,6 @@
                         <div class="tags-list-sbox">
                             <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
                                     ng-class="{selected: tag.selected}" gm-colorize-tag>
-                                <div class="icon">
-                                    <i class="icon-remove icon-white" ng-hide="!tag.selected"> </i>
-                                </div>
                                 <div class="name">{{ tag.name }}</div>
                                 <div class="count">{{ tag.count }}</div>
                             </div>

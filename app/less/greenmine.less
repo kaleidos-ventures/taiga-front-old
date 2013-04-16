@@ -10,13 +10,18 @@
 @grayVeryLighter:       #f2f2f2;
 
 /* Typography */
+/*
 @DroidSansRegular: 'DroidSansRegular';
 @DroidSansBold: 'DroidSansBold';
 @DroidSerifRegular: 'DroidSerifRegular';
 @DroidSerifBold: 'DroidSerifBold';
+*/
 @LeagueGothicRegular: 'LeagueGothicRegular';
 @LeagueGothicCondensed: 'LeagueGothicCondensed';
-@import "greenmine-generic.less";
+@ColabReg: 'ColabReg';
+@ColabThi: 'ColabThi';
+
+@import "greenmine-generic.less";   
 
 /* =============
  * MAIN STYLES
@@ -41,12 +46,12 @@
     border-bottom: 1px solid rgba(0,0,0,0.25);
     position: relative;
     cursor: pointer;
-    font-family: @DroidSansBold;
+    font-family: @ColabReg;
     padding: 10px 30px;
     text-shadow: -1px -1px #666, 1px 1px #ccc;
     color: #fff;
-    line-height: 1.1em;
-    font-size: 1.1em;
+    line-height: 0.8m;
+    font-size: 0.8em;
     &:hover{
         background: #bbb;
         color: darken(#fff, 30%);
@@ -98,7 +103,7 @@
                 display: block;
                 float: left;
                 &.greenmine-logo{
-                    font-size: 64px;
+                    font-size: 4em;
                     color: #333;
                     font-family: @LeagueGothicRegular;
                     &:hover{
@@ -106,7 +111,7 @@
                     }
                 }
                 &.user{
-                    font-size: 16px;
+                    font-size: 1em;
                     color: #FFF;
                     margin-top: 45px;
                     padding: 0 10px;
@@ -120,7 +125,7 @@
         .header-path {
             float: left;
             color: white;
-            font-size: 20px;
+            font-size: 1.2em;
             vertical-align: middle;
             line-height: 45px;
             padding-left: 10px;
@@ -143,19 +148,27 @@
         }
     }
     .nav {
-        background-color: #333333;
         ul {
             margin: 0px;
-            padding: 0px 5px;
+            background-color: #333333;
+            padding:0;
+            display: block;
+            clear: both;
+            overflow: hidden;
             li {
                 list-style: none;
                 text-align: center;
-                display: inline-block;
+                display: block;
+                float: left;
                 border-right: 1px solid #444;
                 padding: 5px 0;
+                background-color: #333333;
+                &:hover{
+                    background-color: darken(#333333, 15%);
+                }
                 a{
-                    font-size: 14px;
-                    font-weight: bold;
+                    font-family: 'ColabReg';
+                    font-size: 1em;
                     color: white;
                     text-decoration: none;
                     opacity: 0.6;
@@ -209,7 +222,7 @@
             padding: 5px 20px;
             color: #333;
             font-weight: bold;
-            font-size: small;
+            font-size: .7em;
         }
     }
 }
@@ -420,15 +433,15 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     margin-bottom: 5px;
                     margin-right: 5px;
                     padding: 5px;
-                    font-family: @DroidSansRegular;
-                    font-size: 13px;
+                    font-family: @ColabThi;
+                    font-size: 1em;
                     color: @white;
                     opacity: 0.3;
                     border-radius: 4px;
                     &.selected {
                         opacity: 1;
                         box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-                        font-family: @DroidSansBold;
+                        font-family: @ColabReg;
                         -webkit-transition: all 0.3s ease-out;
                         -moz-transition: all 0.3s ease-out;
                         -o-transition: all 0.3s ease-out;
@@ -480,7 +493,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 -moz-box-orient: horizontal;
                 border-bottom: 2px solid #666666;
                 width: 100%;
-                font-family: @DroidSansBold;
+                font-family: @ColabReg;
                 color: #333;
 
                 .issue-sortable-field {
@@ -503,7 +516,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     -moz-box-orient: horizontal;
                     padding: 2px 0;
                     border-bottom: 1px solid #eee;
-                    font-family: @DroidSansRegular;
+                    font-family: @ColabThi;
                     &:hover {
                         background-color: #f9f9f9;
                     }
@@ -682,7 +695,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
             border-radius: 0;
             display: block;
             text-shadow: none;
-            font-family: @DroidSansBold;
+            font-family: @ColabReg;
             text-shadow: 0 0 0.2em rgba(0,0,0,.3), 0 0 0.2em rgba(0,0,0,.3),0 0 0.2em rgba(0,0,0,.3);
         }
         .badge-inprogress {
@@ -728,15 +741,16 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 .info {
                     .title {
                         padding: 10px 15px;
-                        font-family: @DroidSansBold;
+                        font-family: @ColabReg;
                         color: @white;
-                        font-size: 14px;
+                        font-size: .8em;
                         text-align: center;
+                        font-weight: bold;
                     }
                     .description {
                         text-align: center;
                         padding: 10px 15px;
-                        font-size: 12px;
+                        font-size: .8em;
                         line-height: 14px;
                         p{
                             margin: 0;
@@ -799,19 +813,22 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                         cursor: move;
                         .title {
                             font-family: 'DroidSerifBold';
-                            font-size: 14px;
+                            font-size: .9em;
                             line-height: 15px;
                             color: #333;
                         }
                         .assign-to{
-                            color: #999;
                             padding: 5px 0;
+                            a{
+                                color: #999;
+                                font-size: .9em;
+                            }
                         }
                         .desc{
                             height: 80px;
                             overflow: hidden;
                             font-family: 'DroidSerif';
-                            font-size: 12px;
+                            font-size: .8em;
                             line-height: 13px;
                             margin: 0;
                         }
@@ -831,7 +848,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
         }
 
         .information-box {
-            font-family: @DroidSansRegular;
+            font-family: @ColabThi;
             background: #333333;
             color: #FFFFFF;
             .info-header {
@@ -852,18 +869,19 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     }
                     .indicator {
                         margin-left: 30px;
-                        font-size: 28px;
+                        font-size: 1.8em;
                         line-height: 25px;
                     }
                     .help {
                         margin-left: 10px;
-                        font-size: 10px;
+                        font-family: 'ColabThi';
+                        font-size: .8em;
                         line-height: 11px;
                     }
                 }
             }
             .info-rows {
-                font-family: @DroidSansRegular;
+                font-family: @ColabThi;
                 .row-item {
                     display: -webkit-box;
                     display: -moz-box;
@@ -881,11 +899,11 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                         padding: 10px 0;
                     }
                     .row-label {
-                        font-size: 18px;
+                        font-size: 1.1em;
                         width: 80px;
                         padding-left: 10px;
                         text-transform: uppercase;
-                        font-family: @DroidSansBold;
+                        font-family: @ColabReg;
                         background: rgba(255,255,255,.1);
                         margin-right: 20px;
                     }
@@ -893,14 +911,14 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                         margin-left: 7px;
                         line-height: 25px;
                         font-family: 'LeagueGothicRegular';
-                        font-size: 28px;
+                        font-size: 1.8em;
                         color: #FFFFFF;
                         margin-right: 5px;
                         margin-top: 2px;
                     }
                     .row-help {
                         margin-right: 20px;
-                        font-size: 10px;
+                        font-size: .7em;
                         line-height: 11px;
                     }
                 }
@@ -936,14 +954,14 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     }
     .progress-indicator {
         font-family: @LeagueGothicRegular;
-        font-size: 33px;
+        font-size: 2em;
         color: #FFFFFF;
         margin-right: 5px;
         margin-top: 2px;
     }
     .progress-help {
-        font-family: @DroidSansRegular;
-        font-size: 10px;
+        font-family: @ColabThi;
+        font-size: .9em;
         color: #EEE;
         width: 67px;
         line-height: 11px;
@@ -994,7 +1012,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
         margin-top: 10px;
     }
     .graphics-container {
-        font-family: @DroidSansRegular;
+        font-family: @ColabThi;
         .user-story-stats {
             background-color: #444;
             padding: 10px;
@@ -1026,14 +1044,14 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 }
                 .progress-indicator {
                     font-family: @LeagueGothicRegular;
-                    font-size: 33px;
+                    font-size: 2em;
                     color: #FFFFFF;
                     margin-right: 5px;
                     margin-top: 2px;
                 }
                 .progress-help {
-                    font-family: @DroidSansRegular;
-                    font-size: 10px;
+                    font-family: @ColabThi;
+                    font-size: .8em;
                     color: #EEE;
                     width: 67px;
                     line-height: 11px;
@@ -1051,14 +1069,14 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     }
                     .indicator {
                         font-family: @LeagueGothicRegular;
-                        font-size: 33px;
+                        font-size: 2em;
                         color: #FFFFFF;
                         margin-right: 5px;
                         margin-top: 2px;
                     }
                     .help {
-                        font-family: @DroidSansRegular;
-                        font-size: 10px;
+                        font-family: @ColabThi;
+                        font-size: 0.9em;
                         color: #EEE;
                         width: 67px;
                         line-height: 11px;
@@ -1140,15 +1158,15 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     margin-bottom: 5px;
                     margin-right: 5px;
                     padding: 5px;
-                    font-family: @DroidSansRegular;
-                    font-size: 13px;
+                    font-family: @ColabThi;
+                    font-size: 1.3em;
                     color: @white;
                     opacity: 0.3;
                     border-radius: 4px;
                     &.selected {
                         opacity: 1;
                         box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-                        font-family: @DroidSansBold;
+                        font-family: @ColabReg;
                         -webkit-transition: all 0.3s ease-out;
                         -moz-transition: all 0.3s ease-out;
                         -o-transition: all 0.3s ease-out;
@@ -1191,7 +1209,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                         .select2-input{
                             width: 100%;
                             padding: 8px 6px;
-                            font-family: @DroidSansRegular;
+                            font-family: @ColabThi;
                             color: #999;
                         }
                     }
@@ -1221,7 +1239,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 -moz-box-orient: horizontal;
                 border-bottom: 2px solid #666666;
                 width: 100%;
-                font-family: @DroidSansBold;
+                font-family: @ColabReg;
                 color: #333;
             }
             .flex-header > div:nth-child(1) {
@@ -1241,7 +1259,8 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     padding: 2px 0;
                     border-bottom: 1px solid #eee;
                     cursor: move;
-                    font-family: @DroidSansRegular;
+                    font-family: @ColabReg;
+                    font-size: .8em;
                     &:hover {
                         background-color: #f9f9f9;
                     }
@@ -1259,41 +1278,44 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
             .us-title {
                 .label {
                     margin-left: 5px;
+                    font-size: .9em;
+                    font-family: @ColabReg;
                 }
             }
 
             .us-points {
                 width: 50px;
                 text-align: center;
-                font-size: 14px;
-                font-family: @DroidSansBold;
-            }
-            .us-points > a {
-                color: #333;
-                text-decoration: none;
-                padding: 7px 16px;
-                cursor: pointer;
+                font-size: 1em;
+                font-family: @ColabReg;
+                &>a {
+                    color: #333;
+                    text-decoration: none;
+                    padding: 7px 16px;
+                    cursor: pointer;
+                    font-size: 1.4em;
+                }
             }
 
             .us-options {
                 width: 85px;
                 a{
                     position: relative;
-                    width: 16px;
+                    width: 20px;
                     margin-right: 4px;
-                    height: 16px;
+                    height: 20px;
                     background: #000;
                     display: inline-block;
                     padding: 1px;
-                    border-radius:2px;
+                    border-radius:20px;
                     &.btn-small-preview {
-                        background: url( '../img/backlog_sprite.png' ) no-repeat center 2px #666666;
+                        background: url( '../img/backlog_sprite.png' ) no-repeat center 5px #666666;
                     }
                     &.btn-small-edit {
-                        background: url( '../img/backlog_sprite.png' ) no-repeat center -20px #669933;
+                        background: url( '../img/backlog_sprite.png' ) no-repeat center -17px #669933;
                     }
                     &.btn-small-remove {
-                        background: url( '../img/backlog_sprite.png' ) no-repeat center -40px #cc0000;
+                        background: url( '../img/backlog_sprite.png' ) no-repeat center -37px #cc0000;
                     }
                     &:hover{
                         background-color: #333;
@@ -1333,15 +1355,15 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     color: #FFFFFF;
                     margin-right: 5px;
                     font-family: 'LeagueGothicRegular';
-                    font-size: 33px;
+                    font-size: 2em;
                     color: #FFFFFF;
                     margin-right: 5px;
                     margin-top: 2px;
                 }
 
                 .help {
-                    font-family: 'DroidSansRegular';
-                    font-size: 10px;
+                    font-family: 'ColabThi';
+                    font-size: .8em;
                     color: #EEE;
                     width: 67px;
                     line-height: 11px;
@@ -1393,8 +1415,8 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
         .sprints-box {
             margin-top: 10px;
             .sprints-box-title{
-                font-family: 'DroidSansBold';
-                font-size: 16px;
+                font-family: 'ColabReg';
+                font-size: 1em;
                 color: #333;
                 margin-top: 16px;
                 margin-bottom: 5px;
@@ -1411,13 +1433,12 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     .title {
                         padding: 5px;
                         padding-bottom: 0px;
-                        background-color: #c0c0c0;
                         a {
                             text-decoration: none;
                             color: #666;
                             text-transform: uppercase;
-                            font-size: 14px;
-                            font-family: @DroidSansBold;
+                            font-size: 1em;
+                            font-family: @ColabReg;
                             &:hover{
                                 color: darken(#666, 20%);
                             }
@@ -1453,7 +1474,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 
                             .progress-indicator {
                                 font-family: 'LeagueGothicRegular';
-                                font-size: 18px;
+                                font-size: 1.1em;
                                 font-weight: bold;
                                 color: #999;
                             }
@@ -1461,7 +1482,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                         .sprint-status {
                             overflow: hidden;
                             float: left;
-                            font-family: @DroidSansRegular;
+                            font-family: @ColabThi;
                             .item > div { float: left; }
                             .item {
                                 float: left;
@@ -1469,7 +1490,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 
                                 .indicator {
                                     font-family: 'LeagueGothicRegular';
-                                    font-size: 18px;
+                                    font-size: 1.1em;
                                     font-weight: bold;
                                     color: #999;
                                     margin-right: 5px;
@@ -1478,8 +1499,8 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                                     color: #999;
                                     width: 57px;
                                     line-height: 19px;
-                                    font-family: 'DroidSansRegular';
-                                    font-size: 10px;
+                                    font-family: 'ColabThi';
+                                    font-size: .8em;
                                     margin-top: 3px;
                                 }
                             }
@@ -1525,7 +1546,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                                 text-align: center;
                                 color: #333;
                                 text-align: center;
-                                font-family: 'DroidSansBold';
+                                font-family: 'ColabReg';
                                 color: #999;
                             }
 
@@ -1540,6 +1561,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     margin-bottom: 30px;
                     box-shadow: 1px 1px 1px 1px rgba(0,0,0,.6);
                     .header {
+                        background-color: #555;
                         .title {
                             background-color: #555;
                             a {
@@ -1551,8 +1573,8 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                             span{
                                 float: right;
                                 color: #fff;
-                                font-size: 12px;
-                                font-family: @DroidSansRegular;
+                                font-size: .9em;
+                                font-family: @ColabThi;
                             }
                         }
                         .stats {
@@ -1576,6 +1598,8 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                                     }
                                     .help {
                                         color: #ccc;
+                                        font-family: 'ColabThi';
+                                        font-size: .8em;
                                     }
                                 }
                             }
@@ -1624,14 +1648,14 @@ body.login {
                 margin-bottom: 0;
             }
             label{
-                font-family: @DroidSansBold;
+                font-family: @ColabReg;
                 color: #666;
                 margin-bottom: 2px;
             }
             input[type="text"], input[type="password"] {
                 width: 310px;
                 padding: 8px 6px;
-                font-family: @DroidSansRegular;
+                font-family: @ColabThi;
                 color: #ccc;
                 &:focus{
                     box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
@@ -1649,7 +1673,7 @@ body.login {
                 border: 0px;
                 .border-radius(4px);
                 padding: 10px;
-                font-family: @DroidSansBold;
+                font-family: @ColabReg;
                 float: right;
                 opacity: 0.4;
                 &:hover{
@@ -1681,9 +1705,9 @@ body.login {
         .login-message{
             margin-top: 10px;
             .loading{
-                font-family: @DroidSansBold;
+                font-family: @ColabReg;
                 color: @green;
-                font-size: 11px;
+                font-size: .7em;
                 margin: 0;
                 .loading-ico{
                     width: 16px;
@@ -1717,9 +1741,9 @@ body.login {
             .error{
                 background: @red;
                 color: @white;
-                font-family: @DroidSansBold;
+                font-family: @ColabReg;
                 padding: 2px 4px;
-                font-size: 11px;
+                font-size: .7em;
                 margin: 0;
                 text-align: center;
             }
@@ -1737,11 +1761,12 @@ form {
         padding: 0;
         margin-bottom: 10px;
         label{
-            font-family: @DroidSansBold;
+            font-family: @ColabReg;
             color: #666;
             margin-bottom: 2px;
             display: block;
             font-size: small;
+            font-size: 1em;
         }
         input[type="color"],
         input[type="email"],
@@ -1752,7 +1777,7 @@ form {
         input[type="url"], {
             width: 96%;
             padding: 8px 6px;
-            font-family: @DroidSansRegular;
+            font-family: @ColabThi;
             color: #999;
             border: 1px solid #aaa;
             //box-shadow:inset 3px 3px 6px -1px rgba(0, 0, 0, 0.2);
@@ -1768,7 +1793,7 @@ form {
         input[type="date"] {
             width: 96%;
             padding: 8px 6px;
-            font-family: @DroidSansRegular;
+            font-family: @ColabThi;
             color: #999;
             box-shadow:inset 3px 3px 6px -1px rgba(0, 0, 0, 0.2);
             &:focus{
@@ -1786,7 +1811,7 @@ form {
         select{
             width: 97%;
             padding: 8px 6px;
-            font-family: @DroidSansRegular;
+            font-family: @ColabThi;
             color: #000;
             background: #fff;
             border: 1px solid #cfcfcf;
@@ -1794,7 +1819,7 @@ form {
         textarea{
             width: 96%;
             padding: 8px 6px;
-            font-family: @DroidSansRegular;
+            font-family: @ColabThi;
             color: #ccc;
             border: none;
             border: 1px solid rgba(0,0,0,.2);
@@ -1906,8 +1931,8 @@ form {
                             display: block;
                             padding: 10px;
                             color: #669933;
-                            font-family: 'DroidSansBold';
-                            font-size: 14px;
+                            font-family: 'ColabReg';
+                            font-size: .9em;
                             color: #333;
                             &:hover{
                                 background: rgba(255,255,255,.1);
@@ -1927,7 +1952,7 @@ form {
                         //background-color: rgba(255,255,255,.6);
                         .border-radius(6px);
                         width: 32%;
-                        font-size: 18px;
+                        font-size: 1em;
                         margin: 0 5px 0 5px;
                         float: left;
                         display: block;
@@ -1936,11 +1961,45 @@ form {
                             vertical-align: middle;
                             padding: 80px 10px 15px;
                             display: block;
+                            color: #fff;
                             background: url(../img/project_ico.png) no-repeat center 10px rgba(0,0,0,.3);
                             &:hover{
                                 background: url(../img/project_ico.png) no-repeat center 7px rgba(102,153,51,0.3);
                                 transition: all 0.2s ease-in;
-                                color: #fff;
+                            }
+                            &.project-0{
+                                background: url(../img/project_ico.png) no-repeat center 10px rgba(154,23,21,0.1);
+                                &:hover{
+                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(154,23,21,0.3);
+                                }
+                            }
+                            &.project-1{
+                                background: url(../img/project_ico.png) no-repeat center 10px rgba(145,145,255,0.1);
+                                &:hover{
+                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(145,145,255,0.3);
+                                }
+                            }
+                            &.project-2{
+                                background: url(../img/project_ico.png) no-repeat center 10px rgba(135,255,21,0.1);
+                                &:hover{
+                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(135,255,21,0.3);
+                                }
+                            }
+                            &.project-3{
+                                background: url(../img/project_ico.png) no-repeat center 10px rgba(154,23,21,0.1);
+                                &:hover{
+                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(154,23,21,0.3);
+                                }
+                            }
+                            &.project-4{
+                                &:hover{
+                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(24,23,145,0.3);
+                                }
+                            }
+                            &.project-5{
+                                &:hover{
+                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(154,23,145,0.3);
+                                }
                             }
                         }
                         .meta {

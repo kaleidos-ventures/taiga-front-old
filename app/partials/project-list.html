@@ -13,7 +13,7 @@
         <div class="main latest-projects">
             <ul>
                 <li class="list-item" ng-repeat="project in projects | limitTo:6 ">
-                    <a href="{{ urls.backlogUrl(project.id) }}">{{ project.name }}</a>
+                    <a class="project-{{ $index }}" href="{{ urls.backlogUrl(project.id) }}">{{ project.name }}</a>
                 </li>
             </ul>
         </div>
