@@ -177,11 +177,11 @@
         </div>
 
     <script type="text/template" id="points-popover">
-        <div class="kk">
-            <div class="item" ng-repeat="obj in constants.pointsList">
+        <ul>
+            <li class="item" ng-repeat="obj in constants.pointsList">
                 <a class="btn-accept">{{ obj.name }}</a>
-            </div>
-        </div>
+            </li>
+        </ul>
     </script>
 
     <script type="text/template" id="us-preview-popover">
@@ -203,8 +203,8 @@
                     <strong>{{ us.subject }}</strong></p>
             </section>
             <section>
-                <input type="button" class="btn btn-success btn-accept" value="Delete" />
-                <input type="button" class="btn btn-cancel" value="Cancel" />
+                <input type="button" class="button button-success" value="Delete" />
+                <input type="button" class="button button-delete" value="Cancel" />
             </section>
         </div>
     </script>

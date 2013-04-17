@@ -230,7 +230,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 }
                 &.admin{
                     a{
-                        background: url('../img/nav_sprite.png') no-repeat 27px -243px
+                        background: url('../img/nav_sprite.png') no-repeat 31px -241px
                     }
                 }
             }
@@ -267,7 +267,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 float: left;
                 overflow: hidden;
                 line-height: 26px;
-                width: 33%;
+                width: 35%;
                 .progress {
                     width: 66%;
                     .bar {
@@ -286,9 +286,9 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 }
                 .progress-help {
                     font-family: @ColabThi;
-                    font-size: .8em;
+                    font-size: .9em;
                     color: #EEE;
-                    width: 67px;
+                    width: 70px;
                     line-height: 11px;
                     margin-top: 3px;
                 }
@@ -310,9 +310,9 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                         }
                         &.help {
                             font-family: @ColabThi;
-                            font-size: 0.9em;
+                            font-size: .9em;
                             color: #EEE;
-                            width: 67px;
+                            width: 70px;
                             line-height: 11px;
                             margin-top: 3px;
                         }
@@ -455,7 +455,16 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     .us-container {
         margin-top: 10px;
         .popover { 
-            max-width: 400px; 
+            max-width: 400px;
+            .arrow{
+                border-width: 0px;
+            }
+            a{
+                color: #333;
+                text-decoration: none;
+                text-align: center;
+                font-size: 1em;
+            }
         }
         .us-preview-popover {
             width: 370px;
@@ -506,31 +515,37 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     }
                 }
             }
-
             .us-title {
+                padding : 10px 0 0;
                 .label {
                     margin-left: 5px;
-                    font-size: .9em;
-                    font-family: @ColabReg;
+                    font-size: 1em;
+                    font-family: @ColabThi;
+                    &:last-child{
+                        margin-right: 10px;
+                    }
+                }
+                .title{
+                    font-size: 1.2em;
+                    font-family: @ColabThi;
                 }
             }
 
             .us-points {
                 width: 50px;
                 text-align: center;
-                font-size: 1em;
                 font-family: @ColabReg;
                 &>a {
                     color: #333;
                     text-decoration: none;
                     padding: 7px 16px;
                     cursor: pointer;
-                    font-size: 1.4em;
+                    font-size: 1.3em;
                 }
             }
 
             .us-options {
-                width: 85px;
+                width: 100px;
                 a{
                     position: relative;
                     width: 20px;
@@ -544,7 +559,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                         background: url( '../img/backlog_sprite.png' ) no-repeat center 5px #666666;
                     }
                     &.btn-small-edit {
-                        background: url( '../img/backlog_sprite.png' ) no-repeat center -17px #669933;
+                        background: url( '../img/backlog_sprite.png' ) no-repeat center -16px #669933;
                     }
                     &.btn-small-remove {
                         background: url( '../img/backlog_sprite.png' ) no-repeat center -37px #cc0000;
@@ -573,15 +588,17 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     }
     .milestones {
         .header-box {
-            background-color: #444;
+            background-color: #444444;
             padding: 10px;
             overflow: hidden;
             color: #ffffff;
-            .title-sbox > div { float: left; }
             .title-sbox {
                 float: left;
                 overflow: hidden;
                 line-height: 26px;
+                div{ 
+                    float: left; 
+                }
                 .title {
                     float: left;
                     color: #FFFFFF;
@@ -630,11 +647,11 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 fieldset {
                     overflow: hidden;
                     padding-bottom: 10px;
-                    div.subfield {
+                    .subfield {
                         float: left;
                         margin-right: 20px;
-                        input[type="date"] {
-                            width: 117px;
+                        input[type="text"] {
+                            width: 160px;
                         }
                     }
                 }
@@ -1603,14 +1620,14 @@ body.login {
                 margin-bottom: 0;
             }
             label{
-                font-family: @ColabReg;
+                font-family: 'ColabReg';
                 color: #666;
                 margin-bottom: 2px;
             }
             input[type="text"], input[type="password"] {
                 width: 310px;
                 padding: 8px 6px;
-                font-family: @ColabThi;
+                font-family: 'ColabReg';
                 color: #ccc;
                 &:focus{
                     box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
