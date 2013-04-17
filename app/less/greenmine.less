@@ -83,8 +83,15 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
         padding: 2px;
         background: rgba(255,255,255, 0.6);
         .bar {
-            background-color: #669900;
-            background-image: none;
+            background: rgb(102,153,51);
+            background: -moz-linear-gradient(left,  rgba(102,153,51,1) 0%, rgba(102,153,0,1) 40%, rgba(67,140,0,1) 57%, rgba(64,94,32,1) 99%);
+            background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(102,153,51,1)), color-stop(40%,rgba(102,153,0,1)), color-stop(57%,rgba(67,140,0,1)), color-stop(99%,rgba(64,94,32,1)));
+            background: -webkit-linear-gradient(left,  rgba(102,153,51,1) 0%,rgba(102,153,0,1) 40%,rgba(67,140,0,1) 57%,rgba(64,94,32,1) 99%);
+            background: -o-linear-gradient(left,  rgba(102,153,51,1) 0%,rgba(102,153,0,1) 40%,rgba(67,140,0,1) 57%,rgba(64,94,32,1) 99%);
+            background: -ms-linear-gradient(left,  rgba(102,153,51,1) 0%,rgba(102,153,0,1) 40%,rgba(67,140,0,1) 57%,rgba(64,94,32,1) 99%);
+            background: linear-gradient(to right,  rgba(102,153,51,1) 0%,rgba(102,153,0,1) 40%,rgba(67,140,0,1) 57%,rgba(64,94,32,1) 99%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#669933', endColorstr='#405e20',GradientType=1 );
+            
             height: 23px;
             position: relative;
             top: 1px;
@@ -667,12 +674,8 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 font-family: 'ColabReg';
                 font-size: 1em;
                 color: #333;
-                margin-top: 16px;
-                margin-bottom: 5px;
+                margin-top: 16px 0 5px;
                 text-transform: uppercase;
-                  &:first-child{
-
-                }
             }
             .sprint-sbox {
                 margin-bottom: 15px;
@@ -680,8 +683,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                 .header {
                     background-color: #d0d0d0;
                     .title {
-                        padding: 5px;
-                        padding-bottom: 0px;
+                        padding: 5px 0 0;
                         a {
                             text-decoration: none;
                             color: #666;
@@ -695,7 +697,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                     }
                     .stats {
                         padding: 3px 5px;
-                        color: white;
+                        color: #FFF;
                         overflow: hidden;
 
                         .sprint-progress > div { float: left; }
@@ -713,7 +715,15 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                                 padding: 2px;
                                 background: rgba(255, 255, 255, 0.6);
                                 .bar{
-                                    background-color: #999;
+                                    background: rgb(181,189,200);
+                                    background: -moz-linear-gradient(left,  rgba(181,189,200,1) 0%, rgba(130,140,149,1) 36%, rgba(109,109,109,1) 100%);
+                                    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(181,189,200,1)), color-stop(36%,rgba(130,140,149,1)), color-stop(100%,rgba(109,109,109,1)));
+                                    background: -webkit-linear-gradient(left,  rgba(181,189,200,1) 0%,rgba(130,140,149,1) 36%,rgba(109,109,109,1) 100%);
+                                    background: -o-linear-gradient(left,  rgba(181,189,200,1) 0%,rgba(130,140,149,1) 36%,rgba(109,109,109,1) 100%);
+                                    background: -ms-linear-gradient(left,  rgba(181,189,200,1) 0%,rgba(130,140,149,1) 36%,rgba(109,109,109,1) 100%);
+                                    background: linear-gradient(to right,  rgba(181,189,200,1) 0%,rgba(130,140,149,1) 36%,rgba(109,109,109,1) 100%);
+                                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b5bdc8', endColorstr='#6d6d6d',GradientType=1 );
+
                                     height: 13px;
                                     position: relative;
                                     top: 1px;
@@ -827,13 +837,19 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                             }
                         }
                         .stats {
-                            color: #FFF;
                             background: #555;
                             .sprint-progress {
                                 .progress {
                                     background: rgba(255, 255, 255, 1);
                                     .bar{
-                                        background-color: #669933;
+                                        background: rgb(102,153,51);
+                                        background: -moz-linear-gradient(left,  rgba(102,153,51,1) 0%, rgba(102,153,0,1) 40%, rgba(67,140,0,1) 57%, rgba(64,94,32,1) 99%);
+                                        background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(102,153,51,1)), color-stop(40%,rgba(102,153,0,1)), color-stop(57%,rgba(67,140,0,1)), color-stop(99%,rgba(64,94,32,1)));
+                                        background: -webkit-linear-gradient(left,  rgba(102,153,51,1) 0%,rgba(102,153,0,1) 40%,rgba(67,140,0,1) 57%,rgba(64,94,32,1) 99%);
+                                        background: -o-linear-gradient(left,  rgba(102,153,51,1) 0%,rgba(102,153,0,1) 40%,rgba(67,140,0,1) 57%,rgba(64,94,32,1) 99%);
+                                        background: -ms-linear-gradient(left,  rgba(102,153,51,1) 0%,rgba(102,153,0,1) 40%,rgba(67,140,0,1) 57%,rgba(64,94,32,1) 99%);
+                                        background: linear-gradient(to right,  rgba(102,153,51,1) 0%,rgba(102,153,0,1) 40%,rgba(67,140,0,1) 57%,rgba(64,94,32,1) 99%);
+                                        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#669933', endColorstr='#405e20',GradientType=1 );
                                     }
                                 }
                                 .progress-indicator {
@@ -864,33 +880,6 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 }
 
 /* ================================
- * WIKI
- * ================================ */
- 
-.wiki {
-    .wiki-container {
-        padding: 5px;
-    }
-    .wikiform-container {
-        padding: 5px;
-        textarea#wiki {
-            width: 98.5%;
-        }
-    }
-    .wiki-buttons {
-        padding: 5px;
-        padding-top: 2px;
-        float: right;
-        margin-right: 1%;
-    }
-
-    textarea#wiki {
-        border: 1px solid #ddd;
-        max-width: 99%;
-    }
-}
-
-/* ================================
  * BACKLOG
  * ================================ */
 
@@ -898,11 +887,10 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     .view-header,
     .view-footer {
         margin-top: 10px;
-        color: white;
+        color: #FFFFFF;
         padding: 5px;
         overflow: hidden;
         background-color:#666;
-
         .title {
             float: left;
         }
@@ -996,7 +984,8 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     }
 }
 
-.issues {
+.issues-content {
+    width: 100%;
     .new-issue{
         display: block;
         overflow: hidden;
@@ -1288,9 +1277,37 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 }
 
 
-/**********************
+/* ================================
+ * WIKI
+ * ================================ */
+ 
+.wiki {
+    .wiki-container {
+        padding: 5px;
+    }
+    .wikiform-container {
+        padding: 5px;
+        textarea#wiki {
+            width: 98.5%;
+        }
+    }
+    .wiki-buttons {
+        padding: 5px;
+        padding-top: 2px;
+        float: right;
+        margin-right: 1%;
+    }
+
+    textarea#wiki {
+        border: 1px solid #ddd;
+        max-width: 99%;
+    }
+}
+
+
+/* ==========================
  * DASHBOARD
- * *******************/
+ * ========================== */
 
 .dashboard {
     padding-left: 0px;
@@ -1491,8 +1508,14 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
                         height: 25px;
                         margin-bottom: 0px;
                         .bar {
-                            background-color: #669900;
-                            background-image: none;
+                            background: rgb(102,153,51);
+                            background: -moz-linear-gradient(left,  rgba(102,153,51,1) 0%, rgba(102,153,0,1) 40%, rgba(67,140,0,1) 57%, rgba(64,94,32,1) 99%);
+                            background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(102,153,51,1)), color-stop(40%,rgba(102,153,0,1)), color-stop(57%,rgba(67,140,0,1)), color-stop(99%,rgba(64,94,32,1)));
+                            background: -webkit-linear-gradient(left,  rgba(102,153,51,1) 0%,rgba(102,153,0,1) 40%,rgba(67,140,0,1) 57%,rgba(64,94,32,1) 99%);
+                            background: -o-linear-gradient(left,  rgba(102,153,51,1) 0%,rgba(102,153,0,1) 40%,rgba(67,140,0,1) 57%,rgba(64,94,32,1) 99%);
+                            background: -ms-linear-gradient(left,  rgba(102,153,51,1) 0%,rgba(102,153,0,1) 40%,rgba(67,140,0,1) 57%,rgba(64,94,32,1) 99%);
+                            background: linear-gradient(to right,  rgba(102,153,51,1) 0%,rgba(102,153,0,1) 40%,rgba(67,140,0,1) 57%,rgba(64,94,32,1) 99%);
+                            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#669933', endColorstr='#405e20',GradientType=1 );
                         }
                     }
                     .indicator {

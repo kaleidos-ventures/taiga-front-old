@@ -1,126 +1,111 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
-<div class="middle-container container-fluid issues">
-    <div class="row-fluid first-row">
-        <div class="span12">
-            <div class="new-issue">
-                <a class="button">
-                    New issue
-                </a>
-            </div>
-            <div class="filters-container">
-                <div class="filters-bar-sbox">
-                    <div class="title-sbox">
-                        <a href="" ng-class="{active: filtersOpened}" ng-click="filtersOpened=!filtersOpened">Filters</a>
-                    </div>
-                    <div class="filters-visual-box" ng-show="filtersOpened">
-                        <div class="tags-list-sbox">
-                            <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
-                                    ng-class="{selected: tag.selected}" gm-colorize-tag>
-                                <div class="icon">
-                                    <i class="icon-remove icon-white" ng-hide="!tag.selected"> </i>
-                                </div>
-                                <div class="name">{{ tag.name }}</div>
-                                <div class="count">{{ tag.count }}</div>
-                            </div>
+    <div class="middle-container container-fluid issues-content">
+        <div class="new-issue">
+            <a class="button">
+                New issue
+            </a>
+        </div>
+        <div class="filters-container">
+            <div class="filters-bar-sbox">
+                <div class="title-sbox">
+                    <a href="" ng-class="{active: filtersOpened}" ng-click="filtersOpened=!filtersOpened">Filters</a>
+                </div>
+                <div class="filters-visual-box" ng-show="filtersOpened">
+                    <div class="tags-list-sbox">
+                        <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
+                                ng-class="{selected: tag.selected}" gm-colorize-tag>
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
                 </div>
-                <div class="issue-form-sbox" ng-show="issueFormOpened">
-                    <form action="" ui-parsley="issueSubmit()">
-                        <fieldset>
-                            <div>Task text:</div>
-                            <textarea ng-model="issueForm.text" data-required="true"></textarea>
-                        </fieldset>
-                        <fieldset>
-                            <input type="submit" class="btn btn-success" value="Save" />
-                            <a href="" class="btn" ng-click="issueFormOpened=false">Close</a>
-                        </fieldset>
-                    </form>
-                </div>
-
-                <div class="filters-selected-box"></div>
+            </div>
+            <div class="issue-form-sbox" ng-show="issueFormOpened">
+                <form action="" ui-parsley="issueSubmit()">
+                    <fieldset>
+                        <div>Task text:</div>
+                        <textarea ng-model="issueForm.text" data-required="true"></textarea>
+                    </fieldset>
+                    <fieldset>
+                        <input type="submit" class="btn btn-success" value="Save" />
+                        <a href="" class="btn" ng-click="issueFormOpened=false">Close</a>
+                    </fieldset>
+                </form>
             </div>
 
-            <div class="issues-container">
-                <div class="issues-table-list">
-                    <div class="flex-header" gm-issues-sort>
-                        <div data-field="severity" class="issue-sortable-field issue-severity">
-                            <i class="icon-chevron-down"></i> Severity</div>
+            <div class="filters-selected-box"></div>
+        </div>
 
-                        <div data-field="subject" class="issue-sortable-field issue-title">
-                            <i class="icon-chevron-down"></i> Subject</div>
+        <div class="issues-container">
+            <div class="issues-table-list">
+                <div class="flex-header" gm-issues-sort>
+                    <div data-field="severity" class="issue-sortable-field issue-severity">Severity</div>
+                    <div data-field="subject" class="issue-sortable-field issue-title">Subject</div>
+                    <div data-field="state" class="issue-sortable-field issue-state">Status</div>
+                    <div data-field="priority" class="issue-sortable-field issue-priority">Priority</div>
+                    <div data-field="assigned_to" class="issue-sortable-field issue-assignedto">Assigned to</div>
 
-                        <div data-field="state" class="issue-sortable-field issue-state">
-                            <i class="icon-chevron-down"></i> Status</div>
-
-                        <div data-field="priority" class="issue-sortable-field issue-priority">
-                            <i class="icon-chevron-down"></i> Priority</div>
-
-                        <div data-field="assigned_to" class="issue-sortable-field issue-assignedto">
-                            <i class="icon-chevron-down"></i> Assigned to</div>
-
-                        <div class="issue-options">Options</div>
-                    </div>
-                    <div class="flex-separator"></div>
-                    <div class="flex-body">
-                        <div class="issue-item" ng-repeat="issue in pagedItems[currentPage]">
-                            <div class="issue-severity">
-                                <a href="" gm-popover="updateIssueSeverity(issue, selectedObj)"
-                                    data-tmpl="#severity-popover" data-auto-hide="true" class="severity-{{ resolveSeverity(issue.severity) | lowercase }}">{{ resolveSeverity(issue.severity) }}</a>
+                    <div class="issue-options">Options</div>
+                </div>
+                <div class="flex-separator"></div>
+                <div class="flex-body">
+                    <div class="issue-item" ng-repeat="issue in pagedItems[currentPage]">
+                        <div class="issue-severity">
+                            <a href="" gm-popover="updateIssueSeverity(issue, selectedObj)"
+                                data-tmpl="#severity-popover" data-auto-hide="true" class="severity-{{ resolveSeverity(issue.severity) | lowercase }}">{{ resolveSeverity(issue.severity) }}</a>
+                        </div>
+                        <div class="issue-title">
+                            <span class="title">{{ issue.subject }}</span>
+                            <span class="tags">
+                                <span ng-repeat="tag in issue.tags" class="label" gm-colorize-tag>{{ tag.name }}</span>
+                            </span>
+                        </div>
+                        <div class="issue-state">
+                            <a href="" gm-popover="updateIssueStatus(issue, selectedObj)"
+                                        data-tmpl="#status-popover">{{ resolveStatus(issue.status) }}</a>
+                        </div>
+                        <div class="issue-priority">
+                            <a href="" gm-popover="updateIssuePriority(issue, selectedObj)" class="priority-{{ resolvePriority(issue.priority) | lowercase }}"
+                                        data-tmpl="#priority-popover">{{ resolvePriority(issue.priority) }}</a>
+                        </div>
+                        <div class="issue-assignedto">
+                            <div class="button-item" ng-show="issue.assigned_to" >
+                                <i class="icon-user"></i>
+                                <a href="" gm-popover="updateIssueAssignation(issue, selectedObj)" data-tmpl="#developers-popover">
+                                   <span>{{ resolveUser(issue.assigned_to) }}</span>
+                                </a>
                             </div>
-                            <div class="issue-title">
-                                <span class="title">{{ issue.subject }}</span>
-                                <span class="tags">
-                                    <span ng-repeat="tag in issue.tags" class="label" gm-colorize-tag>{{ tag.name }}</span>
-                                </span>
-                            </div>
-                            <div class="issue-state">
-                                <a href="" gm-popover="updateIssueStatus(issue, selectedObj)"
-                                            data-tmpl="#status-popover">{{ resolveStatus(issue.status) }}</a>
-                            </div>
-                            <div class="issue-priority">
-                                <a href="" gm-popover="updateIssuePriority(issue, selectedObj)" class="priority-{{ resolvePriority(issue.priority) | lowercase }}"
-                                            data-tmpl="#priority-popover">{{ resolvePriority(issue.priority) }}</a>
-                            </div>
-                            <div class="issue-assignedto">
-                                <div class="button-item" ng-show="issue.assigned_to" >
-                                    <i class="icon-user"></i>
-                                    <a href="" gm-popover="updateIssueAssignation(issue, selectedObj)" data-tmpl="#developers-popover">
-                                       <span>{{ resolveUser(issue.assigned_to) }}</span>
-                                    </a>
-                                </div>
-                                <div class="button-item" ng-show="!issue.assigned_to">
-                                    <i class="icon-question-sign"></i>
-                                    <a href="" gm-popover="updateIssueAssignation(issue, selectedObj)" data-tmpl="#developers-popover">
-                                        <span>Unassigned</span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="issue-options">
-                                <a class="btn-small-preview" gm-preview-popover
-                                    data-template-selector="#issue-preview-popover">
-                                    <span class="help-box">Preview</span></a>
-                                <a class="btn-small-edit" href="{{ urls.issuesUrl(projectId, issue.id) }}"><span class="help-box">Edit</span></a>
-                                <a class="btn-small-remove" data-template-selector="#issue-remove-popover"
-                                    data-context="issue"><span class="help-box">Remove</span></a>
+                            <div class="button-item" ng-show="!issue.assigned_to">
+                                <i class="icon-question-sign"></i>
+                                <a href="" gm-popover="updateIssueAssignation(issue, selectedObj)" data-tmpl="#developers-popover">
+                                    <span>Unassigned</span>
+                                </a>
                             </div>
                         </div>
+                        <div class="issue-options">
+                            <a class="btn-small-preview" gm-preview-popover
+                                data-template-selector="#issue-preview-popover">
+                                <span class="help-box">Preview</span></a>
+                            <a class="btn-small-edit" href="{{ urls.issuesUrl(projectId, issue.id) }}"><span class="help-box">Edit</span></a>
+                            <a class="btn-small-remove" data-template-selector="#issue-remove-popover"
+                                data-context="issue"><span class="help-box">Remove</span></a>
+                        </div>
                     </div>
-                    <div class="pagination issues-pagination">
-                        <ul>
-                            <li ng-class="{disabled: currentPage == 0}">
-                                <a href ng-click="prevPage()">« Prev</a>
-                            </li>
-                            <li ng-repeat="n in range(pagedItems.length)"
-                                ng-class="{active: n == currentPage}"
-                            ng-click="setPage()">
-                                <a href ng-bind="n + 1">1</a>
-                            </li>
-                            <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                                <a href ng-click="nextPage()">Next »</a>
-                            </li>
-                        </ul>
-                    </div>
+                </div>
+                <div class="pagination issues-pagination">
+                    <ul>
+                        <li ng-class="{disabled: currentPage == 0}">
+                            <a href ng-click="prevPage()">« Prev</a>
+                        </li>
+                        <li ng-repeat="n in range(pagedItems.length)"
+                            ng-class="{active: n == currentPage}"
+                        ng-click="setPage()">
+                            <a href ng-bind="n + 1">1</a>
+                        </li>
+                        <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                            <a href ng-click="nextPage()">Next »</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
