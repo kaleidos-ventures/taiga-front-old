@@ -10,8 +10,8 @@
             </ul>
         </div>
         
-        <div class="main latest-projects">
-            <ul>
+        <div class="main projects-dashboard">
+            <ul class="latest-projects">
                 <li class="list-item" ng-repeat="project in projects | limitTo:6 ">
                     <a class="project-{{ $index }}" href="{{ urls.backlogUrl(project.id) }}">{{ project.name }}</a>
                 </li>
