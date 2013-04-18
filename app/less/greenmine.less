@@ -1,6 +1,12 @@
 /* =============
  * MAIN STYLES FOR GREENMINE
  * ============= */
+ 
+ /* Helpers */
+
+.hidden {
+    display: none;
+}
 
 .parsley-error-list{
     padding: 5px 0;
@@ -112,6 +118,146 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
         width: 67px;
         line-height: 11px;
         margin-top: 3px;
+    }
+}
+
+/* =========================================
+ * LOGIN
+ * ========================================= */
+
+body.login {
+    background: url("../img/login_bg.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+#login {
+    .center-box {
+        margin: auto;
+        padding-top: 20px;
+        width: 370px;
+        margin-top: 5%;
+        .logo-box {
+            text-align: center;
+        }
+        .form-container {
+            margin-top: 15px;
+            padding: 20px;
+            background: rgba(255,255,255,0.9);
+            box-shadow: 0px 2px 25px 1px #666;
+            .login-form{
+                margin: 0;
+                .form-field{
+                    margin-bottom: 10px;
+                    clear: both;
+                    &:last-child{
+                        margin-bottom: 0;
+                    }
+                    label{
+                        font-family: 'ColabReg';
+                        color: #666;
+                        margin-bottom: 2px;
+                    }
+                    input[type="text"], input[type="password"] {
+                        width: 310px;
+                        padding: 8px 6px;
+                        font-family: 'ColabReg';
+                        color: #ccc;
+                        &:focus{
+                            box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
+                            border-color: rgba(102,154,51,.6);
+                            outline: 0;
+                            color: #000;
+                            -webkit-transition: .3s ease-in-out;
+                            -moz-transition: .3s ease-in-out;
+                        }
+                    }
+                    .btn01 {
+                        width: 30%;
+                        background: #999;
+                        color: #ffffff;
+                        border: 0px;
+                        .border-radius(4px);
+                        padding: 10px;
+                        font-family: @ColabReg;
+                        float: right;
+                        opacity: 0.4;
+                        &:hover{
+                            -webkit-transition: .3s ease-in-out;
+                            -moz-transition: .3s ease-in-out;
+                            background: #669933;
+                            opacity: 1;
+                        }
+                    }
+                }
+                .forgot-pass{
+                    color: #ccc;
+                    float: left;
+                    font-size: .9em;
+                    display: block;
+                    clear: both;
+                    &:hover{
+                        text-decoration: none;
+                        color: #669933;
+                    }
+                }
+                .login-message{
+                    margin-top: 10px;
+                    .loading{
+                        font-family: @ColabReg;
+                        color: @green;
+                        font-size: .8em;
+                        margin: 0;
+                        .loading-ico{
+                            width: 16px;
+                            height: 16px;
+                            background: url("../img/loading-mine-16x16.png") no-repeat 0 0;
+                            display: block;
+                            float: left;
+                            -webkit-animation: spin 4s infinite linear;
+                            -moz-animation: spin 4s infinite linear;
+                            -o-animation: spin 4s infinite linear;
+                            -ms-animation: spin 4s infinite linear;
+                            margin: 1px 6px 0 0;
+                        }
+                        @-webkit-keyframes spin {
+                            0% { -webkit-transform: rotate(0deg);}
+                            100% { -webkit-transform: rotate(360deg);}
+                        }
+                        @-moz-keyframes spin {
+                            0% { -moz-transform: rotate(0deg);}
+                            100% { -moz-transform: rotate(360deg);}
+                        }
+                        @-o-keyframes spin {
+                            0% { -o-transform: rotate(0deg);}
+                            100% { -o-transform: rotate(360deg);}
+                        }
+                        @-ms-keyframes spin {
+                            0% { -ms-transform: rotate(0deg);}
+                            100% { -ms-transform: rotate(360deg);}
+                        }
+                    }
+                    .error{
+                        background: @red;
+                        color: @white;
+                        font-family: @ColabReg;
+                        padding: 2px 4px;
+                        font-size: .7em;
+                        margin: 0;
+                        text-align: center;
+                    }
+                }
+                
+            }
+            /* NOT ACTIVE SO FAR
+            p.register {
+                margin-top: 15px;
+                padding-top: 15px;
+                border-top: 1px solid #666666;
+                margin-bottom: 0px;
+                padding-bottom: 0px;
+            }
+            */
+        }
     }
 }
 
@@ -250,6 +396,160 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
             color: #333;
             font-family: @ColabReg;
             font-size: .8em;
+        }
+    }
+}
+
+/* =======================================
+ * PROJECTS PAGE
+ * ======================================= */
+
+.projects {
+    background: url(../img/desktop_bg.jpg) no-repeat center 5% fixed #555;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    .middle-container{
+        margin-top: 40px;
+        .project-list {
+            overflow: hidden;
+            .sidebar{
+                float: left;
+                width: 32%
+            }
+            .main{
+                float: right;
+                width: 65%;
+            }
+            .all-projects{
+                min-height: 90%;
+                ul{
+                    margin: 0;
+                    margin-left: 20px;
+                    list-style: none;
+                    padding: 0;
+                    li{
+                        margin: 1px 0;
+                        background: rgba(255,255,255,.3);
+                        a{
+                            display: block;
+                            padding: 10px;
+                            color: #669933;
+                            font-family: 'ColabReg';
+                            font-size: .9em;
+                            color: #333;
+                            &:hover{
+                                background: rgba(255,255,255,.1);
+                                color: #fff;
+                                transition: all 0.2s ease-in;
+                            }
+                        }
+                    }
+                }
+            }
+            .projects-dashboard{
+                ul{
+                    overflow: hidden;
+                    margin: 0;
+                    padding: 0;
+                    .list-item {
+                        //background-color: rgba(255,255,255,.6);
+                        .border-radius(6px);
+                        width: 32%;
+                        font-size: 1em;
+                        margin: 0 5px 0 5px;
+                        float: left;
+                        display: block;
+                        a{
+                            text-align: center;
+                            vertical-align: middle;
+                            padding: 80px 10px 15px;
+                            display: block;
+                            color: #fff;
+                            background: url(../img/project_ico.png) no-repeat center 14px rgba(0,0,0,.3);
+                            &:hover{
+                                background: url(../img/project_ico.png) no-repeat center 7px rgba(102,153,51,0.3);
+                                transition: all 0.2s ease-in;
+                            }
+                            &.project-0{
+                                background: url(../img/project_ico.png) no-repeat center 14px rgba(154,23,21,0.1);
+                                &:hover{
+                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(154,23,21,0.3);
+                                }
+                            }
+                            &.project-1{
+                                background: url(../img/project_ico.png) no-repeat center 14px rgba(145,145,255,0.1);
+                                &:hover{
+                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(145,145,255,0.3);
+                                }
+                            }
+                            &.project-2{
+                                background: url(../img/project_ico.png) no-repeat center 14px rgba(135,255,21,0.1);
+                                &:hover{
+                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(135,255,21,0.3);
+                                }
+                            }
+                            &.project-3{
+                                background: url(../img/project_ico.png) no-repeat center 14px rgba(154,23,21,0.1);
+                                &:hover{
+                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(154,23,21,0.3);
+                                }
+                            }
+                            &.project-4{
+                                background: url(../img/project_ico.png) no-repeat center 14px rgba(154,23,21,0.1);
+                                &:hover{
+                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(24,23,145,0.3);
+                                }
+                            }
+                            &.project-5{
+                                background: url(../img/project_ico.png) no-repeat center 14px rgba(154,23,21,0.1);
+                                &:hover{
+                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(154,23,145,0.3);
+                                }
+                            }
+                        }
+                        .meta {
+                            text-align: center;
+                            display: block;
+                            padding: 0 0 30px;
+                        }
+                    }
+                }
+            }
+            .issues-container {
+                margin: 30px 25px 0 0;
+                .flex-header{
+                    background: rgba(255,255,255,.3);
+                    div{
+                        color: #000;
+                        border-right: 1px solid #333;
+                        &:last-child{
+                            border: none;
+                        }
+                    }
+                }
+                .flex-body{
+                    .issue-item{
+                        padding: 0;
+                        background: rgba(255,255,255,.6);
+                        div{
+                            color: #000;
+                            border-right: 1px solid #666;
+                            &:last-child{
+                                border: none;
+                            }
+                            a{
+                                color: #000;
+                            }
+                        }
+                    }
+                }
+            }
+            .paginator-block {
+                padding: 5px;
+                color: @grayLighter;
+            }
         }
     }
 }
@@ -1605,141 +1905,9 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     }
 }
 
-/* Login */
-
-body.login {
-    background: url("../img/login_bg.jpg") no-repeat center center fixed;
-    background-size: cover;
-}
-
-#login {
-    .center-box {
-        margin: auto;
-        padding-top: 20px;
-        width: 370px;
-        margin-top: 5%;
-        .logo-box {
-            text-align: center;
-        }
-    }
-    .form-container {
-        margin-top: 15px;
-        padding: 20px;
-        background: rgba(255,255,255,0.9);
-        box-shadow: 0px 2px 25px 1px #666;
-        .login-form{
-            margin: 0;
-        }
-        .form-field{
-            margin-bottom: 10px;
-            &:last-child{
-                margin-bottom: 0;
-            }
-            label{
-                font-family: 'ColabReg';
-                color: #666;
-                margin-bottom: 2px;
-            }
-            input[type="text"], input[type="password"] {
-                width: 310px;
-                padding: 8px 6px;
-                font-family: 'ColabReg';
-                color: #ccc;
-                &:focus{
-                    box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
-                    border-color: rgba(102,154,51,.6);
-                    outline: 0;
-                    color: #000;
-                    -webkit-transition: .3s ease-in-out;
-                    -moz-transition: .3s ease-in-out;
-                }
-            }
-            input.btn01 {
-                width: 100px;
-                background: #999;
-                color: #ffffff;
-                border: 0px;
-                .border-radius(4px);
-                padding: 10px;
-                font-family: @ColabReg;
-                float: right;
-                opacity: 0.4;
-                &:hover{
-                    -webkit-transition: .3s ease-in-out;
-                    -moz-transition: .3s ease-in-out;
-                    background: @green;
-                    opacity: 1;
-                }
-            }
-        }
-        .forgot-pass {
-            a{
-                color: #ccc;
-                float: left;
-                font-size: 0.8em;
-                &:hover{
-                    text-decoration: none;
-                    color: @green;
-                }
-            }
-        }
-        p.register {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #666666;
-            margin-bottom: 0px;
-            padding-bottom: 0px;
-        }
-        .login-message{
-            margin-top: 10px;
-            .loading{
-                font-family: @ColabReg;
-                color: @green;
-                font-size: .7em;
-                margin: 0;
-                .loading-ico{
-                    width: 16px;
-                    height: 16px;
-                    background: url("../img/loading-mine-16x16.png") no-repeat 0 0;
-                    display: block;
-                    float: left;
-                    -webkit-animation: spin 4s infinite linear;
-                    -moz-animation: spin 4s infinite linear;
-                    -o-animation: spin 4s infinite linear;
-                    -ms-animation: spin 4s infinite linear;
-                    margin: 1px 6px 0 0;
-                }
-                @-webkit-keyframes spin {
-                    0% { -webkit-transform: rotate(0deg);}
-                    100% { -webkit-transform: rotate(360deg);}
-                }
-                @-moz-keyframes spin {
-                    0% { -moz-transform: rotate(0deg);}
-                    100% { -moz-transform: rotate(360deg);}
-                }
-                @-o-keyframes spin {
-                    0% { -o-transform: rotate(0deg);}
-                    100% { -o-transform: rotate(360deg);}
-                }
-                @-ms-keyframes spin {
-                    0% { -ms-transform: rotate(0deg);}
-                    100% { -ms-transform: rotate(360deg);}
-                }
-            }
-            .error{
-                background: @red;
-                color: @white;
-                font-family: @ColabReg;
-                padding: 2px 4px;
-                font-size: .7em;
-                margin: 0;
-                text-align: center;
-            }
-        }
-    }
-}
-
-/* Forms */
+/* ====================================
+ * FORM STYLES (extendable)
+ * ==================================== */
 form {
     margin: 0;
     padding: 0;
@@ -1824,6 +1992,10 @@ form {
     }
 }
 
+/* ====================================
+ * MODAL STYLES (extendable)
+ * ==================================== */
+
 .modal {
     .inline-form {
         input,
@@ -1880,176 +2052,4 @@ form {
         }
     }
 
-}
-
-
-
-/* Project List */
-
-.projects {
-    background: /*url("../img/noisy_grid.png") repeat 0 0,*/
-                url(../img/desktop_bg.jpg) no-repeat center 5% fixed #555;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    .middle-container{
-        margin-top: 40px;
-        .project-list {
-            overflow: hidden;
-            .sidebar{
-                float: left;
-                width: 32%
-            }
-            .main{
-                float: right;
-                width: 65%;
-            }
-            .all-projects{
-                min-height: 90%;
-                ul{
-                    margin: 0;
-                    margin-left: 20px;
-                    list-style: none;
-                    padding: 0;
-                    li{
-                        margin: 1px 0;
-                        background: rgba(255,255,255,.3);
-                        a{
-                            display: block;
-                            padding: 10px;
-                            color: #669933;
-                            font-family: 'ColabReg';
-                            font-size: .9em;
-                            color: #333;
-                            &:hover{
-                                background: rgba(255,255,255,.1);
-                                color: #fff;
-                                transition: all 0.2s ease-in;
-                            }
-                        }
-                    }
-                }
-            }
-            .projects-dashboard{
-                ul{
-                    overflow: hidden;
-                    margin: 0;
-                    padding: 0;
-                    .list-item {
-                        //background-color: rgba(255,255,255,.6);
-                        .border-radius(6px);
-                        width: 32%;
-                        font-size: 1em;
-                        margin: 0 5px 0 5px;
-                        float: left;
-                        display: block;
-                        a{
-                            text-align: center;
-                            vertical-align: middle;
-                            padding: 80px 10px 15px;
-                            display: block;
-                            color: #fff;
-                            background: url(../img/project_ico.png) no-repeat center 14px rgba(0,0,0,.3);
-                            &:hover{
-                                background: url(../img/project_ico.png) no-repeat center 7px rgba(102,153,51,0.3);
-                                transition: all 0.2s ease-in;
-                            }
-                            &.project-0{
-                                background: url(../img/project_ico.png) no-repeat center 14px rgba(154,23,21,0.1);
-                                &:hover{
-                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(154,23,21,0.3);
-                                }
-                            }
-                            &.project-1{
-                                background: url(../img/project_ico.png) no-repeat center 14px rgba(145,145,255,0.1);
-                                &:hover{
-                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(145,145,255,0.3);
-                                }
-                            }
-                            &.project-2{
-                                background: url(../img/project_ico.png) no-repeat center 14px rgba(135,255,21,0.1);
-                                &:hover{
-                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(135,255,21,0.3);
-                                }
-                            }
-                            &.project-3{
-                                background: url(../img/project_ico.png) no-repeat center 14px rgba(154,23,21,0.1);
-                                &:hover{
-                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(154,23,21,0.3);
-                                }
-                            }
-                            &.project-4{
-                                background: url(../img/project_ico.png) no-repeat center 14px rgba(154,23,21,0.1);
-                                &:hover{
-                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(24,23,145,0.3);
-                                }
-                            }
-                            &.project-5{
-                                background: url(../img/project_ico.png) no-repeat center 14px rgba(154,23,21,0.1);
-                                &:hover{
-                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(154,23,145,0.3);
-                                }
-                            }
-                        }
-                        .meta {
-                            text-align: center;
-                            display: block;
-                            padding: 0 0 30px;
-                        }
-                        /*
-                        .button {
-                            background: none repeat scroll 0 0 #666666;
-                            border: 0px;
-                            .border-radius(4px);
-                            font-family: @DroidSansBold;
-                            a {
-                                color: #ffffff;
-
-                            }
-                        }
-                        */
-                    }
-                }
-            }
-            .issues-container {
-                margin: 30px 25px 0 0;
-                .flex-header{
-                    background: rgba(255,255,255,.3);
-                    div{
-                        color: #000;
-                        border-right: 1px solid #333;
-                        &:last-child{
-                            border: none;
-                        }
-                    }
-                }
-                .flex-body{
-                    .issue-item{
-                        padding: 0;
-                        background: rgba(255,255,255,.6);
-                        div{
-                            color: #000;
-                            border-right: 1px solid #666;
-                            &:last-child{
-                                border: none;
-                            }
-                            a{
-                                color: #000;
-                            }
-                        }
-                    }
-                }
-            }
-            .paginator-block {
-                padding: 5px;
-                color: @grayLighter;
-            }
-        }
-    }
-
-}
-
-.hidden {
-    display: none;
 }

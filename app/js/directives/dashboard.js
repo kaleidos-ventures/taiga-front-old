@@ -53,22 +53,22 @@ angular.module('greenmine.directives.dashboard', []).
     }]).
     directive("gmCanvasTest", ["$parse", function($parse) {
         return function(scope, elm, atts) {
-            var element = angular.element(elm);
+           /* var element = angular.element(elm);
 
             var uniqId = _.uniqueId();
             var canvasElement = $("<canvas />")
-                    .attr({"width": element.width(), "height": element.height()})
-
-            element.empty()
+                    .attr({"width": element.width(), "height": element.height()});
+            
+            element.empty();
             element.append(canvasElement);
-
+            
             var ctx = canvasElement.get(0).getContext("2d");
-
+            
             var options = {
                 animation: false,
                 bezierCurve: false
             };
-
+            
             var data = {
                 labels : ["0", "1", "2", "3", "4", "5"],
                 datasets : [
@@ -88,7 +88,8 @@ angular.module('greenmine.directives.dashboard', []).
                     }
                 ]
             };
+            
+            var chart = new Chart(ctx).Line(data, options);*/
 
-            var chart = new Chart(ctx).Line(data, options);
         };
     }]);

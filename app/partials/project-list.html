@@ -16,6 +16,39 @@
                     <a class="project-{{ $index }}" href="{{ urls.backlogUrl(project.id) }}">{{ project.name }}</a>
                 </li>
             </ul>
+            
+            <div class="issues-container">
+                <div class="issues-table-list">
+                    <div class="flex-header"> <!-- gm-issues-sort -->
+                        <div data-field="severity" class="issue-sortable-field issue-severity">Severity</div>
+                        <div data-field="subject" class="issue-sortable-field issue-title">Subject</div>
+                        <div data-field="priority" class="issue-sortable-field issue-priority">Priority</div>
+                    </div>
+                    <div class="flex-separator"></div>
+                    <div class="flex-body">
+                        <div class="issue-item"> 
+                            <div class="issue-severity">
+                                <a href="" data-auto-hide="true" class="severity-">
+                                    High
+                                </a>
+                            </div>
+                            
+                            <div class="issue-title">
+                                <a href="" class="title">
+                                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumyeirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed  
+                                </a>
+                            </div>
+                            
+                            <div class="issue-priority">
+                                <a href="" class="priority-">
+                                     Critical
+                                </a>
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
     </div>
