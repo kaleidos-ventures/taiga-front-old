@@ -3,6 +3,7 @@
     <div class="project-list">
         
         <div class="sidebar all-projects">
+            <p class="projects-title">All projects</p>
             <ul>
                 <li ng-repeat="project in projects">
                     <a href="{{ urls.backlogUrl(project.id) }}">{{ project.name }}</a>
@@ -11,6 +12,7 @@
         </div>
         
         <div class="main projects-dashboard">
+            <p class="projects-title">Recent projects</p>
             <ul class="latest-projects">
                 <li class="list-item" ng-repeat="project in projects | limitTo:6 ">
                     <a class="project-{{ $index }}" href="{{ urls.backlogUrl(project.id) }}">{{ project.name }}</a>
@@ -18,6 +20,7 @@
             </ul>
             
             <div class="issues-container">
+                <p class="projects-title">Current Issues</p>
                 <div class="issues-table-list">
                     <div class="flex-header"> <!-- gm-issues-sort -->
                         <div data-field="severity" class="issue-sortable-field issue-severity">Severity</div>

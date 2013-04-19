@@ -410,6 +410,13 @@ body.login {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    .projects-title{
+        font-family: 'ColabReg';
+        font-size: 1em;
+        color: #FFF;
+        margin: 16px 0 5px;
+        text-transform: uppercase;
+    }
     .middle-container{
         margin-top: 40px;
         .project-list {
@@ -424,6 +431,9 @@ body.login {
             }
             .all-projects{
                 min-height: 90%;
+                .projects-title{
+                    margin-left: 20px;
+                }
                 ul{
                     margin: 0;
                     margin-left: 20px;
@@ -438,7 +448,7 @@ body.login {
                             color: #669933;
                             font-family: 'ColabReg';
                             font-size: .9em;
-                            color: #333;
+                            color: #000;
                             &:hover{
                                 background: rgba(255,255,255,.1);
                                 color: #fff;
@@ -454,7 +464,6 @@ body.login {
                     margin: 0;
                     padding: 0;
                     .list-item {
-                        //background-color: rgba(255,255,255,.6);
                         .border-radius(6px);
                         width: 32%;
                         font-size: 1em;
@@ -469,43 +478,43 @@ body.login {
                             color: #fff;
                             background: url(../img/project_ico.png) no-repeat center 14px rgba(0,0,0,.3);
                             &:hover{
-                                background: url(../img/project_ico.png) no-repeat center 7px rgba(102,153,51,0.3);
+                                background: url(../img/project_ico.png) no-repeat center 10px rgba(102,153,51,0.3);
                                 transition: all 0.2s ease-in;
                             }
                             &.project-0{
                                 background: url(../img/project_ico.png) no-repeat center 14px rgba(154,23,21,0.1);
                                 &:hover{
-                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(154,23,21,0.3);
+                                    background: url(../img/project_ico.png) no-repeat center 10px rgba(154,23,21,0.3);
                                 }
                             }
                             &.project-1{
                                 background: url(../img/project_ico.png) no-repeat center 14px rgba(145,145,255,0.1);
                                 &:hover{
-                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(145,145,255,0.3);
+                                    background: url(../img/project_ico.png) no-repeat center 10px rgba(145,145,255,0.3);
                                 }
                             }
                             &.project-2{
                                 background: url(../img/project_ico.png) no-repeat center 14px rgba(135,255,21,0.1);
                                 &:hover{
-                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(135,255,21,0.3);
+                                    background: url(../img/project_ico.png) no-repeat center 10px rgba(135,255,21,0.3);
                                 }
                             }
                             &.project-3{
                                 background: url(../img/project_ico.png) no-repeat center 14px rgba(154,23,21,0.1);
                                 &:hover{
-                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(154,23,21,0.3);
+                                    background: url(../img/project_ico.png) no-repeat center 10px rgba(154,23,21,0.3);
                                 }
                             }
                             &.project-4{
                                 background: url(../img/project_ico.png) no-repeat center 14px rgba(154,23,21,0.1);
                                 &:hover{
-                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(24,23,145,0.3);
+                                    background: url(../img/project_ico.png) no-repeat center 10px rgba(24,23,145,0.3);
                                 }
                             }
                             &.project-5{
                                 background: url(../img/project_ico.png) no-repeat center 14px rgba(154,23,21,0.1);
                                 &:hover{
-                                    background: url(../img/project_ico.png) no-repeat center 7px rgba(154,23,145,0.3);
+                                    background: url(../img/project_ico.png) no-repeat center 10px rgba(154,23,145,0.3);
                                 }
                             }
                         }
@@ -541,6 +550,9 @@ body.login {
                             }
                             a{
                                 color: #000;
+                                &:hover{
+                                    color: #333;
+                                }
                             }
                         }
                     }
@@ -974,7 +986,7 @@ body.login {
                 font-family: 'ColabReg';
                 font-size: 1em;
                 color: #333;
-                margin-top: 16px 0 5px;
+                margin: 16px 0 5px;
                 text-transform: uppercase;
             }
             .sprint-sbox {
@@ -983,7 +995,7 @@ body.login {
                 .header {
                     background-color: #d0d0d0;
                     .title {
-                        padding: 5px 0 0;
+                        padding: 5px 0 0 5px;
                         a {
                             text-decoration: none;
                             color: #666;
