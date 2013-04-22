@@ -3,11 +3,11 @@
     <head>
         <meta charset="utf-8" />
         <title>{{ pageTitle }}</title>
-        {%- if environment == "pro" %}
-        <link href="/less/greenmine.css" rel="stylesheet" type="text/css">
-        {%- else %}
-        <link rel="stylesheet/less" type="text/css" href="/less/greenmine-main.less">
+        {%- if development  %}
+        <link rel="stylesheet/less" type="text/css" href="/less/greenmine-main.less" />
         <script src="/js/lib/less-1.3.3.min.js"></script>
+        {%- else %}
+        <link href="/less/style.css" rel="stylesheet" type="text/css" />
         {%- endif %}
     </head>
     <body class="{{ '{{' }} pageSection {{ '}}' }}">
