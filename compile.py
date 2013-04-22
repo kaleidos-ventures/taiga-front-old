@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
+import io
 import sys
 import getopt
-import io
+import random
 
 from jinja2 import Environment, DictLoader
 
@@ -17,7 +18,7 @@ def compile(args):
         env = Environment(loader=DictLoader({"index.html": f.read()}))
 
     template = env.get_template("index.html")
-    ctx = {"environment": "pro" if _env == "pro" else "dev"}
+    ctx = {"n": random.randint(1, 20000), "development": (_env == "dev")}
 
     with io.open("app/index.html", "wt") as f:
         f.write(template.render(**ctx))

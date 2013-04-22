@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
+import random
+
 from werkzeug import SharedDataMiddleware
 
 from flask import Flask
@@ -20,10 +23,14 @@ app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
 
 @app.route('/')
 def index():
-    return render_template('index.jinja')
+    ctx = {"n": random.randint(1, 20000), "development": app.debug}
+    return render_template('index.jinja', **ctx)
 
 
 if __name__ == '__main__':
-    app.debug = True
+    if len(sys.argv) == 2 and sys.argv[1] == "pro":
+        app.debug = False
+    else:
+        app.debug = True
     app.run()
 

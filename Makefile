@@ -9,7 +9,7 @@ development: template
 production: less extern app template_prod
 
 less:
-	lessc --yui-compress app/less/style.less app/less/style.css
+	lessc --yui-compress app/less/greenmine-main.less app/less/style.css
 
 extern:
 	uglifyjs $(EXTERN_SOURCES) -c -o app/js/extern.min.js

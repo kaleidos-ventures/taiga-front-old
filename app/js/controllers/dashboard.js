@@ -178,4 +178,4 @@ var DashboardTaskController = function($scope, $q) {
     };
 };
 
-dashboardtaskcontroller.$inject = ['$scope', '$q'];
+DashboardTaskController.$inject = ['$scope', '$q'];
