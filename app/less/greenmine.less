@@ -588,7 +588,7 @@ body.login {
                 line-height: 26px;
                 width: 35%;
                 .progress {
-                    width: 66%;
+                    width: 50%;
                     .bar {
                         background-color: #669900;
                         height: 23px;
@@ -822,11 +822,11 @@ body.login {
                     font-family: @ColabReg;
                     font-size: .8em;
                     width: 100%;
+
                     &:hover {
                         background-color: #f9f9f9;
                     }
-                    div{
-                        padding: 5px;
+                    &> div{
                         &:nth-child(1) {
                             -webkit-box-flex: 1;
                             -moz-box-flex: 1;
@@ -835,7 +835,6 @@ body.login {
                 }
             }
             .us-title {
-                padding : 10px 0 0;
                 .label {
                     margin-left: 5px;
                     font-size: 1em;
@@ -850,7 +849,12 @@ body.login {
                 }
             }
 
+            .us-title {
+                padding: 7px;
+            }
+
             .us-points {
+                padding: 7px;
                 width: 50px;
                 text-align: center;
                 font-family: @ColabReg;
@@ -864,6 +868,7 @@ body.login {
             }
 
             .us-options {
+                padding: 4px;
                 width: 100px;
                 a{
                     position: relative;
