@@ -1453,6 +1453,7 @@ body.login {
                 }
             }
         }
+
         .flex-body {
             min-height: 40px;
             .issue-item {
@@ -1460,26 +1461,29 @@ body.login {
                 display: -moz-box;
                 -webkit-box-orient: horizontal;
                 -moz-box-orient: horizontal;
-                padding: 2px 0;
                 width: 100%;
-                div{
-                    padding: 5px;
-                }
+
                 div:nth-child(2) {
                     -webkit-box-flex: 1;
                     -moz-box-flex: 1;
                 }
             }
+
+            .popover {
+                font-size: 14px;
+            }
         }
 
 
         .issue-title {
+            padding: 10px;
             .label {
                 margin-left: 5px;
             }
         }
 
         .issue-severity {
+            padding: 10px;
             width: 90px;
             .severity-wishlist{
                 color: #ccc;
@@ -1499,11 +1503,14 @@ body.login {
         }
 
         .issue-state {
+            padding: 10px;
             width: 100px;
         }
 
         .issue-priority {
+            padding: 10px;
             width: 90px;
+
             .priority-low{
                 color: #ccc;
             }
@@ -1515,7 +1522,12 @@ body.login {
             }
         }
 
+        .issue-assignedto {
+            padding: 10px;
+        }
+
         .issue-options {
+            padding: 4px;
             width: 120px;
             a{
                 position: relative;

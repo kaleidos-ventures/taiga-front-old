@@ -13,7 +13,7 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
 
     $scope.filteredItems = [];
     $scope.groupedItems = [];
-    $scope.itemsPerPage = 10;
+    $scope.itemsPerPage = 20;
     $scope.pagedItems = [];
     $scope.currentPage = 0;
 
