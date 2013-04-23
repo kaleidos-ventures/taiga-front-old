@@ -53,10 +53,10 @@
                             data-tmpl="#severity-popover" data-auto-hide="true" class="severity-{{ resolveSeverity(issue.severity) | lowercase }}">{{ resolveSeverity(issue.severity) }}</a>
                     </div>
                     <div class="issue-title">
-                        <span class="title">{{ issue.subject }}</span>
                         <span class="tags">
-                            <span ng-repeat="tag in issue.tags" class="label" gm-colorize-tag>{{ tag.name }}</span>
+                            <span ng-repeat="tag in issue.tags" class="label" gm-colorize-tag>{{ tag }}</span>
                         </span>
+                        <span class="title">{{ issue.subject }}</span>
                     </div>
                     <div class="issue-state">
                         <a href="" gm-popover="updateIssueStatus(issue, selectedObj)"
