@@ -40,7 +40,35 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
         $scope.tags = tags;
     };
 
+    var generateAssignedToTags = function() {
+        var users = $rootScope.constants.usersList
+
+        $scope.assignedToTags = _.map(users, function(user) {
+            var issues = _.filter($scope.issues, {"assigned_to": user.id});
+            return {"id": user.id, "name": user.username, "count": issues.length};
+        });
+    };
+
+    var generateStatusTags = function() {
+        var statuses = $rootScope.constants.statusList;
+
+        $scope.statusTags = _.map(statuses, function(status) {
+            var issues = _.filter($scope.issues, {"status": status.id});
+            return {"id": status.id, "name": status.name, "count": issues.length};
+        });
+    }
+
+    var regenerateTags = function() {
+        generateTagList();
+        generateAssignedToTags();
+        generateStatusTags();
+    };
+
     var filterIssues = function() {
+        /* Reinitialize */
+        _.each($scope.issues, function(item) {  item.__hidden = false; });
+
+        /* Filter by generic tags */
         var selectedTags = _.filter($scope.tags, function(item) { return item.selected });
         var selectedTagsIds = _.map(selectedTags, function(item) { return item.name });
 
@@ -55,8 +83,33 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
                     item.__hidden = false;
                 }
             });
-        } else {
-            _.each($scope.issues, function(item) {  item.__hidden = false; });
+        }
+
+        /* Filter by assigned to tags */
+        var selectedUsers = _.filter($scope.assignedToTags, "selected");
+
+        if (!_.isEmpty(selectedUsers)) {
+            _.each($scope.issues, function(item) {
+                if (item.__hidden) return;
+
+                var result = _.some(selectedUsers, {"id": item.assigned_to});
+                if (!result) {
+                    item.__hidden = true;
+                }
+            });
+        }
+
+        /* Filter by status tags */
+        var selectedStatuses = _.filter($scope.statusTags, "selected");
+        if (!_.isEmpty(selectedStatuses)) {
+            _.each($scope.issues, function(item) {
+                if (item.__hidden) return;
+
+                var result = _.some(selectedStatuses, {"id": item.status});
+                if (!result) {
+                    item.__hidden = true;
+                }
+            });
         }
 
         groupToPages();
@@ -116,7 +169,6 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
         filterIssues();
     };
 
-
     $scope.$watch("sortingOrder", groupToPages);
     $scope.$watch("reverse", groupToPages);
 
@@ -153,7 +205,7 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
             return (issue.project === projectId);
         });
 
-        generateTagList();
+        regenerateTags();
         filterIssues();
     });
 
@@ -184,13 +236,13 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
                     $scope.form = {};
                     $scope.issues.push(us);
 
-                    generateTagList();
+                    regenerateTags();
                     filterIssues();
                 });
         } else {
             $scope.form.save().then(function() {
                 $scope.form = {};
-                generateTagList();
+                regenerateTags();
                 filterIssues();
             });
         }
@@ -203,7 +255,7 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
             var index = $scope.issues.indexOf(issue);
             $scope.issues.splice(index, 1);
 
-            generateTagList();
+            regenerateTags();
             filterIssues();
         });
     };
