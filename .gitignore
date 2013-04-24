@@ -1,2 +1,6 @@
 *.swp
+*.pyc
 app/index.html
+app/js/extern.min.js
+app/js/greenmine.min.js
+app/less/style.css
