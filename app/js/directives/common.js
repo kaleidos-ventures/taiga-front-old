@@ -256,9 +256,9 @@ angular.module('greenmine.directives.common', []).
                     var template = _.str.trim($(element.data('tmpl')).html());
                     template = angular.element($.parseHTML(template));
 
-
                     scope.$apply(function() {
                         $compile(template)(scope);
+                        //scope.$emit("popover:close");
                     });
 
                     element.popover({
@@ -314,6 +314,10 @@ angular.module('greenmine.directives.common', []).
                         element.data('state', 'open');
                     });
                 }
+
+                scope.$on("popover:close", function() {
+                    element.popover('hide');
+                });
             }
         };
     }]).
@@ -366,7 +370,7 @@ angular.module('greenmine.directives.common', []).
             }
         };
     }]);
-    
+
     //~ directive('gmFlashMessageSuccess', function() {
         //~ return function(scope, elm, attrs) {
             //~ var element = angular.element(elm);
