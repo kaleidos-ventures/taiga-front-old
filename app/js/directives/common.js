@@ -366,3 +366,16 @@ angular.module('greenmine.directives.common', []).
             }
         };
     }]);
+    
+    //~ directive('gmFlashMessageSuccess', function() {
+        //~ return function(scope, elm, attrs) {
+            //~ var element = angular.element(elm);
+            //~ element.fadeIn().delay(2000).fadeOut();
+        //~ };
+    //~ }).
+    //~ directive('gmFlashMessageFail', function() {
+        //~ return function(scope, elm, attrs) {
+            //~ var element = angular.element(elm);
+            //~ element.fadeIn().delay(2000).fadeOut();
+        //~ };
+    //~ }).
