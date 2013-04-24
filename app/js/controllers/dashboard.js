@@ -108,6 +108,7 @@ var DashboardController = function($scope, $rootScope, $routeParams, $q, rs) {
         $scope.statusesList = _.sortBy(statuses, 'id')
         $scope.userstoriesList = _.sortBy(userstories, 'id');
 
+        $scope.tasks = tasks;
         $scope.userstories = {};
         $scope.statuses = {};
 
@@ -117,9 +118,8 @@ var DashboardController = function($scope, $rootScope, $routeParams, $q, rs) {
         _.each(points, function(item) { $rootScope.constants.points[item.id] = item; });
         _.each(users, function(item) { $rootScope.constants.users[item.id] = item; });
 
-        $scope.tasks = tasks
+        // HACK: must be deleted on the near future
         $scope.tasks = _.filter(tasks, function(task) {
-            // HACK
             return (task.milestone == sprintId && task.project == projectId);
         });
 

@@ -129,11 +129,27 @@
                             data-error-message="Required"
                             ng-model="form.subject"></input>
                     </fieldset>
+                </div>
+                <div class="fieldset-row">
                     <fieldset>
                         <label>Status</label>
                         <select class="status" name="status" ng-model="form.status" data-required="true"
                             data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.name for c in statuses|orderBy:'order'"></select>
+                            ng-options="c.id as c.name for c in constants.statusList|orderBy:'order'"></select>
+                        </select>
+                    </fieldset>
+                    <fieldset>
+                        <label>Priority</label>
+                        <select class="priority" name="status" ng-model="form.priority" data-required="true"
+                            data-type="number" data-error-message="Required"
+                            ng-options="c.id as c.name for c in constants.priorityList|orderBy:'order'"></select>
+                        </select>
+                    </fieldset>
+                    <fieldset>
+                        <label>Severity</label>
+                        <select class="severity" name="status" ng-model="form.severity" data-required="true"
+                            data-type="number" data-error-message="Required"
+                            ng-options="c.id as c.name for c in constants.severityList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                 </div>
