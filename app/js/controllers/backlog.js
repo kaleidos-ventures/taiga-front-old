@@ -224,7 +224,6 @@ var BacklogUserStoriesCtrl = function($scope, $rootScope, $q, rs) {
     };
 
     /* Signal Handlign */
-
     $scope.$on("sortable:changed", resortUserStories);
 };
 
@@ -257,25 +256,33 @@ var BacklogMilestonesController = function($scope, $rootScope, rs) {
     };
 
     $scope.$on("points:loaded", function() {
-        rs.getMilestones($rootScope.projectId).
-            then(function(data) {
-                // HACK: because django-filter does not works properly
-                // $scope.milestones = data;
-                $scope.milestones = _.filter(data, function(item) {
-                    return item.project === $rootScope.projectId;
-                });
-
-                $scope.$emit("milestones:loaded", $scope.milestones);
-                calculateStats();
+        rs.getMilestones($rootScope.projectId).then(function(data) {
+            // HACK: because django-filter does not works properly
+            // $scope.milestones = data;
+            $scope.milestones = _.filter(data, function(item) {
+                return item.project === $rootScope.projectId;
             });
+
+            calculateStats();
+
+            $scope.$emit("milestones:loaded", $scope.milestones);
+        });
     });
 
     $scope.sprintSubmit = function() {
         if ($scope.form.save === undefined) {
             rs.createMilestone($scope.projectId, $scope.form).then(function(milestone) {
                 $scope.milestones.unshift(milestone);
+
+                // Clear the current form after creating
+                // of new sprint is completed
                 $scope.form = {};
                 $scope.sprintFormOpened = false;
+
+                // Update the sprintId value for correct
+                // linking of dashboard menu item to the
+                // last created milestone
+                $rootScope.sprintId = milestone.id
             });
         } else {
             $scope.form.save().then(function() {
