@@ -238,6 +238,7 @@ angular.module('greenmine.directives.common', []).
             link: function(scope, elm, attrs) {
                 var fn = $parse(attrs.gmPopover);
                 var element = angular.element(elm);
+
                 var autoHide = element.data('auto-hide')
                 var placement = element.data('placement') || 'right';
 
@@ -258,8 +259,8 @@ angular.module('greenmine.directives.common', []).
 
                     scope.$apply(function() {
                         $compile(template)(scope);
-                        //scope.$emit("popover:close");
                     });
+
 
                     element.popover({
                         content: template,
@@ -306,7 +307,7 @@ angular.module('greenmine.directives.common', []).
                     parentElement.on("mouseleave", ".popover", function(event) {
                         var target = angular.element(event.currentTarget);
                         element.data('state', 'closing');
-                        _.delay(closeHandler, 1000);
+                        _.delay(closeHandler, 200);
                     });
 
                     parentElement.on("mouseenter", ".popover", function(event) {
@@ -314,10 +315,6 @@ angular.module('greenmine.directives.common', []).
                         element.data('state', 'open');
                     });
                 }
-
-                scope.$on("popover:close", function() {
-                    element.popover('hide');
-                });
             }
         };
     }]).

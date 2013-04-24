@@ -81,7 +81,7 @@
                         </div>
                         <div class="us-points">
                             <a href="" gm-popover="saveUsPoints(us, selectedId)"
-                                data-tmpl="#points-popover">{{ resolvePoints(us.points) }}</a>
+                                data-tmpl="#points-popover" data-auto-hide="true">{{ resolvePoints(us.points) }}</a>
                         </div>
                         <div class="us-options">
                             <a class="btn-small-preview" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">
@@ -177,11 +177,13 @@
     </div>
 </div>
 <script type="text/template" id="points-popover">
-    <ul>
-        <li class="item" ng-repeat="obj in constants.pointsList">
-            <a data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
-        </li>
-    </ul>
+    <div class="us-points-popover">
+        <ul>
+            <li class="item btn-accept" ng-repeat="obj in constants.pointsList" data-id="{{ obj.id }}">
+                <a href="">{{ obj.name }}</a>
+            </li>
+        </ul>
+    </div>
 </script>
 
 <script type="text/template" id="us-preview-popover">
