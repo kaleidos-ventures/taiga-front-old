@@ -157,23 +157,23 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
         filterIssues();
     });
 
-    $scope.updateIssueAssignation = function(issue, obj) {
-        issue.assigned_to = obj.id;
+    $scope.updateIssueAssignation = function(issue, id) {
+        issue.assigned_to = id || null;
         issue.save();
     };
 
-    $scope.updateIssueStatus = function(issue, obj) {
-        issue.status = obj.id;
+    $scope.updateIssueStatus = function(issue, id) {
+        issue.status = id;
         issue.save();
     };
 
-    $scope.updateIssueSeverity = function(issue, obj) {
-        issue.severity = obj.id;
+    $scope.updateIssueSeverity = function(issue, id) {
+        issue.severity = id;
         issue.save();
     };
 
-    $scope.updateIssuePriority = function(issue, obj) {
-        issue.priority = obj.id;
+    $scope.updateIssuePriority = function(issue, id) {
+        issue.priority = id;
         issue.save();
     };
 

@@ -1,7 +1,7 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container issues-content">
     <div class="new-issue">
-        <a class="button">New issue</a>
+        <a class="button" gm-modal="#new-issue-modal">New issue</a>
     </div>
     <div class="filters-container">
         <div class="filters-bar-sbox">
@@ -49,7 +49,7 @@
             <div class="flex-body">
                 <div class="issue-item" ng-repeat="issue in pagedItems[currentPage]">
                     <div class="issue-severity">
-                        <a href="" gm-popover="updateIssueSeverity(issue, selectedObj)"
+                        <a href="" gm-popover="updateIssueSeverity(issue, selectedId)"
                             data-tmpl="#severity-popover" data-auto-hide="true" class="severity-{{ resolveSeverity(issue.severity) | lowercase }}">{{ resolveSeverity(issue.severity) }}</a>
                     </div>
                     <div class="issue-title">
@@ -59,23 +59,23 @@
                         <span class="title">{{ issue.subject }}</span>
                     </div>
                     <div class="issue-state">
-                        <a href="" gm-popover="updateIssueStatus(issue, selectedObj)"
+                        <a href="" gm-popover="updateIssueStatus(issue, selectedId)"
                                     data-tmpl="#status-popover">{{ resolveStatus(issue.status) }}</a>
                     </div>
                     <div class="issue-priority">
-                        <a href="" gm-popover="updateIssuePriority(issue, selectedObj)" class="priority-{{ resolvePriority(issue.priority) | lowercase }}"
+                        <a href="" gm-popover="updateIssuePriority(issue, selectedId)" class="priority-{{ resolvePriority(issue.priority) | lowercase }}"
                                     data-tmpl="#priority-popover">{{ resolvePriority(issue.priority) }}</a>
                     </div>
                     <div class="issue-assignedto">
                         <div class="button-item" ng-show="issue.assigned_to" >
                             <i class="icon-user"></i>
-                            <a href="" gm-popover="updateIssueAssignation(issue, selectedObj)" data-tmpl="#developers-popover">
+                            <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover">
                                <span>{{ resolveUser(issue.assigned_to) }}</span>
                             </a>
                         </div>
                         <div class="button-item" ng-show="!issue.assigned_to">
                             <i class="icon-question-sign"></i>
-                            <a href="" gm-popover="updateIssueAssignation(issue, selectedObj)" data-tmpl="#developers-popover">
+                            <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover">
                                 <span>Unassigned</span>
                             </a>
                         </div>
@@ -117,9 +117,9 @@
 </div>
 <script type="text/template" id="new-issue-modal">
     <div class="new-issue-modal modal hide">
-        <form class="inline-form issue-form" ui-parsley="submitTask()">
+        <form class="inline-form issue-form" ui-parsley="submitIssue()">
             <div class="modal-header">
-                <h3>Modal title</h3>
+                <h3>New issue:</h3>
             </div>
             <div class="modal-body">
                 <div class="fieldset-row">
@@ -189,7 +189,7 @@
         <ul>
             <li><a class="btn-accept" href="">Unassigned</a>
             <li ng-repeat="obj in constants.usersList">
-                <a class="btn-accept" href="">{{ obj.username }}</a>
+                <a class="btn-accept" href="" data-id="{{ obj.id }}">{{ obj.username }}</a>
             </li>
         </ul>
     </div>
@@ -200,7 +200,7 @@
         <p class="title">Select severity:</p>
         <ul>
             <li ng-repeat="obj in constants.severityList">
-                <a class="btn-accept" href="">{{ obj.name }}</a>
+                <a class="btn-accept" data-id="{{ obj.id }}" href="">{{ obj.name }}</a>
             </li>
         </ul>
     </div>
@@ -211,7 +211,7 @@
         <p class="title">Select priority:</p>
         <ul>
             <li ng-repeat="obj in constants.priorityList">
-                <a href="" class="btn-accept">{{ obj.name }}</a>
+                <a href="" data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
             </li>
         </ul>
     </div>
@@ -222,7 +222,7 @@
         <p class="title">Select status:</p>
         <ul>
             <li ng-repeat="obj in constants.statusList">
-                <a href="" class="btn-accept">{{ obj.name }}</a>
+                <a href="" data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
             </li>
         </ul>
     </div>

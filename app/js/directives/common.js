@@ -279,7 +279,7 @@ angular.module('greenmine.directives.common', []).
                 });
 
                 var parentElement = element.parent();
-                var acceptSelector = element.data('accept-selector') || '.popover-content .button-success';
+                var acceptSelector = element.data('accept-selector') || '.popover-content .button-success, .popover-content .btn-accept';
                 var cancelSelector = element.data('cancel-selector') || '.popover-content .button-delete';
 
                 parentElement.on("click", acceptSelector, function(event) {
@@ -287,9 +287,10 @@ angular.module('greenmine.directives.common', []).
 
                     var context = createContext(scope, element);
                     var target = angular.element(event.currentTarget);
-                    var id = angular.element(event.currentTarget).data('id');
+                    var id = target.data('id');
 
-                    context = _.extend(context, {"selectedObj": target.scope().obj});
+                    context = _.extend(context, {"selectedId": id});
+
                     scope.$apply(function() {
                         fn(scope, context);
                     });
