@@ -212,21 +212,25 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
     $scope.updateIssueAssignation = function(issue, id) {
         issue.assigned_to = id || null;
         issue.save();
+        regenerateTags();
     };
 
     $scope.updateIssueStatus = function(issue, id) {
         issue.status = id;
         issue.save();
+        regenerateTags();
     };
 
     $scope.updateIssueSeverity = function(issue, id) {
         issue.severity = id;
         issue.save();
+        regenerateTags();
     };
 
     $scope.updateIssuePriority = function(issue, id) {
         issue.priority = id;
         issue.save();
+        regenerateTags();
     };
 
     $scope.submitIssue = function() {
