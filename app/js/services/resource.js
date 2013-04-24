@@ -13,7 +13,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             "tasks": "/api/scrum/tasks/",
             "issues": "/api/scrum/issues/",
             "issues/attachments": "/api/scrum/issues/attachments/",
-            "wikipages": "/api/wiki/wiki_pages/",
+            "wikipages": "/api/wiki/pages/",
             "choices/task-status": "/api/scrum/tasks/statuses/",
             "choices/issue-status": "/api/scrum/issues/statuses/",
             "choices/issue-types": "/api/scrum/issues/types/",
@@ -462,7 +462,10 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
         };
 
         service.getWikiPage = function(projectId, slug) {
-            var finalUrl = interpolate(itemUrlTemplate, {"url": url("wikipages"), "id": slug}, true);
+            var urlTemplate = "%(url)s%(id)s-%(slug)s/";
+            var finalUrl = interpolate(urlTemplate,
+                {"url": url("wikipages"), "id": projectId, "slug": slug}, true);
+
             return queryOne(finalUrl);
         };
 
