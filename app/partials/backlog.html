@@ -80,7 +80,7 @@
                             <span class="title">{{ us.subject|truncate:80 }}</span>
                         </div>
                         <div class="us-points">
-                            <a href="" gm-popover="saveUsPoints(us, selectedObj)"
+                            <a href="" gm-popover="saveUsPoints(us, selectedId)"
                                 data-tmpl="#points-popover">{{ resolvePoints(us.points) }}</a>
                         </div>
                         <div class="us-options">
@@ -179,7 +179,7 @@
 <script type="text/template" id="points-popover">
     <ul>
         <li class="item" ng-repeat="obj in constants.pointsList">
-            <a class="btn-accept">{{ obj.name }}</a>
+            <a data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
         </li>
     </ul>
 </script>
