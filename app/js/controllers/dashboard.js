@@ -10,13 +10,13 @@ var DashboardController = function($scope, $rootScope, $routeParams, $q, rs) {
     var sprintId = $routeParams.sid || 1;
 
     var formatUserStoryTasks = function() {
-        var usTasks = {};
+        $scope.usTasks = {};
 
         _.each($scope.userstories, function(us) {
-            usTasks[us.id] = {};
+            $scope.usTasks[us.id] = {};
 
             _.each($scope.statuses, function(status) {
-                usTasks[us.id][status.id] = [];
+                $scope.usTasks[us.id][status.id] = [];
             });
         });
 
@@ -26,10 +26,8 @@ var DashboardController = function($scope, $rootScope, $routeParams, $q, rs) {
                 return true;
             };
 
-            usTasks[task.user_story][task.status].push(task);
+            $scope.usTasks[task.user_story][task.status].push(task);
         });
-
-        $scope.usTasks = usTasks;
     };
 
     var calculateStats = function() {
@@ -125,9 +123,13 @@ var DashboardController = function($scope, $rootScope, $routeParams, $q, rs) {
 
         formatUserStoryTasks();
         calculateStats();
+        initializeEmptyForm();
     });
 
-    $scope.form = {};
+    var initializeEmptyForm = function() {
+        $scope.form = {"status": $scope.statusesList[0].id};
+    };
+
     $scope.submitTask = function() {
         var form = _.extend({tags:[]}, $scope.form, {"user_story": this.us.id});
 
@@ -137,7 +139,7 @@ var DashboardController = function($scope, $rootScope, $routeParams, $q, rs) {
 
                 formatUserStoryTasks();
                 calculateStats();
-                $scope.form = {};
+                initializeEmptyForm();
             });
 
         /* Notify to all modal directives
