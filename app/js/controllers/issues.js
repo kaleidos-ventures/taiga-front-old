@@ -177,6 +177,27 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
         issue.save();
     };
 
+    $scope.submitIssue = function() {
+        if ($scope.form.id === undefined) {
+            rs.createIssue($scope.projectId, $scope.form).
+                then(function(us) {
+                    $scope.form = {};
+                    $scope.issues.push(us);
+
+                    generateTagList();
+                    filterIssues();
+                });
+        } else {
+            $scope.form.save().then(function() {
+                $scope.form = {};
+                generateTagList();
+                filterIssues();
+            });
+        }
+
+        $rootScope.$broadcast("modals:close");
+    };
+
     $scope.removeIssue = function(issue) {
         issue.remove().then(function() {
             var index = $scope.issues.indexOf(issue);

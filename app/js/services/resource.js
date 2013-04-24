@@ -411,6 +411,22 @@ angular.module('greenmine.services.resource', ['greenmine.config'], function($pr
             return defered.promise;
         };
 
+        service.createIssue = function(projectId, form) {
+            var obj = _.extend({}, form, {project: projectId});
+            var defered = $q.defer();
+
+            $http.post(url("issues"), obj, {headers:headers()}).
+                success(function(data, status) {
+                    var modelurl = interpolate(itemUrlTemplate, {"url": url("issues"), "id": data.id}, true);
+                    defered.resolve(new Model(data, modelurl));
+                }).
+                error(function(data, status) {
+                    defered.reject([data, status]);
+                });
+
+            return defered.promise;
+        };
+
         service.createUserStory = function(projectId, form) {
             var obj = _.extend({}, form, {project: projectId});
             var defered = $q.defer();
