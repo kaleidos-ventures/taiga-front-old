@@ -81,12 +81,19 @@
                         </div>
                     </div>
                     <div class="issue-options">
-                        <a class="btn-small-preview" gm-preview-popover
-                            data-template-selector="#issue-preview-popover">
-                            <span class="help-box">Preview</span></a>
+                        <a class="btn-small-preview" gm-popover
+                                data-tmpl="#issue-preview-popover"
+                                data-auto-hide="true"
+                                data-placement="left">
+                            <span class="help-box">Preview</span>
+                        </a>
                         <a class="btn-small-edit" href="{{ urls.issuesUrl(projectId, issue.id) }}"><span class="help-box">Edit</span></a>
-                        <a class="btn-small-remove" data-template-selector="#issue-remove-popover"
-                            data-context="issue"><span class="help-box">Remove</span></a>
+                        <a class="btn-small-remove" gm-popover="removeIssue(issue)"
+                                data-tmpl="#issue-remove-popover"
+                                data-auto-hide="false"
+                                data-placement="left">
+                            <span class="help-box">Remove</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -152,26 +159,26 @@
 </script>
 
 <script type="text/template" id="issue-preview-popover">
-    <div class="us-preview-popover">
+    <div class="issue-preview-popover">
         <section>
-            <strong>Subject:</strong><br /><%= issue.subject %>
+            <strong>Subject:</strong><br />{{ issue.subject }}
         </section>
         <section>
             <strong>Description:</strong>
-            <p><%= issue.description %></p>
+            <p>{{ issue.description }}</p>
         </section>
     </div>
 </script>
 
 <script type="text/template" id="issue-remove-popover">
-    <div class="us-remove-popover">
+    <div class="issue-remove-popover">
         <section>
-            <p>Are you sure you want to delete this task:
-                <strong><%= issue.subject %></strong></p>
+            <p>Are you sure you want to delete this user story:
+                <strong>{{ issue.subject }}</strong></p>
         </section>
         <section>
-            <input type="button" class="btn btn-success btn-delete" value="Delete" />
-            <input type="button" class="btn btn-cancel" value="Cancel" />
+            <input type="button" class="button button-success" value="Delete" />
+            <input type="button" class="button button-delete" value="Cancel" />
         </section>
     </div>
 </script>

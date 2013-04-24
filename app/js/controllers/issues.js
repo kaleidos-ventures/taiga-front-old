@@ -176,6 +176,16 @@ var IssuesController = function($scope, $rootScope, $routeParams, $filter, $q, r
         issue.priority = obj.id;
         issue.save();
     };
+
+    $scope.removeIssue = function(issue) {
+        issue.remove().then(function() {
+            var index = $scope.issues.indexOf(issue);
+            $scope.issues.splice(index, 1);
+
+            generateTagList();
+            filterIssues();
+        });
+    };
 };
 
 IssuesController.$inject = ['$scope', '$rootScope', '$routeParams', '$filter', '$q', 'resource'];

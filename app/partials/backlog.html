@@ -1,260 +1,259 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container backlog-content row-fluid">
-        <div class="span8" ng-controller="BacklogUserStoriesCtrl">
-            <div class="graphics-container">
-                <div class="user-story-stats" url="">
-                    <div class="progress-box">
-                        <div class="progress progress-success">
-                            <div class="bar" style="width: {{ stats.completedPercentage }}%;"></div>
-                        </div>
-                        <div class="progress-indicator indicator">{{ stats.completedPercentage }}%</div>
-                        <div class="progress-help help">completed points</div>
+    <div class="span8" ng-controller="BacklogUserStoriesCtrl">
+        <div class="graphics-container">
+            <div class="user-story-stats" url="">
+                <div class="progress-box">
+                    <div class="progress progress-success">
+                        <div class="bar" style="width: {{ stats.completedPercentage }}%;"></div>
                     </div>
-                    <div class="stats-box">
-                        <div class="item">
-                            <div class="indicator">{{ stats.totalPoints }}</div>
-                            <div class="help">total <br />points</div>
-                        </div>
-
-                        <div class="item">
-                            <div class="indicator">{{ stats.assignedPoints }}</div>
-                            <div class="help">assigned points</div>
-                        </div>
-
-                        <div class="item">
-                            <div class="indicator">{{ stats.notAssignedPoints }}</div>
-                            <div class="help">not assigned points</div>
-                        </div>
-                    </div>
-                    <a class="button new-us-story" gm-modal="#new-us-modal" data-init="initEditUs()">
-                        New user story
-                    </a>
-                    <a class="button show-hide-graphics">
-                        <!-- Show graphics -->
-                    </a>
+                    <div class="progress-indicator indicator">{{ stats.completedPercentage }}%</div>
+                    <div class="progress-help help">completed points</div>
                 </div>
-                <div class="graph-box">
-                    <div id="graphs">
-                        <div id="burndown" url="">
-                            <div id="burndown-graph" style="display:none"></div>
-                        </div>
-                        <div id="burnup" url="">
-                            <div id="burnup-graph" style="display:none"></div>
-                        </div>
+                <div class="stats-box">
+                    <div class="item">
+                        <div class="indicator">{{ stats.totalPoints }}</div>
+                        <div class="help">total <br />points</div>
+                    </div>
+
+                    <div class="item">
+                        <div class="indicator">{{ stats.assignedPoints }}</div>
+                        <div class="help">assigned points</div>
+                    </div>
+
+                    <div class="item">
+                        <div class="indicator">{{ stats.notAssignedPoints }}</div>
+                        <div class="help">not assigned points</div>
                     </div>
                 </div>
+                <a class="button new-us-story" gm-modal="#new-us-modal" data-init="initEditUs()">
+                    New user story
+                </a>
+                <a class="button show-hide-graphics">
+                    <!-- Show graphics -->
+                </a>
             </div>
-
-            <div class="filters-container">
-                <div class="filters-bar-sbox">
-                    <div class="title-sbox">
-                        <a href="" ng-class="{active: filtersOpened}" ng-click="filtersOpened=!filtersOpened">Filters</a>
+            <div class="graph-box">
+                <div id="graphs">
+                    <div id="burndown" url="">
+                        <div id="burndown-graph" style="display:none"></div>
                     </div>
-                    <div class="filters-visual-box" ng-show="filtersOpened">
-                        <div class="tags-list-sbox">
-                            <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
-                                    ng-class="{selected: tag.selected}" gm-colorize-tag>
-                                <div class="name">{{ tag.name }}</div>
-                                <div class="count">{{ tag.count }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="filters-selected-box"></div>
-            </div>
-
-            <div class="us-container">
-                <div class="us-table-list">
-                    <div class="flex-header">
-                        <div class="us-title">User Story</div>
-                        <div class="us-points">Points</div>
-                        <div class="us-options">Options</div>
-                    </div>
-                    <div class="flex-body" ui-sortable=".sprints-box .flex-body" ng-model="unassingedUs">
-                        <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
-                                ui-sortable-index="{{$index}}">
-                            <div class="us-title">
-                                <span class="tags">
-                                    <span ng-repeat="tag in us.tags" class="label" gm-colorize-tag>{{ tag }}</span>
-                                </span>
-                                <span class="title">{{ us.subject|truncate:80 }}</span>
-                            </div>
-                            <div class="us-points">
-                                <a href="" gm-popover="saveUsPoints(us, selectedObj)"
-                                    data-tmpl="#points-popover">{{ resolvePoints(us.points) }}</a>
-                            </div>
-                            <div class="us-options">
-                                <a class="btn-small-preview" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">
-                                    <span class="help-box">Preview</span>
-                                </a>
-                                <a class="btn-small-edit" gm-modal="#new-us-modal"
-                                    data-init="initEditUs(us)" data-end-cancel="cancelEditUs(us)"><span class="help-box">Edit</span></a>
-                                <a class="btn-small-remove" gm-popover="removeUs(us)" data-tmpl="#us-remove-popover"><span class="help-box">Remove</span></a>
-                            </div>
-                        </div>
+                    <div id="burnup" url="">
+                        <div id="burnup-graph" style="display:none"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="milestones span4" ng-controller="BacklogMilestonesController">
-            <div class="header-box">
+        <div class="filters-container">
+            <div class="filters-bar-sbox">
                 <div class="title-sbox">
-                    <div class="title">5</div>
-                    <div class="help">sprints <br />planned</div>
+                    <a href="" ng-class="{active: filtersOpened}" ng-click="filtersOpened=!filtersOpened">Filters</a>
                 </div>
-                <a href="" class="button new-sprint" ng-click="sprintFormOpened=!sprintFormOpened">New sprint</a>
-            </div>
-
-            <div class="milestone-form-box" ng-show="sprintFormOpened">
-                <form action="" ui-parsley="sprintSubmit()">
-                    <fieldset>
-                        <label>Sprint name:</label>
-                        <input type="text" data-required="true" ng-model="form.name"
-                            placeholder="Sprint name..."></input>
-                    </fieldset>
-
-                    <fieldset>
-                        <div class="subfield">
-                            <label>Estimated start:</label>
-                            <input type="text" gm-kalendae data-required="true" ng-model="form.estimated_start"></input>
-                        </div>
-                        <div class="subfield">
-                            <label>Estimated finish</label>
-                            <input type="text" gm-kalendae data-required="true" ng-model="form.estimated_finish"></input>
-                        </div>
-                    </fieldset>
-                    <div class="btn-group">
-                        <input type="submit" class="button button-success" value="Save" />
-                        <a href="" class="button" ng-click="sprintFormOpened=false">Close</a>
-                    </div>
-                </form>
-            </div>
-
-            <div class="sprints-box">
-                <p class="sprints-box-title">Sprints</p>
-                <div class="sprint-sbox" ng-repeat="ml in milestones" ng-controller="BacklogMilestoneController"
-                            ng-class="{first: $first}">
-                    <div class="header">
-                        <div class="title">
-                            <a href="{{ urls.dashboardUrl(projectId, ml.id) }}">{{ ml.name }}</a>
-                            <span ng-show="$first">current sprint</span>
-                        </div>
-                        <div class="stats">
-                            <div class="sprint-progress">
-                                <div class="progress progress-success">
-                                    <div class="bar" style="width: {{ stats.percentage }}%"></div>
-                                </div>
-                                <div class="progress-indicator">{{ stats.percentage }}%</div>
-                            </div>
-                            <div class="sprint-status">
-                                <div class="item">
-                                    <div class="indicator">{{ stats.total }}</div>
-                                    <div class="help">total</div>
-                                </div>
-                                <div class="item">
-                                    <div class="indicator">{{ stats.completed }}</div>
-                                    <div class="help">completed</div>
-                                </div>
-                            </div>
+                <div class="filters-visual-box" ng-show="filtersOpened">
+                    <div class="tags-list-sbox">
+                        <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
+                                ng-class="{selected: tag.selected}" gm-colorize-tag>
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
-                    <div class="body">
-                        <div class="us-list">
-                            <div class="us-table-list">
-                                <div class="flex-body" ui-sortable=".us-container .flex-body"
-                                        ng-model="milestones[$index].user_stories">
-                                    <div class="us-item" ng-repeat="us in ml.user_stories">
-                                        <div class="us-title">{{ us.subject|truncate:50 }}</div>
-                                        <div class="us-points">{{ resolvePoints(us.points) }}</div>
-                                    </div>
-                                </div>
-                            </div>
+                </div>
+            </div>
+            <div class="filters-selected-box"></div>
+        </div>
+
+        <div class="us-container">
+            <div class="us-table-list">
+                <div class="flex-header">
+                    <div class="us-title">User Story</div>
+                    <div class="us-points">Points</div>
+                    <div class="us-options">Options</div>
+                </div>
+                <div class="flex-body" ui-sortable=".sprints-box .flex-body" ng-model="unassingedUs">
+                    <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
+                            ui-sortable-index="{{$index}}">
+                        <div class="us-title">
+                            <span class="tags">
+                                <span ng-repeat="tag in us.tags" class="label" gm-colorize-tag>{{ tag }}</span>
+                            </span>
+                            <span class="title">{{ us.subject|truncate:80 }}</span>
+                        </div>
+                        <div class="us-points">
+                            <a href="" gm-popover="saveUsPoints(us, selectedObj)"
+                                data-tmpl="#points-popover">{{ resolvePoints(us.points) }}</a>
+                        </div>
+                        <div class="us-options">
+                            <a class="btn-small-preview" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">
+                                <span class="help-box">Preview</span>
+                            </a>
+                            <a class="btn-small-edit" gm-modal="#new-us-modal"
+                                data-init="initEditUs(us)" data-end-cancel="cancelEditUs(us)"><span class="help-box">Edit</span></a>
+                            <a class="btn-small-remove" gm-popover="removeUs(us)" data-tmpl="#us-remove-popover"><span class="help-box">Remove</span></a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-    <script type="text/template" id="points-popover">
-        <ul>
-            <li class="item" ng-repeat="obj in constants.pointsList">
-                <a class="btn-accept">{{ obj.name }}</a>
-            </li>
-        </ul>
-    </script>
-
-    <script type="text/template" id="us-preview-popover">
-        <div class="us-preview-popover">
-            <section>
-                <strong>Subject:</strong><br />{{ us.subject }}
-            </section>
-            <section>
-                <strong>Description:</strong>
-                <p>{{ us.description }}</p>
-            </section>
+    <div class="milestones span4" ng-controller="BacklogMilestonesController">
+        <div class="header-box">
+            <div class="title-sbox">
+                <div class="title">5</div>
+                <div class="help">sprints <br />planned</div>
+            </div>
+            <a href="" class="button new-sprint" ng-click="sprintFormOpened=!sprintFormOpened">New sprint</a>
         </div>
-    </script>
 
-    <script type="text/template" id="us-remove-popover">
-        <div class="us-remove-popover">
-            <section>
-                <p>Are you sure you want to delete this user story:
-                    <strong>{{ us.subject }}</strong></p>
-            </section>
-            <section>
-                <input type="button" class="button button-success" value="Delete" />
-                <input type="button" class="button button-delete" value="Cancel" />
-            </section>
-        </div>
-    </script>
+        <div class="milestone-form-box" ng-show="sprintFormOpened">
+            <form action="" ui-parsley="sprintSubmit()">
+                <fieldset>
+                    <label>Sprint name:</label>
+                    <input type="text" data-required="true" ng-model="form.name"
+                        placeholder="Sprint name..."></input>
+                </fieldset>
 
-    <script type="text/template" id="new-us-modal">
-        <div class="new-us-modal modal hide">
-            <form class="inline-form us-form" ui-parsley="submitUs()">
-                <div class="modal-header">
-                    <h3>Modal title</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="fieldset-row">
-                        <fieldset>
-                            <label>Subject</label>
-                            <input class="subject" type="text" data-required="true"
-                                data-error-message="Required"
-                                ng-model="form.subject"></input>
-                        </fieldset>
-                        <fieldset>
-                            <label>Points</label>
-                            <select class="points" name="points" ng-model="form.points" data-required="true"
-                                data-type="number" data-error-message="Required"
-                                ng-options="c.id as c.name for c in constants.pointsList|orderBy:'order'"></select>
-                        </fieldset>
+                <fieldset>
+                    <div class="subfield">
+                        <label>Estimated start:</label>
+                        <input type="text" gm-kalendae data-required="true" ng-model="form.estimated_start"></input>
                     </div>
-                    <div class="fieldset-row">
-                        <fieldset>
-                            <label>Status</label>
-                            <select class="status" name="status" ng-model="form.status" data-required="true"
-                                data-type="number" data-error-message="Required"
-                                ng-options="c.id as c.name for c in usstatuses|orderBy:'order'"></select>
-                            </select>
-                        </fieldset>
-                        <fieldset>
-                            <label>Tags</label>
-                            <input type="text" class="tags" name="status" value="" ng-model="form.tags" ui-select2></input>
-                        </fieldset>
+                    <div class="subfield">
+                        <label>Estimated finish</label>
+                        <input type="text" gm-kalendae data-required="true" ng-model="form.estimated_finish"></input>
                     </div>
-                    <div class="fieldset-row">
-                        <fieldset>
-                            <label>Description</label>
-                            <textarea class="description" ng-model="form.description"></textarea>
-                        </fieldset>
-                    </div>
-                </div>
-                <div class="modal-footer">
+                </fieldset>
+                <div class="btn-group">
                     <input type="submit" class="button button-success" value="Save" />
-                    <a href="" class="button button-cancel">Close</a>
+                    <a href="" class="button" ng-click="sprintFormOpened=false">Close</a>
                 </div>
             </form>
         </div>
-    </script>
+
+        <div class="sprints-box">
+            <p class="sprints-box-title">Sprints</p>
+            <div class="sprint-sbox" ng-repeat="ml in milestones" ng-controller="BacklogMilestoneController"
+                        ng-class="{first: $first}">
+                <div class="header">
+                    <div class="title">
+                        <a href="{{ urls.dashboardUrl(projectId, ml.id) }}">{{ ml.name }}</a>
+                        <span ng-show="$first">current sprint</span>
+                    </div>
+                    <div class="stats">
+                        <div class="sprint-progress">
+                            <div class="progress progress-success">
+                                <div class="bar" style="width: {{ stats.percentage }}%"></div>
+                            </div>
+                            <div class="progress-indicator">{{ stats.percentage }}%</div>
+                        </div>
+                        <div class="sprint-status">
+                            <div class="item">
+                                <div class="indicator">{{ stats.total }}</div>
+                                <div class="help">total</div>
+                            </div>
+                            <div class="item">
+                                <div class="indicator">{{ stats.completed }}</div>
+                                <div class="help">completed</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="body">
+                    <div class="us-list">
+                        <div class="us-table-list">
+                            <div class="flex-body" ui-sortable=".us-container .flex-body"
+                                    ng-model="milestones[$index].user_stories">
+                                <div class="us-item" ng-repeat="us in ml.user_stories">
+                                    <div class="us-title">{{ us.subject|truncate:50 }}</div>
+                                    <div class="us-points">{{ resolvePoints(us.points) }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<script type="text/template" id="points-popover">
+    <ul>
+        <li class="item" ng-repeat="obj in constants.pointsList">
+            <a class="btn-accept">{{ obj.name }}</a>
+        </li>
+    </ul>
+</script>
+
+<script type="text/template" id="us-preview-popover">
+    <div class="us-preview-popover">
+        <section>
+            <strong>Subject:</strong><br />{{ us.subject }}
+        </section>
+        <section>
+            <strong>Description:</strong>
+            <p>{{ us.description }}</p>
+        </section>
+    </div>
+</script>
+
+<script type="text/template" id="us-remove-popover">
+    <div class="us-remove-popover">
+        <section>
+            <p>Are you sure you want to delete this user story:
+                <strong>{{ us.subject }}</strong></p>
+        </section>
+        <section>
+            <input type="button" class="button button-success" value="Delete" />
+            <input type="button" class="button button-delete" value="Cancel" />
+        </section>
+    </div>
+</script>
+
+<script type="text/template" id="new-us-modal">
+    <div class="new-us-modal modal hide">
+        <form class="inline-form us-form" ui-parsley="submitUs()">
+            <div class="modal-header">
+                <h3>Modal title</h3>
+            </div>
+            <div class="modal-body">
+                <div class="fieldset-row">
+                    <fieldset>
+                        <label>Subject</label>
+                        <input class="subject" type="text" data-required="true"
+                            data-error-message="Required"
+                            ng-model="form.subject"></input>
+                    </fieldset>
+                    <fieldset>
+                        <label>Points</label>
+                        <select class="points" name="points" ng-model="form.points" data-required="true"
+                            data-type="number" data-error-message="Required"
+                            ng-options="c.id as c.name for c in constants.pointsList|orderBy:'order'"></select>
+                    </fieldset>
+                </div>
+                <div class="fieldset-row">
+                    <fieldset>
+                        <label>Status</label>
+                        <select class="status" name="status" ng-model="form.status" data-required="true"
+                            data-type="number" data-error-message="Required"
+                            ng-options="c.id as c.name for c in usstatuses|orderBy:'order'"></select>
+                        </select>
+                    </fieldset>
+                    <fieldset>
+                        <label>Tags</label>
+                        <input type="text" class="tags" name="status" value="" ng-model="form.tags" ui-select2></input>
+                    </fieldset>
+                </div>
+                <div class="fieldset-row">
+                    <fieldset>
+                        <label>Description</label>
+                        <textarea class="description" ng-model="form.description"></textarea>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="button button-success" value="Save" />
+                <a href="" class="button button-cancel">Close</a>
+            </div>
+        </form>
+    </div>
+</script>
