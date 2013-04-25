@@ -170,7 +170,7 @@ angular.module('greenmine.directives.issues', []).
         };
     }]).
     directive("gmIssueChanges", function() {
-        var validFields = ["priority", "status", "severity", "tags", "subject", "description"];
+        var validFields = ["priority", "status", "severity", "tags", "subject", "description", "assigned_to"];
         var template = _.template($("#change-template").html());
 
         return function(scope, elm, attrs) {

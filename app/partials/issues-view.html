@@ -29,13 +29,13 @@
                 <h3>Issue data</h3>
             </div>
             <ul class="info-rows">
-               <li>Added by: <span>{{ issue.priority }}</span></li> 
-               <li>Assigned to: <span>{{ issue.owner }}</span></li> 
-               <li>Date: <span>{{ issue.modified_date }}</span></li> 
-               <li>Updated: <span>{{ issue.modified_date }}</span></li> 
-               <li class="priority-{{ issue.priority }}">Priority: <span>{{ issue.priority }}</span></li> 
-               <li class="status-{{ issue.status }}">Status: <span>{{ issue.status }}</span></li> 
-               <li>Attachments: <span>{{ issue.attachments | number }}</span></li> 
+               <li>Added by: <span>{{ issue.priority }}</span></li>
+               <li>Assigned to: <span>{{ issue.owner }}</span></li>
+               <li>Date: <span>{{ issue.modified_date }}</span></li>
+               <li>Updated: <span>{{ issue.modified_date }}</span></li>
+               <li class="priority-{{ issue.priority }}">Priority: <span>{{ issue.priority }}</span></li>
+               <li class="status-{{ issue.status }}">Status: <span>{{ issue.status }}</span></li>
+               <li>Attachments: <span>{{ issue.attachments | number }}</span></li>
             </ul>
         </div>
     </div>
@@ -66,44 +66,50 @@
                 <form class="form-horizontal" ui-parsley="save()">
                     <fieldset>
                         <label class="control-label" for="inputEmail">Status</label>
-                            <select name="status" ng-model="form.status">
-                                <option ng-repeat="obj in constants.statusList"
-                                    ng-selected="isSameAs('status', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
+
+                        <select class="status" name="status" ng-model="form.status" data-required="true"
+                            data-type="number" data-error-message="Required"
+                            ng-options="c.id as c.name for c in constants.statusList|orderBy:'order'"></select>
+                        </select>
                     </fieldset>
-                    
+
                     <fieldset class="issue-priority">
                         <label>Priority</label>
-                        <select name="status" ng-model="form.priority">
-                            <option ng-repeat="obj in constants.priorityList"
-                                ng-selected="isSameAs('priority', obj.id)" value="{{ obj.id }}">{{ obj.name }}</option>
+
+                        <select class="priority status" name="priority" ng-model="form.priority" data-required="true"
+                            data-type="number" data-error-message="Required"
+                            ng-options="c.id as c.name for c in constants.priorityList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
-                    
+
                     <fieldset class="issue-assigned">
                         <label>Assigned to</label>
-                        <select name="status" ng-model="form.assigned_to">
-                            <option ng-repeat="dev in developers"
-                                ng-selected="isSameAs('assigned_to', dev.id)" value="{{ dev.id }}">{{ dev.name }}</option>
+
+                        <select class="assigned-to" name="priority" ng-model="form.assigned_to" data-required="true"
+                            data-type="number" data-error-message="Required"
+                            ng-options="c.id as c.username for c in constants.usersList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
-                    
+
                     <fieldset class="issue-tasks">
                         <label>Tags</label>
                         <input type="text" name="status" value="" ng-model="form.tags" ui-select2></input>
                     </fieldset>
-                    
+
                     <div ng-hide="_showHiddenGroups">
                         <p style="cursor: pointer" ng-click="_showHiddenGroups=true">Edit <b>Subject</b> and <b>Description</b>...</p>
                     </div>
-                    
+
                     <fieldset class="issue-subject" ng-show="_showHiddenGroups">
                         <label for="inputEmail">Subject</label>
                         <input type="text" ng-model="form.subject"></input>
                     </fieldset>
+
                     <fieldset class="issue-description" ng-show="_showHiddenGroups">
                         <label for="inputEmail">Description</label>
                         <textarea ng-model="form.description"></textarea>
                     </fieldset>
+
                     <fieldset class="issue-comment">
                         <label for="inputEmail">Comment</label>
                         <textarea ng-model="form.comment"></textarea>
@@ -138,8 +144,8 @@
     <script type="text/template" id="change-template">
         <div class="change">
             <strong><%= name %></strong>:
-                <span class="old"><%= oldValue %></span> &gt;
-                <span class="new"><%= newValue %></span>
+            <span class="old"><%= oldValue %></span> &gt;
+            <span class="new"><%= newValue %></span>
         </div>
     </script>
 </div>
