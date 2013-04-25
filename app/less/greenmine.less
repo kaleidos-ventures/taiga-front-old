@@ -76,8 +76,8 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 /* ==================================
  * FLASH MESSAGES
  * ================================== */
-
-.flash-messsage{
+ 
+.flash-message{
     position: absolute;
     top: 163px;
     width: 100%;
@@ -89,14 +89,13 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
         padding: 15px 15px 15px 50px;
         font-family: @LeagueGothicRegular;
         font-size: 1.5em;
-    }
-    &.flash-message-success{
-        background: url("../img/message_flash.png") no-repeat 16px 16px lighten(@green, 10%);
         color: #FFF;
     }
-    &.flash-message-fail{
+    .flash-message-success{
+        background: url("../img/message_flash.png") no-repeat 16px 16px lighten(@green, 10%);            
+    }
+    .flash-message-fail{
         background: url("../img/message_flash.png") no-repeat 16px -59px #cc0000;
-        color: #FFF;
     }
 }
 
@@ -1248,6 +1247,8 @@ body.login {
  * ================================ */
 
 .issues-view {
+    padding: 10px;
+    width: 99%;
     .view-header,
     .view-footer {
         margin-top: 10px;
@@ -1257,56 +1258,129 @@ body.login {
         background-color:#666;
         .title {
             float: left;
+            font-family: 'LeagueGothicRegular';
+            font-size: 1.7em;
+            color: #FFFFFF;
+            margin:0;
+            margin-top: 2px;
         }
 
         .buttons {
             float: right;
         }
     }
-
-    .view-body {
-        padding-left: 15px;
-        padding-top: 10px;
-
-        .tags-box {
-            .label { margin-right: 5px; }
+    .tags-list {
+        margin: 15px 0;
+        padding: 0;
+        list-style-type: none;
+        overflow: hidden;
+        width: 98.97%;
+        .tag { 
+            float: left;
+            width: 150px;
+            margin-bottom: 5px;
+            margin-right: 5px;
+            padding: 5px;
+            font-family: 'ColabThi';
+            font-size: 1em;
+            color: #FFF;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+    }
+    .issue-data{
+        h2{
+            font-family: 'ColabReg';
+            font-size: 1.7em;
+            color: #333;
+            margin:0;
+        }
+        p{
+            font-family: 'ColabThi';
+        }
+    }
+    .issue-metadata{
+        background-color: #555;
+        padding: 5px;
+        .info-header{
+            color: #FFF;
+            text-transform: uppercase;
+            font-size: 1em;
+            font-family: 'ColabReg';
+            h3{
+                padding: 5px;
+                margin: 0;
+            }
+        }
+        .info-rows{
+            list-style: none;
+            margin: 0;
+            padding:0;
+            li{
+                padding: 7px;
+                font-size: .9em;
+                font-family: 'ColabReg';
+                color: #000;
+                border-bottom: 1px solid #dcdcdc;
+                background: #fff;
+                &:last-child{
+                    border: none;
+                }
+                span{
+                    font-family: 'ColabThi';
+                }
+            }
         }
     }
 
     .history {
-        padding-left: 15px;
-        ul.history-items {
+        h3{
+            padding: 5px 15px;
+            background: #ccc;
+            margin-bottom: 0;
+        }
+        .history-items {
             padding: 0px;
             margin: 0px;
-
-            li.history-item {
+            .history-item {
                 list-style: none;
                 display: block;
-                margin-bottom: 10px;
-
+                padding: 10px;
                 .title {
-                    border-bottom: 1px solid #eee;
+                    padding: 5px 15px;
+                    background: #eee;
+                    font-family: 'ColabReg';
+                    overflow: hidden;
+                    margin-bottom: 5px;
+                    .updated{
+                        float: left;
+                    }
+                    .date{
+                        float: right;
+                    }
                 }
 
                 .changes {
-                    padding: 4px;
+                    padding: 4px 10px;
                 }
 
                 .comment {
-                    padding: 4px;
+                    padding: 4px 10px;
                 }
             }
         }
     }
 
     .attachments {
-        padding-left: 15px;
-
-        ul.attachments-items {
-            padding: 0px;
-            margin: 0px;
-
-            li.attachments-item {
+        h3{
+            padding-left: 15px;
+            background: url(../img/attachment.png) no-repeat 2px center;
+        }
+        .attachments-items {
+            padding-left: 15px;
+            margin-left: 15px;
+            border-left: 4px solid #ccc;
+            .attachments-item {
                 list-style: none;
                 display: block;
                 margin-bottom: 10px;
@@ -1326,25 +1400,29 @@ body.login {
         }
     }
     .update-form {
-        padding: 15px;
-        border: 1px solid #eee;
-
+        border: 1px solid #ccc;
         h4 {
-            border-bottom: 1px solid #666;
+            padding: 5px 15px;
+            background: @green;
+            margin: 0;
+            color: #fff;
         }
-
-        input {
-            width: 90%;
+        form{
+            padding: 15px;
+            fieldset {
+                
+            }
+            input {
+                width: 90%;
+            }
+            textarea {
+                width: 90%;
+                min-height: 150px;
+            }
+            .select2-container {
+                width: 91%;
+            }
         }
-
-        textarea {
-            width: 90%;
-            min-height: 150px;
-        }
-        .select2-container {
-            width: 91%;
-        }
-
     }
 }
 

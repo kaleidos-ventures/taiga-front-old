@@ -318,6 +318,22 @@ angular.module('greenmine.directives.common', []).
             }
         };
     }]).
+    directive('gmFlashMessage', function() {
+        return function(scope, elm, attrs) {
+            var element = angular.element(elm);
+            console.log(scope);
+            scope.$on("flash:new", function(ctx, success, message) {
+                console.log(2);
+                if(success) {
+                    element.find(".flash-message-success p").text(message);
+                    element.find(".flash-message-success").fadeIn().delay(2000).fadeOut();
+                } else {
+                    element.find(".flash-message-fail p").text(message);
+                    element.find(".flash-message-fail").fadeIn().delay(2000).fadeOut();
+                }
+            });
+        }
+    }).
     directive("gmModal", ["$parse", "$compile", function($parse, $compile) {
         return {
             restrict: "A",
@@ -367,16 +383,3 @@ angular.module('greenmine.directives.common', []).
             }
         };
     }]);
-
-    //~ directive('gmFlashMessageSuccess', function() {
-        //~ return function(scope, elm, attrs) {
-            //~ var element = angular.element(elm);
-            //~ element.fadeIn().delay(2000).fadeOut();
-        //~ };
-    //~ }).
-    //~ directive('gmFlashMessageFail', function() {
-        //~ return function(scope, elm, attrs) {
-            //~ var element = angular.element(elm);
-            //~ element.fadeIn().delay(2000).fadeOut();
-        //~ };
-    //~ }).

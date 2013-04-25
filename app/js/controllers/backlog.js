@@ -4,6 +4,7 @@ var BacklogController = function($scope, $rootScope, $routeParams, rs) {
     $rootScope.pageBreadcrumb = ["Project", "Backlog"];
     $rootScope.projectId = parseInt($routeParams.pid, 10);
     $scope.stats = {};
+    $scope.$broadcast("flash:new", true, "KK");
 
     $scope.$on("stats:update", function(ctx, data) {
         if (data.notAssignedPoints) {
