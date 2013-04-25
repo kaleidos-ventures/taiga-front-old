@@ -1863,6 +1863,7 @@ body.login {
             }
         }
     }
+
     .new-task-modal {
         padding: 5px;
         width: 500px;
@@ -1880,6 +1881,7 @@ body.login {
         }
 
     }
+
     .tasks-container {
         table {
             width: 100%;
@@ -1918,6 +1920,7 @@ body.login {
                 }
             }
         }
+
         .body {
             background-color: #333;
             color: white;
@@ -1985,7 +1988,7 @@ body.login {
                             min-height: 200px;
                             .task-box {
                                 width: 145px;
-                                height: 150px;
+                                height: 120px;
                                 float: left;
                                 margin: 4px;
                                 box-shadow: 0px 5px 12px -2px rgba(0,0,0,.2);
@@ -2014,7 +2017,7 @@ body.login {
                                         }
                                     }
                                     .desc{
-                                        height: 80px;
+                                        height: 65px;
                                         overflow: hidden;
                                         font-family: 'DroidSerif';
                                         font-size: .8em;
@@ -2027,6 +2030,20 @@ body.login {
                     }
                 }
             }
+        }
+
+        /* Dashboard popovers */
+        .developers-popover {
+            cursor: default;
+            ul {
+                li {
+                    pointer: cursor;
+                    &:hover {
+                        background-color: #f2f2f2;
+                    }
+                }
+            }
+
         }
     }
 }

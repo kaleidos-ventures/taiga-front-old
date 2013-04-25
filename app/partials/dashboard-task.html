@@ -1,12 +1,10 @@
-<div class="task-box-content" gm-user-popover="saveTask(task)" ng-controller="DashboardTaskController">
+<div class="task-box-content" ng-controller="DashboardTaskController">
 
     <div class="title">{{ task.subject }}</div>
 
     <div class="assign-to">
-        <a href="" gm-popover="updateTaskAssignation(task, selectedObj)"
-            data-tmpl="#developers-popover">{{ resolveUser(task.assigned_to) }}</a>
+        <a href="" gm-popover="updateTaskAssignation(task, selectedId)"
+            data-tmpl="#developers-popover" data-auto-hide="true">{{ resolveUser(task.assigned_to) }}</a>
     </div>
-    <p class="desc">
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumyeirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
-    </p>
+    <p class="desc">{{ task.description | truncate:90 }}</p>
 </div>

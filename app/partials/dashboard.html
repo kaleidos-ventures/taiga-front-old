@@ -148,11 +148,11 @@
 </script>
 <script type="text/template" id="developers-popover">
     <div class="developers-popover">
-        Select a user:
+        <h3>Select a user:</h3>
         <ul>
-            <li><a class="btn-accept" href="">Unassigned</a>
-            <li ng-repeat="obj in constants.usersList">
-                <a class="btn-accept" href="">{{ obj.username }}</a>
+            <li class="btn-accept"><a data-id="" href="">Unassigned</a>
+            <li ng-repeat="obj in constants.usersList" class="btn-accept" data-id="{{ obj.id }}">
+                <a href="">{{ obj.username }}</a>
             </li>
         </ul>
     </div>

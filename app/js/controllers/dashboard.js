@@ -174,8 +174,8 @@ DashboardUserStoryController.$inject = ['$scope', '$q'];
 
 
 var DashboardTaskController = function($scope, $q) {
-    $scope.updateTaskAssignation = function(task, obj) {
-        task.assigned_to = obj ? obj.id: null;
+    $scope.updateTaskAssignation = function(task, id) {
+        task.assigned_to = id ? id : null;
         task.save();
     };
 };
