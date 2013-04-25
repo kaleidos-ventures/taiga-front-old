@@ -1,5 +1,5 @@
 EXTERN_SOURCES= \
-	app/js/lib/jquery-1.9.1.js \
+	app/js/lib/jquery-2.0.0.js \
 	app/js/lib/ui/jquery.ui.core.js \
 	app/js/lib/ui/jquery.ui.position.js \
 	app/js/lib/ui/jquery.ui.widget.js \
