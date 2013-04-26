@@ -35,7 +35,7 @@
                <li>Updated: <span>{{ issue.modified_date }}</span></li>
                <li class="priority-{{ issue.priority }}">Priority: <span>{{ issue.priority }}</span></li>
                <li class="status-{{ issue.status }}">Status: <span>{{ issue.status }}</span></li>
-               <li>Attachments: <span>{{ issue.attachments | number }}</span></li>
+               <li>Attachments: <span>{{ attachments.length }}</span></li>
             </ul>
         </div>
     </div>
@@ -64,37 +64,41 @@
                 <h4>Update issue</h4>
 
                 <form class="form-horizontal" ui-parsley="save()">
-                    <fieldset>
-                        <label class="control-label" for="inputEmail">Status</label>
+                    <div>
+                        <fieldset class="issue-status">
+                            <label class="control-label" for="inputEmail">Status</label>
 
-                        <select class="status" name="status" ng-model="form.status" data-required="true"
-                            data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.name for c in constants.statusList|orderBy:'order'"></select>
-                        </select>
-                    </fieldset>
+                            <select class="status" name="status" ng-model="form.status" data-required="true"
+                                data-type="number" data-error-message="Required"
+                                ng-options="c.id as c.name for c in constants.statusList|orderBy:'order'"></select>
+                            </select>
+                        </fieldset>
 
-                    <fieldset class="issue-priority">
-                        <label>Priority</label>
+                        <fieldset class="issue-priority">
+                            <label>Priority</label>
 
-                        <select class="priority status" name="priority" ng-model="form.priority" data-required="true"
-                            data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.name for c in constants.priorityList|orderBy:'order'"></select>
-                        </select>
-                    </fieldset>
+                            <select class="priority status" name="priority" ng-model="form.priority" data-required="true"
+                                data-type="number" data-error-message="Required"
+                                ng-options="c.id as c.name for c in constants.priorityList|orderBy:'order'"></select>
+                            </select>
+                        </fieldset>
+                    </div>
 
-                    <fieldset class="issue-assigned">
-                        <label>Assigned to</label>
+                    <div>
+                        <fieldset class="issue-assigned">
+                            <label>Assigned to</label>
 
-                        <select class="assigned-to" name="priority" ng-model="form.assigned_to" data-required="true"
-                            data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.username for c in constants.usersList|orderBy:'order'"></select>
-                        </select>
-                    </fieldset>
+                            <select class="assigned-to" name="priority" ng-model="form.assigned_to" data-required="true"
+                                data-type="number" data-error-message="Required"
+                                ng-options="c.id as c.username for c in constants.usersList|orderBy:'order'"></select>
+                            </select>
+                        </fieldset>
 
-                    <fieldset class="issue-tasks">
-                        <label>Tags</label>
-                        <input type="text" name="status" value="" ng-model="form.tags" ui-select2></input>
-                    </fieldset>
+                        <fieldset class="issue-tags">
+                            <label>Tags</label>
+                            <input type="text" name="status" value="" ng-model="form.tags" ui-select2></input>
+                        </fieldset>
+                    </div>
 
                     <div ng-hide="_showHiddenGroups">
                         <p style="cursor: pointer" ng-click="_showHiddenGroups=true">Edit <b>Subject</b> and <b>Description</b>...</p>
