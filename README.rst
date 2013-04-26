@@ -8,17 +8,8 @@ Install requirements:
 
 .. code-block:: console
 
-    pip install -r requirements.txt
-    python app/app.py
+    sudo npm install -g grunt-cli
+    npm install
+    grunt
 
-
-Also, you can serve this congent over nginx, for this way you
-need compile a index.html from jinja2 template. Do this executing
-make on repo root directory:
-
-.. code-block:: console
-
-    make
-
-
-Point your nginx or apache to **app/** directory.
+And go in your browser to: http://localhost:9001/
