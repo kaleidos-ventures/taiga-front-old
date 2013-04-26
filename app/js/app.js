@@ -33,6 +33,12 @@
         $routeProvider.when('/project/:pid/issues/:issueid',
                 {templateUrl: 'partials/issues-view.html', controller: IssuesViewController});
 
+        $routeProvider.when('/project/:pid/questions',
+                {templateUrl: 'partials/questions.html', controller: QuestionsController});
+
+        $routeProvider.when('/project/:pid/questions/:issueid',
+                {templateUrl: 'partials/questions-view.html', controller: QuestionsViewController});
+
         //$routeProvider.when('/project/:pid/tasks',
         //        {templateUrl: 'partials/tasks.html', controller: TasksController});
 
@@ -145,6 +151,14 @@
                     return _.str.sprintf("/#!/project/%s/issues", projectId);
                 } else {
                     return _.str.sprintf("/#!/project/%s/issues/%s", projectId, issueId);
+                }
+            },
+
+            questionsUrl: function(projectId, issueId) {
+                if (issueId === undefined) {
+                    return _.str.sprintf("/#!/project/%s/questions", projectId);
+                } else {
+                    return _.str.sprintf("/#!/project/%s/questions/%s", projectId, issueId);
                 }
             },
 
