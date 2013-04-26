@@ -21,7 +21,7 @@
                 <h3>Assigned to:</h3>
                 <div class="tags-list-sbox">
                     <div class="tag" ng-repeat="tag in assignedToTags" ng-click="selectTag(tag)"
-                            ng-class="{selected: tag.selected}" gm-colorize-tag>
+                            ng-class="{selected: tag.selected}" style="background-color: #666">
                         <div class="name">{{ tag.name }}</div>
                         <div class="count">{{ tag.count }}</div>
                     </div>
@@ -30,7 +30,7 @@
                 <h3>Status:</h3>
                 <div class="tags-list-sbox">
                     <div class="tag" ng-repeat="tag in statusTags" ng-click="selectTag(tag)"
-                            ng-class="{selected: tag.selected}" gm-colorize-tag>
+                            ng-class="{selected: tag.selected}" style="background-color: #666">
                         <div class="name">{{ tag.name }}</div>
                         <div class="count">{{ tag.count }}</div>
                     </div>

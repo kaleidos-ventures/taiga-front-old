@@ -14,10 +14,8 @@
  * limitations under the License.
 */
 
-'use strict';
-
-
 (function() {
+    'use strict';
     var configCallback = function($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider) {
         $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: LoginController});
         $routeProvider.when('/register', {templateUrl: 'partials/register.html', controller: RegisterController});
@@ -33,11 +31,11 @@
         $routeProvider.when('/project/:pid/issues/:issueid',
                 {templateUrl: 'partials/issues-view.html', controller: IssuesViewController});
 
-        $routeProvider.when('/project/:pid/questions',
-                {templateUrl: 'partials/questions.html', controller: QuestionsController});
+        //$routeProvider.when('/project/:pid/questions',
+        //        {templateUrl: 'partials/questions.html', controller: QuestionsController});
 
-        $routeProvider.when('/project/:pid/questions/:issueid',
-                {templateUrl: 'partials/questions-view.html', controller: QuestionsViewController});
+        //$routeProvider.when('/project/:pid/questions/:issueid',
+        //        {templateUrl: 'partials/questions-view.html', controller: QuestionsViewController});
 
         //$routeProvider.when('/project/:pid/tasks',
         //        {templateUrl: 'partials/tasks.html', controller: TasksController});
