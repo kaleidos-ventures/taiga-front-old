@@ -135,6 +135,14 @@ module.exports = function(grunt) {
                     'app/index.html': 'app/index.template.html'
                 }
             }
+        },
+
+        coffee: {
+            compile: {
+                files: {
+                    "app/js/utils.js": "app/coffee/utils.coffee"
+                }
+            }
         }
     });
 
@@ -146,16 +154,19 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
+    grunt.loadNpmTasks('grunt-contrib-coffee');
 
     // Default task(s).
 
     grunt.registerTask('production', [
+        'coffee',
         'less:production',
         'uglify',
         'htmlmin'
     ]);
 
     grunt.registerTask('development', [
+        'coffee',
         'concat:appSources',
         'less:development',
         'htmlmin',
