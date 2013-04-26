@@ -51,6 +51,10 @@ module.exports = function(grunt) {
 	'app/js/filters/common.js'
     ];
 
+    var applicationSourcesCoffee = [
+        "app/coffee/utils.coffee"
+    ];
+
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -86,9 +90,15 @@ module.exports = function(grunt) {
                 files: applicationSources,
                 tasks: ['concat:appSources']
             },
+
             less: {
                 files: ['app/less/**/*.less'],
                 tasks: ['less:development']
+            },
+
+            coffee: {
+                files: ['app/coffee/*.coffee'],
+                tasks: ['coffee:compile']
             }
         },
 
