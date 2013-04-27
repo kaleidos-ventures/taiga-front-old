@@ -52,7 +52,8 @@ module.exports = function(grunt) {
     ];
 
     var applicationSourcesCoffee = [
-        "app/coffee/utils.coffee"
+        "app/coffee/utils.coffee",
+        "app/coffee/app.coffee"
     ];
 
     // Project configuration.
@@ -74,7 +75,7 @@ module.exports = function(grunt) {
 
         concat: {
             options: {
-                separator: ';',
+                separator: '\n',
                 banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
                         '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
             },
@@ -150,7 +151,8 @@ module.exports = function(grunt) {
         coffee: {
             compile: {
                 files: {
-                    "app/js/utils.js": "app/coffee/utils.coffee"
+                    "app/js/utils.js": "app/coffee/utils.coffee",
+                    "app/js/app.js": "app/coffee/app.coffee"
                 }
             }
         }

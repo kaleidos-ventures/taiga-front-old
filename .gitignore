@@ -7,3 +7,4 @@ app/less/style.css
 node_modules
 
 app/js/utils.js
+app/js/app.js
