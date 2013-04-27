@@ -29,7 +29,6 @@
         if data.length > 0
             $rootScope.sprintId = data[0].id
 
-
 @BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource']
 
 
@@ -115,7 +114,6 @@
 
         # HACK: because django-filter does not works properly
         # $scope.unassingedUs = data
-        #
         $scope.unassingedUs = _.filter unassingedUs, (item) ->
             return (item.project is $rootScope.projectId and item.milestone is null)
 
@@ -189,7 +187,6 @@
             tag.selected = false
         else
             tag.selected = true
-
         filterUsBySelectedTags()
 
     # Signal Handlign
@@ -199,7 +196,6 @@
 
 
 # Backlog milestones controller.
-
 @BacklogMilestonesController = ($scope, $rootScope, rs) ->
     # Local scope variables
     $scope.sprintFormOpened = false
@@ -225,8 +221,6 @@
         rs.getMilestones($rootScope.projectId).then (data) ->
             # HACK: because django-filter does not works properly
             # $scope.milestones = data
-            #
-            #
             $scope.milestones = _.filter data, (item) ->
                 item.project == $rootScope.projectId
 
@@ -259,7 +253,6 @@
 
 
 # One backlog milestone controller
-
 @BacklogMilestoneController = ($scope, rs) ->
     calculateStats = ->
         pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.points)
