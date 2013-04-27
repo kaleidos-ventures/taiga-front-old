@@ -9,3 +9,4 @@ node_modules
 app/js/utils.js
 app/js/app.js
 app/js/controllers/wiki.js
+app/js/controllers/backlog.js
