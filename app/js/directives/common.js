@@ -323,9 +323,7 @@ angular.module('greenmine.directives.common', []).
     directive('gmFlashMessage', function() {
         return function(scope, elm, attrs) {
             var element = angular.element(elm);
-            console.log(scope);
             scope.$on("flash:new", function(ctx, success, message) {
-                console.log(2);
                 if(success) {
                     element.find(".flash-message-success p").text(message);
                     element.find(".flash-message-success").fadeIn().delay(2000).fadeOut();

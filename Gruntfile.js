@@ -55,7 +55,8 @@ module.exports = function(grunt) {
         "app/coffee/utils.coffee",
         "app/coffee/app.coffee",
         "coffee/controllers/wiki.coffee",
-        "coffee/controllers/backlog.coffee"
+        "coffee/controllers/backlog.coffee",
+        "coffee/controllers/dashboard.coffee",
     ];
 
     // Project configuration.
@@ -157,6 +158,7 @@ module.exports = function(grunt) {
                     "app/js/app.js": "app/coffee/app.coffee",
                     "app/js/controllers/wiki.js": "app/coffee/controllers/wiki.coffee",
                     "app/js/controllers/backlog.js": "app/coffee/controllers/backlog.coffee",
+                    "app/js/controllers/dashboard.js": "app/coffee/controllers/dashboard.coffee",
                 }
             }
         }

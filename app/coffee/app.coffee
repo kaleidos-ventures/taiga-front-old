@@ -115,7 +115,7 @@ init = ($rootScope, $location, storage) ->
 
     $rootScope.resolveUser = (id) ->
         user = $rootScope.constants.users[id]
-        return if user is undefined then user.username else "Unassigned"
+        return if user? then user.username else "Unassigned"
 
     $rootScope.urls =
         backlogUrl: (projectId) ->
