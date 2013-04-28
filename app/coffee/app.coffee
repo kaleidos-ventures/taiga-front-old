@@ -125,7 +125,7 @@ init = ($rootScope, $location, storage) ->
             return _.str.sprintf("/#!/project/%s/dashboard/%s", projectId, sprintId)
 
         issuesUrl: (projectId, issueId) ->
-            if issueId is undefined
+            if issueId != undefined
                 return _.str.sprintf("/#!/project/%s/issues/%s", projectId, issueId)
             else
                 return _.str.sprintf("/#!/project/%s/issues", projectId)
