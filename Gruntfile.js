@@ -31,100 +31,12 @@ module.exports = function(grunt) {
 	'app/js/lib/noty/layout.js'
     ];
 
-    var applicationSources = [
-	'app/dist/app.js',
-	'app/dist/utils.js',
-	'app/js/services/common.js',
-	//'app/js/services/resource.js',
-	'app/js/services/storage.js',
-        'app/dist/services.js',
-        'app/dist/controllers.js',
-        'app/dist/directives.js',
-	'app/js/filters/common.js'
-    ];
-
-    var applicationSourcesCoffee = [
-        "app/coffee/utils.coffee",
-        "app/coffee/app.coffee",
-        "app/coffee/controllers/wiki.coffee",
-        "app/coffee/controllers/backlog.coffee",
-        "app/coffee/controllers/dashboard.coffee",
-        "app/coffee/controllers/issues.coffee",
-        "app/coffee/controllers/auth.coffee",
-        "app/coffee/controllers/project.coffee",
-        "app/coffee/directives/common.coffee",
-    ];
-
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        uglify: {
-            options: {
-                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-            },
-            app: {
-                dest: "app/js/greenmine.min.js",
-                src: applicationSources
-            },
-            libs: {
-                dest: "app/js/extern.min.js",
-                src: externalSources
-            }
-        },
-
-        concat: {
-            options: {
-                separator: '\n',
-                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-                        '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
-            },
-
-            appSources: {
-                dest: "app/js/greenmine.min.js",
-                src: applicationSources
-            }
-        },
-
-        watch: {
-            src: {
-                files: applicationSources,
-                tasks: ['concat:appSources']
-            },
-
-            less: {
-                files: ['app/less/**/*.less'],
-                tasks: ['less:development']
-            },
-
-            coffee: {
-                files: ['app/coffee/**/*.coffee'],
-                tasks: ['coffee:compile']
-            }
-        },
-
-        jshint: {
-            all: applicationSources
-        },
-
-        connect: {
-            server: {
-                options: {
-                    port: 9001,
-                    base: 'app'
-                }
-            }
-        },
 
         less: {
-            development: {
-                options: {
-                    paths: ["app/less"]
-                },
-                files: {
-                    "app/less/style.css": "app/less/greenmine-main.less"
-                }
-            },
-            production: {
+            dist: {
                 options: {
                     paths: ["app/less"],
                     yuicompress: true
@@ -135,15 +47,17 @@ module.exports = function(grunt) {
             }
         },
 
-        htmlmin: {
+        uglify: {
+            options: {
+                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+            },
+
             dist: {
-                options: {
-                    removeComments: true,
-                    collapseWhitespace: true
-                },
-                files: {
-                    'app/index.html': 'app/index.template.html'
-                }
+                dest: "app/dist/greenmine.min.js",
+                src: [
+                    "app/dist/libs.js",
+                    "app/dist/app.js",
+                ]
             }
         },
 
@@ -153,14 +67,79 @@ module.exports = function(grunt) {
                     join:  true
                 },
                 files: {
-                    "app/dist/controllers.js": ["app/coffee/controllers/*.coffee"],
-                    "app/dist/directives.js": ["app/coffee/directives/*.coffee"],
-                    "app/dist/services.js": ["app/coffee/services/*.coffee"],
-                    "app/dist/utils.js": "app/coffee/utils.coffee",
-                    "app/dist/app.js": "app/coffee/app.coffee",
+                    "app/dist/config.js": "app/coffee/config.coffee",
+                    "app/dist/app.js": [
+                        "app/coffee/app.coffee",
+                        "app/coffee/utils.coffee",
+                        "app/coffee/controllers/*.coffee",
+                        "app/coffee/directives/*.coffee",
+                        "app/coffee/services/*.coffee",
+                        "app/coffee/filters/*.coffee"
+                    ]
                 }
             }
-        }
+        },
+
+        watch: {
+            less: {
+                files: ['app/less/**/*.less'],
+                tasks: ['less']
+            },
+
+            coffee: {
+                files: ['app/coffee/**/*.coffee'],
+                tasks: ['coffee:compile']
+            }
+        },
+
+        //concat: {
+        //    options: {
+        //        separator: '\n',
+        //        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+        //                '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        //    },
+
+        //    appSources: {
+        //        dest: "app/js/greenmine.min.js",
+        //        src: applicationSources
+        //    }
+        //},
+
+
+        //jshint: {
+        //    all: applicationSources
+        //},
+
+        connect: {
+            server: {
+                options: {
+                    port: 9001,
+                    base: 'app'
+                }
+            }
+        },
+
+
+        htmlmin: {
+            dev: {
+                options: {
+                    removeComments: false,
+                    collapseWhitespace: false
+                },
+                files: {
+                    'app/index.html': 'app/index.template.dev.html'
+                }
+            },
+            pro: {
+                options: {
+                    removeComments: true,
+                    collapseWhitespace: true
+                },
+                files: {
+                    'app/index.html': 'app/index.template.pro.html'
+                }
+            }
+        },
     });
 
     // Load the plugin that provides the "uglify" task.
@@ -177,16 +156,12 @@ module.exports = function(grunt) {
 
     grunt.registerTask('production', [
         'coffee',
-        'less:production',
         'uglify',
-        'htmlmin'
     ]);
 
     grunt.registerTask('development', [
         'coffee',
-        'concat:appSources',
-        'less:development',
-        'htmlmin',
+        'uglify:app'
     ]);
 
     grunt.registerTask('default', [
