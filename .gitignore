@@ -11,3 +11,4 @@ app/js/app.js
 app/js/controllers/wiki.js
 app/js/controllers/backlog.js
 app/js/controllers/dashboard.js
+app/js/controllers/issues.js
