@@ -32,17 +32,18 @@ module.exports = function(grunt) {
     ];
 
     var applicationSources = [
-	'app/js/app.js',
-	'app/js/utils.js',
+	'app/dist/app.js',
+	'app/dist/utils.js',
 	'app/js/services/common.js',
 	'app/js/services/resource.js',
 	'app/js/services/storage.js',
-	'app/js/controllers/auth.js',
-	'app/js/controllers/project.js',
-	'app/js/controllers/backlog.js',
-	'app/js/controllers/dashboard.js',
-	'app/js/controllers/issues.js',
-	'app/js/controllers/wiki.js',
+        'app/dist/controllers.js',
+	//'app/js/controllers/auth.js',
+	//'app/js/controllers/project.js',
+	//'app/js/controllers/backlog.js',
+	//'app/js/controllers/dashboard.js',
+	//'app/js/controllers/issues.js',
+	//'app/js/controllers/wiki.js',
 	'app/js/directives/generic.js',
 	'app/js/directives/common.js',
 	'app/js/directives/dashboard.js',
@@ -58,6 +59,8 @@ module.exports = function(grunt) {
         "app/coffee/controllers/backlog.coffee",
         "app/coffee/controllers/dashboard.coffee",
         "app/coffee/controllers/issues.coffee",
+        "app/coffee/controllers/auth.coffee",
+        "app/coffee/controllers/project.coffee",
     ];
 
     // Project configuration.
@@ -154,13 +157,19 @@ module.exports = function(grunt) {
 
         coffee: {
             compile: {
+                options: {
+                    join:  true
+                },
                 files: {
+                    "app/dist/controllers.js": ["app/coffee/controllers/*.coffee"],
                     "app/js/utils.js": "app/coffee/utils.coffee",
                     "app/js/app.js": "app/coffee/app.coffee",
-                    "app/js/controllers/wiki.js": "app/coffee/controllers/wiki.coffee",
-                    "app/js/controllers/backlog.js": "app/coffee/controllers/backlog.coffee",
-                    "app/js/controllers/dashboard.js": "app/coffee/controllers/dashboard.coffee",
-                    "app/js/controllers/issues.js": "app/coffee/controllers/issues.coffee",
+                    //"app/js/controllers/wiki.js": "app/coffee/controllers/wiki.coffee",
+                    //"app/js/controllers/backlog.js": "app/coffee/controllers/backlog.coffee",
+                    //"app/js/controllers/dashboard.js": "app/coffee/controllers/dashboard.coffee",
+                    //"app/js/controllers/issues.js": "app/coffee/controllers/issues.coffee",
+                    //"app/js/controllers/auth.js": "app/coffee/controllers/auth.coffee",
+                    //"app/js/controllers/project.js": "app/coffee/controllers/project.coffee",
                 }
             }
         }
