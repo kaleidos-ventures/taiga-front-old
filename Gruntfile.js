@@ -49,7 +49,7 @@ module.exports = function(grunt) {
 	//'app/js/directives/common.js',
 	'app/js/directives/dashboard.js',
 	'app/js/directives/issues.js',
-	'app/js/directives/wiki.js',
+	//'app/js/directives/wiki.js',
 	'app/js/filters/common.js'
     ];
 
