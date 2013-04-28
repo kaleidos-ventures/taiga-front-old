@@ -162,8 +162,8 @@ module.exports = function(grunt) {
                 },
                 files: {
                     "app/dist/controllers.js": ["app/coffee/controllers/*.coffee"],
-                    "app/js/utils.js": "app/coffee/utils.coffee",
-                    "app/js/app.js": "app/coffee/app.coffee",
+                    "app/dist/utils.js": "app/coffee/utils.coffee",
+                    "app/dist/app.js": "app/coffee/app.coffee",
                     //"app/js/controllers/wiki.js": "app/coffee/controllers/wiki.coffee",
                     //"app/js/controllers/backlog.js": "app/coffee/controllers/backlog.coffee",
                     //"app/js/controllers/dashboard.js": "app/coffee/controllers/dashboard.coffee",
