@@ -194,7 +194,6 @@
 @BacklogUserStoriesCtrl.$inject = ['$scope', '$rootScope', '$q', 'resource']
 
 
-# Backlog milestones controller.
 @BacklogMilestonesController = ($scope, $rootScope, rs) ->
     # Local scope variables
     $scope.sprintFormOpened = false
@@ -251,7 +250,6 @@
 @BacklogMilestonesController.$inject = ['$scope', '$rootScope', 'resource']
 
 
-# One backlog milestone controller
 @BacklogMilestoneController = ($scope, rs) ->
     calculateStats = ->
         pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.points)

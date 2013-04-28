@@ -1,4 +1,3 @@
-
 issuesModule = angular.module('greenmine.directives.issues', [])
 
 
@@ -39,7 +38,6 @@ gmIssueChangesConstructor = ->
             template(name: name, oldValue: field.old, newValue: field.new)
 
         elements = []
-
         for fieldName in validFields
             field = scope.h[fieldName]
 

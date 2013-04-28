@@ -49,7 +49,9 @@ module.exports = function(grunt) {
 
         uglify: {
             options: {
-                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+                mangle: false,
+                report: 'min'
             },
 
             dist: {
@@ -63,9 +65,7 @@ module.exports = function(grunt) {
 
         coffee: {
             compile: {
-                options: {
-                    join:  true
-                },
+                options: {join:  false},
                 files: {
                     "app/dist/config.js": "app/coffee/config.coffee",
                     "app/dist/app.js": [
@@ -92,33 +92,34 @@ module.exports = function(grunt) {
             }
         },
 
-        //concat: {
-        //    options: {
-        //        separator: '\n',
-        //        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-        //                '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
-        //    },
+        concat: {
+            options: {
+                separator: '\n;',
+                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+                        '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
+            },
 
-        //    appSources: {
-        //        dest: "app/js/greenmine.min.js",
-        //        src: applicationSources
-        //    }
-        //},
-
-
-        //jshint: {
-        //    all: applicationSources
-        //},
+            libs: {
+                dest: "app/dist/libs.js",
+                src: externalSources
+            }
+        },
 
         connect: {
-            server: {
+            devserver: {
                 options: {
                     port: 9001,
                     base: 'app'
                 }
+            },
+            proserver: {
+                options: {
+                    port: 9001,
+                    base: 'app',
+                    keepalive: true
+                }
             }
         },
-
 
         htmlmin: {
             dev: {
@@ -130,7 +131,7 @@ module.exports = function(grunt) {
                     'app/index.html': 'app/index.template.dev.html'
                 }
             },
-            pro: {
+            dist: {
                 options: {
                     removeComments: true,
                     collapseWhitespace: true
@@ -155,18 +156,21 @@ module.exports = function(grunt) {
     // Default task(s).
 
     grunt.registerTask('production', [
-        'coffee',
-        'uglify',
+        'concat:libs',
+        'coffee:compile',
+        'uglify:dist',
+        'htmlmin:dist',
     ]);
 
     grunt.registerTask('development', [
-        'coffee',
-        'uglify:app'
+        'concat:libs',
+        'coffee:compile',
+        'htmlmin:dev',
     ]);
 
     grunt.registerTask('default', [
         'development',
-        'connect',
+        'connect:devserver',
         'watch'
     ]);
 };
