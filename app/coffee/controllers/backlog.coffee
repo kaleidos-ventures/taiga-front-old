@@ -111,11 +111,10 @@
     ]).then((results) ->
         unassingedUs = results[0]
         usPoints = results[1]
+        projectId = parseInt($rootScope.projectId, 10)
 
-        # HACK: because django-filter does not works properly
-        # $scope.unassingedUs = data
-        $scope.unassingedUs = _.filter unassingedUs, (item) ->
-            return (item.project is $rootScope.projectId and item.milestone is null)
+        $scope.unassingedUs = _.filter(unassingedUs,
+                {"project": projectId, milestone: null})
 
         $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order")
 

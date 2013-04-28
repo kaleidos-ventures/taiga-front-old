@@ -35,21 +35,11 @@ module.exports = function(grunt) {
 	'app/dist/app.js',
 	'app/dist/utils.js',
 	'app/js/services/common.js',
-	'app/js/services/resource.js',
+	//'app/js/services/resource.js',
 	'app/js/services/storage.js',
+        'app/dist/services.js',
         'app/dist/controllers.js',
         'app/dist/directives.js',
-	//'app/js/controllers/auth.js',
-	//'app/js/controllers/project.js',
-	//'app/js/controllers/backlog.js',
-	//'app/js/controllers/dashboard.js',
-	//'app/js/controllers/issues.js',
-	//'app/js/controllers/wiki.js',
-	//'app/js/directives/generic.js',
-	//'app/js/directives/common.js',
-	'app/js/directives/dashboard.js',
-	//'app/js/directives/issues.js',
-	//'app/js/directives/wiki.js',
 	'app/js/filters/common.js'
     ];
 
@@ -165,14 +155,9 @@ module.exports = function(grunt) {
                 files: {
                     "app/dist/controllers.js": ["app/coffee/controllers/*.coffee"],
                     "app/dist/directives.js": ["app/coffee/directives/*.coffee"],
+                    "app/dist/services.js": ["app/coffee/services/*.coffee"],
                     "app/dist/utils.js": "app/coffee/utils.coffee",
                     "app/dist/app.js": "app/coffee/app.coffee",
-                    //"app/js/controllers/wiki.js": "app/coffee/controllers/wiki.coffee",
-                    //"app/js/controllers/backlog.js": "app/coffee/controllers/backlog.coffee",
-                    //"app/js/controllers/dashboard.js": "app/coffee/controllers/dashboard.coffee",
-                    //"app/js/controllers/issues.js": "app/coffee/controllers/issues.coffee",
-                    //"app/js/controllers/auth.js": "app/coffee/controllers/auth.coffee",
-                    //"app/js/controllers/project.js": "app/coffee/controllers/project.coffee",
                 }
             }
         }

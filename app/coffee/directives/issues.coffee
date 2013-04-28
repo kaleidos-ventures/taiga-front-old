@@ -25,7 +25,7 @@ gmIssuesSortConstructor = ($parse) -> (scope, elm, attrs) ->
         event.preventDefault()
         scope.$digest()
 
-issuesModule.directive('gmIssuesSort', ["$parse", gmIssuesSortConstructor]);a
+issuesModule.directive('gmIssuesSort', ["$parse", gmIssuesSortConstructor])
 
 
 gmIssueChangesConstructor = ->
