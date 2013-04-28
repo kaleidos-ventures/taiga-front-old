@@ -1,29 +1,23 @@
 angular.module('greenmine.filters.common', []).
-    filter('onlyVisible', [function() {
-        return function(input) {
-            return _.filter(input, function(item) {
-                return (item.__hidden !== true);
-            });
-        };
-    }]).
-    filter('truncate', function() {
-        return function(input, num) {
-            if (num === undefined) num =  25;
-            return _.str.prune(input, num);
-        };
-    }).
-    filter('slugify', [function() {
-        return function(input) {
-            return _.str.slugify(input);
-        };
-    }]).
-    filter("momentFormat", [function() {
-        return function(input, format) {
-            return moment(input).format(format);
-        };
-    }]).
-    filter("lowercase", [function() {
-        return function(input) {
-            return input.toLowerCase();
-        };
-    }]);
+    filter('onlyVisible', ->
+        return (input) ->
+            return _.filter input, (item) ->
+                return item.__hidden != true
+    ).
+    filter('truncate', ->
+        return (input, num) ->
+            num = 25 if num == undefined
+            return _.str.prune(input, num)
+    ).
+    filter('slugify', ->
+        return (input) ->
+            return _.str.slugify(input)
+    ).
+    filter("momentFormat", ->
+        return (input, format) ->
+            return moment(input).format(format)
+    ).
+    filter("lowercase", ->
+        return (input) ->
+            return input.toLowerCase()
+    )
