@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html ng-app="greenmine">
+    <head>
+        <meta charset="utf-8" />
+        <title>Greenmine</title>
+        <link href="/less/style.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="{{ pageSection }}">
+        <div class="main" id="main">
+            <div class="views" ng-view></div>
+        </div>
+
+        <!-- Main libraries -->
+        <script src="/dist/extern.min.js"></script>
+        <script src="/dist/greenmine.min.js"></script>
+        <script src="/dist/config.js"></script>
+    </body>
+</html>
