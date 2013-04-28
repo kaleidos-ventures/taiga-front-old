@@ -23,12 +23,8 @@ module.exports = function(grunt) {
 	'app/js/lib/kalendae.js',
 	'app/js/lib/parsley.js',
 	'app/js/lib/q.js',
-	'app/js/lib/spin.js',
 	'app/js/lib/sha1.js',
-	'app/js/lib/Chart.js',
-	'app/js/lib/noty/jquery.noty.js',
-	'app/js/lib/noty/default.js',
-	'app/js/lib/noty/layout.js'
+	'app/js/lib/Chart.js'
     ];
 
     // Project configuration.
@@ -54,29 +50,70 @@ module.exports = function(grunt) {
                 report: 'min'
             },
 
-            dist: {
-                dest: "app/dist/greenmine.min.js",
+            libs: {
+                dest: "app/dist/libs.min.js",
                 src: [
                     "app/dist/libs.js",
-                    "app/dist/app.js",
+                ]
+            },
+
+            app: {
+                dest: "app/dist/app.min.js",
+                src: [
+                    'app/dist/app-main.js',
+                    'app/dist/app-controllers.js',
+                    'app/dist/app-directives.js',
+                    'app/dist/app-services.js',
+                    'app/dist/app-filters.js'
                 ]
             }
         },
 
         coffee: {
-            compile: {
+            main: {
+                options: {join: true},
+                files: {"app/dist/app-main.js": ["app/coffee/*.coffee"]}
+            },
+
+            controllers: {
+                options: {join: true},
+                files: {
+                    "app/dist/app-controllers.js": ["app/coffee/controllers/*.coffee"]
+                }
+            },
+
+            directives: {
+                options: {join: false},
+                files: {
+                    "app/dist/app-directives.js": ["app/coffee/directives/*.coffee"]
+                }
+            },
+
+            services: {
+                options: {join: false},
+                files: {
+                    "app/dist/app-services.js": ["app/coffee/services/*.coffee"]
+                }
+            },
+
+            filters: {
                 options: {join:  false},
                 files: {
-                    "app/dist/config.js": "app/coffee/config.coffee",
-                    "app/dist/app.js": [
-                        "app/coffee/app.coffee",
-                        "app/coffee/utils.coffee",
-                        "app/coffee/controllers/*.coffee",
-                        "app/coffee/directives/*.coffee",
-                        "app/coffee/services/*.coffee",
-                        "app/coffee/filters/*.coffee"
-                    ]
+                    "app/dist/app-filters.js": ["app/coffee/filters/*.coffee"]
                 }
+            }
+        },
+
+        concat: {
+            options: {
+                separator: ';',
+                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+                        '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
+            },
+
+            libs: {
+                dest: "app/dist/libs.js",
+                src: externalSources
             }
         },
 
@@ -86,22 +123,29 @@ module.exports = function(grunt) {
                 tasks: ['less']
             },
 
-            coffee: {
-                files: ['app/coffee/**/*.coffee'],
-                tasks: ['coffee:compile']
-            }
-        },
-
-        concat: {
-            options: {
-                separator: '\n;',
-                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-                        '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
+            coffeeMain: {
+                files: ['app/coffee/*.coffee'],
+                tasks: ['coffee:main']
             },
 
-            libs: {
-                dest: "app/dist/libs.js",
-                src: externalSources
+            coffeeControllers: {
+                files: "app/coffee/controllers/*.coffee",
+                tasks: ['coffee:controllers']
+            },
+
+            coffeeServices: {
+                files: "app/coffee/directives/*.coffee",
+                tasks: ['coffee:services'],
+            },
+
+            coffeeDirectives: {
+                files: "app/coffee/services/*.coffee",
+                tasks: ['coffee:directives'],
+            },
+
+            coffeeFilters: {
+                files: "app/coffee/filters/*.coffee",
+                tasks: ['coffee:filters'],
             }
         },
 
@@ -153,18 +197,19 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-coffee');
 
-    // Default task(s).
+    grunt.registerTask('generic', [
+        'concat:libs',
+        'coffee'
+    ]);
 
     grunt.registerTask('production', [
-        'concat:libs',
-        'coffee:compile',
-        'uglify:dist',
+        'generic',
+        'uglify',
         'htmlmin:dist',
     ]);
 
     grunt.registerTask('development', [
-        'concat:libs',
-        'coffee:compile',
+        'generic',
         'htmlmin:dev',
     ]);
 
