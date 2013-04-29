@@ -199,7 +199,8 @@ module.exports = function(grunt) {
 
     grunt.registerTask('generic', [
         'concat:libs',
-        'coffee'
+        'coffee',
+        'less'
     ]);
 
     grunt.registerTask('production', [
