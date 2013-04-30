@@ -51,56 +51,25 @@ module.exports = function(grunt) {
             },
 
             libs: {
-                dest: "app/dist/libs.min.js",
-                src: [
-                    "app/dist/libs.js",
-                ]
+                dest: "app/dist/libs.js",
+                src: externalSources
             },
 
             app: {
-                dest: "app/dist/app.min.js",
-                src: [
-                    'app/dist/app-main.js',
-                    'app/dist/app-controllers.js',
-                    'app/dist/app-directives.js',
-                    'app/dist/app-services.js',
-                    'app/dist/app-filters.js'
-                ]
+                dest: "app/dist/app.js",
+                src: ["app/dist/_app.js"]
             }
         },
 
         coffee: {
-            main: {
-                options: {join: true},
-                files: {"app/dist/app-main.js": ["app/coffee/*.coffee"]}
-            },
-
-            controllers: {
-                options: {join: true},
-                files: {
-                    "app/dist/app-controllers.js": ["app/coffee/controllers/*.coffee"]
-                }
-            },
-
-            directives: {
+            mainDevelopment: {
                 options: {join: false},
-                files: {
-                    "app/dist/app-directives.js": ["app/coffee/directives/*.coffee"]
-                }
+                files: {"app/dist/app.js": ["app/coffee/**/*.coffee"]}
             },
 
-            services: {
+            mainProduction: {
                 options: {join: false},
-                files: {
-                    "app/dist/app-services.js": ["app/coffee/services/*.coffee"]
-                }
-            },
-
-            filters: {
-                options: {join:  false},
-                files: {
-                    "app/dist/app-filters.js": ["app/coffee/filters/*.coffee"]
-                }
+                files: {"app/dist/_app.js": ["app/coffee/**/*.coffee"]}
             }
         },
 
@@ -124,28 +93,8 @@ module.exports = function(grunt) {
             },
 
             coffeeMain: {
-                files: ['app/coffee/*.coffee'],
-                tasks: ['coffee:main']
-            },
-
-            coffeeControllers: {
-                files: "app/coffee/controllers/*.coffee",
-                tasks: ['coffee:controllers']
-            },
-
-            coffeeServices: {
-                files: "app/coffee/directives/*.coffee",
-                tasks: ['coffee:services'],
-            },
-
-            coffeeDirectives: {
-                files: "app/coffee/services/*.coffee",
-                tasks: ['coffee:directives'],
-            },
-
-            coffeeFilters: {
-                files: "app/coffee/filters/*.coffee",
-                tasks: ['coffee:filters'],
+                files: ['app/coffee/**/*.coffee'],
+                tasks: ['coffee:mainDevelopment']
             }
         },
 
@@ -166,22 +115,13 @@ module.exports = function(grunt) {
         },
 
         htmlmin: {
-            dev: {
-                options: {
-                    removeComments: false,
-                    collapseWhitespace: false
-                },
-                files: {
-                    'app/index.html': 'app/index.template.dev.html'
-                }
-            },
             dist: {
                 options: {
                     removeComments: true,
                     collapseWhitespace: true
                 },
                 files: {
-                    'app/index.html': 'app/index.template.pro.html'
+                    'app/index.html': 'app/index.template.html'
                 }
             }
         },
@@ -198,20 +138,20 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-coffee');
 
     grunt.registerTask('generic', [
-        'concat:libs',
-        'coffee',
-        'less'
     ]);
 
     grunt.registerTask('production', [
-        'generic',
+        'less',
+        'coffee:mainProduction',
         'uglify',
-        'htmlmin:dist',
+        'htmlmin',
     ]);
 
     grunt.registerTask('development', [
-        'generic',
-        'htmlmin:dev',
+        'less',
+        'coffee:mainDevelopment',
+        'concat:libs',
+        'htmlmin',
     ]);
 
     grunt.registerTask('default', [

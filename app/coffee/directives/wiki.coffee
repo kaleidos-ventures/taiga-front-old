@@ -56,7 +56,7 @@ gmRenderMarkdownConstructor = ($parse) -> (scope, elm, attrs) ->
 
     scope.$watch attrs.gmRenderMarkdown, ->
         data = scope.$eval(attrs.gmRenderMarkdown)
-        if data is not undefined
+        if data != undefined
             # Regex for future page linking.
             # /^\s*\([ \t]*(\S+)(?:[ \t]+(["'])(.*?)\2)?[ \t]*\)/
             element.html(markdown.toHTML(data.replace("\r", "")))

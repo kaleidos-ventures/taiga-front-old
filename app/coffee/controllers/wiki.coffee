@@ -9,15 +9,15 @@
     projectId = $rootScope.projectId
     slug = $routeParams.slug
 
-    rs.getWikiPage(projectId, slug).then(
-        (page) ->
-            $scope.page = page
-            $scope.content = page.content
+    promise = rs.getWikiPage(projectId, slug)
+    promise.then (page) ->
+        $scope.page = page
+        $scope.content = page.content
 
-        () ->
-            $scope.formOpened = true)
+    promise.then null, ->
+        $scope.formOpened = true
 
-    $scope.savePage = () ->
+    $scope.savePage = ->
         if $scope.page is undefined
             content = $scope.content
 
@@ -28,14 +28,14 @@
 
         else
             $scope.page.content = $scope.content
-            $scope.page.save().then () ->
+            $scope.page.save().then ->
                 $scope.formOpened = false
 
-    $scope.openEditForm = () ->
+    $scope.openEditForm = ->
         $scope.formOpened = true
         $scope.content = $scope.page.content
 
-    $scope.discartCurrentChanges = () ->
+    $scope.discartCurrentChanges = ->
         $scope.formOpened = false
         $scope.content = $scope.page.content
 
