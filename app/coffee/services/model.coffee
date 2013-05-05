@@ -83,7 +83,7 @@ angular.module 'greenmine.services.model', [], ($provide) ->
                 self = @
                 defered = $q.defer()
 
-                if @isModified()
+                if not @isModified()
                     defered.resolve(true)
                     return defered.promise
 
