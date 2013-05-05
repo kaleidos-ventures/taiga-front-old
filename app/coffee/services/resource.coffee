@@ -19,7 +19,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             "choices/severities": "/api/scrum/severities/"
 
         host = config.host
-        scheme=config.scheme
+        scheme = config.scheme
 
         return () ->
             args = _.toArray(arguments)
@@ -32,179 +32,47 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             url = _.str.sprintf.apply(null, params)
             return _.str.sprintf("%s://%s%s", scheme, host, url)
 
-    resourceProvider = ($http, $q, storage, url, config) ->
+    resourceProvider = ($http, $q, storage, url, $model, config) ->
         service = {}
-
         headers = ->
             return {"X-SESSION-TOKEN": storage.get('token')}
-
-        toJson = (data) ->
-            return JSON.stringify(data)
-
-        interpolate = (fmt, obj, named) ->
-            if named
-                return fmt.replace(/%\(\w+\)s/g, (match) -> String(obj[match.slice(2,-2)]))
-            else
-                return fmt.replace(/%s/g, (match) -> String(obj.shift()))
-
-
-        class Model
-            constructor: (data, url) ->
-                @_attrs = data
-                @_url = url
-
-                @_isModified = false
-                @_modifiedAttrs = {}
-
-                @initialize()
-
-            initialize: () ->
-                self = @
-
-                getter = (name) ->
-                    return ->
-                        if name.substr(0,2) == "__"
-                            return self[name]
-
-                        if self._modifiedAttrs[name] is not undefined
-                            return self._modifiedAttrs[name]
-                        else
-                            return self._attrs[name]
-
-                setter = (name) ->
-                    return (value) ->
-                        if name.substr(0,2) == "__"
-                            self[name] = value
-                        else if self._attrs[name] != value
-                            self._modifiedAttrs[name] = value
-                            self._isModified = true
-
-
-                _.each @_attrs, (value, name) ->
-                    options =
-                        get: getter(name)
-                        enumerable: true
-                        configurable: true
-
-                    if name != "id"
-                        options.set = setter(name)
-
-                    Object.defineProperty(self, name, options)
-            serialize: () ->
-                data =
-                    "data": _.clone(@_attrs)
-                    "url": @_url
-
-                return JSON.stringify(data)
-
-            isModified: () ->
-                return this._isModified
-
-            revert: () ->
-                @_modifiedAttrs = {}
-                @_isModified = false
-
-            remove: () ->
-                defered = $q.defer()
-
-                params =
-                    method: "DELETE"
-                    url: @_url
-                    headers: headers()
-
-                $http(params).success((data, status) ->
-                    defered.resolve(data, status)
-                ).error((data, status) ->
-                    defered.reject(data, status)
-                )
-                return defered.promise
-
-            save: () ->
-                self = @
-                defered = $q.defer()
-
-                if @isModified()
-                    defered.resolve(true)
-                else
-                    postObject = _.extend({}, @_modifiedAttrs)
-
-                    params =
-                        method: "PATCH"
-                        url: @_url
-                        headers: headers(),
-                        data: toJson(postObject)
-
-                    $http(params).success((data, status) ->
-                        self._isModified = false
-                        self._attrs = _.extend(self._attrs, self._modifiedAttrs, data)
-                        self._modifiedAttrs = {}
-                        defered.resolve(self)
-                    ).error((data, status) ->
-                        defered.reject([self, data, status])
-                    )
-
-                return defered.promise
-
-            refresh: () ->
-                defered = $q.defer()
-                self = @
-
-                params =
-                    method: "GET",
-                    url: @_url
-                    headers: headers()
-
-                $http(params).success((data, status) ->
-                    self._modifiedAttrs = {}
-                    self._attrs = data
-                    self._isModified = false
-
-                    defered.resolve(self)
-                ).error((data, status) ->
-                    defered.reject([data, status])
-                )
-
-                return defered.promise
-
-        Model.desSerialize = (sdata) ->
-            ddata = JSON.parse(sdata)
-            model = new Model(ddata.url, ddata.data)
-            return model
 
         # Resource Action Helpers
         itemUrlTemplate = "%(url)s%(id)s/"
 
-        queryMany = (url, params, options) ->
+        queryMany = (name, params, options) ->
+            console.log name, url(name)
+
             defauts = {method: "GET", headers:  headers()}
-            current = {url: url, params: params or {}}
+            current = {url: url(name), params: params or {}}
 
             httpParams = _.extend({}, defauts, options, current)
             defered = $q.defer()
 
-            $http(httpParams).success((data, status) ->
-                models = _.map data, (item) ->
-                    modelurl = interpolate(itemUrlTemplate, {"url": url, "id": item.id}, true)
-                    return new Model(item, modelurl)
-
+            promise = $http(httpParams)
+            promise.success (data, status) ->
+                models = _.map data, (attrs) -> $model(name, attrs)
                 defered.resolve(models)
-            ).error((data, status) ->
+
+            promise.error (data, status) ->
                 defered.reject(data, status)
-            )
 
             return defered.promise
 
-        queryOne = (url, params) ->
-            paramsDefault = {"method":"GET", "headers": headers(), "url": url}
+        queryOne = (name, id, extraParams) ->
+            params =
+                method: "GET"
+                headers: headers()
+                url: "#{url(name)}#{id}"
+
             defered = $q.defer()
 
-            params = _.extend({}, paramsDefault, params or {})
+            promise = $http(_.extend({}, params, extraParams or {}))
+            promise.success (data, status) ->
+                defered.resolve($model(name, data))
 
-            $http(params).success((data, status) ->
-                model = new Model(data, url)
-                defered.resolve(model)
-            ).error((data, status) ->
-                defered.reject([data, status])
-            )
+            promise.error (data, status) ->
+                defered.reject()
 
             return defered.promise
 
@@ -226,35 +94,35 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
                 "username": username
                 "password":password
 
-            $http({method:'POST', url: url('auth'), data: toJson(postData)})
+            $http({method:'POST', url: url('auth'), data: JSON.stringify(postData)})
                 .success(onSuccess).error(onError)
 
             return defered.promise
 
         # Get a project list
-        service.getProjects = -> queryMany(url('projects'))
+        service.getProjects = -> queryMany('projects')
 
         # Get available task statuses for a project.
         service.getTaskStatuses = (projectId) ->
-            return queryMany(url('choices/task-status'), {project: projectId})
+            return queryMany('choices/task-status', {project: projectId})
 
         service.getUsPoints = (projectId) ->
-            return queryMany(url('choices/points'), {project: projectId})
+            return queryMany('choices/points', {project: projectId})
 
         service.getPriorities = (projectId) ->
-            return queryMany(url("choices/priorities"), {project: projectId})
+            return queryMany("choices/priorities", {project: projectId})
 
         service.getSeverities = (projectId) ->
-            return queryMany(url("choices/severities"), {project: projectId})
+            return queryMany("choices/severities", {project: projectId})
 
         service.getIssueStatuses = (projectId) ->
-            return queryMany(url("choices/issue-status"), {project: projectId})
+            return queryMany("choices/issue-status", {project: projectId})
 
         service.getIssueTypes = (projectId) ->
-            return queryMany(url("choices/issue-types"), {project: projectId})
+            return queryMany("choices/issue-types", {project: projectId})
 
         service.getUsStatuses = (projectId) ->
-            return queryMany(url("choices/us-status"), {project: projectId})
+            return queryMany("choices/us-status", {project: projectId})
 
         # Get a milestone lines for a project.
         service.getMilestones = (projectId) ->
@@ -278,56 +146,43 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             # Second step: make user story models
             _makeUserStoryModels = (objects) ->
-                baseUrl = url("userstories")
-
                 for milestone in objects
-                    user_stories = _.map milestone.user_stories, (item) ->
-                        modelurl = interpolate(itemUrlTemplate, {"url": baseUrl, "id": item.id}, true)
-                        return new Model(item, modelurl)
-
-                    milestone.user_stories = user_stories
+                    milestone.user_stories = _.map milestone.user_stories, (obj) -> $model("userstories", obj)
 
                 return objects
 
             # Third step: make milestone models
             _makeModels = (objects) ->
-                baseUrl = url("milestones")
-
-                return _.map objects, (item) ->
-                    modelurl = interpolate(itemUrlTemplate, {"url": baseUrl, "id": item.id}, true)
-                    return new Model(item, modelurl)
+                return _.map objects, (obj) -> $model("milestones", obj)
 
             return _getMilestones().then(_makeUserStoryModels).then(_makeModels)
 
         # Get unassigned user stories list for a project.
         service.getUnassignedUserStories = (projectId) ->
-            return queryMany(url("userstories"),
-                {"project":projectId, "milestone": "null"})
+            return queryMany("userstories", {"project":projectId, "milestone": "null"})
 
         # Get a user stories list by projectId and sprintId.
         service.getMilestoneUserStories = (projectId, sprintId) ->
-            return queryMany(url("userstories"),
-                {"project":projectId, "milestone": sprintId})
+            return queryMany("userstories", {"project":projectId, "milestone": sprintId})
 
         service.getTasks = (projectId, sprintId) ->
             params = {project:projectId}
             if sprintId != undefined
                 params.milestone = sprintId
 
-            return queryMany(url("tasks"), params)
+            return queryMany("tasks", params)
 
         # Get project Issues list
         service.getIssues = (projectId) ->
-            return queryMany(url("issues"), {project:projectId})
+            return queryMany("issues", {project:projectId})
 
         service.getIssue = (projectId, issueId) ->
-            finalUrl = interpolate(itemUrlTemplate, {"url": url("issues"), "id": issueId}, true)
-            return queryOne(finalUrl)
+            return queryOne("issues", issueId)
 
         # Get a users with role developer for
         # one concret project.
         service.getUsers = (projectId) ->
-            return queryMany(url("users"), {project: projectId})
+            return queryMany("users", {project: projectId})
 
         service.createTask = (projectId, form) ->
             obj = _.extend({}, form, {project: projectId})
@@ -336,11 +191,10 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             promise = $http.post(url("tasks"), obj, {headers:headers()})
 
             promise.success (data, status) ->
-                modelurl = interpolate(itemUrlTemplate, {"url": url("tasks"), "id": data.id}, true)
-                defered.resolve(new Model(data, modelurl))
+                defered.resolve($model("tasks", data))
 
             promise.error (data, status) ->
-                defered.reject([data, status])
+                defered.reject()
 
             return defered.promise
 
@@ -349,13 +203,11 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             defered = $q.defer()
 
             promise = $http.post(url("issues"), obj, {headers:headers()})
-
             promise.success (data, status) ->
-                modelurl = interpolate(itemUrlTemplate, {"url": url("issues"), "id": data.id}, true)
-                defered.resolve(new Model(data, modelurl))
+                defered.resolve($model("issues", data))
 
             promise.error (data, status) ->
-                defered.reject([data, status])
+                defered.reject()
 
             return defered.promise
 
@@ -366,11 +218,10 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             promise = $http.post(url("userstories"), obj, {headers:headers()})
 
             promise.success (data, status) ->
-                modelurl = interpolate(itemUrlTemplate, {"url": url("userstories"), "id": data.id}, true)
-                defered.resolve(new Model(data, modelurl))
+                defered.resolve($model("userstories", data))
 
             promise.error (data, status) ->
-                defered.reject([data, status])
+                defered.reject()
 
             return defered.promise
 
@@ -381,20 +232,20 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             promise = $http.post(url("milestones"), obj, {headers:headers()})
 
             promise.success (data, status) ->
-                modelurl = interpolate(itemUrlTemplate, {"url": url("milestones"), "id": data.id}, true)
-                defered.resolve(new Model(data, modelurl))
+                defered.resolve($model("milestones", data))
 
             promise.error (data, status) ->
-                defered.reject(data, status)
+                defered.reject()
 
             return defered.promise
 
         service.getWikiPage = (projectId, slug) ->
-            urlTemplate = "%(url)s%(id)s-%(slug)s/"
-            finalUrl = interpolate(urlTemplate,
-                {"url": url("wikipages"), "id": projectId, "slug": slug}, true)
+            class WikiModel extends $model.cls
+                getUrl: ->
+                    return "#{url(@_name)}#{@_attrs.project}-#{@_attrs.slug}/"
 
-            return queryOne(finalUrl)
+            _id = "#{projectId}-#{slug}"
+            return queryOne("wikipages", _id, {}, cls=WikiModel)
 
         service.createWikiPage = (projectId, slug, content) ->
             obj =
@@ -405,18 +256,16 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             defered = $q.defer()
 
             promise = $http.post(url("wikipages"), obj, {headers:headers()})
-
             promise.success (data, status) ->
-                modelurl = interpolate(itemUrlTemplate, {"url": url("wikipages"), "id": data.slug}, true)
-                defered.resolve(new Model(data, modelurl))
+                defered.resolve($model("wikipages", slug))
 
             promise.error (data, status) ->
-                defered.reject([data, status])
+                defered.reject()
 
             return defered.promise
 
         service.getIssueAttachments = (projectId, issueId) ->
-            return queryMany(url("issues/attachments"), {project:projectId, object_id: issueId})
+            return queryMany("issues/attachments", {project:projectId, object_id: issueId})
 
         service.uploadIssueAttachment = (projectId, issueId, file, progress) ->
             defered = $q.defer()
@@ -456,5 +305,5 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
         return service
 
     $provide.factory("url", ['greenmine.config', urlProvider])
-    $provide.factory('resource', ['$http', '$q', 'storage', 'url', 'greenmine.config', resourceProvider])
+    $provide.factory('resource', ['$http', '$q', 'storage', 'url', '$model', 'greenmine.config', resourceProvider])
 )

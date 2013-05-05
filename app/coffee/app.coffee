@@ -71,6 +71,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 modules = [
     "greenmine.filters.common",
     "greenmine.services.common",
+    "greenmine.services.model",
     "greenmine.services.resource",
     "greenmine.services.storage",
     "greenmine.directives.generic",
