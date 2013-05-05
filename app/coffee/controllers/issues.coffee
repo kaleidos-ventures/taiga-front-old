@@ -55,14 +55,12 @@
         generateStatusTags()
 
     filterIssues = ->
-        console.log "filterIssues"
         for issue in $scope.issues
             issue.__hidden = false
 
         # Filter by generic tags
         selectedTags = _.filter($scope.tags, "selected")
         selectedTagsIds = _.map(selectedTags, "name")
-        console.log selectedTagsIds
 
         if selectedTagsIds.length > 0
             for item in $scope.issues
@@ -95,7 +93,6 @@
         groupToPages()
 
     groupToPages = ->
-        console.log "groupToPages"
         $scope.pagedItems = []
 
         issues = _.reject($scope.issues, "__hidden")
@@ -108,21 +105,17 @@
                 $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push(issue)
 
     $scope.prevPage = ->
-        console.log "prevPage"
         if $scope.currentPage > 0
             $scope.currentPage--
 
     $scope.nextPage = ->
-        console.log "nextPage"
         if $scope.currentPage < ($scope.pagedItems.length - 1)
             $scope.currentPage++
 
     $scope.setPage = ->
-        console.log "setPage"
         $scope.currentPage = this.n
 
     $scope.range = (start, end) ->
-        console.log "range"
         ret = []
         if not end?
             end = start
@@ -140,18 +133,22 @@
     $scope.$watch("sortingOrder", groupToPages)
     $scope.$watch("reverse", groupToPages)
 
-    $q.all([
+    promise = $q.all([
         rs.getIssueTypes(projectId),
         rs.getIssueStatuses(projectId),
         rs.getSeverities(projectId),
         rs.getPriorities(projectId),
-        rs.getUsers(projectId)
-    ]).then((results) ->
+        rs.getUsers(projectId),
+        rs.getIssues(projectId)
+    ])
+
+    promise = promise.then (results) ->
         issueTypes = results[0]
         issueStatuses = results[1]
         severities = results[2]
         priorities = results[3]
         users = results[4]
+        issues = results[5]
 
         _.each(users, (item) -> $rootScope.constants.users[item.id] = item)
         _.each(issueTypes, (item) -> $rootScope.constants.type[item.id] = item)
@@ -165,12 +162,9 @@
         $rootScope.constants.priorityList = _.sortBy(priorities, "order")
         $rootScope.constants.usersList = _.sortBy(users, "id")
 
-        return rs.getIssues(projectId)
-    ).then((issues) ->
         $scope.issues = issues
         regenerateTags()
         filterIssues()
-    )
 
     $scope.updateIssueAssignation = (issue, id) ->
         issue.assigned_to = id || null
