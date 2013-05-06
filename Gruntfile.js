@@ -137,9 +137,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-coffee');
 
-    grunt.registerTask('generic', [
-    ]);
-
     grunt.registerTask('production', [
         'less',
         'coffee:mainProduction',
