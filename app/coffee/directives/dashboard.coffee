@@ -1,7 +1,6 @@
-
 dashboardModule = angular.module('greenmine.directives.dashboard', [])
 
-gmCanvasTestConstructor = ($parse) -> (scope, elm, atts) ->
+gmCanvasTestConstructor = ($parse) -> (scope, elm, attrs) ->
     element = angular.element(elm)
 
     uniqId = _.uniqueId()
