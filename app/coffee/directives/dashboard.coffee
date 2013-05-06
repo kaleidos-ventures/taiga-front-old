@@ -3,14 +3,15 @@ dashboardModule = angular.module('greenmine.directives.dashboard', [])
 gmCanvasTestConstructor = ($parse) -> (scope, elm, attrs) ->
     element = angular.element(elm)
 
-    uniqId = _.uniqueId()
-    canvasElement = $("<canvas />")
-            .attr({"width": element.width(), "height": element.height()})
+    width = element.width()
+    height = element.width()
+
+    chart = $("<canvas />").css("width", width).css("height", height).attr("id", "dashboard-chart")
 
     element.empty()
-    element.append(canvasElement)
+    element.append(chart)
 
-    ctx = canvasElement.get(0).getContext("2d")
+    ctx = $("#dashboard-chart").get(0).getContext("2d")
 
     options =
         animation: false,
@@ -35,6 +36,6 @@ gmCanvasTestConstructor = ($parse) -> (scope, elm, attrs) ->
             }
         ]
 
-    chart = new Chart(ctx).Line(data, options)
+    new Chart(ctx).Line(data, options)
 
 dashboardModule.directive("gmCanvasTest", ["$parse", gmCanvasTestConstructor])

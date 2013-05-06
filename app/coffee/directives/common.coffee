@@ -2,19 +2,23 @@ commonModule = angular.module('greenmine.directives.common', [])
 
 gmBacklogGraphConstructor = ($parse) ->
     return (scope, elm, attrs) ->
-    
+
         element = angular.element(elm)
-        
+
         width = element.width()
         height = element.width()
-        
+
         chart = $("<canvas />").css("width", width).css("height", height).attr("id", "burndown-chart")
-        
+
         element.empty()
         element.append(chart)
-        
+
         ctx = $("#burndown-chart").get(0).getContext("2d")
-        
+
+        options =
+            animation: false,
+            bezierCurve: false
+
         data = {
             labels : ["January","February","March","April","May","June","July"],
             datasets : [
@@ -34,10 +38,10 @@ gmBacklogGraphConstructor = ($parse) ->
                 }
             ]
         }
-        
-        myNewChart = new Chart(ctx).Line(data)
 
-commonModule.directive("gmBacklogGraph", gmBacklogGraphConstructor);
+        new Chart(ctx).Line(data, options)
+
+commonModule.directive("gmBacklogGraph", gmBacklogGraphConstructor)
 
 
 headerMenuConstructor = ($rootScope) ->
