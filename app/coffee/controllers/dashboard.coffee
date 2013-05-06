@@ -32,29 +32,22 @@
         _.each $scope.userstoriesList, (us) ->
             totalPoints += pointIdToOrder(us.points)
 
-        _.each $scope.tasks, (task) ->
-            completedTasks +=1 if $scope.statuses[task.status].is_closed
-
         _.each $scope.usTasks, (statuses, usId) ->
             hasOpenTasks = false
-
-            completedTasks = 0
-            totalTasks = 0
+            hasTasks = false
 
             _.each statuses, (tasks, statusId) ->
-                totalTasks += tasks.length
-
+                hasTasks = true
                 if $scope.statuses[statusId].is_closed
                     completedTasks += tasks.length
                 else if tasks.length > 0
                     hasOpenTasks = true
 
-            compledUss += 1 if hasOpenTasks is true
-
-            us = $scope.userstories[usId]
-            points = pointIdToOrder(us.points)
-
-            completedPoints += ((completedTasks * points) / totalTasks) || 0
+            if hasOpenTasks is false and hasTasks is true
+                compledUss += 1
+                us = $scope.userstories[usId]
+                points = pointIdToOrder(us.points)
+                completedPoints += points
 
         $scope.stats =
             totalPoints: totalPoints
