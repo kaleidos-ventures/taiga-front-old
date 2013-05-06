@@ -64,14 +64,17 @@
 
         $scope.tags = tags
 
-    filterUsBySelectedTags = ->
-        selectedTags = _.filter($scope.tags, "selected")
-        selectedTagsIds = _.map(selectedTags, "name")
 
-        if selectedTagsIds.length > 0
-            _.each $scope.unassingedUs, (item) ->
-                itemTagIds = _.map(item.tags, (tag) -> tag)
-                interSection = _.intersection(selectedTagsIds, itemTagIds)
+     filterUsBySelectedTags = ->
+        selectedTags = _($scope.tags)
+                             .filter("selected")
+                             .map("name")
+                             .value()
+
+        if selectedTags.length > 0
+            for item in $scope.unassingedUs
+                itemTags = item.tags
+                interSection = _.intersection(selectedTags, itemTags)
 
                 if interSection.length == 0
                     item.__hidden = true
@@ -79,7 +82,8 @@
                     item.__hidden = false
 
         else
-            _.each($scope.unassingedUs, (item) -> item.__hidden = false)
+            item.__hidden = false for item in $scope.unassingedUs
+
 
     resortUserStories = ->
         # Normalize user stories array
@@ -93,9 +97,9 @@
         # Calculte new stats
         calculateStats()
 
-        _.each $scope.unassingedUs, (item) ->
-            if item.isModified()
-                item.save()
+        for item in $scope.unassingedUs
+            item.save() if item.isModified()
+
 
     $q.all([
         rs.getUsers($scope.projectId),
