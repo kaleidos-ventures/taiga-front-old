@@ -37,9 +37,9 @@ gmDashboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
 
 
         width = element.width()
-        height = element.width()
+        height = width/8
 
-        chart = $("<canvas />").css("width", width).css("height", height).attr("id", "dashboard-chart")
+        chart = $("<canvas />").attr("width", width).attr("height", height).attr("id", "dashboard-chart")
 
         element.empty()
         element.append(chart)
@@ -48,7 +48,9 @@ gmDashboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
 
         options =
             animation: false,
-            bezierCurve: false
+            bezierCurve: false,
+            scaleFontFamily : "'ColabThi'",
+            scaleFontSize : 10
 
         numOfDays = (moment(scope.milestone.estimated_finish) - moment(scope.milestone.estimated_start))/ (24*60*60*1000)
 
@@ -56,17 +58,16 @@ gmDashboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
             labels : getDaysLabels(scope.milestone.estimated_start, numOfDays)
             datasets : [
                 {
-                    fillColor : "rgba(220,220,220,0.5)",
-                    strokeColor : "rgba(220,220,220,1)",
-                    pointColor : "rgba(220,220,220,1)",
-                    pointStrokeColor : "#fff",
+                    fillColor : "rgba(120,120,120,0.2)",
+                    strokeColor : "rgba(120,120,120,0.2)",
+                    pointColor : "rgba(255,255,255,1)",
+                    pointStrokeColor : "#ccc",
                     data : getOptimalList(scope.stats.totalPoints, numOfDays)
                 },
                 {
-                    fillColor : "rgba(151,187,205,0.5)",
-                    strokeColor : "rgba(151,187,205,1)",
-                    pointColor : "rgba(151,187,205,1)",
-                    pointStrokeColor : "#fff",
+                    fillColor : "rgba(102,153,51,0.3)",
+                    strokeColor : "rgba(102,153,51,1)",
+                    pointColor : "rgba(255,255,255,1)",
                     data : getUSCompletionList(scope.milestone.user_stories, numOfDays, scope.milestone.estimated_start)
                 }
             ]

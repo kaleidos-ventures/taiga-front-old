@@ -6,35 +6,35 @@ gmBacklogGraphConstructor = ($parse) ->
         element = angular.element(elm)
 
         width = element.width()
-        height = element.width()
-
-        chart = $("<canvas />").css("width", width).css("height", height).attr("id", "burndown-chart")
+        height = width/6
 
         element.empty()
+        chart = $("<canvas />").attr("width", width).attr("height", height).attr("id", "burndown-chart")
         element.append(chart)
 
         ctx = $("#burndown-chart").get(0).getContext("2d")
 
         options =
             animation: false,
-            bezierCurve: false
+            bezierCurve: false,
+            scaleFontFamily : "'ColabThi'",
+            scaleFontSize : 10
 
         data = {
-            labels : ["January","February","March","April","May","June","July"],
+            labels : ["January","February","March","April","May","June"],
             datasets : [
                 {
-                    fillColor : "rgba(220,220,220,0.5)",
-                    strokeColor : "rgba(220,220,220,1)",
-                    pointColor : "rgba(220,220,220,1)",
-                    pointStrokeColor : "#fff",
-                    data : [65,59,90,81,56,55,40]
+                    fillColor : "rgba(120,120,120,0.2)",
+                    strokeColor : "rgba(120,120,120,0.2)",
+                    pointColor : "rgba(255,255,255,1)",
+                    pointStrokeColor : "#ccc",
+                    data : [100, 80, 60, 40, 20, 0]
                 },
                 {
-                    fillColor : "rgba(151,187,205,0.5)",
-                    strokeColor : "rgba(151,187,205,1)",
-                    pointColor : "rgba(151,187,205,1)",
-                    pointStrokeColor : "#fff",
-                    data : [28,48,40,19,96,27,100]
+                    fillColor : "rgba(102,153,51,0.3)",
+                    strokeColor : "rgba(102,153,51,1)",
+                    pointColor : "rgba(255,255,255,1)",
+                    data : [100,92,68,45,19,0]
                 }
             ]
         }
