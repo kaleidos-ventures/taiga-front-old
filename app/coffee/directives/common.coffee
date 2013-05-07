@@ -87,6 +87,18 @@ breadcrumbsConstructor = ($rootScope) ->
 commonModule.directive('gmBreadcrumb', ["$rootScope", breadcrumbsConstructor])
 
 commonModule.
+    directive('gmNinjaGraph', ->
+        return {
+            restrict: "A",
+            link: (scope, elm, attrs) ->
+                element = angular.element(elm)
+                graph = angular.element(".graph-box")
+
+                element.on "click", (event) ->
+                    event.preventDefault()
+                    graph.fadeToggle()
+        }
+    ).
     directive('gmColorizeTag', ->
         return (scope, elm, attrs) ->
             element = angular.element(elm)
