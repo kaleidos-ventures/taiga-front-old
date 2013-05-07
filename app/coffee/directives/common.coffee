@@ -1,9 +1,51 @@
 commonModule = angular.module('greenmine.directives.common', [])
 
-gmBacklogGraphConstructor = ($parse) ->
-    return (scope, elm, attrs) ->
+gmBacklogGraphConstructor = ($parse) -> (scope, elm, attrs) ->
+    element = angular.element(elm)
 
-        element = angular.element(elm)
+    redrawChart = () ->
+        getOptimalList = (totalPoints, numOfSprints) ->
+            (totalPoints-((totalPoints/(numOfSprints))*sprintNum) for sprintNum in [0..numOfSprints])
+
+        getLabels = (listOfMilestones, numOfSprints) ->
+            result = []
+            if listOfMilestones.length > numOfSprints
+                result = _.map(listOfMilestones, 'name')
+            else
+                difference = numOfSprints - listOfMilestones.length
+                counter = 0
+                for x in [0..numOfSprints-1]
+                    if listOfMilestones.length > x
+                        result.push listOfMilestones[x].name
+                    else
+                        counter++
+                        result.push "Future sprint #{counter}"
+            result.push ""
+            return result
+
+        getEvolutionPoints = (listOfMilestones, totalPoints) ->
+            listOfMilestones = _.filter(listOfMilestones, (milestone) -> moment(milestone.finish_date) <= moment())
+            result = [totalPoints]
+            _.each(listOfMilestones, (milestone, index) ->
+                result.push(result[index] - milestone.closed_points)
+            )
+            result
+
+        getTeamIncrementPoints = (listOfMilestones) ->
+            listOfMilestones = _.filter(listOfMilestones, (milestone) -> moment(milestone.finish_date) <= moment())
+            result = [0]
+            _.each(listOfMilestones, (milestone, index) ->
+                result.push(result[index] - milestone.team_increment_points)
+            )
+            result
+
+        getClientIncrementPoints = (listOfMilestones) ->
+            listOfMilestones = _.filter(listOfMilestones, (milestone) -> moment(milestone.finish_date) <= moment())
+            result = getTeamIncrementPoints()
+            _.each(listOfMilestones, (milestone, index) ->
+                result[index+1] = (result[index] - milestone.client_increment_points)
+            )
+            result
 
         width = element.width()
         height = width/6
@@ -15,31 +57,46 @@ gmBacklogGraphConstructor = ($parse) ->
         ctx = $("#burndown-chart").get(0).getContext("2d")
 
         options =
-            animation: false,
-            bezierCurve: false,
-            scaleFontFamily : "'ColabThi'",
+            animation: false
+            bezierCurve: false
+            scaleFontFamily : "'ColabThi'"
             scaleFontSize : 10
 
-        data = {
-            labels : ["January","February","March","April","May","June"],
+        data =
+            labels : getLabels(scope.project.list_of_milestones, scope.project.sprints)
             datasets : [
                 {
-                    fillColor : "rgba(120,120,120,0.2)",
-                    strokeColor : "rgba(120,120,120,0.2)",
-                    pointColor : "rgba(255,255,255,1)",
-                    pointStrokeColor : "#ccc",
-                    data : [100, 80, 60, 40, 20, 0]
+                    fillColor : "rgba(120,120,120,0.2)"
+                    strokeColor : "rgba(120,120,120,0.2)"
+                    pointColor : "rgba(255,255,255,1)"
+                    pointStrokeColor : "#ccc"
+                    data : getOptimalList(scope.project.total_story_points, scope.project.sprints)
                 },
                 {
-                    fillColor : "rgba(102,153,51,0.3)",
-                    strokeColor : "rgba(102,153,51,1)",
-                    pointColor : "rgba(255,255,255,1)",
-                    data : [100,92,68,45,19,0]
+                    fillColor : "rgba(102,153,51,0.3)"
+                    strokeColor : "rgba(102,153,51,1)"
+                    pointColor : "rgba(255,255,255,1)"
+                    data : getEvolutionPoints(scope.project.list_of_milestones, scope.project.total_story_points)
+                }
+                {
+                    fillColor : "rgba(10,15,5,0.3)"
+                    strokeColor : "rgba(10,15,5,1)"
+                    pointColor : "rgba(255,255,255,1)"
+                    data : getTeamIncrementPoints(scope.project.list_of_milestones)
+                }
+                {
+                    fillColor : "rgba(10,15,5,0.3)"
+                    strokeColor : "rgba(10,15,5,1)"
+                    pointColor : "rgba(255,255,255,1)"
+                    data : getClientIncrementPoints(scope.project.list_of_milestones)
                 }
             ]
-        }
 
         new Chart(ctx).Line(data, options)
+
+    scope.$watch 'project', (value) ->
+        if scope.project
+            redrawChart()
 
 commonModule.directive("gmBacklogGraph", gmBacklogGraphConstructor)
 

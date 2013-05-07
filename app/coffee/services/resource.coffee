@@ -102,6 +102,9 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
         # Get a project list
         service.getProjects = -> queryMany('projects')
 
+        service.getProject = (projectId) ->
+            return queryOne("projects", "#{projectId}/")
+
         # Get available task statuses for a project.
         service.getTaskStatuses = (projectId) ->
             return queryMany('choices/task-status', {project: projectId})

@@ -29,6 +29,9 @@
         if data.length > 0
             $rootScope.sprintId = data[0].id
 
+    rs.getProject($rootScope.projectId).then (project) ->
+        $rootScope.project = project
+
 @BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource']
 
 
