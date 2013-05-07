@@ -157,6 +157,36 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             return _getMilestones().then(_makeUserStoryModels).then(_makeModels)
 
+        service.getMilestone = (projectId, sprintId) ->
+            _getMilestone = ->
+                defered = $q.defer()
+
+                params =
+                    "method": "GET"
+                    "headers": headers()
+                    "url": url("milestones")+sprintId+"/"
+                    "params": {"project": projectId}
+
+                $http(params).success((data, status) ->
+                    defered.resolve(data)
+                ).error((data, status) ->
+                    defered.reject(data, status)
+                )
+
+                return defered.promise
+
+            # Second step: make user story models
+            _makeUserStoryModels = (milestone) ->
+                milestone.user_stories = _.map milestone.user_stories, (obj) -> $model("userstories", obj)
+
+                return milestone
+
+            # Third step: make milestone models
+            _makeModel = (milestone) ->
+                return $model("milestone", milestone)
+
+            return _getMilestone().then(_makeUserStoryModels).then(_makeModel)
+
         # Get unassigned user stories list for a project.
         service.getUnassignedUserStories = (projectId) ->
             return queryMany("userstories", {"project":projectId, "milestone": "null"})

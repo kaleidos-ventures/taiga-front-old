@@ -1,41 +1,80 @@
 dashboardModule = angular.module('greenmine.directives.dashboard', [])
 
-gmCanvasTestConstructor = ($parse) -> (scope, elm, attrs) ->
+gmDashboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
     element = angular.element(elm)
 
-    width = element.width()
-    height = element.width()
+    redrawChart = () ->
+        getDaysLabels = (startDay, numOfDays) ->
+            labels = []
+            for dayNum in [0..numOfDays]
+                day = moment(startDay)
+                day.add('days', dayNum)
+                labels.push(day.date())
+            return labels
 
-    chart = $("<canvas />").css("width", width).css("height", height).attr("id", "dashboard-chart")
+        getOptimalList = (totalPoints, numOfDays) ->
+            (totalPoints-((totalPoints/(numOfDays-1))*dayNum) for dayNum in [0..numOfDays-1])
 
-    element.empty()
-    element.append(chart)
+        getUSCompletionList = (userStories, numOfDays, startDay) ->
+            pointIdToOrder = greenmine.utils.pointIdToOrder(scope.constants.points)
+            points = []
 
-    ctx = $("#dashboard-chart").get(0).getContext("2d")
+            for dayNum in [0..numOfDays-1]
+                day = moment(startDay)
+                day.add('days', dayNum)
+                if day > moment().add('days', 1)
+                    break
 
-    options =
-        animation: false,
-        bezierCurve: false
+                finishedUserStories = _.filter(userStories, (obj) ->
+                    if obj.finish_date
+                        return day > moment(obj.finish_date)
+                    else
+                        return false
+                )
 
-    data =
-        labels : ["0", "1", "2", "3", "4", "5"]
-        datasets : [
-            {
-                fillColor : "rgba(220,220,220,0.5)",
-                strokeColor : "rgba(220,220,220,1)",
-                pointColor : "rgba(220,220,220,1)",
-                pointStrokeColor : "#fff",
-                data : [100, 80, 60, 40, 20, 0]
-            },
-            {
-                fillColor : "rgba(151,187,205,0.5)",
-                strokeColor : "rgba(151,187,205,1)",
-                pointColor : "rgba(151,187,205,1)",
-                pointStrokeColor : "#fff",
-                data : [100, 76, 64, 36, 0, 0]
-            }
-        ]
+                points.push(_.reduce(finishedUserStories, ((total, us) -> return total + pointIdToOrder(us.points)), 0))
+            return points
 
-    new Chart(ctx).Line(data, options)
 
-dashboardModule.directive("gmCanvasTest", ["$parse", gmCanvasTestConstructor])
+        width = element.width()
+        height = element.width()
+
+        chart = $("<canvas />").css("width", width).css("height", height).attr("id", "dashboard-chart")
+
+        element.empty()
+        element.append(chart)
+
+        ctx = $("#dashboard-chart").get(0).getContext("2d")
+
+        options =
+            animation: false,
+            bezierCurve: false
+
+        numOfDays = (moment(scope.milestone.estimated_finish) - moment(scope.milestone.estimated_start))/ (24*60*60*1000)
+
+        data =
+            labels : getDaysLabels(scope.milestone.estimated_start, numOfDays)
+            datasets : [
+                {
+                    fillColor : "rgba(220,220,220,0.5)",
+                    strokeColor : "rgba(220,220,220,1)",
+                    pointColor : "rgba(220,220,220,1)",
+                    pointStrokeColor : "#fff",
+                    data : getOptimalList(scope.stats.totalPoints, numOfDays)
+                },
+                {
+                    fillColor : "rgba(151,187,205,0.5)",
+                    strokeColor : "rgba(151,187,205,1)",
+                    pointColor : "rgba(151,187,205,1)",
+                    pointStrokeColor : "#fff",
+                    data : getUSCompletionList(scope.milestone.user_stories, numOfDays, scope.milestone.estimated_start)
+                }
+            ]
+
+        new Chart(ctx).Line(data, options)
+
+    scope.$watch 'statuses', (value) ->
+        if scope.statuses and scope.milestone
+            redrawChart()
+
+dashboardModule.directive("gmDashboardGraph", ["$parse", "resource", gmDashboardGraphConstructor])

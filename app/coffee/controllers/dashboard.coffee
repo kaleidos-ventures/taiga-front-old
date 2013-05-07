@@ -60,16 +60,18 @@
 
     $q.all([
         rs.getTaskStatuses(projectId),
-        rs.getMilestoneUserStories(projectId, sprintId),
+        rs.getMilestone(projectId, sprintId)
         rs.getUsPoints(projectId),
         rs.getTasks(projectId, sprintId),
-        rs.getUsers(projectId)
+        rs.getUsers(projectId),
     ]).then((results) ->
         statuses = results[0]
-        userstories = results[1]
+        milestone = results[1]
         points = results[2]
         tasks = results[3]
         users = results[4]
+
+        userstories = milestone.user_stories
 
         $rootScope.constants.usersList = _.sortBy(users, "id")
 
@@ -79,6 +81,7 @@
         $scope.tasks = tasks
         $scope.userstories = {}
         $scope.statuses = {}
+        $scope.milestone = milestone
 
         _.each(statuses, (status) -> $scope.statuses[status.id] = status)
         _.each(userstories, (us) -> $scope.userstories[us.id] = us)
