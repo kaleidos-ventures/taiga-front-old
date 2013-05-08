@@ -153,7 +153,7 @@ commonModule.
 
                 element.on "click", (event) ->
                     event.preventDefault()
-                    graph.fadeToggle()
+                    graph.slideToggle()
         }
     ).
     directive('gmColorizeTag', ->

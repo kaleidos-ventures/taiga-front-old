@@ -2,6 +2,24 @@
 <div class="middle-container issues-content">
     <div class="new-issue">
         <a class="button" gm-modal="#new-issue-modal">New issue</a>
+        <fieldset class="show-graph">
+            <label for="show-graph">Show Graphs</label>
+            <input id="show-graph" type="checkbox" ng-model="checked">
+        </fieldset>
+    </div>
+    <div class="graph-box" ng-show="checked">
+        <div class="graph-container current-issues">
+            <p>Opened vs. closed bugs</p>
+            <div class="graph" gm-pending-issue-graph></div>
+        </div>
+        <div class="graph-container your-issues">
+            <p>Your Issues</p>
+            <div class="graph" gm-your-issues-graph></div>
+        </div>
+        <div class="graph-container issues-creation">
+            <p>Issues creation rythm</p>
+            <div class="graph" gm-issues-creation-graph></div>
+        </div>
     </div>
     <div class="filters-container">
         <div class="filters-bar-sbox">
