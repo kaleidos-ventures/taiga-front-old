@@ -8,7 +8,7 @@
  */
 
 //Define the global Chart Variable as a class.
-var Chart = function(context){
+window.Chart = function(context){
 
 	var chart = this;
 	
@@ -308,6 +308,8 @@ var Chart = function(context){
 			datasetStroke : true,
 			datasetStrokeWidth : 2,
 			datasetFill : true,
+			datasetFillXAxis : null,
+			datasetFillYAxis : null,
 			animation : true,
 			animationSteps : 60,
 			animationEasing : "easeOutQuart",
@@ -376,11 +378,7 @@ var Chart = function(context){
 				graphMin : config.scaleStartValue,
 				labels : []
 			}
-			for (var i=0; i<calculatedScale.steps; i++){
-				if(labelTemplateString){
-				calculatedScale.labels.push(tmpl(labelTemplateString,{value:(config.scaleStartValue + (config.scaleStepWidth * i)).toFixed(getDecimalPlaces (config.scaleStepWidth))}));
-				}
-			}
+			populateLabels(labelTemplateString, calculatedScale.labels,calculatedScale.steps,config.scaleStartValue,config.scaleStepWidth);
 		}
 		
 		scaleHop = maxSize/(calculatedScale.steps);
@@ -516,11 +514,7 @@ var Chart = function(context){
 				graphMin : config.scaleStartValue,
 				labels : []
 			}
-			for (var i=0; i<calculatedScale.steps; i++){
-				if(labelTemplateString){
-				calculatedScale.labels.push(tmpl(labelTemplateString,{value:(config.scaleStartValue + (config.scaleStepWidth * i)).toFixed(getDecimalPlaces (config.scaleStepWidth))}));
-				}
-			}
+			populateLabels(labelTemplateString, calculatedScale.labels,calculatedScale.steps,config.scaleStartValue,config.scaleStepWidth);
 		}
 		
 		scaleHop = maxSize/(calculatedScale.steps);
@@ -813,11 +807,7 @@ var Chart = function(context){
 				graphMin : config.scaleStartValue,
 				labels : []
 			}
-			for (var i=0; i<calculatedScale.steps; i++){
-				if(labelTemplateString){
-				calculatedScale.labels.push(tmpl(labelTemplateString,{value:(config.scaleStartValue + (config.scaleStepWidth * i)).toFixed(getDecimalPlaces (config.scaleStepWidth))}));
-				}
-			}
+			populateLabels(labelTemplateString, calculatedScale.labels,calculatedScale.steps,config.scaleStartValue,config.scaleStepWidth);
 		}
 		
 		scaleHop = Math.floor(scaleHeight/calculatedScale.steps);
@@ -841,8 +831,16 @@ var Chart = function(context){
 				}
 				ctx.stroke();
 				if (config.datasetFill){
-					ctx.lineTo(yAxisPosX + (valueHop*(data.datasets[i].data.length-1)),xAxisPosY);
-					ctx.lineTo(yAxisPosX,xAxisPosY);
+                    var graphXAxisPosY = xAxisPosY;
+                    var graphYAxisPosX = yAxisPosX;
+                    if (config.datasetFillXAxis !== null) {
+                        graphXAxisPosY = yPosValue(config.datasetFillXAxis);
+                    }
+                    if (config.datasetFillYAxis !== null) {
+                        graphYAxisPosX = xPos(config.datasetFillYAxis);
+                    }
+					ctx.lineTo(yAxisPosX + (valueHop*(data.datasets[i].data.length-1)),graphXAxisPosY);
+					ctx.lineTo(graphYAxisPosX,graphXAxisPosY);
 					ctx.closePath();
 					ctx.fillStyle = data.datasets[i].fillColor;
 					ctx.fill();
@@ -864,7 +862,10 @@ var Chart = function(context){
 			}
 			
 			function yPos(dataSet,iteration){
-				return xAxisPosY - animPc*(calculateOffset(data.datasets[dataSet].data[iteration],calculatedScale,scaleHop));			
+				return yPosValue(data.datasets[dataSet].data[iteration]);
+			}
+			function yPosValue(value){
+				return xAxisPosY - animPc*(calculateOffset(value,calculatedScale,scaleHop));
 			}
 			function xPos(iteration){
 				return yAxisPosX + (valueHop * iteration);
@@ -1049,11 +1050,7 @@ var Chart = function(context){
 				graphMin : config.scaleStartValue,
 				labels : []
 			}
-			for (var i=0; i<calculatedScale.steps; i++){
-				if(labelTemplateString){
-				calculatedScale.labels.push(tmpl(labelTemplateString,{value:(config.scaleStartValue + (config.scaleStepWidth * i)).toFixed(getDecimalPlaces (config.scaleStepWidth))}));
-				}
-			}
+			populateLabels(labelTemplateString, calculatedScale.labels,calculatedScale.steps,config.scaleStartValue,config.scaleStepWidth);
 		}
 		
 		scaleHop = Math.floor(scaleHeight/calculatedScale.steps);
@@ -1324,19 +1321,9 @@ var Chart = function(context){
 			        numberOfSteps = Math.round(graphRange/stepValue);
 		        }
 	        };
-	        
 
-	        
-	        //Create an array of all the labels by interpolating the string.
-	        
 	        var labels = [];
-	        
-	        if(labelTemplateString){
-		        //Fix floating point errors by setting to fixed the on the same decimal as the stepValue.
-		        for (var i=1; i<numberOfSteps+1; i++){
-		        	labels.push(tmpl(labelTemplateString,{value:(graphMin + (stepValue*i)).toFixed(getDecimalPlaces (stepValue))}));
-		        }
-	        }
+	        populateLabels(labelTemplateString, labels, numberOfSteps, graphMin, stepValue);
 		
 	        return {
 		        steps : numberOfSteps,
@@ -1352,6 +1339,16 @@ var Chart = function(context){
 
 
 	}
+
+    //Populate an array of all the labels by interpolating the string.
+    function populateLabels(labelTemplateString, labels, numberOfSteps, graphMin, stepValue) {
+        if (labelTemplateString) {
+            //Fix floating point errors by setting to fixed the on the same decimal as the stepValue.
+            for (var i = 1; i < numberOfSteps + 1; i++) {
+                labels.push(tmpl(labelTemplateString, {value: (graphMin + (stepValue * i)).toFixed(getDecimalPlaces(stepValue))}));
+            }
+        }
+    }
 	
 	//Max value from array
 	function Max( array ){
@@ -1438,6 +1435,5 @@ var Chart = function(context){
 	    return data ? fn( data ) : fn;
 	  };
 }
-
 
 
