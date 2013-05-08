@@ -427,7 +427,7 @@ commonModule.
                         body.append(modal)
                         scope.$apply ->
                             initCallback(scope)
-                            $compile(modal.contents())(scope)
+                            $compile(modal)(scope)
                         modal.modal()
 
                 scope.$on 'modals:close', ->
