@@ -68,31 +68,32 @@ gmBacklogGraphConstructor = ($parse) -> (scope, elm, attrs) ->
             labels : getLabels(scope.project.list_of_milestones, scope.project.sprints)
             datasets : [
                 {
-                    fillColor : "rgba(120,120,120,0.2)"
-                    strokeColor : "rgba(120,120,120,0.2)"
-                    pointColor : "rgba(255,255,255,1)"
-                    pointStrokeColor : "#ccc"
+                    fillColor : "rgba(120,120,120,0.2)",
+                    strokeColor : "rgba(120,120,120,0.2)",
+                    pointColor : "rgba(255,255,255,1)",
+                    pointStrokeColor : "#ccc",
                     data : getOptimalList(scope.project.total_story_points, scope.project.sprints)
                 },
                 {
-                    fillColor : "rgba(102,153,51,0.3)"
-                    strokeColor : "rgba(102,153,51,1)"
-                    pointColor : "rgba(255,255,255,1)"
+                    fillColor : "rgba(102,153,51,0.3)",
+                    strokeColor : "rgba(102,153,51,1)",
+                    pointColor : "rgba(255,255,255,1)",
                     data : getEvolutionPoints(scope.project.list_of_milestones, scope.project.total_story_points)
-                }
+                },
                 {
-                    fillColor : "rgba(153,51,51,0.3)"
-                    strokeColor : "rgba(153,51,51,1)"
-                    pointColor : "rgba(255,255,255,1)"
+                    fillColor : "rgba(153,51,51,0.3)",
+                    strokeColor : "rgba(153,51,51,1)",
+                    pointColor : "rgba(255,255,255,1)",
                     data : getTeamIncrementPoints(scope.project.list_of_milestones)
-                }
+                },
                 {
-                    fillColor : "rgba(255,51,51,0.3)"
-                    strokeColor : "rgba(255,51,51,1)"
-                    pointColor : "rgba(255,255,255,1)"
+                    fillColor : "rgba(255,51,51,0.3)",
+                    strokeColor : "rgba(255,51,51,1)",
+                    pointColor : "rgba(255,255,255,1)",
                     data : getClientIncrementPoints(scope.project.list_of_milestones)
                 }
             ]
+            
 
         new Chart(ctx).Line(data, options)
 

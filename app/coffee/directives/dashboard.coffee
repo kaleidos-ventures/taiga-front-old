@@ -37,7 +37,7 @@ gmDashboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
 
 
         width = element.width()
-        height = width/8
+        height = width/6
 
         chart = $("<canvas />").attr("width", width).attr("height", height).attr("id", "dashboard-chart")
 

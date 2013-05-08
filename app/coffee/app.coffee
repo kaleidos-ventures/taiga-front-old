@@ -83,7 +83,7 @@ modules = [
 
 
 init = ($rootScope, $location, storage) ->
-    storage.set("userInfo", {"id": "12345", "username": "niwibe", "fullname": "Andrey Antukh"})
+    storage.set("userInfo", {"id": "12345", "username": "xaviju", "fullname": "Xavi Julián"})
 
     $rootScope.auth = storage.get('userInfo')
     $rootScope.constants = {}
