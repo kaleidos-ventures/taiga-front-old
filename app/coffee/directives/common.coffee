@@ -41,9 +41,9 @@ gmBacklogGraphConstructor = ($parse) -> (scope, elm, attrs) ->
 
         getClientIncrementPoints = (listOfMilestones) ->
             listOfMilestones = _.filter(listOfMilestones, (milestone) -> moment(milestone.finish_date) <= moment())
-            result = getTeamIncrementPoints()
+            result = getTeamIncrementPoints(listOfMilestones)
             _.each(listOfMilestones, (milestone, index) ->
-                result[index+1] = (result[index] - milestone.client_increment_points)
+                result[index+1] += (result[index] - milestone.client_increment_points)
             )
             result
 
@@ -61,6 +61,8 @@ gmBacklogGraphConstructor = ($parse) -> (scope, elm, attrs) ->
             bezierCurve: false
             scaleFontFamily : "'ColabThi'"
             scaleFontSize : 10
+            datasetFillXAxis: 0
+            datasetFillYAxis: 0
 
         data =
             labels : getLabels(scope.project.list_of_milestones, scope.project.sprints)
@@ -79,14 +81,14 @@ gmBacklogGraphConstructor = ($parse) -> (scope, elm, attrs) ->
                     data : getEvolutionPoints(scope.project.list_of_milestones, scope.project.total_story_points)
                 }
                 {
-                    fillColor : "rgba(10,15,5,0.3)"
-                    strokeColor : "rgba(10,15,5,1)"
+                    fillColor : "rgba(153,51,51,0.3)"
+                    strokeColor : "rgba(153,51,51,1)"
                     pointColor : "rgba(255,255,255,1)"
                     data : getTeamIncrementPoints(scope.project.list_of_milestones)
                 }
                 {
-                    fillColor : "rgba(10,15,5,0.3)"
-                    strokeColor : "rgba(10,15,5,1)"
+                    fillColor : "rgba(255,51,51,0.3)"
+                    strokeColor : "rgba(255,51,51,1)"
                     pointColor : "rgba(255,255,255,1)"
                     data : getClientIncrementPoints(scope.project.list_of_milestones)
                 }
