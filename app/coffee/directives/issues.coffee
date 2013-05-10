@@ -50,10 +50,24 @@ gmIssueChangesConstructor = ->
 
 issuesModule.directive("gmIssueChanges", gmIssueChangesConstructor)
 
-gmPendingIssueGraphConstructor = ->
-    return (scope, elm, attrs) ->
+gmPendingIssueGraphConstructor = -> (scope, elm, attrs) ->
+    redrawChart = () ->
+        element = angular.element elm
+        countIssues = (severities, issues) ->
+            counter = {}
+            for severity in severities
+                counter[severity.id] = 0
 
-        element = angular.element(elm)
+            for issue in issues
+                if not counter[issue.severity]
+                    counter[issue.severity] = 1
+                else
+                    counter[issue.severity] += 1
+
+            result = []
+            for severity in severities
+                result.push(counter[severity.id])
+            result
 
         width = element.width()
         height = width
@@ -69,7 +83,7 @@ gmPendingIssueGraphConstructor = ->
             scaleFontSize : 10
 
         data = {
-            labels : ["Wishlist","Minor","Normal","Important","Critical"],
+            labels : (severity.name for severity in scope.constants.severityList)
             datasets : [
                 #Number of created bugs
                 {
@@ -77,26 +91,45 @@ gmPendingIssueGraphConstructor = ->
                     strokeColor : "rgba(120,120,120,0.2)",
                     pointColor : "rgba(255,255,255,1)",
                     pointStrokeColor : "#ccc",
-                    data : [100,80,60,80,100]
+                    data : countIssues(scope.constants.severityList, scope.issues)
                 },
                 #Number of resolved bugs
                 {
                     fillColor : "rgba(102,153,51,0.3)",
                     strokeColor : "rgba(102,153,51,1)",
                     pointColor : "rgba(255,255,255,1)",
-                    data : [100,60,40,50,100]
+                    data : countIssues(scope.constants.severityList, _.filter(scope.issues, 'is_closed'))
                 }
             ]
         }
 
         new Chart(ctx).Radar(data,options)
 
+    scope.$watch 'issues', (value) ->
+        console.log value
+        redrawChart() if value
+
 issuesModule.directive("gmPendingIssueGraph", gmPendingIssueGraphConstructor)
 
-gmYourIssuesGraphConstructor = ->
-    return (scope, elm, attrs) ->
+gmYourIssuesGraphConstructor = -> (scope, elm, attrs) ->
+    element = angular.element(elm)
 
-        element = angular.element(elm)
+    redrawChart = () ->
+        countIssues = (severities, issues) ->
+            counter = {}
+            for severity in severities
+                counter[severity.id] = 0
+
+            for issue in issues
+                if not counter[issue.severity]
+                    counter[issue.severity] = 1
+                else
+                    counter[issue.severity] += 1
+
+            result = []
+            for severity in severities
+                result.push(counter[severity.id])
+            result
 
         width = element.width()
         height = width
@@ -111,42 +144,23 @@ gmYourIssuesGraphConstructor = ->
             scaleFontFamily : "'ColabThi'",
             scaleFontSize : 10
 
-        data = [
-            # Wishlist
-            {
-                value: 30,
-                color:"#ccc"
-            },
-            # Minor
-            {
-                value : 50,
-                color : "#669933"
-            },
-            # Normal
-            {
-                value : 100,
-                color : "blue"
-            },
-            # Important
-            {
-                value : 40,
-                color : "orange"
-            },
-            # Critical
-            {
-                value : 120,
-                color : "#CC0000"
-            }
+        colors = ["#ccc", "#669933", "blue", "orange", "#CC0000"]
+        counts = countIssues(scope.constants.severityList, scope.issues)
+        data = []
 
-        ]
+        for x in [0..counts.length-1]
+            data.push value:counts[x], color:colors[x]
 
-        new Chart(ctx).Doughnut(data,options);
+        new Chart(ctx).Doughnut(data,options)
+
+    scope.$watch 'issues', (value) ->
+        redrawChart() if value
 
 issuesModule.directive("gmYourIssuesGraph", gmYourIssuesGraphConstructor)
 
-gmIssuesCreationGraphConstructor = ->
-    return (scope, elm, attrs) ->
+gmIssuesCreationGraphConstructor = -> (scope, elm, attrs) ->
 
+    redrawChart = () ->
         element = angular.element(elm)
 
         width = element.width()
@@ -174,16 +188,12 @@ gmIssuesCreationGraphConstructor = ->
                     pointStrokeColor : "#ccc",
                     data : [10, 15, 30, 40, 20, 10]
                 }
-                ##,
-                #{
-                #    fillColor : "rgba(102,153,51,0.3)",
-                #    strokeColor : "rgba(102,153,51,1)",
-                #    pointColor : "rgba(255,255,255,1)",
-                #    data : [100,92,68,45,19,0]
-                #}
             ]
         }
 
         new Chart(ctx).Line(data, options)
+
+    scope.$watch 'issues', (value) ->
+        redrawChart() if value
 
 issuesModule.directive("gmIssuesCreationGraph", gmIssuesCreationGraphConstructor)
