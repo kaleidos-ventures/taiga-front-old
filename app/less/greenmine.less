@@ -14,7 +14,7 @@
 }
 
 .button{
-    background: #CCC;
+    background: #999;
     display: inline-block;
     padding: 5px 10px 6px;
     border: none;
@@ -32,8 +32,9 @@
     color: #ffffff;
     font-size: 1em;
     &:hover{
-        background: #bbb;
+        background: darken(#999, 30%);
         color: darken(#fff, 30%);
+        transition: all 0.2s ease-in;
     }
     &.button-success, &.button-edit {
         background-color: #91bd09;
@@ -754,7 +755,7 @@ body.login {
                     border-radius: 4px;
                     &.selected {
                         opacity: 1;
-                        box-shadow: 1px 1px 1px rgba(0,0,0,.2);
+                        box-shadow: 1px 1px 1px rgba(0,0,0,.4);
                         font-family: @ColabReg;
                         transition: all 0.3s ease-out;
                     }
@@ -1575,11 +1576,9 @@ body.login {
         .filters-visual-box {
             overflow: hidden;
             padding: 10px;
-
-            & > h3 {
-                padding: 0px;
-                margin: 0px;
-                margin-bottom: 7px;
+            h3 {
+                margin: 0;
+                padding: 7px 0;
                 font-size: 16px;
             }
 
@@ -1596,8 +1595,9 @@ body.login {
                     font-family: @ColabThi;
                     font-size: 1em;
                     color: @white;
-                    opacity: 0.5;
+                    opacity: 0.4;
                     border-radius: 4px;
+                    background-color: #666; 
                     &.selected {
                         opacity: 1;
                         box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
@@ -1618,6 +1618,27 @@ body.login {
                         padding: 5px 8px;
                         margin-top: -5px;
                         border-radius: 0 4px 4px 0;
+                    }
+                    &.status-new{
+                    background-color: #8C2318;
+                    }
+                    &.status-in-progress{
+                        background-color: #5E8C6A;   
+                    }
+                    &.status-ready-for-test{
+                        background-color: #88A65E;
+                    }
+                    &.status-closed{
+                        background-color: #BFB35A;
+                    }
+                    &.status-needs-info{
+                        background-color: #89BAB4;
+                    }
+                    &.status-rejected{
+                        background-color: #CC0000;
+                    }
+                    &.status-postponed{
+                        background-color: #ccc; 
                     }
                 }
             }
@@ -2063,46 +2084,42 @@ body.login {
                         &.row-us-description {
                             min-height: 200px;
                             padding-bottom: 10px;
-                            border-bottom: 1px solid #555;
+                            border-bottom: 1px solid #333;
+                            position: relative;
                             .info {
                                 .title {
-                                    padding: 10px 15px;
+                                    padding: 10px 25px;
                                     font-family: @ColabReg;
                                     color: @white;
-                                    font-size: .8em;
+                                    font-size: 1em;
                                     text-align: center;
                                     font-weight: bold;
                                 }
                                 .description {
                                     text-align: center;
                                     padding: 10px 15px;
-                                    font-size: .8em;
+                                    font-size: .9em;
                                     line-height: 14px;
                                     p{
                                         margin: 0;
                                     }
                                 }
                             }
-                            .options {
-                                padding: 5px;
-                                ul {
-                                    padding: 5px;
-                                    margin: 0px;
-                                    list-style: none;
-                                }
-                                a {
-                                    color: white;
-                                    text-decoration: none;
-                                    display: block;
-                                    padding: 5px 0;
-                                    text-align: center;
-                                    background: #888;
-                                    border: none;
-                                    &:hover{
-                                        background: darken(#888, 20%);
-                                        transition: all 0.3s ease-in;
-                                    }
-                                }
+                            .button{
+                                display: block;
+                                text-align: center;
+                                border: none;
+                                margin: 10px;
+                            }
+                            .us-points{
+                                position: absolute;
+                                top: 2px;
+                                right: 0;
+                                padding: 5px 5px 5px 7px;
+                                background: rgba(255,255,255,.3);
+                                border-radius: 10px 0px 0px 10px;
+                                font-family: 'LeagueGothicRegular';
+                                font-size: 1.1em;
                             }
                         }
                         .tasks {
@@ -2110,13 +2127,10 @@ body.login {
                             min-height: 200px;
                             .task-box {
                                 width: 145px;
-                                height: 120px;
+                                height: 145px;
                                 float: left;
                                 margin: 4px;
                                 box-shadow: 0px 5px 12px -2px rgba(0,0,0,.2);
-                                &:hover{
-                                    box-shadow: 0px 6px 15px -2px rgba(0,0,0,.3);
-                                }
                                 .task-box-content {
                                     background-color: #FFF5D8;
                                     color: black;
@@ -2125,6 +2139,7 @@ body.login {
                                     height: 90%;
                                     padding: 7px;
                                     cursor: move;
+                                    position: relative;
                                     .title {
                                         font-family: 'DroidSerifBold';
                                         font-size: .9em;
@@ -2132,7 +2147,9 @@ body.login {
                                         color: #333;
                                     }
                                     .assign-to{
-                                        padding: 5px 0;
+                                        margin: 5px 0;
+                                        padding: 0 5px;
+                                        border-left: 15px solid #CCC;
                                         a{
                                             color: #666;
                                             font-size: .9em;
@@ -2145,6 +2162,36 @@ body.login {
                                         font-size: .8em;
                                         line-height: 13px;
                                         margin: 0;
+                                    }
+                                    .us-points{
+                                        margin: 0;
+                                        text-align: center;
+                                        padding: 3px 5px;
+                                        background-color: rgba(0,0,0,.2);
+                                        color: #000;
+                                        margin-top: 4px;
+                                    }
+                                    .edit-task{
+                                        position: absolute;
+                                        bottom: 0px;
+                                        right: 0px;
+                                        padding: 5px 5px 5px 5px;
+                                        text-indent: 100%;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        width: 16px;
+                                        height: 16px;
+                                        display: block;
+                                        opacity: 0;
+                                        border-radius: 20px 0 0 0;
+                                        background: url('../img/backlog_sprite.png') no-repeat center -12px rgba(66,99,33,.6);
+                                    }
+                                    &:hover{
+                                        box-shadow: 0px 6px 15px -2px rgba(0,0,0,.3);
+                                        .edit-task{
+                                            opacity: 1;
+                                            transition: all 0.3s ease-in;
+                                        }
                                     }
                                 }
                             }

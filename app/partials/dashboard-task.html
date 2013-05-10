@@ -2,9 +2,10 @@
 
     <div class="title">{{ task.subject }}</div>
 
-    <div class="assign-to">
+    <div class="assign-to" style="border-color: #cc0000">
         <a href="" gm-popover="updateTaskAssignation(task, selectedId)"
             data-tmpl="#developers-popover" data-auto-hide="true">{{ resolveUser(task.assigned_to) }} {{ task.assigned_to }}</a>
     </div>
-    <p class="desc">{{ task.description | truncate:90 }}</p>
+    <p class="desc">{{ task.description | truncate:110 }}</p>
+    <a href="#TODO" class="edit-task">Edit</a>
 </div>

@@ -26,33 +26,37 @@
             <div class="title-sbox">
                 <a href="" ng-class="{active: filtersOpened}" ng-click="filtersOpened=!filtersOpened">Filters</a>
             </div>
-            <div class="filters-visual-box" ng-show="filtersOpened">
-                <h3>Tags:</h3>
-                <div class="tags-list-sbox">
-                    <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
-                            ng-class="{selected: tag.selected}" gm-colorize-tag>
-                        <div class="name">{{ tag.name }}</div>
-                        <div class="count">{{ tag.count }}</div>
+            <ul class="filters-visual-box" ng-show="filtersOpened">
+                <li>
+                    <h3>Status:</h3>
+                    <div class="tags-list-sbox">
+                        <div class="tag status-{{ tag.name | slugify }}" ng-repeat="tag in statusTags" ng-click="selectTag(tag)"
+                                ng-class="{selected: tag.selected}">
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
                     </div>
-                </div>
-
-                <h3>Assigned to:</h3>
-                <div class="tags-list-sbox">
-                    <div class="tag" ng-repeat="tag in assignedToTags" ng-click="selectTag(tag)"
-                            ng-class="{selected: tag.selected}" style="background-color: #666">
-                        <div class="name">{{ tag.name }}</div>
-                        <div class="count">{{ tag.count }}</div>
+                </li>
+                <li>
+                    <h3>Assigned to:</h3>
+                    <div class="tags-list-sbox">
+                        <div class="tag" ng-repeat="tag in assignedToTags" ng-click="selectTag(tag)"
+                                ng-class="{selected: tag.selected}"><!-- TODO - Add into tag a background-color with user own color from admin -->
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
                     </div>
-                </div>
-
-                <h3>Status:</h3>
-                <div class="tags-list-sbox">
-                    <div class="tag" ng-repeat="tag in statusTags" ng-click="selectTag(tag)"
-                            ng-class="{selected: tag.selected}" style="background-color: #666">
-                        <div class="name">{{ tag.name }}</div>
-                        <div class="count">{{ tag.count }}</div>
+                </li>
+                <li>
+                    <h3>Tags:</h3>
+                    <div class="tags-list-sbox">
+                        <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
+                                ng-class="{selected: tag.selected}" gm-colorize-tag>
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
                     </div>
-                </div>
+                </li>
             </div>
         </div>
         <div class="issue-form-sbox" ng-show="issueFormOpened">
