@@ -59,7 +59,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             return defered.promise
 
-        queryOne = (name, id, params, options) ->
+        queryOne = (name, id, params, options, cls) ->
             defauts = {method: "GET", headers:  headers()}
             current = {url: "#{url(name)}#{id}/", params: params or {}}
 
@@ -68,9 +68,8 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             defered = $q.defer()
 
             promise = $http(httpParams)
-            console.log httpParams
             promise.success (data, status) ->
-                defered.resolve($model(name, data))
+                defered.resolve($model(name, data, cls))
 
             promise.error (data, status) ->
                 defered.reject()
@@ -274,12 +273,13 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             return defered.promise
 
         service.getWikiPage = (projectId, slug) ->
+            console.log $model.cls
             class WikiModel extends $model.cls
                 getUrl: ->
                     return "#{url(@_name)}#{@_attrs.project}-#{@_attrs.slug}/"
 
             _id = "#{projectId}-#{slug}"
-            return queryOne("wikipages", _id, {}, cls=WikiModel)
+            return queryOne("wikipages", _id, {project:projectId}, {},  WikiModel)
 
         service.createWikiPage = (projectId, slug, content) ->
             obj =
