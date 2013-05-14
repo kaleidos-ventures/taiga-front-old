@@ -1,7 +1,6 @@
-issuesModule = angular.module('greenmine.directives.issues', [])
+module = angular.module('greenmine.directives.issues', [])
 
-
-gmIssuesSortConstructor = ($parse) -> (scope, elm, attrs) ->
+GmIssuesSortDirective = ($parse) -> (scope, elm, attrs) ->
     element = angular.element(elm)
 
     element.on "click", ".issue-sortable-field", (event) ->
@@ -24,10 +23,10 @@ gmIssuesSortConstructor = ($parse) -> (scope, elm, attrs) ->
         event.preventDefault()
         scope.$digest()
 
-issuesModule.directive('gmIssuesSort', ["$parse", gmIssuesSortConstructor])
+module.directive('gmIssuesSort', ["$parse", GmIssuesSortDirective])
 
 
-gmIssueChangesConstructor = ->
+GmIssueChangesDirective = ->
     validFields = ["priority", "status", "severity", "tags", "subject", "description", "assigned_to"]
     template = _.template($("#change-template").html())
 
@@ -48,9 +47,9 @@ gmIssueChangesConstructor = ->
 
         element.append(el) for el in elements
 
-issuesModule.directive("gmIssueChanges", gmIssueChangesConstructor)
+module.directive("gmIssueChanges", GmIssueChangesDirective)
 
-gmPendingIssueGraphConstructor = -> (scope, elm, attrs) ->
+GmPendingIssueGraphDirective = -> (scope, elm, attrs) ->
     redrawChart = () ->
         element = angular.element elm
         countIssues = (severities, issues) ->
@@ -109,9 +108,9 @@ gmPendingIssueGraphConstructor = -> (scope, elm, attrs) ->
         console.log value
         redrawChart() if value
 
-issuesModule.directive("gmPendingIssueGraph", gmPendingIssueGraphConstructor)
+module.directive("gmPendingIssueGraph", GmPendingIssueGraphDirective)
 
-gmYourIssuesGraphConstructor = -> (scope, elm, attrs) ->
+GmYourIssuesGraphDirective = -> (scope, elm, attrs) ->
     element = angular.element(elm)
 
     redrawChart = () ->
@@ -156,10 +155,9 @@ gmYourIssuesGraphConstructor = -> (scope, elm, attrs) ->
     scope.$watch 'issues', (value) ->
         redrawChart() if value
 
-issuesModule.directive("gmYourIssuesGraph", gmYourIssuesGraphConstructor)
+module.directive("gmYourIssuesGraph", GmYourIssuesGraphDirective)
 
-gmIssuesCreationGraphConstructor = -> (scope, elm, attrs) ->
-
+GmIssuesCreationGraphDirective = -> (scope, elm, attrs) ->
     redrawChart = () ->
         element = angular.element(elm)
 
@@ -196,4 +194,4 @@ gmIssuesCreationGraphConstructor = -> (scope, elm, attrs) ->
     scope.$watch 'issues', (value) ->
         redrawChart() if value
 
-issuesModule.directive("gmIssuesCreationGraph", gmIssuesCreationGraphConstructor)
+module.directive("gmIssuesCreationGraph", GmIssuesCreationGraphDirective)
