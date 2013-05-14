@@ -1,13 +1,10 @@
-genericModule = angular.module('greenmine.directives.generic', [])
 
 
-versionConstructor = (version) -> (scope, elm, attrs) ->
+AppVersionDirective = (version) -> (scope, elm, attrs) ->
     elm.text(version)
 
-genericModule.directive('appVersion', ['version', versionConstructor])
 
-# Select2 Directive
-select2Constructor = ->
+UiSelect2Directive = ->
     require: "?ngModel"
     restrict: "A"
     link: (scope, elm, attrs, ngModel) ->
@@ -23,10 +20,8 @@ select2Constructor = ->
             ngModel.$setViewValue(arguments[0].val)
             scope.$digest()
 
-genericModule.directive('uiSelect2', select2Constructor)
 
-
-uiEventConstructor = ($parse) -> (scope, elm, attrs) ->
+UiEventDirective = ($parse) -> (scope, elm, attrs) ->
     events = scope.$eval(attrs.uiEvent)
     angular.forEach events,  (uiEvent, eventName) ->
         fn = $parse(uiEvent)
@@ -37,10 +32,8 @@ uiEventConstructor = ($parse) -> (scope, elm, attrs) ->
             scope.$apply ->
                 fn(scope, {$event: evt, $params: params})
 
-genericModule.directive('uiEvent', ['$parse', uiEventConstructor])
 
-
-uiParsleyConstructor = ($parse, $http, url) -> (scope, elm, attrs) ->
+UiParsleyDirective = ($parse, $http, url) -> (scope, elm, attrs) ->
     fn = $parse(attrs.uiParsley)
 
     onFormSubmit = (valid, event, form) ->
@@ -50,7 +43,7 @@ uiParsleyConstructor = ($parse, $http, url) -> (scope, elm, attrs) ->
             fn(scope, {$event:event})
 
     element = $(elm)
-    element.parsley(
+    element.parsley
         listeners: {onFormSubmit: onFormSubmit}
         validators:
             remoteuserverify: (val, opt, self) ->
@@ -71,13 +64,9 @@ uiParsleyConstructor = ($parse, $http, url) -> (scope, elm, attrs) ->
 
         messages:
             remoteuserverify: "Username taken"
-    )
 
 
-genericModule.directive('uiParsley', ['$parse', '$http', 'url', uiParsleyConstructor])
-
-
-gmFileConstructor = ($parse) ->
+GmFileDirective = ($parse) ->
     require: "?ngModel",
     restrict: "A",
     link: (scope, elm, attrs, ngModel) ->
@@ -88,4 +77,10 @@ gmFileConstructor = ($parse) ->
                 scope.$apply ->
                     ngModel.$setViewValue(files[0])
 
-genericModule.directive('gmFile', ["$parse", gmFileConstructor]);
+
+module = angular.module('greenmine.directives.generic', [])
+module.directive('appVersion', ['version', AppVersionDirective])
+module.directive('uiSelect2', UiSelect2Directive)
+module.directive('uiEvent', ['$parse', UiEventDirective])
+module.directive('uiParsley', ['$parse', '$http', 'url', UiParsleyDirective])
+module.directive('gmFile', ["$parse", GmFileDirective])
