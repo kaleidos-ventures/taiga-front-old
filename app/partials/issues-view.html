@@ -3,7 +3,6 @@
     <div class="view-header">
         <p class="title">Issue #{{ issue.id }}</p>
         <div class="buttons">
-            <a class="button button-edit" ng-click="updateFormOpened=true">Update issue</a>
             <a class="button button-delete">Delete issue</a>
         </div>
     </div>
@@ -58,7 +57,7 @@
         </div>
     </div>
 
-    <div class="row-fluid" ng-show="updateFormOpened">
+    <div class="row-fluid">
         <div class="span12">
             <div class="update-form">
                 <h4>Update issue</h4>
@@ -88,7 +87,7 @@
                         <fieldset class="issue-assigned">
                             <label>Assigned to</label>
 
-                            <select class="assigned-to" name="priority" ng-model="form.assigned_to" data-required="true"
+                            <select class="assigned-to" name="priority" ng-model="form.assigned_to"
                                 data-type="number" data-error-message="Required"
                                 ng-options="c.id as c.username for c in constants.usersList|orderBy:'order'"></select>
                             </select>
@@ -138,7 +137,6 @@
             <div class="view-footer">
                 <p class="title">Issue #{{ issue.id }}</p>
                 <div class="buttons">
-                    <a class="button button-edit" ng-click="updateFormOpened=true">Update issue</a>
                     <a class="button button-delete">Delete issue</a>
                 </div>
             </div>

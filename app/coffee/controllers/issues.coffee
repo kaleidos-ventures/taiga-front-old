@@ -221,7 +221,7 @@
     projectId = $rootScope.projectId
     issueId = $routeParams.issueid
 
-    $q.all([
+    promise = $q.all [
         rs.getIssueTypes(projectId),
         rs.getIssueStatuses(projectId),
         rs.getSeverities(projectId),
@@ -229,7 +229,9 @@
         rs.getUsers(projectId),
         rs.getIssueAttachments(projectId, issueId),
         rs.getIssue(projectId, issueId)
-    ]).then((results) ->
+    ]
+
+    promise.then (results) ->
         issueTypes = results[0]
         issueStatuses = results[1]
         severities = results[2]
@@ -252,8 +254,7 @@
 
         $scope.attachments = attachments
         $scope.issue = issue
-        $scope.form = _.extend({}, $scope.issue)
-    )
+        $scope.form = _.extend({}, $scope.issue._attrs)
 
     $scope.issue = {}
     $scope.form = {}
@@ -272,13 +273,15 @@
         else
             defered.resolve(null)
 
-        promise = promise.then (data) ->
+        promise = promise.then () ->
             _.each $scope.form, (value, key) ->
                 $scope.issue[key] = value
+                return
+
             return $scope.issue.save()
 
-        promise = promise.then (issue)->
-            $scope.updateFormOpened = false
-            return issue.refresh()
+        return promise.then (issue) ->
+            console.log issue
+            issue.refresh()
 
 @IssuesViewController.$inject = ['$scope', '$rootScope', '$routeParams', '$q', 'resource']
