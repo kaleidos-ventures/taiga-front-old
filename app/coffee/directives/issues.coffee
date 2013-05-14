@@ -1,5 +1,3 @@
-module = angular.module('greenmine.directives.issues', [])
-
 GmIssuesSortDirective = ($parse) -> (scope, elm, attrs) ->
     element = angular.element(elm)
 
@@ -23,8 +21,6 @@ GmIssuesSortDirective = ($parse) -> (scope, elm, attrs) ->
         event.preventDefault()
         scope.$digest()
 
-module.directive('gmIssuesSort', ["$parse", GmIssuesSortDirective])
-
 
 GmIssueChangesDirective = ->
     validFields = ["priority", "status", "severity", "tags", "subject", "description", "assigned_to"]
@@ -47,7 +43,6 @@ GmIssueChangesDirective = ->
 
         element.append(el) for el in elements
 
-module.directive("gmIssueChanges", GmIssueChangesDirective)
 
 GmPendingIssueGraphDirective = -> (scope, elm, attrs) ->
     redrawChart = () ->
@@ -108,7 +103,6 @@ GmPendingIssueGraphDirective = -> (scope, elm, attrs) ->
         console.log value
         redrawChart() if value
 
-module.directive("gmPendingIssueGraph", GmPendingIssueGraphDirective)
 
 GmYourIssuesGraphDirective = -> (scope, elm, attrs) ->
     element = angular.element(elm)
@@ -155,7 +149,6 @@ GmYourIssuesGraphDirective = -> (scope, elm, attrs) ->
     scope.$watch 'issues', (value) ->
         redrawChart() if value
 
-module.directive("gmYourIssuesGraph", GmYourIssuesGraphDirective)
 
 GmIssuesCreationGraphDirective = -> (scope, elm, attrs) ->
     redrawChart = () ->
@@ -194,4 +187,10 @@ GmIssuesCreationGraphDirective = -> (scope, elm, attrs) ->
     scope.$watch 'issues', (value) ->
         redrawChart() if value
 
+
+module = angular.module('greenmine.directives.issues', [])
+module.directive('gmIssuesSort', ["$parse", GmIssuesSortDirective])
+module.directive("gmIssueChanges", GmIssueChangesDirective)
+module.directive("gmPendingIssueGraph", GmPendingIssueGraphDirective)
+module.directive("gmYourIssuesGraph", GmYourIssuesGraphDirective)
 module.directive("gmIssuesCreationGraph", GmIssuesCreationGraphDirective)
