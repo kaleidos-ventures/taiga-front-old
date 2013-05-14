@@ -59,15 +59,16 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             return defered.promise
 
-        queryOne = (name, id, extraParams) ->
-            params =
-                method: "GET"
-                headers: headers()
-                url: "#{url(name)}#{id}"
+        queryOne = (name, id, params, options) ->
+            defauts = {method: "GET", headers:  headers()}
+            current = {url: "#{url(name)}#{id}/", params: params or {}}
+
+            httpParams =  _.extend({}, defauts, options, current)
 
             defered = $q.defer()
 
-            promise = $http(_.extend({}, params, extraParams or {}))
+            promise = $http(httpParams)
+            console.log httpParams
             promise.success (data, status) ->
                 defered.resolve($model(name, data))
 
@@ -210,7 +211,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             return queryMany("issues", {project:projectId})
 
         service.getIssue = (projectId, issueId) ->
-            return queryOne("issues", issueId)
+            return queryOne("issues", issueId, {project:projectId})
 
         # Get a users with role developer for
         # one concret project.

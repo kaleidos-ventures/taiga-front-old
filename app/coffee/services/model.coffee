@@ -24,18 +24,23 @@ angular.module 'greenmine.services.model', [], ($provide) ->
                         if name.substr(0,2) == "__"
                             return self[name]
 
-                        if self._modifiedAttrs[name] is not undefined
-                            return self._modifiedAttrs[name]
-                        else
+                        if self._modifiedAttrs[name] is undefined
                             return self._attrs[name]
+
+                        return self._modifiedAttrs[name]
 
                 setter = (name) ->
                     return (value) ->
                         if name.substr(0,2) == "__"
                             self[name] = value
-                        else if self._attrs[name] != value
+                            return
+
+                        if self._attrs[name] != value
+                            console.log "setter", name, value
                             self._modifiedAttrs[name] = value
                             self._isModified = true
+                        else
+                            delete self._modifiedAttrs[name]
 
                 _.each @_attrs, (value, name) ->
                     options =
@@ -84,7 +89,7 @@ angular.module 'greenmine.services.model', [], ($provide) ->
                 defered = $q.defer()
 
                 if not @isModified()
-                    defered.resolve(true)
+                    defered.resolve(self)
                     return defered.promise
 
                 postObject = _.extend({}, @_modifiedAttrs)
