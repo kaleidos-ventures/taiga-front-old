@@ -91,7 +91,14 @@ GmIssueHistoryDirective = ($compile, $rootScope) ->
 
             return null
 
+        cachedScope = null
+
         render = (historyItems) ->
+            # Initial Clear
+            cachedScope.$destroy() if cachedScope != null
+            target.empty()
+
+            # Make new list
             _historyItems = []
 
             for item in historyItems
@@ -99,7 +106,7 @@ GmIssueHistoryDirective = ($compile, $rootScope) ->
                 if _item?
                     _historyItems.push(_item)
 
-            $scope = $rootScope.$new(true)
+            cachedScope = $scope = $rootScope.$new(true)
             $scope.historyItems = _historyItems
 
             template = angular.element($.parseHTML(baseTemplate))
