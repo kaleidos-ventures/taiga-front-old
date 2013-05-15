@@ -1,4 +1,4 @@
-@TasksViewController = ($scope, $rootScope, $routeParams, $q, rs) ->
+@TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
     $rootScope.pageSection = 'tasks'
     $rootScope.pageBreadcrumb = ["Project", "Tasks", "#" + $routeParams.taskid]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
@@ -56,4 +56,10 @@
         return promise.then (task) ->
             task.refresh()
 
-@TasksViewController.$inject = ['$scope', '$rootScope', '$routeParams', '$q', 'resource']
+
+    $scope.removeTask = (task) ->
+        milestone = task.milestone
+        task.remove().then ->
+            $location.url("/project/#{projectId}/dashboard/#{milestone}/")
+
+@TasksViewController.$inject = ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource']

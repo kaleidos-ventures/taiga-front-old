@@ -213,7 +213,7 @@
 @IssuesController.$inject = ['$scope', '$rootScope', '$routeParams', '$filter', '$q', 'resource']
 
 
-@IssuesViewController = ($scope, $rootScope, $routeParams, $q, rs) ->
+@IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = ["Project", "Issues", "#" + $routeParams.issueid]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
@@ -284,4 +284,9 @@
             console.log issue
             issue.refresh()
 
-@IssuesViewController.$inject = ['$scope', '$rootScope', '$routeParams', '$q', 'resource']
+    $scope.removeIssue = (issue) ->
+        issue.remove().then ->
+            $location.url("/project/#{projectId}/issues/")
+
+
+@IssuesViewController.$inject = ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource']

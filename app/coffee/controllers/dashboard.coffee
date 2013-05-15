@@ -11,13 +11,16 @@
 
     formatUserStoryTasks = ->
         $scope.usTasks = {}
+
         _.each $scope.userstories, (us) ->
             $scope.usTasks[us.id] = {}
             _.each $scope.statuses, (status) ->
                 $scope.usTasks[us.id][status.id] = []
 
         _.each $scope.tasks, (task) ->
-            $scope.usTasks[task.user_story][task.status].push(task)
+            # why? because a django-filters sucks
+            if $scope.usTasks[task.user_story]?
+                $scope.usTasks[task.user_story][task.status].push(task)
 
     calculateStats = ->
         pointIdToOrder = greenmine.utils.pointIdToOrder($rootScope.constants.points)
