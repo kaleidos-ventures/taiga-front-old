@@ -43,16 +43,7 @@
         <div class="span12">
             <div class="history">
                 <h3>History</h3>
-
-                <ul class="history-items">
-                    <li class="history-item" ng-repeat="h in issue.history">
-                        <div class="title"><span class="updated">Updated by {{ h.by }}</span><span class="date">{{ h.modified_date }}</span></div>
-                        <div class="changes" gm-issue-changes></div>
-                        <div class="comment" ng-show="h.comment">
-                            <strong>Comment:</strong><br />{{ h.comment }}
-                        </div>
-                    </li>
-                </ul>
+                <div class="history-items-container" ng-model="issue.history" gm-issue-history></div>
             </div>
         </div>
     </div>
@@ -143,11 +134,24 @@
         </div>
     </div>
 
-    <script type="text/template" id="change-template">
-        <div class="change">
-            <strong><%= name %></strong>:
-            <span class="old"><%= oldValue %></span> &gt;
-            <span class="new"><%= newValue %></span>
-        </div>
+    <script type="text/angular-template" id="change-template">
+        <ul class="history-items">
+            <li class="history-item" ng-repeat="hitem in historyItems">
+                <div class="title">
+                    <span class="updated">Updated by {{ hitem.by }}</span>
+                    <span class="date">{{ hitem.modified_date }}</span>
+                </div>
+                <div class="changes">
+                    <div class="change" ng-repeat="change in hitem.changes">
+                        <strong>{{ change.name }}</strong>:
+                        <span class="old">{{ change.old }}</span> &gt;
+                        <span class="new">{{ change.new }}</span>
+                    </div>
+                </div>
+                <div class="comment" ng-show="hitem.comment">
+                    <strong>Comment:</strong><br />{{ hitem.comment }}
+                </div>
+            </li>
+        </ul>
     </script>
 </div>

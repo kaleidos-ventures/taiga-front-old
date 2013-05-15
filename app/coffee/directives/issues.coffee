@@ -57,7 +57,10 @@ GmIssueHistoryDirective = ($compile, $rootScope) ->
         resolveValue = (name, value) ->
             return switch name
                 when "priority", "status", "severity" then $rootScope.constants[name][value].name
-                when "assigned_to" then $rootScope.constants.users[value].email
+                when "assigned_to"
+                    if value == null
+                        return "Unassigned"
+                    return $rootScope.constants.users[value].email
                 else value
 
         createChangeItem = (name, field) ->
@@ -80,6 +83,8 @@ GmIssueHistoryDirective = ($compile, $rootScope) ->
             historyItem =
                 changes: changes
                 comment: item.comment
+                by: item.by
+                modified_date: item.modified_date
 
             if historyItem.changes.length > 0 or historyItem.comment.length > 0
                 return historyItem
