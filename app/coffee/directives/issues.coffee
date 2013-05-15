@@ -173,7 +173,6 @@ GmPendingIssueGraphDirective = -> (scope, elm, attrs) ->
         new Chart(ctx).Radar(data,options)
 
     scope.$watch 'issues', (value) ->
-        console.log value
         redrawChart() if value
 
 

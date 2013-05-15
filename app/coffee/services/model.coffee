@@ -36,7 +36,6 @@ angular.module 'greenmine.services.model', [], ($provide) ->
                             return
 
                         if self._attrs[name] != value
-                            console.log "setter", name, value
                             self._modifiedAttrs[name] = value
                             self._isModified = true
                         else
@@ -69,6 +68,7 @@ angular.module 'greenmine.services.model', [], ($provide) ->
 
             remove: () ->
                 defered = $q.defer()
+                self = @
 
                 params =
                     method: "DELETE"
@@ -77,10 +77,10 @@ angular.module 'greenmine.services.model', [], ($provide) ->
 
                 promise = $http(params)
                 promise.success (data, status) ->
-                    defered.resolve(data, status)
+                    defered.resolve(self)
 
-                promise.error(data, status) ->
-                    defered.reject(data, status)
+                promise.error (data, status) ->
+                    defered.reject(self)
 
                 return defered.promise
 
