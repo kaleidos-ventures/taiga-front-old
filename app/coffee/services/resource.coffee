@@ -9,6 +9,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             "tasks": "/api/scrum/tasks/"
             "issues": "/api/scrum/issues/"
             "issues/attachments": "/api/scrum/issues/attachments/"
+            "tasks/attachments": "/api/scrum/tasks/attachments/"
             "wikipages": "/api/wiki/pages/"
             "choices/task-status": "/api/scrum/tasks/statuses/"
             "choices/issue-status": "/api/scrum/issues/statuses/"
@@ -205,12 +206,14 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             return queryMany("tasks", params)
 
-        # Get project Issues list
         service.getIssues = (projectId) ->
             return queryMany("issues", {project:projectId})
 
         service.getIssue = (projectId, issueId) ->
             return queryOne("issues", issueId, {project:projectId})
+
+        service.getTask = (projectId, taskId) ->
+            return queryOne("tasks", taskId, {project:projectId})
 
         # Get a users with role developer for
         # one concret project.
@@ -300,6 +303,9 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
         service.getIssueAttachments = (projectId, issueId) ->
             return queryMany("issues/attachments", {project:projectId, object_id: issueId})
+
+        service.getTaskAttachments = (projectId, issueId) ->
+            return queryMany("tasks/attachments", {project:projectId, object_id: issueId})
 
         service.uploadIssueAttachment = (projectId, issueId, file, progress) ->
             defered = $q.defer()

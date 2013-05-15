@@ -7,5 +7,5 @@
             data-tmpl="#developers-popover" data-auto-hide="true">{{ resolveUser(task.assigned_to) }} {{ task.assigned_to }}</a>
     </div>
     <p class="desc">{{ task.description | truncate:110 }}</p>
-    <a href="#TODO" class="edit-task">Edit</a>
+    <a href="{{ urls.tasksUrl(projectId, task.id) }}" class="edit-task">Edit</a>
 </div>

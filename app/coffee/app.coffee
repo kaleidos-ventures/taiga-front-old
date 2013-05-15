@@ -29,6 +29,9 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when('/project/:pid/issues/:issueid',
             {templateUrl: 'partials/issues-view.html', controller: IssuesViewController})
 
+    $routeProvider.when('/project/:pid/tasks/:taskid',
+            {templateUrl: 'partials/tasks-view.html', controller: TasksViewController})
+
     # $routeProvider.when('/project/:pid/questions',
     #         {templateUrl: 'partials/questions.html', controller: QuestionsController})
 
@@ -131,6 +134,9 @@ init = ($rootScope, $location, storage) ->
                 return _.str.sprintf("/#!/project/%s/issues/%s", projectId, issueId)
             else
                 return _.str.sprintf("/#!/project/%s/issues", projectId)
+
+        tasksUrl: (projectId, taskId) ->
+            return _.str.sprintf("/#!/project/%s/tasks/%s", projectId, taskId)
 
         questionsUrl: (projectId, issueId) ->
             if issueId is undefined

@@ -44,6 +44,67 @@ GmIssueChangesDirective = ->
         element.append(el) for el in elements
 
 
+GmIssueHistoryDirective = ($compile, $rootScope) ->
+    restrict: "A"
+    require: "?ngModel"
+    link: (scope, elm, attrs, ngModel) ->
+        validFields = ["priority", "status", "severity", "tags",
+                       "subject", "description", "assigned_to"]
+
+        baseTemplate = _.str.trim(angular.element("#change-template").html())
+        target = angular.element(elm)
+
+        resolveValue = (name, value) ->
+            return switch name
+                when "priority", "status", "severity" then $rootScope.constants[name][value].name
+                when "assigned_to" then $rootScope.constants.users[value].email
+                else value
+
+        createChangeItem = (name, field) ->
+            change =
+                name: name
+                new:  resolveValue(name, field.new)
+                old: resolveValue(name, field.old)
+
+            return change
+
+        createHistoryItem = (item) ->
+            changes = []
+
+            for name in validFields
+                field = item[name]
+
+                if field?
+                    changes.push(createChangeItem(name, field))
+
+            historyItem =
+                changes: changes
+                comment: item.comment
+
+            if historyItem.changes.length > 0 or historyItem.comment.length > 0
+                return historyItem
+
+            return null
+
+        render = (historyItems) ->
+            _historyItems = []
+
+            for item in historyItems
+                _item = createHistoryItem(item)
+                if _item?
+                    _historyItems.push(_item)
+
+            $scope = $rootScope.$new(true)
+            $scope.historyItems = _historyItems
+
+            template = angular.element($.parseHTML(baseTemplate))
+            $compile(template)($scope)
+            target.append(template)
+
+        ngModel.$render = () ->
+            render ngModel.$viewValue or []
+
+
 GmPendingIssueGraphDirective = -> (scope, elm, attrs) ->
     redrawChart = () ->
         element = angular.element elm
@@ -191,6 +252,7 @@ GmIssuesCreationGraphDirective = -> (scope, elm, attrs) ->
 module = angular.module('greenmine.directives.issues', [])
 module.directive('gmIssuesSort', ["$parse", GmIssuesSortDirective])
 module.directive("gmIssueChanges", GmIssueChangesDirective)
+module.directive("gmIssueHistory", GmIssueHistoryDirective)
 module.directive("gmPendingIssueGraph", GmPendingIssueGraphDirective)
 module.directive("gmYourIssuesGraph", GmYourIssuesGraphDirective)
 module.directive("gmIssuesCreationGraph", GmIssuesCreationGraphDirective)

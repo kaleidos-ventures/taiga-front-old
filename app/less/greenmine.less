@@ -75,7 +75,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 /* ==================================
  * FLASH MESSAGES
  * ================================== */
- 
+
 .flash-message{
     position: absolute;
     top: 163px;
@@ -91,7 +91,7 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
         color: #FFF;
     }
     .flash-message-success{
-        background: url("../img/message_flash.png") no-repeat 16px 16px lighten(@green, 10%);            
+        background: url("../img/message_flash.png") no-repeat 16px 16px lighten(@green, 10%);
     }
     .flash-message-fail{
         background: url("../img/message_flash.png") no-repeat 16px -59px #cc0000;
@@ -1046,7 +1046,7 @@ body.login {
                 font-family: 'LeagueGothicRegular';
                 font-size: 2em;
                 color: #333;
-                
+
                 float: left;
                 display: block;
                 padding-left: 40px;
@@ -1281,6 +1281,195 @@ body.login {
  * BACKLOG
  * ================================ */
 
+
+.tasks-view {
+    padding: 10px;
+    width: 98.97%;
+    .view-header,
+    .view-footer {
+        margin-top: 10px;
+        color: #FFFFFF;
+        padding: 5px;
+        overflow: hidden;
+        background-color:#666;
+        .title {
+            float: left;
+            font-family: 'LeagueGothicRegular';
+            font-size: 1.7em;
+            color: #FFFFFF;
+            margin:0;
+            margin-top: 2px;
+        }
+
+        .buttons {
+            float: right;
+        }
+    }
+    .tags-list {
+        margin: 15px 0;
+        padding: 0;
+        list-style-type: none;
+        overflow: hidden;
+        width: 98.97%;
+        .tag {
+            float: left;
+            width: 150px;
+            margin-bottom: 5px;
+            margin-right: 5px;
+            padding: 5px;
+            font-family: 'ColabThi';
+            font-size: 1em;
+            color: #FFF;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+    }
+    .task-data{
+        h2{
+            font-family: 'ColabReg';
+            font-size: 1.7em;
+            color: #333;
+            margin:0;
+        }
+        p{
+            font-family: 'ColabThi';
+            line-height: 1.4em;
+        }
+    }
+    .task-metadata{
+        background-color: #555;
+        padding: 5px;
+        .info-header{
+            color: #FFF;
+            text-transform: uppercase;
+            font-size: 1em;
+            font-family: 'ColabReg';
+            h3{
+                padding: 5px;
+                margin: 0;
+            }
+        }
+        .info-rows{
+            list-style: none;
+            margin: 0;
+            padding:0;
+            li{
+                padding: 7px;
+                font-size: .9em;
+                font-family: 'ColabReg';
+                color: #000;
+                border-bottom: 1px solid #dcdcdc;
+                background: #fff;
+                &:last-child{
+                    border: none;
+                }
+                span{
+                    font-family: 'ColabThi';
+                }
+            }
+        }
+    }
+
+    .history {
+        h3{
+            padding: 5px 15px;
+            background: #ccc;
+            margin-bottom: 0;
+        }
+        .history-items {
+            padding: 0px;
+            margin: 0px;
+            .history-item {
+                list-style: none;
+                display: block;
+                padding: 10px;
+                .title {
+                    padding: 5px 15px;
+                    background: #eee;
+                    font-family: 'ColabReg';
+                    overflow: hidden;
+                    margin-bottom: 5px;
+                    .updated{
+                        float: left;
+                    }
+                    .date{
+                        float: right;
+                    }
+                }
+
+                .changes {
+                    padding: 4px 10px;
+                }
+
+                .comment {
+                    padding: 4px 10px;
+                }
+            }
+        }
+    }
+
+    .attachments {
+        h3{
+            padding-left: 15px;
+            background: url(../img/attachment.png) no-repeat 2px center;
+        }
+        .attachments-items {
+            padding-left: 15px;
+            margin-left: 15px;
+            border-left: 4px solid #ccc;
+            .attachments-item {
+                list-style: none;
+                display: block;
+                margin-bottom: 10px;
+
+                .title {
+                    border-bottom: 1px solid #eee;
+                }
+
+                .changes {
+                    padding: 4px;
+                }
+
+                .comment {
+                    padding: 4px;
+                }
+            }
+        }
+    }
+    .update-form {
+        border: 1px solid #ccc;
+        h4 {
+            padding: 5px 15px;
+            background: @green;
+            margin: 0;
+            color: #fff;
+        }
+        form{
+            padding: 15px;
+            div{
+                overflow: hidden;
+            }
+            fieldset {
+                &.task-status, &.task-priority, &.task-assigned, &.task-tags{
+                    width: 33%;
+                    float: left;
+                }
+                .select2-container {
+                    //width: 91%;
+                }
+                input {
+                    //width: 90%;
+                }
+                textarea {
+                    //width: 90%;
+                    min-height: 150px;
+                }
+            }
+        }
+    }
+}
+
+
 .issues-view {
     padding: 10px;
     width: 98.97%;
@@ -1310,7 +1499,7 @@ body.login {
         list-style-type: none;
         overflow: hidden;
         width: 98.97%;
-        .tag { 
+        .tag {
             float: left;
             width: 150px;
             margin-bottom: 5px;
@@ -1597,7 +1786,7 @@ body.login {
                     color: @white;
                     opacity: 0.4;
                     border-radius: 4px;
-                    background-color: #666; 
+                    background-color: #666;
                     &.selected {
                         opacity: 1;
                         box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
@@ -1623,7 +1812,7 @@ body.login {
                     background-color: #8C2318;
                     }
                     &.status-in-progress{
-                        background-color: #5E8C6A;   
+                        background-color: #5E8C6A;
                     }
                     &.status-ready-for-test{
                         background-color: #88A65E;
@@ -1638,7 +1827,7 @@ body.login {
                         background-color: #CC0000;
                     }
                     &.status-postponed{
-                        background-color: #ccc; 
+                        background-color: #ccc;
                     }
                 }
             }
