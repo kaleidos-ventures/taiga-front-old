@@ -1,4 +1,4 @@
-@LoginController = ($scope, $rootScope, $location, rs) ->
+@LoginController = ($scope, $rootScope, $location, rs, storage) ->
     $rootScope.pageSection = 'login'
 
     $scope.form = {}
@@ -8,16 +8,20 @@
 
         $scope.loading = true
 
-        promise = rs.login(username, password).then (data) ->
+        onSuccess = (data) ->
+            storage.set("userInfo", data)
             $location.url("/")
-        , (data) ->
+
+        onError = (data) ->
             $scope.error = true
             $scope.errorMessage = data.detail
 
+        promise = rs.login(username, password)
+        promise = promise.then onSuccess, onError
         promise.then ->
             $scope.loading = false
 
-@LoginController.$inject = ['$scope', '$rootScope', '$location', 'resource']
+@LoginController.$inject = ['$scope', '$rootScope', '$location', 'resource', 'storage']
 
 
 @RegisterController = ($scope, $rootScope, url) ->
