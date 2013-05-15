@@ -48,7 +48,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
             {templateUrl: 'partials/wiki.html', controller: WikiController})
 
     $routeProvider.otherwise({redirectTo: '/login'})
-    $locationProvider.hashPrefix('!')
+    #$locationProvider.hashPrefix('!')
 
     defaultHeaders =
         "Content-Type": "application/json",
@@ -121,31 +121,31 @@ init = ($rootScope, $location, storage) ->
 
     $rootScope.urls =
         projectsUrl: ->
-            return '/#!/'
+            return '/#/'
 
         backlogUrl: (projectId) ->
-            return _.str.sprintf("/#!/project/%s/backlog", projectId)
+            return _.str.sprintf("/#/project/%s/backlog", projectId)
 
         dashboardUrl: (projectId, sprintId) ->
-            return _.str.sprintf("/#!/project/%s/dashboard/%s", projectId, sprintId)
+            return _.str.sprintf("/#/project/%s/dashboard/%s", projectId, sprintId)
 
         issuesUrl: (projectId, issueId) ->
             if issueId != undefined
-                return _.str.sprintf("/#!/project/%s/issues/%s", projectId, issueId)
+                return _.str.sprintf("/#/project/%s/issues/%s", projectId, issueId)
             else
-                return _.str.sprintf("/#!/project/%s/issues", projectId)
+                return _.str.sprintf("/#/project/%s/issues", projectId)
 
         tasksUrl: (projectId, taskId) ->
-            return _.str.sprintf("/#!/project/%s/tasks/%s", projectId, taskId)
+            return _.str.sprintf("/#/project/%s/tasks/%s", projectId, taskId)
 
         questionsUrl: (projectId, issueId) ->
             if issueId is undefined
-                return _.str.sprintf("/#!/project/%s/questions/%s", projectId, issueId)
+                return _.str.sprintf("/#/project/%s/questions/%s", projectId, issueId)
             else
-                return _.str.sprintf("/#!/project/%s/questions", projectId)
+                return _.str.sprintf("/#/project/%s/questions", projectId)
 
         wikiUrl: (projectId, pageName) ->
-            return _.str.sprintf("/#!/project/%s/wiki/%s", projectId, _.str.slugify(pageName))
+            return _.str.sprintf("/#/project/%s/wiki/%s", projectId, _.str.slugify(pageName))
 
     $rootScope.logout = () ->
         storage.clear()
