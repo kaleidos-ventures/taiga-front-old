@@ -117,6 +117,9 @@ init = ($rootScope, $location, storage) ->
         return if user? then user.username else "Unassigned"
 
     $rootScope.urls =
+        projectsUrl: ->
+            return '/#!/'
+
         backlogUrl: (projectId) ->
             return _.str.sprintf("/#!/project/%s/backlog", projectId)
 
