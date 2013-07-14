@@ -308,8 +308,6 @@ window.Chart = function(context){
 			datasetStroke : true,
 			datasetStrokeWidth : 2,
 			datasetFill : true,
-			datasetFillXAxis : null,
-			datasetFillYAxis : null,
 			animation : true,
 			animationSteps : 60,
 			animationEasing : "easeOutQuart",
@@ -831,16 +829,8 @@ window.Chart = function(context){
 				}
 				ctx.stroke();
 				if (config.datasetFill){
-                    var graphXAxisPosY = xAxisPosY;
-                    var graphYAxisPosX = yAxisPosX;
-                    if (config.datasetFillXAxis !== null) {
-                        graphXAxisPosY = yPosValue(config.datasetFillXAxis);
-                    }
-                    if (config.datasetFillYAxis !== null) {
-                        graphYAxisPosX = xPos(config.datasetFillYAxis);
-                    }
-					ctx.lineTo(yAxisPosX + (valueHop*(data.datasets[i].data.length-1)),graphXAxisPosY);
-					ctx.lineTo(graphYAxisPosX,graphXAxisPosY);
+					ctx.lineTo(yAxisPosX + (valueHop*(data.datasets[i].data.length-1)),xAxisPosY);
+					ctx.lineTo(yAxisPosX,xAxisPosY);
 					ctx.closePath();
 					ctx.fillStyle = data.datasets[i].fillColor;
 					ctx.fill();
@@ -862,10 +852,7 @@ window.Chart = function(context){
 			}
 			
 			function yPos(dataSet,iteration){
-				return yPosValue(data.datasets[dataSet].data[iteration]);
-			}
-			function yPosValue(value){
-				return xAxisPosY - animPc*(calculateOffset(value,calculatedScale,scaleHop));
+				return xAxisPosY - animPc*(calculateOffset(data.datasets[dataSet].data[iteration],calculatedScale,scaleHop));			
 			}
 			function xPos(iteration){
 				return yAxisPosX + (valueHop * iteration);
