@@ -65,9 +65,9 @@
                     <div class="us-points">Points</div>
                     <div class="us-options">Options</div>
                 </div>
-                <div class="flex-body" ui-sortable=".sprints-box .flex-body" ng-model="unassingedUs">
+                <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs">
                     <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
-                            ui-sortable-index="{{$index}}">
+                            gm-sortable-index="{{$index}}">
                         <div class="us-title">
                             <span class="tags">
                                 <span ng-repeat="tag in us.tags" class="label" gm-colorize-tag>{{ tag }}</span>
@@ -76,15 +76,15 @@
                         </div>
                         <div class="us-points">
                             <a href="" gm-popover="saveUsPoints(us, selectedId)"
-                                data-tmpl="#points-popover" data-auto-hide="true">{{ resolvePoints(us.points) }}</a>
+                                data-tmpl="#points-popover" data-auto-hide="true">{{ constants.points[us.points].name }}</a>
                         </div>
                         <div class="us-options">
                             <a class="btn-small-preview" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">
                                 <span class="help-box">Preview</span>
                             </a>
-                            <a class="btn-small-edit" gm-modal="#new-us-modal"
-                                data-init="initEditUs(us)" data-end-cancel="cancelEditUs(us)"><span class="help-box">Edit</span></a>
-                            <a class="btn-small-remove" gm-popover="removeUs(us)" data-tmpl="#us-remove-popover"><span class="help-box">Remove</span></a>
+                            <a class="btn-small-edit"><span class="help-box">Edit</span></a>
+                            <a class="btn-small-remove" gm-popover="removeUs(us)"
+                                data-tmpl="#us-remove-popover"><span class="help-box">Remove</span></a>
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
                 <div class="body">
                     <div class="us-list">
                         <div class="us-table-list">
-                            <div class="flex-body" ui-sortable=".us-container .flex-body"
+                            <div class="flex-body" gm-sortable=".us-container .flex-body"
                                     ng-model="milestones[$index].user_stories">
                                 <div class="us-item" ng-repeat="us in ml.user_stories">
                                     <div class="us-title">{{ us.subject|truncate:50 }}</div>

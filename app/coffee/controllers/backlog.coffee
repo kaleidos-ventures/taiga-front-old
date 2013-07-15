@@ -19,7 +19,6 @@ BacklogController = ($scope, $rootScope, $routeParams, rs) ->
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     $scope.stats = {}
-    $scope.$broadcast("flash:new", true, "KK")
 
     $scope.$on "stats:update", (ctx, data) ->
         if data.notAssignedPoints
@@ -43,16 +42,36 @@ BacklogController = ($scope, $rootScope, $routeParams, rs) ->
         if data.length > 0
             $rootScope.sprintId = data[0].id
 
+    # Load initial data
     rs.getProject($rootScope.projectId).then (project) ->
         $rootScope.project = project
+        $rootScope.$broadcast("project:loaded", project)
+
+    rs.getUsers($scope.projectId).then (users) ->
+        $scope.users = users
+        $rootScope.$broadcast("users:loaded", users)
+
+    rs.getUsPoints($scope.projectId).then (points) ->
+        $rootScope.constants.points = {}
+        $rootScope.constants.pointsList = _.sortBy(points, "order")
+
+        for item in points
+            $rootScope.constants.points[item.id] = item
+
+        $rootScope.$broadcast("points:loaded", points)
 
 
 BacklogUserStoryFormController = ($scope, $rootScope, $gmOverlay, rs) ->
     $scope.type = "create"
     $scope.formOpened = false
 
+    # Load data
+    promise = rs.getUsStatuses($scope.projectId)
+    promise.then (result) ->
+        $scope.usstatuses = result
+
     $scope.submit = ->
-        if type == "create"
+        if $scope.type == "create"
             promise = rs.createUserStory($scope.form)
             promise.then (us) ->
                 $rootScope.$broadcast("userstory-form:create", us)
@@ -96,29 +115,26 @@ BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
         pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.points)
         total = 0
 
-        _.each $scope.unassingedUs, (us) ->
+        for us in $scope.unassingedUs
             total += pointIdToOrder(us.points)
 
-        $scope.$emit("stats:update", {
-            "notAssignedPoints": total
-        })
+        $scope.$emit("stats:update", {"notAssignedPoints": total})
 
     generateTagList = ->
         tagsDict = {}
         tags = []
 
-        _.each $scope.unassingedUs, (us) ->
-            _.each us.tags, (tag) ->
+        for us in $scope.unassingedUs
+            for tag in us.tags
                 if tagsDict[tag] is undefined
                     tagsDict[tag] = 1
                 else
                     tagsDict[tag] += 1
 
-        _.each tagsDict, (val, key) ->
+        for key, val of tagsDict
             tags.push({name:key, count:val})
 
         $scope.tags = tags
-
 
      filterUsBySelectedTags = ->
         selectedTags = _($scope.tags)
@@ -146,54 +162,35 @@ BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
             item.order = index
             item.milestone = null
 
+        for item, index in $scope.unassingedUs
+            item.order = index
+            item.milestone = null
+
         # Sort again
         $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order")
 
         # Calculte new stats
         calculateStats()
 
+        # TODO: defer each save.
         for item in $scope.unassingedUs
             item.save() if item.isModified()
 
-    promise = $q.all([
-        rs.getUsers($scope.projectId),
-        rs.getUsStatuses($scope.projectId)
-    ])
+    rs.getUnassignedUserStories($scope.projectId).then (unassingedUs) ->
+        projectId = parseInt($scope.projectId, 10)
 
-    promise.then (results) ->
-        $scope.users = results[0]
-        $scope.usstatuses = results[1]
-
-    promise = $q.all([
-        rs.getUnassignedUserStories($scope.projectId),
-        rs.getUsPoints($scope.projectId),
-    ])
-
-    promise.then (results) ->
-        unassingedUs = results[0]
-        usPoints = results[1]
-        projectId = parseInt($rootScope.projectId, 10)
-
-        $scope.unassingedUs = _.filter(unassingedUs,
-                {"project": projectId, milestone: null})
-
+        $scope.unassingedUs = _.filter(unassingedUs, {"project": projectId, milestone: null})
         $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order")
-
-        $rootScope.constants.points = {}
-        $rootScope.constants.pointsList = _.sortBy(usPoints, "order")
-
-        _.each usPoints, (item) ->
-            $rootScope.constants.points[item.id] = item
 
         generateTagList()
         filterUsBySelectedTags()
         calculateStats()
 
-        $rootScope.$broadcast("points:loaded")
         $rootScope.$broadcast("userstories:loaded")
 
     $scope.openCreateUserStoryForm = ->
-        $rootScope.$broadcast("userstory-form:open", "create", {us:[]})
+        $rootScope.$broadcast("userstory-form:open", "create",
+                              {us:[], project:$scope.projectId})
 
     $scope.removeUs = (us) ->
         us.remove().then ->

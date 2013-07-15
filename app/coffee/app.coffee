@@ -102,6 +102,7 @@ init = ($rootScope, $location, storage) ->
     $rootScope.constants.type = {}
     $rootScope.constants.users = {}
 
+    #TODO: deprecate and remove this methods.
     $rootScope.resolvePoints = (id) ->
         point = $rootScope.constants.points[id]
         return if point? then point.name else undefined

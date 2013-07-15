@@ -177,30 +177,24 @@ GmColorizeTagDirective = -> (scope, elm, attrs) ->
 GmKalendaeDirective = ->
     directive =
         require: "?ngModel"
-        link: (scope, elm, attrs, ngModel) ->
+        link: (scope, elm, attrs, ctrl) ->
             element = angular.element(elm)
-            options =
-                format: "YYYY-MM-DD"
-
-            kalendae = new Kalendae.Input(element.get(0), options)
-            element.data('kalendae', kalendae)
-
+            kalendae = new Kalendae.Input(element.get(0), {format:"YYYY-MM-DD"})
             kalendae.subscribe 'change', (date, action) ->
-                self = this
-                scope.$apply ->
-                    ngModel.$setViewValue(self.getSelected())
+                ctrl.$setViewValue(@.getSelected())
+                scope.$apply()
 
     return directive
 
 
-UiSortableDirective = ->
+GmSortableDirective = ->
     uiConfig = {}
 
     directive =
         require: '?ngModel'
         link: (scope, element, attrs, ngModel) ->
             opts = angular.extend({}, uiConfig.sortable)
-            opts.connectWith = attrs.uiSortable
+            opts.connectWith = attrs.gmSortable
 
             if ngModel
                 ngModel.$render = ->
@@ -312,9 +306,8 @@ GmPopoverDirective = ($parse, $compile) ->
 
     directive =
         restrict: "A"
-        link: (scope, elm, attrs) ->
+        link: (scope, element, attrs) ->
             fn = $parse(attrs.gmPopover)
-            element = angular.element(elm)
 
             autoHide = element.data('auto-hide')
             placement = element.data('placement') or 'right'
@@ -335,14 +328,14 @@ GmPopoverDirective = ($parse, $compile) ->
                 scope.$apply ->
                     $compile(template)(scope)
 
-                element.popover(
+                element.popover({
                     content: template,
                     html:true,
                     animation: false,
                     delay: 0,
                     trigger: "manual",
                     placement: placement
-                )
+                })
 
                 element.popover("show")
 
@@ -373,12 +366,10 @@ GmPopoverDirective = ($parse, $compile) ->
 
             if autoHide
                 parentElement.on "mouseleave", ".popover", (event) ->
-                    target = angular.element(event.currentTarget)
                     element.data('state', 'closing')
                     _.delay(closeHandler, 200)
 
                 parentElement.on "mouseenter", ".popover", (event) ->
-                    target = angular.element(event.currentTarget)
                     element.data('state', 'open')
 
     return directive
@@ -437,6 +428,37 @@ GmModalDirective = ($parse, $compile) ->
     return directive
 
 
+
+GmChecksleyFormDirective = ($parse, $compile, $window) ->
+    restrict: "A"
+    link: (scope, elm, attrs) ->
+        element = angular.element(elm)
+        element.on "submit", (event) ->
+            event.preventDefault()
+
+        callback = $parse(attrs.gmChecksleyForm)
+
+        onFormSubmit = (ok, event, form) ->
+            scope.$apply ->
+                callback(scope) if ok
+
+        attachParsley = ->
+            element.checksley('destroy')
+            element.checksley(listeners: {onFormSubmit: onFormSubmit})
+
+        scope.$on("$includeContentLoaded", attachParsley)
+        element.checksley(listeners: {onFormSubmit: onFormSubmit})
+
+
+GmChecksleySubmitButtonDirective = ->
+    restrict: "A"
+    link: (scope, elm, attrs) ->
+        element = angular.element(elm)
+        element.on "click", (event) ->
+            event.preventDefault()
+            element.closest("form").trigger("submit")
+
+
 module = angular.module('greenmine.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
 #Commented because blocks totally the browser.
@@ -445,7 +467,12 @@ module.directive('gmHeaderMenu', ["$rootScope", GmHeaderMenuDirective])
 module.directive('gmNinjaGraph', GmNinjaGraphDirective)
 module.directive('gmColorizeTag', GmColorizeTagDirective)
 module.directive('gmKalendae', GmKalendaeDirective)
-module.directive('uiSortable', UiSortableDirective)
+module.directive('gmSortable', GmSortableDirective)
 module.directive('gmPopover', ['$parse', '$compile', GmPopoverDirective])
-module.directive('gmModal', ["$parse", "$compile", GmModalDirective])
-module.directive('gmFlashMessage', GmFlashMessageDirective)
+#this module is commented because is deprecated.
+#module.directive('gmModal', ["$parse", "$compile", GmModalDirective])
+#TODO: this directive does not works properly
+#module.directive('gmFlashMessage', GmFlashMessageDirective)
+module.directive('gmChecksleyForm', ['$parse', '$compile', '$window', GmChecksleyFormDirective])
+module.directive('gmChecksleySubmitButton', [GmChecksleySubmitButtonDirective])
+
