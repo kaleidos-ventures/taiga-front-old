@@ -22,6 +22,7 @@ module.exports = (grunt) ->
         'app/js/moment.js',
         'app/js/kalendae.js',
         'app/js/parsley.js',
+        'app/js/checksley.js',
         'app/js/q.js',
         'app/js/sha1.js',
         'app/js/Chart.js'
@@ -99,6 +100,11 @@ module.exports = (grunt) ->
             coffeeMain: {
                 files: ['app/coffee/**/*.coffee'],
                 tasks: ['coffee:mainDevelopment']
+            },
+
+            libs: {
+                files: externalSources,
+                tasks: ["concat"],
             }
         },
 

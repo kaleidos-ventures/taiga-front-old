@@ -33,6 +33,36 @@ UiEventDirective = ($parse) -> (scope, elm, attrs) ->
                 fn(scope, {$event: evt, $params: params})
 
 
+GmChecksleyFormDirective = ($parse, $compile, $window) ->
+    restrict: "A"
+    link: (scope, elm, attrs) ->
+        element = angular.element(elm)
+        element.on "submit", (event) ->
+            event.preventDefault()
+
+        callback = $parse(attrs.gmChecksleyForm)
+
+        onFormSubmit = (ok, event, form) ->
+            scope.$apply ->
+                callback(scope) if ok
+
+        attachParsley = ->
+            element.checksley('destroy')
+            element.checksley(listeners: {onFormSubmit: onFormSubmit})
+
+        scope.$on("$includeContentLoaded", attachParsley)
+        element.checksley(listeners: {onFormSubmit: onFormSubmit})
+
+
+GmChecksleySubmitButtonDirective = ->
+    restrict: "A"
+    link: (scope, elm, attrs) ->
+        element = angular.element(elm)
+        element.on "click", (event) ->
+            event.preventDefault()
+            element.closest("form").trigger("submit")
+
+
 UiParsleyDirective = ($parse, $http, url) -> (scope, elm, attrs) ->
     fn = $parse(attrs.uiParsley)
 
@@ -84,3 +114,5 @@ module.directive('uiSelect2', UiSelect2Directive)
 module.directive('uiEvent', ['$parse', UiEventDirective])
 module.directive('uiParsley', ['$parse', '$http', 'url', UiParsleyDirective])
 module.directive('gmFile', ["$parse", GmFileDirective])
+module.directive('gmChecksleyForm', ['$parse', '$compile', '$window', GmChecksleyFormDirective])
+module.directive('gmChecksleySubmitButton', [GmChecksleySubmitButtonDirective])

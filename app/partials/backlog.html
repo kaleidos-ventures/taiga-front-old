@@ -102,7 +102,7 @@
         </div>
 
         <div class="milestone-form-box" ng-show="sprintFormOpened">
-            <form action="" ui-parsley="sprintSubmit()">
+            <form action="" gm-checksley-form="sprintSubmit()">
                 <fieldset>
                     <label>Sprint name:</label>
                     <input type="text" data-required="true" ng-model="form.name"
@@ -120,7 +120,7 @@
                     </div>
                 </fieldset>
                 <div class="btn-group">
-                    <input type="submit" class="button button-success" value="Save" />
+                    <input type="submit" class="button button-success" gm-checksley-submit-button value="Save" />
                     <a href="" class="button" ng-click="sprintFormOpened=false">Close</a>
                 </div>
             </form>
