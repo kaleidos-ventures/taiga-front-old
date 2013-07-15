@@ -1,4 +1,18 @@
-@BacklogController = ($scope, $rootScope, $routeParams, rs) ->
+# Copyright 2013 Andrey Antukh <niwi@niwi.be>
+#
+# Licensed under the Apache License, Version 2.0 (the "License")
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+BacklogController = ($scope, $rootScope, $routeParams, rs) ->
     # Global Scope Variables
     $rootScope.pageSection = 'backlog'
     $rootScope.pageBreadcrumb = ["Project", "Backlog"]
@@ -32,10 +46,9 @@
     rs.getProject($rootScope.projectId).then (project) ->
         $rootScope.project = project
 
-@BacklogController.$inject = ['$scope', '$rootScope', '$routeParams', 'resource']
 
 
-@BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
+BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
     # Local scope variables
     $scope.filtersOpened = false
     $scope.form = {}
@@ -198,10 +211,8 @@
     # Signal Handlign
     $scope.$on("sortable:changed", resortUserStories)
 
-@BacklogUserStoriesCtrl.$inject = ['$scope', '$rootScope', '$q', 'resource']
 
-
-@BacklogMilestonesController = ($scope, $rootScope, rs) ->
+BacklogMilestonesController = ($scope, $rootScope, rs) ->
     # Local scope variables
     $scope.sprintFormOpened = false
 
@@ -254,10 +265,7 @@
                 $scope.sprintFormOpened = false
 
 
-@BacklogMilestonesController.$inject = ['$scope', '$rootScope', 'resource']
-
-
-@BacklogMilestoneController = ($scope, rs) ->
+BacklogMilestoneController = ($scope, rs) ->
     calculateStats = ->
         pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.points)
         total = 0
@@ -288,4 +296,9 @@
     calculateStats()
     $scope.$on("sortable:changed", normalizeMilestones)
 
-@BacklogMilestoneController.$inject = ['$scope']
+
+module = angular.module("greenmine.controllers.backlog", [])
+module.controller('BacklogMilestoneController', ['$scope', BacklogMilestoneController])
+module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', BacklogMilestonesController])
+module.controller('BacklogUserStoriesCtrl', ['$scope', '$rootScope', '$q', 'resource', BacklogUserStoriesCtrl])
+module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', BacklogController])

@@ -15,22 +15,22 @@
 @greenmine = {} if not @greenmine?
 
 configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider) ->
-    $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: LoginController})
-    $routeProvider.when('/register', {templateUrl: 'partials/register.html', controller: RegisterController})
-    $routeProvider.when('/recovery', {templateUrl: 'partials/recovery.html', controller: RecoveryController})
-    $routeProvider.when('/', {templateUrl: 'partials/project-list.html', controller: ProjectListController})
+    $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: "LoginController"})
+    $routeProvider.when('/register', {templateUrl: 'partials/register.html', controller: "RegisterController"})
+    $routeProvider.when('/recovery', {templateUrl: 'partials/recovery.html', controller: "RecoveryController"})
+    $routeProvider.when('/', {templateUrl: 'partials/project-list.html', controller: "ProjectListController"})
 
     $routeProvider.when('/project/:pid/backlog',
-            {templateUrl: 'partials/backlog.html', controller: BacklogController})
+            {templateUrl: 'partials/backlog.html', controller: "BacklogController"})
 
     $routeProvider.when('/project/:pid/issues',
-            {templateUrl: 'partials/issues.html', controller: IssuesController})
+            {templateUrl: 'partials/issues.html', controller: "IssuesController"})
 
     $routeProvider.when('/project/:pid/issues/:issueid',
-            {templateUrl: 'partials/issues-view.html', controller: IssuesViewController})
+            {templateUrl: 'partials/issues-view.html', controller: "IssuesViewController"})
 
     $routeProvider.when('/project/:pid/tasks/:taskid',
-            {templateUrl: 'partials/tasks-view.html', controller: TasksViewController})
+            {templateUrl: 'partials/tasks-view.html', controller: "TasksViewController"})
 
     # $routeProvider.when('/project/:pid/questions',
     #         {templateUrl: 'partials/questions.html', controller: QuestionsController})
@@ -42,13 +42,12 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     #         {templateUrl: 'partials/tasks.html', controller: TasksController})
 
     $routeProvider.when('/project/:pid/dashboard/:sid',
-            {templateUrl: 'partials/dashboard.html', controller: DashboardController})
+            {templateUrl: 'partials/dashboard.html', controller: "DashboardController"})
 
     $routeProvider.when('/project/:pid/wiki/:slug',
-            {templateUrl: 'partials/wiki.html', controller: WikiController})
+            {templateUrl: 'partials/wiki.html', controller: "WikiController"})
 
     $routeProvider.otherwise({redirectTo: '/login'})
-    #$locationProvider.hashPrefix('!')
 
     defaultHeaders =
         "Content-Type": "application/json",
@@ -72,6 +71,13 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 
 
 modules = [
+    "greenmine.controllers.auth",
+    "greenmine.controllers.backlog",
+    "greenmine.controllers.dashboard",
+    "greenmine.controllers.issues",
+    "greenmine.controllers.project",
+    "greenmine.controllers.tasks",
+    "greenmine.controllers.wiki",
     "greenmine.filters.common",
     "greenmine.services.common",
     "greenmine.services.model",
@@ -155,3 +161,8 @@ angular
     .module('greenmine', modules)
     .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', configCallback])
     .run(['$rootScope', '$location', 'storage', init])
+
+angular.module('greenmine.config', []).value('greenmine.config', {
+    host: "localhost:8000"
+    scheme: "http"
+})

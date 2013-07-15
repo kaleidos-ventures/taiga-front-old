@@ -1,4 +1,18 @@
-@IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
+# Copyright 2013 Andrey Antukh <niwi@niwi.be>
+#
+# Licensed under the Apache License, Version 2.0 (the "License")
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
     # Global Scope Variables
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = ["Project", "Issues"]
@@ -210,10 +224,9 @@
             regenerateTags()
             filterIssues()
 
-@IssuesController.$inject = ['$scope', '$rootScope', '$routeParams', '$filter', '$q', 'resource']
 
 
-@IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
+IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = ["Project", "Issues", "#" + $routeParams.issueid]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
@@ -289,4 +302,6 @@
             $location.url("/project/#{projectId}/issues/")
 
 
-@IssuesViewController.$inject = ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource']
+module = angular.module("greenmine.controllers.issues", [])
+module.controller("IssuesViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', IssuesViewController])
+module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter', '$q', 'resource', IssuesController])
