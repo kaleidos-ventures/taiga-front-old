@@ -52,7 +52,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             promise = $http(httpParams)
             promise.success (data, status) ->
-                models = _.map data, (attrs) -> $model(name, attrs)
+                models = _.map data, (attrs) -> $model.make_model(name, attrs)
                 defered.resolve(models)
 
             promise.error (data, status) ->
@@ -70,7 +70,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             promise = $http(httpParams)
             promise.success (data, status) ->
-                defered.resolve($model(name, data, cls))
+                defered.resolve($model.make_model(name, data, cls))
 
             promise.error (data, status) ->
                 defered.reject()
@@ -151,13 +151,13 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             # Second step: make user story models
             _makeUserStoryModels = (objects) ->
                 for milestone in objects
-                    milestone.user_stories = _.map milestone.user_stories, (obj) -> $model("userstories", obj)
+                    milestone.user_stories = _.map milestone.user_stories, (obj) -> $model.make_model("userstories", obj)
 
                 return objects
 
             # Third step: make milestone models
             _makeModels = (objects) ->
-                return _.map objects, (obj) -> $model("milestones", obj)
+                return _.map objects, (obj) -> $model.make_model("milestones", obj)
 
             return _getMilestones().then(_makeUserStoryModels).then(_makeModels)
 
@@ -181,13 +181,13 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             # Second step: make user story models
             _makeUserStoryModels = (milestone) ->
-                milestone.user_stories = _.map milestone.user_stories, (obj) -> $model("userstories", obj)
+                milestone.user_stories = _.map milestone.user_stories, (obj) -> $model.make_model("userstories", obj)
 
                 return milestone
 
             # Third step: make milestone models
             _makeModel = (milestone) ->
-                return $model("milestone", milestone)
+                return $model.make_model("milestone", milestone)
 
             return _getMilestone().then(_makeUserStoryModels).then(_makeModel)
 
@@ -227,7 +227,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             promise = $http.post(url("tasks"), obj, {headers:headers()})
 
             promise.success (data, status) ->
-                defered.resolve($model("tasks", data))
+                defered.resolve($model.make_model("tasks", data))
 
             promise.error (data, status) ->
                 defered.reject()
@@ -240,7 +240,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             promise = $http.post(url("issues"), obj, {headers:headers()})
             promise.success (data, status) ->
-                defered.resolve($model("issues", data))
+                defered.resolve($model.make_model("issues", data))
 
             promise.error (data, status) ->
                 defered.reject()
@@ -254,7 +254,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             promise = $http.post(url("userstories"), obj, {headers:headers()})
 
             promise.success (data, status) ->
-                defered.resolve($model("userstories", data))
+                defered.resolve($model.make_model("userstories", data))
 
             promise.error (data, status) ->
                 defered.reject()
@@ -268,7 +268,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             promise = $http.post(url("milestones"), obj, {headers:headers()})
 
             promise.success (data, status) ->
-                defered.resolve($model("milestones", data))
+                defered.resolve($model.make_model("milestones", data))
 
             promise.error (data, status) ->
                 defered.reject()
@@ -294,7 +294,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             promise = $http.post(url("wikipages"), obj, {headers:headers()})
             promise.success (data, status) ->
-                defered.resolve($model("wikipages", slug))
+                defered.resolve($model.make_model("wikipages", slug))
 
             promise.error (data, status) ->
                 defered.reject()

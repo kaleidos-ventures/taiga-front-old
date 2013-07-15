@@ -116,19 +116,21 @@ BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
         for item in $scope.unassingedUs
             item.save() if item.isModified()
 
-
-    $q.all([
+    promise = $q.all([
         rs.getUsers($scope.projectId),
         rs.getUsStatuses($scope.projectId)
-    ]).then((results) ->
+    ])
+
+    promise.then (results) ->
         $scope.users = results[0]
         $scope.usstatuses = results[1]
-    )
 
-    $q.all([
+    promise = $q.all([
         rs.getUnassignedUserStories($scope.projectId),
         rs.getUsPoints($scope.projectId),
-    ]).then((results) ->
+    ])
+
+    promise.then (results) ->
         unassingedUs = results[0]
         usPoints = results[1]
         projectId = parseInt($rootScope.projectId, 10)
@@ -150,7 +152,6 @@ BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
 
         $rootScope.$broadcast("points:loaded")
         $rootScope.$broadcast("userstories:loaded")
-    )
 
     # User Story Form
     $scope.submitUs = ->
@@ -221,10 +222,9 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
         assigned = 0
         completed = 0
 
-        _.each $scope.milestones, (ml) ->
-            _.each ml.user_stories, (us) ->
+        for ml in $scope.milestones
+            for us in ml.user_stories
                 assigned += pointIdToOrder(us.points)
-
                 if us.is_closed
                     completed += pointIdToOrder(us.points)
 
@@ -232,17 +232,6 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
             "assignedPoints": assigned,
             "completedPoints": completed
         })
-
-    $scope.$on "points:loaded", ->
-        rs.getMilestones($rootScope.projectId).then (data) ->
-            # HACK: because django-filter does not works properly
-            # $scope.milestones = data
-            $scope.milestones = _.filter data, (item) ->
-                item.project == $rootScope.projectId
-
-            calculateStats()
-            $scope.$emit("milestones:loaded", $scope.milestones)
-
 
     $scope.sprintSubmit = ->
         if $scope.form.save is undefined
@@ -263,6 +252,18 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
             $scope.form.save().then ->
                 $scope.form = {}
                 $scope.sprintFormOpened = false
+
+    $scope.$on "points:loaded", ->
+        rs.getMilestones($rootScope.projectId).then (data) ->
+            # HACK: because django-filter does not works properly
+            # $scope.milestones = data
+            $scope.milestones = _.filter data, (item) ->
+                item.project == $rootScope.projectId
+
+            calculateStats()
+            $scope.$emit("milestones:loaded", $scope.milestones)
+
+
 
 
 BacklogMilestoneController = ($scope, rs) ->
