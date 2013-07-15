@@ -439,7 +439,8 @@ GmModalDirective = ($parse, $compile) ->
 
 module = angular.module('greenmine.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
-module.directive("gmBacklogGraph", GmBacklogGraphDirective)
+#Commented because blocks totally the browser.
+#module.directive("gmBacklogGraph", GmBacklogGraphDirective)
 module.directive('gmHeaderMenu', ["$rootScope", GmHeaderMenuDirective])
 module.directive('gmNinjaGraph', GmNinjaGraphDirective)
 module.directive('gmColorizeTag', GmColorizeTagDirective)

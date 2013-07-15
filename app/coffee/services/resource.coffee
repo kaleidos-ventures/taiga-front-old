@@ -247,21 +247,11 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             return defered.promise
 
-        service.createUserStory = (projectId, form) ->
-            obj = _.extend({}, form, {project: projectId})
-            defered = $q.defer()
-
-            promise = $http.post(url("userstories"), obj, {headers:headers()})
-
-            promise.success (data, status) ->
-                defered.resolve($model.make_model("userstories", data))
-
-            promise.error (data, status) ->
-                defered.reject()
-
-            return defered.promise
+        service.createUserStory = (data) ->
+            return $model.create('userstories', data)
 
         service.createMilestone = (projectId, form) ->
+            #return $model.create('milestones', data)
             obj = _.extend({}, form, {project: projectId})
             defered = $q.defer()
 

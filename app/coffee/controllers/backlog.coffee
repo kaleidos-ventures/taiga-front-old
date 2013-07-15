@@ -47,6 +47,45 @@ BacklogController = ($scope, $rootScope, $routeParams, rs) ->
         $rootScope.project = project
 
 
+BacklogUserStoryFormController = ($scope, $rootScope, $gmOverlay, rs) ->
+    $scope.type = "create"
+    $scope.formOpened = false
+
+    $scope.submit = ->
+        if type == "create"
+            promise = rs.createUserStory($scope.form)
+            promise.then (us) ->
+                $rootScope.$broadcast("userstory-form:create", us)
+                $scope.formOpened = false
+                $scope.overlay.close()
+
+        else
+            promise = $scope.form.save()
+            promise.then ->
+                $rootScope.$broadcast("userstory-form:update")
+                $scope.overlay.close()
+
+    $scope.close = ->
+        $scope.formOpened = false
+        $scope.overlay.close()
+
+        if $scope.type == "create"
+            $scope.form = {}
+        else
+            $scope.form.revert()
+
+    $scope.$on "userstory-form:open", (ctx, type, form={}) ->
+        $scope.type = type
+        $scope.form = form
+        $scope.formOpened = true
+
+        $scope.overlay = $gmOverlay()
+        $scope.overlay.open().then ->
+            $scope.formOpened = false
+
+    $scope.$on "userstory-form:close", ->
+        $scope.formOpened = false
+
 
 BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
     # Local scope variables
@@ -153,39 +192,8 @@ BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
         $rootScope.$broadcast("points:loaded")
         $rootScope.$broadcast("userstories:loaded")
 
-    # User Story Form
-    $scope.submitUs = ->
-        if $scope.form.id is undefined
-            rs.createUserStory($scope.projectId, $scope.form).then (us) ->
-                $scope.form = {}
-                $scope.unassingedUs.push(us)
-
-                generateTagList()
-                filterUsBySelectedTags()
-                resortUserStories()
-
-        else
-            $scope.form.save().then ->
-                $scope.form = {}
-                generateTagList()
-                filterUsBySelectedTags()
-                resortUserStories()
-
-        $rootScope.$broadcast("modals:close")
-
-    # Pre edit user story hook.
-    $scope.initEditUs = (us) ->
-        if us?
-            $scope.form = us
-        else
-            $scope.form = {tags: []}
-
-    # Cancel edit user story hook.
-    $scope.cancelEditUs = ->
-        if $scope.form?
-            if $scope.form.revert?
-                $scope.form.revert()
-            $scope.form = {}
+    $scope.openCreateUserStoryForm = ->
+        $rootScope.$broadcast("userstory-form:open", "create", {us:[]})
 
     $scope.removeUs = (us) ->
         us.remove().then ->
@@ -207,6 +215,7 @@ BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
             tag.selected = false
         else
             tag.selected = true
+
         filterUsBySelectedTags()
 
     # Signal Handlign
@@ -303,3 +312,5 @@ module.controller('BacklogMilestoneController', ['$scope', BacklogMilestoneContr
 module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', BacklogMilestonesController])
 module.controller('BacklogUserStoriesCtrl', ['$scope', '$rootScope', '$q', 'resource', BacklogUserStoriesCtrl])
 module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', BacklogController])
+module.controller('BacklogUserStoryFormController',
+                    ['$scope', '$rootScope', '$gmOverlay', 'resource', BacklogUserStoryFormController])
