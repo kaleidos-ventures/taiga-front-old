@@ -123,21 +123,31 @@ GmHeaderMenuDirective = ($rootScope) ->
 
 
 GmBreadcrumbDirective = ($rootScope) ->
-    return (scope, elm, attrs) ->
-        breadcrumb = $rootScope.pageBreadcrumb
+    return (scope, element, attrs) ->
 
-        if breadcrumb is undefined
-            return
+        scope.$watch "pageBreadcrumb", (breadcrumb) ->
+            if breadcrumb is undefined
+                return
 
-        element = angular.element(elm)
-        total = breadcrumb.length-1
+            total = breadcrumb.length-1
+            element.empty()
 
-        element.empty()
-        _.each breadcrumb, (item, index) ->
-            element.append(angular.element('<span class="title-item"></span>').text(item))
-            if index != total
-                element.append(angular.element('<span class="separator"> &rsaquo; </span>'))
+            items = []
 
+            for item, index in breadcrumb
+                items.push(angular.element('<span class="title-item"></span>').text(item))
+
+                if index != total
+                    items.push(angular.element('<span class="separator"> &rsaquo; </span>'))
+
+            if not _.isEmpty(items)
+                first = items[0]
+                first.css('font-weight', 'bold')
+                first.css('color', 'black')
+                first.css('curso', 'pointer')
+
+            for item in items
+                element.append(item)
 
 GmNinjaGraphDirective = ->
     directive =

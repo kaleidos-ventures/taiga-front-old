@@ -15,7 +15,6 @@
 BacklogController = ($scope, $rootScope, $routeParams, rs) ->
     # Global Scope Variables
     $rootScope.pageSection = 'backlog'
-    $rootScope.pageBreadcrumb = ["Project", "Backlog"]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     $scope.stats = {}
@@ -45,6 +44,7 @@ BacklogController = ($scope, $rootScope, $routeParams, rs) ->
     # Load initial data
     rs.getProject($rootScope.projectId).then (project) ->
         $rootScope.project = project
+        $rootScope.pageBreadcrumb = [project.name, "Backlog"]
         $rootScope.$broadcast("project:loaded", project)
 
     rs.getUsers($scope.projectId).then (users) ->
