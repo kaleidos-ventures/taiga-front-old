@@ -218,19 +218,8 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
         service.getUsers = (projectId) ->
             return queryMany("users", {project: projectId})
 
-        service.createTask = (projectId, form) ->
-            obj = _.extend({}, form, {project: projectId})
-            defered = $q.defer()
-
-            promise = $http.post(url("tasks"), obj, {headers:headers()})
-
-            promise.success (data, status) ->
-                defered.resolve($model.make_model("tasks", data))
-
-            promise.error (data, status) ->
-                defered.reject()
-
-            return defered.promise
+        service.createTask = (form) ->
+            return $model.create("tasks", form)
 
         service.createIssue = (projectId, form) ->
             obj = _.extend({}, form, {project: projectId})

@@ -64,7 +64,7 @@
                     </table>
                 </div>
 
-                <div class="body" gm-newtask-modal=".row-us-description .new-task">
+                <div class="body">
                     <table ng-repeat="us in userstoriesList">
                         <tbody>
                             <tr>
@@ -78,7 +78,7 @@
                                     <!--
                                     <a href="" class="button" gm-modal="#new-task-modal">Edit task</a>
                                     -->
-                                    <a href="" class="button">Add new task</a>
+                                    <a href="" class="button" ng-click="openCreateTaskForm(us)">Add new task</a>
                                     <div class="us-points">5</div>
                                 </td>
                                 <td class="col-task-status col-task-{{ status.name|slugify }}"
@@ -98,11 +98,17 @@
         </div>
     </div>
 </div>
-<script type="text/template" id="new-task-modal">
-    <div class="new-task-modal modal hide">
-        <form class="inline-form task-form" ui-parsley="submitTask()">
-            <div class="modal-header">
-                <h3>Modal title</h3>
+
+
+<div id="taskboard-task-modalform"
+        ng-show="formOpened"
+        ng-controller="TaskboardTaskFormController">
+
+    <div class="new-task-modal modal">
+        <form class="inline-form task-form" gm-checksley-form="submit()">
+            <div class="modal-header" ng-switch on="type">
+                <h3 ng-switch-when="create">Create task</h3>
+                <h3 ng-switch-when="edit">Modify task</h3>
             </div>
             <div class="modal-body">
                 <div class="fieldset-row">
@@ -132,7 +138,7 @@
                 <div class="fieldset-row">
                     <fieldset>
                         <label>Tags</label>
-                        <input type="text" class="tags" name="status" value="" ng-model="form.tags" ui-select2></input>
+                        <input type="text" class="tags" name="status" value="" ng-model="form.tags" gm-tags-input></input>
                     </fieldset>
                 </div>
                 <div class="fieldset-row">
@@ -143,12 +149,13 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="button button-success" value="Save" />
-                <a href="" class="button button-cancel">Close</a>
+                <input type="submit" class="button button-success" gm-checksley-submit-button value="Save" />
+                <a href="" class="button button-cancel" ng-click="close()">Close</a>
             </div>
         </form>
     </div>
-</script>
+</div>
+
 <script type="text/template" id="developers-popover">
     <div class="developers-popover">
         <h3>Select a user:</h3>

@@ -75,13 +75,15 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs) ->
             totalTasks: totalTasks
             completedTasks: completedTasks
 
-    $q.all([
+    promise = $q.all([
         rs.getTaskStatuses(projectId),
         rs.getMilestone(projectId, sprintId)
         rs.getUsPoints(projectId),
         rs.getTasks(projectId, sprintId),
         rs.getUsers(projectId),
-    ]).then((results) ->
+    ])
+
+    promise.then (results) ->
         statuses = results[0]
         milestone = results[1]
         points = results[2]
@@ -111,25 +113,21 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs) ->
 
         formatUserStoryTasks()
         calculateStats()
-        initializeEmptyForm()
-    )
 
-    initializeEmptyForm = ->
-        $scope.form = {"status": $scope.statusesList[0].id}
+    $scope.openCreateTaskForm = (us) ->
+        options =
+            status: $scope.statusesList[0].id
+            project: projectId
 
-    $scope.submitTask = ->
-        form = _.extend({tags:[]}, $scope.form, {"user_story": this.us.id})
+        if us != undefined
+            options.user_story = us.id
 
-        rs.createTask(projectId, form).then (model) ->
-            $scope.tasks.push(model)
+        $rootScope.$broadcast("task-form:open", "create", options)
 
-            formatUserStoryTasks()
-            calculateStats()
-            initializeEmptyForm()
-
-        # Notify to all modal directives
-        # for close all opened modals.
-        $scope.$broadcast("modals:close")
+    $scope.$on "task-form:create", (ctx, model) ->
+        $scope.tasks.push(model)
+        formatUserStoryTasks()
+        calculateStats()
 
     $scope.$on "sortable:changed", ->
         _.each $scope.usTasks, (statuses, usId) ->
@@ -143,6 +141,39 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs) ->
         calculateStats()
 
 
+TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, rs) ->
+    $scope.type = "create"
+    $scope.formOpened = false
+
+    $scope.submit = ->
+        rs.createTask($scope.form).then (model) ->
+            $rootScope.$broadcast("task-form:create", model)
+            $scope.overlay.close()
+            $scope.formOpened = true
+
+    $scope.close = ->
+        $scope.formOpened = false
+        $scope.overlay.close()
+
+        if $scope.type == "create"
+            $scope.form = {}
+        else
+            $scope.form.revert()
+
+    $scope.$on "task-form:open", (ctx, type, form={}) ->
+        $scope.type = type
+        $scope.form = form
+        $scope.formOpened = true
+
+        $scope.$broadcast("checksley:reset")
+
+        $scope.overlay = $gmOverlay()
+        $scope.overlay.open().then ->
+            $scope.formOpened = false
+
+    $scope.$on "task-form:close", ->
+        $scope.formOpened = false
+
 TaskboardTaskController = ($scope, $q) ->
     $scope.updateTaskAssignation = (task, id) ->
         task.assigned_to = id ? id : null
@@ -153,3 +184,4 @@ TaskboardTaskController = ($scope, $q) ->
 module = angular.module("greenmine.controllers.taskboard", [])
 module.controller("TaskboardTaskController", ['$scope', '$q', TaskboardTaskController])
 module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', TaskboardController])
+module.controller("TaskboardTaskFormController", ['$scope', '$rootScope', '$gmOverlay', 'resource', TaskboardTaskFormController])
