@@ -25,16 +25,29 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs) ->
 
     formatUserStoryTasks = ->
         $scope.usTasks = {}
+        $scope.unassignedTasks = {}
 
-        _.each $scope.userstories, (us) ->
+        for us in $scope.userstoriesList
+            console.log us
             $scope.usTasks[us.id] = {}
-            _.each $scope.statuses, (status) ->
+
+            for status in $scope.statusesList
                 $scope.usTasks[us.id][status.id] = []
 
-        _.each $scope.tasks, (task) ->
-            # why? because a django-filters sucks
-            if $scope.usTasks[task.user_story]?
-                $scope.usTasks[task.user_story][task.status].push(task)
+        for status in $scope.statusesList
+            $scope.unassignedTasks[status.id] = []
+
+
+
+        for task in $scope.tasks
+            if task.user_story == null
+                $scope.unassignedTasks[task.status].push(task)
+            else
+                # why? because a django-filters sucks
+                if $scope.usTasks[task.user_story]?
+                    $scope.usTasks[task.user_story][task.status].push(task)
+
+        return
 
     calculateStats = ->
         pointIdToOrder = greenmine.utils.pointIdToOrder($rootScope.constants.points)
@@ -130,13 +143,18 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs) ->
         calculateStats()
 
     $scope.$on "sortable:changed", ->
-        _.each $scope.usTasks, (statuses, usId) ->
-            _.each statuses, (tasks, statusId) ->
-                _.each tasks, (task) ->
+        for usId, statuses of $scope.usTasks
+            for statusId, tasks of statuses
+                for task in tasks
                     task.user_story = parseInt(usId, 10)
                     task.status = parseInt(statusId, 10)
-
                     task.save() if task.isModified()
+
+        for statusId, tasks of $scope.unassignedTasks
+            for task in tasks
+                task.user_story = null
+                task.status = parseInt(statusId, 10)
+                task.save() if task.isModified()
 
         calculateStats()
 
