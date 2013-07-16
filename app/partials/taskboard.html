@@ -78,14 +78,14 @@
                                     <!--
                                     <a href="" class="button" gm-modal="#new-task-modal">Edit task</a>
                                     -->
-                                    <a href="" class="button" gm-modal="#new-task-modal">Add new task</a>
+                                    <a href="" class="button">Add new task</a>
                                     <div class="us-points">5</div>
                                 </td>
                                 <td class="col-task-status col-task-{{ status.name|slugify }}"
                                         ng-repeat="status in statusesList|orderBy:'order'"
                                         style="width: {{ 100/(statusesList.length+1) }}%">
 
-                                    <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][status.id]">
+                                    <div class="tasks" gm-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][status.id]">
                                         <div class="task-box" ng-repeat="task in usTasks[us.id][status.id]"
                                             ng-include="'/partials/taskboard-task.html'"></div>
                                     </div>
