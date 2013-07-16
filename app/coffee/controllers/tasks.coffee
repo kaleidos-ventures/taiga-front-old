@@ -51,25 +51,19 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
     $scope.isSameAs = (property, id) ->
         return ($scope.task[property] == parseInt(id, 10))
 
-    $scope.save = ->
-        defered = $q.defer()
+    $scope.submit = ->
+        defered = Q.defer()
         promise = defered.promise
 
-        if $scope.attachment
-            rs.uploadTaskAttachment(projectId, taskId, $scope.attachment).then (data)->
-                defered.resolve(data)
-        else
-            defered.resolve(null)
-
-        promise = promise.then () ->
-            _.each $scope.form, (value, key) ->
+        promise = rs.uploadTaskAttachment(projectId, taskId, $scope.attachment)
+        promise = promise.then ->
+            for key, value of $scope.form
                 $scope.task[key] = value
-                return
-
             return $scope.task.save()
 
         return promise.then (task) ->
             task.refresh()
+            scope.$apply()
 
 
     $scope.removeTask = (task) ->

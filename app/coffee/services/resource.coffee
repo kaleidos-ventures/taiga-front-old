@@ -283,6 +283,48 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
         service.getTaskAttachments = (projectId, issueId) ->
             return queryMany("tasks/attachments", {project:projectId, object_id: issueId})
 
+
+        service.uploadTaskAttachment = (projectId, issueId, file, progress) ->
+            defered = Q.defer()
+
+            if file is undefined
+                defered.resolve(null)
+                return defered.promise
+
+            console.log "uploadTaskAttachment", arguments
+
+            #uploadProgress = (evt) ->
+            #    if (evt.lengthComputable) {
+            #        progress = Math.round(evt.loaded * 100 / evt.total)
+            #    } else {
+            #        progress = 'unable to compute'
+            #    }
+            #}
+
+            uploadComplete = (evt) ->
+                data = JSON.parse(evt.target.responseText)
+                defered.resolve(data)
+
+            uploadFailed = (evt) ->
+                defered.reject("fail")
+
+            formData = new FormData()
+            formData.append("project", projectId)
+            formData.append("object_id", issueId)
+            formData.append("attached_file", file)
+
+            xhr = new XMLHttpRequest()
+
+            if progress != undefined
+                xhr.upload.addEventListener("progress", uploadProgress, false)
+
+            xhr.addEventListener("load", uploadComplete, false)
+            xhr.addEventListener("error", uploadFailed, false)
+            xhr.open("POST", url("tasks/attachments"))
+            xhr.setRequestHeader("X-SESSION-TOKEN", storage.get('token'))
+            xhr.send(formData)
+            return defered.promise
+
         service.uploadIssueAttachment = (projectId, issueId, file, progress) ->
             defered = $q.defer()
 

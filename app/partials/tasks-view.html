@@ -6,9 +6,11 @@
             <a class="button button-delete" ng-click="removeTask(task)">Delete task</a>
         </div>
     </div>
+
     <ul class="tags-list">
         <li class="tag" ng-repeat="tag in task.tags" gm-colorize-tag>{{ tag }}</li>
     </ul>
+
     <div class="row-fluid task-data">
         <div class="span8 task-data-description">
             <h2>{{ task.subject }}</h2>
@@ -53,7 +55,7 @@
             <div class="update-form">
                 <h4>Update task</h4>
 
-                <form class="form-horizontal" ui-parsley="save()">
+                <form class="form-horizontal" gm-checksley-form="submit()">
                     <div>
                         <fieldset class="task-status">
                             <label class="control-label" for="inputEmail">Status</label>
@@ -77,7 +79,7 @@
                     <div>
                         <fieldset class="task-tags">
                             <label>Tags</label>
-                            <input type="text" name="status" value="" ng-model="form.tags" ui-select2></input>
+                            <input type="text" name="status" value="" ng-model="form.tags" gm-tags-input></input>
                         </fieldset>
                     </div>
 
@@ -106,7 +108,7 @@
                     </fieldset>
 
                     <fieldset class="task-edit-submit">
-                        <button type="submit" class="button button-edit">Save</button>
+                        <button type="submit" class="button button-edit" gm-checksley-submit-button>Save</button>
                     </fieldset>
                 </form>
 
