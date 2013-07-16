@@ -341,6 +341,32 @@ body.login {
         }
     }
     .nav {
+        .search-box {
+            position: absolute;
+            top: 54px;
+            right: 25px;
+
+            input {
+                border: 1px solid #bbb;
+                background-color: #999;
+                padding: 2px;
+                width: 300px;
+                color: white;
+
+                background: url('../img/nav_sprite.png') no-repeat 280px -194px;
+
+            }
+            ::-webkit-input-placeholder {
+                color: white;
+                font-size: 14px;
+                opacity: 0.5;
+                line-height: 18px;
+                vertical-align: middle;
+            }
+            ::-moz-placeholder { color: white; } /* firefox 19+ */
+            :-ms-input-placeholder { color: white; } /* ie */
+            input:-moz-placeholder { color: white; }
+        }
         ul {
             margin: 0px;
             padding:0;
