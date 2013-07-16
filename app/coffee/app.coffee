@@ -41,8 +41,8 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     # $routeProvider.when('/project/:pid/tasks',
     #         {templateUrl: 'partials/tasks.html', controller: TasksController})
 
-    $routeProvider.when('/project/:pid/dashboard/:sid',
-            {templateUrl: 'partials/dashboard.html', controller: "DashboardController"})
+    $routeProvider.when('/project/:pid/taskboard/:sid',
+            {templateUrl: 'partials/taskboard.html', controller: "TaskboardController"})
 
     $routeProvider.when('/project/:pid/wiki/:slug',
             {templateUrl: 'partials/wiki.html', controller: "WikiController"})
@@ -73,7 +73,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 modules = [
     "greenmine.controllers.auth",
     "greenmine.controllers.backlog",
-    "greenmine.controllers.dashboard",
+    "greenmine.controllers.taskboard",
     "greenmine.controllers.issues",
     "greenmine.controllers.project",
     "greenmine.controllers.tasks",
@@ -86,7 +86,7 @@ modules = [
     "greenmine.services.overlay",
     "greenmine.directives.generic",
     "greenmine.directives.common",
-    "greenmine.directives.dashboard",
+    "greenmine.directives.taskboard",
     "greenmine.directives.issues",
     "greenmine.directives.wiki"
 ]
@@ -134,8 +134,8 @@ init = ($rootScope, $location, storage) ->
         backlogUrl: (projectId) ->
             return _.str.sprintf("/#/project/%s/backlog", projectId)
 
-        dashboardUrl: (projectId, sprintId) ->
-            return _.str.sprintf("/#/project/%s/dashboard/%s", projectId, sprintId)
+        taskboardUrl: (projectId, sprintId) ->
+            return _.str.sprintf("/#/project/%s/taskboard/%s", projectId, sprintId)
 
         issuesUrl: (projectId, issueId) ->
             if issueId != undefined

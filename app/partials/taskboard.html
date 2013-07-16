@@ -5,7 +5,7 @@
             <div class="stats-container">
                 <div class="row-fluid">
                     <div class="span8">
-                        <div class="graphics-box" gm-dashboard-graph></div>
+                        <div class="graphics-box" gm-taskboard-graph></div>
                     </div>
                     <div class="span4">
                         <div class="information-box">
@@ -87,7 +87,7 @@
 
                                     <div class="tasks" ui-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][status.id]">
                                         <div class="task-box" ng-repeat="task in usTasks[us.id][status.id]"
-                                            ng-include="'/partials/dashboard-task.html'"></div>
+                                            ng-include="'/partials/taskboard-task.html'"></div>
                                     </div>
                                 </td>
                             </tr>

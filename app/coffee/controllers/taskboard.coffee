@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-DashboardController = ($scope, $rootScope, $routeParams, $q, rs) ->
+TaskboardController = ($scope, $rootScope, $routeParams, $q, rs) ->
     # Global Scope Variables
     $rootScope.pageSection = 'dashboard'
-    $rootScope.pageBreadcrumb = ["Project", "Dashboard"]
+    $rootScope.pageBreadcrumb = ["Project", "Taskboard"]
     $rootScope.projectId = $routeParams.pid
     $scope.sprintId = $routeParams.sid
     $scope.statuses = []
@@ -143,13 +143,13 @@ DashboardController = ($scope, $rootScope, $routeParams, $q, rs) ->
         calculateStats()
 
 
-DashboardTaskController = ($scope, $q) ->
+TaskboardTaskController = ($scope, $q) ->
     $scope.updateTaskAssignation = (task, id) ->
         task.assigned_to = id ? id : null
         task.save()
 
 
 
-module = angular.module("greenmine.controllers.dashboard", [])
-module.controller("DashboardTaskController", ['$scope', '$q', DashboardTaskController])
-module.controller("DashboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', DashboardController])
+module = angular.module("greenmine.controllers.taskboard", [])
+module.controller("TaskboardTaskController", ['$scope', '$q', TaskboardTaskController])
+module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', TaskboardController])

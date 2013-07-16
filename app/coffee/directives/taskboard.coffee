@@ -1,6 +1,6 @@
-dashboardModule = angular.module('greenmine.directives.dashboard', [])
+dashboardModule = angular.module('greenmine.directives.taskboard', [])
 
-gmDashboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
+gmTaskboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
     element = angular.element(elm)
 
     redrawChart = () ->
@@ -78,4 +78,4 @@ gmDashboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
         if scope.statuses and scope.milestone
             redrawChart()
 
-dashboardModule.directive("gmDashboardGraph", ["$parse", "resource", gmDashboardGraphConstructor])
+dashboardModule.directive("gmTaskboardGraph", ["$parse", "resource", gmTaskboardGraphConstructor])
