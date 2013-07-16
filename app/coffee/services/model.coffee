@@ -109,6 +109,7 @@ angular.module 'greenmine.services.model', [], ($provide) ->
                 defered = $q.defer()
 
                 if not @isModified() and patch
+                    defered.resolve(self)
                     return defered.promise
 
                 params =

@@ -42,8 +42,6 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
         itemUrlTemplate = "%(url)s%(id)s/"
 
         queryMany = (name, params, options) ->
-            console.log name, url(name)
-
             defauts = {method: "GET", headers:  headers()}
             current = {url: url(name), params: params or {}}
 
@@ -266,7 +264,6 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             return defered.promise
 
         service.getWikiPage = (projectId, slug) ->
-            console.log $model.cls
             class WikiModel extends $model.cls
                 getUrl: ->
                     return "#{url(@_name)}#{@_attrs.project}-#{@_attrs.slug}/"

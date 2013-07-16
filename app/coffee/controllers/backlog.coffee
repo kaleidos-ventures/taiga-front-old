@@ -71,18 +71,18 @@ BacklogUserStoryFormController = ($scope, $rootScope, $gmOverlay, rs) ->
         $scope.usstatuses = result
 
     $scope.submit = ->
+        $scope.overlay.close()
         if $scope.type == "create"
             promise = rs.createUserStory($scope.form)
             promise.then (us) ->
                 $rootScope.$broadcast("userstory-form:create", us)
                 $scope.formOpened = false
-                $scope.overlay.close()
 
         else
             promise = $scope.form.save()
             promise.then ->
                 $rootScope.$broadcast("userstory-form:update")
-                $scope.overlay.close()
+                $scope.formOpened = false
 
     $scope.close = ->
         $scope.formOpened = false
@@ -97,6 +97,8 @@ BacklogUserStoryFormController = ($scope, $rootScope, $gmOverlay, rs) ->
         $scope.type = type
         $scope.form = form
         $scope.formOpened = true
+
+        $scope.$broadcast("checksley:reset")
 
         $scope.overlay = $gmOverlay()
         $scope.overlay.open().then ->
@@ -191,6 +193,9 @@ BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
     $scope.openCreateUserStoryForm = ->
         $rootScope.$broadcast("userstory-form:open", "create",
                               {us:[], project:$scope.projectId})
+
+    $scope.openEditUserStoryForm = (us) ->
+        $rootScope.$broadcast("userstory-form:open", "edit", us)
 
     $scope.removeUs = (us) ->
         us.remove().then ->

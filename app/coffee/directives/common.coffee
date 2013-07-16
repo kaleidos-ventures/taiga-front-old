@@ -442,11 +442,12 @@ GmChecksleyFormDirective = ($parse, $compile, $window) ->
             scope.$apply ->
                 callback(scope) if ok
 
-        attachParsley = ->
+        attachChecksley = ->
             element.checksley('destroy')
             element.checksley(listeners: {onFormSubmit: onFormSubmit})
 
-        scope.$on("$includeContentLoaded", attachParsley)
+        scope.$on("$includeContentLoaded", attachChecksley)
+        scope.$on("checksley:reset", attachChecksley)
         element.checksley(listeners: {onFormSubmit: onFormSubmit})
 
 
@@ -457,6 +458,40 @@ GmChecksleySubmitButtonDirective = ->
         element.on "click", (event) ->
             event.preventDefault()
             element.closest("form").trigger("submit")
+
+
+GmTagsInputDirective = ->
+    restrict: "A"
+    require: "ngModel"
+    link: (scope, elm, attrs, ctrl) ->
+        trimList = (list) ->
+            return _.map(list, (i) -> i.trim())
+
+        parser = (value) ->
+            value = value.replace(/,\s/, ",")
+            value = value.replace(/\./, ",")
+
+            if _.isEmpty(value)
+                return undefined
+
+            value = trimList(value.split(","))
+            console.log "parser", value
+            return value
+
+        formatter = (value) ->
+            if value is undefined
+                return value
+            if _.isString(value)
+                return value
+
+
+            value = value.join(", ")
+            console.log "formatter", value
+            return value
+
+        ctrl.$parsers.push(parser)
+        ctrl.$formatters.push(formatter)
+
 
 
 module = angular.module('greenmine.directives.common', [])
@@ -475,4 +510,4 @@ module.directive('gmPopover', ['$parse', '$compile', GmPopoverDirective])
 #module.directive('gmFlashMessage', GmFlashMessageDirective)
 module.directive('gmChecksleyForm', ['$parse', '$compile', '$window', GmChecksleyFormDirective])
 module.directive('gmChecksleySubmitButton', [GmChecksleySubmitButtonDirective])
-
+module.directive('gmTagsInput', [GmTagsInputDirective])
