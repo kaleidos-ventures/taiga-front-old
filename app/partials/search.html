@@ -10,7 +10,11 @@
                 <h3>Issues:</h3>
                 <ul class="result-list">
                     <li class="result-item" ng-repeat="item in results.issue">
-                        <div class="title"><a href="">{{ item.stored_fields.title }}</a></div>
+                        <div class="title">
+                            <a href="{{ urls.issuesUrl(projectId, item.pk) }}">
+                                {{ item.stored_fields.title }}
+                            </a>
+                        </div>
                         <div class="description">
                             {{ item.stored_fields.description|truncate:200 }}
                         </div>
@@ -22,7 +26,11 @@
                 <h3>User stories:</h3>
                 <ul class="result-list">
                     <li class="result-item" ng-repeat="item in results.userstory">
-                        <div class="title"><a href="">{{ item.stored_fields.title }}</a></div>
+                        <div class="title">
+                            <a href="{{ urls.userStoryUrl(projectId, item.pk) }}">
+                                {{ item.stored_fields.title }}
+                            </a>
+                        </div>
                         <div class="description">
                             {{ item.stored_fields.description|truncate:200 }}
                         </div>
