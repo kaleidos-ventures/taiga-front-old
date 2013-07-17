@@ -17,8 +17,9 @@
                 <h3>Attachments</h3>
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
-                        <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a> on
-                            <span>{{ attachment.created_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span>
+                        <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
+                        <span>on {{ attachment.created_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span>
+                        <a href="" ng-click="removeAttachment(attachment)">(remove)</a>
                     </li>
                 </ul>
             </div>
@@ -53,7 +54,7 @@
             <div class="update-form">
                 <h4>Update issue</h4>
 
-                <form class="form-horizontal" ui-parsley="save()">
+                <form class="form-horizontal" gm-checksley-form="submit()">
                     <div>
                         <fieldset class="issue-status">
                             <label class="control-label" for="inputEmail">Status</label>
@@ -86,7 +87,7 @@
 
                         <fieldset class="issue-tags">
                             <label>Tags</label>
-                            <input type="text" name="status" value="" ng-model="form.tags" ui-select2></input>
+                            <input type="text" name="status" value="" ng-model="form.tags" gm-tags-input></input>
                         </fieldset>
                     </div>
 
@@ -115,10 +116,9 @@
                     </fieldset>
 
                     <fieldset class="issue-edit-submit">
-                        <button type="submit" class="button button-edit">Save</button>
+                        <button type="submit" class="button button-edit" gm-checksley-submit-button>Save</button>
                     </fieldset>
                 </form>
-
             </div>
         </div>
     </div>

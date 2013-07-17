@@ -171,6 +171,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
         _.each(severities, (item) -> $rootScope.constants.severity[item.id] = item)
         _.each(priorities, (item) -> $rootScope.constants.priority[item.id] = item)
 
+
         $rootScope.constants.typeList = _.sortBy(issueTypes, "order")
         $rootScope.constants.statusList = _.sortBy(issueStatuses, "order")
         $rootScope.constants.severityList = _.sortBy(severities, "order")
@@ -201,21 +202,13 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
         issue.save()
         regenerateTags()
 
-    $scope.submitIssue = ->
-        if $scope.form.id is undefined
-            rs.createIssue($scope.projectId, $scope.form).then (us) ->
-                $scope.form = {}
-                $scope.issues.push(us)
+    $scope.submit = ->
+        rs.createIssue($scope.projectId, $scope.form).then (issue) ->
+            $scope.form = {}
+            $scope.issues.push(us)
 
-                regenerateTags()
-                filterIssues()
-        else
-            $scope.form.save().then ->
-                $scope.form = {}
-                regenerateTags()
-                filterIssues()
-
-        $rootScope.$broadcast("modals:close")
+            regenerateTags()
+            filterIssues()
 
     $scope.removeIssue = (issue) ->
         issue.remove().then ->
@@ -229,11 +222,29 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
 
 IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
     $rootScope.pageSection = 'issues'
-    $rootScope.pageBreadcrumb = ["Project", "Issues", "#" + $routeParams.issueid]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
+    $rootScope.pageBreadcrumb = ["Project", ""]
 
     projectId = $rootScope.projectId
     issueId = $routeParams.issueid
+
+    $scope.issue = {}
+    $scope.form = {}
+    $scope.updateFormOpened = false
+
+    loadIssue = ->
+        rs.getIssue(projectId, issueId).then (issue) ->
+            $scope.issue = issue
+            $scope.form = _.extend({}, $scope.issue._attrs)
+            $rootScope.pageBreadcrumb[1] = "##{issue.ref}"
+
+
+    loadAttachments = ->
+        rs.getIssueAttachments(projectId, issueId).then (attachments) ->
+            $scope.attachments = attachments
+
+    # Load initial data
+    loadAttachments()
 
     promise = $q.all [
         rs.getIssueTypes(projectId),
@@ -242,7 +253,6 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
         rs.getPriorities(projectId),
         rs.getUsers(projectId),
         rs.getIssueAttachments(projectId, issueId),
-        rs.getIssue(projectId, issueId)
     ]
 
     promise.then (results) ->
@@ -251,8 +261,6 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
         severities = results[2]
         priorities = results[3]
         users = results[4]
-        attachments = results[5]
-        issue = results[6]
 
         _.each(users, (item) -> $rootScope.constants.users[item.id] = item)
         _.each(issueTypes, (item) -> $rootScope.constants.type[item.id] = item)
@@ -266,37 +274,24 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
         $rootScope.constants.priorityList = _.sortBy(priorities, "order")
         $rootScope.constants.usersList = _.sortBy(users, "id")
 
-        $scope.attachments = attachments
-        $scope.issue = issue
-        $scope.form = _.extend({}, $scope.issue._attrs)
-
-    $scope.issue = {}
-    $scope.form = {}
-    $scope.updateFormOpened = false
+        loadIssue()
 
     $scope.isSameAs = (property, id) ->
         return ($scope.issue[property] == parseInt(id, 10))
 
-    $scope.save = ->
-        defered = $q.defer()
-        promise = defered.promise
+    $scope.submit = ->
+        rs.uploadIssueAttachment(projectId, issueId, $scope.attachment)
 
-        if $scope.attachment
-            rs.uploadIssueAttachment(projectId, issueId, $scope.attachment).then (data)->
-                defered.resolve(data)
-        else
-            defered.resolve(null)
+        for key, value of $scope.form
+            $scope.issue[key] = value
 
-        promise = promise.then () ->
-            _.each $scope.form, (value, key) ->
-                $scope.issue[key] = value
-                return
+        $scope.issue.save().then (issue) ->
+            loadIssue()
+            loadAttachments()
 
-            return $scope.issue.save()
-
-        return promise.then (issue) ->
-            console.log issue
-            issue.refresh()
+    $scope.removeAttachment = (attachment) ->
+        $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
+        attachment.remove()
 
     $scope.removeIssue = (issue) ->
         issue.remove().then ->

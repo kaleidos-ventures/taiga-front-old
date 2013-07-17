@@ -149,7 +149,7 @@ init = ($rootScope, $location, storage) ->
         backlog: "/project/%s/backlog"
         taskboard: "/project/%s/taskboard/%s"
         userstory: "/project/%s/user-story/%s"
-        issue: "/project/%s/taskboard/%s"
+        issue: "/project/%s/issues/%s"
         issues: "/project/%s/issues"
         task: "/project/%s/tasks/%s"
         tasks: "/project/%s/tasks/%s"

@@ -22,6 +22,7 @@ GmIssuesSortDirective = ($parse) -> (scope, elm, attrs) ->
         scope.$digest()
 
 
+# TODO: remove, seems not used and deprecated
 GmIssueChangesDirective = ->
     validFields = ["priority", "status", "severity", "tags", "subject", "description", "assigned_to"]
     template = _.template($("#change-template").html())

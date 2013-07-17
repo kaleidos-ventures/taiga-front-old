@@ -37,8 +37,6 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs) ->
         for status in $scope.statusesList
             $scope.unassignedTasks[status.id] = []
 
-
-
         for task in $scope.tasks
             if task.user_story == null
                 $scope.unassignedTasks[task.status].push(task)
@@ -55,6 +53,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs) ->
         totalTasks = $scope.tasks.length
         totalUss = $scope.userstoriesList.length
         totalPoints = 0
+
         completedPoints = 0
         compledUss = 0
         completedTasks = 0

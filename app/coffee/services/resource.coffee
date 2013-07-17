@@ -338,15 +338,11 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             return defered.promise
 
         service.uploadIssueAttachment = (projectId, issueId, file, progress) ->
-            defered = $q.defer()
+            defered = Q.defer()
 
-            #uploadProgress = (evt) ->
-            #    if (evt.lengthComputable) {
-            #        progress = Math.round(evt.loaded * 100 / evt.total)
-            #    } else {
-            #        progress = 'unable to compute'
-            #    }
-            #}
+            if file is undefined
+                defered.resolve(null)
+                return defered.promise
 
             uploadComplete = (evt) ->
                 data = JSON.parse(evt.target.responseText)
