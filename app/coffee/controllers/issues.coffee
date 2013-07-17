@@ -15,7 +15,6 @@
 IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
     # Global Scope Variables
     $rootScope.pageSection = 'issues'
-    $rootScope.pageBreadcrumb = ["Project", "Issues"]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     projectId = $rootScope.projectId
@@ -32,6 +31,12 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
 
     $scope.sortingOrder = 'severity'
     $scope.reverse = false
+
+    # Load initial data
+    rs.getProject($rootScope.projectId).then (project) ->
+        $rootScope.project = project
+        $rootScope.pageBreadcrumb = [project.name, "Issues"]
+        $rootScope.$broadcast("project:loaded", project)
 
     generateTagList = ->
         tagsDict = {}
@@ -223,7 +228,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
 IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
     $rootScope.pageSection = 'issues'
     $rootScope.projectId = parseInt($routeParams.pid, 10)
-    $rootScope.pageBreadcrumb = ["Project", ""]
+    $rootScope.pageBreadcrumb = ["", "Issues", ""]
 
     projectId = $rootScope.projectId
     issueId = $routeParams.issueid
@@ -232,12 +237,25 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
     $scope.form = {}
     $scope.updateFormOpened = false
 
+    # Load initial data
+    rs.getProject($rootScope.projectId).then (project) ->
+        $rootScope.project = project
+        $rootScope.$broadcast("project:loaded", project)
+
+        breadcrumb = _.clone($rootScope.pageBreadcrumb)
+        breadcrumb[0] = project.name
+
+        $rootScope.pageBreadcrumb = breadcrumb
+
     loadIssue = ->
         rs.getIssue(projectId, issueId).then (issue) ->
             $scope.issue = issue
             $scope.form = _.extend({}, $scope.issue._attrs)
-            $rootScope.pageBreadcrumb[1] = "##{issue.ref}"
 
+            breadcrumb = _.clone($rootScope.pageBreadcrumb)
+            breadcrumb[2] = "##{issue.ref}"
+
+            $rootScope.pageBreadcrumb = breadcrumb
 
     loadAttachments = ->
         rs.getIssueAttachments(projectId, issueId).then (attachments) ->

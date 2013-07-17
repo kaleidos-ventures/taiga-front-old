@@ -15,7 +15,7 @@
 
 TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
     $rootScope.pageSection = 'tasks'
-    $rootScope.pageBreadcrumb = ["Project", "Tasks", "#" + $routeParams.taskid]
+    $rootScope.pageBreadcrumb = ["", "Tasks", ""]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     projectId = $rootScope.projectId
@@ -33,6 +33,21 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
         rs.getTask(projectId, taskId).then (task) ->
             $scope.task = task
             $scope.form = _.extend({}, $scope.task._attrs)
+
+            breadcrumb = _.clone($rootScope.pageBreadcrumb)
+            breadcrumb[2] = "##{task.ref}"
+
+            $rootScope.pageBreadcrumb = breadcrumb
+
+
+    # Load initial data
+    rs.getProject($rootScope.projectId).then (project) ->
+        $rootScope.project = project
+        $rootScope.$broadcast("project:loaded", project)
+
+        breadcrumb = _.clone($rootScope.pageBreadcrumb)
+        breadcrumb[0] = project.name
+        $rootScope.pageBreadcrumb = breadcrumb
 
     # Initial load
     loadAttachments()

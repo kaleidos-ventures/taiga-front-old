@@ -14,6 +14,7 @@
 
 ProjectListController = ($scope, $rootScope, rs) ->
     $rootScope.pageSection = 'projects'
+    $rootScope.pageBreadcrumb = ["Greenmine", "Dashboard"]
 
     rs.getProjects().then (projects) ->
         $scope.projects = projects
