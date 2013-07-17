@@ -30,9 +30,9 @@
                 <h3>Issue data</h3>
             </div>
             <ul class="info-rows">
-               <li>Added by: <span>{{ task.priority }}</span></li>
-               <li>Assigned to: <span>{{ task.owner }}</span></li>
-               <li>Date: <span>{{ task.modified_date }}</span></li>
+               <li>Added by: <span>{{ task.owner }}</span></li>
+               <li>Assigned to: <span>{{ task.assigned_to }}</span></li>
+               <li>Date: <span>{{ task.created_date }}</span></li>
                <li>Updated: <span>{{ task.modified_date }}</span></li>
                <li class="priority-{{ task.priority }}">Priority: <span>{{ task.priority }}</span></li>
                <li class="status-{{ task.status }}">Status: <span>{{ task.status }}</span></li>

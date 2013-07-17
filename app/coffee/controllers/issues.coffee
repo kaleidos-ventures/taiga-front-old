@@ -153,6 +153,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
         rs.getSeverities(projectId),
         rs.getPriorities(projectId),
         rs.getUsers(projectId),
+        rs.getRoles(),
         rs.getIssues(projectId)
     ])
 

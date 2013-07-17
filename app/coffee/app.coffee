@@ -23,6 +23,9 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when('/project/:pid/backlog',
             {templateUrl: 'partials/backlog.html', controller: "BacklogController"})
 
+    $routeProvider.when('/project/:pid/user-story/:userstoryid',
+            {templateUrl: 'partials/user-story-view.html', controller: "UserStoryViewController"})
+
     $routeProvider.when('/project/:pid/issues',
             {templateUrl: 'partials/issues.html', controller: "IssuesController"})
 
@@ -73,6 +76,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 modules = [
     "greenmine.controllers.auth",
     "greenmine.controllers.backlog",
+    "greenmine.controllers.user-story",
     "greenmine.controllers.taskboard",
     "greenmine.controllers.issues",
     "greenmine.controllers.project",
@@ -133,6 +137,9 @@ init = ($rootScope, $location, storage) ->
 
         backlogUrl: (projectId) ->
             return _.str.sprintf("/#/project/%s/backlog", projectId)
+
+        userStoryUrl: (projectId, userStoryId) ->
+            return _.str.sprintf("/#/project/%s/user-story/%s", projectId, userStoryId)
 
         taskboardUrl: (projectId, sprintId) ->
             return _.str.sprintf("/#/project/%s/taskboard/%s", projectId, sprintId)

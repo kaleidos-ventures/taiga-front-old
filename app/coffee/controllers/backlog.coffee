@@ -57,10 +57,11 @@ BacklogController = ($scope, $rootScope, $routeParams, rs) ->
 
     rs.getUsPoints($scope.projectId).then (points) ->
         $rootScope.constants.points = {}
+        $rootScope.constants.pointsByOrder = {}
         $rootScope.constants.pointsList = _.sortBy(points, "order")
-
         for item in points
             $rootScope.constants.points[item.id] = item
+            $rootScope.constants.pointsByOrder[item.order] = item
 
         $rootScope.$broadcast("points:loaded", points)
 
@@ -118,7 +119,7 @@ BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
     $scope.form = {}
 
     calculateStats = ->
-        pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.points, $scope.roles)
+        pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)
         total = 0
 
         for us in $scope.unassingedUs
@@ -233,7 +234,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
     $scope.sprintFormOpened = false
 
     calculateStats = ->
-        pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.points, $scope.roles)
+        pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)
         assigned = 0
         completed = 0
 
@@ -283,7 +284,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
 
 BacklogMilestoneController = ($scope, rs) ->
     calculateStats = ->
-        pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.points, $scope.roles)
+        pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)
         total = 0
         completed = 0
 

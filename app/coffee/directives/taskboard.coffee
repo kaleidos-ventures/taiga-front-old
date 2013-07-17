@@ -16,7 +16,7 @@ gmTaskboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
             (totalPoints-((totalPoints/(numOfDays-1))*dayNum) for dayNum in [0..numOfDays-1])
 
         getUSCompletionList = (userStories, numOfDays, startDay) ->
-            pointIdToOrder = greenmine.utils.pointIdToOrder(scope.constants.points)
+            pointIdToOrder = greenmine.utils.pointIdToOrder(scope.constants.pointsByOrder, scope.roles)
             points = []
 
             for dayNum in [0..numOfDays-1]

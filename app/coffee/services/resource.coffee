@@ -201,6 +201,10 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
         service.getMilestoneUserStories = (projectId, sprintId) ->
             return queryMany("userstories", {"project":projectId, "milestone": sprintId})
 
+        # Get a user stories by projectId and userstory id
+        service.getUserStory = (projectId, userStoryId) ->
+            return queryOne("userstories", userStoryId, {project:projectId})
+
         service.getTasks = (projectId, sprintId) ->
             params = {project:projectId}
             if sprintId != undefined

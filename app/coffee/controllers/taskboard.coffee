@@ -50,7 +50,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs) ->
         return
 
     calculateStats = ->
-        pointIdToOrder = greenmine.utils.pointIdToOrder($rootScope.constants.points)
+        pointIdToOrder = greenmine.utils.pointIdToOrder($rootScope.constants.pointsByOrder, $scope.roles)
 
         totalTasks = $scope.tasks.length
         totalUss = $scope.userstoriesList.length

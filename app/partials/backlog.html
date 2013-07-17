@@ -82,7 +82,7 @@
                             <a class="btn-small-preview" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">
                                 <span class="help-box">Preview</span>
                             </a>
-                            <a class="btn-small-edit" ng-click="openEditUserStoryForm(us)"><span class="help-box">Edit</span></a>
+                            <a class="btn-small-edit" href="{{ urls.userStoryUrl(projectId, us.id) }}"><span class="help-box">Edit</span></a>
                             <a class="btn-small-remove" gm-popover="removeUs(us)"
                                 data-tmpl="#us-remove-popover"><span class="help-box">Remove</span></a>
                         </div>
