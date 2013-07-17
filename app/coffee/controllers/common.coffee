@@ -13,6 +13,33 @@ DataServiceProvider = ($rootScope, $q, rs) ->
 
         return promise
 
+    service.loadUserStoryPoints = ($scope) ->
+        promise = rs.getUsPoints($rootScope.projectId)
+        promise = promise.then (points) ->
+            $rootScope.constants.points = {}
+            $rootScope.constants.pointsByOrder = {}
+            $rootScope.constants.pointsList = _.sortBy(points, "order")
+
+            for item in points
+                $rootScope.constants.points[item.id] = item
+                $rootScope.constants.pointsByOrder[item.order] = item
+
+            $rootScope.$broadcast("points:loaded", points)
+            return points
+
+        return promise
+
+    service.loadUnassignedUserStories = ($scope) ->
+        promise = rs.getUnassignedUserStories($rootScope.projectId)
+        promise = promise.then (unassingedUs) ->
+            projectId = parseInt($rootScope.projectId, 10)
+
+            $scope.unassingedUs = _.filter(unassingedUs, {"project": projectId, milestone: null})
+            $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order")
+            $rootScope.$broadcast("userstories:loaded")
+            return $scope.unassingedUs
+
+        return promise
 
     service.loadIssueConstants = ($scope) ->
         promise = $q.all [
@@ -37,10 +64,11 @@ DataServiceProvider = ($rootScope, $q, rs) ->
             rs.getSeverities($rootScope.projectId),
             rs.getPriorities($rootScope.projectId),
             rs.getUsers($rootScope.projectId),
+            rs.getRoles($rootScope.projectId),
         ]
 
         promise = promise.then (results) ->
-            [severities, priorities, users] = results
+            [severities, priorities, users, roles] = results
 
             $rootScope.constants.severityList = _.sortBy(severities, "order")
             $rootScope.constants.priorityList = _.sortBy(priorities, "order")
@@ -49,6 +77,11 @@ DataServiceProvider = ($rootScope, $q, rs) ->
             _.each(severities, (item) -> $rootScope.constants.severity[item.id] = item)
             _.each(priorities, (item) -> $rootScope.constants.priority[item.id] = item)
             _.each(users, (item) -> $rootScope.constants.users[item.id] = item)
+
+            $scope.roles = roles
+
+            $rootScope.$broadcast("roles:loaded", roles)
+            $rootScope.$broadcast("users:loaded", users)
 
             return results
 

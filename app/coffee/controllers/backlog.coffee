@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-BacklogController = ($scope, $rootScope, $routeParams, rs) ->
+BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
     # Global Scope Variables
     $rootScope.pageSection = 'backlog'
+    $rootScope.pageBreadcrumb = ["", "Backlog"]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     $scope.stats = {}
@@ -41,80 +42,12 @@ BacklogController = ($scope, $rootScope, $routeParams, rs) ->
         if data.length > 0
             $rootScope.sprintId = data[0].id
 
-    # Load initial data
-    rs.getProject($rootScope.projectId).then (project) ->
-        $rootScope.project = project
-        $rootScope.pageBreadcrumb = [project.name, "Backlog"]
-        $rootScope.$broadcast("project:loaded", project)
-
-    #rs.getUsers($scope.projectId).then (users) ->
-    #    $scope.users = users
-    #    $rootScope.$broadcast("users:loaded", users)
-
-    rs.getRoles($scope.projectId).then (roles) ->
-        $scope.roles = roles
-        $rootScope.$broadcast("roles:loaded", roles)
-
-    rs.getUsPoints($scope.projectId).then (points) ->
-        $rootScope.constants.points = {}
-        $rootScope.constants.pointsByOrder = {}
-        $rootScope.constants.pointsList = _.sortBy(points, "order")
-
-        for item in points
-            $rootScope.constants.points[item.id] = item
-            $rootScope.constants.pointsByOrder[item.order] = item
-
-        $rootScope.$broadcast("points:loaded", points)
+    $data.loadProject($scope)
+    $data.loadCommonConstants($scope).then ->
+        $data.loadUserStoryPoints($scope)
 
 
-BacklogUserStoryFormController = ($scope, $rootScope, $gmOverlay, rs) ->
-    $scope.type = "create"
-    $scope.formOpened = false
-
-    # Load data
-    promise = rs.getUsStatuses($scope.projectId)
-    promise.then (result) ->
-        $scope.usstatuses = result
-
-    $scope.submit = ->
-        $scope.overlay.close()
-        if $scope.type == "create"
-            promise = rs.createUserStory($scope.form)
-            promise.then (us) ->
-                $rootScope.$broadcast("userstory-form:create", us)
-                $scope.formOpened = false
-
-        else
-            promise = $scope.form.save()
-            promise.then ->
-                $rootScope.$broadcast("userstory-form:update")
-                $scope.formOpened = false
-
-    $scope.close = ->
-        $scope.formOpened = false
-        $scope.overlay.close()
-
-        if $scope.type == "create"
-            $scope.form = {}
-        else
-            $scope.form.revert()
-
-    $scope.$on "userstory-form:open", (ctx, type, form={}) ->
-        $scope.type = type
-        $scope.form = form
-        $scope.formOpened = true
-
-        $scope.$broadcast("checksley:reset")
-
-        $scope.overlay = $gmOverlay()
-        $scope.overlay.open().then ->
-            $scope.formOpened = false
-
-    $scope.$on "userstory-form:close", ->
-        $scope.formOpened = false
-
-
-BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
+BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs, $data) ->
     # Local scope variables
     $scope.filtersOpened = false
     $scope.form = {}
@@ -184,17 +117,11 @@ BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
         for item in $scope.unassingedUs
             item.save() if item.isModified()
 
-    rs.getUnassignedUserStories($scope.projectId).then (unassingedUs) ->
-        projectId = parseInt($scope.projectId, 10)
-
-        $scope.unassingedUs = _.filter(unassingedUs, {"project": projectId, milestone: null})
-        $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order")
-
-        generateTagList()
-        filterUsBySelectedTags()
-        calculateStats()
-
-        $rootScope.$broadcast("userstories:loaded")
+    $scope.$on "points:loaded", ->
+        $data.loadUnassignedUserStories($scope).then ->
+            generateTagList()
+            filterUsBySelectedTags()
+            calculateStats()
 
     $scope.openCreateUserStoryForm = ->
         $rootScope.$broadcast("userstory-form:open", "create",
@@ -228,6 +155,53 @@ BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs) ->
 
     # Signal Handlign
     $scope.$on("sortable:changed", resortUserStories)
+
+
+BacklogUserStoryFormController = ($scope, $rootScope, $gmOverlay, rs) ->
+    $scope.type = "create"
+    $scope.formOpened = false
+
+    # Load data
+    promise = rs.getUsStatuses($scope.projectId)
+    promise.then (result) ->
+        $scope.usstatuses = result
+
+    $scope.submit = ->
+        $scope.overlay.close()
+        if $scope.type == "create"
+            promise = rs.createUserStory($scope.form)
+            promise.then (us) ->
+                $rootScope.$broadcast("userstory-form:create", us)
+                $scope.formOpened = false
+
+        else
+            promise = $scope.form.save()
+            promise.then ->
+                $rootScope.$broadcast("userstory-form:update")
+                $scope.formOpened = false
+
+    $scope.close = ->
+        $scope.formOpened = false
+        $scope.overlay.close()
+
+        if $scope.type == "create"
+            $scope.form = {}
+        else
+            $scope.form.revert()
+
+    $scope.$on "userstory-form:open", (ctx, type, form={}) ->
+        $scope.type = type
+        $scope.form = form
+        $scope.formOpened = true
+
+        $scope.$broadcast("checksley:reset")
+
+        $scope.overlay = $gmOverlay()
+        $scope.overlay.open().then ->
+            $scope.formOpened = false
+
+    $scope.$on "userstory-form:close", ->
+        $scope.formOpened = false
 
 
 BacklogMilestonesController = ($scope, $rootScope, rs) ->
@@ -318,7 +292,7 @@ BacklogMilestoneController = ($scope, rs) ->
 module = angular.module("greenmine.controllers.backlog", [])
 module.controller('BacklogMilestoneController', ['$scope', BacklogMilestoneController])
 module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', BacklogMilestonesController])
-module.controller('BacklogUserStoriesCtrl', ['$scope', '$rootScope', '$q', 'resource', BacklogUserStoriesCtrl])
-module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', BacklogController])
+module.controller('BacklogUserStoriesCtrl', ['$scope', '$rootScope', '$q', 'resource', '$data', BacklogUserStoriesCtrl])
+module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', BacklogController])
 module.controller('BacklogUserStoryFormController',
                     ['$scope', '$rootScope', '$gmOverlay', 'resource', BacklogUserStoryFormController])
