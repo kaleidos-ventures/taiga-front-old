@@ -19,8 +19,9 @@
                 <h3>Attachments</h3>
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
-                        <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a> on
-                            <span>{{ attachment.created_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span>
+                        <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
+                        <span>on {{ attachment.created_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span>
+                        <a href="" ng-click="removeAttachment(attachment)">(remove)</a>
                     </li>
                 </ul>
             </div>

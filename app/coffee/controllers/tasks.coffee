@@ -21,18 +21,31 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
     projectId = $rootScope.projectId
     taskId = $routeParams.taskid
 
+    $scope.task = {}
+    $scope.form = {}
+    $scope.updateFormOpened = false
+
+    loadAttachments = ->
+        rs.getTaskAttachments(projectId, taskId).then (attachments) ->
+            $scope.attachments = attachments
+
+    loadTask = ->
+        rs.getTask(projectId, taskId).then (task) ->
+            $scope.task = task
+            $scope.form = _.extend({}, $scope.task._attrs)
+
+    # Initial load
+    loadAttachments()
+    loadTask()
+
     promise = $q.all [
         rs.getTaskStatuses(projectId),
         rs.getUsers(projectId),
-        rs.getTaskAttachments(projectId, taskId),
-        rs.getTask(projectId, taskId)
     ]
 
     promise.then (results) ->
         taskStatuses = results[0]
         users = results[1]
-        attachments = results[2]
-        task = results[3]
 
         _.each(users, (item) -> $rootScope.constants.users[item.id] = item)
         _.each(taskStatuses, (item) -> $rootScope.constants.status[item.id] = item)
@@ -40,31 +53,24 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
         $rootScope.constants.statusList = _.sortBy(taskStatuses, "order")
         $rootScope.constants.usersList = _.sortBy(users, "id")
 
-        $scope.attachments = attachments
-        $scope.task = task
-        $scope.form = _.extend({}, $scope.task._attrs)
-
-    $scope.task = {}
-    $scope.form = {}
-    $scope.updateFormOpened = false
 
     $scope.isSameAs = (property, id) ->
         return ($scope.task[property] == parseInt(id, 10))
 
     $scope.submit = ->
-        defered = Q.defer()
-        promise = defered.promise
+        rs.uploadTaskAttachment(projectId, taskId, $scope.attachment)
 
-        promise = rs.uploadTaskAttachment(projectId, taskId, $scope.attachment)
-        promise = promise.then ->
-            for key, value of $scope.form
-                $scope.task[key] = value
-            return $scope.task.save()
+        for key, value of $scope.form
+            $scope.task[key] = value
 
-        return promise.then (task) ->
-            task.refresh()
-            scope.$apply()
+        $scope.task.save().then (task) ->
+            loadTask()
+            loadAttachments()
 
+    $scope.removeAttachment = (attachment) ->
+        console.log "removeAttachment", attachment
+        $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
+        attachment.remove()
 
     $scope.removeTask = (task) ->
         milestone = task.milestone
