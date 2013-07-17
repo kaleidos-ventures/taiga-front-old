@@ -19,5 +19,7 @@ angular.module('greenmine.filters.common', []).
     ).
     filter("lowercase", ->
         return (input) ->
-            return input.toLowerCase()
+            if input
+                return input.toLowerCase()
+            return ""
     )

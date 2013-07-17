@@ -30,19 +30,19 @@ GmIssueChangesDirective = ->
     return (scope, elm, attrs) ->
         element = angular.element(elm)
 
-        handleField = (name, field) ->
-            template(name: name, oldValue: field.old, newValue: field.new)
+        #handleField = (name, field) ->
+        #    template(name: name, oldValue: field.old, newValue: field.new)
 
-        elements = []
-        for fieldName in validFields
-            field = scope.h[fieldName]
+        #elements = []
+        #for fieldName in validFields
+        #    field = scope.h[fieldName]
 
-            if field is undefined
-                continue
+        #    if field is undefined
+        #        continue
 
-            elements.push(handleField(fieldName, field))
+        #    elements.push(handleField(fieldName, field))
 
-        element.append(el) for el in elements
+        #element.append(el) for el in elements
 
 
 GmIssueHistoryDirective = ($compile, $rootScope) ->

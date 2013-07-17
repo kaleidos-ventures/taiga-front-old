@@ -400,58 +400,31 @@ GmPopoverDirective = ($parse, $compile) ->
 
     return directive
 
-GmFlashMessageDirective = -> (scope, elm, attrs) ->
-    element = angular.element(elm)
-    scope.$on "flash:new", (ctx, success, message) ->
-        if success
-            element.find(".flash-message-success p").text(message)
-            element.find(".flash-message-success").fadeIn().delay(2000).fadeOut()
-        else
-            element.find(".flash-message-fail p").text(message)
-            element.find(".flash-message-fail").fadeIn().delay(2000).fadeOut()
+GmFlashMessageDirective = ->
+    compile: (element, attrs) ->
+        template = """
+        <div class="flash-message-success hidden">
+            <p>¡Genial! Aquí va el mensaje de confirmación </p>
+        </div>
+        <div class="flash-message-fail hidden">
+            <p>¡Ops! Esto es embarazoso, parece que algo ha salido mal... </p>
+        </div>"""
 
+        element.html(template)
+        return @.link
 
-GmModalDirective = ($parse, $compile) ->
-    directive =
-        restrict: "A",
-        link: (scope, elm, attrs) ->
-            element = angular.element(elm)
-            body = angular.element("body")
-            modal = null
+    link: (scope, elm, attrs) ->
+        element = angular.element(elm)
+        scope.$on "flash:new", (ctx, success, message) ->
+            if success
+                element.find(".flash-message-success p").text(message)
+                element.find(".flash-message-success").fadeIn().delay(2000).fadeOut()
+            else
+                element.find(".flash-message-fail p").text(message)
+                element.find(".flash-message-fail").fadeIn().delay(2000).fadeOut()
 
-            initCallback = $parse(element.data('init'))
-            cancelCallback = $parse(element.data('end-cancel'))
+            angular.element("html, body").animate({ scrollTop: 0 }, "slow");
 
-            element.on "click", (event) ->
-                if modal is not undefined
-                    scope.$apply ->
-                        modal.modal('hide')
-                        initCallback(scope)
-                        modal.modal("show")
-
-                else
-                    modaltTmpl = _.str.trim(angular.element(attrs.gmModal).html())
-
-                    modal = angular.element($.parseHTML(modaltTmpl))
-                    modal.attr("id", _.uniqueId("modal-"))
-                    modal.on "click", ".button-cancel", (event) ->
-                        event.preventDefault()
-                        scope.$apply ->
-                            cancelCallback(scope)
-
-                        modal.modal('hide')
-
-                    body.append(modal)
-                    scope.$apply ->
-                        initCallback(scope)
-                        $compile(modal)(scope)
-                    modal.modal()
-
-            scope.$on 'modals:close', ->
-                if modal is not undefined
-                    modal.modal('hide')
-
-    return directive
 
 
 
@@ -530,10 +503,7 @@ module.directive('gmColorizeTag', GmColorizeTagDirective)
 module.directive('gmKalendae', GmKalendaeDirective)
 module.directive('gmSortable', GmSortableDirective)
 module.directive('gmPopover', ['$parse', '$compile', GmPopoverDirective])
-#this module is commented because is deprecated.
-#module.directive('gmModal', ["$parse", "$compile", GmModalDirective])
-#TODO: this directive does not works properly
-#module.directive('gmFlashMessage', GmFlashMessageDirective)
+module.directive('gmFlashMessages', GmFlashMessageDirective)
 module.directive('gmChecksleyForm', ['$parse', '$compile', '$window', GmChecksleyFormDirective])
 module.directive('gmChecksleySubmitButton', [GmChecksleySubmitButtonDirective])
 module.directive('gmTagsInput', [GmTagsInputDirective])

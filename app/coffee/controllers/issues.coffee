@@ -112,7 +112,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
         issues = _.reject($scope.issues, "__hidden")
         issues = $filter("orderBy")(issues, $scope.sortingOrder, $scope.reverse)
 
-        _.each issues, (issue, i) ->
+        for issue, i in issues
             if i % $scope.itemsPerPage == 0
                 $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [issue]
             else
@@ -153,8 +153,8 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
         rs.getSeverities(projectId),
         rs.getPriorities(projectId),
         rs.getUsers(projectId),
-        rs.getRoles(),
         rs.getIssues(projectId)
+        rs.getRoles(),
     ])
 
     promise = promise.then (results) ->
@@ -280,6 +280,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
         return ($scope.issue[property] == parseInt(id, 10))
 
     $scope.submit = ->
+        $rootScope.$broadcast("flash:new", true, "La issue se ha guardado!")
         rs.uploadIssueAttachment(projectId, issueId, $scope.attachment)
 
         for key, value of $scope.form
