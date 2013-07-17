@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
+IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
     # Global Scope Variables
     $rootScope.pageSection = 'issues'
     $rootScope.projectId = parseInt($routeParams.pid, 10)
@@ -152,40 +152,15 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
     $scope.$watch("sortingOrder", groupToPages)
     $scope.$watch("reverse", groupToPages)
 
-    promise = $q.all([
-        rs.getIssueTypes(projectId),
-        rs.getIssueStatuses(projectId),
-        rs.getSeverities(projectId),
-        rs.getPriorities(projectId),
-        rs.getUsers(projectId),
-        rs.getIssues(projectId)
-        rs.getRoles(),
-    ])
+    loadIssues = ->
+        rs.getIssues($rootScope.projectId).then (issues) ->
+            $scope.issues = issues
+            regenerateTags()
+            filterIssues()
 
-    promise = promise.then (results) ->
-        issueTypes = results[0]
-        issueStatuses = results[1]
-        severities = results[2]
-        priorities = results[3]
-        users = results[4]
-        issues = results[5]
-
-        _.each(users, (item) -> $rootScope.constants.users[item.id] = item)
-        _.each(issueTypes, (item) -> $rootScope.constants.type[item.id] = item)
-        _.each(issueStatuses, (item) -> $rootScope.constants.status[item.id] = item)
-        _.each(severities, (item) -> $rootScope.constants.severity[item.id] = item)
-        _.each(priorities, (item) -> $rootScope.constants.priority[item.id] = item)
-
-
-        $rootScope.constants.typeList = _.sortBy(issueTypes, "order")
-        $rootScope.constants.statusList = _.sortBy(issueStatuses, "order")
-        $rootScope.constants.severityList = _.sortBy(severities, "order")
-        $rootScope.constants.priorityList = _.sortBy(priorities, "order")
-        $rootScope.constants.usersList = _.sortBy(users, "id")
-
-        $scope.issues = issues
-        regenerateTags()
-        filterIssues()
+    $data.loadCommonConstants($scope).then ->
+        $data.loadIssueConstants($scope).then ->
+            loadIssues()
 
     $scope.updateIssueAssignation = (issue, id) ->
         issue.assigned_to = id || null
@@ -225,7 +200,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs) ->
 
 
 
-IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
+IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data) ->
     $rootScope.pageSection = 'issues'
     $rootScope.projectId = parseInt($routeParams.pid, 10)
     $rootScope.pageBreadcrumb = ["", "Issues", ""]
@@ -236,16 +211,6 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
     $scope.issue = {}
     $scope.form = {}
     $scope.updateFormOpened = false
-
-    # Load initial data
-    rs.getProject($rootScope.projectId).then (project) ->
-        $rootScope.project = project
-        $rootScope.$broadcast("project:loaded", project)
-
-        breadcrumb = _.clone($rootScope.pageBreadcrumb)
-        breadcrumb[0] = project.name
-
-        $rootScope.pageBreadcrumb = breadcrumb
 
     loadIssue = ->
         rs.getIssue(projectId, issueId).then (issue) ->
@@ -261,38 +226,11 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
         rs.getIssueAttachments(projectId, issueId).then (attachments) ->
             $scope.attachments = attachments
 
-    # Load initial data
-    loadAttachments()
-
-    promise = $q.all [
-        rs.getIssueTypes(projectId),
-        rs.getIssueStatuses(projectId),
-        rs.getSeverities(projectId),
-        rs.getPriorities(projectId),
-        rs.getUsers(projectId),
-        rs.getIssueAttachments(projectId, issueId),
-    ]
-
-    promise.then (results) ->
-        issueTypes = results[0]
-        issueStatuses = results[1]
-        severities = results[2]
-        priorities = results[3]
-        users = results[4]
-
-        _.each(users, (item) -> $rootScope.constants.users[item.id] = item)
-        _.each(issueTypes, (item) -> $rootScope.constants.type[item.id] = item)
-        _.each(issueStatuses, (item) -> $rootScope.constants.status[item.id] = item)
-        _.each(severities, (item) -> $rootScope.constants.severity[item.id] = item)
-        _.each(priorities, (item) -> $rootScope.constants.priority[item.id] = item)
-
-        $rootScope.constants.typeList = _.sortBy(issueTypes, "order")
-        $rootScope.constants.statusList = _.sortBy(issueStatuses, "order")
-        $rootScope.constants.severityList = _.sortBy(severities, "order")
-        $rootScope.constants.priorityList = _.sortBy(priorities, "order")
-        $rootScope.constants.usersList = _.sortBy(users, "id")
-
-        loadIssue()
+    $data.loadProject($scope)
+    $data.loadCommonConstants($scope).then ->
+        $data.loadIssueConstants($scope).then ->
+            loadIssue()
+            loadAttachments()
 
     $scope.isSameAs = (property, id) ->
         return ($scope.issue[property] == parseInt(id, 10))
@@ -318,5 +256,5 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
 
 
 module = angular.module("greenmine.controllers.issues", [])
-module.controller("IssuesViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', IssuesViewController])
-module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter', '$q', 'resource', IssuesController])
+module.controller("IssuesViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", IssuesViewController])
+module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter', '$q', 'resource', "$data", IssuesController])
