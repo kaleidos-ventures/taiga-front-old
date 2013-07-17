@@ -47,9 +47,9 @@ BacklogController = ($scope, $rootScope, $routeParams, rs) ->
         $rootScope.pageBreadcrumb = [project.name, "Backlog"]
         $rootScope.$broadcast("project:loaded", project)
 
-    rs.getUsers($scope.projectId).then (users) ->
-        $scope.users = users
-        $rootScope.$broadcast("users:loaded", users)
+    #rs.getUsers($scope.projectId).then (users) ->
+    #    $scope.users = users
+    #    $rootScope.$broadcast("users:loaded", users)
 
     rs.getRoles($scope.projectId).then (roles) ->
         $scope.roles = roles
@@ -59,6 +59,7 @@ BacklogController = ($scope, $rootScope, $routeParams, rs) ->
         $rootScope.constants.points = {}
         $rootScope.constants.pointsByOrder = {}
         $rootScope.constants.pointsList = _.sortBy(points, "order")
+
         for item in points
             $rootScope.constants.points[item.id] = item
             $rootScope.constants.pointsByOrder[item.order] = item
