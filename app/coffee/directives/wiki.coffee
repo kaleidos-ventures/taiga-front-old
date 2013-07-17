@@ -1,4 +1,3 @@
-wikiModule = angular.module('greenmine.directives.wiki', [])
 
 gmMarkitupConstructor = ($parse) ->
     require: "?ngModel",
@@ -48,17 +47,27 @@ gmMarkitupConstructor = ($parse) ->
         element.on "keypress", (event) ->
             scope.$apply()
 
-wikiModule.directive('gmMarkitup', ["$parse", gmMarkitupConstructor])
+
+GmRenderMarkdownDirective = ($rootScope, $parse) ->
+    link: (scope, elm, attrs) ->
+        element = angular.element(elm)
+        projectId = scope.projectId
+        urls = $rootScope.urls
+
+        scope.$watch attrs.gmRenderMarkdown, ->
+            data = scope.$eval(attrs.gmRenderMarkdown)
+            if data != undefined
+
+                tree = markdown.parse(data.replace("\r", ""))
+                for item in tree[1]
+                    if _.isArray(item) and item[0] == "link"
+                        wikiName = item[1].href
+                        if not _.str.startsWith("/") and not _.str.endsWith("/")
+                            item[1].href = urls.wikiUrl(projectId, item[1].href)
+
+                element.html(markdown.toHTML(tree))
 
 
-gmRenderMarkdownConstructor = ($parse) -> (scope, elm, attrs) ->
-    element = angular.element(elm)
-
-    scope.$watch attrs.gmRenderMarkdown, ->
-        data = scope.$eval(attrs.gmRenderMarkdown)
-        if data != undefined
-            # Regex for future page linking.
-            # /^\s*\([ \t]*(\S+)(?:[ \t]+(["'])(.*?)\2)?[ \t]*\)/
-            element.html(markdown.toHTML(data.replace("\r", "")))
-
-wikiModule.directive("gmRenderMarkdown", ["$parse", gmRenderMarkdownConstructor])
+module = angular.module('greenmine.directives.wiki', [])
+module.directive('gmMarkitup', ["$parse", gmMarkitupConstructor])
+module.directive("gmRenderMarkdown", ["$rootScope", "$parse", GmRenderMarkdownDirective])
