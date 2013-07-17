@@ -3,9 +3,8 @@ utils = @greenmine.utils = {}
 utils.pointIdToOrder = (points, roles) ->
     return (us_points) ->
         total = 0
-        _.each us_points, (value, key) ->
-            if points[key].value?
-                total = total + points[key].value
 
-        console.log total
+        for key, value of us_points
+            if points[value].value != null
+                total += points[value].value
         return total

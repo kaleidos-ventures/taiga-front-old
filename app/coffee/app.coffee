@@ -173,7 +173,7 @@ init = ($rootScope, $location, storage) ->
             url = gm.format($rootScope.baseUrls.taskboard, [projectId, sprintId])
             return conditionalUrl(url, raw)
 
-        userStoryUrl: (projectId, userStoryId) ->
+        userStoryUrl: (projectId, userStoryId, raw) ->
             url = gm.format($rootScope.baseUrls.userstory, [projectId, userStoryId])
             return conditionalUrl(url, raw)
 
