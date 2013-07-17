@@ -1,11 +1,5 @@
 utils = @greenmine.utils = {}
 
-utils.pointIdToOrder = (points) ->
-    return (id) ->
-        point = points[id]
-        if point.order == -2
-            return 0.5
-        else if point.order == -1
-            return 0
-        else
-            return point.order
+utils.pointIdToOrder = (points, roles) ->
+    return (us_points) ->
+        return _.reduce(_.map(us_points, (value, key) -> points[value].value), (acum, elem) -> elem+acum)

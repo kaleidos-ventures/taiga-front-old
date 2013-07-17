@@ -3,6 +3,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
         urls =
             "auth": "/api/auth/login/"
             "users": "/api/users/"
+            "roles": "/api/roles/"
             "projects": "/api/scrum/projects/"
             "userstories": "/api/scrum/user-stories/"
             "milestones": "/api/scrum/milestones/"
@@ -103,6 +104,9 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
         service.getProject = (projectId) ->
             return queryOne("projects", projectId)
+
+        # Get roles
+        service.getRoles = -> queryMany('roles')
 
         # Get available task statuses for a project.
         service.getTaskStatuses = (projectId) ->
