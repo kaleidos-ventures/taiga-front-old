@@ -20,8 +20,10 @@
         <li class="admin"><a href="" title="Administration panel">Admin</a></li>
     </ul>
 
-    <div class="search-box">
-        <input type="text" name="search" placeholder="Search..." />
+    <div class="search-box" gm-search-box>
+        <form method="get">
+            <input type="text" name="search" placeholder="Search..." ng-model="term" />
+        </form>
     </div>
 </div>
 <div class="breadcrumb">

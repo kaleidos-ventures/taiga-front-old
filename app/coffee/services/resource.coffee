@@ -19,6 +19,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             "choices/points": "/api/scrum/user-stories/points/"
             "choices/priorities": "/api/scrum/priorities/"
             "choices/severities": "/api/scrum/severities/"
+            "search": "/api/search/"
 
         host = config.host
         scheme = config.scheme
@@ -220,6 +221,9 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
         service.getTask = (projectId, taskId) ->
             return queryOne("tasks", taskId, {project:projectId})
+
+        service.search = (projectId, term) ->
+            return queryMany("search", {"project": projectId, "text": term})
 
         # Get a users with role developer for
         # one concret project.

@@ -118,6 +118,7 @@ GmHeaderMenuDirective = ($rootScope) ->
             element.find("li.questions").addClass("selected")
         else if menuSection is "wiki"
             element.find("li.wiki").addClass("selected")
+        else if menuSection is "search"
         else
             element.hide()
 
@@ -148,6 +149,21 @@ GmBreadcrumbDirective = ($rootScope) ->
 
             for item in items
                 element.append(item)
+
+
+SearchBoxDirective = ($rootScope, $location) ->
+    link: (scope, elm, attrs) ->
+        form = elm.find("form")
+        form.on "submit", (event) ->
+            event.preventDefault()
+
+            action = form.attr('action')
+            value = form.find("input").val()
+
+            scope.$apply ->
+                path = $rootScope.urls.searchUrl(scope.projectId, true)
+                $location.path(path).search({term: value})
+
 
 GmNinjaGraphDirective = ->
     directive =
@@ -521,3 +537,4 @@ module.directive('gmPopover', ['$parse', '$compile', GmPopoverDirective])
 module.directive('gmChecksleyForm', ['$parse', '$compile', '$window', GmChecksleyFormDirective])
 module.directive('gmChecksleySubmitButton', [GmChecksleySubmitButtonDirective])
 module.directive('gmTagsInput', [GmTagsInputDirective])
+module.directive('gmSearchBox', ["$rootScope", "$location", SearchBoxDirective])

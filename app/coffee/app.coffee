@@ -12,7 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-@greenmine = {} if not @greenmine?
+@greenmine = {}
+@gm = @greenmine
+
+gm = @gm
+gm.format = (fmt, obj, named) ->
+    obj = _.clone(obj)
+    if named
+        return fmt.replace /%\(\w+\)s/g, (match) -> String(obj[match.slice(2,-2)])
+    else
+        return fmt.replace /%s/g, (match) -> String(obj.shift())
 
 configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider) ->
     $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: "LoginController"})
@@ -50,7 +59,10 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when('/project/:pid/wiki/:slug',
             {templateUrl: 'partials/wiki.html', controller: "WikiController"})
 
-    $routeProvider.otherwise({redirectTo: '/login'})
+    $routeProvider.when('/project/:pid/search', {
+        controller: "SearchController", templateUrl: "partials/search.html"})
+
+    #$routeProvider.otherwise({redirectTo: '/login'})
 
     defaultHeaders =
         "Content-Type": "application/json",
@@ -77,6 +89,7 @@ modules = [
     "greenmine.controllers.auth",
     "greenmine.controllers.backlog",
     "greenmine.controllers.user-story",
+    "greenmine.controllers.search",
     "greenmine.controllers.taskboard",
     "greenmine.controllers.issues",
     "greenmine.controllers.project",
@@ -131,36 +144,66 @@ init = ($rootScope, $location, storage) ->
         user = $rootScope.constants.users[id]
         return if user? then user.username else "Unassigned"
 
+    $rootScope.baseUrls =
+        projects: "/"
+        backlog: "/project/%s/backlog"
+        taskboard: "/project/%s/taskboard/%s"
+        userstory: "/project/%s/user-story/%s"
+        issue: "/project/%s/taskboard/%s"
+        issues: "/project/%s/issues"
+        task: "/project/%s/tasks/%s"
+        tasks: "/project/%s/tasks/%s"
+        wiki: "/project/%s/wiki/%s"
+        search: "/project/%s/search"
+
+    conditionalUrl = (url, raw) ->
+        return url if raw
+        return "/##{url}"
+
+    # TODO: refactor this.
     $rootScope.urls =
         projectsUrl: ->
             return '/#/'
 
-        backlogUrl: (projectId) ->
-            return _.str.sprintf("/#/project/%s/backlog", projectId)
+        backlogUrl: (projectId, raw) ->
+            url = gm.format($rootScope.baseUrls.backlog, [projectId])
+            return conditionalUrl(url, raw)
+
+        taskboardUrl: (projectId, sprintId, raw) ->
+            url = gm.format($rootScope.baseUrls.taskboard, [projectId, sprintId])
+            return conditionalUrl(url, raw)
 
         userStoryUrl: (projectId, userStoryId) ->
-            return _.str.sprintf("/#/project/%s/user-story/%s", projectId, userStoryId)
+            url = gm.format($rootScope.baseUrls.userstory, [projectId, userStoryId])
+            return conditionalUrl(url, raw)
 
-        taskboardUrl: (projectId, sprintId) ->
-            return _.str.sprintf("/#/project/%s/taskboard/%s", projectId, sprintId)
+        issuesUrl: (projectId, issueId, raw) ->
+            url = null
 
-        issuesUrl: (projectId, issueId) ->
             if issueId != undefined
-                return _.str.sprintf("/#/project/%s/issues/%s", projectId, issueId)
+                url = gm.format($rootScope.baseUrls.issue, [projectId, issueId])
             else
-                return _.str.sprintf("/#/project/%s/issues", projectId)
+                url = gm.format($rootScope.baseUrls.issues, [projectId])
 
-        tasksUrl: (projectId, taskId) ->
-            return _.str.sprintf("/#/project/%s/tasks/%s", projectId, taskId)
+            return conditionalUrl(url, raw)
 
-        questionsUrl: (projectId, issueId) ->
-            if issueId is undefined
-                return _.str.sprintf("/#/project/%s/questions/%s", projectId, issueId)
+        tasksUrl: (projectId, taskId, raw) ->
+            url = null
+
+            if taskId != undefined
+                url = gm.format($rootScope.baseUrls.task, [projectId, taskId])
             else
-                return _.str.sprintf("/#/project/%s/questions", projectId)
+                url = gm.format($rootScope.baseUrls.tasks, [projectId])
 
-        wikiUrl: (projectId, pageName) ->
-            return _.str.sprintf("/#/project/%s/wiki/%s", projectId, _.str.slugify(pageName))
+            return conditionalUrl(url, raw)
+
+        wikiUrl: (projectId, pageName, raw) ->
+            url = gm.format($rootScope.baseUrls.wiki, [projectId, pageName])
+            return conditionalUrl(url, raw)
+
+        searchUrl: (projectId, raw) ->
+            url = gm.format($rootScope.baseUrls.search, [projectId])
+            return conditionalUrl(url, raw)
 
     $rootScope.logout = () ->
         storage.clear()
