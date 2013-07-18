@@ -13,35 +13,36 @@
 # limitations under the License.
 
 
-UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
+UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data) ->
     $rootScope.pageSection = 'user-stories'
     $rootScope.pageBreadcrumb = ["", "User stories", ""]
-    $rootScope.projectId = parseInt($routeParams.pid, 10)
+    $scope.projectId = parseInt($routeParams.pid, 10)
 
-    projectId = $rootScope.projectId
+    projectId = $scope.projectId
     userStoryId = $routeParams.userstoryid
 
     $scope.userStory = {}
-    $scope.form = {}
+    $scope.form = {'points':{}}
+    $scope.totalPoints = 0
+    $scope.points = {}
 
     loadUserStory = ->
         rs.getUserStory(projectId, userStoryId).then (userStory) ->
             $scope.userStory = userStory
-            $scope.form = _.extend({}, $scope.userStory._attrs)
+            $scope.form = _.clone($scope.userStory._attrs, true)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
             breadcrumb[2] = "##{userStory.ref}"
 
             $rootScope.pageBreadcrumb = breadcrumb
 
-    # Load initial data
-    rs.getProject($rootScope.projectId).then (project) ->
-        $scope.project = project
-        $rootScope.$broadcast("project:loaded", project)
+            pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)
+            $scope.totalPoints = pointIdToOrder(userStory.points)
+            _.each userStory.points, (value_order, rol_id) ->
+                $scope.points[rol_id] = $scope.constants.pointsByOrder[value_order]?.value
 
-        breadcrumb = _.clone($rootScope.pageBreadcrumb)
-        breadcrumb[0] = project.name
-        $rootScope.pageBreadcrumb = breadcrumb
+    # Load initial data
+    $data.loadProject($scope)
 
     # Initial load
     promise = $q.all [
@@ -58,7 +59,10 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) 
 
         $scope.constants.statusList = _.sortBy(usStatuses, "order")
         $scope.constants.usersList = _.sortBy(users, "id")
-        loadUserStory()
+
+        $data.loadCommonConstants($scope).then ->
+            loadUserStory()
+            $data.loadUserStoryPoints($scope)
 
     $scope.submit = ->
         for key, value of $scope.form
@@ -72,5 +76,5 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) 
             $location.url("/project/#{projectId}/backlog")
 
 module = angular.module("greenmine.controllers.user-story", [])
-module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', UserStoryViewController])
+module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", UserStoryViewController])
 

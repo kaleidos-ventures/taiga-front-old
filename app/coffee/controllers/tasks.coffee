@@ -41,13 +41,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
 
 
     # Load initial data
-    rs.getProject($rootScope.projectId).then (project) ->
-        $scope.project = project
-        $rootScope.$broadcast("project:loaded", project)
-
-        breadcrumb = _.clone($rootScope.pageBreadcrumb)
-        breadcrumb[0] = project.name
-        $rootScope.pageBreadcrumb = breadcrumb
+    $data.loadProject($scope)
 
     # Initial load
     promise = $q.all [

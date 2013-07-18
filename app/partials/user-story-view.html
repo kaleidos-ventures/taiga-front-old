@@ -30,7 +30,12 @@
                <li class="priority-{{ userStory.priority }}">Priority: <span>{{ userStory.priority }}</span></li>
                <li class="status-{{ userStory.status }}">Status: <span>{{ userStory.status }}</span></li>
 
-               <li>TODO: points</li>
+               <li>Points:
+                    <span ng-repeat="role in roles">
+                        {{ role.name }}: {{ points[role.id] }},
+                    </span>
+                    Total: {{ totalPoints }}
+               </li>
 
             </ul>
         </div>
@@ -66,6 +71,8 @@
                             <input type="text" name="status" value="" ng-model="form.tags" gm-tags-input></input>
                         </fieldset>
                     </div>
+
+                    <div gm-role-points-edition></div>
 
                     <div ng-hide="_showHiddenGroups">
                         <p style="cursor: pointer" ng-click="_showHiddenGroups=true">Edit <b>Subject</b> and <b>Description</b>...</p>

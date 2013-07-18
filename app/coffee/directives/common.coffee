@@ -400,6 +400,7 @@ GmPopoverDirective = ($parse, $compile) ->
 
     return directive
 
+
 GmFlashMessageDirective = ->
     compile: (element, attrs) ->
         template = """
@@ -424,8 +425,6 @@ GmFlashMessageDirective = ->
                 element.find(".flash-message-fail").fadeIn().delay(2000).fadeOut()
 
             angular.element("html, body").animate({ scrollTop: 0 }, "slow");
-
-
 
 
 GmChecksleyFormDirective = ($parse, $compile, $window) ->
@@ -492,6 +491,22 @@ GmTagsInputDirective = ->
         ctrl.$formatters.push(formatter)
 
 
+GmRolePointsEditionDirective = ->
+    compile: (element, attrs) ->
+        template = """
+        <fieldset class="us-role-points" ng-repeat="role in roles">
+                    {{ role.name }}
+            <select class="points" name="points" ng-model="form.points[role.id]" data-required="true"
+                data-type="number" data-error-message="Required"
+                ng-options="c.order as c.name for c in constants.pointsList|orderBy:'order'">
+            </select>
+        </fieldset>"""
+
+        element.html(template)
+        return @.link
+
+    link: (scope, elm, attrs) ->
+
 
 module = angular.module('greenmine.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
@@ -508,3 +523,4 @@ module.directive('gmChecksleyForm', ['$parse', '$compile', '$window', GmChecksle
 module.directive('gmChecksleySubmitButton', [GmChecksleySubmitButtonDirective])
 module.directive('gmTagsInput', [GmTagsInputDirective])
 module.directive('gmSearchBox', ["$rootScope", "$location", SearchBoxDirective])
+module.directive('gmRolePointsEdition', GmRolePointsEditionDirective)
