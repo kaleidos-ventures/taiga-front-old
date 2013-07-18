@@ -31,12 +31,12 @@
                 <h3>Issue data</h3>
             </div>
             <ul class="info-rows">
-               <li>Added by: <span>{{ task.owner }}</span></li>
-               <li>Assigned to: <span>{{ task.assigned_to }}</span></li>
-               <li>Date: <span>{{ task.created_date }}</span></li>
-               <li>Updated: <span>{{ task.modified_date }}</span></li>
-               <li class="priority-{{ task.priority }}">Priority: <span>{{ task.priority }}</span></li>
-               <li class="status-{{ task.status }}">Status: <span>{{ task.status }}</span></li>
+               <li>Added by: <span>{{ constants.users[task.owner].username }}</span></li>
+               <li>Assigned to: <span>{{ constants.users[task.assigned_to].username }}</span></li>
+               <li>Date: <span>{{ task.created_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span></li>
+               <li>Updated: <span>{{ task.modified_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span></li>
+               <li class="priority-{{ task.priority }}">Priority: <span>{{ constants.priority[task.priority].name }}</span></li>
+               <li class="status-{{ task.status }}">Status: <span>{{ constants.status[task.status].name }}</span></li>
                <li>Attachments: <span>{{ attachments.length }}</span></li>
             </ul>
         </div>

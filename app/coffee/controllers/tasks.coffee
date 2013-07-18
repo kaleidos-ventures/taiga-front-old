@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
+TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data) ->
     $rootScope.pageSection = 'tasks'
     $rootScope.pageBreadcrumb = ["", "Tasks", ""]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
@@ -86,4 +86,4 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
 
 
 module = angular.module("greenmine.controllers.tasks", [])
-module.controller("TasksViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', TasksViewController])
+module.controller("TasksViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", TasksViewController])
