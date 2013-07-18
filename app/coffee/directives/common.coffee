@@ -319,88 +319,71 @@ GmSortableDirective = ->
     return directive
 
 GmPopoverDirective = ($parse, $compile) ->
-    createContext = (scope, element) ->
-        context = (element.data('ctx') or "").split(",")
-        data = {_scope: scope}
+    restrict: "A"
+    link: (scope, element, attrs) ->
+        fn = $parse(attrs.gmPopover)
 
-        _.each context, (key) ->
-            key = _.str.trim(key)
-            data[key] = scope[key]
+        autoHide = element.data('auto-hide')
+        placement = element.data('placement') or 'right'
 
-        return data
+        acceptSelector = element.data('accept-selector') or '.popover-content .button-success, .popover-content .btn-accept'
+        cancelSelector = element.data('cancel-selector') or '.popover-content .button-delete'
 
-    directive =
-        restrict: "A"
-        link: (scope, element, attrs) ->
-            fn = $parse(attrs.gmPopover)
+        element.on "click", (event) ->
+            event.preventDefault()
 
-            autoHide = element.data('auto-hide')
-            placement = element.data('placement') or 'right'
+            template = _.str.trim($(element.data('tmpl')).html())
+            template = angular.element($.parseHTML(template))
 
-            acceptSelector = element.data('accept-selector') or '.popover-content .button-success, .popover-content .btn-accept'
-            cancelSelector = element.data('cancel-selector') or '.popover-content .button-delete'
+            scope.$apply ->
+                template = $compile(template)(scope)
 
-            element.on "click", (event) ->
+            element.popover({
+                content: template,
+                html:true,
+                animation: false,
+                delay: 0,
+                trigger: "manual",
+                placement: placement
+            })
+
+            element.popover("show")
+
+            closeHandler = ->
+                state = element.data('state')
+
+                if state == "closing"
+                    element.popover('hide')
+                    element.data('state', 'closed')
+
+
+            next = element.next()
+            next.on "click", acceptSelector, (event) ->
                 event.preventDefault()
-                context = createContext(scope, element)
-                template = _.str.trim($(element.data('tmpl')).html())
-                template = angular.element($.parseHTML(template))
+
+                target = angular.element(event.currentTarget)
+                id = target.data('id')
 
                 scope.$apply ->
-                    $compile(template)(scope)
+                    fn(scope, {"selectedId": id})
 
-                element.popover({
-                    content: template,
-                    html:true,
-                    animation: false,
-                    delay: 0,
-                    trigger: "manual",
-                    placement: placement
-                })
+                element.popover('hide')
+                next.off()
 
-                element.popover("show")
+            next.on "click", cancelSelector, (event) ->
+                element.popover('hide')
+                next.off()
 
-                closeHandler = ->
-                    state = element.data('state')
+            if autoHide
+                element.data('state', 'closing')
+                _.delay(closeHandler, 2000)
 
-                    if state == "closing"
-                        element.popover('hide')
-                        element.data('state', 'closed')
-
-
-                next = element.next()
-                next.on "click", acceptSelector, (event) ->
-                    event.preventDefault()
-
-                    context = createContext(scope, element)
-                    target = angular.element(event.currentTarget)
-                    id = target.data('id')
-
-                    context = _.extend(context, {"selectedId": id})
-
-                    scope.$apply ->
-                        fn(target.scope(), context)
-
-                    element.popover('hide')
-                    next.off()
-
-                next.on "click", cancelSelector, (event) ->
-                    element.popover('hide')
-                    next.off()
-
-                if autoHide
+                next.on "mouseleave", ".popover-inner", (event) ->
                     element.data('state', 'closing')
-                    _.delay(closeHandler, 2000)
+                    _.delay(closeHandler, 200)
 
-                    next.on "mouseleave", ".popover", (event) ->
-                        element.data('state', 'closing')
-                        _.delay(closeHandler, 200)
-
-                    next.on "mouseenter", ".popover", (event) ->
-                        element.data('state', 'open')
-
-
-    return directive
+                next.on "mouseenter", ".popover-inner", (event) ->
+                    element.data('state', 'open')
 
 
 GmFlashMessageDirective = ->
