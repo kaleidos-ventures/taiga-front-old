@@ -38,8 +38,18 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
 
             pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)
             $scope.totalPoints = pointIdToOrder(userStory.points)
-            _.each userStory.points, (value_order, rol_id) ->
-                $scope.points[rol_id] = $scope.constants.pointsByOrder[value_order]?.value
+
+            for roleId, pointsOrder of userStory.points
+                $scope.points[roleId] = $scope.constants.pointsByOrder[pointsOrder].name
+
+            #console.log "************** points *****************"
+            #for point in $scope.constants.pointsList
+            #    console.log "point:", point._attrs
+
+            #console.log "************** roles *****************"
+            #for role in $scope.roles
+            #    console.log "role:", role._attrs
+
 
     # Load initial data
     $data.loadProject($scope)
@@ -61,10 +71,11 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         $scope.constants.usersList = _.sortBy(users, "id")
 
         $data.loadCommonConstants($scope).then ->
-            loadUserStory()
-            $data.loadUserStoryPoints($scope)
+            $data.loadUserStoryPoints($scope).then ->
+                loadUserStory()
 
     $scope.submit = ->
+        $rootScope.$broadcast("flash:new", true, "La user story se ha guardado!")
         for key, value of $scope.form
             $scope.userStory[key] = value
 

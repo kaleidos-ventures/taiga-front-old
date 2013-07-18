@@ -120,7 +120,6 @@ GmHeaderMenuDirective = ($rootScope) ->
             element.find("li.wiki").addClass("selected")
         else if menuSection is "search"
         else
-            element.hide()
 
 
 GmBreadcrumbDirective = ($rootScope) ->
@@ -372,12 +371,10 @@ GmPopoverDirective = ($parse, $compile) ->
                 next = element.next()
                 next.on "click", acceptSelector, (event) ->
                     event.preventDefault()
-                    console.log "KKKKKK"
 
                     context = createContext(scope, element)
                     target = angular.element(event.currentTarget)
                     id = target.data('id')
-                    console.log target
 
                     context = _.extend(context, {"selectedId": id})
 
@@ -478,7 +475,6 @@ GmTagsInputDirective = ->
                 return undefined
 
             value = trimList(value.split(","))
-            console.log "parser", value
             return value
 
         formatter = (value) ->
@@ -489,7 +485,6 @@ GmTagsInputDirective = ->
 
 
             value = value.join(", ")
-            console.log "formatter", value
             return value
 
         ctrl.$parsers.push(parser)
