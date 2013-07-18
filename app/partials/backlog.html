@@ -78,9 +78,9 @@
                 </div>
                 <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs">
                     <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
-                            gm-sortable-index="{{$index}}">
+                            gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}">
                         <div class="us-check">
-                            <input type="checkbox"></input>
+                            <input type="checkbox" ng-model="us.selected"></input>
                         </div>
                         <div class="us-title">
                             <div class="title">{{ us.subject|truncate:60 }}</div>
