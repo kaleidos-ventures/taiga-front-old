@@ -57,11 +57,11 @@ GmIssueHistoryDirective = ($compile, $rootScope) ->
 
         resolveValue = (name, value) ->
             return switch name
-                when "priority", "status", "severity" then $rootScope.constants[name][value].name
+                when "priority", "status", "severity" then scope.constants[name][value].name
                 when "assigned_to"
                     if value == null
                         return "Unassigned"
-                    return $rootScope.constants.users[value].email
+                    return scope.constants.users[value].email
                 else value
 
         createChangeItem = (name, field) ->
@@ -107,7 +107,7 @@ GmIssueHistoryDirective = ($compile, $rootScope) ->
                 if _item?
                     _historyItems.push(_item)
 
-            cachedScope = $scope = $rootScope.$new(true)
+            cachedScope = $scope = scope.$new(true)
             $scope.historyItems = _historyItems
 
             template = angular.element($.parseHTML(baseTemplate))

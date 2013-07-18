@@ -42,7 +42,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
 
     # Load initial data
     rs.getProject($rootScope.projectId).then (project) ->
-        $rootScope.project = project
+        $scope.project = project
         $rootScope.$broadcast("project:loaded", project)
 
         breadcrumb = _.clone($rootScope.pageBreadcrumb)
@@ -50,9 +50,6 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
         $rootScope.pageBreadcrumb = breadcrumb
 
     # Initial load
-    loadAttachments()
-    loadTask()
-
     promise = $q.all [
         rs.getTaskStatuses(projectId),
         rs.getUsers(projectId),
@@ -62,12 +59,13 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
         taskStatuses = results[0]
         users = results[1]
 
-        _.each(users, (item) -> $rootScope.constants.users[item.id] = item)
-        _.each(taskStatuses, (item) -> $rootScope.constants.status[item.id] = item)
+        _.each(users, (item) -> $scope.constants.users[item.id] = item)
+        _.each(taskStatuses, (item) -> $scope.constants.status[item.id] = item)
 
-        $rootScope.constants.statusList = _.sortBy(taskStatuses, "order")
-        $rootScope.constants.usersList = _.sortBy(users, "id")
-
+        $scope.constants.statusList = _.sortBy(taskStatuses, "order")
+        $scope.constants.usersList = _.sortBy(users, "id")
+        loadAttachments()
+        loadTask()
 
     $scope.isSameAs = (property, id) ->
         return ($scope.task[property] == parseInt(id, 10))

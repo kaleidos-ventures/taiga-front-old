@@ -15,47 +15,62 @@
 
 UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs) ->
     $rootScope.pageSection = 'user-stories'
+    $rootScope.pageBreadcrumb = ["", "User stories", ""]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     projectId = $rootScope.projectId
     userStoryId = $routeParams.userstoryid
 
+    $scope.userStory = {}
+    $scope.form = {}
+
+    loadUserStory = ->
+        rs.getUserStory(projectId, userStoryId).then (userStory) ->
+            $scope.userStory = userStory
+            $scope.form = _.extend({}, $scope.userStory._attrs)
+
+            breadcrumb = _.clone($rootScope.pageBreadcrumb)
+            breadcrumb[2] = "##{userStory.ref}"
+
+            $rootScope.pageBreadcrumb = breadcrumb
+
+    # Load initial data
+    rs.getProject($rootScope.projectId).then (project) ->
+        $scope.project = project
+        $rootScope.$broadcast("project:loaded", project)
+
+        breadcrumb = _.clone($rootScope.pageBreadcrumb)
+        breadcrumb[0] = project.name
+        $rootScope.pageBreadcrumb = breadcrumb
+
+    # Initial load
     promise = $q.all [
         rs.getUsStatuses(projectId),
         rs.getUsers(projectId),
-        rs.getUserStory(projectId, userStoryId)
     ]
 
     promise.then (results) ->
         usStatuses = results[0]
         users = results[1]
-        userStory = results[2]
 
-        _.each(users, (item) -> $rootScope.constants.users[item.id] = item)
-        _.each(usStatuses, (item) -> $rootScope.constants.status[item.id] = item)
+        _.each(users, (item) -> $scope.constants.users[item.id] = item)
+        _.each(usStatuses, (item) -> $scope.constants.status[item.id] = item)
 
-        $scope.userStory = userStory
-        $scope.form = _.extend({}, $scope.userStory._attrs)
-
-        $rootScope.pageBreadcrumb = ["Project", "User stories", "#" + userStory.ref]
-        $rootScope.constants.statusList = _.sortBy(usStatuses, "order")
-        $rootScope.constants.usersList = _.sortBy(users, "id")
-
-    $scope.userStory = {}
-    $scope.form = {}
+        $scope.constants.statusList = _.sortBy(usStatuses, "order")
+        $scope.constants.usersList = _.sortBy(users, "id")
+        loadUserStory()
 
     $scope.submit = ->
-        console.log "SUBMIT"
         for key, value of $scope.form
             $scope.userStory[key] = value
 
-        promise = $scope.userStory.save()
-        promise.then ->
-            console.log "ASDASD", arguments
+        $scope.userStory.save().then (userStory)->
+            loadUserStory()
 
-    $scope.removeTask = (userStory) ->
-        task.remove().then ->
-            $location.url("/project/#{projectId}/")
+    $scope.removeUserStory = (userStory) ->
+        userStory.remove().then ->
+            $location.url("/project/#{projectId}/backlog")
 
 module = angular.module("greenmine.controllers.user-story", [])
 module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', UserStoryViewController])
+
