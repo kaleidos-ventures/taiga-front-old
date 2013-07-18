@@ -89,7 +89,7 @@ modules = [
     "greenmine.controllers.common",
     "greenmine.controllers.auth",
     "greenmine.controllers.backlog",
-    #"greenmine.controllers.user-story",
+    "greenmine.controllers.user-story",
     "greenmine.controllers.search",
     "greenmine.controllers.taskboard",
     "greenmine.controllers.issues",
