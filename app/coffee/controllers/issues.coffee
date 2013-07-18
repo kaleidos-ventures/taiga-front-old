@@ -20,7 +20,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
     projectId = $scope.projectId
 
     $scope.filtersOpened = false
-    $scope.issueFormOpened = false
 
     # Pagination variables
     $scope.filteredItems = []
@@ -150,6 +149,9 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
         $scope.currentPage = 0
         filterIssues()
 
+    $scope.openCreateIssueForm = ->
+        $scope.$broadcast("issue-form:open")
+
     $scope.$watch("sortingOrder", groupToPages)
     $scope.$watch("reverse", groupToPages)
 
@@ -183,14 +185,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
         issue.save()
         regenerateTags()
 
-    $scope.submit = ->
-        rs.createIssue($scope.projectId, $scope.form).then (issue) ->
-            $scope.form = {}
-            $scope.issues.push(us)
-
-            regenerateTags()
-            filterIssues()
-
     $scope.removeIssue = (issue) ->
         issue.remove().then ->
             index = $scope.issues.indexOf(issue)
@@ -199,6 +193,11 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
             regenerateTags()
             filterIssues()
 
+    $scope.$on "issue-form:create", (ctx, issue) ->
+        $scope.issues.push(issue)
+
+        regenerateTags()
+        filterIssues()
 
 
 IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data) ->
@@ -256,6 +255,33 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             $location.url("/project/#{projectId}/issues/")
 
 
+IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
+    $scope.formOpened = false
+
+    $scope.submit = ->
+        promise = rs.createIssue($rootScope.projectId, $scope.form)
+        promise.then (issue) ->
+            $scope.form = {}
+            $scope.close()
+
+            $rootScope.$broadcast("issue-form:create", issue)
+
+    $scope.close = ->
+        $scope.formOpened = false
+        $scope.overlay.close()
+
+    $scope.$on "issue-form:open", (ctx, form={}) ->
+        $scope.form = form
+        $scope.formOpened = true
+
+        $scope.$broadcast("checksley:reset")
+
+        $scope.overlay = $gmOverlay()
+        $scope.overlay.open().then ->
+            $scope.formOpened = false
+
+
 module = angular.module("greenmine.controllers.issues", [])
 module.controller("IssuesViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", IssuesViewController])
 module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter', '$q', 'resource', "$data", IssuesController])
+module.controller("IssuesFormController", ['$scope', '$rootScope', '$gmOverlay', 'resource', IssuesFormController])
