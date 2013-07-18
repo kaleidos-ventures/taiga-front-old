@@ -217,13 +217,8 @@
                             data-error-message="Required"
                             ng-model="form.subject"></input>
                     </fieldset>
-                    <fieldset>
-                        <label>Points</label>
-                        <select class="points" name="points" ng-model="form.points" data-required="true"
-                            data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.name for c in constants.pointsList|orderBy:'order'"></select>
-                    </fieldset>
                 </div>
+                <div class="fieldset-row" gm-role-points-edition></div>
                 <div class="fieldset-row">
                     <fieldset>
                         <label>Status</label>

@@ -478,9 +478,9 @@ GmRolePointsEditionDirective = ->
     compile: (element, attrs) ->
         template = """
         <fieldset class="us-role-points" ng-repeat="role in roles">
-                    {{ role.name }}
+            {{ role.name }} (points)
             <select class="points" name="points" ng-model="form.points[role.id]" data-required="true"
-                data-type="number" data-error-message="Required"
+                data-error-message="Required"
                 ng-options="c.order as c.name for c in constants.pointsList|orderBy:'order'">
             </select>
         </fieldset>"""
@@ -489,6 +489,11 @@ GmRolePointsEditionDirective = ->
         return @.link
 
     link: (scope, elm, attrs) ->
+        if scope.form is undefined
+            scope.form = {}
+
+        if scope.form.points is undefined
+            scope.form.points = {}
 
 
 module = angular.module('greenmine.directives.common', [])

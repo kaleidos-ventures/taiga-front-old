@@ -2608,6 +2608,28 @@ form {
  * MODAL STYLES (extendable)
  * ==================================== */
 
+.new-us-modal {
+
+    .us-form {
+        fieldset.us-role-points {
+            width: 100px;
+            float: left;
+        }
+
+        select.points {
+            width: 100px;
+        }
+
+        select.status { width: 150px; }
+        input.subject { width: 435px; }
+
+        textarea.description {
+            width: 515px;
+            height: 100px;
+        }
+    }
+}
+
 .modal {
     .inline-form {
         input,
@@ -2636,32 +2658,9 @@ form {
     }
 
     .us-form {
-        select.points { width: 65px; }
-        select.status { width: 150px; }
-        input.subject { width: 435px; }
-
-        .select2-container {
-            width: 365px;
-
-            .select2-choices {
-                padding: 3px 2px;
-            }
-        }
-
-        textarea.description {
-            width: 515px;
-            height: 100px;
-        }
     }
     .issue-form,
     .task-form {
-        .select2-container {
-            width: 425px;
-
-            .select2-choices {
-                padding: 3px 2px;
-            }
-        }
         textarea.description {
             width: 440px;
             height: 100px;

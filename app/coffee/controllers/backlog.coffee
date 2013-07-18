@@ -50,7 +50,6 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
 BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs, $data) ->
     # Local scope variables
     $scope.filtersOpened = false
-    $scope.form = {}
 
     calculateStats = ->
         pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)
@@ -117,15 +116,18 @@ BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs, $data) ->
         for item in $scope.unassingedUs
             item.save() if item.isModified()
 
-    $scope.$on "points:loaded", ->
+    loadUserStories = ->
         $data.loadUnassignedUserStories($scope).then ->
             generateTagList()
             filterUsBySelectedTags()
             calculateStats()
 
+    $scope.$on("points:loaded", loadUserStories)
+    $scope.$on("userstory-form:create", loadUserStories)
+
     $scope.openCreateUserStoryForm = ->
         $rootScope.$broadcast("userstory-form:open", "create",
-                              {us:[], project:$scope.projectId})
+                              {us:[], points:{}, project:$scope.projectId})
 
     $scope.openEditUserStoryForm = (us) ->
         $rootScope.$broadcast("userstory-form:open", "edit", us)
