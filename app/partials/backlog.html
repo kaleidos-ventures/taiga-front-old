@@ -94,7 +94,7 @@
                                 data-tmpl="#points-popover" data-auto-hide="true">{{ constants.points[us.points].name }}</a>
                             -->
                             <div ng-repeat="role in roles" class="role-point"
-                                    gm-popover="saveUsPoints(us, selectedId)"
+                                    gm-popover="saveUsPoints(us, role, selectedId)"
                                     data-tmpl="#points-popover" data-auto-hide="true">
                                 {{ constants.points[us.points[role.id]].name }}
                             </div>
@@ -206,7 +206,7 @@
     <div class="new-us-modal modal">
         <form class="inline-form us-form" gm-checksley-form="submit()">
             <div class="modal-header" ng-switch on="type">
-                <h3 ng-switch-when="create">Create user story</h3>
+                <h3 ng-switch-when="create">Creat user story</h3>
                 <h3 ng-switch-when="edit">Modify user story</h3>
             </div>
             <div class="modal-body">

@@ -338,12 +338,8 @@ GmPopoverDirective = ($parse, $compile) ->
             autoHide = element.data('auto-hide')
             placement = element.data('placement') or 'right'
 
-            closeHandler = ->
-                state = element.data('state')
-
-                if state == "closing"
-                    element.popover('hide')
-                    element.data('state', 'closed')
+            acceptSelector = element.data('accept-selector') or '.popover-content .button-success, .popover-content .btn-accept'
+            cancelSelector = element.data('cancel-selector') or '.popover-content .button-delete'
 
             element.on "click", (event) ->
                 event.preventDefault()
@@ -365,38 +361,47 @@ GmPopoverDirective = ($parse, $compile) ->
 
                 element.popover("show")
 
-                if autoHide is not undefined
+                closeHandler = ->
+                    state = element.data('state')
+
+                    if state == "closing"
+                        element.popover('hide')
+                        element.data('state', 'closed')
+
+
+                next = element.next()
+                next.on "click", acceptSelector, (event) ->
+                    event.preventDefault()
+                    console.log "KKKKKK"
+
+                    context = createContext(scope, element)
+                    target = angular.element(event.currentTarget)
+                    id = target.data('id')
+                    console.log target
+
+                    context = _.extend(context, {"selectedId": id})
+
+                    scope.$apply ->
+                        fn(target.scope(), context)
+
+                    element.popover('hide')
+                    next.off()
+
+                next.on "click", cancelSelector, (event) ->
+                    element.popover('hide')
+                    next.off()
+
+                if autoHide
                     element.data('state', 'closing')
                     _.delay(closeHandler, 2000)
 
-            parentElement = element.parent()
-            acceptSelector = element.data('accept-selector') or '.popover-content .button-success, .popover-content .btn-accept'
-            cancelSelector = element.data('cancel-selector') or '.popover-content .button-delete'
+                    next.on "mouseleave", ".popover", (event) ->
+                        element.data('state', 'closing')
+                        _.delay(closeHandler, 200)
 
-            parentElement.on "click", acceptSelector, (event) ->
-                event.preventDefault()
+                    next.on "mouseenter", ".popover", (event) ->
+                        element.data('state', 'open')
 
-                context = createContext(scope, element)
-                target = angular.element(event.currentTarget)
-                id = target.data('id')
-
-                context = _.extend(context, {"selectedId": id})
-
-                scope.$apply ->
-                    fn(scope, context)
-
-                element.popover('hide')
-
-            parentElement.on "click", cancelSelector, (event) ->
-                element.popover('hide')
-
-            if autoHide
-                parentElement.on "mouseleave", ".popover", (event) ->
-                    element.data('state', 'closing')
-                    _.delay(closeHandler, 200)
-
-                parentElement.on "mouseenter", ".popover", (event) ->
-                    element.data('state', 'open')
 
     return directive
 

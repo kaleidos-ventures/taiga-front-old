@@ -139,8 +139,12 @@ BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs, $data) ->
             generateTagList()
             filterUsBySelectedTags()
 
-    $scope.saveUsPoints = (us, id) ->
-        us.points = id
+    $scope.saveUsPoints = (us, role, ref) ->
+        console.log "Role: #{role.id}, ref: #{ref}"
+        points = _.clone(us.points)
+        points[role.id] = ref
+
+        us.points = points
         us.save().then calculateStats, (data, status) ->
             us.revert()
 
