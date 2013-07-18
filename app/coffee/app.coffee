@@ -120,31 +120,6 @@ init = ($rootScope, $location, storage) ->
     $rootScope.constants.type = {}
     $rootScope.constants.users = {}
 
-    #TODO: deprecate and remove this methods.
-    $rootScope.resolvePoints = (id) ->
-        point = $rootScope.constants.points[id]
-        return if point? then point.name else undefined
-
-    $rootScope.resolveStatus = (id) ->
-        status = $rootScope.constants.status[id]
-        return if status? then status.name else undefined
-
-    $rootScope.resolvePriority = (id) ->
-        priority = $rootScope.constants.priority[id]
-        return if priority? then priority.name else undefined
-
-    $rootScope.resolveSeverity = (id) ->
-        severity = $rootScope.constants.severity[id]
-        return if severity? then severity.name else undefined
-
-    $rootScope.resolveType = (id) ->
-        type = $rootScope.constants.type[id]
-        return if type? then type.name else undefined
-
-    $rootScope.resolveUser = (id) ->
-        user = $rootScope.constants.users[id]
-        return if user? then user.username else "Unassigned"
-
     $rootScope.baseUrls =
         projects: "/"
         backlog: "/project/%s/backlog"
