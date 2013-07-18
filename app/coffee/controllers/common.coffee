@@ -78,7 +78,7 @@ DataServiceProvider = ($rootScope, $q, rs) ->
             _.each(statuses, (item) -> $scope.constants.status[item.id] = item)
 
             $scope.constants.typeList = _.sortBy(types, "order")
-            $scope.constants.statusList = _.sortBy(types, "order")
+            $scope.constants.statusList = _.sortBy(statuses, "order")
             return results
 
         return promise

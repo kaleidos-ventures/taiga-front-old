@@ -29,13 +29,13 @@
                 <h3>Issue data</h3>
             </div>
             <ul class="info-rows">
-               <li>Added by: <span>{{ issue.priority }}</span></li>
-               <li>Assigned to: <span>{{ issue.owner }}</span></li>
-               <li>Date: <span>{{ issue.modified_date }}</span></li>
-               <li>Updated: <span>{{ issue.modified_date }}</span></li>
-               <li class="priority-{{ issue.priority }}">Priority: <span>{{ issue.priority }}</span></li>
-               <li class="status-{{ issue.status }}">Status: <span>{{ issue.status }}</span></li>
-               <li>Attachments: <span>{{ attachments.length }}</span></li>
+                <li>Added by: <span>{{ constants.users[issue.owner].username }}</span></li>
+                <li>Assigned to: <span>{{ constants.users[issue.assigned_to].username }}</span></li>
+                <li>Date: <span>{{ issue.modified_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span></li>
+                <li>Updated: <span>{{ issue.modified_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span></li>
+                <li class="priority-{{ issue.priority }}">Priority: <span>{{ constants.priority[issue.priority].name }}</span></li>
+                <li class="status-{{ issue.status }}">Status: <span>{{ constants.status[issue.status].name }}</span></li>
+                <li>Attachments: <span>{{ attachments.length }}</span></li>
             </ul>
         </div>
     </div>

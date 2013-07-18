@@ -31,13 +31,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
     $scope.sortingOrder = 'severity'
     $scope.reverse = false
 
-    # Load initial data
-    rs.getProject($scope.projectId).then (project) ->
-        $scope.project = project
-
-        $rootScope.pageBreadcrumb = [project.name, "Issues"]
-        $rootScope.$broadcast("project:loaded", project)
-
     generateTagList = ->
         tagsDict = {}
         tags = []
@@ -161,6 +154,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
             regenerateTags()
             filterIssues()
 
+    $data.loadProject($scope)
     $data.loadCommonConstants($scope).then ->
         $data.loadIssueConstants($scope).then ->
             loadIssues()
