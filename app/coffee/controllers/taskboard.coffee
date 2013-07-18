@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TaskboardController = ($scope, $rootScope, $routeParams, $q, rs) ->
+TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
     # Global Scope Variables
     $rootScope.pageSection = 'dashboard'
     $rootScope.pageBreadcrumb = ["Project", "Taskboard"]
-    $rootScope.projectId = $routeParams.pid
+
+    $scope.projectId = $routeParams.pid
     $scope.sprintId = $routeParams.sid
     $scope.statuses = []
 
@@ -87,44 +88,18 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs) ->
             totalTasks: totalTasks
             completedTasks: completedTasks
 
-    promise = $q.all([
-        rs.getTaskStatuses(projectId),
-        rs.getMilestone(projectId, sprintId)
-        rs.getUsPoints(projectId),
-        rs.getTasks(projectId, sprintId),
-        rs.getUsers(projectId),
-    ])
 
-    promise.then (results) ->
-        statuses = results[0]
-        milestone = results[1]
-        points = results[2]
-        tasks = results[3]
-        users = results[4]
+    loadTasks = ->
+        rs.getTasks($scope.projectId, $scope.sprintId).then (tasks) ->
+            $scope.tasks = tasks
+            formatUserStoryTasks()
+            calculateStats()
 
-        userstories = milestone.user_stories
-
-        $rootScope.constants.usersList = _.sortBy(users, "id")
-
-        $scope.statusesList = _.sortBy(statuses, 'id')
-        $scope.userstoriesList = _.sortBy(userstories, 'id')
-
-        $scope.tasks = tasks
-        $scope.userstories = {}
-        $scope.statuses = {}
-        $scope.milestone = milestone
-
-        _.each(statuses, (status) -> $scope.statuses[status.id] = status)
-        _.each(userstories, (us) -> $scope.userstories[us.id] = us)
-        _.each(points, (item) -> $rootScope.constants.points[item.id] = item)
-        _.each(users, (item) -> $rootScope.constants.users[item.id] = item)
-
-        ## HACK: must be deleted on the near future
-        #$scope.tasks = _.filter tasks, (task) ->
-        #    return (task.milestone == sprintId && task.project == projectId)
-
-        formatUserStoryTasks()
-        calculateStats()
+    $data.loadProject($scope).then ->
+        $data.loadCommonConstants($scope).then ->
+            promise = $q.all [$data.loadUserStoryPoints($scope)
+                              $data.loadTaskboardData($scope)]
+            promise.then(loadTasks)
 
     $scope.openCreateTaskForm = (us) ->
         options =
@@ -200,5 +175,5 @@ TaskboardTaskController = ($scope, $q) ->
 
 module = angular.module("greenmine.controllers.taskboard", [])
 module.controller("TaskboardTaskController", ['$scope', '$q', TaskboardTaskController])
-module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', TaskboardController])
+module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', TaskboardController])
 module.controller("TaskboardTaskFormController", ['$scope', '$rootScope', '$gmOverlay', 'resource', TaskboardTaskFormController])

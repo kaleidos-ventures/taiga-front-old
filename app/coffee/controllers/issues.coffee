@@ -15,9 +15,9 @@
 IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
     # Global Scope Variables
     $rootScope.pageSection = 'issues'
-    $rootScope.projectId = parseInt($routeParams.pid, 10)
+    $scope.projectId = parseInt($routeParams.pid, 10)
 
-    projectId = $rootScope.projectId
+    projectId = $scope.projectId
 
     $scope.filtersOpened = false
     $scope.issueFormOpened = false
@@ -33,8 +33,9 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
     $scope.reverse = false
 
     # Load initial data
-    rs.getProject($rootScope.projectId).then (project) ->
-        $rootScope.project = project
+    rs.getProject($scope.projectId).then (project) ->
+        $scope.project = project
+
         $rootScope.pageBreadcrumb = [project.name, "Issues"]
         $rootScope.$broadcast("project:loaded", project)
 
@@ -55,14 +56,14 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
         $scope.tags = tags
 
     generateAssignedToTags = ->
-        users = $rootScope.constants.usersList
+        users = $scope.constants.usersList
 
         $scope.assignedToTags = _.map users, (user) ->
             issues = _.filter($scope.issues, {"assigned_to": user.id})
             return {"id": user.id, "name": user.username, "count": issues.length}
 
     generateStatusTags = ->
-        statuses = $rootScope.constants.statusList
+        statuses = $scope.constants.statusList
 
         $scope.statusTags = _.map statuses, (status) ->
             issues = _.filter($scope.issues, {"status": status.id})
@@ -153,7 +154,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
     $scope.$watch("reverse", groupToPages)
 
     loadIssues = ->
-        rs.getIssues($rootScope.projectId).then (issues) ->
+        rs.getIssues($scope.projectId).then (issues) ->
             $scope.issues = issues
             regenerateTags()
             filterIssues()
@@ -202,10 +203,10 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
 
 IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data) ->
     $rootScope.pageSection = 'issues'
-    $rootScope.projectId = parseInt($routeParams.pid, 10)
     $rootScope.pageBreadcrumb = ["", "Issues", ""]
+    $scope.projectId = parseInt($routeParams.pid, 10)
 
-    projectId = $rootScope.projectId
+    projectId = $scope.projectId
     issueId = $routeParams.issueid
 
     $scope.issue = {}

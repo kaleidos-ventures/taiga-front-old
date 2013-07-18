@@ -2,30 +2,54 @@ DataServiceProvider = ($rootScope, $q, rs) ->
     service = {}
 
     service.loadProject = ($scope) ->
-        promise = rs.getProject($rootScope.projectId).then (project) ->
-            $rootScope.project = project
+        promise = rs.getProject($scope.projectId).then (project) ->
+            $scope.project = project
             $rootScope.$broadcast("project:loaded", project)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
             breadcrumb[0] = project.name
-
             $rootScope.pageBreadcrumb = breadcrumb
 
         return promise
 
     service.loadUserStoryPoints = ($scope) ->
-        promise = rs.getUsPoints($rootScope.projectId)
+        promise = rs.getUsPoints($scope.projectId)
         promise = promise.then (points) ->
-            $rootScope.constants.points = {}
-            $rootScope.constants.pointsByOrder = {}
-            $rootScope.constants.pointsList = _.sortBy(points, "order")
+            $scope.constants.points = {}
+            $scope.constants.pointsByOrder = {}
+            $scope.constants.pointsList = _.sortBy(points, "order")
 
             for item in points
-                $rootScope.constants.points[item.id] = item
-                $rootScope.constants.pointsByOrder[item.order] = item
+                $scope.constants.points[item.id] = item
+                $scope.constants.pointsByOrder[item.order] = item
 
             $rootScope.$broadcast("points:loaded", points)
             return points
+
+        return promise
+
+    service.loadTaskboardData = ($scope) ->
+        promise = $q.all [
+            rs.getTasks($scope.projectId, $scope.sprintId),
+            rs.getTaskStatuses($scope.projectId),
+            rs.getMilestone($scope.projectId, $scope.sprintId),
+        ]
+
+        promise = promise.then (results) ->
+            [tasks, statuses, milestone] = results
+
+            userstories = milestone.user_stories
+
+            $scope.statuses = {}
+            $scope.userstories = {}
+
+            $scope.statusesList = _.sortBy(statuses, 'id')
+            $scope.userstoriesList = _.sortBy(userstories, 'id')
+
+            _.each(statuses, (status) -> $scope.statuses[status.id] = status)
+            _.each(userstories, (us) -> $scope.userstories[us.id] = us)
+
+            return results
 
         return promise
 
@@ -43,40 +67,40 @@ DataServiceProvider = ($rootScope, $q, rs) ->
 
     service.loadIssueConstants = ($scope) ->
         promise = $q.all [
-            rs.getIssueTypes($rootScope.projectId),
-            rs.getIssueStatuses($rootScope.projectId),
+            rs.getIssueTypes($scope.projectId),
+            rs.getIssueStatuses($scope.projectId),
         ]
 
         promise = promise.then (results) ->
             [types, statuses] = results
 
-            _.each(types, (item) -> $rootScope.constants.type[item.id] = item)
-            _.each(statuses, (item) -> $rootScope.constants.status[item.id] = item)
+            _.each(types, (item) -> $scope.constants.type[item.id] = item)
+            _.each(statuses, (item) -> $scope.constants.status[item.id] = item)
 
-            $rootScope.constants.typeList = _.sortBy(types, "order")
-            $rootScope.constants.statusList = _.sortBy(types, "order")
+            $scope.constants.typeList = _.sortBy(types, "order")
+            $scope.constants.statusList = _.sortBy(types, "order")
             return results
 
         return promise
 
     service.loadCommonConstants = ($scope) ->
         promise = $q.all [
-            rs.getSeverities($rootScope.projectId),
-            rs.getPriorities($rootScope.projectId),
-            rs.getUsers($rootScope.projectId),
-            rs.getRoles($rootScope.projectId),
+            rs.getSeverities($scope.projectId),
+            rs.getPriorities($scope.projectId),
+            rs.getUsers($scope.projectId),
+            rs.getRoles($scope.projectId),
         ]
 
         promise = promise.then (results) ->
             [severities, priorities, users, roles] = results
 
-            $rootScope.constants.severityList = _.sortBy(severities, "order")
-            $rootScope.constants.priorityList = _.sortBy(priorities, "order")
-            $rootScope.constants.usersList = _.sortBy(users, "id")
+            $scope.constants.severityList = _.sortBy(severities, "order")
+            $scope.constants.priorityList = _.sortBy(priorities, "order")
+            $scope.constants.usersList = _.sortBy(users, "id")
 
-            _.each(severities, (item) -> $rootScope.constants.severity[item.id] = item)
-            _.each(priorities, (item) -> $rootScope.constants.priority[item.id] = item)
-            _.each(users, (item) -> $rootScope.constants.users[item.id] = item)
+            _.each(severities, (item) -> $scope.constants.severity[item.id] = item)
+            _.each(priorities, (item) -> $scope.constants.priority[item.id] = item)
+            _.each(users, (item) -> $scope.constants.users[item.id] = item)
 
             $scope.roles = roles
 
