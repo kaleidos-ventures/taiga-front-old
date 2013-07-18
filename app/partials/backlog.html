@@ -61,22 +61,43 @@
         <div class="us-container">
             <div class="us-table-list">
                 <div class="flex-header">
-                    <div class="us-title">User Story</div>
+                    <div class="us-check"></div>
+                    <div class="us-title"></div>
                     <div class="us-points">Points</div>
+                    <div class="us-options"></div>
+                </div>
+                <div class="flex-header second">
+                    <div class="us-check"></div>
+                    <div class="us-title">User Story</div>
+                    <div class="us-points">
+                        <div ng-repeat="item in roles" class="role-point">
+                            {{ item.name }}
+                        </div>
+                    </div>
                     <div class="us-options">Options</div>
                 </div>
                 <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs">
                     <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
                             gm-sortable-index="{{$index}}">
+                        <div class="us-check">
+                            <input type="checkbox"></input>
+                        </div>
                         <div class="us-title">
-                            <span class="tags">
+                            <div class="title">{{ us.subject|truncate:60 }}</div>
+                            <div class="tags">
                                 <span ng-repeat="tag in us.tags" class="label" gm-colorize-tag>{{ tag }}</span>
-                            </span>
-                            <span class="title">{{ us.subject|truncate:60 }}</span>
+                            </div>
                         </div>
                         <div class="us-points">
+                            <!--
                             <a href="" gm-popover="saveUsPoints(us, selectedId)"
                                 data-tmpl="#points-popover" data-auto-hide="true">{{ constants.points[us.points].name }}</a>
+                            -->
+                            <div ng-repeat="role in roles" class="role-point"
+                                    gm-popover="saveUsPoints(us, selectedId)"
+                                    data-tmpl="#points-popover" data-auto-hide="true">
+                                {{ constants.points[us.points[role.id]].name }}
+                            </div>
                         </div>
                         <div class="us-options">
                             <a class="btn-small-preview" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">

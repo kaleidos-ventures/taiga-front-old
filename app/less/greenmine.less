@@ -869,13 +869,16 @@ body.login {
                 display: -moz-box;
                 -webkit-box-orient: horizontal;
                 -moz-box-orient: horizontal;
-                border-bottom: 2px solid #666666;
+
+                &.second {
+                    border-bottom: 2px solid #666666;
+                }
+
                 width: 100%;
                 font-family: @ColabReg;
                 color: #333;
                 div {
-                    padding: 5px;
-                    &:nth-child(1) {
+                    &:nth-child(2) {
                         -webkit-box-flex: 1;
                         -moz-box-flex: 1;
                     }
@@ -899,21 +902,25 @@ body.login {
                         background-color: #f9f9f9;
                     }
                     &> div{
-                        &:nth-child(1) {
+                        &:nth-child(2) {
                             -webkit-box-flex: 1;
                             -moz-box-flex: 1;
                         }
                     }
                 }
             }
+
+            .us-check {
+                width: 13px;
+                padding-top: 7px;
+            }
+
             .us-title {
                 .label {
-                    margin-left: 5px;
                     font-size: 1em;
                     font-family: @ColabThi;
-                    &:last-child{
-                        margin-right: 10px;
-                    }
+                    margin-top: 5px;
+                    margin-right: 5px;
                 }
                 .title{
                     font-size: 1.2em;
@@ -922,12 +929,11 @@ body.login {
             }
 
             .us-title {
-                padding: 7px;
+                padding: 5px;
             }
 
             .us-points {
-                padding: 7px;
-                width: 50px;
+                width: 150px;
                 text-align: center;
                 font-family: @ColabReg;
                 &>a {
@@ -935,6 +941,19 @@ body.login {
                     text-decoration: none;
                     padding: 7px 16px;
                     cursor: pointer;
+                    font-size: 1.3em;
+                }
+
+                div.role-point {
+                    cursor: pointer;
+                    display: inline-block;
+                    width: 30px;
+                    padding: 5px;
+                }
+            }
+
+            .flex-body {
+                .us-points {
                     font-size: 1.3em;
                 }
             }
