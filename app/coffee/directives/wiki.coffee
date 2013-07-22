@@ -48,22 +48,37 @@ gmMarkitupConstructor = ($parse) ->
             scope.$apply()
 
 
+
 GmRenderMarkdownDirective = ($rootScope, $parse) ->
-    link: (scope, elm, attrs) ->
+    parseMarkdownLinks = (scope, tree) ->
+        if tree.length == 0
+            return
+
+        if tree[0] == "link"
+            wikiName = tree[1].href
+
+            if _.str.startsWith(wikiName, "/")
+                return
+            if _.str.endsWith(wikiName, "/")
+                return
+
+            tree[1].href = scope.urls.wikiUrl(scope.projectId, tree[1].href)
+            return null
+
+        for t in tree
+            parseMarkdownLinks(scope, t) if _.isArray(t)
+
+    return (scope, elm, attrs) ->
         element = angular.element(elm)
         projectId = scope.projectId
-        urls = $rootScope.urls
 
         scope.$watch attrs.gmRenderMarkdown, ->
             data = scope.$eval(attrs.gmRenderMarkdown)
             if data != undefined
 
                 tree = markdown.parse(data.replace("\r", ""))
-                for item in tree[1]
-                    if _.isArray(item) and item[0] == "link"
-                        wikiName = item[1].href
-                        if not _.str.startsWith("/") and not _.str.endsWith("/")
-                            item[1].href = urls.wikiUrl(projectId, item[1].href)
+                for item in tree[1..tree.length]
+                    parseMarkdownLinks(scope, item)
 
                 element.html(markdown.toHTML(tree))
 
