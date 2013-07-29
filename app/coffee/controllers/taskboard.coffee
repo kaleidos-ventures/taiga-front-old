@@ -141,7 +141,7 @@ TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, rs) ->
         rs.createTask($scope.form).then (model) ->
             $rootScope.$broadcast("task-form:create", model)
             $scope.overlay.close()
-            $scope.formOpened = true
+            $scope.formOpened = false
 
     $scope.close = ->
         $scope.formOpened = false
