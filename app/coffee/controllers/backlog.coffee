@@ -50,6 +50,7 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
 BacklogUserStoriesCtrl = ($scope, $rootScope, $q, rs, $data) ->
     # Local scope variables
     $scope.filtersOpened = false
+    $scope.showTags = false
 
     calculateStats = ->
         pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)

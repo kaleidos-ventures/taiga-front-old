@@ -65,7 +65,18 @@
             <div class="us-table-list">
                 <div class="flex-header">
                     <div class="us-check"></div>
-                    <div class="us-title"></div>
+                    <div class="us-title">
+                        <div class="list-options">
+                            <div class="option">
+                                <input id="show_tags" type="checkbox" ng-model="showTags"></input>
+                                <label for="show_tags">Show tags</label>
+                            </div>
+                            <div class="option">
+                                <input id="show_total_points" type="checkbox" ng-model="showTotalPoints"></input>
+                                <label for="show_total_points">Show total points (TODO)</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="us-points">Points</div>
                     <div class="us-options"></div>
                 </div>
@@ -87,7 +98,7 @@
                         </div>
                         <div class="us-title">
                             <div class="title">{{ us.subject|truncate:60 }}</div>
-                            <div class="tags">
+                            <div class="tags" ng-hide="!showTags">
                                 <span ng-repeat="tag in us.tags" class="label" gm-colorize-tag>{{ tag }}</span>
                             </div>
                         </div>
