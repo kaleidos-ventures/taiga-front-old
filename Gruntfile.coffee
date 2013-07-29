@@ -62,7 +62,7 @@ module.exports = (grunt) ->
         },
 
         coffee: {
-            mainDevelopment: {
+            dev: {
                 options: {join: false},
                 files: {
                     "app/dist/app.js": [
@@ -72,7 +72,7 @@ module.exports = (grunt) ->
                 }
             },
 
-            mainProduction: {
+            pro: {
                 options: {join: false},
                 files: {"app/dist/_app.js": ["app/coffee/**/*.coffee"]}
             }
@@ -147,22 +147,22 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks('grunt-contrib-htmlmin')
     grunt.loadNpmTasks('grunt-contrib-coffee')
 
-    grunt.registerTask('production', [
+    grunt.registerTask('pro', [
         'less',
-        'coffee:mainProduction',
+        'coffee:pro',
         'uglify',
         'htmlmin',
     ])
 
-    grunt.registerTask('development', [
+    grunt.registerTask('dev', [
         'less',
-        'coffee:mainDevelopment',
+        'coffee:dev',
         'concat:libs',
         'htmlmin',
     ])
 
     grunt.registerTask('default', [
-        'development',
+        'dev',
         'connect:devserver',
         'watch'
     ])
