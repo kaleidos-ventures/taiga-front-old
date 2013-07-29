@@ -139,7 +139,7 @@
             <li class="history-item" ng-repeat="hitem in historyItems">
                 <div class="title">
                     <span class="updated">Updated by {{ hitem.by }}</span>
-                    <span class="date">{{ hitem.modified_date }}</span>
+                    <span class="date">{{ hitem.modified_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span>
                 </div>
                 <div class="changes">
                     <div class="change" ng-repeat="change in hitem.changes">
