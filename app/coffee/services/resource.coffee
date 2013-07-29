@@ -1,25 +1,25 @@
 angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) ->
     urlProvider = (config) ->
         urls =
-            "auth": "/api/core/users/actions/login"
-            "users": "/api/core/users"
-            "roles": "/api/core/roles"
-            "projects": "/api/scrum/projects/"
-            "userstories": "/api/scrum/user-stories/"
-            "milestones": "/api/scrum/milestones/"
-            "tasks": "/api/scrum/tasks/"
-            "issues": "/api/scrum/issues/"
-            "issues/attachments": "/api/scrum/issues/attachments/"
-            "tasks/attachments": "/api/scrum/tasks/attachments/"
-            "wikipages": "/api/wiki/pages/"
-            "choices/task-status": "/api/scrum/tasks/statuses/"
-            "choices/issue-status": "/api/scrum/issues/statuses/"
-            "choices/issue-types": "/api/scrum/issues/types/"
-            "choices/us-status": "/api/scrum/user-stories/statuses/"
-            "choices/points": "/api/scrum/user-stories/points/"
-            "choices/priorities": "/api/scrum/priorities/"
-            "choices/severities": "/api/scrum/severities/"
-            "search": "/api/search/"
+            "auth": "/api/v1/core/auth/login"
+            "users": "/api/v1/core/users"
+            "roles": "/api/v1/core/roles"
+            "projects": "/api/v1/scrum/projects"
+            "userstories": "/api/v1/scrum/userstories"
+            "milestones": "/api/v1/scrum/milestones"
+            "tasks": "/api/v1/scrum/tasks"
+            "issues": "/api/v1/scrum/issues"
+            "issues/attachments": "/api/v1/scrum/issue-attachments"
+            "tasks/attachments": "/api/v1/scrum/task-attachments"
+            "wikipages": "/api/v1/wiki/pages"
+            "choices/task-status": "/api/v1/scrum/task-statuses"
+            "choices/issue-status": "/api/v1/scrum/issue-statuses"
+            "choices/issue-types": "/api/v1/scrum/issue-types"
+            "choices/us-status": "/api/v1/scrum/userstory-statuses"
+            "choices/points": "/api/v1/scrum/points"
+            "choices/priorities": "/api/v1/scrum/priorities"
+            "choices/severities": "/api/v1/scrum/severities"
+            "search": "/api/v1/core/search"
 
         host = config.host
         scheme = config.scheme
@@ -40,9 +40,6 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
         headers = ->
             return {"X-SESSION-TOKEN": storage.get('token')}
 
-        # Resource Action Helpers
-        itemUrlTemplate = "%(url)s%(id)s/"
-
         queryMany = (name, params, options) ->
             defauts = {method: "GET", headers:  headers()}
             current = {url: url(name), params: params or {}}
@@ -62,7 +59,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
         queryOne = (name, id, params, options, cls) ->
             defauts = {method: "GET", headers:  headers()}
-            current = {url: "#{url(name)}#{id}/", params: params or {}}
+            current = {url: "#{url(name)}/#{id}", params: params or {}}
 
             httpParams =  _.extend({}, defauts, options, current)
 
@@ -171,7 +168,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
                 params =
                     "method": "GET"
                     "headers": headers()
-                    "url": url("milestones")+sprintId+"/"
+                    "url": "#{url("milestones")}/#{sprintId}"
                     "params": {"project": projectId}
 
                 $http(params).success((data, status) ->
@@ -267,7 +264,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
         service.getWikiPage = (projectId, slug) ->
             class WikiModel extends $model.cls
                 getUrl: ->
-                    return "#{url(@_name)}#{@_attrs.project}-#{@_attrs.slug}/"
+                    return "#{url(@_name)}/#{@_attrs.project}-#{@_attrs.slug}"
 
             _id = "#{projectId}-#{slug}"
             return queryOne("wikipages", _id, {project:projectId}, {},  WikiModel)

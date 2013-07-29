@@ -28,7 +28,7 @@ angular.module 'greenmine.services.model', [], ($provide) ->
                 return "id"
 
             getUrl: ->
-                return "#{url(@_name)}#{@getAttrs()[@getIdAttrName()]}/"
+                return "#{url(@_name)}/#{@getAttrs()[@getIdAttrName()]}"
 
             getAttrs: (patch=false) ->
                 if patch
