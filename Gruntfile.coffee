@@ -97,9 +97,9 @@ module.exports = (grunt) ->
                 tasks: ['less']
             },
 
-            coffeeMain: {
+            coffee: {
                 files: ['app/coffee/**/*.coffee'],
-                tasks: ['coffee:mainDevelopment']
+                tasks: ['coffee:dev']
             },
 
             libs: {
