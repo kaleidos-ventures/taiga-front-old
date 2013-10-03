@@ -1,16 +1,16 @@
 angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) ->
     urlProvider = (config) ->
         urls =
-            "auth": "/api/v1/core/auth/login"
-            "users": "/api/v1/core/users"
-            "roles": "/api/v1/core/roles"
+            "auth": "/api/v1/auth/login"
+            "users": "/api/v1/users"
+            "roles": "/api/v1/roles"
             "projects": "/api/v1/scrum/projects"
-            "userstories": "/api/v1/scrum/userstories"
             "milestones": "/api/v1/scrum/milestones"
+            "userstories": "/api/v1/scrum/userstories"
             "tasks": "/api/v1/scrum/tasks"
+            "tasks/attachments": "/api/v1/scrum/task-attachments"
             "issues": "/api/v1/scrum/issues"
             "issues/attachments": "/api/v1/scrum/issue-attachments"
-            "tasks/attachments": "/api/v1/scrum/task-attachments"
             "wikipages": "/api/v1/wiki/pages"
             "choices/task-status": "/api/v1/scrum/task-statuses"
             "choices/issue-status": "/api/v1/scrum/issue-statuses"
