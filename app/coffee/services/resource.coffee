@@ -11,7 +11,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             "tasks/attachments": "/api/v1/task-attachments"
             "issues": "/api/v1/issues"
             "issues/attachments": "/api/v1/issue-attachments"
-            "wikipages": "/api/v1/wiki/pages"
+            "wiki": "/api/v1/wiki"
             "choices/task-status": "/api/v1/task-statuses"
             "choices/issue-status": "/api/v1/issue-statuses"
             "choices/issue-types": "/api/v1/issue-types"
@@ -262,24 +262,39 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             return defered.promise
 
         service.getWikiPage = (projectId, slug) ->
-            class WikiModel extends $model.cls
-                getUrl: ->
-                    return "#{url(@_name)}/#{@_attrs.project}-#{@_attrs.slug}"
+            defered = $q.defer()
 
-            _id = "#{projectId}-#{slug}"
-            return queryOne("wikipages", _id, {project:projectId}, {},  WikiModel)
+            httpParams = {
+                method: "GET"
+                headers: headers()
+                url: url("wiki")
+                params: {project: projectId, slug: slug }
+            }
+
+            promise = $http(httpParams)
+            promise.success (data) ->
+                if data.length == 0
+                    defered.reject()
+                else
+                    defered.resolve($model.make_model("wiki", data[0]))
+
+            promise.error ->
+                defered.reject()
+
+            return defered.promise
 
         service.createWikiPage = (projectId, slug, content) ->
-            obj =
+            obj = {
                 "content": content
                 "slug": slug
                 "project": projectId
+            }
 
             defered = $q.defer()
 
-            promise = $http.post(url("wikipages"), obj, {headers:headers()})
+            promise = $http.post(url("wiki"), obj, {headers:headers()})
             promise.success (data, status) ->
-                defered.resolve($model.make_model("wikipages", slug))
+                defered.resolve($model.make_model("wiki", slug))
 
             promise.error (data, status) ->
                 defered.reject()
@@ -299,8 +314,6 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             if file is undefined
                 defered.resolve(null)
                 return defered.promise
-
-            console.log "uploadTaskAttachment", arguments
 
             #uploadProgress = (evt) ->
             #    if (evt.lengthComputable) {
