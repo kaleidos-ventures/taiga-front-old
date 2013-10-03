@@ -9,7 +9,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             "userstories": "/api/v1/userstories"
             "tasks": "/api/v1/tasks"
             "tasks/attachments": "/api/v1/task-attachments"
-            "issues": "/api/v1/scrum/issues"
+            "issues": "/api/v1/issues"
             "issues/attachments": "/api/v1/issue-attachments"
             "wikipages": "/api/v1/wiki/pages"
             "choices/task-status": "/api/v1/task-statuses"
