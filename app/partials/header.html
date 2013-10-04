@@ -7,7 +7,7 @@
         <a class="logout" href="" ng-click="logout()">Logout</a>
     </div>
 </div>
-<div class="nav" gm-header-menu>
+<div class="nav" gm-header-menu ng-show="projectId">
     <ul>
         <li class="backlog"><a href="{{ urls.backlogUrl(projectId) }}" title="Backlog">Backlog</a></li>
         <li class="dashboard" ng-show="sprintId"><a href="{{ urls.taskboardUrl(projectId, sprintId) }}" title="Taskboard">Taskboard</a></li>
