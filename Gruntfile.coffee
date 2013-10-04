@@ -18,6 +18,8 @@ module.exports = (grunt) ->
         'app/js/lodash.js',
         'app/js/underscore.string.js',
         'app/js/angular.js',
+        'app/js/angular-route.js',
+        'app/js/angular-sanitize.js',
         'app/js/bootstrap.js',
         'app/js/moment.js',
         'app/js/kalendae.js',

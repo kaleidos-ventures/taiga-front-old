@@ -84,10 +84,10 @@
                                         ng-repeat="status in statusesList|orderBy:'order'"
                                         style="width: {{ 100/(statusesList.length+1) }}%">
 
-                                    <div class="tasks" gm-sortable=".tasks-container .body .tasks"
-                                            ng-model="usTasks[us.id][status.id]">
-                                        <div class="task-box" ng-repeat="task in usTasks[us.id][status.id]"
-                                            ng-include="'/partials/taskboard-task.html'"></div>
+                                    <div class="tasks" gm-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][status.id]">
+                                        <div class="task-box" ng-repeat="task in usTasks[us.id][status.id]">
+                                            <div ng-include="'/partials/taskboard-task.html'"></div>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -109,10 +109,10 @@
                                         ng-repeat="status in statusesList|orderBy:'order'"
                                         style="width: {{ 100/(statusesList.length+1) }}%">
 
-                                    <div class="tasks" gm-sortable=".tasks-container .body .tasks"
-                                            ng-model="unassignedTasks[status.id]">
-                                        <div class="task-box" ng-repeat="task in unassignedTasks[status.id]"
-                                            ng-include="'/partials/taskboard-task.html'"></div>
+                                    <div class="tasks" gm-sortable=".tasks-container .body .tasks" ng-model="unassignedTasks[status.id]">
+                                        <div class="task-box" ng-repeat="task in unassignedTasks[status.id]">
+                                            <div ng-include="'/partials/taskboard-task.html'"></div>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>

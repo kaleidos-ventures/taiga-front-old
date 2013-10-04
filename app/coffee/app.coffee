@@ -81,11 +81,13 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
             )
         ])
 
-    $compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|blob):/)
+    #$compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|blob):/)
     $httpProvider.responseInterceptors.push('authHttpIntercept')
 
 
 modules = [
+    "ngRoute",
+    "ngSanitize",
     "greenmine.controllers.common",
     "greenmine.controllers.auth",
     "greenmine.controllers.backlog",
