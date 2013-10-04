@@ -106,7 +106,8 @@ modules = [
     "greenmine.directives.common",
     "greenmine.directives.taskboard",
     "greenmine.directives.issues",
-    "greenmine.directives.wiki"
+    "greenmine.directives.wiki",
+    "greenmine.plugins.modal",
 ]
 
 

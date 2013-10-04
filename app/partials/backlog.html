@@ -1,6 +1,6 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container backlog-content row-fluid">
-    <div class="span8" ng-controller="BacklogUserStoriesCtrl">
+    <div class="span8" ng-controller="BacklogUserStoriesController">
         <div class="graphics-container">
             <div class="user-story-stats" url="">
                 <div class="progress-box">
@@ -216,12 +216,13 @@
 
 <!-- user story form -->
 <div id="userstory-modalform"
-        ng-show="formOpened"
-        ng-controller="BacklogUserStoryFormController">
+    kl-modal="user-story-form"
+    ng-show="formOpened"
+    ng-controller="BacklogUserStoryModalController">
 
     <div class="new-us-modal modal">
         <form class="inline-form us-form" gm-checksley-form="submit()">
-            <div class="modal-header" ng-switch on="type">
+            <div class="modal-header" ng-switch on="context.type">
                 <h3 ng-switch-when="create">Creat user story</h3>
                 <h3 ng-switch-when="edit">Modify user story</h3>
             </div>
