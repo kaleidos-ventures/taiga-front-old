@@ -108,6 +108,7 @@ modules = [
     "greenmine.directives.issues",
     "greenmine.directives.wiki",
     "greenmine.plugins.modal",
+    "greenmine.plugins.confirm",
 ]
 
 

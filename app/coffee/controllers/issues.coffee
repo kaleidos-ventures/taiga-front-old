@@ -194,7 +194,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
         filterIssues()
 
 
-IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data) ->
+IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data, $confirm) ->
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = ["", "Issues", ""]
     $scope.projectId = parseInt($routeParams.pid, 10)
@@ -245,8 +245,10 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         attachment.remove()
 
     $scope.removeIssue = (issue) ->
-        issue.remove().then ->
-            $location.url("/project/#{projectId}/issues/")
+        promise = $confirm.confirm("Are you sure?")
+        promise.then ->
+            issue.remove().then ->
+                $location.url("/project/#{projectId}/issues/")
 
 
 IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
@@ -276,6 +278,6 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
 
 
 module = angular.module("greenmine.controllers.issues", [])
-module.controller("IssuesViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", IssuesViewController])
-module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter', '$q', 'resource', "$data", IssuesController])
+module.controller("IssuesViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", IssuesViewController])
+module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter', '$q', 'resource', "$data", "$confirm", IssuesController])
 module.controller("IssuesFormController", ['$scope', '$rootScope', '$gmOverlay', 'resource', IssuesFormController])
