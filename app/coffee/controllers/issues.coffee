@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data) ->
+IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm) ->
     # Global Scope Variables
     $rootScope.pageSection = 'issues'
-    $scope.projectId = parseInt($routeParams.pid, 10)
+    $rootScope.pageBreadcrumb = ["", "Backlog"]
+    $rootScope.projectId = parseInt($routeParams.pid, 10)
 
-    projectId = $scope.projectId
+    projectId = $rootScope.projectId
 
     $scope.filtersOpened = false
 
