@@ -1,4 +1,4 @@
-utils = @greenmine.utils = {}
+utils = @gm.utils = {}
 
 utils.pointIdToOrder = (points, roles) ->
     return (us_points) ->
