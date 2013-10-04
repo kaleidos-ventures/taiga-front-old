@@ -19,7 +19,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             "choices/points": "/api/v1/points"
             "choices/priorities": "/api/v1/priorities"
             "choices/severities": "/api/v1/severities"
-            "search": "/api/v1/core/search"
+            "search": "/api/v1/search"
 
         host = config.host
         scheme = config.scheme
