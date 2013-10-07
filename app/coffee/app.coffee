@@ -72,16 +72,14 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $httpProvider.defaults.headers.post = defaultHeaders
     $httpProvider.defaults.headers.put = defaultHeaders
 
-    $provide.factory("authHttpIntercept", ["$q", "$location", ($q, $location) ->
+    authHttpIntercept = ($q, $location) ->
         return (promise) ->
-            return promise.then(null, (response) ->
+            return promise.then null, (response) ->
                 if response.status == 401 or response.status == 0
                     $location.url("/login")
                 return $q.reject(response)
-            )
-        ])
 
-    #$compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|blob):/)
+    $provide.factory("authHttpIntercept", ["$q", "$location", authHttpIntercept])
     $httpProvider.responseInterceptors.push('authHttpIntercept')
 
 
@@ -189,12 +187,8 @@ init = ($rootScope, $location, storage) ->
         storage.clear()
         $location.url("/login")
 
-angular
-    .module('greenmine', modules)
-    .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', configCallback])
-    .run(['$rootScope', '$location', 'storage', init])
+angular.module('greenmine', modules)
+       .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', configCallback])
+       .run(['$rootScope', '$location', 'storage', init])
 
-angular.module('greenmine.config', []).value('greenmine.config', {
-    host: "localhost:8000"
-    scheme: "http"
-})
+angular.module('greenmine.config', []).value('greenmine.config', {host: "localhost:8000", scheme: "http"})
