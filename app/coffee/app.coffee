@@ -62,6 +62,9 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when('/project/:pid/search', {
         controller: "SearchController", templateUrl: "partials/search.html"})
 
+    $routeProvider.when('/project/:pid/admin', {
+        controller: "ProjectAdminController", templateUrl: "partials/project-admin.html"})
+
     #$routeProvider.otherwise({redirectTo: '/login'})
 
     defaultHeaders =
@@ -133,6 +136,7 @@ init = ($rootScope, $location, storage) ->
         tasks: "/project/%s/tasks/%s"
         wiki: "/project/%s/wiki/%s"
         search: "/project/%s/search"
+        admin: "/project/%s/admin"
 
     conditionalUrl = (url, raw) ->
         return url if raw
@@ -153,6 +157,10 @@ init = ($rootScope, $location, storage) ->
 
         userStoryUrl: (projectId, userStoryId, raw) ->
             url = gm.format($rootScope.baseUrls.userstory, [projectId, userStoryId])
+            return conditionalUrl(url, raw)
+
+        adminUrl: (projectId,  raw) ->
+            url = gm.format($rootScope.baseUrls.admin, [projectId])
             return conditionalUrl(url, raw)
 
         issuesUrl: (projectId, issueId, raw) ->

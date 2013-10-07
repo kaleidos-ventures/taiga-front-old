@@ -20,5 +20,11 @@ ProjectListController = ($scope, $rootScope, rs) ->
         $scope.projects = projects
 
 
+ProjectAdminController = ($scope, $rootScope, $routeParams, rs) ->
+    $rootScope.pageSection = 'admin'
+    $rootScope.pageBreadcrumb = ["", "Project Admin"]
+    $rootScope.projectId = parseInt($routeParams.pid, 10)
+
 module = angular.module("greenmine.controllers.project", [])
 module.controller("ProjectListController", ['$scope', '$rootScope', 'resource', ProjectListController])
+module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routeParams", "resource", ProjectAdminController])

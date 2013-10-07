@@ -118,6 +118,8 @@ GmHeaderMenuDirective = ($rootScope) ->
             element.find("li.questions").addClass("selected")
         else if menuSection is "wiki"
             element.find("li.wiki").addClass("selected")
+        else if menuSection is "admin"
+            element.find("li.admin").addClass("selected")
         else if menuSection is "search"
         else
 
