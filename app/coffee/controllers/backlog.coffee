@@ -96,7 +96,6 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
         else
             item.__hidden = false for item in $scope.unassingedUs
 
-
     resortUserStories = ->
         # Normalize user stories array
         _.each $scope.unassingedUs, (item, index) ->
@@ -141,7 +140,6 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
             filterUsBySelectedTags()
 
     $scope.saveUsPoints = (us, role, ref) ->
-        console.log "Role: #{role.id}, ref: #{ref}"
         points = _.clone(us.points)
         points[role.id] = ref
 
@@ -170,7 +168,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs) ->
     promise.then (result) ->
         $scope.usstatuses = result
 
-    $scope.deferred = null
+    $scope.defered = null
     $scope.context = null
 
     openModal = ->
@@ -186,7 +184,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs) ->
         $scope.formOpened = false
 
     @.initialize = (dfr, ctx) ->
-        $scope.deferred = dfr
+        $scope.defered = dfr
         $scope.context = ctx
         openModal()
 
@@ -197,7 +195,9 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs) ->
 
     $scope.submit = ->
         $scope.overlay.close()
-        rs.createUserStory($scope.form).then(closeModal)
+        rs.createUserStory($scope.form).then ->
+            closeModal()
+            $scope.defered.resolve()
 
     $scope.close = ->
         $scope.formOpened = false
