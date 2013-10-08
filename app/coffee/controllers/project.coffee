@@ -20,7 +20,7 @@ ProjectListController = ($scope, $rootScope, rs) ->
         $scope.projects = projects
 
 
-ProjectAdminController = ($scope, $rootScope, $routeParams, $data, rs) ->
+ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, rs) ->
     $rootScope.pageSection = 'admin'
     $rootScope.pageBreadcrumb = ["", "Project Admin"]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
@@ -31,7 +31,8 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, rs) ->
     $scope.submit = ->
         promise = $scope.project.save()
         promise.then (data) ->
-            console.log data
+            $gmFlash.info("Project saved successful!")
+
         promise.then null, (data) ->
             console.error data
             $scope.checksleyErrors = data
@@ -39,4 +40,5 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, rs) ->
 
 module = angular.module("greenmine.controllers.project", [])
 module.controller("ProjectListController", ['$scope', '$rootScope', 'resource', ProjectListController])
-module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routeParams", "$data", "resource", ProjectAdminController])
+module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routeParams", "$data",
+                                             "$gmFlash", "resource", ProjectAdminController])
