@@ -1,17 +1,7 @@
 module.exports = (grunt) ->
     externalSources = [
-        'app/js/jquery.js'
-        'app/js/ui/jquery.ui.core.js'
-        'app/js/ui/jquery.ui.position.js'
-        'app/js/ui/jquery.ui.widget.js',
-        'app/js/ui/jquery.ui.mouse.js',
-        'app/js/ui/jquery.ui.draggable.js',
-        'app/js/ui/jquery.ui.droppable.js',
-        'app/js/ui/jquery.ui.effect.js',
-        'app/js/ui/jquery.ui.effect-drop.js',
-        'app/js/ui/jquery.ui.effect-transfer.js',
-        'app/js/ui/jquery.ui.position.js',
-        'app/js/ui/jquery.ui.sortable.js',
+        'app/js/jquery.js',
+        'app/js/ui/jquery-ui.js',
         'app/js/jquery.markitup.js',
         'app/js/markdown.js',
         'app/js/lodash.js',
@@ -104,7 +94,7 @@ module.exports = (grunt) ->
 
             libs: {
                 files: externalSources,
-                tasks: ["concat"],
+                tasks: ["uglify"],
             }
         },
 
@@ -157,7 +147,7 @@ module.exports = (grunt) ->
     grunt.registerTask('dev', [
         'less',
         'coffee:dev',
-        'concat:libs',
+        'uglify:libs',
         'htmlmin',
     ])
 
