@@ -111,8 +111,10 @@ modules = [
     "greenmine.directives.taskboard",
     "greenmine.directives.issues",
     "greenmine.directives.wiki",
-    "greenmine.plugins.modal",
-    "greenmine.plugins.confirm",
+
+    # Plugins
+    "gmModal",
+    "gmConfirm",
 ]
 
 

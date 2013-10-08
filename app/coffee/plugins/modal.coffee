@@ -41,13 +41,13 @@ ModalServiceFactory = ($rootScope, $q, $log) ->
 
 ModalRegisterDirective = ($rootScope, $modal) ->
     return (scope, element, attrs) ->
-        name = attrs.klModal
-        domId = _.uniqueId("kl-modal-")
+        name = attrs.gmModal
+        domId = _.uniqueId("gm-modal-")
 
         element.attr("id", domId)
         $modal.register(name, domId)
 
 
-module = angular.module("greenmine.plugins.modal", [])
+module = angular.module("gmModal", [])
 module.factory("$modal", ["$rootScope", "$q", "$log", ModalServiceFactory])
-module.directive("klModal", ["$rootScope", "$modal", ModalRegisterDirective])
+module.directive("gmModal", ["$rootScope", "$modal", ModalRegisterDirective])
