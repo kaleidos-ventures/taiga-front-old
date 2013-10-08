@@ -57,9 +57,9 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="view-footer">
-                <p class="title">Issue #{{ issue.id }}</p>
+                <p class="title">Project: {{ project.name }}</p>
                 <div class="buttons">
-                    <a class="button button-delete">Delete issue</a>
+                    <a class="button button-delete" ng-click="deleteCurrentProject()">Delete project</a>
                 </div>
             </div>
         </div>
