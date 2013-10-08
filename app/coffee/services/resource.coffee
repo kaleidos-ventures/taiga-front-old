@@ -394,6 +394,6 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
         return service
 
-    $provide.factory("url", ['greenmine.config', urlProvider])
-    $provide.factory('resource', ['$http', '$q', '$gmStorage', 'url', '$model', 'greenmine.config', resourceProvider])
+    $provide.factory("url", ['config', urlProvider])
+    $provide.factory('resource', ['$http', '$q', '$gmStorage', 'url', '$model', 'config', resourceProvider])
 )

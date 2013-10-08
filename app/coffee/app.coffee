@@ -23,7 +23,7 @@ gm.format = (fmt, obj, named) ->
     else
         return fmt.replace /%s/g, (match) -> String(obj.shift())
 
-configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider) ->
+configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider, $gmUrlsProvider) ->
     $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: "LoginController"})
     $routeProvider.when('/register', {templateUrl: 'partials/register.html', controller: "RegisterController"})
     $routeProvider.when('/recovery', {templateUrl: 'partials/recovery.html', controller: "RecoveryController"})
@@ -86,6 +86,30 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $provide.factory("authHttpIntercept", ["$q", "$location", authHttpIntercept])
     $httpProvider.responseInterceptors.push('authHttpIntercept')
 
+    apiUrls = {
+        "auth": "/api/v1/auth"
+        "users": "/api/v1/users"
+        "roles": "/api/v1/roles"
+        "projects": "/api/v1/projects"
+        "milestones": "/api/v1/milestones"
+        "userstories": "/api/v1/userstories"
+        "tasks": "/api/v1/tasks"
+        "tasks/attachments": "/api/v1/task-attachments"
+        "issues": "/api/v1/issues"
+        "issues/attachments": "/api/v1/issue-attachments"
+        "wiki": "/api/v1/wiki"
+        "choices/task-status": "/api/v1/task-statuses"
+        "choices/issue-status": "/api/v1/issue-statuses"
+        "choices/issue-types": "/api/v1/issue-types"
+        "choices/us-status": "/api/v1/userstory-statuses"
+        "choices/points": "/api/v1/points"
+        "choices/priorities": "/api/v1/priorities"
+        "choices/severities": "/api/v1/severities"
+        "search": "/api/v1/search"
+    }
+
+    $gmUrlsProvider.setUrls("api", apiUrls)
+
 
 modules = [
     "ngRoute",
@@ -112,6 +136,7 @@ modules = [
     "greenmine.directives.wiki",
 
     # Plugins modules.
+    "gmUrls",
     "gmFlash",
     "gmModal",
     "gmStorage",
@@ -120,7 +145,7 @@ modules = [
 ]
 
 
-init = ($rootScope, $location, $gmStorage) ->
+init = ($rootScope, $location, $gmStorage, $gmUrls, config) ->
     $rootScope.auth = $gmStorage.get('userInfo')
     $rootScope.constants = {}
     $rootScope.constants.points = {}
@@ -129,6 +154,9 @@ init = ($rootScope, $location, $gmStorage) ->
     $rootScope.constants.status = {}
     $rootScope.constants.type = {}
     $rootScope.constants.users = {}
+
+    # Configure on init a default host and scheme for api urls.
+    $gmUrls.setHost("api", config.host, config.scheme)
 
     $rootScope.baseUrls =
         projects: "/"
@@ -201,7 +229,7 @@ init = ($rootScope, $location, $gmStorage) ->
         $location.url("/login")
 
 angular.module('greenmine', modules)
-       .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', configCallback])
-       .run(['$rootScope', '$location', '$gmStorage', init])
+       .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', '$gmUrlsProvider', configCallback])
+       .run(['$rootScope', '$location', '$gmStorage', '$gmUrls', 'config', init])
 
-angular.module('greenmine.config', []).value('greenmine.config', {host: "localhost:8000", scheme: "http"})
+angular.module('greenmine.config', []).value('config', {host: "localhost:8000", scheme: "http"})
