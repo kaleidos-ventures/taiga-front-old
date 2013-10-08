@@ -13,50 +13,14 @@
 # limitations under the License.
 
 angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) ->
-    urlProvider = (config) ->
-        urls =
-            "auth": "/api/v1/auth"
-            "users": "/api/v1/users"
-            "roles": "/api/v1/roles"
-            "projects": "/api/v1/projects"
-            "milestones": "/api/v1/milestones"
-            "userstories": "/api/v1/userstories"
-            "tasks": "/api/v1/tasks"
-            "tasks/attachments": "/api/v1/task-attachments"
-            "issues": "/api/v1/issues"
-            "issues/attachments": "/api/v1/issue-attachments"
-            "wiki": "/api/v1/wiki"
-            "choices/task-status": "/api/v1/task-statuses"
-            "choices/issue-status": "/api/v1/issue-statuses"
-            "choices/issue-types": "/api/v1/issue-types"
-            "choices/us-status": "/api/v1/userstory-statuses"
-            "choices/points": "/api/v1/points"
-            "choices/priorities": "/api/v1/priorities"
-            "choices/severities": "/api/v1/severities"
-            "search": "/api/v1/search"
-
-        host = config.host
-        scheme = config.scheme
-
-        return () ->
-            args = _.toArray(arguments)
-            name = args.slice(0, 1)
-            params = [urls[name]]
-
-            for item in args.slice(1)
-                params.push(item)
-
-            url = _.str.sprintf.apply(null, params)
-            return _.str.sprintf("%s://%s%s", scheme, host, url)
-
-    resourceProvider = ($http, $q, $gmStorage, url, $model, config) ->
+    resourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         service = {}
         headers = ->
             return {"X-SESSION-TOKEN": $gmStorage.get('token')}
 
         queryMany = (name, params, options) ->
             defauts = {method: "GET", headers:  headers()}
-            current = {url: url(name), params: params or {}}
+            current = {url: $gmUrls.api(name), params: params or {}}
 
             httpParams = _.extend({}, defauts, options, current)
             defered = $q.defer()
@@ -73,7 +37,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
         queryOne = (name, id, params, options, cls) ->
             defauts = {method: "GET", headers:  headers()}
-            current = {url: "#{url(name)}/#{id}", params: params or {}}
+            current = {url: "#{$gmUrls.api(name)}/#{id}", params: params or {}}
 
             httpParams =  _.extend({}, defauts, options, current)
 
@@ -106,7 +70,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
                 "username": username
                 "password":password
 
-            $http({method:'POST', url: url('auth'), data: JSON.stringify(postData)})
+            $http({method:'POST', url: $gmUrls.api('auth'), data: JSON.stringify(postData)})
                 .success(onSuccess).error(onError)
 
             return defered.promise
@@ -151,7 +115,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
                 params =
                     "method":"GET"
                     "headers": headers()
-                    "url": url("milestones")
+                    "url": $gmUrls.api("milestones")
                     "params": {"project": projectId}
 
                 $http(params).success((data, status) ->
@@ -182,7 +146,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
                 params =
                     "method": "GET"
                     "headers": headers()
-                    "url": "#{url("milestones")}/#{sprintId}"
+                    "url": "#{$gmUrls.api("milestones")}/#{sprintId}"
                     "params": {"project": projectId}
 
                 $http(params).success((data, status) ->
@@ -248,7 +212,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             obj = _.extend({}, form, {project: projectId})
             defered = $q.defer()
 
-            promise = $http.post(url("issues"), obj, {headers:headers()})
+            promise = $http.post($gmUrls.api("issues"), obj, {headers:headers()})
             promise.success (data, status) ->
                 defered.resolve($model.make_model("issues", data))
 
@@ -265,7 +229,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             obj = _.extend({}, form, {project: projectId})
             defered = $q.defer()
 
-            promise = $http.post(url("milestones"), obj, {headers:headers()})
+            promise = $http.post($gmUrls.api("milestones"), obj, {headers:headers()})
 
             promise.success (data, status) ->
                 defered.resolve($model.make_model("milestones", data))
@@ -281,7 +245,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             httpParams = {
                 method: "GET"
                 headers: headers()
-                url: url("wiki")
+                url: $gmUrls.api("wiki")
                 params: {project: projectId, slug: slug }
             }
 
@@ -306,7 +270,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             defered = $q.defer()
 
-            promise = $http.post(url("wiki"), obj, {headers:headers()})
+            promise = $http.post($gmUrls.api("wiki"), obj, {headers:headers()})
             promise.success (data, status) ->
                 defered.resolve($model.make_model("wiki", slug))
 
@@ -356,7 +320,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             xhr.addEventListener("load", uploadComplete, false)
             xhr.addEventListener("error", uploadFailed, false)
-            xhr.open("POST", url("tasks/attachments"))
+            xhr.open("POST", $gmUrls.api("tasks/attachments"))
             xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
             xhr.send(formData)
             return defered.promise
@@ -387,13 +351,12 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
 
             xhr.addEventListener("load", uploadComplete, false)
             xhr.addEventListener("error", uploadFailed, false)
-            xhr.open("POST", url("issues/attachments"))
+            xhr.open("POST", $gmUrls.api("issues/attachments"))
             xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
             xhr.send(formData)
             return defered.promise
 
         return service
 
-    $provide.factory("url", ['config', urlProvider])
-    $provide.factory('resource', ['$http', '$q', '$gmStorage', 'url', '$model', 'config', resourceProvider])
+    $provide.factory('resource', ['$http', '$q', '$gmStorage', '$gmUrls', '$model', 'config', resourceProvider])
 )

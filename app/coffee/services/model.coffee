@@ -13,7 +13,7 @@
 # limitations under the License.
 
 angular.module 'greenmine.services.model', [], ($provide) ->
-    modelProvider = ($q, $http, url, $gmStorage) ->
+    modelProvider = ($q, $http, $gmUrls, $gmStorage) ->
         headers = ->
             return {"X-SESSION-TOKEN": $gmStorage.get('token')}
 
@@ -38,7 +38,7 @@ angular.module 'greenmine.services.model', [], ($provide) ->
                 return "id"
 
             getUrl: ->
-                return "#{url(@_name)}/#{@.getAttrs()[@.getIdAttrName()]}"
+                return "#{$gmUrls.api(@_name)}/#{@.getAttrs()[@.getIdAttrName()]}"
 
             getAttrs: (patch=false) ->
                 if patch
@@ -190,7 +190,7 @@ angular.module 'greenmine.services.model', [], ($provide) ->
 
             params =
                 method: "POST"
-                url: url(name)
+                url: $gmUrls.api(name)
                 headers: headers()
                 data: JSON.stringify(data)
 
@@ -213,4 +213,4 @@ angular.module 'greenmine.services.model', [], ($provide) ->
 
         return service
 
-    $provide.factory('$model', ['$q', '$http', 'url', '$gmStorage', modelProvider])
+    $provide.factory('$model', ['$q', '$http', '$gmUrls', '$gmStorage', modelProvider])
