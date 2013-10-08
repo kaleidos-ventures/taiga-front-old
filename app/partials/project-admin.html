@@ -27,6 +27,20 @@
                         </fieldset>
                     </div>
 
+                    <div>
+                        <fieldset class="project-total-milestones">
+                            <label class="control-label" for="total_milestones">Num. Sprints:</label>
+                            <input type="text" id="total_milestones" name="total_milestones"
+                                ng-model="project.total_milestones" data-error-message="Required" />
+                        </fieldset>
+
+                        <fieldset class="project-total-story-points">
+                            <label for="slug">Total story-points:</label>
+                            <input type="text" id="total_story_points" name="total_story_points"
+                                ng-model="project.total_story_points" data-error-message="Required" />
+                        </fieldset>
+                    </div>
+
                     <fieldset class="project-description">
                         <label for="description">Description</label>
                         <textarea id="description" name="description" ng-model="project.description"></textarea>
