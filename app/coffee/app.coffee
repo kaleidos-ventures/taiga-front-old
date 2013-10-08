@@ -90,6 +90,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 modules = [
     "ngRoute",
     "ngSanitize",
+
     "greenmine.controllers.common",
     "greenmine.controllers.auth",
     "greenmine.controllers.backlog",
