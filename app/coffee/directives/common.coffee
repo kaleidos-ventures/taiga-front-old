@@ -431,18 +431,22 @@ GmChecksleyFormDirective = ($parse, $compile, $window) ->
             event.preventDefault()
 
         callback = $parse(attrs.gmChecksleyForm)
-
         onFormSubmit = (ok, event, form) ->
             scope.$apply ->
                 callback(scope) if ok
 
+        form = element.checksley(listeners: {onFormSubmit: onFormSubmit})
+
         attachChecksley = ->
-            element.checksley('destroy')
-            element.checksley(listeners: {onFormSubmit: onFormSubmit})
+            form.destroy()
+            form.initialize()
 
         scope.$on("$includeContentLoaded", attachChecksley)
         scope.$on("checksley:reset", attachChecksley)
-        element.checksley(listeners: {onFormSubmit: onFormSubmit})
+
+        scope.$watch "checksleyErrors", (errors) ->
+            if not _.isEmpty(errors)
+                form.setErrors(errors)
 
 
 GmChecksleySubmitButtonDirective = ->

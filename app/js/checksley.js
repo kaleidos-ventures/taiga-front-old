@@ -1,4 +1,4 @@
-/*! checksley - v0.1.0 - 2013-07-15 */
+/*! checksley - v0.3.0 - 2013-10-08 */
 (function() {
   var Checksley, Field, FieldMultiple, Form, checksley, defaults, formatMesssage, messages, toInt, validators, _checksley,
     __hasProp = {}.hasOwnProperty,
@@ -175,9 +175,8 @@
   };
 
   _checksley = function(options) {
-    var element, elm, instance, _options;
-    elm = this;
-    element = $(elm);
+    var element, instance, _options;
+    element = $(this);
     if (!element.is("form, input, select, textarea")) {
       throw "element is not a valid element for checksley";
     }
@@ -188,11 +187,11 @@
         _options = options;
       }
       if (element.is("input[type=radio], input[type=checkbox]")) {
-        instance = new checksley.FieldMultiple(element, options);
+        instance = new FieldMultiple(element, options);
       } else if (element.is("input, select, textarea")) {
-        instance = new checksley.Field(element, options);
+        instance = new Field(element, options);
       } else {
-        instance = new Form(elm, options);
+        instance = new Form(element, options);
       }
     }
     if (_.isString(options)) {
@@ -228,15 +227,22 @@
       return _.merge(defaults, options);
     };
 
-    Checksley.prototype.updateValidators = function(options) {
-      return _.extend(validators, options);
+    Checksley.prototype.updateValidators = function(_validators) {
+      return _.extend(validators, _validators);
     };
 
-    Checksley.prototype.updateMessages = function(lang, messages) {
+    Checksley.prototype.updateMessages = function(lang, messages, overwrite) {
+      if (overwrite == null) {
+        overwrite = false;
+      }
       if (this.messages[lang] === void 0) {
         this.messages[lang] = {};
       }
-      return _.merge(this.messages[lang], messages);
+      if (overwrite) {
+        return this.messages[lang] = messages;
+      } else {
+        return _.merge(this.messages[lang], messages);
+      }
     };
 
     Checksley.prototype.injectPlugin = function() {
@@ -415,7 +421,7 @@
 
     Field.prototype.applyValidators = function(showErrors) {
       var data, listeners, name, val, valid, _ref;
-      if (showErrors === void 0) {
+      if (showErrors === void 0 || showErrors === null) {
         showErrors = this.options.showErrors;
       }
       val = this.getValue();
@@ -461,8 +467,11 @@
     };
 
     Field.prototype.manageError = function(name, constraint) {
-      var message;
-      if (name === "type") {
+      var data, message;
+      data = this.element.data();
+      if (data["errorMessage"] !== void 0) {
+        message = data["errorMessage"];
+      } else if (name === "type") {
         message = checksley.getMessage("type")[constraint.params];
       } else {
         message = checksley.getMessage(name);
@@ -474,6 +483,19 @@
         message = formatMesssage(message, _.clone(constraint.params, true));
       }
       return this.addError(this.makeErrorElement(name, message));
+    };
+
+    Field.prototype.setErrors = function(messages) {
+      var message, _i, _len, _results;
+      if (!_.isArray(messages)) {
+        messages = [messages];
+      }
+      _results = [];
+      for (_i = 0, _len = messages.length; _i < _len; _i++) {
+        message = messages[_i];
+        _results.push(this.addError(this.makeErrorElement("custom", message)));
+      }
+      return _results;
     };
 
     Field.prototype.makeErrorElement = function(constraintName, message) {
@@ -574,7 +596,7 @@
       this.isCheckbox = this.element.is("input[type=checkbox]");
     }
 
-    FieldMultiple.prototype.getSibligns = function() {
+    FieldMultiple.prototype.getSiblings = function() {
       var group;
       group = this.element.data("group");
       if (group === void 0) {
@@ -587,11 +609,11 @@
     FieldMultiple.prototype.getValue = function() {
       var element, values, _i, _len, _ref;
       if (this.isRadio) {
-        return $("" + (this.getSibligns()) + ":checked").val() || '';
+        return $("" + (this.getSiblings()) + ":checked").val() || '';
       }
       if (this.isCheckbox) {
         values = [];
-        _ref = $("" + (this.getSibligns()) + ":checked");
+        _ref = $("" + (this.getSiblings()) + ":checked");
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           element = _ref[_i];
           values.push($(element).val());
@@ -602,7 +624,7 @@
 
     FieldMultiple.prototype.unbindEvents = function() {
       var element, _i, _len, _ref, _results;
-      _ref = $(this.getSibligns());
+      _ref = $(this.getSiblings());
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         element = _ref[_i];
@@ -615,7 +637,7 @@
       var element, trigger, _i, _len, _ref, _results;
       this.unbindEvents();
       trigger = this.element.data("trigger");
-      _ref = $(this.getSibligns());
+      _ref = $(this.getSiblings());
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         element = _ref[_i];
@@ -644,10 +666,14 @@
       this.id = _.uniqueId("checksleyform-");
       this.element = $(elm);
       this.options = _.extend({}, defaults, options);
+      this.initialize();
+    }
+
+    Form.prototype.initialize = function() {
       this.initializeFields();
       this.bindEvents();
-      this.bindData();
-    }
+      return this.bindData();
+    };
 
     Form.prototype.bindData = function() {
       return this.element.data("checksley", this);
@@ -660,6 +686,7 @@
     Form.prototype.initializeFields = function() {
       var element, field, fieldElm, _i, _len, _ref, _results;
       this.fields = [];
+      this.fieldsByName = {};
       _ref = this.element.find(this.options.inputs);
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -674,7 +701,23 @@
           field = new checksley.Field(fieldElm, this.options);
         }
         field.setForm(this);
-        _results.push(this.fields.push(field));
+        this.fields.push(field);
+        _results.push(this.fieldsByName[element.attr("name")] = field);
+      }
+      return _results;
+    };
+
+    Form.prototype.setErrors = function(errors) {
+      var error, field, name, _results;
+      _results = [];
+      for (name in errors) {
+        error = errors[name];
+        field = this.fieldsByName[name];
+        if (field) {
+          _results.push(field.setErrors(error));
+        } else {
+          _results.push(void 0);
+        }
       }
       return _results;
     };
