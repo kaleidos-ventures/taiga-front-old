@@ -12,23 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-overlayServiceFactory = ($rootScope, $q) ->
+OverlayProvider = ($rootScope, $q, $log) ->
     class OverlayService
         constructor: ->
-            console.log "OverlayService.constructor"
-
             @.el = angular.element("<div />", {"class": "overlay"})
             @.defered = $q.defer()
 
             _.bindAll(@)
 
         close: ->
-            console.log "OverlayService.close"
+            $log.info "OverlayService.close"
             @.el.off()
             @.el.remove()
 
         open: ->
-            console.log "OverlayService.open"
+            $log.info "OverlayService.open"
             self = @
 
             @.el.on "click", (event) ->
@@ -44,5 +42,5 @@ overlayServiceFactory = ($rootScope, $q) ->
     return -> new OverlayService()
 
 
-module = angular.module("greenmine.services.overlay", [])
-module.factory('$gmOverlay', ["$rootScope", "$q", overlayServiceFactory])
+module = angular.module("gmOverlay", [])
+module.factory('$gmOverlay', ["$rootScope", "$q", "$log", OverlayProvider])
