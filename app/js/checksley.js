@@ -1,4 +1,4 @@
-/*! checksley - v0.3.0 - 2013-10-08 */
+/*! checksley - v0.4.0 - 2013-10-08 */
 (function() {
   var Checksley, Field, FieldMultiple, Form, checksley, defaults, formatMesssage, messages, toInt, validators, _checksley,
     __hasProp = {}.hasOwnProperty,
@@ -487,6 +487,7 @@
 
     Field.prototype.setErrors = function(messages) {
       var message, _i, _len, _results;
+      this.removeErrors();
       if (!_.isArray(messages)) {
         messages = [messages];
       }
