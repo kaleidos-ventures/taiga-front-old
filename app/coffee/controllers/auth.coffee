@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-LoginController = ($scope, $rootScope, $location, rs, storage) ->
+LoginController = ($scope, $rootScope, $location, rs, $gmStorage) ->
     $rootScope.pageSection = 'login'
 
     $scope.form = {}
@@ -23,7 +23,7 @@ LoginController = ($scope, $rootScope, $location, rs, storage) ->
         $scope.loading = true
 
         onSuccess = (data) ->
-            storage.set("userInfo", data)
+            $gmStorage.set("userInfo", data)
             $location.url("/")
 
         onError = (data) ->
@@ -45,6 +45,6 @@ RecoveryController = ($scope, $rootScope, url) ->
 
 
 module = angular.module("greenmine.controllers.auth", [])
-module.controller("LoginController", ['$scope', '$rootScope', '$location', 'resource', 'storage', LoginController])
+module.controller("LoginController", ['$scope', '$rootScope', '$location', 'resource', '$gmStorage', LoginController])
 module.controller("RegisterController", ['$scope', '$rootScope', 'url', RegisterController])
 module.controller("RecoveryController", ['$scope', '$rootScope', 'url', RecoveryController])

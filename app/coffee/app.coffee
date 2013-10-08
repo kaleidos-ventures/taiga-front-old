@@ -105,7 +105,6 @@ modules = [
     "greenmine.services.common",
     "greenmine.services.model",
     "greenmine.services.resource",
-    "greenmine.services.storage",
     "greenmine.directives.generic",
     "greenmine.directives.common",
     "greenmine.directives.taskboard",
@@ -115,13 +114,14 @@ modules = [
     # Plugins modules.
     "gmFlash",
     "gmModal",
+    "gmStorage",
     "gmConfirm",
     "gmOverlay",
 ]
 
 
-init = ($rootScope, $location, storage) ->
-    $rootScope.auth = storage.get('userInfo')
+init = ($rootScope, $location, $gmStorage) ->
+    $rootScope.auth = $gmStorage.get('userInfo')
     $rootScope.constants = {}
     $rootScope.constants.points = {}
     $rootScope.constants.severity = {}
@@ -197,11 +197,11 @@ init = ($rootScope, $location, storage) ->
             return conditionalUrl(url, raw)
 
     $rootScope.logout = () ->
-        storage.clear()
+        $gmStorage.clear()
         $location.url("/login")
 
 angular.module('greenmine', modules)
        .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', configCallback])
-       .run(['$rootScope', '$location', 'storage', init])
+       .run(['$rootScope', '$location', '$gmStorage', init])
 
 angular.module('greenmine.config', []).value('greenmine.config', {host: "localhost:8000", scheme: "http"})

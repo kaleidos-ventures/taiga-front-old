@@ -13,9 +13,9 @@
 # limitations under the License.
 
 angular.module 'greenmine.services.model', [], ($provide) ->
-    modelProvider = ($q, $http, url, storage) ->
+    modelProvider = ($q, $http, url, $gmStorage) ->
         headers = ->
-            return {"X-SESSION-TOKEN": storage.get('token')}
+            return {"X-SESSION-TOKEN": $gmStorage.get('token')}
 
         class Model
             constructor: (name, data, dataTypes) ->
@@ -213,4 +213,4 @@ angular.module 'greenmine.services.model', [], ($provide) ->
 
         return service
 
-    $provide.factory('$model', ['$q', '$http', 'url', 'storage', modelProvider])
+    $provide.factory('$model', ['$q', '$http', 'url', '$gmStorage', modelProvider])

@@ -49,10 +49,10 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             url = _.str.sprintf.apply(null, params)
             return _.str.sprintf("%s://%s%s", scheme, host, url)
 
-    resourceProvider = ($http, $q, storage, url, $model, config) ->
+    resourceProvider = ($http, $q, $gmStorage, url, $model, config) ->
         service = {}
         headers = ->
-            return {"X-SESSION-TOKEN": storage.get('token')}
+            return {"X-SESSION-TOKEN": $gmStorage.get('token')}
 
         queryMany = (name, params, options) ->
             defauts = {method: "GET", headers:  headers()}
@@ -96,7 +96,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             defered = $q.defer()
 
             onSuccess = (data, status) ->
-                storage.set("token", data["token"])
+                $gmStorage.set("token", data["token"])
                 defered.resolve(data)
 
             onError = (data, status) ->
@@ -357,7 +357,7 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             xhr.addEventListener("load", uploadComplete, false)
             xhr.addEventListener("error", uploadFailed, false)
             xhr.open("POST", url("tasks/attachments"))
-            xhr.setRequestHeader("X-SESSION-TOKEN", storage.get('token'))
+            xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
             xhr.send(formData)
             return defered.promise
 
@@ -388,12 +388,12 @@ angular.module('greenmine.services.resource', ['greenmine.config'], ($provide) -
             xhr.addEventListener("load", uploadComplete, false)
             xhr.addEventListener("error", uploadFailed, false)
             xhr.open("POST", url("issues/attachments"))
-            xhr.setRequestHeader("X-SESSION-TOKEN", storage.get('token'))
+            xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
             xhr.send(formData)
             return defered.promise
 
         return service
 
     $provide.factory("url", ['greenmine.config', urlProvider])
-    $provide.factory('resource', ['$http', '$q', 'storage', 'url', '$model', 'greenmine.config', resourceProvider])
+    $provide.factory('resource', ['$http', '$q', '$gmStorage', 'url', '$model', 'greenmine.config', resourceProvider])
 )
