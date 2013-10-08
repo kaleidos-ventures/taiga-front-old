@@ -19,36 +19,38 @@ angular.module 'greenmine.services.model', [], ($provide) ->
 
         class Model
             constructor: (name, data, dataTypes) ->
-                @_attrs = data
-                @_name = name
-                @_dataTypes = dataTypes
+                @._attrs = data
+                @._name = name
+                @._dataTypes = dataTypes
 
-                @_isModified = false
-                @_modifiedAttrs = {}
-
-                @initialize()
-                @applyCasts()
+                @.setAttrs(data)
+                @.initialize()
 
             applyCasts: ->
-                for attrName, castName of @_dataTypes
+                for attrName, castName of @._dataTypes
                     castMethod = service.casts[castName]
                     if not castMethod
                         continue
 
-                    @_attrs[attrName] = castMethod(@_attrs[attrName])
-
+                    @._attrs[attrName] = castMethod(@._attrs[attrName])
 
             getIdAttrName: ->
                 return "id"
 
             getUrl: ->
-                return "#{url(@_name)}/#{@getAttrs()[@getIdAttrName()]}"
+                return "#{url(@_name)}/#{@.getAttrs()[@.getIdAttrName()]}"
 
             getAttrs: (patch=false) ->
                 if patch
-                    return _.extend({}, @_modifiedAttrs)
+                    return _.extend({}, @._modifiedAttrs)
+                return _.extend({}, @._attrs, @._modifiedAttrs)
 
-                return _.extend({}, @_attrs, @_modifiedAttrs)
+            setAttrs: (attrs) ->
+                @._attrs = attrs
+                @._modifiedAttrs = {}
+
+                @.applyCasts()
+                @._isModified = false
 
             initialize: () ->
                 self = @
@@ -147,7 +149,7 @@ angular.module 'greenmine.services.model', [], ($provide) ->
                     defered.resolve(self)
 
                 promise.error (data, status) ->
-                    defered.reject()
+                    defered.reject(data)
 
                 return defered.promise
 
