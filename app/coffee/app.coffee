@@ -112,7 +112,8 @@ modules = [
     "greenmine.directives.issues",
     "greenmine.directives.wiki",
 
-    # Plugins
+    # Plugins modules.
+    "gmFlash",
     "gmModal",
     "gmConfirm",
 ]

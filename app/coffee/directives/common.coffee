@@ -397,32 +397,6 @@ GmPopoverDirective = ($parse, $compile) ->
                     element.data('state', 'open')
 
 
-GmFlashMessageDirective = ->
-    compile: (element, attrs) ->
-        template = """
-        <div class="flash-message-success hidden">
-            <p>¡Genial! Aquí va el mensaje de confirmación </p>
-        </div>
-        <div class="flash-message-fail hidden">
-            <p>¡Ops! Esto es embarazoso, parece que algo ha salido mal... </p>
-        </div>"""
-
-        element.html(template)
-        return @.link
-
-    link: (scope, elm, attrs) ->
-        element = angular.element(elm)
-        scope.$on "flash:new", (ctx, success, message) ->
-            if success
-                element.find(".flash-message-success p").text(message)
-                element.find(".flash-message-success").fadeIn().delay(2000).fadeOut()
-            else
-                element.find(".flash-message-fail p").text(message)
-                element.find(".flash-message-fail").fadeIn().delay(2000).fadeOut()
-
-            angular.element("html, body").animate({ scrollTop: 0 }, "slow");
-
-
 GmChecksleyFormDirective = ($parse, $compile, $window) ->
     restrict: "A"
     link: (scope, elm, attrs) ->
@@ -520,7 +494,6 @@ module.directive('gmColorizeTag', GmColorizeTagDirective)
 module.directive('gmKalendae', GmKalendaeDirective)
 module.directive('gmSortable', GmSortableDirective)
 module.directive('gmPopover', ['$parse', '$compile', GmPopoverDirective])
-module.directive('gmFlashMessages', GmFlashMessageDirective)
 module.directive('gmChecksleyForm', ['$parse', '$compile', '$window', GmChecksleyFormDirective])
 module.directive('gmChecksleySubmitButton', [GmChecksleySubmitButtonDirective])
 module.directive('gmTagsInput', [GmTagsInputDirective])
