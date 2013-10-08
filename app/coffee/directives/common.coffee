@@ -25,25 +25,34 @@ GmBacklogGraphDirective = ($parse) -> (scope, elm, attrs) ->
             listOfMilestones = _.filter(listOfMilestones, (milestone) -> moment(milestone.finish_date) <= moment())
             result = [totalPoints]
             _.each(listOfMilestones, (milestone, index) ->
-                result.push(result[index] - milestone.closed_points)
+                if isNaN(result[index] - milestone.closed_points["1"])
+                    result.push(0)
+                else
+                    result.push(result[index] - milestone.closed_points["1"])
             )
-            result
+            return result
 
         getTeamIncrementPoints = (listOfMilestones) ->
             listOfMilestones = _.filter(listOfMilestones, (milestone) -> moment(milestone.finish_date) <= moment())
             result = [0]
             _.each(listOfMilestones, (milestone, index) ->
-                result.push(result[index] - milestone.team_increment_points)
+                if isNaN(result[index] - milestone.team_increment_points["1"])
+                    result.push(0)
+                else
+                    result.push(result[index] - milestone.team_increment_points["1"])
             )
-            result
+            return result
 
         getClientIncrementPoints = (listOfMilestones) ->
             listOfMilestones = _.filter(listOfMilestones, (milestone) -> moment(milestone.finish_date) <= moment())
             result = getTeamIncrementPoints(listOfMilestones)
             _.each(listOfMilestones, (milestone, index) ->
-                result[index+1] += (result[index] - milestone.client_increment_points)
+                if isNaN(result[index] - milestone.client_increment_points["1"])
+                    result.push(0)
+                else
+                    result[index+1] += (result[index] - milestone.client_increment_points["1"])
             )
-            result
+            return result
 
         width = element.width()
         height = width/6
@@ -63,14 +72,14 @@ GmBacklogGraphDirective = ($parse) -> (scope, elm, attrs) ->
             datasetFillYAxis: 0
 
         data =
-            labels : getLabels(scope.project.list_of_milestones, scope.project.sprints)
+            labels : getLabels(scope.project.list_of_milestones, scope.project.total_milestones)
             datasets : [
                 {
                     fillColor : "rgba(120,120,120,0.2)",
                     strokeColor : "rgba(120,120,120,0.2)",
                     pointColor : "rgba(255,255,255,1)",
                     pointStrokeColor : "#ccc",
-                    data : getOptimalList(scope.project.total_story_points, scope.project.sprints)
+                    data : getOptimalList(scope.project.total_story_points, scope.project.total_milestones)
                 },
                 {
                     fillColor : "rgba(102,153,51,0.3)",
@@ -500,8 +509,7 @@ GmRolePointsEditionDirective = ->
 
 module = angular.module('greenmine.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
-#Commented because blocks totally the browser.
-#module.directive("gmBacklogGraph", GmBacklogGraphDirective)
+module.directive("gmBacklogGraph", GmBacklogGraphDirective)
 module.directive('gmHeaderMenu', ["$rootScope", GmHeaderMenuDirective])
 module.directive('gmNinjaGraph', GmNinjaGraphDirective)
 module.directive('gmColorizeTag', GmColorizeTagDirective)

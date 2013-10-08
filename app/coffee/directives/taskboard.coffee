@@ -15,7 +15,7 @@ gmTaskboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
         getOptimalList = (totalPoints, numOfDays) ->
             (totalPoints-((totalPoints/(numOfDays-1))*dayNum) for dayNum in [0..numOfDays-1])
 
-        getUSCompletionList = (userStories, numOfDays, startDay) ->
+        getUSCompletionList = (userStories, numOfDays, startDay, totalPoints) ->
             pointIdToOrder = greenmine.utils.pointIdToOrder(scope.constants.pointsByOrder, scope.roles)
             points = []
 
@@ -32,7 +32,7 @@ gmTaskboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
                         return false
                 )
 
-                points.push(_.reduce(finishedUserStories, ((total, us) -> return total + pointIdToOrder(us.points)), 0))
+                points.push(_.reduce(finishedUserStories, ((total, us) -> return total - pointIdToOrder(us.points)), totalPoints))
             return points
 
 
@@ -68,14 +68,23 @@ gmTaskboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
                     fillColor : "rgba(102,153,51,0.3)",
                     strokeColor : "rgba(102,153,51,1)",
                     pointColor : "rgba(255,255,255,1)",
-                    data : getUSCompletionList(scope.milestone.user_stories, numOfDays, scope.milestone.estimated_start)
+                    data : getUSCompletionList(scope.milestone.user_stories, numOfDays, scope.milestone.estimated_start, scope.stats.totalPoints)
                 }
             ]
 
+        console.log data
         new Chart(ctx).Line(data, options)
 
     scope.$watch 'statuses', (value) ->
-        if scope.statuses and scope.milestone
+        if scope.statuses and scope.milestone and scope.stats
+            redrawChart()
+
+    scope.$watch 'milestone', (value) ->
+        if scope.statuses and scope.milestone and scope.stats
+            redrawChart()
+
+    scope.$watch 'stats', (value) ->
+        if scope.statuses and scope.milestone and scope.stats
             redrawChart()
 
 dashboardModule.directive("gmTaskboardGraph", ["$parse", "resource", gmTaskboardGraphConstructor])

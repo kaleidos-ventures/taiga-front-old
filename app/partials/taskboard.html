@@ -1,7 +1,7 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container dashboard-content">
     <!-- Temporary hidden -->
-    <div class="row-fluid first-row stats-row" style="display:none">
+    <div class="row-fluid first-row stats-row">
         <div class="span12">
             <div class="stats-container">
                 <div class="row-fluid">
@@ -78,7 +78,10 @@
                                         </div>
                                     </div>
                                     <a href="" class="button" ng-click="openCreateTaskForm(us)">Add new task</a>
-                                    <div class="us-points">5</div>
+                                    <!-- TODO: This doesn't work with 2 or more roles -->
+                                    <div ng-repeat="role in roles" class="us-points">
+                                        {{ constants.points[us.points[role.id]].name }}
+                                    </div>
                                 </td>
                                 <td class="col-task-status col-task-{{ status.name|slugify }}"
                                         ng-repeat="status in statusesList|orderBy:'order'"
@@ -103,7 +106,6 @@
                                         <div class="description"></div>
                                     </div>
                                     <a href="" class="button" ng-click="openCreateTaskForm(us)">Add new task</a>
-                                    <div class="us-points">5</div>
                                 </td>
                                 <td class="col-task-status col-task-{{ status.name|slugify }}"
                                         ng-repeat="status in statusesList|orderBy:'order'"

@@ -45,6 +45,7 @@ DataServiceProvider = ($rootScope, $q, rs) ->
 
             $scope.statusesList = _.sortBy(statuses, 'id')
             $scope.userstoriesList = _.sortBy(userstories, 'id')
+            $scope.milestone = milestone
 
             _.each(statuses, (status) -> $scope.statuses[status.id] = status)
             _.each(userstories, (us) -> $scope.userstories[us.id] = us)
