@@ -69,6 +69,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 
     defaultHeaders =
         "Content-Type": "application/json",
+        "Accept-Language": "en"
 
     $httpProvider.defaults.headers.delete = defaultHeaders
     $httpProvider.defaults.headers.patch = defaultHeaders
