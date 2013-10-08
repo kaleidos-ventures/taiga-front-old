@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.0-31f190d
+ * @license AngularJS v1.2.0-80d2c85
  * (c) 2010-2012 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -80,16 +80,6 @@ function minErr(module) {
 }
 
 ////////////////////////////////////
-
-/**
- * hasOwnProperty may be overwritten by a property of the same name, or entirely
- * absent from an object that does not inherit Object.prototype; this copy is
- * used instead
- */
-var hasOwnPropertyFn = Object.prototype.hasOwnProperty;
-var hasOwnPropertyLocal = function(obj, key) {
-  return hasOwnPropertyFn.call(obj, key);
-};
 
 /**
  * @ngdoc function
@@ -770,6 +760,8 @@ function shallowCopy(src, dst) {
   dst = dst || {};
 
   for(var key in src) {
+    // shallowCopy is only ever called by $compile nodeLinkFn, which has control over src
+    // so we don't need to worry hasOwnProperty here
     if (src.hasOwnProperty(key) && key.substr(0, 2) !== '$$') {
       dst[key] = src[key];
     }
@@ -792,7 +784,7 @@ function shallowCopy(src, dst) {
  *
  * * Both objects or values pass `===` comparison.
  * * Both objects or values are of the same type and all of their properties pass `===` comparison.
- * * Both values are NaN. (In JavasScript, NaN == NaN => false. But we consider two NaN as equal)
+ * * Both values are NaN. (In JavaScript, NaN == NaN => false. But we consider two NaN as equal)
  * * Both values represent the same regular expression (In JavasScript,
  *   /abc/ == /abc/ => false. But we consider two regular expressions as equal when their textual
  *   representation matches).
@@ -1267,6 +1259,17 @@ function assertArgFn(arg, name, acceptArrayAnnotation) {
 }
 
 /**
+ * throw error if the name given is hasOwnProperty
+ * @param  {String} name    the name to test
+ * @param  {String} context the context in which the name is used, such as module or directive
+ */
+function assertNotHasOwnProperty(name, context) {
+  if (name === 'hasOwnProperty') {
+    throw ngMinErr('badname', "hasOwnProperty is not a valid {0} name", context);
+  }
+}
+
+/**
  * Return the value accessible from the object by path. Any undefined traversals are ignored
  * @param {Object} obj starting object
  * @param {string} path path to traverse
@@ -1302,6 +1305,8 @@ function getter(obj, path, bindFnToScope) {
  */
 
 function setupModuleLoader(window) {
+
+  var $injectorMinErr = minErr('$injector');
 
   function ensure(obj, name, factory) {
     return obj[name] || (obj[name] = factory());
@@ -1361,12 +1366,13 @@ function setupModuleLoader(window) {
      * @returns {module} new module with the {@link angular.Module} api.
      */
     return function module(name, requires, configFn) {
+      assertNotHasOwnProperty(name, 'module');
       if (requires && modules.hasOwnProperty(name)) {
         modules[name] = null;
       }
       return ensure(modules, name, function() {
         if (!requires) {
-          throw minErr('$injector')('nomod', "Module '{0}' is not available! You either misspelled the module name " +
+          throw $injectorMinErr('nomod', "Module '{0}' is not available! You either misspelled the module name " +
               "or forgot to load it. If registering a module ensure that you specify the dependencies as the second " +
               "argument.", name);
         }
@@ -1595,7 +1601,7 @@ function setupModuleLoader(window) {
  * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
  */
 var version = {
-  full: '1.2.0-31f190d',    // all of these placeholder strings will be replaced by grunt's
+  full: '1.2.0-80d2c85',    // all of these placeholder strings will be replaced by grunt's
   major: 1,    // package task
   minor: 2,
   dot: 0,
@@ -1695,6 +1701,7 @@ function publishExternalAPI(angular){
         $exceptionHandler: $ExceptionHandlerProvider,
         $filter: $FilterProvider,
         $interpolate: $InterpolateProvider,
+        $interval: $IntervalProvider,
         $http: $HttpProvider,
         $httpBackend: $HttpBackendProvider,
         $location: $LocationProvider,
@@ -2517,13 +2524,16 @@ forEach({
 
   triggerHandler: function(element, eventName, eventData) {
     var eventFns = (JQLiteExpandoStore(element, 'events') || {})[eventName];
-    eventData = eventData || {
+    
+    eventData = eventData || [];
+
+    var event = [{
       preventDefault: noop,
       stopPropagation: noop
-    };
+    }];
 
     forEach(eventFns, function(fn) {
-      fn.call(element, eventData);
+      fn.apply(element, event.concat(eventData));
     });
   }
 }, function(fn, name){
@@ -3071,6 +3081,7 @@ function createInjector(modulesToLoad) {
   }
 
   function provider(name, provider_) {
+    assertNotHasOwnProperty(name, 'service');
     if (isFunction(provider_) || isArray(provider_)) {
       provider_ = providerInjector.instantiate(provider_);
     }
@@ -3091,6 +3102,7 @@ function createInjector(modulesToLoad) {
   function value(name, value) { return factory(name, valueFn(value)); }
 
   function constant(name, value) {
+    assertNotHasOwnProperty(name, 'constant');
     providerCache[name] = value;
     instanceCache[name] = value;
   }
@@ -4325,6 +4337,7 @@ function $CompileProvider($provide) {
    * @returns {ng.$compileProvider} Self for chaining.
    */
    this.directive = function registerDirective(name, directiveFactory) {
+    assertNotHasOwnProperty(name, 'directive');
     if (isString(name)) {
       assertArg(directiveFactory, 'directiveFactory');
       if (!hasDirectives.hasOwnProperty(name)) {
@@ -5322,6 +5335,9 @@ function $CompileProvider($provide) {
           dst['class'] = (dst['class'] ? dst['class'] + ' ' : '') + value;
         } else if (key == 'style') {
           $element.attr('style', $element.attr('style') + ';' + value);
+          // `dst` will never contain hasOwnProperty as DOM parser won't let it.
+          // You will get an "InvalidCharacterError: DOM Exception 5" error if you
+          // have an attribute like "has-own-property" or "data-has-own-property", etc.
         } else if (key.charAt(0) != '$' && !dst.hasOwnProperty(key)) {
           dst[key] = value;
           dstAttr[key] = srcAttr[key];
@@ -5658,6 +5674,7 @@ function $ControllerProvider() {
    *    annotations in the array notation).
    */
   this.register = function(name, constructor) {
+    assertNotHasOwnProperty(name, 'controller');
     if (isObject(name)) {
       extend(controllers, name)
     } else {
@@ -7176,6 +7193,94 @@ function $InterpolateProvider() {
   }];
 }
 
+function $IntervalProvider() {
+  this.$get = ['$rootScope', '$window', '$q',
+       function($rootScope,   $window,   $q) {
+    var intervals = {};
+
+
+     /**
+      * @ngdoc function
+      * @name ng.$interval
+      *
+      * @description
+      * Angular's wrapper for `window.setInterval`. The `fn` function is executed every `delay`
+      * milliseconds.
+      *
+      * The return value of registering an interval function is a promise. This promise will be
+      * notified upon each tick of the interval, and will be resolved after `count` iterations, or
+      * run indefinitely if `count` is not defined. The value of the notification will be the
+      * number of iterations that have run.
+      * To cancel an interval, call `$interval.cancel(promise)`.
+      *
+      * In tests you can use {@link ngMock.$interval#flush `$interval.flush(millis)`} to
+      * move forward by `millis` milliseconds and trigger any functions scheduled to run in that
+      * time.
+      *
+      * @param {function()} fn A function that should be called repeatedly.
+      * @param {number} delay Number of milliseconds between each function call.
+      * @param {number=} [count=0] Number of times to repeat. If not set, or 0, will repeat
+      *   indefinitely.
+      * @param {boolean=} [invokeApply=true] If set to `false` skips model dirty checking, otherwise
+      *   will invoke `fn` within the {@link ng.$rootScope.Scope#$apply $apply} block.
+      * @returns {promise} A promise which will be notified on each iteration.
+      */
+    function interval(fn, delay, count, invokeApply) {
+      var setInterval = $window.setInterval,
+          clearInterval = $window.clearInterval;
+
+      var deferred = $q.defer(),
+          promise = deferred.promise,
+          count = (isDefined(count)) ? count : 0,
+          iteration = 0,
+          skipApply = (isDefined(invokeApply) && !invokeApply);
+
+      promise.then(null, null, fn);
+
+      promise.$$intervalId = setInterval(function tick() {
+        deferred.notify(iteration++);
+
+        if (count > 0 && iteration >= count) {
+          deferred.resolve(iteration);
+          clearInterval(promise.$$intervalId);
+          delete intervals[promise.$$intervalId];
+        }
+
+        if (!skipApply) $rootScope.$apply();
+
+      }, delay);
+
+      intervals[promise.$$intervalId] = deferred;
+
+      return promise;
+    }
+
+
+     /**
+      * @ngdoc function
+      * @name ng.$interval#cancel
+      * @methodOf ng.$interval
+      *
+      * @description
+      * Cancels a task associated with the `promise`.
+      *
+      * @param {number} promise Promise returned by the `$interval` function.
+      * @returns {boolean} Returns `true` if the task was successfully canceled.
+      */
+    interval.cancel = function(promise) {
+      if (promise && promise.$$intervalId in intervals) {
+        intervals[promise.$$intervalId].reject('canceled');
+        clearInterval(promise.$$intervalId);
+        delete intervals[promise.$$intervalId];
+        return true;
+      }
+      return false;
+    };
+
+    return interval;
+  }];
+}
+
 /**
  * @ngdoc object
  * @name ng.$locale
@@ -8062,7 +8167,6 @@ function ensureSafeObject(obj, fullExpression) {
   if (obj && obj.constructor === obj) {
     throw $parseMinErr('isecfn',
         'Referencing Function in Angular expressions is disallowed! Expression: {0}', fullExpression);
-  // 
   } else if (// isWindow(obj)
       obj && obj.document && obj.location && obj.alert && obj.setInterval) {
     throw $parseMinErr('isecwindow',
@@ -8113,156 +8217,191 @@ var OPERATORS = {
 };
 var ESCAPE = {"n":"\n", "f":"\f", "r":"\r", "t":"\t", "v":"\v", "'":"'", '"':'"'};
 
-function lex(text, csp){
-  var tokens = [],
-      token,
-      index = 0,
-      json = [],
-      ch,
-      lastCh = ':'; // can start regexp
 
-  while (index < text.length) {
-    ch = text.charAt(index);
-    if (is('"\'')) {
-      readString(ch);
-    } else if (isNumber(ch) || is('.') && isNumber(peek())) {
-      readNumber();
-    } else if (isIdent(ch)) {
-      readIdent();
-      // identifiers can only be if the preceding char was a { or ,
-      if (was('{,') && json[0]=='{' &&
-         (token=tokens[tokens.length-1])) {
-        token.json = token.text.indexOf('.') == -1;
-      }
-    } else if (is('(){}[].,;:?')) {
-      tokens.push({
-        index:index,
-        text:ch,
-        json:(was(':[,') && is('{[')) || is('}]:,')
-      });
-      if (is('{[')) json.unshift(ch);
-      if (is('}]')) json.shift();
-      index++;
-    } else if (isWhitespace(ch)) {
-      index++;
-      continue;
-    } else {
-      var ch2 = ch + peek(),
-          ch3 = ch2 + peek(2),
-          fn = OPERATORS[ch],
-          fn2 = OPERATORS[ch2],
-          fn3 = OPERATORS[ch3];
-      if (fn3) {
-        tokens.push({index:index, text:ch3, fn:fn3});
-        index += 3;
-      } else if (fn2) {
-        tokens.push({index:index, text:ch2, fn:fn2});
-        index += 2;
-      } else if (fn) {
-        tokens.push({index:index, text:ch, fn:fn, json: was('[,:') && is('+-')});
-        index += 1;
+/////////////////////////////////////////
+
+
+/**
+ * @constructor
+ */
+var Lexer = function (csp) {
+  this.csp = csp;
+};
+
+Lexer.prototype = {
+  constructor: Lexer,
+
+  lex: function (text) {
+    this.text = text;
+    this.index = 0;
+    this.ch = undefined;
+    this.lastCh = ':'; // can start regexp
+
+    this.tokens = [];
+
+    var token;
+    var json = [];
+
+    while (this.index < this.text.length) {
+      this.ch = this.text.charAt(this.index);
+      if (this.is('"\'')) {
+        this.readString(this.ch);
+      } else if (this.isNumber(this.ch) || this.is('.') && this.isNumber(this.peek())) {
+        this.readNumber();
+      } else if (this.isIdent(this.ch)) {
+        this.readIdent();
+        // identifiers can only be if the preceding char was a { or ,
+        if (this.was('{,') && json[0] === '{' &&
+            (token = this.tokens[this.tokens.length - 1])) {
+          token.json = token.text.indexOf('.') === -1;
+        }
+      } else if (this.is('(){}[].,;:?')) {
+        this.tokens.push({
+          index: this.index,
+          text: this.ch,
+          json: (this.was(':[,') && this.is('{[')) || this.is('}]:,')
+        });
+        if (this.is('{[')) json.unshift(this.ch);
+        if (this.is('}]')) json.shift();
+        this.index++;
+      } else if (this.isWhitespace(this.ch)) {
+        this.index++;
+        continue;
       } else {
-        throwError("Unexpected next character ", index, index+1);
+        var ch2 = this.ch + this.peek();
+        var ch3 = ch2 + this.peek(2);
+        var fn = OPERATORS[this.ch];
+        var fn2 = OPERATORS[ch2];
+        var fn3 = OPERATORS[ch3];
+        if (fn3) {
+          this.tokens.push({index: this.index, text: ch3, fn: fn3});
+          this.index += 3;
+        } else if (fn2) {
+          this.tokens.push({index: this.index, text: ch2, fn: fn2});
+          this.index += 2;
+        } else if (fn) {
+          this.tokens.push({
+            index: this.index,
+            text: this.ch,
+            fn: fn,
+            json: (this.was('[,:') && this.is('+-'))
+          });
+          this.index += 1;
+        } else {
+          this.throwError('Unexpected next character ', this.index, this.index + 1);
+        }
       }
+      this.lastCh = this.ch;
     }
-    lastCh = ch;
-  }
-  return tokens;
+    return this.tokens;
+  },
 
-  function is(chars) {
-    return chars.indexOf(ch) != -1;
-  }
+  is: function(chars) {
+    return chars.indexOf(this.ch) !== -1;
+  },
 
-  function was(chars) {
-    return chars.indexOf(lastCh) != -1;
-  }
+  was: function(chars) {
+    return chars.indexOf(this.lastCh) !== -1;
+  },
 
-  function peek(i) {
+  peek: function(i) {
     var num = i || 1;
-    return index + num < text.length ? text.charAt(index + num) : false;
-  }
-  function isNumber(ch) {
-    return '0' <= ch && ch <= '9';
-  }
-  function isWhitespace(ch) {
-    return ch == ' ' || ch == '\r' || ch == '\t' ||
-           ch == '\n' || ch == '\v' || ch == '\u00A0'; // IE treats non-breaking space as \u00A0
-  }
-  function isIdent(ch) {
-    return 'a' <= ch && ch <= 'z' ||
-           'A' <= ch && ch <= 'Z' ||
-           '_' == ch || ch == '$';
-  }
-  function isExpOperator(ch) {
-    return ch == '-' || ch == '+' || isNumber(ch);
-  }
+    return (this.index + num < this.text.length) ? this.text.charAt(this.index + num) : false;
+  },
 
-  function throwError(error, start, end) {
-    end = end || index;
-    var colStr = (isDefined(start) ?
-        "s " + start +  "-" + index + " [" + text.substring(start, end) + "]"
-        : " " + end);
-    throw $parseMinErr('lexerr', "Lexer Error: {0} at column{1} in expression [{2}].",
-        error, colStr, text);
-  }
+  isNumber: function(ch) {
+    return ('0' <= ch && ch <= '9');
+  },
 
-  function readNumber() {
-    var number = "";
-    var start = index;
-    while (index < text.length) {
-      var ch = lowercase(text.charAt(index));
-      if (ch == '.' || isNumber(ch)) {
+  isWhitespace: function(ch) {
+    return (ch === ' ' || ch === '\r' || ch === '\t' ||
+            ch === '\n' || ch === '\v' || ch === '\u00A0'); // IE treats non-breaking space as \u00A0
+  },
+
+  isIdent: function(ch) {
+    return ('a' <= ch && ch <= 'z' ||
+            'A' <= ch && ch <= 'Z' ||
+            '_' === ch || ch === '$');
+  },
+
+  isExpOperator: function(ch) {
+    return (ch === '-' || ch === '+' || this.isNumber(ch));
+  },
+
+  throwError: function(error, start, end) {
+    end = end || this.index;
+    var colStr = (isDefined(start)
+            ? 's ' + start +  '-' + this.index + ' [' + this.text.substring(start, end) + ']'
+            : ' ' + end);
+    throw $parseMinErr('lexerr', 'Lexer Error: {0} at column{1} in expression [{2}].',
+        error, colStr, this.text);
+  },
+
+  readNumber: function() {
+    var number = '';
+    var start = this.index;
+    while (this.index < this.text.length) {
+      var ch = lowercase(this.text.charAt(this.index));
+      if (ch == '.' || this.isNumber(ch)) {
         number += ch;
       } else {
-        var peekCh = peek();
-        if (ch == 'e' && isExpOperator(peekCh)) {
+        var peekCh = this.peek();
+        if (ch == 'e' && this.isExpOperator(peekCh)) {
           number += ch;
-        } else if (isExpOperator(ch) &&
-            peekCh && isNumber(peekCh) &&
+        } else if (this.isExpOperator(ch) &&
+            peekCh && this.isNumber(peekCh) &&
             number.charAt(number.length - 1) == 'e') {
           number += ch;
-        } else if (isExpOperator(ch) &&
-            (!peekCh || !isNumber(peekCh)) &&
+        } else if (this.isExpOperator(ch) &&
+            (!peekCh || !this.isNumber(peekCh)) &&
             number.charAt(number.length - 1) == 'e') {
-          throwError('Invalid exponent');
+          this.throwError('Invalid exponent');
         } else {
           break;
         }
       }
-      index++;
+      this.index++;
     }
     number = 1 * number;
-    tokens.push({index:start, text:number, json:true,
-      fn:function() {return number;}});
-  }
-  function readIdent() {
-    var ident = "",
-        start = index,
-        lastDot, peekIndex, methodName, ch;
+    this.tokens.push({
+      index: start,
+      text: number,
+      json: true,
+      fn: function() { return number; }
+    });
+  },
 
-    while (index < text.length) {
-      ch = text.charAt(index);
-      if (ch == '.' || isIdent(ch) || isNumber(ch)) {
-        if (ch == '.') lastDot = index;
+  readIdent: function() {
+    var parser = this;
+
+    var ident = '';
+    var start = this.index;
+
+    var lastDot, peekIndex, methodName, ch;
+
+    while (this.index < this.text.length) {
+      ch = this.text.charAt(this.index);
+      if (ch === '.' || this.isIdent(ch) || this.isNumber(ch)) {
+        if (ch === '.') lastDot = this.index;
         ident += ch;
       } else {
         break;
       }
-      index++;
+      this.index++;
     }
 
     //check if this is not a method invocation and if it is back out to last dot
     if (lastDot) {
-      peekIndex = index;
-      while(peekIndex < text.length) {
-        ch = text.charAt(peekIndex);
-        if (ch == '(') {
+      peekIndex = this.index;
+      while (peekIndex < this.text.length) {
+        ch = this.text.charAt(peekIndex);
+        if (ch === '(') {
           methodName = ident.substr(lastDot - start + 1);
           ident = ident.substr(0, lastDot - start);
-          index = peekIndex;
+          this.index = peekIndex;
           break;
         }
-        if(isWhitespace(ch)) {
+        if (this.isWhitespace(ch)) {
           peekIndex++;
         } else {
           break;
@@ -8272,54 +8411,56 @@ function lex(text, csp){
 
 
     var token = {
-      index:start,
-      text:ident
+      index: start,
+      text: ident
     };
 
+    // OPERATORS is our own object so we don't need to use special hasOwnPropertyFn
     if (OPERATORS.hasOwnProperty(ident)) {
-      token.fn = token.json = OPERATORS[ident];
+      token.fn = OPERATORS[ident];
+      token.json = OPERATORS[ident];
     } else {
-      var getter = getterFn(ident, csp, text);
+      var getter = getterFn(ident, this.csp, this.text);
       token.fn = extend(function(self, locals) {
         return (getter(self, locals));
       }, {
         assign: function(self, value) {
-          return setter(self, ident, value, text);
+          return setter(self, ident, value, parser.text);
         }
       });
     }
 
-    tokens.push(token);
+    this.tokens.push(token);
 
     if (methodName) {
-      tokens.push({
+      this.tokens.push({
         index:lastDot,
         text: '.',
         json: false
       });
-      tokens.push({
+      this.tokens.push({
         index: lastDot + 1,
         text: methodName,
         json: false
       });
     }
-  }
+  },
 
-  function readString(quote) {
-    var start = index;
-    index++;
-    var string = "";
+  readString: function(quote) {
+    var start = this.index;
+    this.index++;
+    var string = '';
     var rawString = quote;
     var escape = false;
-    while (index < text.length) {
-      var ch = text.charAt(index);
+    while (this.index < this.text.length) {
+      var ch = this.text.charAt(this.index);
       rawString += ch;
       if (escape) {
-        if (ch == 'u') {
-          var hex = text.substring(index + 1, index + 5);
+        if (ch === 'u') {
+          var hex = this.text.substring(this.index + 1, this.index + 5);
           if (!hex.match(/[\da-f]{4}/i))
-            throwError( "Invalid unicode escape [\\u" + hex + "]");
-          index += 4;
+            this.throwError('Invalid unicode escape [\\u' + hex + ']');
+          this.index += 4;
           string += String.fromCharCode(parseInt(hex, 16));
         } else {
           var rep = ESCAPE[ch];
@@ -8330,172 +8471,227 @@ function lex(text, csp){
           }
         }
         escape = false;
-      } else if (ch == '\\') {
+      } else if (ch === '\\') {
         escape = true;
-      } else if (ch == quote) {
-        index++;
-        tokens.push({
-          index:start,
-          text:rawString,
-          string:string,
-          json:true,
-          fn:function() { return string; }
+      } else if (ch === quote) {
+        this.index++;
+        this.tokens.push({
+          index: start,
+          text: rawString,
+          string: string,
+          json: true,
+          fn: function() { return string; }
         });
         return;
       } else {
         string += ch;
       }
-      index++;
+      this.index++;
     }
-    throwError("Unterminated quote", start);
+    this.throwError('Unterminated quote', start);
   }
-}
+};
 
-/////////////////////////////////////////
 
-function parser(text, json, $filter, csp){
-  var ZERO = valueFn(0),
-      value,
-      tokens = lex(text, csp),
-      assignment = _assignment,
-      functionCall = _functionCall,
-      fieldAccess = _fieldAccess,
-      objectIndex = _objectIndex,
-      filterChain = _filterChain;
+/**
+ * @constructor
+ */
+var Parser = function (lexer, $filter, csp) {
+  this.lexer = lexer;
+  this.$filter = $filter;
+  this.csp = csp;
+};
 
-  if(json){
-    // The extra level of aliasing is here, just in case the lexer misses something, so that
-    // we prevent any accidental execution in JSON.
-    assignment = logicalOR;
-    functionCall =
-      fieldAccess =
-      objectIndex =
-      filterChain =
-        function() { throwError("is not valid json", {text:text, index:0}); };
-    value = primary();
-  } else {
-    value = statements();
-  }
-  if (tokens.length !== 0) {
-    throwError("is an unexpected token", tokens[0]);
-  }
-  value.literal = !!value.literal;
-  value.constant = !!value.constant;
-  return value;
+Parser.ZERO = function () { return 0; };
 
-  ///////////////////////////////////
-  function throwError(msg, token) {
+Parser.prototype = {
+  constructor: Parser,
+
+  parse: function (text, json) {
+    this.text = text;
+
+    //TODO(i): strip all the obsolte json stuff from this file
+    this.json = json;
+
+    this.tokens = this.lexer.lex(text, this.csp);
+
+    if (json) {
+      // The extra level of aliasing is here, just in case the lexer misses something, so that
+      // we prevent any accidental execution in JSON.
+      this.assignment = this.logicalOR;
+
+      this.functionCall =
+      this.fieldAccess =
+      this.objectIndex =
+      this.filterChain = function() {
+        this.throwError('is not valid json', {text: text, index: 0});
+      };
+    }
+
+    var value = json ? this.primary() : this.statements();
+
+    if (this.tokens.length !== 0) {
+      this.throwError('is an unexpected token', this.tokens[0]);
+    }
+
+    value.literal = !!value.literal;
+    value.constant = !!value.constant;
+
+    return value;
+  },
+
+  primary: function () {
+    var primary;
+    if (this.expect('(')) {
+      primary = this.filterChain();
+      this.consume(')');
+    } else if (this.expect('[')) {
+      primary = this.arrayDeclaration();
+    } else if (this.expect('{')) {
+      primary = this.object();
+    } else {
+      var token = this.expect();
+      primary = token.fn;
+      if (!primary) {
+        this.throwError('not a primary expression', token);
+      }
+      if (token.json) {
+        primary.constant = true;
+        primary.literal = true;
+      }
+    }
+
+    var next, context;
+    while ((next = this.expect('(', '[', '.'))) {
+      if (next.text === '(') {
+        primary = this.functionCall(primary, context);
+        context = null;
+      } else if (next.text === '[') {
+        context = primary;
+        primary = this.objectIndex(primary);
+      } else if (next.text === '.') {
+        context = primary;
+        primary = this.fieldAccess(primary);
+      } else {
+        this.throwError('IMPOSSIBLE');
+      }
+    }
+    return primary;
+  },
+
+  throwError: function(msg, token) {
     throw $parseMinErr('syntax',
-        "Syntax Error: Token '{0}' {1} at column {2} of the expression [{3}] starting at [{4}].",
-        token.text, msg, (token.index + 1), text, text.substring(token.index));
-  }
+        'Syntax Error: Token \'{0}\' {1} at column {2} of the expression [{3}] starting at [{4}].',
+          token.text, msg, (token.index + 1), this.text, this.text.substring(token.index));
+  },
 
-  function peekToken() {
-    if (tokens.length === 0)
-      throw $parseMinErr('ueoe', "Unexpected end of expression: {0}", text);
-    return tokens[0];
-  }
+  peekToken: function() {
+    if (this.tokens.length === 0)
+      throw $parseMinErr('ueoe', 'Unexpected end of expression: {0}', this.text);
+    return this.tokens[0];
+  },
 
-  function peek(e1, e2, e3, e4) {
-    if (tokens.length > 0) {
-      var token = tokens[0];
+  peek: function(e1, e2, e3, e4) {
+    if (this.tokens.length > 0) {
+      var token = this.tokens[0];
       var t = token.text;
-      if (t==e1 || t==e2 || t==e3 || t==e4 ||
+      if (t === e1 || t === e2 || t === e3 || t === e4 ||
           (!e1 && !e2 && !e3 && !e4)) {
         return token;
       }
     }
     return false;
-  }
+  },
 
-  function expect(e1, e2, e3, e4){
-    var token = peek(e1, e2, e3, e4);
+  expect: function(e1, e2, e3, e4){
+    var token = this.peek(e1, e2, e3, e4);
     if (token) {
-      if (json && !token.json) {
-        throwError("is not valid json", token);
+      if (this.json && !token.json) {
+        this.throwError('is not valid json', token);
       }
-      tokens.shift();
+      this.tokens.shift();
       return token;
     }
     return false;
-  }
+  },
 
-  function consume(e1){
-    if (!expect(e1)) {
-      throwError("is unexpected, expecting [" + e1 + "]", peek());
+  consume: function(e1){
+    if (!this.expect(e1)) {
+      this.throwError('is unexpected, expecting [' + e1 + ']', this.peek());
     }
-  }
+  },
 
-  function unaryFn(fn, right) {
+  unaryFn: function(fn, right) {
     return extend(function(self, locals) {
       return fn(self, locals, right);
     }, {
       constant:right.constant
     });
-  }
+  },
 
-  function ternaryFn(left, middle, right){
+  ternaryFn: function(left, middle, right){
     return extend(function(self, locals){
       return left(self, locals) ? middle(self, locals) : right(self, locals);
     }, {
       constant: left.constant && middle.constant && right.constant
     });
-  }
+  },
 
-  function binaryFn(left, fn, right) {
+  binaryFn: function(left, fn, right) {
     return extend(function(self, locals) {
       return fn(self, locals, left, right);
     }, {
       constant:left.constant && right.constant
     });
-  }
+  },
 
-  function statements() {
+  statements: function() {
     var statements = [];
-    while(true) {
-      if (tokens.length > 0 && !peek('}', ')', ';', ']'))
-        statements.push(filterChain());
-      if (!expect(';')) {
+    while (true) {
+      if (this.tokens.length > 0 && !this.peek('}', ')', ';', ']'))
+        statements.push(this.filterChain());
+      if (!this.expect(';')) {
         // optimize for the common case where there is only one statement.
         // TODO(size): maybe we should not support multiple statements?
-        return statements.length == 1
-          ? statements[0]
-          : function(self, locals){
-            var value;
-            for ( var i = 0; i < statements.length; i++) {
-              var statement = statements[i];
-              if (statement)
-                value = statement(self, locals);
-            }
-            return value;
-          };
+        return (statements.length === 1)
+            ? statements[0]
+            : function(self, locals) {
+                var value;
+                for (var i = 0; i < statements.length; i++) {
+                  var statement = statements[i];
+                  if (statement) {
+                    value = statement(self, locals);
+                  }
+                }
+                return value;
+              };
       }
     }
-  }
+  },
 
-  function _filterChain() {
-    var left = expression();
+  filterChain: function() {
+    var left = this.expression();
     var token;
-    while(true) {
-      if ((token = expect('|'))) {
-        left = binaryFn(left, token.fn, filter());
+    while (true) {
+      if ((token = this.expect('|'))) {
+        left = this.binaryFn(left, token.fn, this.filter());
       } else {
         return left;
       }
     }
-  }
+  },
 
-  function filter() {
-    var token = expect();
-    var fn = $filter(token.text);
+  filter: function() {
+    var token = this.expect();
+    var fn = this.$filter(token.text);
     var argsFn = [];
-    while(true) {
-      if ((token = expect(':'))) {
-        argsFn.push(expression());
+    while (true) {
+      if ((token = this.expect(':'))) {
+        argsFn.push(this.expression());
       } else {
-        var fnInvoke = function(self, locals, input){
+        var fnInvoke = function(self, locals, input) {
           var args = [input];
-          for ( var i = 0; i < argsFn.length; i++) {
+          for (var i = 0; i < argsFn.length; i++) {
             args.push(argsFn[i](self, locals));
           }
           return fn.apply(self, args);
@@ -8505,224 +8701,187 @@ function parser(text, json, $filter, csp){
         };
       }
     }
-  }
+  },
 
-  function expression() {
-    return assignment();
-  }
+  expression: function() {
+    return this.assignment();
+  },
 
-  function _assignment() {
-    var left = ternary();
+  assignment: function() {
+    var left = this.ternary();
     var right;
     var token;
-    if ((token = expect('='))) {
+    if ((token = this.expect('='))) {
       if (!left.assign) {
-        throwError("implies assignment but [" +
-          text.substring(0, token.index) + "] can not be assigned to", token);
+        this.throwError('implies assignment but [' +
+            this.text.substring(0, token.index) + '] can not be assigned to', token);
       }
-      right = ternary();
-      return function(scope, locals){
+      right = this.ternary();
+      return function(scope, locals) {
         return left.assign(scope, right(scope, locals), locals);
       };
+    }
+    return left;
+  },
+
+  ternary: function() {
+    var left = this.logicalOR();
+    var middle;
+    var token;
+    if ((token = this.expect('?'))) {
+      middle = this.ternary();
+      if ((token = this.expect(':'))) {
+        return this.ternaryFn(left, middle, this.ternary());
+      } else {
+        this.throwError('expected :', token);
+      }
     } else {
       return left;
     }
-  }
+  },
 
-  function ternary() {
-    var left = logicalOR();
-    var middle;
+  logicalOR: function() {
+    var left = this.logicalAND();
     var token;
-    if((token = expect('?'))){
-      middle = ternary();
-      if((token = expect(':'))){
-        return ternaryFn(left, middle, ternary());
-      }
-      else {
-        throwError('expected :', token);
-      }
-    }
-    else {
-      return left;
-    }
-  }
-
-  function logicalOR() {
-    var left = logicalAND();
-    var token;
-    while(true) {
-      if ((token = expect('||'))) {
-        left = binaryFn(left, token.fn, logicalAND());
+    while (true) {
+      if ((token = this.expect('||'))) {
+        left = this.binaryFn(left, token.fn, this.logicalAND());
       } else {
         return left;
       }
     }
-  }
+  },
 
-  function logicalAND() {
-    var left = equality();
+  logicalAND: function() {
+    var left = this.equality();
     var token;
-    if ((token = expect('&&'))) {
-      left = binaryFn(left, token.fn, logicalAND());
+    if ((token = this.expect('&&'))) {
+      left = this.binaryFn(left, token.fn, this.logicalAND());
     }
     return left;
-  }
+  },
 
-  function equality() {
-    var left = relational();
+  equality: function() {
+    var left = this.relational();
     var token;
-    if ((token = expect('==','!=','===','!=='))) {
-      left = binaryFn(left, token.fn, equality());
+    if ((token = this.expect('==','!=','===','!=='))) {
+      left = this.binaryFn(left, token.fn, this.equality());
     }
     return left;
-  }
+  },
 
-  function relational() {
-    var left = additive();
+  relational: function() {
+    var left = this.additive();
     var token;
-    if ((token = expect('<', '>', '<=', '>='))) {
-      left = binaryFn(left, token.fn, relational());
+    if ((token = this.expect('<', '>', '<=', '>='))) {
+      left = this.binaryFn(left, token.fn, this.relational());
     }
     return left;
-  }
+  },
 
-  function additive() {
-    var left = multiplicative();
+  additive: function() {
+    var left = this.multiplicative();
     var token;
-    while ((token = expect('+','-'))) {
-      left = binaryFn(left, token.fn, multiplicative());
+    while ((token = this.expect('+','-'))) {
+      left = this.binaryFn(left, token.fn, this.multiplicative());
     }
     return left;
-  }
+  },
 
-  function multiplicative() {
-    var left = unary();
+  multiplicative: function() {
+    var left = this.unary();
     var token;
-    while ((token = expect('*','/','%'))) {
-      left = binaryFn(left, token.fn, unary());
+    while ((token = this.expect('*','/','%'))) {
+      left = this.binaryFn(left, token.fn, this.unary());
     }
     return left;
-  }
+  },
 
-  function unary() {
+  unary: function() {
     var token;
-    if (expect('+')) {
-      return primary();
-    } else if ((token = expect('-'))) {
-      return binaryFn(ZERO, token.fn, unary());
-    } else if ((token = expect('!'))) {
-      return unaryFn(token.fn, unary());
+    if (this.expect('+')) {
+      return this.primary();
+    } else if ((token = this.expect('-'))) {
+      return this.binaryFn(Parser.ZERO, token.fn, this.unary());
+    } else if ((token = this.expect('!'))) {
+      return this.unaryFn(token.fn, this.unary());
     } else {
-      return primary();
+      return this.primary();
     }
-  }
+  },
 
+  fieldAccess: function(object) {
+    var parser = this;
+    var field = this.expect().text;
+    var getter = getterFn(field, this.csp, this.text);
 
-  function primary() {
-    var primary;
-    if (expect('(')) {
-      primary = filterChain();
-      consume(')');
-    } else if (expect('[')) {
-      primary = arrayDeclaration();
-    } else if (expect('{')) {
-      primary = object();
-    } else {
-      var token = expect();
-      primary = token.fn;
-      if (!primary) {
-        throwError("not a primary expression", token);
+    return extend(function(scope, locals, self) {
+      return getter(self || object(scope, locals), locals);
+    }, {
+      assign: function(scope, value, locals) {
+        return setter(object(scope, locals), field, value, parser.text);
       }
-      if (token.json) {
-        primary.constant = primary.literal = true;
+    });
+  },
+
+  objectIndex: function(obj) {
+    var parser = this;
+
+    var indexFn = this.expression();
+    this.consume(']');
+
+    return extend(function(self, locals) {
+      var o = obj(self, locals),
+          i = indexFn(self, locals),
+          v, p;
+
+      if (!o) return undefined;
+      v = ensureSafeObject(o[i], parser.text);
+      if (v && v.then) {
+        p = v;
+        if (!('$$v' in v)) {
+          p.$$v = undefined;
+          p.then(function(val) { p.$$v = val; });
+        }
+        v = v.$$v;
       }
-    }
-
-    var next, context;
-    while ((next = expect('(', '[', '.'))) {
-      if (next.text === '(') {
-        primary = functionCall(primary, context);
-        context = null;
-      } else if (next.text === '[') {
-        context = primary;
-        primary = objectIndex(primary);
-      } else if (next.text === '.') {
-        context = primary;
-        primary = fieldAccess(primary);
-      } else {
-        throwError("IMPOSSIBLE");
+      return v;
+    }, {
+      assign: function(self, value, locals) {
+        var key = indexFn(self, locals);
+        // prevent overwriting of Function.constructor which would break ensureSafeObject check
+        var safe = ensureSafeObject(obj(self, locals), parser.text);
+        return safe[key] = value;
       }
-    }
-    return primary;
-  }
+    });
+  },
 
-  function _fieldAccess(object) {
-    var field = expect().text;
-    var getter = getterFn(field, csp, text);
-    return extend(
-        function(scope, locals, self) {
-          return getter(self || object(scope, locals), locals);
-        },
-        {
-          assign:function(scope, value, locals) {
-            return setter(object(scope, locals), field, value, text);
-          }
-        }
-    );
-  }
-
-  function _objectIndex(obj) {
-    var indexFn = expression();
-    consume(']');
-    return extend(
-      function(self, locals){
-        var o = obj(self, locals),
-            i = indexFn(self, locals),
-            v, p;
-
-        if (!o) return undefined;
-        v = ensureSafeObject(o[i], text);
-        if (v && v.then) {
-          p = v;
-          if (!('$$v' in v)) {
-            p.$$v = undefined;
-            p.then(function(val) { p.$$v = val; });
-          }
-          v = v.$$v;
-        }
-        return v;
-      }, {
-        assign:function(self, value, locals){
-          var key = indexFn(self, locals);
-          // prevent overwriting of Function.constructor which would break ensureSafeObject check
-          return ensureSafeObject(obj(self, locals), text)[key] = value;
-        }
-      });
-  }
-
-  function _functionCall(fn, contextGetter) {
+  functionCall: function(fn, contextGetter) {
     var argsFn = [];
-    if (peekToken().text != ')') {
+    if (this.peekToken().text !== ')') {
       do {
-        argsFn.push(expression());
-      } while (expect(','));
+        argsFn.push(this.expression());
+      } while (this.expect(','));
     }
-    consume(')');
-    return function(scope, locals){
-      var args = [],
-          context = contextGetter ? contextGetter(scope, locals) : scope;
+    this.consume(')');
 
-      for ( var i = 0; i < argsFn.length; i++) {
+    var parser = this;
+
+    return function(scope, locals) {
+      var args = [];
+      var context = contextGetter ? contextGetter(scope, locals) : scope;
+
+      for (var i = 0; i < argsFn.length; i++) {
         args.push(argsFn[i](scope, locals));
       }
       var fnPtr = fn(scope, locals, context) || noop;
 
-      ensureSafeObject(fnPtr, text);
+      ensureSafeObject(fnPtr, parser.text);
 
-      // IE stupidity!
+      // IE stupidity! (IE doesn't have apply for some native functions)
       var v = fnPtr.apply
-          ? fnPtr.apply(context, args)
-          : fnPtr(args[0], args[1], args[2], args[3], args[4]);
+            ? fnPtr.apply(context, args)
+            : fnPtr(args[0], args[1], args[2], args[3], args[4]);
 
       // Check for promise
       if (v && v.then) {
@@ -8734,65 +8893,68 @@ function parser(text, json, $filter, csp){
         v = v.$$v;
       }
 
-      return ensureSafeObject(v, text);
+      return ensureSafeObject(v, parser.text);
     };
-  }
+  },
 
   // This is used with json array declaration
-  function arrayDeclaration () {
+  arrayDeclaration: function () {
     var elementFns = [];
     var allConstant = true;
-    if (peekToken().text != ']') {
+    if (this.peekToken().text !== ']') {
       do {
-        var elementFn = expression();
+        var elementFn = this.expression();
         elementFns.push(elementFn);
         if (!elementFn.constant) {
           allConstant = false;
         }
-      } while (expect(','));
+      } while (this.expect(','));
     }
-    consume(']');
-    return extend(function(self, locals){
+    this.consume(']');
+
+    return extend(function(self, locals) {
       var array = [];
-      for ( var i = 0; i < elementFns.length; i++) {
+      for (var i = 0; i < elementFns.length; i++) {
         array.push(elementFns[i](self, locals));
       }
       return array;
     }, {
-      literal:true,
-      constant:allConstant
+      literal: true,
+      constant: allConstant
     });
-  }
+  },
 
-  function object () {
+  object: function () {
     var keyValues = [];
     var allConstant = true;
-    if (peekToken().text != '}') {
+    if (this.peekToken().text !== '}') {
       do {
-        var token = expect(),
+        var token = this.expect(),
         key = token.string || token.text;
-        consume(":");
-        var value = expression();
-        keyValues.push({key:key, value:value});
+        this.consume(':');
+        var value = this.expression();
+        keyValues.push({key: key, value: value});
         if (!value.constant) {
           allConstant = false;
         }
-      } while (expect(','));
+      } while (this.expect(','));
     }
-    consume('}');
-    return extend(function(self, locals){
+    this.consume('}');
+
+    return extend(function(self, locals) {
       var object = {};
-      for ( var i = 0; i < keyValues.length; i++) {
+      for (var i = 0; i < keyValues.length; i++) {
         var keyValue = keyValues[i];
         object[keyValue.key] = keyValue.value(self, locals);
       }
       return object;
     }, {
-      literal:true,
-      constant:allConstant
+      literal: true,
+      constant: allConstant
     });
-  }
-}
+  },
+};
+
 
 //////////////////////////////////////////////////
 // Parser helper functions
@@ -8902,6 +9064,9 @@ function cspSafeGetterFn(key0, key1, key2, key3, key4, fullExp) {
 }
 
 function getterFn(path, csp, fullExp) {
+  // Check whether the cache has this getter already.
+  // We can use hasOwnProperty directly on the cache because we ensure,
+  // see below, that the cache never stores a path called 'hasOwnProperty'
   if (getterFnCache.hasOwnProperty(path)) {
     return getterFnCache[path];
   }
@@ -8950,7 +9115,12 @@ function getterFn(path, csp, fullExp) {
     fn.toString = function() { return code; };
   }
 
-  return getterFnCache[path] = fn;
+  // Only cache the value if it's not going to mess up the cache object
+  // This is more performant that using Object.prototype.hasOwnProperty.call
+  if (path !== 'hasOwnProperty') {
+    getterFnCache[path] = fn;
+  }
+  return fn;
 }
 
 ///////////////////////////////////
@@ -8998,13 +9168,29 @@ function $ParseProvider() {
   var cache = {};
   this.$get = ['$filter', '$sniffer', function($filter, $sniffer) {
     return function(exp) {
-      switch(typeof exp) {
+      var parsedExpression;
+
+      switch (typeof exp) {
         case 'string':
-          return cache.hasOwnProperty(exp)
-            ? cache[exp]
-            : cache[exp] =  parser(exp, false, $filter, $sniffer.csp);
+          if (cache.hasOwnProperty(exp)) {
+            return cache[exp];
+          }
+
+          var lexer = new Lexer($sniffer.csp);
+          var parser = new Parser(lexer, $filter, $sniffer.csp);
+          parsedExpression = parser.parse(exp, false);
+
+          if (exp !== 'hasOwnProperty') {
+            // Only cache the value if it's not going to mess up the cache object
+            // This is more performant that using Object.prototype.hasOwnProperty.call
+            cache[exp] = parsedExpression;
+          }
+
+          return parsedExpression;
+
         case 'function':
           return exp;
+
         default:
           return noop;
       }
@@ -10394,12 +10580,14 @@ function $RootScopeProvider(){
               continue;
             }
             try {
+              //allow all listeners attached to the current scope to run
               namedListeners[i].apply(null, listenerArgs);
-              if (stopPropagation) return event;
             } catch (e) {
               $exceptionHandler(e);
             }
           }
+          //if any listener on the current scope stops propagation, prevent bubbling
+          if (stopPropagation) return event;
           //traverse upwards
           scope = scope.$parent;
         } while (scope);
@@ -12231,7 +12419,7 @@ function filterFilter() {
       default:
         comperator = function(obj, text) {
           text = (''+text).toLowerCase();
-          return (''+obj).toLowerCase().indexOf(text) > -1
+          return (''+obj).toLowerCase().indexOf(text) > -1;
         };
     }
     var search = function(obj, text){
@@ -13048,7 +13236,7 @@ function ngDirective(directive) {
  *
  * This change permits the easy creation of action links with the `ngClick` directive
  * without changing the location or causing page reloads, e.g.:
- * `<a href="" ng-click="model.$save()">Save</a>`
+ * `<a href="" ng-click="list.addItem()">Add Item</a>`
  */
 var htmlAnchorDirective = valueFn({
   restrict: 'E',
@@ -13501,9 +13689,12 @@ function FormController(element, attrs) {
    * Input elements using ngModelController do this automatically when they are linked.
    */
   form.$addControl = function(control) {
+    // Breaking change - before, inputs whose name was "hasOwnProperty" were quietly ignored
+    // and not added to the scope.  Now we throw an error.
+    assertNotHasOwnProperty(control.$name, 'input');
     controls.push(control);
 
-    if (control.$name && !form.hasOwnProperty(control.$name)) {
+    if (control.$name) {
       form[control.$name] = control;
     }
   };
@@ -14175,11 +14366,6 @@ var inputType = {
 };
 
 
-function isEmpty(value) {
-  return isUndefined(value) || value === '' || value === null || value !== value;
-}
-
-
 function textInputType(scope, element, attr, ctrl, $sniffer, $browser) {
 
   var listener = function() {
@@ -14236,7 +14422,7 @@ function textInputType(scope, element, attr, ctrl, $sniffer, $browser) {
 
 
   ctrl.$render = function() {
-    element.val(isEmpty(ctrl.$viewValue) ? '' : ctrl.$viewValue);
+    element.val(ctrl.$isEmpty(ctrl.$viewValue) ? '' : ctrl.$viewValue);
   };
 
   // pattern validator
@@ -14245,7 +14431,7 @@ function textInputType(scope, element, attr, ctrl, $sniffer, $browser) {
       match;
 
   var validate = function(regexp, value) {
-    if (isEmpty(value) || regexp.test(value)) {
+    if (ctrl.$isEmpty(value) || regexp.test(value)) {
       ctrl.$setValidity('pattern', true);
       return value;
     } else {
@@ -14259,7 +14445,7 @@ function textInputType(scope, element, attr, ctrl, $sniffer, $browser) {
     if (match) {
       pattern = new RegExp(match[1], match[2]);
       patternValidator = function(value) {
-        return validate(pattern, value)
+        return validate(pattern, value);
       };
     } else {
       patternValidator = function(value) {
@@ -14282,7 +14468,7 @@ function textInputType(scope, element, attr, ctrl, $sniffer, $browser) {
   if (attr.ngMinlength) {
     var minlength = int(attr.ngMinlength);
     var minLengthValidator = function(value) {
-      if (!isEmpty(value) && value.length < minlength) {
+      if (!ctrl.$isEmpty(value) && value.length < minlength) {
         ctrl.$setValidity('minlength', false);
         return undefined;
       } else {
@@ -14299,7 +14485,7 @@ function textInputType(scope, element, attr, ctrl, $sniffer, $browser) {
   if (attr.ngMaxlength) {
     var maxlength = int(attr.ngMaxlength);
     var maxLengthValidator = function(value) {
-      if (!isEmpty(value) && value.length > maxlength) {
+      if (!ctrl.$isEmpty(value) && value.length > maxlength) {
         ctrl.$setValidity('maxlength', false);
         return undefined;
       } else {
@@ -14317,7 +14503,7 @@ function numberInputType(scope, element, attr, ctrl, $sniffer, $browser) {
   textInputType(scope, element, attr, ctrl, $sniffer, $browser);
 
   ctrl.$parsers.push(function(value) {
-    var empty = isEmpty(value);
+    var empty = ctrl.$isEmpty(value);
     if (empty || NUMBER_REGEXP.test(value)) {
       ctrl.$setValidity('number', true);
       return value === '' ? null : (empty ? value : parseFloat(value));
@@ -14328,13 +14514,13 @@ function numberInputType(scope, element, attr, ctrl, $sniffer, $browser) {
   });
 
   ctrl.$formatters.push(function(value) {
-    return isEmpty(value) ? '' : '' + value;
+    return ctrl.$isEmpty(value) ? '' : '' + value;
   });
 
   if (attr.min) {
     var min = parseFloat(attr.min);
     var minValidator = function(value) {
-      if (!isEmpty(value) && value < min) {
+      if (!ctrl.$isEmpty(value) && value < min) {
         ctrl.$setValidity('min', false);
         return undefined;
       } else {
@@ -14350,7 +14536,7 @@ function numberInputType(scope, element, attr, ctrl, $sniffer, $browser) {
   if (attr.max) {
     var max = parseFloat(attr.max);
     var maxValidator = function(value) {
-      if (!isEmpty(value) && value > max) {
+      if (!ctrl.$isEmpty(value) && value > max) {
         ctrl.$setValidity('max', false);
         return undefined;
       } else {
@@ -14365,7 +14551,7 @@ function numberInputType(scope, element, attr, ctrl, $sniffer, $browser) {
 
   ctrl.$formatters.push(function(value) {
 
-    if (isEmpty(value) || isNumber(value)) {
+    if (ctrl.$isEmpty(value) || isNumber(value)) {
       ctrl.$setValidity('number', true);
       return value;
     } else {
@@ -14379,7 +14565,7 @@ function urlInputType(scope, element, attr, ctrl, $sniffer, $browser) {
   textInputType(scope, element, attr, ctrl, $sniffer, $browser);
 
   var urlValidator = function(value) {
-    if (isEmpty(value) || URL_REGEXP.test(value)) {
+    if (ctrl.$isEmpty(value) || URL_REGEXP.test(value)) {
       ctrl.$setValidity('url', true);
       return value;
     } else {
@@ -14396,7 +14582,7 @@ function emailInputType(scope, element, attr, ctrl, $sniffer, $browser) {
   textInputType(scope, element, attr, ctrl, $sniffer, $browser);
 
   var emailValidator = function(value) {
-    if (isEmpty(value) || EMAIL_REGEXP.test(value)) {
+    if (ctrl.$isEmpty(value) || EMAIL_REGEXP.test(value)) {
       ctrl.$setValidity('email', true);
       return value;
     } else {
@@ -14446,6 +14632,11 @@ function checkboxInputType(scope, element, attr, ctrl) {
 
   ctrl.$render = function() {
     element[0].checked = ctrl.$viewValue;
+  };
+
+  // Override the standard `$isEmpty` because a value of `false` means empty in a checkbox.
+  ctrl.$isEmpty = function(value) {
+    return value !== trueValue;
   };
 
   ctrl.$formatters.push(function(value) {
@@ -14783,6 +14974,25 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
    */
   this.$render = noop;
 
+  /**
+   * @ngdoc function
+   * @name { ng.directive:ngModel.NgModelController#$isEmpty
+   * @methodOf ng.directive:ngModel.NgModelController
+   *
+   * @description
+   * This is called when we need to determine if the value of the input is empty.
+   * 
+   * For instance, the required directive does this to work out if the input has data or not.
+   * The default `$isEmpty` function checks whether the value is `undefined`, `''`, `null` or `NaN`.
+   * 
+   * You can override this for input directives whose concept of being empty is different to the
+   * default. The `checkboxInputType` directive does this because in its case a value of `false`
+   * implies empty.
+   */
+  this.$isEmpty = function(value) {
+    return isUndefined(value) || value === '' || value === null || value !== value;
+  };
+
   var parentForm = $element.inheritedData('$formController') || nullFormCtrl,
       invalidCount = 0, // used to easily determine if we are valid
       $error = this.$error = {}; // keep invalid keys here
@@ -14936,18 +15146,18 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
  * @element input
  *
  * @description
- * Is a directive that tells Angular to do two-way data binding. It works together with `input`,
- * `select`, `textarea` and even custom form controls that use {@link ng.directive:ngModel.NgModelController
- * NgModelController} exposed by this directive.
+ * The `ngModel` directive binds an `input`,`select`, `textarea` (or custom form control) to a
+ * property on the scope using {@link ng.directive:ngModel.NgModelController NgModelController},
+ * which is created and exposed by this directive.
  *
  * `ngModel` is responsible for:
  *
- * - binding the view into the model, which other directives such as `input`, `textarea` or `select`
- *   require,
- * - providing validation behavior (i.e. required, number, email, url),
- * - keeping state of the control (valid/invalid, dirty/pristine, validation errors),
- * - setting related css class onto the element (`ng-valid`, `ng-invalid`, `ng-dirty`, `ng-pristine`),
- * - register the control with parent {@link ng.directive:form form}.
+ * - Binding the view into the model, which other directives such as `input`, `textarea` or `select`
+ *   require.
+ * - Providing validation behavior (i.e. required, number, email, url).
+ * - Keeping the state of the control (valid/invalid, dirty/pristine, validation errors).
+ * - Setting related css classes on the element (`ng-valid`, `ng-invalid`, `ng-dirty`, `ng-pristine`).
+ * - Registering the control with its parent {@link ng.directive:form form}.
  *
  * Note: `ngModel` will try to bind to the property given by evaluating the expression on the
  * current scope. If the property doesn't already exist on this scope, it will be created
@@ -15057,7 +15267,7 @@ var requiredDirective = function() {
       attr.required = true; // force truthy in case we are on non input element
 
       var validator = function(value) {
-        if (attr.required && (isEmpty(value) || value === false)) {
+        if (attr.required && ctrl.$isEmpty(value)) {
           ctrl.$setValidity('required', false);
           return;
         } else {
@@ -15082,7 +15292,8 @@ var requiredDirective = function() {
  * @name ng.directive:ngList
  *
  * @description
- * Text input that converts between comma-separated string into an array of strings.
+ * Text input that converts between a delimited string and an array of strings. The delimiter
+ * can be a fixed string (by default a comma) or a regular expression.
  *
  * @element input
  * @param {string=} ngList optional delimiter that should be used to split the value. If
@@ -15117,7 +15328,7 @@ var requiredDirective = function() {
 
         it('should be invalid if empty', function() {
           input('names').enter('');
-          expect(binding('names')).toEqual('[]');
+          expect(binding('names')).toEqual('');
           expect(binding('myForm.namesInput.$valid')).toEqual('false');
           expect(element('span.error').css('display')).not().toBe('none');
         });
@@ -15132,6 +15343,9 @@ var ngListDirective = function() {
           separator = match && new RegExp(match[1]) || attr.ngList || ',';
 
       var parse = function(viewValue) {
+        // If the viewValue is invalid (say required but empty) it will be `undefined`
+        if (isUndefined(viewValue)) return;
+
         var list = [];
 
         if (viewValue) {
@@ -15151,23 +15365,77 @@ var ngListDirective = function() {
 
         return undefined;
       });
+
+      // Override the standard $isEmpty because an empty array means the input is empty.
+      ctrl.$isEmpty = function(value) {
+        return !value || !value.length;
+      };
     }
   };
 };
 
 
 var CONSTANT_VALUE_REGEXP = /^(true|false|\d+)$/;
-
+/**
+ * @ngdoc directive
+ * @name ng.directive:ngValue
+ *
+ * @description
+ * Binds the given expression to the value of `input[select]` or `input[radio]`, so
+ * that when the element is selected, the `ngModel` of that element is set to the
+ * bound value.
+ *
+ * `ngValue` is useful when dynamically generating lists of radio buttons using `ng-repeat`, as
+ * shown below.
+ *
+ * @element input
+ * @param {string=} ngValue angular expression, whose value will be bound to the `value` attribute
+ *   of the `input` element
+ *
+ * @example
+    <doc:example>
+      <doc:source>
+       <script>
+          function Ctrl($scope) {
+            $scope.names = ['pizza', 'unicorns', 'robots'];
+            $scope.my = { favorite: 'unicorns' };
+          }
+       </script>
+        <form ng-controller="Ctrl">
+          <h2>Which is your favorite?</h2>
+            <label ng-repeat="name in names" for="{{name}}">
+              {{name}}
+              <input type="radio"
+                     ng-model="my.favorite"
+                     ng-value="name"
+                     id="{{name}}"
+                     name="favorite">
+            </label>
+          </span>
+          <div>You chose {{my.favorite}}</div>
+        </form>
+      </doc:source>
+      <doc:scenario>
+        it('should initialize to model', function() {
+          expect(binding('my.favorite')).toEqual('unicorns');
+        });
+        it('should bind the values to the inputs', function() {
+          input('my.favorite').select('pizza');
+          expect(binding('my.favorite')).toEqual('pizza');
+        });
+      </doc:scenario>
+    </doc:example>
+ */
 var ngValueDirective = function() {
   return {
     priority: 100,
     compile: function(tpl, tplAttr) {
       if (CONSTANT_VALUE_REGEXP.test(tplAttr.ngValue)) {
-        return function(scope, elm, attr) {
+        return function ngValueConstantLink(scope, elm, attr) {
           attr.$set('value', scope.$eval(attr.ngValue));
         };
       } else {
-        return function(scope, elm, attr) {
+        return function ngValueLink(scope, elm, attr) {
           scope.$watch(attr.ngValue, function valueWatchAction(value) {
             attr.$set('value', value);
           });
@@ -17149,6 +17417,7 @@ var ngRepeatDirective = ['$parse', '$animate', function($parse, $animate) {
            key = (collection === collectionKeys) ? index : collectionKeys[index];
            value = collection[key];
            trackById = trackByIdFn(key, value, index);
+           assertNotHasOwnProperty(trackById, '`track by` id');
            if(lastBlockMap.hasOwnProperty(trackById)) {
              block = lastBlockMap[trackById]
              delete lastBlockMap[trackById];
@@ -17171,6 +17440,7 @@ var ngRepeatDirective = ['$parse', '$animate', function($parse, $animate) {
 
           // remove existing items
           for (key in lastBlockMap) {
+            // lastBlockMap is our own object so we don't need to use special hasOwnPropertyFn
             if (lastBlockMap.hasOwnProperty(key)) {
               block = lastBlockMap[key];
               $animate.leave(block.elements);
@@ -17891,6 +18161,7 @@ var scriptDirective = ['$templateCache', function($templateCache) {
   };
 }];
 
+var ngOptionsMinErr = minErr('ngOptions');
 /**
  * @ngdoc directive
  * @name ng.directive:select
@@ -18039,10 +18310,11 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
         ngModelCtrl = ngModelCtrl_;
         nullOption = nullOption_;
         unknownOption = unknownOption_;
-      }
+      };
 
 
       self.addOption = function(value) {
+        assertNotHasOwnProperty(value, '"option value"');
         optionsMap[value] = true;
 
         if (ngModelCtrl.$viewValue == value) {
@@ -18068,12 +18340,12 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
         $element.prepend(unknownOption);
         $element.val(unknownVal);
         unknownOption.prop('selected', true); // needed for IE
-      }
+      };
 
 
       self.hasOption = function(value) {
         return optionsMap.hasOwnProperty(value);
-      }
+      };
 
       $scope.$on('$destroy', function() {
         // disable unknown option so that we don't do work when the whole select is being destroyed
@@ -18191,7 +18463,7 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
         var match;
 
         if (! (match = optionsExp.match(NG_OPTIONS_REGEXP))) {
-          throw minErr('ngOptions')('iexp',
+          throw ngOptionsMinErr('iexp',
             "Expected expression in form of '_select_ (as _label_)? for (_key_,)?_value_ in _collection_' but got '{0}'. Element: {1}",
             optionsExp, startingTag(selectElement));
         }
@@ -18230,7 +18502,7 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
             var optionGroup,
                 collection = valuesFn(scope) || [],
                 locals = {},
-                key, value, optionElement, index, groupIndex, length, groupLength;
+                key, value, optionElement, index, groupIndex, length, groupLength, trackIndex;
 
             if (multiple) {
               value = [];
@@ -18245,7 +18517,7 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
                     key = optionElement.val();
                     if (keyName) locals[keyName] = key;
                     if (trackFn) {
-                      for (var trackIndex = 0; trackIndex < collection.length; trackIndex++) {
+                      for (trackIndex = 0; trackIndex < collection.length; trackIndex++) {
                         locals[valueName] = collection[trackIndex];
                         if (trackFn(scope, locals) == key) break;
                       }
@@ -18264,7 +18536,7 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
                 value = null;
               } else {
                 if (trackFn) {
-                  for (var trackIndex = 0; trackIndex < collection.length; trackIndex++) {
+                  for (trackIndex = 0; trackIndex < collection.length; trackIndex++) {
                     locals[valueName] = collection[trackIndex];
                     if (trackFn(scope, locals) == key) {
                       value = valueFn(scope, locals);
@@ -18337,7 +18609,7 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
               optionGroupNames.push(optionGroupName);
             }
             if (multiple) {
-              selected = selectedSet.remove(trackFn ? trackFn(scope, locals) : valueFn(scope, locals)) != undefined;
+              selected = selectedSet.remove(trackFn ? trackFn(scope, locals) : valueFn(scope, locals)) !== undefined;
             } else {
               if (trackFn) {
                 var modelCast = {};
@@ -18455,7 +18727,7 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
         }
       }
     }
-  }
+  };
 }];
 
 var optionDirective = ['$interpolate', function($interpolate) {
@@ -18504,7 +18776,7 @@ var optionDirective = ['$interpolate', function($interpolate) {
         });
       };
     }
-  }
+  };
 }];
 
 var styleDirective = valueFn({
