@@ -1539,6 +1539,59 @@ body.login {
 }
 
 
+.project-admin-view {
+    margin: auto;
+    width: 98.97%;
+
+    .view-header,
+    .view-footer {
+        margin-top: 10px;
+        color: #FFFFFF;
+        padding: 5px;
+        overflow: hidden;
+        background-color:#666;
+        .title {
+            float: left;
+            font-family: 'LeagueGothicRegular';
+            font-size: 1.7em;
+            color: #FFFFFF;
+            margin:0;
+            margin-top: 2px;
+        }
+
+        .buttons {
+            float: right;
+        }
+    }
+
+    .update-form {
+        border: 1px solid #ccc;
+        margin-top: 20px;
+        margin-bottom: 10px;
+
+        form {
+            padding: 15px;
+            div {overflow: hidden;}
+            fieldset {
+                &.project-name, &.project-slug {
+                    width: 33%;
+                    float: left;
+                }
+                .select2-container {
+                    //width: 91%;
+                }
+                input {
+                    //width: 90%;
+                }
+                textarea {
+                    min-height: 150px;
+                }
+            }
+        }
+    }
+}
+
+
 .issues-view {
     margin: auto;
     width: 98.97%;

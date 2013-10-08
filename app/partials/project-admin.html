@@ -1,1 +1,53 @@
-<p>Project Admin</p>
+<header class="header-container" ng-include="'/partials/header.html'"></header>
+<div class="middle-container project-admin-view">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="view-header">
+                <p class="title">Project: {{ project.name }}</p>
+                <div class="buttons">
+                    <a class="button button-delete" ng-click="deleteCurrentProject()">Delete project</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="update-form">
+                <form class="form-horizontal" gm-checksley-form="submit()">
+                    <div>
+                        <fieldset class="project-name">
+                            <label class="control-label" for="name">Name</label>
+                            <input type="text" id="name" name="name" ng-model="project.name" data-error-message="Required" />
+                        </fieldset>
+
+                        <fieldset class="project-slug">
+                            <label for="slug">Slug</label>
+                            <input type="text" id="slug" name="slug" ng-model="project.slug" data-error-message="Required" />
+                        </fieldset>
+                    </div>
+
+                    <fieldset class="project-description">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" ng-model="project.description"></textarea>
+                    </fieldset>
+
+                    <fieldset class="project-submit">
+                        <button type="submit" class="button button-edit" gm-checksley-submit-button>Save</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="view-footer">
+                <p class="title">Issue #{{ issue.id }}</p>
+                <div class="buttons">
+                    <a class="button button-delete">Delete issue</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
