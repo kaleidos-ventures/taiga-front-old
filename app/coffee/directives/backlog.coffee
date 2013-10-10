@@ -17,13 +17,10 @@ GmDoomlineDirective = ->
     priority: -20
     link: (scope, elm, attrs) ->
         removeDoomlineDom = ->
-            elm.find(".doomline").remove()
+            elm.find(".doomline").removeClass("doomline")
 
         addDoomlienDom = (element) ->
-            dom = angular.element("<div/>", {"class": "doomline"})
-            dom.css("border-bottom", "1px solid red")
-            dom.css("height", "1px")
-            dom.insertAfter(element)
+            element.addClass("doomline")
 
         generateDoomline = (elements) ->
             total_points = scope.project.total_story_points
