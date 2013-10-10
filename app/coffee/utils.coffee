@@ -11,3 +11,6 @@ utils.pointIdToOrder = (points, roles) ->
 
 utils.delay = (timeout, func) ->
     return _.delay(func, timeout)
+
+util.debounced = (timeout, func) ->
+    return _.debounce(func, timeout)

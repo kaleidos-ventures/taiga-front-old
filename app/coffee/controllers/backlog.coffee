@@ -144,7 +144,13 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
         points[role.id] = ref
 
         us.points = points
-        us.save().then calculateStats, (data, status) ->
+
+        promise = us.save()
+        promise.then ->
+            calculateStats()
+            $scope.$broadcast("points:changed")
+
+        promise.then null, (data, status) ->
             us.revert()
 
     # User Story Filters
