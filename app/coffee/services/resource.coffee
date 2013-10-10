@@ -15,7 +15,10 @@
 ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service = {}
     headers = ->
-        return {"X-SESSION-TOKEN": $gmStorage.get('token')}
+        return {
+            "X-SESSION-TOKEN": $gmStorage.get('token')
+            "X-DISABLE-PAGINATION": "true"
+        }
 
     queryMany = (name, params, options) ->
         defauts = {method: "GET", headers:  headers()}
