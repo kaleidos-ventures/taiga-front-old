@@ -8,3 +8,6 @@ utils.pointIdToOrder = (points, roles) ->
             if points[value].value != null
                 total += points[value].value
         return total
+
+utils.delay = (timeout, func) ->
+    return _.delay(func, timeout)

@@ -87,7 +87,7 @@
                     </div>
                     <div class="us-options">Options</div>
                 </div>
-                <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs">
+                <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs" gm-doomline>
                     <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
                             gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}">
                         <div class="us-check">

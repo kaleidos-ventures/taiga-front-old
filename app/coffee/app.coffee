@@ -134,6 +134,7 @@ modules = [
     "greenmine.directives.taskboard",
     "greenmine.directives.issues",
     "greenmine.directives.wiki",
+    "greenmine.directives.backlog",
 
     # Plugins modules.
     "gmUrls",
