@@ -2704,6 +2704,55 @@ form {
 }
 
 /* ====================================
+ * SEARCH RESULTS
+ * ==================================== */
+
+.search-container {
+    
+}
+
+.results-tab {
+    border-bottom: 1px solid #ccc;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    padding: 0 4px;
+    li {
+        float: left;
+        display: block;
+        padding: 8px 15px;
+        padding-left: 35px;
+        border: 1px solid #ccc;
+        color: #ccc;
+        border-bottom: none;
+        background: #FFF;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: all .2s ease-in;
+        &.active, &:hover {
+            color: #000;
+            position: relative;
+            top: 1px;
+        }
+    }
+    .issues-tab, .userstory-tab {
+        background: url('../img/search-results.png') no-repeat #FFF;
+    }
+    .issues-tab {
+        background-position: 11px 8px;
+        &.active {
+            background-position: 11px -24px;
+        }
+    }
+    .userstory-tab {
+        background-position: 9px -58px;
+        &.active {
+            background-position: 9px -95px;
+        }
+    }
+}
+
+/* ====================================
  * MODAL STYLES (extendable)
  * ==================================== */
 

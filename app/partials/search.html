@@ -2,8 +2,18 @@
 <div class="middle-container search-content">
     <div class="search-container">
         <div class="search-header">
-            <p>Has buscado: <strong>{{ term }}</p>
+            <p>Has buscado: <strong>{{ term }}</strong></p>
         </div>
+
+        <ul class="results-tab clearfix">
+            <li class="issues-tab active"> <!-- ng-show="results.issue" -->
+                Issues
+            </li>
+            
+            <li class="userstory-tab"> <!-- ng-show="results.userstory" -->
+                User stories
+            </li>
+        </ul>
 
         <div class="search-results">
             <div class="results-issues" ng-show="results.issue">
