@@ -48,7 +48,21 @@
     }
 }
 
-select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input  {
+select, textarea, input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input  {
     border-radius: 0px;
 }
 
@@ -207,9 +221,9 @@ body.login {
                     }
                 }
                 .forgot-pass{
-                    color: #ccc;
+                    color: darken(#ccc, 20%);
                     float: left;
-                    font-size: .9em;
+                    font-size: 13px;
                     display: block;
                     clear: both;
                     &:hover{
@@ -253,17 +267,30 @@ body.login {
                             100% { -ms-transform: rotate(360deg);}
                         }
                     }
-                    .error{
+                    .error {
                         background: @red;
                         color: @white;
                         font-family: @ColabReg;
-                        padding: 2px 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                        margin: 0;
+                        text-align: center;
+                    }
+                }
+                .checksley-error-list{
+                    margin: 0;
+                    padding: 0;
+                    margin-top: 10px;
+                    li {
+                        background: @red;
+                        color: @white;
+                        font-family: @ColabReg;
+                        padding: 4px;
                         font-size: .7em;
                         margin: 0;
                         text-align: center;
                     }
                 }
-
             }
             /* NOT ACTIVE SO FAR
             p.register {
@@ -284,13 +311,7 @@ body.login {
 
 .header-container {
     background: #669933; /* Callback */
-    background: -moz-linear-gradient(top, #669933 0%, #116800 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#669933), color-stop(100%,#116800));
-    background: -webkit-linear-gradient(top, #669933 0%,#116800 100%);
-    background: -o-linear-gradient(top, #669933 0%,#116800 100%);
-    background: -ms-linear-gradient(top, #669933 0%,#116800 100%);
     background: linear-gradient(to bottom, #669933 0%,#116800 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#669933', endColorstr='#116800',GradientType=0 );
     color: @grayDarker;
     width: 100%;
     overflow: hidden;
@@ -305,8 +326,8 @@ body.login {
                 display: block;
                 float: left;
                 &.greenmine-logo{
-                    font-size: 32px;
-                    padding-top: 10px;
+                    font-size: 36px;
+                    padding: 10px 0;
                     color: #333;
                     font-family: @LeagueGothicRegular;
                     &:hover{
@@ -316,7 +337,7 @@ body.login {
                 &.user{
                     font-size: 1em;
                     color: darken(#669933, 30%);
-                    margin-top: 25px;
+                    line-height: 65px;
                     padding: 0 10px;
                     font-family: @ColabThi;
                     &:hover{
@@ -343,29 +364,25 @@ body.login {
     .nav {
         .search-box {
             position: absolute;
-            top: 54px;
-            right: 25px;
-
-            input {
-                border: 1px solid #bbb;
-                background-color: #999;
-                padding: 2px;
+            top: 70px;
+            right: 10px;
+            input[type="text"] {
+                border: 1px solid darken(#333, 50%);
+                background: darken(#333, 20%);
+                padding: 4px;
                 width: 300px;
                 color: white;
-
-                background: url('../img/nav_sprite.png') no-repeat 280px -194px;
-
+                font-family: @ColabReg;
             }
-            ::-webkit-input-placeholder {
-                color: white;
-                font-size: 14px;
-                opacity: 0.5;
-                line-height: 18px;
-                vertical-align: middle;
+            input[type="submit"] {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background: url('img/nav_sprite.png') no-repeat 0 0;
+                width: 24px;
+                height: 24px;
+                border: 0;
             }
-            ::-moz-placeholder { color: white; } /* firefox 19+ */
-            :-ms-input-placeholder { color: white; } /* ie */
-            input:-moz-placeholder { color: white; }
         }
         ul {
             margin: 0px;
@@ -1143,12 +1160,12 @@ body.login {
                 text-transform: uppercase;
             }
             .sprint-sbox {
-                margin-bottom: 15px;
+                margin-bottom: 25px;
                 opacity: 0.6;
                 .header {
                     background-color: #d0d0d0;
                     .title {
-                        padding: 5px 0 0 5px;
+                        padding: 10px 5px;
                         a {
                             text-decoration: none;
                             color: #666;
