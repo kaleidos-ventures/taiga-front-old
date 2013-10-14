@@ -1,22 +1,28 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container search-content">
     <div class="search-container">
-        <div class="search-header">
-            <p>Has buscado: <strong>{{ term }}</strong></p>
+        <div class="search-header" >
+            <p ng-show="results.userstory || results.issue">Has buscado: <strong>{{ term }}</strong></p>
+            <p ng-show="!(results.userstory || results.issue)">No hay resultados para <strong>{{ term }}</strong> ¡prueba a buscar de nuevo""</p>
         </div>
 
-        <ul class="results-tab clearfix">
-            <li class="issues-tab active"> <!-- ng-show="results.issue" -->
-                Issues
-            </li>
-            
-            <li class="userstory-tab"> <!-- ng-show="results.userstory" -->
+        <ul class="results-tab clearfix" ng-show="results.userstory || results.issue">
+            <li class="userstory-tab active"
+                ng-class=""
+                ng-click=""
+                ng-show="results.userstory"> 
                 User stories
+            </li>
+            <li class="issues-tab"
+                ng-class=""
+                ng-click=""
+                ng-show="results.issue">
+                Issues
             </li>
         </ul>
 
         <div class="search-results">
-            <div class="results-issues" ng-show="results.issue">
+            <div class="results-issues">
                 <h3>Issues:</h3>
                 <ul class="result-list">
                     <li class="result-item" ng-repeat="item in results.issue">
@@ -32,7 +38,7 @@
                 </ul>
             </div>
 
-            <div class="results-issues" ng-show="results.userstory">
+            <div class="results-userstory">
                 <h3>User stories:</h3>
                 <ul class="result-list">
                     <li class="result-item" ng-repeat="item in results.userstory">
