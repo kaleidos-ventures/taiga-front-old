@@ -7,24 +7,16 @@
         </div>
 
         <ul class="results-tab clearfix" ng-show="results.userstory || results.issue">
-            <li class="userstory-tab active"
-                ng-class=""
-                ng-click=""
-                ng-show="results.userstory"> 
-                User stories
-            </li>
-            <li class="issues-tab"
-                ng-class=""
-                ng-click=""
-                ng-show="results.issue">
-                Issues
-            </li>
+            <li class="userstory-tab"
+                ng-repeat="type in resultTypes"
+                ng-class="{active: isTypeActive(type)}"
+                ng-click="setActiveType(type)">{{ translateResultType(type) }}</li>
         </ul>
 
         <div class="search-results">
-            <div class="results-issues">
+            <div class="results" ng-repeat="type in resultTypes" ng-show="isTypeActive(type)">
                 <ul class="result-list">
-                    <li class="result-item" ng-repeat="item in results.issue">
+                    <li class="result-item" ng-repeat="item in results[type]">
                         <div class="title">
                             <a href="{{ urls.issuesUrl(projectId, item.pk) }}">
                                 {{ item.stored_fields.title }}
