@@ -10,6 +10,16 @@
             </div>
         </div>
     </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="sprints-list">
+                Created sprints:
+                <div class="sprint" ng-repeat="ml in project.list_of_milestones">
+                    {{ ml.name }} <span ng-click="deleteMilestone(ml)">Delete</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row-fluid">
         <div class="span12">
