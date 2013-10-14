@@ -39,27 +39,13 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $dat
 
             $rootScope.pageBreadcrumb = breadcrumb
 
-
     # Load initial data
     $data.loadProject($scope)
+    $data.loadUserAndRoles($scope)
 
     # Initial load
-    promise = $q.all [
-        rs.getTaskStatuses(projectId),
-        rs.getUsers(projectId),
-    ]
-
-    promise.then (results) ->
-        taskStatuses = results[0]
-        users = results[1]
-
-        _.each(users, (item) -> $scope.constants.users[item.id] = item)
-        _.each(taskStatuses, (item) -> $scope.constants.status[item.id] = item)
-
-        $scope.constants.statusList = _.sortBy(taskStatuses, "order")
-        $scope.constants.usersList = _.sortBy(users, "id")
-        loadAttachments()
-        loadTask()
+    loadAttachments()
+    loadTask()
 
     $scope.isSameAs = (property, id) ->
         return ($scope.task[property] == parseInt(id, 10))

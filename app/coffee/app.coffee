@@ -147,13 +147,28 @@ modules = [
 
 
 init = ($rootScope, $location, $gmStorage, $gmUrls, config) ->
+    # Constants
     $rootScope.auth = $gmStorage.get('userInfo')
     $rootScope.constants = {}
+
+    $rootScope.constants.usStatuses = {}
+    $rootScope.constants.usStatusesList = []
     $rootScope.constants.points = {}
-    $rootScope.constants.severity = {}
-    $rootScope.constants.priority = {}
-    $rootScope.constants.status = {}
-    $rootScope.constants.type = {}
+    $rootScope.constants.pointsList = []
+    $rootScope.constants.pointsByOrder = {}
+
+    $rootScope.constants.taskStatuses = {}
+    $rootScope.constants.taskStatusesList = []
+
+    $rootScope.constants.severities = {}
+    $rootScope.constants.severitiesList = []
+    $rootScope.constants.priorities = {}
+    $rootScope.constants.prioritiesList = []
+    $rootScope.constants.issueStatuses = {}
+    $rootScope.constants.issueStatusesList = []
+    $rootScope.constants.issueTypes = {}
+    $rootScope.constants.issueTypesList = []
+
     $rootScope.constants.users = {}
 
     # Configure on init a default host and scheme for api urls.

@@ -53,26 +53,10 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
 
     # Load initial data
     $data.loadProject($scope)
+    $data.loadUsersAndRoles($scope)
 
     # Initial load
-    promise = $q.all [
-        rs.getUsStatuses(projectId),
-        rs.getUsers(projectId),
-    ]
-
-    promise.then (results) ->
-        usStatuses = results[0]
-        users = results[1]
-
-        _.each(users, (item) -> $scope.constants.users[item.id] = item)
-        _.each(usStatuses, (item) -> $scope.constants.status[item.id] = item)
-
-        $scope.constants.statusList = _.sortBy(usStatuses, "order")
-        $scope.constants.usersList = _.sortBy(users, "id")
-
-        $data.loadCommonConstants($scope).then ->
-            $data.loadUserStoryPoints($scope).then ->
-                loadUserStory()
+    loadUserStory()
 
     $scope.submit = ->
         $rootScope.$broadcast("flash:new", true, "La user story se ha guardado!")

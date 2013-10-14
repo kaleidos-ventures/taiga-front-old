@@ -80,8 +80,8 @@
                     <div class="issue-severity">
                         <a href="" gm-popover="updateIssueSeverity(issue, selectedId)"
                             data-tmpl="#severity-popover" data-auto-hide="true"
-                                class="severity-{{ constants.severity[issue.severity].name|lowercase }}">
-                            {{ constants.severity[issue.severity].name|lowercase }}
+                                class="severity-{{ constants.severities[issue.severity].name|lowercase }}">
+                            {{ constants.severities[issue.severity].name|lowercase }}
                         </a>
                     </div>
                     <div class="issue-title">
@@ -92,12 +92,12 @@
                     </div>
                     <div class="issue-state">
                         <a href="" gm-popover="updateIssueStatus(issue, selectedId)"
-                            data-tmpl="#status-popover">{{ constants.status[issue.status].name }}</a>
+                            data-tmpl="#status-popover">{{ constants.issueStatuses[issue.status].name }}</a>
                     </div>
                     <div class="issue-priority">
                         <a href="" gm-popover="updateIssuePriority(issue, selectedId)"
-                            class="priority-{{ constants.priority[issue.priority].name|lowercase }}"
-                                    data-tmpl="#priority-popover">{{ constants.priority[issue.priority].name }}</a>
+                            class="priority-{{ constants.priorities[issue.priority].name|lowercase }}"
+                                    data-tmpl="#priority-popover">{{ constants.priorities[issue.priority].name }}</a>
                     </div>
                     <div class="issue-assignedto">
                         <div class="button-item" ng-show="issue.assigned_to" >
@@ -168,21 +168,21 @@
                         <label>Status</label>
                         <select class="status" name="status" ng-model="form.status" data-required="true"
                             data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.name for c in constants.statusList|orderBy:'order'"></select>
+                            ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                     <fieldset>
                         <label>Priority</label>
                         <select class="priority" name="status" ng-model="form.priority" data-required="true"
                             data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.name for c in constants.priorityList|orderBy:'order'"></select>
+                            ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                     <fieldset>
                         <label>Severity</label>
                         <select class="severity" name="status" ng-model="form.severity" data-required="true"
                             data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.name for c in constants.severityList|orderBy:'order'"></select>
+                            ng-options="c.id as c.name for c in constants.severitiesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                 </div>
@@ -195,7 +195,7 @@
                         <label>Type</label>
                         <select class="type" name="type" ng-model="form.type" data-required="true"
                             data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.name for c in constants.typeList|orderBy:'order'"></select>
+                            ng-options="c.id as c.name for c in constants.issueTypesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                 </div>
@@ -255,7 +255,7 @@
     <div class="severity-popover">
         <p class="title">Select severity:</p>
         <ul>
-            <li ng-repeat="obj in constants.severityList">
+            <li ng-repeat="obj in constants.severitiesList">
                 <a class="btn-accept" data-id="{{ obj.id }}" href="">{{ obj.name }}</a>
             </li>
         </ul>
@@ -266,7 +266,7 @@
     <div class="priority-popover">
         <p class="title">Select priority:</p>
         <ul>
-            <li ng-repeat="obj in constants.priorityList">
+            <li ng-repeat="obj in constants.prioritiesList">
                 <a href="" data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
             </li>
         </ul>
@@ -277,7 +277,7 @@
     <div class="status-popover">
         <p class="title">Select status:</p>
         <ul>
-            <li ng-repeat="obj in constants.statusList">
+            <li ng-repeat="obj in constants.issueStatusesList">
                 <a href="" data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
             </li>
         </ul>

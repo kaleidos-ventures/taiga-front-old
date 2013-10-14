@@ -264,7 +264,7 @@
                         <label>Status</label>
                         <select class="status" name="status" ng-model="form.status" data-required="true"
                             data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.name for c in usstatuses|orderBy:'order'"></select>
+                            ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                     <fieldset>

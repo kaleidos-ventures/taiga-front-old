@@ -43,8 +43,7 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
             $rootScope.sprintId = data[0].id
 
     $data.loadProject($scope)
-    $data.loadCommonConstants($scope).then ->
-        $data.loadUserStoryPoints($scope)
+    $data.loadUsersAndRoles($scope)
 
 
 BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
@@ -170,10 +169,6 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs) ->
     $scope.formOpened = false
 
     # Load data
-    promise = rs.getUsStatuses($scope.projectId)
-    promise.then (result) ->
-        $scope.usstatuses = result
-
     $scope.defered = null
     $scope.context = null
 

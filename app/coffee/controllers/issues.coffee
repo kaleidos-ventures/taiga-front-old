@@ -56,7 +56,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             return {"id": user.id, "name": user.username, "count": issues.length}
 
     generateStatusTags = ->
-        statuses = $scope.constants.statusList
+        statuses = $scope.constants.issueStatusesList
 
         $scope.statusTags = _.map statuses, (status) ->
             issues = _.filter($scope.issues, {"status": status.id})
@@ -156,9 +156,8 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             filterIssues()
 
     $data.loadProject($scope)
-    $data.loadCommonConstants($scope).then ->
-        $data.loadIssueConstants($scope).then ->
-            loadIssues()
+    $data.loadUsersAndRoles($scope).then ->
+        loadIssues()
 
     $scope.updateIssueAssignation = (issue, id) ->
         issue.assigned_to = id || null
@@ -222,10 +221,9 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             $scope.attachments = attachments
 
     $data.loadProject($scope)
-    $data.loadCommonConstants($scope).then ->
-        $data.loadIssueConstants($scope).then ->
-            loadIssue()
-            loadAttachments()
+    $data.loadUsersAndRoles($scope).then ->
+        loadIssue()
+        loadAttachments()
 
     $scope.isSameAs = (property, id) ->
         return ($scope.issue[property] == parseInt(id, 10))

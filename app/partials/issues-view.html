@@ -33,8 +33,8 @@
                 <li>Assigned to: <span>{{ constants.users[issue.assigned_to].username }}</span></li>
                 <li>Date: <span>{{ issue.modified_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span></li>
                 <li>Updated: <span>{{ issue.modified_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span></li>
-                <li class="priority-{{ issue.priority }}">Priority: <span>{{ constants.priority[issue.priority].name }}</span></li>
-                <li class="status-{{ issue.status }}">Status: <span>{{ constants.status[issue.status].name }}</span></li>
+                <li class="priority-{{ issue.priority }}">Priority: <span>{{ constants.priorities[issue.priority].name }}</span></li>
+                <li class="status-{{ issue.status }}">Status: <span>{{ constants.issueStatuses[issue.status].name }}</span></li>
                 <li>Attachments: <span>{{ attachments.length }}</span></li>
             </ul>
         </div>
@@ -61,7 +61,7 @@
 
                             <select class="status" name="status" ng-model="form.status" data-required="true"
                                 data-type="number" data-error-message="Required"
-                                ng-options="c.id as c.name for c in constants.statusList|orderBy:'order'"></select>
+                                ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'"></select>
                             </select>
                         </fieldset>
 
@@ -70,7 +70,7 @@
 
                             <select class="priority status" name="priority" ng-model="form.priority" data-required="true"
                                 data-type="number" data-error-message="Required"
-                                ng-options="c.id as c.name for c in constants.priorityList|orderBy:'order'"></select>
+                                ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'"></select>
                             </select>
                         </fieldset>
                     </div>

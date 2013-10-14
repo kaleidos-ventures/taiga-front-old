@@ -151,7 +151,7 @@ GmPendingIssueGraphDirective = -> (scope, elm, attrs) ->
             scaleFontSize : 10
 
         data = {
-            labels : (severity.name for severity in scope.constants.severityList)
+            labels : (severity.name for severity in scope.constants.severitiesList)
             datasets : [
                 #Number of created bugs
                 {
@@ -159,14 +159,14 @@ GmPendingIssueGraphDirective = -> (scope, elm, attrs) ->
                     strokeColor : "rgba(120,120,120,0.2)",
                     pointColor : "rgba(255,255,255,1)",
                     pointStrokeColor : "#ccc",
-                    data : countIssues(scope.constants.severityList, scope.issues)
+                    data : countIssues(scope.constants.severitiesList, scope.issues)
                 },
                 #Number of resolved bugs
                 {
                     fillColor : "rgba(102,153,51,0.3)",
                     strokeColor : "rgba(102,153,51,1)",
                     pointColor : "rgba(255,255,255,1)",
-                    data : countIssues(scope.constants.severityList, _.filter(scope.issues, 'is_closed'))
+                    data : countIssues(scope.constants.severitiesList, _.filter(scope.issues, 'is_closed'))
                 }
             ]
         }
@@ -211,7 +211,7 @@ GmYourIssuesGraphDirective = -> (scope, elm, attrs) ->
             scaleFontSize : 10
 
         colors = ["#ccc", "#669933", "blue", "orange", "#CC0000"]
-        counts = countIssues(scope.constants.severityList, scope.issues)
+        counts = countIssues(scope.constants.severitiesList, scope.issues)
         data = []
 
         for x in [0..counts.length-1]

@@ -19,7 +19,6 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
 
     $scope.projectId = $routeParams.pid
     $scope.sprintId = $routeParams.sid
-    $scope.statuses = []
 
     projectId = $routeParams.pid
     sprintId = $routeParams.sid || 1
@@ -29,13 +28,12 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
         $scope.unassignedTasks = {}
 
         for us in $scope.userstoriesList
-            console.log us
             $scope.usTasks[us.id] = {}
 
-            for status in $scope.statusesList
+            for status in $scope.constants.taskStatusesList
                 $scope.usTasks[us.id][status.id] = []
 
-        for status in $scope.statusesList
+        for status in $scope.constants.taskStatusesList
             $scope.unassignedTasks[status.id] = []
 
         for task in $scope.tasks
@@ -68,7 +66,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
 
             _.each statuses, (tasks, statusId) ->
                 hasTasks = true
-                if $scope.statuses[statusId].is_closed
+                if statuses[statusId].is_closed
                     completedTasks += tasks.length
                 else if tasks.length > 0
                     hasOpenTasks = true
@@ -96,14 +94,13 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
             calculateStats()
 
     $data.loadProject($scope).then ->
-        $data.loadCommonConstants($scope).then ->
-            promise = $q.all [$data.loadUserStoryPoints($scope)
-                              $data.loadTaskboardData($scope)]
+        $data.loadUsersAndRoles($scope).then ->
+            promise = $data.loadTaskboardData($scope)
             promise.then(loadTasks)
 
     $scope.openCreateTaskForm = (us) ->
         options =
-            status: $scope.statusesList[0].id
+            status: $scope.constants.taskStatusesList[0].id
             project: projectId
 
         if us != undefined

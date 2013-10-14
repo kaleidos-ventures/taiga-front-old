@@ -86,28 +86,6 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     # Get roles
     service.getRoles = -> queryMany('roles')
 
-    # Get available task statuses for a project.
-    service.getTaskStatuses = (projectId) ->
-        return queryMany('choices/task-status', {project: projectId})
-
-    service.getUsPoints = (projectId) ->
-        return queryMany('choices/points', {project: projectId})
-
-    service.getPriorities = (projectId) ->
-        return queryMany("choices/priorities", {project: projectId})
-
-    service.getSeverities = (projectId) ->
-        return queryMany("choices/severities", {project: projectId})
-
-    service.getIssueStatuses = (projectId) ->
-        return queryMany("choices/issue-status", {project: projectId})
-
-    service.getIssueTypes = (projectId) ->
-        return queryMany("choices/issue-types", {project: projectId})
-
-    service.getUsStatuses = (projectId) ->
-        return queryMany("choices/us-status", {project: projectId})
-
     # Get a milestone lines for a project.
     service.getMilestones = (projectId) ->
         # First step: obtain data

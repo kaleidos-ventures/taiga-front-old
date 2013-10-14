@@ -56,9 +56,9 @@
                     <table>
                         <tbody>
                             <tr>
-                                <td class="row-us-description" style="width: {{ 100/(statusesList.length+1) }}%"></td>
-                                <td class="" ng-repeat="status in statusesList|orderBy:'order'"
-                                        style="width: {{ 100/(statusesList.length+1) }}%; border-right-color: {{ status.color }}">
+                                <td class="row-us-description" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%"></td>
+                                <td class="" ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
+                                        style="width: {{ 100/(constants.taskStatusesList.length+1) }}%; border-right-color: {{ status.color }}">
                                     <div class="badge" style="background-color: {{ status.color }};">{{ status.name }}</div>
                                 </td>
                             </tr>
@@ -70,7 +70,7 @@
                     <table ng-repeat="us in userstoriesList">
                         <tbody>
                             <tr>
-                                <td class="row-us-description" style="width: {{ 100/(statusesList.length+1) }}%">
+                                <td class="row-us-description" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
                                     <div class="info">
                                         <div class="title">{{ us.subject }}</div>
                                         <div class="description">
@@ -84,8 +84,8 @@
                                     </div>
                                 </td>
                                 <td class="col-task-status col-task-{{ status.name|slugify }}"
-                                        ng-repeat="status in statusesList|orderBy:'order'"
-                                        style="width: {{ 100/(statusesList.length+1) }}%">
+                                        ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
+                                        style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
 
                                     <div class="tasks" gm-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][status.id]">
                                         <div class="task-box" ng-repeat="task in usTasks[us.id][status.id]">
@@ -100,7 +100,7 @@
                     <table>
                         <tbody>
                             <tr>
-                                <td class="row-us-description" style="width: {{ 100/(statusesList.length+1) }}%">
+                                <td class="row-us-description" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
                                     <div class="info">
                                         <div class="title">Tareas sin user story asignada</div>
                                         <div class="description"></div>
@@ -108,8 +108,8 @@
                                     <a href="" class="button" ng-click="openCreateTaskForm(us)">Add new task</a>
                                 </td>
                                 <td class="col-task-status col-task-{{ status.name|slugify }}"
-                                        ng-repeat="status in statusesList|orderBy:'order'"
-                                        style="width: {{ 100/(statusesList.length+1) }}%">
+                                        ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
+                                        style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
 
                                     <div class="tasks" gm-sortable=".tasks-container .body .tasks" ng-model="unassignedTasks[status.id]">
                                         <div class="task-box" ng-repeat="task in unassignedTasks[status.id]">
@@ -151,7 +151,7 @@
                         <label>Status</label>
                         <select class="status" name="status" ng-model="form.status" data-required="true"
                             data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.name for c in statusesList|orderBy:'order'"></select>
+                            ng-options="c.id as c.name for c in constants.taskStatusesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                     <fieldset>

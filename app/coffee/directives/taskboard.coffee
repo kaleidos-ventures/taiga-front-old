@@ -72,19 +72,14 @@ gmTaskboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
                 }
             ]
 
-        console.log data
         new Chart(ctx).Line(data, options)
 
-    scope.$watch 'statuses', (value) ->
-        if scope.statuses and scope.milestone and scope.stats
-            redrawChart()
-
     scope.$watch 'milestone', (value) ->
-        if scope.statuses and scope.milestone and scope.stats
+        if scope.constants.taskStatuses and scope.milestone and scope.stats
             redrawChart()
 
     scope.$watch 'stats', (value) ->
-        if scope.statuses and scope.milestone and scope.stats
+        if scope.constants.taskStatuses and scope.milestone and scope.stats
             redrawChart()
 
 dashboardModule.directive("gmTaskboardGraph", ["$parse", "resource", gmTaskboardGraphConstructor])

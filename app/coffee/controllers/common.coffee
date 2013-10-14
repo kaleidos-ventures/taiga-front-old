@@ -10,48 +10,47 @@ DataServiceProvider = ($rootScope, $q, rs) ->
             breadcrumb[0] = project.name
             $rootScope.pageBreadcrumb = breadcrumb
 
-        return promise
-
-    service.loadUserStoryPoints = ($scope) ->
-        promise = rs.getUsPoints($scope.projectId)
-        promise = promise.then (points) ->
-            $scope.constants.points = {}
-            $scope.constants.pointsByOrder = {}
-            $scope.constants.pointsList = _.sortBy(points, "order")
-
-            for item in points
+            # USs
+            for item in project.points
                 $scope.constants.points[item.id] = item
                 $scope.constants.pointsByOrder[item.order] = item
+            $scope.constants.pointsList = _.sortBy(project.points, "order")
+            $rootScope.$broadcast("points:loaded", project.points)
+            _.each(project.us_statuses, (status) -> $scope.constants.usStatuses[status.id] = status)
+            $scope.constants.usStatusesList = _.sortBy(project.us_statuses, 'id')
 
-            $rootScope.$broadcast("points:loaded", points)
-            return points
+            # Tasks
+            _.each(project.task_statuses, (item) -> $scope.constants.taskStatuses[item.id] = item)
+            $scope.constants.taskStatusesList = _.sortBy(project.task_statuses, "order")
+
+            # issue
+            _.each(project.severities, (item) -> $scope.constants.severities[item.id] = item)
+            $scope.constants.severitiesList = _.sortBy(project.severities, "order")
+            _.each(project.priorities, (item) -> $scope.constants.priorities[item.id] = item)
+            $scope.constants.prioritiesList = _.sortBy(project.priorities, "order")
+            _.each(project.issue_types, (item) -> $scope.constants.issueTypes[item.id] = item)
+            $scope.constants.issueTypesList = _.sortBy(project.issue_types, "order")
+            _.each(project.issue_statuses, (item) -> $scope.constants.issueStatuses[item.id] = item)
+            $scope.constants.issueStatusesList = _.sortBy(project.issue_statuses, "order")
 
         return promise
 
     service.loadTaskboardData = ($scope) ->
         promise = $q.all [
             rs.getTasks($scope.projectId, $scope.sprintId),
-            rs.getTaskStatuses($scope.projectId),
             rs.getMilestone($scope.projectId, $scope.sprintId),
         ]
 
         promise = promise.then (results) ->
-            [tasks, statuses, milestone] = results
+            [tasks, milestone] = results
+            $scope.milestone = milestone
 
             userstories = milestone.user_stories
 
-            $scope.statuses = {}
             $scope.userstories = {}
-
-            $scope.statusesList = _.sortBy(statuses, 'id')
-            $scope.userstoriesList = _.sortBy(userstories, 'id')
-            $scope.milestone = milestone
-
-            _.each(statuses, (status) -> $scope.statuses[status.id] = status)
             _.each(userstories, (us) -> $scope.userstories[us.id] = us)
-
+            $scope.userstoriesList = _.sortBy(userstories, 'id')
             return results
-
         return promise
 
     service.loadUnassignedUserStories = ($scope) ->
@@ -63,53 +62,25 @@ DataServiceProvider = ($rootScope, $q, rs) ->
             $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order")
             $rootScope.$broadcast("userstories:loaded")
             return $scope.unassingedUs
-
         return promise
 
-    service.loadIssueConstants = ($scope) ->
+    service.loadUsersAndRoles = ($scope) ->
         promise = $q.all [
-            rs.getIssueTypes($scope.projectId),
-            rs.getIssueStatuses($scope.projectId),
-        ]
-
-        promise = promise.then (results) ->
-            [types, statuses] = results
-
-            _.each(types, (item) -> $scope.constants.type[item.id] = item)
-            _.each(statuses, (item) -> $scope.constants.status[item.id] = item)
-
-            $scope.constants.typeList = _.sortBy(types, "order")
-            $scope.constants.statusList = _.sortBy(statuses, "order")
-            return results
-
-        return promise
-
-    service.loadCommonConstants = ($scope) ->
-        promise = $q.all [
-            rs.getSeverities($scope.projectId),
-            rs.getPriorities($scope.projectId),
             rs.getUsers($scope.projectId),
             rs.getRoles($scope.projectId),
         ]
 
         promise = promise.then (results) ->
-            [severities, priorities, users, roles] = results
+            [users, roles] = results
 
-            $scope.constants.severityList = _.sortBy(severities, "order")
-            $scope.constants.priorityList = _.sortBy(priorities, "order")
             $scope.constants.usersList = _.sortBy(users, "id")
-
-            _.each(severities, (item) -> $scope.constants.severity[item.id] = item)
-            _.each(priorities, (item) -> $scope.constants.priority[item.id] = item)
             _.each(users, (item) -> $scope.constants.users[item.id] = item)
 
             $scope.roles = roles
 
             $rootScope.$broadcast("roles:loaded", roles)
             $rootScope.$broadcast("users:loaded", users)
-
             return results
-
         return promise
     return service
 
