@@ -170,8 +170,34 @@
                 <div class="header">
                     <div class="title">
                         <a href="{{ urls.taskboardUrl(projectId, ml.id) }}">{{ ml.name }}</a>
+                        <a href="" ng-click="showEditForm(ml.id)">Edit</a>
                         <span ng-show="$first">current sprint</span>
                     </div>
+                    <div class="milestone-edit-form-box" ng-show="sprintEditFormOpened[ml.id]">
+                        <form action="" gm-checksley-form="sprintEditSubmit(ml)">
+                            <fieldset>
+                                <label>Sprint name:</label>
+                                <input type="text" data-required="true" ng-model="ml.name"
+                                    placeholder="Sprint name..."></input>
+                            </fieldset>
+
+                            <fieldset>
+                                <div class="subfield">
+                                    <label>Estimated start:</label>
+                                    <input type="text" gm-kalendae data-required="true" ng-model="ml.estimated_start"></input>
+                                </div>
+                                <div class="subfield">
+                                    <label>Estimated finish</label>
+                                    <input type="text" gm-kalendae data-required="true" ng-model="ml.estimated_finish"></input>
+                                </div>
+                            </fieldset>
+                            <div class="btn-group">
+                                <input type="submit" class="button button-success" gm-checksley-submit-button value="Save" />
+                                <a href="" class="button" ng-click="sprintEditFormOpened[ml.id]=false">Close</a>
+                            </div>
+                        </form>
+                    </div>
+
                     <div class="stats">
                         <div class="sprint-progress">
                             <div class="progress progress-success">
