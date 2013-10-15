@@ -37,6 +37,7 @@
                                     <div class="row-help">completed <br />tasks</div>
                                 </div>
                                 <div class="row-item sprint-data">
+                                    <!-- TODO: iocaine -->
                                     <div class="row-label">Data</div>
                                     <div class="iocaine-powder">5 <span>iocaine doses</span></div>
                                     <div class="labor-force">90% <span>labor force</span></div>
@@ -73,15 +74,17 @@
                                 <td class="row-us-description" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
                                     <div class="info">
                                         <div class="title">{{ us.subject }}</div>
+                                        <!-- TODO: Xaviju do your magic -->
+                                        <ul class="us-points-per-role">
+                                            <li ng-repeat="role in roles" class="us-point">
+                                                {{ role.name }}: {{ constants.pointsByOrder[us.points[role.id]].name }}
+                                            </li>
+                                        </ul>
                                         <div class="description">
                                             <p>{{ us.description }}</p>
                                         </div>
                                     </div>
                                     <a href="" class="button" ng-click="openCreateTaskForm(us)">Add new task</a>
-                                    <!-- TODO: This doesn't work with 2 or more roles -->
-                                    <div ng-repeat="role in roles" class="us-points">
-                                        {{ constants.points[us.points[role.id]].name }}
-                                    </div>
                                 </td>
                                 <td class="col-task-status col-task-{{ status.name|slugify }}"
                                         ng-repeat="status in constants.taskStatusesList|orderBy:'order'"

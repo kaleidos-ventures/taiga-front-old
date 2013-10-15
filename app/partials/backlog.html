@@ -70,6 +70,7 @@
                             </div>
                             <div class="option">
                                 <input id="show_total_points" type="checkbox" ng-model="showTotalPoints"></input>
+                                <!-- TODO: total points col -->
                                 <label for="show_total_points">Show total points (TODO)</label>
                             </div>
                         </div>
@@ -159,6 +160,7 @@
         </div>
 
         <div class="project-extras">
+            <!-- TODO: iocaine -->
             <div class="iocaine-powder">5 <span>iocaine doses</span></div>
             <div class="labor-force">90% <span>labor force</span></div>
         </div>
@@ -224,9 +226,7 @@
                                     ng-model="milestones[$index].user_stories">
                                 <div class="us-item" ng-repeat="us in ml.user_stories">
                                     <div class="us-title">{{ us.subject|truncate:50 }}</div>
-                                    <!--
-                                    <div class="us-points">TODO</div>
-                                    -->
+                                    <div class="us-points">{{ us.total_points }}</div>
                                 </div>
                             </div>
                         </div>
