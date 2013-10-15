@@ -243,6 +243,10 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
         milestone.save().then ->
             $scope.sprintEditFormOpened[milestone.id] = false
 
+    $scope.closeSprintEditForm = (milestone) ->
+        $scope.sprintEditFormOpened[milestone.id] = false
+        milestone.revert()
+
     $scope.sprintSubmit = ->
         if $scope.form.save is undefined
             rs.createMilestone($scope.projectId, $scope.form).then (milestone) ->
