@@ -178,7 +178,22 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         return queryOne("tasks", taskId, {project:projectId})
 
     service.search = (projectId, term) ->
-        return queryMany("search", {"project": projectId, "text": term})
+        defered = $q.defer()
+
+        params =
+            "method": "GET"
+            "headers": headers()
+            "url": $gmUrls.api("search")
+            "params": {"project": projectId, "text": term}
+
+        promise = $http(params)
+        promise.success (data, status) ->
+            defered.resolve(data)
+
+        promise.error (data, status) ->
+            defered.reject(data, status)
+
+        return defered.promise
 
     # Get a users with role developer for
     # one concret project.

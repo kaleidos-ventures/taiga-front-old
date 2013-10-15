@@ -2,11 +2,11 @@
 <div class="middle-container search-content">
     <div class="search-container">
         <div class="search-header" >
-            <p ng-show="results.userstory || results.issue">Has buscado: <strong>{{ term }}</strong></p>
-            <p ng-show="!(results.userstory || results.issue)">No hay resultados para <strong>{{ term }}</strong> ¡prueba a buscar de nuevo!</p>
+            <p ng-show="results.count > 0">Has buscado: <strong>{{ term }}</strong></p>
+            <p ng-show="results.count == 0">No hay resultados para <strong>{{ term }}</strong> ¡prueba a buscar de nuevo!</p>
         </div>
 
-        <ul class="results-tab clearfix" ng-show="results.userstory || results.issue">
+        <ul class="results-tab clearfix" ng-show="results.count > 0">
             <li class="userstory-tab"
                 ng-repeat="type in resultTypes"
                 ng-class="{active: isTypeActive(type)}"
@@ -18,12 +18,12 @@
                 <ul class="result-list">
                     <li class="result-item" ng-repeat="item in results[type]">
                         <div class="title">
-                            <a href="{{ urls.issuesUrl(projectId, item.pk) }}">
-                                {{ item.stored_fields.title }}
+                            <a href="{{ urls.issuesUrl(projectId, item.id) }}">
+                                {{ item.subject }}
                             </a>
                         </div>
                         <div class="description">
-                            {{ item.stored_fields.description|truncate:200 }}
+                            {{ item.description|truncate:200 }}
                         </div>
                     </li>
                 </ul>

@@ -37,8 +37,8 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs) ->
         $scope.activeType = type
 
     rs.search($rootScope.projectId, $routeParams.term).then (results) ->
-        $scope.results = _.groupBy(results, "model_name")
-        $scope.resultTypes = _.keys($scope.results)
+        $scope.results = results
+        $scope.resultTypes = _.reject(_.keys($scope.results), (x) -> x == "count")
 
         $scope.activeType = null
         maxItemsCounter = 0
