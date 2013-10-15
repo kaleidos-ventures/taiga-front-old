@@ -357,7 +357,7 @@ body.login {
                 padding: 3px 0;
                 padding-left: 23px;
                 font-size: .9em;
-                &::before {
+                &:before {
                     padding-right: 5px;
                     position: relative;
                     top: 1px;
@@ -378,7 +378,7 @@ body.login {
                 color: white;
                 font-family: @ColabReg;
             }
-            input[type="submit"] {
+            /*input[type="submit"] {
                 position: absolute;
                 top: 0;
                 right: 0;
@@ -386,7 +386,7 @@ body.login {
                 width: 24px;
                 height: 24px;
                 border: 0;
-            }
+            }*/
         }
         ul {
             margin: 0px;
@@ -400,9 +400,12 @@ body.login {
                 float: left;
                 border-right: 1px solid #444;
                 padding: 5px 0;
+                transition: all .2s ease-in;
                 &:hover{
                     background-color: darken(#333333, 15%);
-                    transition: all .2s ease-in;
+                    a {
+                        opacity: 1;
+                    }
                 }
                 a{
                     font-family: 'ColabReg';
@@ -410,51 +413,20 @@ body.login {
                     color: white;
                     text-decoration: none;
                     opacity: 0.6;
-                    padding: 5px 20px 5px 40px;
+                    padding: 5px 20px 5px 20px;
                     display: block;
-                    &:hover{
-                        opacity: 1;
+                    transition: all .2s ease-in;
+                    &:before {
+                        padding-right: 5px;
+                        position: relative;
+                        top: 2px;
+                        font-size: 16px;
                     }
                 }
                 &.selected {
                     background-color: #0d0d0d;
                     a{
                         opacity: 1;
-                    }
-                }
-                &.backlog{
-                    a{
-                        background: url('../img/nav_sprite.png') no-repeat 14px 4px;
-                    }
-                }
-                &.dashboard{
-                    a{
-                        background: url('../img/nav_sprite.png') no-repeat 14px -43px;
-                    }
-                }
-                &.issues{
-                    a{
-                        background: url('../img/nav_sprite.png') no-repeat 14px -93px;
-                    }
-                }
-                &.wiki{
-                    a{
-                        background: url('../img/nav_sprite.png') no-repeat 14px -143px;
-                    }
-                }
-                &.search{
-                    a{
-                        background: url('../img/nav_sprite.png') no-repeat 14px -193px;
-                    }
-                }
-                &.admin{
-                    a{
-                        background: url('../img/nav_sprite.png') no-repeat 14px -241px;
-                    }
-                }
-                &.questions{
-                    a{
-                        background: url('../img/nav_sprite.png') no-repeat 14px -298px;
                     }
                 }
             }
@@ -713,17 +685,22 @@ body.login {
                 text-shadow: -1px -1px #666, 1px 1px #888;
                 &.new-us-story{
                     float: right;
-                    padding: 7px 15px 7px 41px;
+                    padding: 6px 15px 6px 15px;
                     border-radius: 4px;
                     border: none;
-                    background: url('../img/user_story.png') no-repeat 8px center #669933;
+                    background-color: #669933;
                     -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
                     -moz-box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
                     box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
                     cursor: pointer;
                     &:hover, &.active{
-                        background: url('../img/user_story.png') no-repeat 8px center;
                         background-color: #111;
+                    }
+                    &:before {
+                        position: relative;
+                        top: 4px;
+                        font-size: 18px;
+                        padding-right: 5px;
                     }
                 }
                 &.show-hide-graphics {
@@ -731,16 +708,20 @@ body.login {
                     color: white;
                     border: none;
                     margin-right: 10px;
-                    padding: 15px;
+                    padding: 3px 10px;
                     border-radius: 4px;
-                    background: url('../img/backlog_graph.png') no-repeat center center #669933;
+                    background: #669933;
                     -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
                     -moz-box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
                     box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
                     cursor: pointer;
                     &:hover, &.active{
-                        background: url('../img/backlog_graph.png') no-repeat center center;
                         background-color: #111;
+                    }
+                    &:before {
+                        position: relative;
+                        top: 2px;
+                        font-size: 25px;
                     }
                 }
                 &:hover, &.active{
@@ -1014,27 +995,35 @@ body.login {
                 width: 100px;
                 a{
                     position: relative;
-                    width: 20px;
                     margin-right: 4px;
-                    height: 20px;
                     background: #000;
                     display: inline-block;
                     padding: 1px;
-                    border-radius:20px;
+                    border-radius:50%;
+                    padding: 5px;
+                    &:before {
+                        color: #FFF;
+                        font-size: 16px;
+                        position: relative;
+                        top: 1px;
+                    }
                     &.btn-small-preview {
-                        background: url( '../img/backlog_sprite.png' ) no-repeat center 5px #666666;
+                        background: #666666;
                     }
                     &.btn-small-edit {
-                        background: url( '../img/backlog_sprite.png' ) no-repeat center -16px #669933;
+                        background: #669933;
                     }
                     &.btn-small-remove {
-                        background: url( '../img/backlog_sprite.png' ) no-repeat center -37px #cc0000;
+                        background: #cc0000;
                     }
                     &:hover{
                         background-color: #333;
                         transition: all 0.3s ease-in;
                         .help-box{
                             display: block;
+                        }
+                        &:before{
+                            opacity: 0.7;
                         }
                     }
                     .help-box{
@@ -1087,18 +1076,24 @@ body.login {
             }
             .new-sprint{
                 float: right;
-                background: url('../img/sprint_ico.png') no-repeat 13px center #669933;
+                background: #669933;
                 color: #fff;
-                padding: 7px 15px 7px 35px;
+                padding: 7px 15px 7px 15px;
                 border: none;
                 box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
                 cursor: pointer;
-                &:hover{
-                    background: url('../img/sprint_ico.png') no-repeat -30px center #333;
-                    -webkit-transition: all 0.3s ease-out;
-                    -moz-transition: all 0.3s ease-out;
-                    -o-transition: all 0.3s ease-out;
+                transition: all 0.3s ease-out;
+                &:before {
+                    padding-right: 6px;
+                    position: relative;
+                    top: 2px;
                     transition: all 0.3s ease-out;
+                }
+                &:hover{
+                    background: #333;
+                    &:before {
+                        padding-right: 30px;
+                    }
                 }
             }
         }
@@ -1135,23 +1130,26 @@ body.login {
                 font-family: 'LeagueGothicRegular';
                 font-size: 28px;
                 color: #333;
-
                 float: left;
                 display: block;
-                padding-left: 40px;
                 span{
                     color: #ccc;
                 }
             }
+            .iocaine-powder, .labor-force{
+                &:before {
+                    font-size: 36px;
+                    padding-right: 8px;
+                    position: relative;
+                    top: 2px;
+                }
+            }
             .iocaine-powder{
-                background: url('../img/project-extras.png') no-repeat 2px 3px;
                 width: 30%;
             }
             .labor-force{
-                background: url('../img/project-extras.png') no-repeat 2px -60px;
                 width: 40%;
-                span{
-                }
+                padding-left: 40px;
             }
         }
         .sprints-box {
@@ -1169,16 +1167,20 @@ body.login {
                 .header {
                     background-color: #d0d0d0;
                     .title {
-                        padding: 10px 5px;
-                        a {
+                        padding: 12px 5px;
+                        .name, .edit {
                             text-decoration: none;
                             color: #666;
                             text-transform: uppercase;
-                            font-size: 1em;
+                            font-size: 16px;
                             font-family: @ColabReg;
                             &:hover{
                                 color: darken(#666, 20%);
                             }
+                        }
+                        .edit {
+                            margin-left: 5px;
+                            font-size: 15px;
                         }
                     }
                     .stats {

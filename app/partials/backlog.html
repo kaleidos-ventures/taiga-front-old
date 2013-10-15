@@ -26,10 +26,10 @@
                         <div class="help">not assigned points</div>
                     </div>
                 </div>
-                <a class="button new-us-story" ng-click="openCreateUserStoryForm()">
+                <a class="button new-us-story" data-icon="m" ng-click="openCreateUserStoryForm()">
                     New user story
                 </a>
-                <a class="button show-hide-graphics" gm-ninja-graph>
+                <a class="button show-hide-graphics" data-icon="k" gm-ninja-graph>
                     <!-- Show graphics -->
                 </a>
             </div>
@@ -112,11 +112,11 @@
                             </div>
                         </div>
                         <div class="us-options">
-                            <a class="btn-small-preview" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">
+                            <a class="btn-small-preview" data-icon="l" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">
                                 <span class="help-box">Preview</span>
                             </a>
-                            <a class="btn-small-edit" href="{{ urls.userStoryUrl(projectId, us.id) }}"><span class="help-box">Edit</span></a>
-                            <a class="btn-small-remove" gm-popover="removeUs(us)"
+                            <a class="btn-small-edit" data-icon="j" href="{{ urls.userStoryUrl(projectId, us.id) }}"><span class="help-box">Edit</span></a>
+                            <a class="btn-small-remove" data-icon="h" gm-popover="removeUs(us)"
                                 data-tmpl="#us-remove-popover"><span class="help-box">Remove</span></a>
                         </div>
                     </div>
@@ -131,7 +131,7 @@
                 <div class="title">{{ project.total_milestones }}</div>
                 <div class="help">sprints <br />planned</div>
             </div>
-            <a href="" class="button new-sprint" ng-click="sprintFormOpened=!sprintFormOpened">New sprint</a>
+            <a href="" data-icon="q" class="button new-sprint" ng-click="sprintFormOpened=!sprintFormOpened">New sprint</a>
         </div>
 
         <div class="milestone-form-box" ng-show="sprintFormOpened">
@@ -161,18 +161,18 @@
 
         <div class="project-extras">
             <!-- TODO: iocaine -->
-            <div class="iocaine-powder">5 <span>iocaine doses</span></div>
-            <div class="labor-force">90% <span>labor force</span></div>
+            <div class="iocaine-powder" data-icon="r">5 <span>iocaine doses</span></div>
+            <div class="labor-force" data-icon="s">90% <span>labor force</span></div>
         </div>
 
         <div class="sprints-box">
             <p class="sprints-box-title">Sprints</p>
             <div class="sprint-sbox" ng-repeat="ml in milestones" ng-controller="BacklogMilestoneController"
-                        ng-class="{first: $first}">
+                        ng-class="{first: $first}" ng-mouseover="showEditOption=true" ng-mouseout="showEditOption=false">
                 <div class="header">
                     <div class="title">
-                        <a href="{{ urls.taskboardUrl(projectId, ml.id) }}">{{ ml.name }}</a>
-                        <a href="" ng-click="showEditForm(ml.id)">Edit</a>
+                        <a class="name" href="{{ urls.taskboardUrl(projectId, ml.id) }}">{{ ml.name }}</a>
+                        <a class="edit" href="" ng-click="showEditForm(ml.id)" ng-show="showEditOption" data-icon="d"></a>
                         <span ng-show="$first">current sprint</span>
                     </div>
                     <div class="milestone-edit-form-box" ng-show="sprintEditFormOpened[ml.id]">

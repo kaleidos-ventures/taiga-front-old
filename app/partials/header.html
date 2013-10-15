@@ -9,15 +9,15 @@
 </div>
 <div class="nav" gm-header-menu ng-show="projectId">
     <ul>
-        <li class="backlog"><a href="{{ urls.backlogUrl(projectId) }}" title="Backlog">Backlog</a></li>
-        <li class="dashboard" ng-show="sprintId"><a href="{{ urls.taskboardUrl(projectId, sprintId) }}" title="Taskboard">Taskboard</a></li>
-        <li class="issues"><a href="{{ urls.issuesUrl(projectId) }}" title="Issues">Issues</a></li>
-        <li class="wiki"><a href="{{ urls.wikiUrl(projectId, 'home') }}" title="wiki">Wiki</a></li>
+        <li class="backlog"><a data-icon="f" href="{{ urls.backlogUrl(projectId) }}" title="Backlog">Backlog</a></li>
+        <li class="dashboard" ng-show="sprintId"><a data-icon="n" href="{{ urls.taskboardUrl(projectId, sprintId) }}" title="Taskboard">Taskboard</a></li>
+        <li class="issues"><a data-icon="a" href="{{ urls.issuesUrl(projectId) }}" title="Issues">Issues</a></li>
+        <li class="wiki"><a data-icon="g" href="{{ urls.wikiUrl(projectId, 'home') }}" title="wiki">Wiki</a></li>
         <!--
         <li class="questions"><a href="{{ urls.questionsUrl(projectId) }}" title="questions">Questions</a></li>
         <li class="search"><a href="" title="search">Search</a></li>
         -->
-        <li class="admin"><a href="{{ urls.adminUrl(projectId) }}" title="Administration panel">Admin</a></li>
+        <li class="admin"><a data-icon="i" href="{{ urls.adminUrl(projectId) }}" title="Administration panel">Admin</a></li>
     </ul>
 
     <div class="search-box" gm-search-box>
