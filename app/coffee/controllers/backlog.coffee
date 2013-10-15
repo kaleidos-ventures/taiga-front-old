@@ -213,7 +213,6 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs) ->
 BacklogMilestonesController = ($scope, $rootScope, rs) ->
     # Local scope variables
     $scope.sprintFormOpened = false
-    $scope.sprintEditFormOpened = {}
 
     calculateStats = ->
         pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)
@@ -230,17 +229,6 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
             "assignedPoints": assigned,
             "completedPoints": completed
         })
-
-    $scope.showEditForm = (id) ->
-        $scope.sprintEditFormOpened[id] = true
-
-    $scope.sprintEditSubmit = (milestone) ->
-        milestone.save().then ->
-            $scope.sprintEditFormOpened[milestone.id] = false
-
-    $scope.closeSprintEditForm = (milestone) ->
-        $scope.sprintEditFormOpened[milestone.id] = false
-        milestone.revert()
 
     $scope.sprintSubmit = ->
         if $scope.form.save is undefined
@@ -275,6 +263,18 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
 
 
 BacklogMilestoneController = ($scope, rs) ->
+    $scope.editFormOpened = false
+
+    $scope.showEditForm = () ->
+        $scope.editFormOpened = true
+
+    $scope.submit = ->
+        $scope.ml.save().then ->
+            $scope.editFormOpened = false
+
+    $scope.closeEditForm = ->
+        $scope.editFormOpened = false
+
     calculateStats = ->
         pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)
         total = 0

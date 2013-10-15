@@ -178,30 +178,6 @@
                         <a class="edit" href="" ng-click="showEditForm(ml.id)" ng-show="showEditOption" data-icon="d"></a>
                         <span ng-show="$first">current sprint</span>
                     </div>
-                    <div class="milestone-edit-form-box" ng-show="sprintEditFormOpened[ml.id]">
-                        <form action="" gm-checksley-form="sprintEditSubmit(ml)">
-                            <fieldset>
-                                <label>Sprint name:</label>
-                                <input type="text" data-required="true" ng-model="ml.name"
-                                    placeholder="Sprint name..."></input>
-                            </fieldset>
-
-                            <fieldset>
-                                <div class="subfield">
-                                    <label>Estimated start:</label>
-                                    <input type="text" gm-kalendae data-required="true" ng-model="ml.estimated_start"></input>
-                                </div>
-                                <div class="subfield">
-                                    <label>Estimated finish</label>
-                                    <input type="text" gm-kalendae data-required="true" ng-model="ml.estimated_finish"></input>
-                                </div>
-                            </fieldset>
-                            <div class="btn-group">
-                                <input type="submit" class="button button-success" gm-checksley-submit-button value="Save" />
-                                <a href="" class="button" ng-click="closeSprintEditForm(ml)">Close</a>
-                            </div>
-                        </form>
-                    </div>
 
                     <div class="stats">
                         <div class="sprint-progress">
@@ -223,7 +199,7 @@
                     </div>
                 </div>
                 <div class="body">
-                    <div class="us-list">
+                    <div class="us-list" ng-hide="editFormOpened">
                         <div class="us-table-list">
                             <div class="flex-body" gm-sortable=".us-container .flex-body"
                                     ng-model="milestones[$index].user_stories">
@@ -234,6 +210,31 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="milestone-edit-form-box" ng-show="editFormOpened">
+                    <form action="" gm-checksley-form="submit()">
+                        <fieldset>
+                            <label>Sprint name:</label>
+                            <input type="text" data-required="true" ng-model="ml.name"
+                                placeholder="Sprint name..."></input>
+                        </fieldset>
+
+                        <fieldset>
+                            <div class="subfield">
+                                <label>Estimated start:</label>
+                                <input type="text" gm-kalendae data-required="true" ng-model="ml.estimated_start"></input>
+                            </div>
+                            <div class="subfield">
+                                <label>Estimated finish</label>
+                                <input type="text" gm-kalendae data-required="true" ng-model="ml.estimated_finish"></input>
+                            </div>
+                        </fieldset>
+                        <div class="btn-group">
+                            <input type="submit" class="button button-success" gm-checksley-submit-button value="Save" />
+                            <a href="" class="button" ng-click="closeEditForm()">Close</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
