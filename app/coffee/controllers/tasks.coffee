@@ -41,7 +41,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $dat
 
     # Load initial data
     $data.loadProject($scope)
-    $data.loadUserAndRoles($scope)
+    $data.loadUsersAndRoles($scope)
 
     # Initial load
     loadAttachments()
