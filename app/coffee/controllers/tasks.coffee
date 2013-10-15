@@ -40,12 +40,10 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $dat
             $rootScope.pageBreadcrumb = breadcrumb
 
     # Load initial data
-    $data.loadProject($scope)
-    $data.loadUsersAndRoles($scope)
-
-    # Initial load
-    loadAttachments()
-    loadTask()
+    $data.loadProject($scope).then ->
+        $data.loadUsersAndRoles($scope).then ->
+            loadAttachments()
+            loadTask()
 
     $scope.isSameAs = (property, id) ->
         return ($scope.task[property] == parseInt(id, 10))

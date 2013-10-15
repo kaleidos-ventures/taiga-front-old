@@ -57,7 +57,9 @@ GmIssueHistoryDirective = ($compile, $rootScope) ->
 
         resolveValue = (name, value) ->
             return switch name
-                when "priority", "status", "severity" then scope.constants[name][value].name
+                when "priority" then scope.constants.priorities[value].name
+                when "status" then scope.constants.issueStatuses[value].name
+                when "severity" then scope.constants.severities[value].name
                 when "assigned_to"
                     if value == null
                         return "Unassigned"

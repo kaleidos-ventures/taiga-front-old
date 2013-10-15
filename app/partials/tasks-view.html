@@ -28,14 +28,13 @@
         </div>
         <div class="span4 task-metadata">
             <div class="info-header">
-                <h3>Issue data</h3>
+                <h3>Task data</h3>
             </div>
             <ul class="info-rows">
                <li>Added by: <span>{{ constants.users[task.owner].username }}</span></li>
                <li>Assigned to: <span>{{ constants.users[task.assigned_to].username }}</span></li>
                <li>Date: <span>{{ task.created_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span></li>
                <li>Updated: <span>{{ task.modified_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span></li>
-               <li class="priority-{{ task.priority }}">Priority: <span>{{ constants.priorities[task.priority].name }}</span></li>
                <li class="status-{{ task.status }}">Status: <span>{{ constants.taskStatuses[task.status].name }}</span></li>
                <li>Attachments: <span>{{ attachments.length }}</span></li>
             </ul>
@@ -46,7 +45,7 @@
         <div class="span12">
             <div class="history">
                 <h3>History</h3>
-                <div class="history-items-container" ng-model="task.history" gm-issue-history></div>
+                <div class="history-items-container" ng-model="task.history" gm-task-history></div>
             </div>
         </div>
     </div>
@@ -120,7 +119,7 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="view-footer">
-                <p class="title">Issue #{{ task.ref }}</p>
+                <p class="title">Task #{{ task.ref }}</p>
                 <div class="buttons">
                     <a class="button button-delete">Delete task</a>
                 </div>
