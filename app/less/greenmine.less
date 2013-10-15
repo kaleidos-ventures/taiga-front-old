@@ -354,10 +354,14 @@ body.login {
             margin-top: 4px;
             a{
                 color: #FFF;
-                background: url('../img/logout_ico.png') no-repeat center left;
                 padding: 3px 0;
                 padding-left: 23px;
                 font-size: .9em;
+                &::before {
+                    padding-right: 5px;
+                    position: relative;
+                    top: 1px;
+                }
             }
         }
     }
