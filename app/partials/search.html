@@ -28,21 +28,6 @@
                     </li>
                 </ul>
             </div>
-
-            <div class="results-userstory">
-                <ul class="result-list">
-                    <li class="result-item" ng-repeat="item in results.userstory">
-                        <div class="title">
-                            <a href="{{ urls.userStoryUrl(projectId, item.pk) }}">
-                                {{ item.stored_fields.title }}
-                            </a>
-                        </div>
-                        <div class="description">
-                            {{ item.stored_fields.description|truncate:200 }}
-                        </div>
-                    </li>
-                </ul>
-            </div>
         </div>
     </div>
 </div>
