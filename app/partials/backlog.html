@@ -79,8 +79,9 @@
                                 <!-- TODO: total points col -->
                                 <label for="show_total_points">Show total points (TODO)</label>
                             </div>
-                            <div class="option">
-                                <a href="" class="add-selected-us" data-icon="A">Add selected US (TODO points) to current sprint</a>
+                            <div class="option" ng-show="selectedUserStories">
+                                <a href="" class="add-selected-us" data-icon="A"
+                                    ng-click="moveSelectedUserStoriesToCurrentSprint()">Add selected US ({{ selectedStoryPoints }} points) to current sprint</a>
                             </div>
                         </div>
                     </div>
@@ -95,7 +96,7 @@
                     <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
                             gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}">
                         <div class="us-check">
-                            <input type="checkbox" ng-model="us.selected"></input>
+                            <input type="checkbox" ng-model="us.selected" ng-change="changeUserStoriesSelection()"></input>
                         </div>
                         <div class="us-title">
                             <div class="title">{{ us.subject|truncate:60 }}</div>

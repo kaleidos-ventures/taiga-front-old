@@ -47,10 +47,6 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
 
 
 BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
-    # Local scope variables
-    $scope.filtersOpened = false
-    $scope.showTags = false
-
     calculateStats = ->
         pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)
         total = 0
@@ -121,8 +117,70 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
             filterUsBySelectedTags()
             calculateStats()
 
+    calculateStoryPoints = (selectedUserStories) ->
+        defered = $q.defer()
+
+        gm.utils.defer ->
+            total = 0
+
+            for us in selectedUserStories
+                for roleId, pointId of us.points
+                    pointsValue = $scope.constants.points[pointId].value
+                    if pointsValue is null
+                        pointsValue = 0
+                    total += pointsValue
+
+            defered.resolve(total)
+
+        return defered.promise
+
+    getSelectedUserStories = ->
+        selected = _.filter($scope.unassingedUs, "selected")
+        if selected.length == 0
+            return null
+        return selected
+
+    getUnselectedUserStories = ->
+        selected = _.reject($scope.unassingedUs, "selected")
+        if selected.length == 0
+            return null
+        return selected
+
+    # Local scope variables
+    $scope.selectedUserStories = null
+    $scope.selectedStoryPoints = 9
+
+    $scope.filtersOpened = false
+    $scope.showTags = false
+
+    $scope.moveSelectedUserStoriesToCurrentSprint = ->
+        if $scope.milestones.length == 0
+            return
+
+        milestone = $scope.milestones[0]
+
+        selected = getSelectedUserStories()
+        unselected = getUnselectedUserStories()
+
+        for us in selected
+            milestone.user_stories.push(us)
+            us.milestone = milestone.id
+            us.save()
+
+        $scope.unassingedUs = unselected
+
+    $scope.changeUserStoriesSelection = ->
+        selected = $scope.selectedUserStories = getSelectedUserStories()
+
+        promise = calculateStoryPoints(selected)
+        promise.then (points) ->
+            $scope.selectedStoryPoints = points
+
     $scope.$on("points:loaded", loadUserStories)
     $scope.$on("userstory-form:create", loadUserStories)
+
+    $scope.$on "milestones:loaded", (ctx, data) ->
+        $scope.milestones = data
 
     $scope.openCreateUserStoryForm = ->
         promise = $modal.open("user-story-form", {"us": {us:[], points:{}, project:$scope.projectId}})
@@ -258,7 +316,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
                 item.project == $rootScope.projectId
 
             calculateStats()
-            $scope.$emit("milestones:loaded", $scope.milestones)
+            $rootScope.$broadcast("milestones:loaded", $scope.milestones)
 
 
 
