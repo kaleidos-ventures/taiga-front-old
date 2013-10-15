@@ -62,6 +62,12 @@
             <div class="us-table-list">
                 <div class="flex-header">
                     <div class="us-check"></div>
+                    <div class="us-title">User Story</div>
+                    <div class="us-points">Points</div>
+                    <div class="us-options">Options</div>
+                </div>
+                <div class="flex-header second">
+                    <div class="us-check"></div>
                     <div class="us-title">
                         <div class="list-options">
                             <div class="option">
@@ -73,27 +79,24 @@
                                 <!-- TODO: total points col -->
                                 <label for="show_total_points">Show total points (TODO)</label>
                             </div>
+                            <div class="option">
+                                <a href="" class="add-selected-us" data-icon="A">Add selected US (TODO points) to current sprint</a>
+                            </div>
                         </div>
                     </div>
-                    <div class="us-points">Points</div>
-                    <div class="us-options"></div>
-                </div>
-                <div class="flex-header second">
-                    <div class="us-check"></div>
-                    <div class="us-title">User Story</div>
                     <div class="us-points">
                         <div ng-repeat="item in roles" class="role-point">
                             {{ item.name }}
                         </div>
                     </div>
-                    <div class="us-options">Options</div>
+                    <div class="us-options"></div>
                 </div>
                 <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs" gm-doomline>
                     <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
                             gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}">
                         <div class="us-check">
                             <input type="checkbox" ng-model="us.selected"></input>
-                        </div>
+                        </div>  
                         <div class="us-title">
                             <div class="title">{{ us.subject|truncate:60 }}</div>
                             <div class="tags" ng-hide="!showTags">

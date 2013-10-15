@@ -865,8 +865,20 @@ body.login {
                 }
             }
         }
-
         .us-table-list {
+
+            .selected-points {
+                float: right;
+                span {
+                    display: block;
+                    font-size: 13px;
+                    text-align: center;
+                }
+                a{
+                    background: @green;
+                }
+            }
+            
             .flex-header {
                 display: -webkit-box;
                 display: -moz-box;
@@ -875,6 +887,7 @@ body.login {
 
                 &.second {
                     border-bottom: 2px solid #666666;
+                    
                 }
 
                 width: 100%;
@@ -886,40 +899,6 @@ body.login {
                         -moz-box-flex: 1;
                     }
                 }
-            }
-
-            .flex-body {
-                min-height: 40px;
-                .us-item {
-                    display: -webkit-box;
-                    display: -moz-box;
-                    -webkit-box-orient: horizontal;
-                    -moz-box-orient: horizontal;
-                    padding: 2px 0;
-                    border-bottom: 1px solid #eee;
-                    cursor: move;
-                    font-family: @ColabReg;
-                    font-size: .8em;
-                    width: 100%;
-
-                    &:hover {
-                        background-color: #f9f9f9;
-                    }
-                    &.selected {
-                        background-color: #ddd;
-                    }
-                    &> div{
-                        &:nth-child(2) {
-                            -webkit-box-flex: 1;
-                            -moz-box-flex: 1;
-                        }
-                    }
-
-
-                    &.doomline { border-bottom: 1px solid red; }
-                }
-
-
             }
 
 
@@ -952,6 +931,17 @@ body.login {
                             font-size: 12px;
                             color: #777;
                         }
+                        .add-selected-us{
+                            color: @green;
+                            &:before {
+                                padding-right: 5px;
+                                position: relative;
+                                top: 1px;
+                            }
+                            &:hover {
+                                color: @gray;
+                            }
+                        }
                     }
                 }
             }
@@ -975,67 +965,98 @@ body.login {
                     font-size: 1.2em;
                 }
 
-                div.role-point {
+                .role-point {
                     cursor: pointer;
                     display: inline-block;
                     width: 30px;
-                    font-size: 15px;
+                    font-size: 14px;
+                    color: darken(#CCC, 40%);
                     line-height: 20px;
-                }
-            }
-
-            .flex-body {
-                .us-points {
-                    font-size: 1.3em;
                 }
             }
 
             .us-options {
                 padding: 4px;
                 width: 100px;
-                a{
-                    position: relative;
-                    margin-right: 4px;
-                    background: #000;
-                    display: inline-block;
-                    padding: 1px;
-                    border-radius:50%;
-                    padding: 5px;
-                    &:before {
-                        color: #FFF;
-                        font-size: 16px;
+            }
+            .flex-body {
+                min-height: 40px;
+                .us-item {
+                    display: -webkit-box;
+                    display: -moz-box;
+                    -webkit-box-orient: horizontal;
+                    -moz-box-orient: horizontal;
+                    padding: 2px 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: move;
+                    font-family: @ColabReg;
+                    font-size: .8em;
+                    width: 100%;
+
+                    &:hover {
+                        background-color: #f9f9f9;
+                    }
+                    &.selected {
+                        background-color: #ddd;
+                    }
+                    &> div{
+                        &:nth-child(2) {
+                            -webkit-box-flex: 1;
+                            -moz-box-flex: 1;
+                        }
+                    }
+
+
+                    &.doomline { border-bottom: 1px solid red; }
+                }
+                .us-points {
+                    font-size: 1.3em;
+                }
+                .us-options {
+                    a{
                         position: relative;
-                        top: 1px;
-                    }
-                    &.btn-small-preview {
-                        background: #666666;
-                    }
-                    &.btn-small-edit {
-                        background: #669933;
-                    }
-                    &.btn-small-remove {
-                        background: #cc0000;
-                    }
-                    &:hover{
-                        background-color: #333;
-                        transition: all 0.3s ease-in;
+                        margin-right: 4px;
+                        background: #000;
+                        display: inline-block;
+                        padding: 1px;
+                        border-radius:50%;
+                        padding: 5px;
+                        &:before {
+                            color: #FFF;
+                            font-size: 16px;
+                            position: relative;
+                            top: 1px;
+                        }
+                        &.btn-small-preview {
+                            background: #666666;
+                        }
+                        &.btn-small-edit {
+                            background: #669933;
+                        }
+                        &.btn-small-remove {
+                            background: #cc0000;
+                        }
+                        &:hover{
+                            background-color: #333;
+                            transition: all 0.3s ease-in;
+                            .help-box{
+                                display: block;
+                            }
+                            &:before{
+                                opacity: 0.7;
+                            }
+                        }
                         .help-box{
-                            display: block;
+                            position: absolute;
+                            top: -29px;
+                            border: 1px solid #669933;
+                            left: -25px;
+                            padding: 4px;
+                            width: 57px;
+                            height: 13px;
+                            text-align:center;
+                            color: #fff;
                         }
-                        &:before{
-                            opacity: 0.7;
-                        }
-                    }
-                    .help-box{
-                        position: absolute;
-                        top: -29px;
-                        border: 1px solid #669933;
-                        left: -25px;
-                        padding: 4px;
-                        width: 57px;
-                        height: 13px;
-                        text-align:center;
-                        color: #fff;
                     }
                 }
             }
@@ -2493,7 +2514,7 @@ body.login {
                                 border-radius: 10px 0px 0px 10px;
                                 font-family: 'LeagueGothicRegular';
                                 font-size: 1.1em;
-                            }
+                            }   
                         }
                         .tasks {
                             padding: 3px;
