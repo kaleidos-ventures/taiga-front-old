@@ -163,14 +163,18 @@ TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, rs) ->
     $scope.$on "task-form:close", ->
         $scope.formOpened = false
 
-TaskboardTaskController = ($scope, $q) ->
+TaskboardTaskController = ($scope, $rootScope, $q) ->
     $scope.updateTaskAssignation = (task, id) ->
         task.assigned_to = id ? id : null
         task.save()
 
+    $scope.getTaskColorStyle = (task) ->
+        return {
+            "border-color": $rootScope.constants.users[task.assigned_to].color or '#FFF5D8'
+        }
 
 
 module = angular.module("greenmine.controllers.taskboard", [])
-module.controller("TaskboardTaskController", ['$scope', '$q', TaskboardTaskController])
+module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', TaskboardTaskController])
 module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', TaskboardController])
 module.controller("TaskboardTaskFormController", ['$scope', '$rootScope', '$gmOverlay', 'resource', TaskboardTaskFormController])
