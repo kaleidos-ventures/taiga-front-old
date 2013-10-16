@@ -3,8 +3,11 @@
         <a class="greenmine-logo" href="{{ urls.projectsUrl() }}" title="greenmine">Greenmine</a>
     </div>
     <div class="top-menu-sbox">
-        <a class"user">{{ auth.email }}</a>
-        <a class="logout" data-icon="p" href="" ng-click="logout()">Logout</a>
+        <ul>
+            <li><a class"user" title="{{ auth.email }}">{{ auth.email }}</a></li>
+            <li><a class="logout" data-icon="f" href="{{ urls.projects}}" title="Show all projects">All Projects</a></li>
+            <li><a class="logout" data-icon="p" href="" ng-click="logout()" title="Logout">Logout</a></li>
+        </ul>
     </div>
 </div>
 <div class="nav" gm-header-menu ng-show="projectId">
@@ -15,7 +18,6 @@
         <li class="wiki"><a data-icon="g" href="{{ urls.wikiUrl(projectId, 'home') }}" title="wiki">Wiki</a></li>
         <!--
         <li class="questions"><a href="{{ urls.questionsUrl(projectId) }}" title="questions">Questions</a></li>
-        <li class="search"><a href="" title="search">Search</a></li>
         -->
         <li class="admin"><a data-icon="i" href="{{ urls.adminUrl(projectId) }}" title="Administration panel">Admin</a></li>
     </ul>

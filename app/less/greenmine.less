@@ -338,17 +338,30 @@ body.login {
         .top-menu-sbox {
             float: right;
             padding: 2px;
-            padding-right: 20px;
+            padding-right: 10px;
             margin-top: 4px;
-            a{
-                color: #FFF;
-                padding: 3px 0;
-                padding-left: 10px;
-                font-size: .9em;
-                &:before {
-                    padding-right: 5px;
-                    position: relative;
-                    top: 1px;
+            ul {
+                margin: 0px;
+                padding:0;
+                overflow: hidden;
+                list-style: none;
+                li {
+                    text-align: center;
+                    display: block;
+                    float: left;
+                    padding: 5px 0;
+                    transition: all .2s ease-in;
+                    a{
+                        color: #FFF;
+                        padding: 3px 0;
+                        padding-left: 10px;
+                        font-size: .9em;
+                        &:before {
+                            padding-right: 5px;
+                            position: relative;
+                            top: 1px;
+                        }
+                    }
                 }
             }
         }
