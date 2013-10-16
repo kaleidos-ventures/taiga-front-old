@@ -12,9 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-angular.module('greenmine.services.common', ['greenmine.config'], ($provide) ->
-    $provide.factory('notify', ['$rootScope', ($rootScope) ->
-        return (type, messages, timeout) ->
-            $rootScope.$broadcast('$notify', type, messages, timeout)
-    ])
-).value('version', '0.1')
+
+AuthProvider = ($gmStorage, $model) ->
+    service = {}
+
+    service.getUser = ->
+        userData = $gmStorage.get('userInfo')
+        if userData
+            return $model.make_model("users", userData)
+        return null
+
+    service.setUser = (user) ->
+        $gmStorage.set("userInfo", user.getAttrs())
+
+    return service
+
+
+module = angular.module('greenmine.services.common', [])
+module.factory("$gmAuth", ["$gmStorage", "$model", AuthProvider])

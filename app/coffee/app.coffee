@@ -154,9 +154,9 @@ modules = [
 ]
 
 
-init = ($rootScope, $location, $gmStorage, $gmUrls, config) ->
+init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, config) ->
     # Constants
-    $rootScope.auth = $gmStorage.get('userInfo')
+    $rootScope.auth = $gmAuth.getUser()
     $rootScope.constants = {}
 
     $rootScope.constants.usStatuses = {}
@@ -254,6 +254,6 @@ init = ($rootScope, $location, $gmStorage, $gmUrls, config) ->
 
 angular.module('greenmine', modules)
        .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', '$gmUrlsProvider', configCallback])
-       .run(['$rootScope', '$location', '$gmStorage', '$gmUrls', 'config', init])
+       .run(['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls', 'config', init])
 
 angular.module('greenmine.config', []).value('config', {host: "localhost:8000", scheme: "http"})

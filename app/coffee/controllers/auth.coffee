@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-LoginController = ($scope, $rootScope, $location, rs, $gmStorage) ->
+LoginController = ($scope, $rootScope, $location, rs, $gmAuth) ->
     $rootScope.pageSection = 'login'
 
     $scope.form = {}
@@ -22,8 +22,10 @@ LoginController = ($scope, $rootScope, $location, rs, $gmStorage) ->
 
         $scope.loading = true
 
-        onSuccess = (data) ->
-            $gmStorage.set("userInfo", data)
+        onSuccess = (user) ->
+            $gmAuth.setUser(user)
+            $rootScope.auth = user
+
             $location.url("/")
 
         onError = (data) ->
@@ -31,7 +33,7 @@ LoginController = ($scope, $rootScope, $location, rs, $gmStorage) ->
             $scope.errorMessage = data.detail
 
         promise = rs.login(username, password)
-        promise = promise.then onSuccess, onError
+        promise = promise.then(onSuccess, onError)
         promise.then ->
             $scope.loading = false
 
@@ -95,7 +97,7 @@ ProfileController = ($scope, $rootScope) ->
 
 
 module = angular.module("greenmine.controllers.auth", [])
-module.controller("LoginController", ['$scope', '$rootScope', '$location', 'resource', '$gmStorage', LoginController])
+module.controller("LoginController", ['$scope', '$rootScope', '$location', 'resource', '$gmAuth', LoginController])
 module.controller("RegisterController", ['$scope', '$rootScope', RegisterController])
 module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', RecoveryController])
 module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', 'resource',  ChangePasswordController])

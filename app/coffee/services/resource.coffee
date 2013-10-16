@@ -62,8 +62,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         defered = $q.defer()
 
         onSuccess = (data, status) ->
-            $gmStorage.set("token", data["token"])
-            defered.resolve(data)
+            $gmStorage.set("token", data["auth_token"])
+            user = $model.make_model("users", data)
+            defered.resolve(user)
 
         onError = (data, status) ->
             defered.reject(data)
@@ -112,6 +113,22 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return defered.promise
 
+    service.changePassword = (password) ->
+        defered = $q.defer()
+        postData = {password: password}
+        url = $gmUrls.api("users-change-password")
+
+        onSuccess = (data, status) ->
+            defered.resolve(data)
+
+        onError = (data, status) ->
+            defered.reject(data)
+
+        $http({method: "POST", url: url, data: JSON.stringify(postData)})
+            .success(onSuccess)
+            .error(onError)
+
+        return defered.promise
 
     # Get a project list
     service.getProjects = -> queryMany('projects')
