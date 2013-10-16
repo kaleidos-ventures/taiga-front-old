@@ -4,18 +4,19 @@
     </div>
     <div class="top-menu-sbox">
         <ul>
-            <li><a class"user" title="{{ auth.email }}">{{ auth.email }}</a></li>
             <li>
-                <a class="all-projects" data-icon="f" href=""
-                   title="Show all projects">All Projects</a>
-                <ul class="project-list">
+                <a data-icon="b" href="{{ urls.projects}}" title="Show all projects">All Projects</a>
+                <!-- <ul class="project-list">
                     <li ng-repeat="proj in auth.projects">
                         <a href="{{ urls.backlogUrl(proj.id) }}">{{ proj.name }}</a>
                     </li>
                 </ul>
+                -->
             </li>
-            <li><a class="logout" data-icon="p" href="" ng-click="logout()"
-                   title="Logout">Logout</a></li>
+            <li>
+                <a data-icon="D" title="{{ auth.email }}">{{ auth.email }}</a>
+            </li>
+            <li><a data-icon="p" href="" ng-click="logout()" title="Logout">Logout</a></li>
         </ul>
     </div>
 </div>
