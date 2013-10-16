@@ -117,15 +117,17 @@
                             </a>
                         </div>
                     </div>
-                    <div class="issue-options">
-                        <a class="btn-small-preview" gm-popover
+                    <div class="issue-options extra-options">
+                        <a data-icon="l" class="btn-small-preview" gm-popover
                                 data-tmpl="#issue-preview-popover"
                                 data-auto-hide="true"
                                 data-placement="left">
                             <span class="help-box">Preview</span>
                         </a>
-                        <a class="btn-small-edit" href="{{ urls.issuesUrl(projectId, issue.id) }}"><span class="help-box">Edit</span></a>
-                        <a class="btn-small-remove" gm-popover="removeIssue(issue)"
+                        <a data-icon="j" class="btn-small-edit" href="{{ urls.issuesUrl(projectId, issue.id) }}">
+                            <span class="help-box">Edit</span>
+                        </a>
+                        <a data-icon="h" class="btn-small-remove" gm-popover="removeIssue(issue)"
                                 data-tmpl="#issue-remove-popover"
                                 data-auto-hide="false"
                                 data-placement="left">

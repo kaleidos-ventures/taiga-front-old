@@ -1030,53 +1030,6 @@ body.login {
                 .us-points {
                     font-size: 1.3em;
                 }
-                .us-options {
-                    a{
-                        position: relative;
-                        margin-right: 2px;
-                        background: #000;
-                        display: inline-block;
-                        padding: 1px;
-                        border-radius:50%;
-                        padding: 5px;
-                        &:before {
-                            color: #FFF;
-                            font-size: 16px;
-                            position: relative;
-                            top: 1px;
-                        }
-                        &.btn-small-preview {
-                            background: #666666;
-                        }
-                        &.btn-small-edit {
-                            background: #669933;
-                        }
-                        &.btn-small-remove {
-                            background: #cc0000;
-                        }
-                        &:hover{
-                            background-color: #333;
-                            transition: all 0.3s ease-in;
-                            .help-box{
-                                display: block;
-                            }
-                            &:before{
-                                opacity: 0.7;
-                            }
-                        }
-                        .help-box{
-                            position: absolute;
-                            top: -29px;
-                            border: 1px solid #669933;
-                            left: -25px;
-                            padding: 4px;
-                            width: 57px;
-                            height: 13px;
-                            text-align:center;
-                            color: #fff;
-                        }
-                    }
-                }
             }
         }
     }
@@ -2213,48 +2166,6 @@ body.login {
         .issue-assignedto {
             padding: 10px;
         }
-
-        .issue-options {
-            padding: 4px;
-            width: 120px;
-            a{
-                position: relative;
-                width: 20px;
-                margin-right: 4px;
-                height: 20px;
-                background: #000;
-                display: inline-block;
-                padding: 1px;
-                border-radius: 20px;
-                &.btn-small-preview {
-                    background: url( '../img/backlog_sprite.png' ) no-repeat center 5px #666666;
-                }
-                &.btn-small-edit {
-                    background: url( '../img/backlog_sprite.png' ) no-repeat center -17px #669933;
-                }
-                &.btn-small-remove {
-                    background: url( '../img/backlog_sprite.png' ) no-repeat center -38px #cc0000;
-                }
-                &:hover{
-                    background-color: #333;
-                    transition: all 0.3s ease-in;
-                    .help-box{
-                        display: block;
-                    }
-                }
-                .help-box{
-                    position: absolute;
-                    top: -29px;
-                    border: 1px solid #669933;
-                    left: -25px;
-                    padding: 4px;
-                    width: 57px;
-                    height: 13px;
-                    text-align:center;
-                    color: #fff;
-                }
-            }
-        }
         .issue-assignedto {
             width: 160px;
         }
@@ -2286,6 +2197,57 @@ body.login {
                     }
                 }
             }
+        }
+    }
+}
+
+/* Issue options */
+.extra-options {
+    padding: 4px;
+    width: 120px;
+    a{
+        position: relative;
+        margin-right: 2px;
+        background: #000;
+        display: inline-block;
+        padding: 1px;
+        border-radius:50%;
+        padding: 5px;
+        &:before {
+            color: #FFF;
+            font-size: 16px;
+            position: relative;
+            top: 1px;
+        }
+        &.btn-small-preview {
+            background: #666666;
+        }
+        &.btn-small-edit {
+            background: #669933;
+        }
+        &.btn-small-remove {
+            background: #cc0000;
+        }
+        &:hover{
+            background-color: #333;
+            transition: all 0.3s ease-in;
+            .help-box{
+                display: block;
+            }
+            &:before{
+                opacity: 0.7;
+            }
+        }
+        .help-box{
+            position: absolute;
+            top: -29px;
+            border: 1px solid #669933;
+            left: -25px;
+            padding: 4px;
+            width: 57px;
+            height: 13px;
+            text-align:center;
+            color: #fff;
         }
     }
 }

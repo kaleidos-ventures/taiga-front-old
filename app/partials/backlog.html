@@ -115,13 +115,17 @@
                                 {{ constants.points[us.points[role.id]].name }}
                             </div>
                         </div>
-                        <div class="us-options">
+                        <div class="us-options extra-options">
                             <a class="btn-small-preview" data-icon="l" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">
                                 <span class="help-box">Preview</span>
                             </a>
-                            <a class="btn-small-edit" data-icon="j" href="{{ urls.userStoryUrl(projectId, us.id) }}"><span class="help-box">Edit</span></a>
+                            <a class="btn-small-edit" data-icon="j" href="{{ urls.userStoryUrl(projectId, us.id) }}">
+                                <span class="help-box">Edit</span>
+                            </a>
                             <a class="btn-small-remove" data-icon="h" gm-popover="removeUs(us)"
-                                data-tmpl="#us-remove-popover"><span class="help-box">Remove</span></a>
+                                data-tmpl="#us-remove-popover">
+                                <span class="help-box">Remove</span>
+                            </a>
                         </div>
                     </div>
                 </div>
