@@ -12,205 +12,206 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-angular.module 'greenmine.services.model', [], ($provide) ->
-    modelProvider = ($q, $http, $gmUrls, $gmStorage) ->
-        headers = ->
-            return {"X-SESSION-TOKEN": $gmStorage.get('token')}
 
-        class Model
-            constructor: (name, data, dataTypes) ->
-                @._attrs = data
-                @._name = name
-                @._dataTypes = dataTypes
+ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
+    headers = ->
+        return {"X-SESSION-TOKEN": $gmStorage.get('token')}
 
-                @.setAttrs(data)
-                @.initialize()
+    class Model
+        constructor: (name, data, dataTypes) ->
+            @._attrs = data
+            @._name = name
+            @._dataTypes = dataTypes
 
-            applyCasts: ->
-                for attrName, castName of @._dataTypes
-                    castMethod = service.casts[castName]
-                    if not castMethod
-                        continue
+            @.setAttrs(data)
+            @.initialize()
 
-                    @._attrs[attrName] = castMethod(@._attrs[attrName])
+        applyCasts: ->
+            for attrName, castName of @._dataTypes
+                castMethod = service.casts[castName]
+                if not castMethod
+                    continue
 
-            getIdAttrName: ->
-                return "id"
+                @._attrs[attrName] = castMethod(@._attrs[attrName])
 
-            getUrl: ->
-                return "#{$gmUrls.api(@_name)}/#{@.getAttrs()[@.getIdAttrName()]}"
+        getIdAttrName: ->
+            return "id"
 
-            getAttrs: (patch=false) ->
-                if patch
-                    return _.extend({}, @._modifiedAttrs)
-                return _.extend({}, @._attrs, @._modifiedAttrs)
+        getUrl: ->
+            return "#{$gmUrls.api(@_name)}/#{@.getAttrs()[@.getIdAttrName()]}"
 
-            setAttrs: (attrs) ->
-                @._attrs = attrs
-                @._modifiedAttrs = {}
+        getAttrs: (patch=false) ->
+            if patch
+                return _.extend({}, @._modifiedAttrs)
+            return _.extend({}, @._attrs, @._modifiedAttrs)
 
-                @.applyCasts()
-                @._isModified = false
+        setAttrs: (attrs) ->
+            @._attrs = attrs
+            @._modifiedAttrs = {}
 
-            initialize: () ->
-                self = @
+            @.applyCasts()
+            @._isModified = false
 
-                getter = (name) ->
-                    return ->
-                        if name.substr(0,2) == "__"
-                            return self[name]
+        initialize: () ->
+            self = @
 
-                        if name not in _.keys(self._modifiedAttrs)
-                            return self._attrs[name]
+            getter = (name) ->
+                return ->
+                    if name.substr(0,2) == "__"
+                        return self[name]
 
-                        return self._modifiedAttrs[name]
+                    if name not in _.keys(self._modifiedAttrs)
+                        return self._attrs[name]
 
-                setter = (name) ->
-                    return (value) ->
-                        if name.substr(0,2) == "__"
-                            self[name] = value
-                            return
+                    return self._modifiedAttrs[name]
 
-                        if self._attrs[name] != value
-                            self._modifiedAttrs[name] = value
-                            self._isModified = true
-                        else
-                            delete self._modifiedAttrs[name]
-
+            setter = (name) ->
+                return (value) ->
+                    if name.substr(0,2) == "__"
+                        self[name] = value
                         return
 
-                _.each @_attrs, (value, name) ->
-                    options =
-                        get: getter(name)
-                        set: setter(name)
-                        enumerable: true
-                        configurable: true
+                    if self._attrs[name] != value
+                        self._modifiedAttrs[name] = value
+                        self._isModified = true
+                    else
+                        delete self._modifiedAttrs[name]
 
-                    Object.defineProperty(self, name, options)
+                    return
 
-            serialize: () ->
-                data =
-                    "data": _.clone(@_attrs)
-                    "name": @_name
+            _.each @_attrs, (value, name) ->
+                options =
+                    get: getter(name)
+                    set: setter(name)
+                    enumerable: true
+                    configurable: true
 
-                return JSON.stringify(data)
+                Object.defineProperty(self, name, options)
 
-            isModified: () ->
-                return this._isModified
+        serialize: () ->
+            data =
+                "data": _.clone(@_attrs)
+                "name": @_name
 
-            revert: () ->
-                @_modifiedAttrs = {}
-                @_isModified = false
+            return JSON.stringify(data)
 
-            remove: () ->
-                defered = $q.defer()
-                self = @
+        isModified: () ->
+            return this._isModified
 
-                params =
-                    method: "DELETE"
-                    url: @getUrl()
-                    headers: headers()
+        revert: () ->
+            @_modifiedAttrs = {}
+            @_isModified = false
 
-                promise = $http(params)
-                promise.success (data, status) ->
-                    defered.resolve(self)
-
-                promise.error (data, status) ->
-                    defered.reject(self)
-
-                return defered.promise
-
-            save: (patch=true) ->
-                self = @
-                defered = $q.defer()
-
-                if not @isModified() and patch
-                    defered.resolve(self)
-                    return defered.promise
-
-                params =
-                    url: @getUrl()
-                    headers: headers(),
-
-                if patch
-                    params.method = "PATCH"
-                else
-                    params.method = "PUT"
-
-                params.data = JSON.stringify(@getAttrs(patch))
-
-                promise = $http(params)
-                promise.success (data, status) ->
-                    self._isModified = false
-                    self._attrs = _.extend(self.getAttrs(), data)
-                    self._modifiedAttrs = {}
-
-                    self.applyCasts()
-                    defered.resolve(self)
-
-                promise.error (data, status) ->
-                    defered.reject(data)
-
-                return defered.promise
-
-            refresh: () ->
-                defered = $q.defer()
-                self = @
-
-                params =
-                    method: "GET",
-                    url: @getUrl()
-                    headers: headers()
-
-                promise = $http(params)
-                promise.success (data, status) ->
-                    self._modifiedAttrs = {}
-                    self._attrs = data
-                    self._isModified = false
-                    self.applyCasts()
-
-                    defered.resolve(self)
-
-                promise.error (data, status) ->
-                    defered.reject([data, status])
-
-                return defered.promise
-
-            @desSerialize = (sdata) ->
-                ddata = JSON.parse(sdata)
-                model = new Model(ddata.url, ddata.data)
-                return model
-
-        service = {}
-        service.make_model = (name, data, cls=Model, dataTypes={}) ->
-            return new cls(name, data, dataTypes)
-
-        service.create = (name, data, cls=Model, dataTypes={}) ->
+        remove: () ->
             defered = $q.defer()
+            self = @
 
             params =
-                method: "POST"
-                url: $gmUrls.api(name)
+                method: "DELETE"
+                url: @getUrl()
                 headers: headers()
-                data: JSON.stringify(data)
 
             promise = $http(params)
-            promise.success (_data, _status) ->
-                defered.resolve(service.make_model(name, _data, cls, dataTypes))
+            promise.success (data, status) ->
+                defered.resolve(self)
 
             promise.error (data, status) ->
-                defered.reject(null)
+                defered.reject(self)
 
             return defered.promise
 
-        service.cls = Model
-        service.casts =
-            int: (value) ->
-                return parseInt(value, 10)
+        save: (patch=true) ->
+            self = @
+            defered = $q.defer()
 
-            float: (value) ->
-                return parseFloat(value, 10)
+            if not @isModified() and patch
+                defered.resolve(self)
+                return defered.promise
 
-        return service
+            params =
+                url: @getUrl()
+                headers: headers(),
 
-    $provide.factory('$model', ['$q', '$http', '$gmUrls', '$gmStorage', modelProvider])
+            if patch
+                params.method = "PATCH"
+            else
+                params.method = "PUT"
+
+            params.data = JSON.stringify(@getAttrs(patch))
+
+            promise = $http(params)
+            promise.success (data, status) ->
+                self._isModified = false
+                self._attrs = _.extend(self.getAttrs(), data)
+                self._modifiedAttrs = {}
+
+                self.applyCasts()
+                defered.resolve(self)
+
+            promise.error (data, status) ->
+                defered.reject(data)
+
+            return defered.promise
+
+        refresh: () ->
+            defered = $q.defer()
+            self = @
+
+            params =
+                method: "GET",
+                url: @getUrl()
+                headers: headers()
+
+            promise = $http(params)
+            promise.success (data, status) ->
+                self._modifiedAttrs = {}
+                self._attrs = data
+                self._isModified = false
+                self.applyCasts()
+
+                defered.resolve(self)
+
+            promise.error (data, status) ->
+                defered.reject([data, status])
+
+            return defered.promise
+
+        @desSerialize = (sdata) ->
+            ddata = JSON.parse(sdata)
+            model = new Model(ddata.url, ddata.data)
+            return model
+
+    service = {}
+    service.make_model = (name, data, cls=Model, dataTypes={}) ->
+        return new cls(name, data, dataTypes)
+
+    service.create = (name, data, cls=Model, dataTypes={}) ->
+        defered = $q.defer()
+
+        params =
+            method: "POST"
+            url: $gmUrls.api(name)
+            headers: headers()
+            data: JSON.stringify(data)
+
+        promise = $http(params)
+        promise.success (_data, _status) ->
+            defered.resolve(service.make_model(name, _data, cls, dataTypes))
+
+        promise.error (data, status) ->
+            defered.reject(null)
+
+        return defered.promise
+
+    service.cls = Model
+    service.casts =
+        int: (value) ->
+            return parseInt(value, 10)
+
+        float: (value) ->
+            return parseFloat(value, 10)
+
+    return service
+
+module = angular.module('greenmine.services.model', [])
+module.factory('$model', ['$q', '$http', '$gmUrls', '$gmStorage', ModelProvider])
