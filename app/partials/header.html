@@ -5,8 +5,8 @@
     <div class="top-menu-sbox">
         <ul>
             <li>
-                <a data-icon="b" href="{{ urls.projects}}" title="Show all projects">All Projects</a>
-                <ul class="project-list">
+                <a data-icon="b" ng-click="projectsList=!projectsList" href="" title="Show all projects">All Projects</a>
+                <ul class="project-list" ng-show="projectsList" ng-mouseleave="projectsList=false">
                     <li>
                         <a title="Project Name" href="#">Endesa Escuela de ventas</a>
                     </li>

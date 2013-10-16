@@ -217,3 +217,54 @@ input[type="search"], input[type="tel"],
 input[type="color"], .uneditable-input {
     margin-bottom: 0px;
 }
+
+/* ==============================================
+ * CSS3 ARROW BOX // http://cssarrowplease.com/
+ * ============================================== */
+
+/* Example > .top_arrow_box(#FFFFFF; 10%, 20px, #cccc; 1px)*/
+.top_arrow_box(@background; @position; @width; @border-color; @border-width) {
+        position: absolute;
+        background: @background;
+    &:after, &:before {
+        bottom: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+    &:after {
+        border-color: transparent;
+        border-bottom-color: @background;
+        border-width: @width;
+        left: @position;
+        margin-left: -@width;
+    }
+    &:before {
+        border-color: transparent;
+        border-bottom-color: @border-color;
+        border-width:@border-width + @width;
+        left: @position;
+        margin-left: -(@border-width+@width);
+    }
+}
+
+/* Box sizing: border-box */
+.box-sizing (@type: border-box) {
+	-webkit-box-sizing: @type;
+	-moz-box-sizing:    @type;
+	box-sizing:         @type;
+}
+
+/* Border-radius mixin */
+.border-radius (@radius: 5px) {
+	-webkit-border-radius: @radius;
+	-moz-border-radius:    @radius;
+	border-radius:         @radius;
+
+	-moz-background-clip:    padding;
+	-webkit-background-clip: padding-box;
+	background-clip:         padding-box;
+}
