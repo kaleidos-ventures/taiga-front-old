@@ -150,6 +150,7 @@ modules = [
 init = ($rootScope, $location, $gmStorage, $gmUrls, config) ->
     # Constants
     $rootScope.auth = $gmStorage.get('userInfo')
+    console.log $rootScope.auth
     $rootScope.constants = {}
 
     $rootScope.constants.usStatuses = {}
