@@ -94,7 +94,7 @@
                     <div class="us-options"></div>
                 </div>
                 <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs" gm-doomline>
-                    <div class="empty" ng-hidde="unassingedUs|onlyVisible">There isn't unassigned User Stories. Create a new one.</div>
+                    <div class="empty" ng-show="(unassingedUs|onlyVisible).length == 0">There isn't unassigned User Stories. Create a new one.</div>
                     <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
                             gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}">
                         <div class="us-check">
@@ -177,7 +177,7 @@
 
         <div class="sprints-box">
             <p class="sprints-box-title">Sprints</p>
-            <p class="empty" ng-hidde="milestones">There isn't Sprints. Create a new one.</div>
+            <p class="empty" ng-show="milestones.length == 0">There isn't Sprints. Create a new one.</div>
             <div class="sprint-sbox" ng-repeat="ml in milestones" ng-controller="BacklogMilestoneController"
                         ng-class="{first: $first}" ng-mouseover="showEditOption=true" ng-mouseout="showEditOption=false">
                 <div class="header">
