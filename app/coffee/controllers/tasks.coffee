@@ -59,7 +59,6 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $dat
             loadAttachments()
 
     $scope.removeAttachment = (attachment) ->
-        console.log "removeAttachment", attachment
         $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
         attachment.remove()
 

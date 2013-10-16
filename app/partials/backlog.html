@@ -3,7 +3,7 @@
     <div class="span8" ng-controller="BacklogUserStoriesController">
         <div class="graphics-container">
             <div class="user-story-stats" url="">
-                <div class="progress-box">
+                <div class="progress-box" ng-show="stats.completedPercentage">
                     <div class="progress progress-success">
                         <div class="bar" style="width: {{ stats.completedPercentage }}%;"></div>
                     </div>
@@ -26,10 +26,11 @@
                         <div class="help">not assigned points</div>
                     </div>
                 </div>
-                <a class="button new-us-story" data-icon="m" ng-click="openCreateUserStoryForm()">
+                <a class="button new-us-story" data-icon="m"
+                    ng-click="openCreateUserStoryForm()">
                     New user story
                 </a>
-                <a class="button show-hide-graphics" data-icon="k" gm-ninja-graph>
+                <a class="button show-hide-graphics" data-icon="k" ng-show="stats.completedPercentage" gm-ninja-graph>
                     <!-- Show graphics -->
                 </a>
             </div>
@@ -40,7 +41,7 @@
             </div>
         </div>
 
-        <div class="filters-container">
+        <div class="filters-container" ng-show="tags">
             <div class="filters-bar-sbox">
                 <div class="title-sbox">
                     <a data-icon="B" href="" ng-class="{active: filtersOpened}" ng-click="filtersOpened=!filtersOpened">Filters</a>
@@ -93,6 +94,7 @@
                     <div class="us-options"></div>
                 </div>
                 <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs" gm-doomline>
+                    <div class="empty" ng-hidde="unassingedUs|onlyVisible">There isn't unassigned User Stories. Create a new one.</div>
                     <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
                             gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}">
                         <div class="us-check">
@@ -175,6 +177,7 @@
 
         <div class="sprints-box">
             <p class="sprints-box-title">Sprints</p>
+            <p class="empty" ng-hidde="milestones">There isn't Sprints. Create a new one.</div>
             <div class="sprint-sbox" ng-repeat="ml in milestones" ng-controller="BacklogMilestoneController"
                         ng-class="{first: $first}" ng-mouseover="showEditOption=true" ng-mouseout="showEditOption=false">
                 <div class="header">
