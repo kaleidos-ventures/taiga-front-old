@@ -316,8 +316,8 @@ body.login {
     width: 100%;
     overflow: hidden;
     .header-box {
+        .clearfix();
         width: 100%;
-        overflow: hidden;
         .logo-sbox {
             padding: 0px 15px;
             float: left;
@@ -340,19 +340,19 @@ body.login {
             padding: 2px;
             padding-right: 10px;
             margin-top: 4px;
-            ul {
+            >ul {
                 margin: 0px;
                 padding:0;
-                overflow: hidden;
                 list-style: none;
-                li {
+                >li {
                     text-align: center;
                     display: block;
                     float: left;
                     padding: 5px 0;
                     margin-left: 8px;
                     transition: all .2s ease-in;
-                    a{
+                    position: relative;
+                    >a{
                         color: #FFF;
                         padding: 3px 0;
                         padding-left: 10px;
@@ -369,6 +369,25 @@ body.login {
                                 opacity: 1;
                             }
                         }
+                    }
+                }
+            }
+            .project-list {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+                width: 200px;
+                position: absolute;
+                top: 25px;
+                li {
+                    display: block;
+                    background: rgba(0,0,0,.6);
+                    color: @white;
+                    text-align: center;
+                    margin-bottom: 2px;
+                    transition: all .2s ease-in;
+                    &:hover {
+                        background: rgba(0,0,0,1);
                     }
                 }
             }
@@ -966,9 +985,9 @@ body.login {
     }
     .milestones {
         .header-box {
+            .clearfix();
             background-color: #444444;
             padding: 10px;
-            overflow: hidden;
             color: #ffffff;
             .title-sbox {
                 float: left;

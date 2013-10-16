@@ -20,19 +20,16 @@ module.exports = (grunt) ->
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-
         less: {
-            dist: {
+            development: {
                 options: {
-                    paths: ["app/less"],
-                    yuicompress: true
+                    paths: ['app/less']
                 },
                 files: {
                     "app/less/style.css": "app/less/greenmine-main.less"
                 }
             }
         },
-
         uglify: {
             options: {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
@@ -130,7 +127,7 @@ module.exports = (grunt) ->
 
     grunt.loadNpmTasks('grunt-contrib-uglify')
     grunt.loadNpmTasks('grunt-contrib-concat')
-    grunt.loadNpmTasks('grunt-contrib-less')
+    grunt.loadNpmTasks('assemble-less')
     grunt.loadNpmTasks('grunt-contrib-watch')
     grunt.loadNpmTasks('grunt-contrib-connect')
     grunt.loadNpmTasks('grunt-contrib-jshint')
