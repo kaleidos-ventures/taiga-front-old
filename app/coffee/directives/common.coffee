@@ -104,7 +104,7 @@ GmBacklogGraphDirective = ($parse) -> (scope, elm, attrs) ->
         new Chart(ctx).Line(data, options)
 
     scope.$watch 'project', (value) ->
-        if scope.project and scope.project.total_milestones
+        if scope.project
             redrawChart()
 
 

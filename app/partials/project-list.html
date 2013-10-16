@@ -5,7 +5,7 @@
         <div class="sidebar all-projects">
             <p class="projects-title">All projects</p>
             <ul>
-                <li ng-hide="projects" class="empty">
+                <li ng-show="projects.length == 0" class="empty">
                     You have not projects jet.
                 </li>
                 <li ng-repeat="project in projects">
@@ -17,10 +17,10 @@
         <div class="main projects-dashboard">
             <p class="projects-title">Recent projects</p>
             <ul class="latest-projects">
-                <li ng-hide="projects" class="empty">
+                <li ng-show="(projects|limitTo:6).length == 0" class="empty">
                     You have not recent projects jet.
                 </li>
-                <li class="list-item" ng-repeat="project in projects | limitTo:6 ">
+                <li class="list-item" ng-repeat="project in projects|limitTo:6">
                     <a class="project-{{ $index }}" href="{{ urls.backlogUrl(project.id) }}">{{ project.name }}</a>
                 </li>
             </ul>

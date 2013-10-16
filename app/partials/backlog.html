@@ -30,11 +30,11 @@
                     ng-click="openCreateUserStoryForm()">
                     New user story
                 </a>
-                <a class="button show-hide-graphics" data-icon="k" ng-show="stats.completedPercentage" gm-ninja-graph>
+                <a class="button show-hide-graphics" data-icon="k" ng-show="milestones.length > 0" gm-ninja-graph>
                     <!-- Show graphics -->
                 </a>
             </div>
-            <div class="graph-box">
+            <div class="graph-box" ng-show="milestones.length > 0">
                 <div id="graphs">
                     <div id="burndown" gm-backlog-graph></div>
                 </div>
