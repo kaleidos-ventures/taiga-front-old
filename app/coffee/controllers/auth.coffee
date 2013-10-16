@@ -90,10 +90,22 @@ ChangePasswordController = ($scope, $rootScope, $location, rs) ->
             $scope.errorMessage = data.detail
 
 
-ProfileController = ($scope, $rootScope) ->
+ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs) ->
     $rootScope.projectId = null
     $rootScope.pageSection = 'profile'
     $rootScope.pageBreadcrumb = ["Greenmine", "Profile"]
+
+    $scope.formData = {}
+
+    $scope.submitProfile = ->
+        promise = $rootScope.auth.save()
+        promise.then (user) ->
+            $gmAuth.setUser(user)
+            $gmFlash.info("Profile saved successful.")
+
+    $scope.submitPassword = ->
+        rs.changePasswordForCurrentUser($scope.formData.password).then ->
+            $gmFlash.info("Password changed successful.")
 
 
 module = angular.module("greenmine.controllers.auth", [])
@@ -101,4 +113,4 @@ module.controller("LoginController", ['$scope', '$rootScope', '$location', 'reso
 module.controller("RegisterController", ['$scope', '$rootScope', RegisterController])
 module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', RecoveryController])
 module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', 'resource',  ChangePasswordController])
-module.controller("ProfileController", ['$scope', '$rootScope', ProfileController])
+module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', ProfileController])

@@ -113,7 +113,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return defered.promise
 
-    service.changePassword = (password) ->
+    service.changePasswordForCurrentUser = (password) ->
         defered = $q.defer()
         postData = {password: password}
         url = $gmUrls.api("users-change-password")
@@ -124,7 +124,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         onError = (data, status) ->
             defered.reject(data)
 
-        $http({method: "POST", url: url, data: JSON.stringify(postData)})
+        $http({method: "POST", url: url, data: JSON.stringify(postData), headers: headers()})
             .success(onSuccess)
             .error(onError)
 

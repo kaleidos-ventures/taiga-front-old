@@ -5,25 +5,25 @@
             <div class="update-form">
                 <h4>Profile</h4>
 
-                <form class="form-horizontal" gm-checksley-form="submit()">
+                <form class="form-horizontal" gm-checksley-form="submitProfile()">
                     <fieldset>
                         <label>Username:</label>
-                        <input type="text" name="username" value="" ng-model="auth.username"></input>
+                        <input type="text" name="username" data-required="true" value="" ng-model="auth.username"></input>
                     </fieldset>
 
                     <fieldset>
                         <label>First name:</label>
-                        <input type="text" name="first_name" value="" ng-model="auth.first_name"></input>
+                        <input type="text" name="first_name" data-required="true" value="" ng-model="auth.first_name"></input>
                     </fieldset>
 
                     <fieldset>
                         <label>Last name:</label>
-                        <input type="text" name="last_name" value="" ng-model="auth.last_name"></input>
+                        <input type="text" name="last_name" data-required="true" value="" ng-model="auth.last_name"></input>
                     </fieldset>
 
                     <fieldset>
                         <label>Email:</label>
-                        <input type="text" name="last_name" value="" ng-model="auth.email"></input>
+                        <input type="text" data-type="email" name="last_name" data-required="true" value="" ng-model="auth.email"></input>
                     </fieldset>
 
 
@@ -37,10 +37,10 @@
         <div class="profile-password">
             <div class="update-form">
 
-                <form class="form-horizontal" gm-checksley-form="submit()">
+                <form class="form-horizontal" gm-checksley-form="submitPassword()">
                     <fieldset>
                         <label>Password:</label>
-                        <input type="password" ng-model="password"></input>
+                        <input type="password" ng-model="formData.password" data-minlength="6"></input>
                     </fieldset>
 
                     <fieldset class="issue-edit-submit">
