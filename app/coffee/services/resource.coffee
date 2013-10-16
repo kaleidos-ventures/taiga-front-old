@@ -73,9 +73,45 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
             "password":password
 
         $http({method:'POST', url: $gmUrls.api('auth'), data: JSON.stringify(postData)})
-            .success(onSuccess).error(onError)
+            .success(onSuccess)
+            .error(onError)
 
         return defered.promise
+
+    service.recovery = (email) ->
+        defered = $q.defer()
+        postData = {username: email}
+        url = $gmUrls.api("users-password-recovery")
+
+        onSuccess = (data, status) ->
+            defered.resolve(data)
+
+        onError = (data, status) ->
+            defered.reject(data)
+
+        $http({method: "POST", url: url, data: JSON.stringify(postData)})
+            .success(onSuccess)
+            .error(onError)
+
+        return defered.promise
+
+    service.changePasswordFromRecovery = (token, password) ->
+        defered = $q.defer()
+        postData = {password: password, token: token}
+        url = $gmUrls.api("users-change-password-from-recovery")
+
+        onSuccess = (data, status) ->
+            defered.resolve(data)
+
+        onError = (data, status) ->
+            defered.reject(data)
+
+        $http({method: "POST", url: url, data: JSON.stringify(postData)})
+            .success(onSuccess)
+            .error(onError)
+
+        return defered.promise
+
 
     # Get a project list
     service.getProjects = -> queryMany('projects')

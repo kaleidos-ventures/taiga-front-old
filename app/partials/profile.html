@@ -1,0 +1,53 @@
+<header class="header-container" ng-include="'/partials/header.html'"></header>
+<div class="middle-container">
+    <div class="profile-box">
+        <div class="profile-data">
+            <div class="update-form">
+                <h4>Profile</h4>
+
+                <form class="form-horizontal" gm-checksley-form="submit()">
+                    <fieldset>
+                        <label>Username:</label>
+                        <input type="text" name="username" value="" ng-model="auth.username"></input>
+                    </fieldset>
+
+                    <fieldset>
+                        <label>First name:</label>
+                        <input type="text" name="first_name" value="" ng-model="auth.first_name"></input>
+                    </fieldset>
+
+                    <fieldset>
+                        <label>Last name:</label>
+                        <input type="text" name="last_name" value="" ng-model="auth.last_name"></input>
+                    </fieldset>
+
+                    <fieldset>
+                        <label>Email:</label>
+                        <input type="text" name="last_name" value="" ng-model="auth.email"></input>
+                    </fieldset>
+
+
+                    <fieldset class="issue-edit-submit">
+                        <button type="submit" class="button button-edit" gm-checksley-submit-button>Save</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+
+        <div class="profile-password">
+            <div class="update-form">
+
+                <form class="form-horizontal" gm-checksley-form="submit()">
+                    <fieldset>
+                        <label>Password:</label>
+                        <input type="password" ng-model="password"></input>
+                    </fieldset>
+
+                    <fieldset class="issue-edit-submit">
+                        <button type="submit" class="button button-edit" gm-checksley-submit-button>Save</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

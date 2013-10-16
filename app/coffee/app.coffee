@@ -27,6 +27,9 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: "LoginController"})
     $routeProvider.when('/register', {templateUrl: 'partials/register.html', controller: "RegisterController"})
     $routeProvider.when('/recovery', {templateUrl: 'partials/recovery.html', controller: "RecoveryController"})
+    $routeProvider.when('/change-password', {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController"})
+    $routeProvider.when('/profile', {templateUrl: 'partials/profile.html', controller: "ProfileController"})
+
     $routeProvider.when('/', {templateUrl: 'partials/project-list.html', controller: "ProjectListController"})
 
     $routeProvider.when('/project/:pid/backlog',
@@ -88,7 +91,6 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 
     apiUrls = {
         "auth": "/api/v1/auth"
-        "users": "/api/v1/users"
         "roles": "/api/v1/roles"
         "projects": "/api/v1/projects"
         "milestones": "/api/v1/milestones"
@@ -106,6 +108,11 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         "choices/priorities": "/api/v1/priorities"
         "choices/severities": "/api/v1/severities"
         "search": "/api/v1/search"
+
+        "users": "/api/v1/users"
+        "users-password-recovery": "/api/v1/users/password_recovery"
+        "users-change-password-from-recovery": "/api/v1/users/change_password_from_recovery"
+        "users-change-password": "/api/v1/users/change_password"
     }
 
     $gmUrlsProvider.setUrls("api", apiUrls)

@@ -170,57 +170,121 @@ body.login {
         .logo-box {
             text-align: center;
         }
+
+        .recovery-forms-box {
+            form {
+                margin: 0;
+
+                .form-field {
+                    .btn01 { width: 45%; }
+                }
+            }
+        }
+
         .form-container {
             margin-top: 15px;
             padding: 20px;
             background: rgba(255,255,255,0.9);
             box-shadow: 0px 2px 25px 1px #666;
-            .login-form{
-                margin: 0;
-                .form-field{
-                    margin-bottom: 10px;
-                    clear: both;
-                    &:last-child{
-                        margin-bottom: 0;
+
+            .login-message{
+                margin-top: 10px;
+                .loading{
+                    font-family: @ColabReg;
+                    color: @green;
+                    font-size: .8em;
+                    margin: 0;
+                    .loading-ico{
+                        width: 16px;
+                        height: 16px;
+                        background: url("../img/loading-mine-16x16.png") no-repeat 0 0;
+                        display: block;
+                        float: left;
+                        -webkit-animation: spin 4s infinite linear;
+                        -moz-animation: spin 4s infinite linear;
+                        -o-animation: spin 4s infinite linear;
+                        -ms-animation: spin 4s infinite linear;
+                        margin: 1px 6px 0 0;
                     }
-                    label{
-                        font-family: 'ColabReg';
-                        color: #666;
-                        margin-bottom: 2px;
+                    @-webkit-keyframes spin {
+                        0% { -webkit-transform: rotate(0deg);}
+                        100% { -webkit-transform: rotate(360deg);}
                     }
-                    input[type="text"], input[type="password"] {
-                        width: 310px;
-                        padding: 8px 6px;
-                        font-family: 'ColabReg';
-                        color: #ccc;
-                        &:focus{
-                            box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
-                            border-color: rgba(102,154,51,.6);
-                            outline: 0;
-                            color: #000;
-                            -webkit-transition: .3s ease-in-out;
-                            -moz-transition: .3s ease-in-out;
-                        }
+                    @-moz-keyframes spin {
+                        0% { -moz-transform: rotate(0deg);}
+                        100% { -moz-transform: rotate(360deg);}
                     }
-                    .btn01 {
-                        width: 30%;
-                        background: #999;
-                        color: #ffffff;
-                        border: 0px;
-                        .border-radius(4px);
-                        padding: 10px;
-                        font-family: @ColabReg;
-                        float: right;
-                        opacity: 0.4;
-                        &:hover{
-                            -webkit-transition: .3s ease-in-out;
-                            -moz-transition: .3s ease-in-out;
-                            background: #669933;
-                            opacity: 1;
-                        }
+                    @-o-keyframes spin {
+                        0% { -o-transform: rotate(0deg);}
+                        100% { -o-transform: rotate(360deg);}
+                    }
+                    @-ms-keyframes spin {
+                        0% { -ms-transform: rotate(0deg);}
+                        100% { -ms-transform: rotate(360deg);}
                     }
                 }
-                .forgot-pass{
+                .error {
+                    background: @red;
+                    color: @white;
+                    font-family: @ColabReg;
+                    padding: 4px;
+                    font-size: 14px;
+                    margin: 0;
+                    text-align: center;
+                }
+            }
+
+            .form-field {
+                margin-bottom: 10px;
+                clear: both;
+                &:last-child{
+                    margin-bottom: 0;
+                }
+
+                label{
+                    font-family: 'ColabReg';
+                    color: #666;
+                    margin-bottom: 2px;
+                }
+
+                input[type="text"], input[type="password"] {
+                    width: 310px;
+                    padding: 8px 6px;
+                    font-family: 'ColabReg';
+                    color: #ccc;
+                    &:focus{
+                        box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
+                        border-color: rgba(102,154,51,.6);
+                        outline: 0;
+                        color: #000;
+                        -webkit-transition: .3s ease-in-out;
+                        -moz-transition: .3s ease-in-out;
+                    }
+                }
+                .btn01 {
+                    width: 30%;
+                    background: #999;
+                    color: #ffffff;
+                    border: 0px;
+                    .border-radius(4px);
+                    padding: 10px;
+                    font-family: @ColabReg;
+                    float: right;
+                    opacity: 0.4;
+                    &:hover{
+                        -webkit-transition: .3s ease-in-out;
+                        -moz-transition: .3s ease-in-out;
+                        background: #669933;
+                        opacity: 1;
+                    }
+                }
+            }
+
+
+            .login-form{
+                margin: 0;
+
+                .forgot-pass {
                     color: darken(#ccc, 20%);
                     float: left;
                     font-size: 13px;
@@ -229,52 +293,6 @@ body.login {
                     &:hover{
                         text-decoration: none;
                         color: #669933;
-                    }
-                }
-                .login-message{
-                    margin-top: 10px;
-                    .loading{
-                        font-family: @ColabReg;
-                        color: @green;
-                        font-size: .8em;
-                        margin: 0;
-                        .loading-ico{
-                            width: 16px;
-                            height: 16px;
-                            background: url("../img/loading-mine-16x16.png") no-repeat 0 0;
-                            display: block;
-                            float: left;
-                            -webkit-animation: spin 4s infinite linear;
-                            -moz-animation: spin 4s infinite linear;
-                            -o-animation: spin 4s infinite linear;
-                            -ms-animation: spin 4s infinite linear;
-                            margin: 1px 6px 0 0;
-                        }
-                        @-webkit-keyframes spin {
-                            0% { -webkit-transform: rotate(0deg);}
-                            100% { -webkit-transform: rotate(360deg);}
-                        }
-                        @-moz-keyframes spin {
-                            0% { -moz-transform: rotate(0deg);}
-                            100% { -moz-transform: rotate(360deg);}
-                        }
-                        @-o-keyframes spin {
-                            0% { -o-transform: rotate(0deg);}
-                            100% { -o-transform: rotate(360deg);}
-                        }
-                        @-ms-keyframes spin {
-                            0% { -ms-transform: rotate(0deg);}
-                            100% { -ms-transform: rotate(360deg);}
-                        }
-                    }
-                    .error {
-                        background: @red;
-                        color: @white;
-                        font-family: @ColabReg;
-                        padding: 4px;
-                        font-size: 14px;
-                        margin: 0;
-                        text-align: center;
                     }
                 }
                 .checksley-error-list{
@@ -292,15 +310,6 @@ body.login {
                     }
                 }
             }
-            /* NOT ACTIVE SO FAR
-            p.register {
-                margin-top: 15px;
-                padding-top: 15px;
-                border-top: 1px solid #666666;
-                margin-bottom: 0px;
-                padding-bottom: 0px;
-            }
-            */
         }
     }
 }
@@ -2607,6 +2616,18 @@ body.login {
             }
 
         }
+    }
+}
+
+
+.profile-box {
+    .profile-data,
+    .profile-password {
+        float: left;
+        width: 500px;
+        padding: 20px;
+        border: 1px solid #eee;
+        margin: 10px;
     }
 }
 

@@ -36,15 +36,67 @@ LoginController = ($scope, $rootScope, $location, rs, $gmStorage) ->
             $scope.loading = false
 
 
-RegisterController = ($scope, $rootScope, url) ->
+RegisterController = ($scope, $rootScope) ->
     $rootScope.pageSection = 'login'
 
 
-RecoveryController = ($scope, $rootScope, url) ->
+RecoveryController = ($scope, $rootScope, $location, rs) ->
     $rootScope.pageSection = 'login'
+
+    $scope.formData = {}
+    $scope.success = false
+    $scope.error = false
+
+    $scope.submit = ->
+        promise = rs.recovery($scope.formData.email)
+        promise.then ->
+            $scope.success = true
+            $scope.error = false
+
+            gm.utils.delay 1000, ->
+                $location.url("/change-password")
+                $scope.$apply()
+
+        promise.then null, (data) ->
+            $scope.error = true
+            $scope.success = false
+            $scope.formData = {}
+            $scope.errorMessage = data.detail
+
+
+ChangePasswordController = ($scope, $rootScope, $location, rs) ->
+    $rootScope.pageSection = 'login'
+
+    $scope.error = false
+    $scope.success = false
+    $scope.formData = {}
+
+    $scope.submit = ->
+        promise = rs.changePasswordFromRecovery($scope.formData.token, $scope.formData.password)
+        promise.then ->
+            $scope.success = true
+            $scope.error = false
+
+            gm.utils.delay 1000, ->
+                $location.url("/login")
+                $scope.$apply()
+
+        promise.then null, (data) ->
+            $scope.error = true
+            $scope.success = false
+            $scope.formData = {}
+            $scope.errorMessage = data.detail
+
+
+ProfileController = ($scope, $rootScope) ->
+    $rootScope.projectId = null
+    $rootScope.pageSection = 'profile'
+    $rootScope.pageBreadcrumb = ["Greenmine", "Profile"]
 
 
 module = angular.module("greenmine.controllers.auth", [])
 module.controller("LoginController", ['$scope', '$rootScope', '$location', 'resource', '$gmStorage', LoginController])
-module.controller("RegisterController", ['$scope', '$rootScope', 'url', RegisterController])
-module.controller("RecoveryController", ['$scope', '$rootScope', 'url', RecoveryController])
+module.controller("RegisterController", ['$scope', '$rootScope', RegisterController])
+module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', RecoveryController])
+module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', 'resource',  ChangePasswordController])
+module.controller("ProfileController", ['$scope', '$rootScope', ProfileController])
