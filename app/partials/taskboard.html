@@ -36,6 +36,13 @@
                                     <div class="row-indicator">{{ stats.completedTasks }}</div>
                                     <div class="row-help">completed <br />tasks</div>
                                 </div>
+                                <div class="row-item">
+                                    <div class="row-label">Dates</div>
+                                    <div class="row-indicator">{{ milestone.start_date|momentFormat:"L" }}</div>
+                                    <div class="row-help">start<br />date</div>
+                                    <div class="row-indicator">{{ milestone.end_date|momentFormat:"L" }}</div>
+                                    <div class="row-help">end<br />date</div>
+                                </div>
                                 <!-- TODO: iocaine and labor force
                                 <div class="row-item sprint-data">
                                     <div class="row-label">Data</div>
@@ -82,7 +89,7 @@
                                             </li>
                                         </ul>
                                         <div class="description">
-                                            <p>{{ us.description }}</p>
+                                            <p>{{ us.description|truncate:140 }}</p>
                                         </div>
                                     </div>
                                     <a href="" class="button" ng-click="openCreateTaskForm(us)">Add new task</a>
@@ -106,7 +113,7 @@
                             <tr>
                                 <td class="row-us-description" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
                                     <div class="info">
-                                        <div class="title">Tareas sin user story asignada</div>
+                                        <div class="title">Unassigned Tasks</div>
                                         <div class="description"></div>
                                     </div>
                                     <a href="" class="button" ng-click="openCreateTaskForm(us)">Add new task</a>

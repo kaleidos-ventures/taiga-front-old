@@ -7,6 +7,5 @@
             data-tmpl="#developers-popover" data-auto-hide="false">
                 {{ constants.users[task.assigned_to].username || "Unassigned" }}</a>
     </div>
-    <p class="desc">{{ task.description | truncate:60 }}</p>
     <a href="{{ urls.tasksUrl(projectId, task.id) }}" class="edit-task">Edit</a>
 </div>
