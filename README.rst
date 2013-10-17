@@ -1,6 +1,9 @@
 greenmine-front
 ===============
 
+.. image:: http://kaleidos.net/static/img/badge.png
+    :target: http://kaleidos.net/community/greenmine/
+
 Setup initial environment
 -------------------------
 
