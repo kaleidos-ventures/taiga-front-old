@@ -74,10 +74,10 @@
                             <tr>
                                 <td class="row-us-description" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
                                     <div class="info">
-                                        <div class="title">{{ us.subject }}</div>
+                                        <div class="title"><a href="{{ urls.userStoryUrl(projectId, us.id) }}">{{ us.subject }}</a></div>
                                         <!-- TODO: Xaviju do your magic -->
                                         <ul class="us-points-per-role">
-                                            <li ng-repeat="role in roles" class="us-point">
+                                            <li ng-repeat="role in constants.computableRolesList" class="us-point">
                                                 {{ role.name }}: {{ constants.pointsByOrder[us.points[role.id]].name }}
                                             </li>
                                         </ul>

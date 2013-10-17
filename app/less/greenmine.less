@@ -2513,13 +2513,22 @@ body.login {
                             border-bottom: 1px solid #333;
                             position: relative;
                             .info {
+                                .us-points-per-role {
+                                    list-style: none;
+                                    margin-top: 0px;
+                                    margin-bottom: 5px;
+                                    font-size: 14px;
+                                    li { display: inline; }
+                                }
                                 .title {
                                     padding: 10px 25px;
                                     font-family: @ColabReg;
-                                    color: @white;
                                     font-size: 1em;
                                     text-align: center;
-                                    font-weight: bold;
+                                    a {
+                                        color: @white;
+                                        font-weight: bold;
+                                    }
                                 }
                                 .description {
                                     text-align: center;
