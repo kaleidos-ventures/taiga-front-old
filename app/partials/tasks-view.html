@@ -20,7 +20,7 @@
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
-                        <span>on {{ attachment.created_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span>
+                        <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
                         <a href="" ng-click="removeAttachment(attachment)">(remove)</a>
                     </li>
                 </ul>
@@ -33,8 +33,8 @@
             <ul class="info-rows">
                <li>Added by: <span>{{ constants.users[task.owner].username }}</span></li>
                <li>Assigned to: <span>{{ constants.users[task.assigned_to].username }}</span></li>
-               <li>Date: <span>{{ task.created_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span></li>
-               <li>Updated: <span>{{ task.modified_date|momentFormat:"MMMM Do YYYY, h:mm:ss a" }}</span></li>
+               <li>Date: <span>{{ task.created_date|momentFormat:"LLL" }}</span></li>
+               <li>Updated: <span>{{ task.modified_date|momentFormat:"LLL" }}</span></li>
                <li class="status-{{ task.status }}">Status: <span>{{ constants.taskStatuses[task.status].name }}</span></li>
                <li>Attachments: <span>{{ attachments.length }}</span></li>
             </ul>
