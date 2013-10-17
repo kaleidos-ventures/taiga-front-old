@@ -74,9 +74,10 @@ DataServiceProvider = ($rootScope, $q, rs) ->
             [users, roles] = results
 
             $scope.constants.usersList = _.sortBy(users, "id")
-            _.each(users, (item) -> $scope.constants.users[item.id] = item)
+            $scope.constants.rolesList = roles
+            $scope.constants.computableRolesList = _.filter(roles, "computable")
 
-            $scope.roles = roles
+            _.each(users, (item) -> $scope.constants.users[item.id] = item)
 
             $rootScope.$broadcast("roles:loaded", roles)
             $rootScope.$broadcast("users:loaded", users)
