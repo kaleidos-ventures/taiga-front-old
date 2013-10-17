@@ -1,23 +1,76 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
+
+<main class="project-admin-view">
+    <h2>{{ project.name }}</h2>
+    <h3>Created Sprints</h3>
+    <ul class="sprint-list">
+        <li class="sprint" ng-repeat="ml in project.list_of_milestones">
+            {{ ml.name }}
+            <a href="" data-icon="h" title="Delete Milestone" ng-click="deleteMilestone(ml)"></a>
+        </li>
+    </ul>
+    
+    <div class="update-form">
+        <form class="form-horizontal" gm-checksley-form="submit()">
+            
+             <fieldset class="project-name">
+                <label class="control-label" for="name">Name</label>
+                <input type="text" id="name" name="name" ng-model="project.name" data-error-message="Required" />
+            </fieldset>
+            
+            <fieldset class="project-slug">
+                <label for="slug">Slug</label>
+                <input type="text" id="slug" name="slug" ng-model="project.slug" data-error-message="Required" />
+            </fieldset>
+
+            <fieldset class="project-total-milestones">
+                <label class="control-label" for="total_milestones">Num. Sprints:</label>
+                <input type="text" id="total_milestones" name="total_milestones"
+                    ng-model="project.total_milestones" data-error-message="Required" />
+            </fieldset>
+
+            <fieldset class="project-total-story-points">
+                <label for="slug">Total story-points:</label>
+                <input type="text" id="total_story_points" name="total_story_points"
+                    ng-model="project.total_story_points" data-error-message="Required" />
+            </fieldset>
+
+            <fieldset class="project-description">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" ng-model="project.description"></textarea>
+            </fieldset>
+
+            <fieldset class="project-submit">
+                <button type="submit" class="button button-edit" gm-checksley-submit-button>Save</button>
+            </fieldset>
+            
+        </form>
+    </div>
+
+    <h3>Project Members</h3>
+    <ul class="members-list">
+        <li class="member" ng-repeat="ml in project.list_of_milestones">
+            David Barragán Merino
+            <span>[Role]</span>
+        </li>
+    </ul>
+
+    <a class="button button-delete" ng-click="deleteCurrentProject()">Delete project</a>
+    
+</main>
+
+
+
+<!--
 <div class="middle-container project-admin-view">
     <div class="row-fluid">
         <div class="span12">
-            <div class="view-header">
-                <p class="title">Project: {{ project.name }}</p>
-                <div class="buttons">
-                    <a class="button button-delete" ng-click="deleteCurrentProject()">Delete project</a>
-                </div>
-            </div>
+            
         </div>
     </div>
     <div class="row-fluid">
         <div class="span12">
-            <div class="sprints-list">
-                Created sprints:
-                <div class="sprint" ng-repeat="ml in project.list_of_milestones">
-                    {{ ml.name }} <span ng-click="deleteMilestone(ml)">Delete</span>
-                </div>
-            </div>
+            
         </div>
     </div>
 
@@ -75,3 +128,4 @@
         </div>
     </div>
 </div>
+-->
