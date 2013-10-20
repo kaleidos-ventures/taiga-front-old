@@ -23,3 +23,18 @@ angular.module('greenmine.filters.common', []).
                 return input.toLowerCase()
             return ""
     )
+
+
+OnlyVisibleFilter = ->
+    return (input) ->
+        return _.filter input, (item) ->
+            return item.__hidden != true
+
+TruncateFilter = ->
+    return (input, num) ->
+        num = 25 if num is undefined
+        return _.str.prune(input, num)
+
+SlugifyFilter = ->
+    return (input) ->
+        return _.str.slugify(input)
