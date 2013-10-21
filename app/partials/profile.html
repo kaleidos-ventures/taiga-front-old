@@ -26,9 +26,11 @@
                         <input type="text" data-type="email" name="last_name" data-required="true" value="" ng-model="auth.email"></input>
                     </fieldset>
 
-                    <fieldset>
+                    <fieldset class="colorPicker">
                         <label>Color:</label>
                         <input type="text" name="color" data-required="true" value="" ng-model="auth.color"></input>
+                        <div class="colorSample" style="background-color: {{auth.color}}"></div>
+                        <div class="colorSelector" coffee-color-picker="auth.color = $color"></div>
                     </fieldset>
 
 

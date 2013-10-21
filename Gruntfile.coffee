@@ -15,7 +15,9 @@ module.exports = (grunt) ->
         'app/js/checksley.js',
         'app/js/q.js',
         'app/js/sha1.js',
-        'app/js/Chart.js'
+        'app/js/Chart.js',
+        'app/js/coffeeColorPicker.js',
+        'app/js/coffeeColorPicker.angular.js'
     ]
 
     grunt.initConfig({

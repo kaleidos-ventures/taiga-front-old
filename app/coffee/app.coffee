@@ -121,6 +121,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 modules = [
     "ngRoute",
     "ngSanitize",
+    "coffeeColorPicker",
 
     "greenmine.controllers.common",
     "greenmine.controllers.auth",

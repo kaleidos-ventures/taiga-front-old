@@ -188,6 +188,19 @@ GmNinjaGraphDirective = ->
 
     return directive
 
+CoffeeColorPickerDirective = ->
+    directive =
+        restrict: "A"
+        link: (scope, elm, attrs) ->
+            element = angular.element(elm)
+            element.coffeeColorPicker()
+            element.on 'pick', (event, color) ->
+                scope.$color = color
+                scope.$apply () ->
+                    scope.$eval(attrs.gmColorPicker)
+
+    return directive
+
 
 GmColorizeTagDirective = -> (scope, elm, attrs) ->
     element = angular.element(elm)
