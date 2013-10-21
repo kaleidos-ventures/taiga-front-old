@@ -26,6 +26,12 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
     $scope.totalPoints = 0
     $scope.points = {}
 
+    calculateTotalPoints = (us) ->
+        total = 0
+        for roleId, pointId of us.points
+            total += $scope.constants.points[pointId].value
+        return total
+
     loadUserStory = ->
         rs.getUserStory(projectId, userStoryId).then (userStory) ->
             $scope.userStory = userStory
@@ -33,30 +39,22 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
             breadcrumb[2] = "##{userStory.ref}"
-
             $rootScope.pageBreadcrumb = breadcrumb
 
-            pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)
-            $scope.totalPoints = pointIdToOrder(userStory.points)
+            $scope.totalPoints = calculateTotalPoints(userStory)
 
-            for roleId, pointsOrder of userStory.points
-                $scope.points[roleId] = $scope.constants.pointsByOrder[pointsOrder].name
-
-            #console.log "************** points *****************"
-            #for point in $scope.constants.pointsList
-            #    console.log "point:", point._attrs
-
-            #console.log "************** roles *****************"
-            #for role in $scope.roles
-            #    console.log "role:", role._attrs
-
+            for roleId, pointId of userStory.points
+                $scope.points[roleId] = $scope.constants.points[pointId].name
 
     # Load initial data
-    $data.loadProject($scope)
-    $data.loadUsersAndRoles($scope)
+    promise = $q.all [
+        $data.loadProject($scope)
+        $data.loadUsersAndRoles($scope)
+    ]
 
     # Initial load
-    loadUserStory()
+    promise.then ->
+        loadUserStory()
 
     $scope.submit = ->
         $rootScope.$broadcast("flash:new", true, "La user story se ha guardado!")

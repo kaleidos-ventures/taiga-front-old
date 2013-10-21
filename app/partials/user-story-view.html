@@ -31,7 +31,7 @@
                <li class="status-{{ userStory.status }}">Status: <span>{{ userStory.status }}</span></li>
 
                <li>Points:
-                    <span ng-repeat="role in roles">
+                    <span ng-repeat="role in constants.computableRolesList">
                         {{ role.name }}: {{ points[role.id] }},
                     </span>
                     Total: {{ totalPoints }}
