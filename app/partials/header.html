@@ -22,7 +22,9 @@
 <div class="nav" gm-header-menu ng-show="projectId">
     <ul>
         <li class="backlog"><a data-icon="f" href="{{ urls.backlogUrl(projectId) }}" title="Backlog">Backlog</a></li>
+        <!--
         <li class="dashboard" ng-show="sprintId"><a data-icon="n" href="{{ urls.taskboardUrl(projectId, sprintId) }}" title="Taskboard">Taskboard</a></li>
+        -->
         <li class="issues"><a data-icon="a" href="{{ urls.issuesUrl(projectId) }}" title="Issues">Issues</a></li>
         <li class="wiki"><a data-icon="g" href="{{ urls.wikiUrl(projectId, 'home') }}" title="wiki">Wiki</a></li>
         <!--
