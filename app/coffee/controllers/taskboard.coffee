@@ -66,7 +66,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
 
             _.each statuses, (tasks, statusId) ->
                 hasTasks = true
-                if statuses[statusId].is_closed
+                if $scope.constants.taskStatusesList[statusId - 1].is_closed
                     completedTasks += tasks.length
                 else if tasks.length > 0
                     hasOpenTasks = true
