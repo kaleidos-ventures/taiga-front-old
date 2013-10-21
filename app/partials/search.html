@@ -18,7 +18,7 @@
                 <ul class="result-list">
                     <li class="result-item" ng-repeat="item in results[type]">
                         <div class="title">
-                            <a href="{{ urls.issuesUrl(projectId, item.id) }}">
+                            <a href="{{ translateTypeUrl(type, projectId, item.id) }}">
                                 {{ item.subject }}
                             </a>
                         </div>

@@ -20,15 +20,21 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs) ->
     $data.loadProject($scope)
 
     $scope.resultTypeMap = {
-        userstory: "User Story"
-        task: "Task"
-        issue: "Issue"
+        userstories: "User Story"
+        tasks: "Task"
+        issues: "Issue"
     }
 
     $scope.translateResultType = (type) ->
         if $scope.resultTypeMap[type] == undefined
             return type
         return $scope.resultTypeMap[type]
+
+    $scope.translateTypeUrl = (type, projectId, itemId) ->
+        return switch type
+            when "userstories" then $rootScope.urls.userStoryUrl(projectId, itemId)
+            when "issues" then $rootScope.urls.issuesUrl(projectId, itemId)
+            when "tasks" then $rootScope.urls.tasksUrl(projectId, itemId)
 
     $scope.isTypeActive = (type) ->
         return type == $scope.activeType
