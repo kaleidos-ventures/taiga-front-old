@@ -2032,6 +2032,8 @@ body.login {
                         -o-transition: all 0.3s ease-out;
                         transition: all 0.3s ease-out;
                     }
+
+                    // Status color
                     &.status-new{
                     background-color: #8C2318;
                     }
@@ -2052,6 +2054,34 @@ body.login {
                     }
                     &.status-postponed{
                         background-color: #ccc;
+                    }
+
+                    // Severity colors
+                    &.severity-wishlist{
+                        background-color: #CCC;
+                    }
+                    &.severity-minor{
+                        background-color: #669933;
+                    }
+                    &.severity-normal{
+                        background-color: blue;
+                    }
+                    &.severity-important{
+                        background-color: orange;
+                    }
+                    &.severity-critical{
+                        background-color: #CC0000;
+                    }
+
+                    // Priority colors
+                    &.priority-low{
+                        background-color: #CCC;
+                    }
+                    &.priority-normal{
+                        background-color: #669933;
+                    }
+                    &.priority-high{
+                        background-color: #CC0000;
                     }
                 }
             }
