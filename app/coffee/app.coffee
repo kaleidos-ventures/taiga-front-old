@@ -132,7 +132,7 @@ modules = [
     "greenmine.controllers.project",
     "greenmine.controllers.tasks",
     "greenmine.controllers.wiki",
-    "greenmine.filters.common",
+    "greenmine.filters",
     "greenmine.services.common",
     "greenmine.services.model",
     "greenmine.services.resource",
