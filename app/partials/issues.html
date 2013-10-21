@@ -43,6 +43,26 @@
                     </div>
                 </li>
                 <li>
+                    <h3>Severity:</h3>
+                    <div class="tags-list-sbox">
+                        <div class="tag" ng-repeat="tag in severityTags" ng-click="selectTag(tag)"
+                                ng-class="{selected: tag.selected}">
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h3>Priority:</h3>
+                    <div class="tags-list-sbox">
+                        <div class="tag" ng-repeat="tag in priorityTags" ng-click="selectTag(tag)"
+                                ng-class="{selected: tag.selected}">
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
+                    </div>
+                </li>
+                <li>
                     <h3>Assigned to:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" ng-repeat="tag in assignedToTags" ng-click="selectTag(tag)"

@@ -62,9 +62,25 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             issues = _.filter($scope.issues, {"status": status.id})
             return {"id": status.id, "name": status.name, "count": issues.length}
 
+    generateSeverityTags = ->
+        severities = $rootScope.constants.severitiesList
+
+        $scope.severityTags = _.map severities, (severity) ->
+            issues = _.filter($scope.issues, {"severity": severity.id})
+            return {"id": severity.id, "name": severity.name, "count": issues.length}
+
+    generatePriorityTags = ->
+        priorities = $rootScope.constants.prioritiesList
+
+        $scope.priorityTags = _.map priorities, (priority) ->
+            issues = _.filter($scope.issues, {"priority": priority.id})
+            return {"id": priority.id, "name": priority.name, "count": issues.length}
+
     regenerateTags = ->
         generateTagList()
         generateAssignedToTags()
+        generateSeverityTags()
+        generatePriorityTags()
         generateStatusTags()
 
     filterIssues = ->
@@ -92,6 +108,24 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
                 continue if item.__hidden
 
                 result = _.some(selectedUsers, {"id": item.assigned_to})
+                item.__hidden = true if not result
+
+        # Filter by priority tags
+        selectedPriorities = _.filter($scope.priorityTags, "selected")
+        if not _.isEmpty(selectedPriorities)
+            for item in $scope.issues
+                continue if item.__hidden
+
+                result = _.some(selectedPriorities, {"id": item.priority})
+                item.__hidden = true if not result
+
+        # Filter by severity tags
+        selectedSeverities = _.filter($scope.severityTags, "selected")
+        if not _.isEmpty(selectedSeverities)
+            for item in $scope.issues
+                continue if item.__hidden
+
+                result = _.some(selectedSeverities, {"id": item.severity})
                 item.__hidden = true if not result
 
         # Filter by status tags
