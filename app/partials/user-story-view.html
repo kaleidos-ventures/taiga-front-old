@@ -93,6 +93,11 @@
                         <textarea ng-model="form.comment"></textarea>
                     </fieldset>
 
+                    <fieldset class="task-attachment">
+                        <a class="add-attachment" data-icon="E" title="Add Attachment" href="">Add Attachments</a>
+                        <input type="file" class="hidden" name="attachment" gm-file ng-model="attachment" />
+                    </fieldset>
+
                     <fieldset class="task-edit-submit">
                         <button type="submit" class="button button-edit" gm-checksley-submit-button>Save</button>
                     </fieldset>
