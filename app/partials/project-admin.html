@@ -2,15 +2,18 @@
 
 <main class="project-admin-view">
     <h2>{{ project.name }}</h2>
-    <h3>Created Sprints</h3>
-    <ul class="sprint-list">
-        <li class="sprint" ng-repeat="ml in project.list_of_milestones">
-            {{ ml.name }}
-            <a href="" data-icon="h" title="Delete Milestone" ng-click="deleteMilestone(ml)"></a>
-        </li>
-    </ul>
-
+    <div class="sprint-list-container">
+        <h3 data-icon="q">Created Sprints</h3>
+        <ul class="sprint-list">
+            <li class="sprint" ng-repeat="ml in project.list_of_milestones">
+                <a href="" data-icon="h" title="Delete Milestone" ng-click="deleteMilestone(ml)"></a>
+                {{ ml.name }}
+            </li>
+        </ul>
+    </div>
+    
     <div class="update-form">
+        <h3 data-icon="f">Project data</h3>
         <form class="form-horizontal" gm-checksley-form="submit()">
 
             <fieldset class="project-name">
@@ -46,18 +49,18 @@
 
         </form>
     </div>
-
-    <h3>Project Members</h3>
-    <ul class="members-list">
-        <li class="member" ng-repeat="mbr in project.memberships">
-            {{ mbr.full_name }}
-            <span>[{{ mbr.role_name }}]</span>
-            <!-- TODO: Remove a member of a project
-            <a data-icon="h" href="" ng-click="deleteMember(mbr.id)" title="Delete member"></a>
-            -->
-        </li>
-    </ul>
-
+    <div class="project-members">
+        <h3 data-icon="t">Project Members</h3>
+        <ul class="members-list">
+            <li class="member" ng-repeat="mbr in project.memberships">
+                {{ mbr.full_name }}
+                <span>[{{ mbr.role_name }}]</span>
+                <!-- TODO: Remove a member of a project
+                <a data-icon="h" href="" ng-click="deleteMember(mbr.id)" title="Delete member"></a>
+                -->
+            </li>
+        </ul>
+    </div>
     <a class="button button-delete" ng-click="deleteCurrentProject()">Delete project</a>
 
 </main>
