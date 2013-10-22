@@ -328,50 +328,13 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         return defered.promise
 
     service.getIssueAttachments = (projectId, issueId) ->
-        return queryMany("issues/attachments", {project:projectId, object_id: issueId})
+        return queryMany("issues/attachments", {project: projectId, object_id: issueId})
 
-    service.getTaskAttachments = (projectId, issueId) ->
-        return queryMany("tasks/attachments", {project:projectId, object_id: issueId})
+    service.getTaskAttachments = (projectId, taskId) ->
+        return queryMany("tasks/attachments", {project: projectId, object_id: taskId})
 
-
-    service.uploadTaskAttachment = (projectId, issueId, file, progress) ->
-        defered = Q.defer()
-
-        if file is undefined
-            defered.resolve(null)
-            return defered.promise
-
-        #uploadProgress = (evt) ->
-        #    if (evt.lengthComputable) {
-        #        progress = Math.round(evt.loaded * 100 / evt.total)
-        #    } else {
-        #        progress = 'unable to compute'
-        #    }
-        #}
-
-        uploadComplete = (evt) ->
-            data = JSON.parse(evt.target.responseText)
-            defered.resolve(data)
-
-        uploadFailed = (evt) ->
-            defered.reject("fail")
-
-        formData = new FormData()
-        formData.append("project", projectId)
-        formData.append("object_id", issueId)
-        formData.append("attached_file", file)
-
-        xhr = new XMLHttpRequest()
-
-        if progress != undefined
-            xhr.upload.addEventListener("progress", uploadProgress, false)
-
-        xhr.addEventListener("load", uploadComplete, false)
-        xhr.addEventListener("error", uploadFailed, false)
-        xhr.open("POST", $gmUrls.api("tasks/attachments"))
-        xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
-        xhr.send(formData)
-        return defered.promise
+    service.getWikiPageAttachments = (projectId, wikiPageId) ->
+        return queryMany("wiki/attachments", {project: projectId, object_id: wikiPageId})
 
     service.uploadIssueAttachment = (projectId, issueId, file, progress) ->
         defered = Q.defer()
@@ -400,6 +363,68 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
         xhr.open("POST", $gmUrls.api("issues/attachments"))
+        xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
+        xhr.send(formData)
+        return defered.promise
+
+    service.uploadTaskAttachment = (projectId, taskId, file, progress) ->
+        defered = Q.defer()
+
+        if file is undefined
+            defered.resolve(null)
+            return defered.promise
+
+        uploadComplete = (evt) ->
+            data = JSON.parse(evt.target.responseText)
+            defered.resolve(data)
+
+        uploadFailed = (evt) ->
+            defered.reject("fail")
+
+        formData = new FormData()
+        formData.append("project", projectId)
+        formData.append("object_id", taskId)
+        formData.append("attached_file", file)
+
+        xhr = new XMLHttpRequest()
+
+        if progress != undefined
+            xhr.upload.addEventListener("progress", uploadProgress, false)
+
+        xhr.addEventListener("load", uploadComplete, false)
+        xhr.addEventListener("error", uploadFailed, false)
+        xhr.open("POST", $gmUrls.api("tasks/attachments"))
+        xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
+        xhr.send(formData)
+        return defered.promise
+
+    service.uploadWikiPageAttachment = (projectId, wikiPageId, file, progress) ->
+        defered = Q.defer()
+
+        if file is undefined
+            defered.resolve(null)
+            return defered.promise
+
+        uploadComplete = (evt) ->
+            data = JSON.parse(evt.target.responseText)
+            defered.resolve(data)
+
+        uploadFailed = (evt) ->
+            defered.reject("fail")
+
+        formData = new FormData()
+        formData.append("project", projectId)
+        formData.append("object_id", wikiPageId)
+        formData.append("attached_file", file)
+
+        xhr = new XMLHttpRequest()
+
+        if progress != undefined
+            xhr.upload.addEventListener("progress", uploadProgress, false)
+
+        xhr.addEventListener("load", uploadComplete, false)
+        xhr.addEventListener("error", uploadFailed, false)
+        xhr.open("POST", $gmUrls.api("wiki/attachments"))
         xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
         xhr.send(formData)
         return defered.promise

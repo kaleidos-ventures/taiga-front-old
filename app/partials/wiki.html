@@ -3,6 +3,16 @@
     <div class="row-fluid" ng-show="!formOpened">
         <div class="span12">
             <div class="wiki-container" gm-render-markdown="content"></div>
+            <div class="attachments" ng-show="attachments">
+                <h3>Attachments</h3>
+                <ul class="attachments-items">
+                    <li class="attachments-item" ng-repeat="attachment in attachments">
+                        <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
+                        <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
+                        <a href="" ng-click="removeAttachment(attachment)">(remove)</a>
+                    </li>
+                </ul>
+            </div>
             <div class="wiki-buttons">
                 <a href="" class="button button-edit" ng-click="openEditForm()">Edit</a>
                 <a href="" class="button button-delete" ng-click="">Delete</a>
@@ -14,6 +24,10 @@
             <div class="wikiform-container">
                 <textarea id="wiki" ng-model="content" gm-markitup></textarea>
             </div>
+            <fieldset class="wiki-attachment">
+                <label for="attachment">Attachment</label>
+                <input type="file" name="attachment" gm-file ng-model="attachment"></textarea>
+            </fieldset>
             <div class="wiki-buttons">
                 <a href="" class="button button-success" ng-click="savePage()">Save</a>
                 <a href="" class="button" ng-click="discartCurrentChanges()">Cancel</a>

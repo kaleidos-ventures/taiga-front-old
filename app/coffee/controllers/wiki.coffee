@@ -17,7 +17,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, rs) ->
     $rootScope.pageBreadcrumb = ["Project", "Wiki", $routeParams.slug]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
-    $scope.formOpened = false
+    $scope.formOpened = true
     $scope.form = {}
 
     projectId = $rootScope.projectId
@@ -27,23 +27,28 @@ WikiController = ($scope, $rootScope, $location, $routeParams, rs) ->
     promise.then (page) ->
         $scope.page = page
         $scope.content = page.content
+        loadAttachments(page)
 
     promise.then null, ->
         $scope.formOpened = true
 
+    loadAttachments = (page) ->
+        rs.getWikiPageAttachments(projectId, page.id).then (attachments) ->
+            $scope.attachments = attachments
+
     $scope.savePage = ->
         if $scope.page is undefined
             content = $scope.content
-
             rs.createWikiPage(projectId, slug, content).then (page) ->
-                $scope.page = page
-                $scope.content = page.content
                 $scope.formOpened = false
-
+                rs.uploadWikiPageAttachment(projectId, page.id, $scope.attachment).then ->
+                    loadAttachments($scope.page)
         else
             $scope.page.content = $scope.content
-            $scope.page.save().then ->
+            $scope.page.save().then (page) ->
                 $scope.formOpened = false
+                rs.uploadWikiPageAttachment(projectId, page.id, $scope.attachment).then ->
+                    loadAttachments($scope.page)
 
     $scope.openEditForm = ->
         $scope.formOpened = true
@@ -52,6 +57,10 @@ WikiController = ($scope, $rootScope, $location, $routeParams, rs) ->
     $scope.discartCurrentChanges = ->
         $scope.formOpened = false
         $scope.content = $scope.page.content
+
+    $scope.removeAttachment = (attachment) ->
+        $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
+        attachment.remove()
 
 
 module = angular.module("greenmine.controllers.wiki", [])
