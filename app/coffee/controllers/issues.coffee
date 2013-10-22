@@ -228,7 +228,8 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         filterIssues()
 
 
-IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data, $confirm) ->
+IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data,
+                        $confirm) ->
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = ["", "Issues", ""]
     $scope.projectId = parseInt($routeParams.pid, 10)
@@ -311,6 +312,10 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
 
 
 module = angular.module("greenmine.controllers.issues", [])
-module.controller("IssuesViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", IssuesViewController])
-module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter', '$q', 'resource', "$data", "$confirm", IssuesController])
-module.controller("IssuesFormController", ['$scope', '$rootScope', '$gmOverlay', 'resource', IssuesFormController])
+module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
+                  '$routeParams', '$q', 'resource', "$data", "$confirm",
+                  IssuesViewController])
+module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
+                  '$q', 'resource', "$data", "$confirm", IssuesController])
+module.controller("IssuesFormController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
+                  IssuesFormController])
