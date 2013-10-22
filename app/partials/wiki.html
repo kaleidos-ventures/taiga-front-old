@@ -24,10 +24,8 @@
             <div class="wikiform-container">
                 <textarea id="wiki" ng-model="content" gm-markitup></textarea>
             </div>
-            <fieldset class="wiki-attachment">
-                <label for="attachment">Attachment</label>
-                <input type="file" name="attachment" gm-file ng-model="attachment"></textarea>
-            </fieldset>
+            <a class="add-attachment" data-icon="E" title="Add Attachment" href="">Add Attachments</a>
+            <input type="file" class="hidden" name="attachment" gm-file ng-model="attachment" />
             <div class="wiki-buttons">
                 <a href="" class="button button-success" ng-click="savePage()">Save</a>
                 <a href="" class="button" ng-click="discartCurrentChanges()">Cancel</a>
