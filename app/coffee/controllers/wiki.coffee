@@ -36,29 +36,40 @@ WikiController = ($scope, $rootScope, $location, $routeParams, rs) ->
         rs.getWikiPageAttachments(projectId, page.id).then (attachments) ->
             $scope.attachments = attachments
 
+    $scope.openEditForm = ->
+        $scope.formOpened = true
+        $scope.content = $scope.page.content
+
+    $scope.discartCurrentChanges = ->
+        if $scope.page is undefined
+            $scope.content = ""
+        else
+            $scope.formOpened = false
+            $scope.content = $scope.page.content
+
     $scope.savePage = ->
         if $scope.page is undefined
             content = $scope.content
             rs.createWikiPage(projectId, slug, content).then (page) ->
+                $scope.page = page
                 $scope.formOpened = false
                 rs.uploadWikiPageAttachment(projectId, page.id, $scope.attachment).then ->
                     loadAttachments($scope.page)
         else
             $scope.page.content = $scope.content
             $scope.page.save().then (page) ->
+                $scope.page = page
                 $scope.formOpened = false
                 rs.uploadWikiPageAttachment(projectId, page.id, $scope.attachment).then ->
                     loadAttachments($scope.page)
 
-    $scope.openEditForm = ->
-        $scope.formOpened = true
-        $scope.content = $scope.page.content
+    $scope.deletePage = ->
+        $scope.page.remove().then ->
+            $scope.page = undefined
+            $scope.content = ""
+            $scope.formOpened = true
 
-    $scope.discartCurrentChanges = ->
-        $scope.formOpened = false
-        $scope.content = $scope.page.content
-
-    $scope.removeAttachment = (attachment) ->
+    $scope.deleteAttachment = (attachment) ->
         $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
         attachment.remove()
 
