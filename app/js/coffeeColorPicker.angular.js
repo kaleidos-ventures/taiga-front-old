@@ -6,9 +6,14 @@
     directive = {
       restrict: "A",
       link: function(scope, elm, attrs) {
-        var element;
+        var element, options;
         element = angular.element(elm);
-        element.coffeeColorPicker();
+        if (attrs.coffeeColorPickerOptions) {
+          options = scope.$eval(attrs.coffeeColorPickerOptions);
+          element.coffeeColorPicker(options);
+        } else {
+          element.coffeeColorPicker();
+        }
         return element.on('pick', function(event, color) {
           scope.$color = color;
           return scope.$apply(function() {

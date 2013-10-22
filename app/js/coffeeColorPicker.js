@@ -11,7 +11,7 @@
         },
         freezeTime: 1000
       };
-      this.settings = $.extend({}, this.settings, options);
+      this.settings = $.extend(true, {}, this.settings, options);
       this.el = el;
       this._rect = el[0].getBoundingClientRect();
       this._color = this.settings.color;
