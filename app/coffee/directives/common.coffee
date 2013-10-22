@@ -410,6 +410,16 @@ GmPopoverDirective = ($parse, $compile) ->
                     element.data('state', 'open')
 
 
+GmForwardClickDirective = ->
+    restrict: "A"
+    link: (scope, element, attrs) ->
+        selector = attrs.gmForwardClick
+
+        element.on "click", (event) ->
+            event.preventDefault()
+            angular.element(attrs.gmForwardClick).trigger("click")
+
+
 GmChecksleyFormDirective = ($parse, $compile, $window) ->
     restrict: "A"
     link: (scope, elm, attrs) ->
@@ -507,6 +517,7 @@ module.directive('gmColorizeTag', GmColorizeTagDirective)
 module.directive('gmKalendae', GmKalendaeDirective)
 module.directive('gmSortable', GmSortableDirective)
 module.directive('gmPopover', ['$parse', '$compile', GmPopoverDirective])
+module.directive('gmForwardClick', GmForwardClickDirective)
 module.directive('gmChecksleyForm', ['$parse', '$compile', '$window', GmChecksleyFormDirective])
 module.directive('gmChecksleySubmitButton', [GmChecksleySubmitButtonDirective])
 module.directive('gmTagsInput', [GmTagsInputDirective])

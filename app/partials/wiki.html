@@ -24,8 +24,10 @@
             <div class="wikiform-container">
                 <textarea id="wiki" ng-model="content" gm-markitup></textarea>
             </div>
-            <a class="add-attachment" data-icon="E" title="Add Attachment" href="">Add Attachments</a>
-            <input type="file" class="hidden" name="attachment" gm-file ng-model="attachment" />
+            <a class="add-attachment" data-icon="E" title="Add Attachment" href=""
+               gm-forward-click="#attachment_file_input" >Add Attachments</a>
+            <input type="file" class="hidden" name="attachment" id="attachment_file_input"
+                   gm-file ng-model="attachment" />
             <div class="wiki-buttons">
                 <a href="" class="button button-success" ng-click="savePage()">Save</a>
                 <a href="" class="button" ng-click="discartCurrentChanges()">Cancel</a>

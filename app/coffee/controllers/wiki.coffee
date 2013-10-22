@@ -17,7 +17,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, rs) ->
     $rootScope.pageBreadcrumb = ["Project", "Wiki", $routeParams.slug]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
-    $scope.formOpened = true
+    $scope.formOpened = false
     $scope.form = {}
 
     projectId = $rootScope.projectId
@@ -29,7 +29,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, rs) ->
         $scope.content = page.content
         loadAttachments(page)
 
-    promise.then null, ->
+    promise.then null, (data) ->
         $scope.formOpened = true
 
     loadAttachments = (page) ->
