@@ -133,8 +133,13 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     # Get a project list
     service.getProjects = -> queryMany('projects')
 
+    # Get a project
     service.getProject = (projectId) ->
         return queryOne("projects", projectId)
+
+    # Create a memberships
+    service.createMembership = (form) ->
+        return $model.create("memberships", form)
 
     # Get roles
     service.getRoles = -> queryMany('roles')

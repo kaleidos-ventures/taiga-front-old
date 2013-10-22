@@ -11,7 +11,7 @@
             </li>
         </ul>
     </div>
-    
+
     <div class="update-form">
         <h3 data-icon="f">Project data</h3>
         <form class="form-horizontal" gm-checksley-form="submit()">
@@ -49,47 +49,49 @@
 
         </form>
     </div>
-    <div class="project-members">
+    <div class="project-members" ng-controller="MembershipFormController">
         <h3 data-icon="t">Project Members</h3>
-        <a href="" class="add-member" data-icon="A" title="Add member" ng-click="addNewMember=!addNewMember">Add member</a>
-        <div class="add-member-form" ng-show="addNewMember">
+        <a href="" class="add-member" data-icon="A" title="Add member"
+           ng-click="toggleForm()">Add member</a>
+        <div class="add-member-form" ng-show="formOpened">
             <h4>Add new member</h4>
-            <form action="" method="post">
+            <form gm-checksley-form="submit()">
+                <fieldset>
+                    <label class="control-label" for="role">Role</label>
+                    <select id="role" name="role" ng-model="membership.role" data-required="true"
+                            ng-options="r.id as r.name for r in constants.rolesList|orderBy:'order'">
+                    </select>
+                </fieldset>
                 <fieldset class="project-name">
-                    <label class="control-label" for="member">Member</label>
-                    <select id="member">
-                        <option>Member 1</option>
-                        <option>Member 2</option>
-                        <option>Member 3</option>
-                        <option>Member 4</option>
+                    <label class="control-label" for="user">User</label>
+                    <select id="user" name="user" ng-model="membership.user" data-required="true"
+                            ng-options="u.id as u.full_name for u in noMemberUsersList|orderBy:'full_name'">
                     </select>
                 </fieldset>
                 <fieldset>
-                    <label class="control-label" for="position">Positions</label>
-                    <select id="position">
-                        <option>Position 1</option>
-                        <option>Position 2</option>
-                        <option>Position 3</option>
-                        <option>Position 4</option>
-                    </select>
-                </fieldset>
-                <fieldset>
-                    <button type="submit" class="button button-edit">Add member</button>
-                    <button type="submit" class="button button-cancel" ng-click="addNewMember=false">Cancel</button>
+                    <button type="submit" class="button button-edit"  gm-checksley-submit-button>Add member</button>
+                    <button type="submit" class="button button-cancel" ng-click="closeForm()">Cancel</button>
                 </fieldset>
             </form>
         </div>
-        <ul class="members-list">
+        <ul class="members-list" ng-controller="MembershipsController">
             <li class="member" ng-repeat="mbr in project.memberships">
-                <a href="" data-icon="h" title="Delete Milestone" ng-click=""></a>
+                <a href="" data-icon="h"  title="Delete Member" ng-click="deleteMember(mbr)"></a>
+                <span>[<a href="" gm-popover="updateMemberRole(mbr, selectedId)"
+                          data-tmpl="#role-popover">{{ mbr.role_name }}</a>]</span>
                 {{ mbr.full_name }}
-                <span>[{{ mbr.role_name }}]</span>
-                <!-- TODO: Remove a member of a project
-                <a data-icon="h" href="" ng-click="deleteMember(mbr.id)" title="Delete member"></a>
-                -->
             </li>
         </ul>
     </div>
     <a class="button button-delete" ng-click="deleteCurrentProject()">Delete project</a>
-
 </main>
+<script type="text/template" id="role-popover">
+    <div class="role-popover">
+        <p class="title">Select role:</p>
+        <ul>
+            <li ng-repeat="obj in constants.rolesList|orderBy:'order'">
+                <a href="" data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
+            </li>
+        </ul>
+    </div>
+</script>

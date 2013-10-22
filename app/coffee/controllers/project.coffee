@@ -21,13 +21,15 @@ ProjectListController = ($scope, $rootScope, rs) ->
         $scope.projects = projects
 
 
-ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model, $confirm, rs) ->
+ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model,
+                          $confirm) ->
     $rootScope.pageSection = 'admin'
     $rootScope.pageBreadcrumb = ["", "Project Admin"]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     # This attach "project" to $scope
     $data.loadProject($scope)
+    $data.loadUsersAndRoles($scope)
 
     $scope.submit = ->
         promise = $scope.project.save()
@@ -44,8 +46,63 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
             $model.make_model('milestones', milestone).remove().then () ->
                 $data.loadProject($scope)
 
+    $scope.$on "membership:load-project", (ctx) ->
+        $data.loadProject($scope)
+        $data.loadUsersAndRoles($scope)
+
+
+MembershipFormController = ($scope, $rootScope, rs) ->
+    $scope.formOpened = false
+
+    $scope.toggleForm = ->
+        if $scope.formOpened
+            $scope.closeForm()
+        else
+            $scope.openForm()
+
+    $scope.openForm = ->
+        $scope.membership = {project: $rootScope.projectId}
+        $scope.noMemberUsersList = _.filter($scope.constants.usersList, (user) ->
+            return _.indexOf($scope.project.members, user.id) == -1
+        )
+        $scope.$broadcast("checksley:reset")
+        $scope.formOpened = true
+
+    $scope.closeForm = ->
+        $scope.formOpened = false
+
+    $scope.submit = ->
+        promise = rs.createMembership($scope.membership)
+
+        promise.then (data) ->
+            $rootScope.$broadcast("membership:load-project")
+            $scope.closeForm()
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
+
+
+MembershipsController = ($scope, $rootScope, $model, $confirm) ->
+    $scope.deleteMember = (member) ->
+        promise = $confirm.confirm("Are you sure?")
+        promise.then () ->
+            $model.make_model('memberships',member).remove().then () ->
+                $rootScope.$broadcast("membership:load-project")
+
+    $scope.updateMemberRole = (member, roleId) ->
+        memberModel = $model.make_model('memberships',member)
+        memberModel.role = roleId
+        memberModel.save().then (data) ->
+            $rootScope.$broadcast("membership:load-project")
+
 
 module = angular.module("greenmine.controllers.project", [])
-module.controller("ProjectListController", ['$scope', '$rootScope', 'resource', ProjectListController])
-module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routeParams", "$data",
-                                             "$gmFlash", "$model", "$confirm", "resource", ProjectAdminController])
+module.controller("ProjectListController", ['$scope', '$rootScope', 'resource',
+                                            ProjectListController])
+module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routeParams",
+                                             "$data", "$gmFlash", "$model", "$confirm",
+                                             ProjectAdminController])
+module.controller("MembershipFormController", ["$scope", "$rootScope", 'resource',
+                                               MembershipFormController])
+module.controller("MembershipsController", ["$scope", "$rootScope", "$model", "$confirm",
+                                            MembershipsController])

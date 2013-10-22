@@ -93,6 +93,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         "auth": "/api/v1/auth"
         "roles": "/api/v1/roles"
         "projects": "/api/v1/projects"
+        "memberships": "/api/v1/memberships"
         "milestones": "/api/v1/milestones"
         "userstories": "/api/v1/userstories"
         "userstories/attachments": "/api/v1/userstory-attachments"

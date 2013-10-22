@@ -199,7 +199,7 @@ ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
             defered.resolve(service.make_model(name, _data, cls, dataTypes))
 
         promise.error (data, status) ->
-            defered.reject(null)
+            defered.reject(data)
 
         return defered.promise
 
