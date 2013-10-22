@@ -30,7 +30,7 @@
                         <label>Color:</label>
                         <input type="text" name="color" data-required="true" value="" ng-model="auth.color"></input>
                         <div class="colorSample" style="background-color: {{auth.color}}"></div>
-                        <div class="colorSelector" coffee-color-picker="auth.color = $color"></div>
+                        <div class="colorSelector" coffee-color-picker="auth.color = $color" coffee-color-picker-options="{color: {hue:100, sat: 100, lit: 25}}"></div>
                     </fieldset>
 
 
