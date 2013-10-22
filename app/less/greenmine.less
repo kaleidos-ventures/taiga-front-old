@@ -1688,7 +1688,7 @@ body.login {
         margin-bottom: 20px;
         h3 {
             padding: 8px;
-            background: #669900;
+            background: @green;
             color: #FFF;
             margin: 0;
             &:before {
@@ -1720,14 +1720,26 @@ body.login {
         width: 60%;
         border: 1px solid #eee;
         margin-bottom: 20px;
+        position: relative;
         h3 {
             padding: 8px;
-            background: #669900;
+            background: @green;
             color: #FFF;
             margin: 0;
             &:before {
                 font-size: 15px;
                 margin-right: 5px;
+            }
+        }
+        .add-member {
+            color: @white;
+            position:absolute;
+            top: 8px;
+            right: 8px;
+            &:before {
+                margin-right: 5px;
+                position: relative;
+                top: 1px;
             }
         }
     }
