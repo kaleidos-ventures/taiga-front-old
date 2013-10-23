@@ -15,7 +15,9 @@
 
 ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
     headers = ->
-        return {"X-SESSION-TOKEN": $gmStorage.get('token')}
+        return {
+            "Authorization": "Bearer #{$gmStorage.get('token')}"
+        }
 
     class Model
         constructor: (name, data, dataTypes) ->
