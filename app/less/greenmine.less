@@ -2672,21 +2672,24 @@ body.login {
                             border-bottom: 1px solid #333;
                             position: relative;
                             .info {
-                                .us-points-per-role {
-                                    list-style: none;
-                                    margin-top: 0px;
-                                    margin-bottom: 5px;
-                                    font-size: 14px;
-                                    li { display: inline; }
-                                }
                                 .title {
                                     padding: 10px 25px;
                                     font-family: @ColabReg;
-                                    font-size: 1em;
-                                    text-align: center;
                                     a {
                                         color: @white;
                                         font-weight: bold;
+                                        float: left;
+                                        font-size: 16px;
+                                        width: 65%;
+                                    }
+                                    ul{
+                                        float: right;
+                                        width: 30%;
+                                        text-align: right;
+                                        font-size: 13px;
+                                        list-style: none;
+                                        margin: 0;
+                                        padding: 0;
                                     }
                                 }
                                 .description {
@@ -2699,21 +2702,30 @@ body.login {
                                     }
                                 }
                             }
-                            .button{
+                            .add-new-task{
                                 display: block;
                                 text-align: center;
                                 border: none;
                                 margin: 10px;
-                            }
-                            .us-points{
+                                color: #ccc;
+                                transition: all.2s ease;
                                 position: absolute;
-                                top: 2px;
-                                right: 0;
-                                padding: 5px 5px 5px 7px;
-                                background: rgba(255,255,255,.3);
-                                border-radius: 10px 0px 0px 10px;
-                                font-family: 'LeagueGothicRegular';
-                                font-size: 1.1em;
+                                bottom: 2px;
+                                width: 100%;
+                                &:before {
+                                    margin-right: 5px;
+                                    position: relative;
+                                    top: 1px;
+                                }
+                                &:hover {
+                                    color: #FFF;
+                                }
+                            }
+                            &.unassigned-task {
+                                .title {
+                                    display: block;
+                                    text-align:center;
+                                }
                             }
                         }
                         .tasks {

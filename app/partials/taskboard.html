@@ -81,18 +81,20 @@
                             <tr>
                                 <td class="row-us-description" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
                                     <div class="info">
-                                        <div class="title"><a href="{{ urls.userStoryUrl(projectId, us.id) }}">{{ us.subject }}</a></div>
-                                        <!-- TODO: Xaviju do your magic -->
-                                        <ul class="us-points-per-role">
-                                            <li ng-repeat="role in constants.computableRolesList" class="us-point">
-                                                {{ role.name }}: {{ constants.pointsByOrder[us.points[role.id]].name }}
-                                            </li>
-                                        </ul>
+                                        <div class="title clearfix">
+                                            <a href="{{ urls.userStoryUrl(projectId, us.id) }}">{{ us.subject }}</a>
+                                            <ul class="us-points-per-role">
+                                                <li ng-repeat="role in constants.computableRolesList" class="us-point">
+                                                    {{ role.name }}: {{ constants.pointsByOrder[us.points[role.id]].name }}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
                                         <div class="description">
                                             <p>{{ us.description|truncate:140 }}</p>
                                         </div>
                                     </div>
-                                    <a href="" class="button" ng-click="openCreateTaskForm(us)">Add new task</a>
+                                    <a href="" data-icon="A" class="add-new-task" ng-click="openCreateTaskForm(us)">Add new task</a>
                                 </td>
                                 <td class="col-task-status col-task-{{ status.name|slugify }}"
                                         ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
@@ -111,12 +113,12 @@
                     <table>
                         <tbody>
                             <tr>
-                                <td class="row-us-description" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
+                                <td class="row-us-description unassigned-task" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
                                     <div class="info">
                                         <div class="title">Unassigned Tasks</div>
                                         <div class="description"></div>
                                     </div>
-                                    <a href="" class="button" ng-click="openCreateTaskForm(us)">Add new task</a>
+                                    <a href="" data-icon="A" class="add-new-task" ng-click="openCreateTaskForm(us)">Add new task</a>
                                 </td>
                                 <td class="col-task-status col-task-{{ status.name|slugify }}"
                                         ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
