@@ -22,10 +22,11 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         return data
 
     queryMany = (name, params, options) ->
-        defauts = {method: "GET", headers:  headers()}
-        current = {url: $gmUrls.api(name), params: params or {}}
+        defaultHttpParams = {method: "GET", headers:  headers(), url: $gmUrls.api(name)}
+        if not _.isEmpty(params)
+            defaultHttpParams.params = params
 
-        httpParams = _.extend({}, defauts, options, current)
+        httpParams = _.extend({}, defaultHttpParams, options)
         defered = $q.defer()
 
         promise = $http(httpParams)
@@ -39,10 +40,11 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         return defered.promise
 
     queryOne = (name, id, params, options, cls) ->
-        defauts = {method: "GET", headers:  headers()}
-        current = {url: "#{$gmUrls.api(name)}/#{id}", params: params or {}}
+        defaultHttpParams = {method: "GET", headers:  headers(), url: "#{$gmUrls.api(name)}/#{id}"}
+        if not _.isEmpty(params)
+            defaultHttpParams.params = params
 
-        httpParams =  _.extend({}, defauts, options, current)
+        httpParams =  _.extend({}, defaultHttpParams, options)
 
         defered = $q.defer()
 
