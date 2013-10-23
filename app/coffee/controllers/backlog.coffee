@@ -251,10 +251,15 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs) ->
         $scope.formOpened = true
 
     $scope.submit = ->
-        $scope.overlay.close()
-        rs.createUserStory($scope.form).then ->
+        promise = rs.createUserStory($scope.form)
+
+        promise.then (data) ->
             closeModal()
+            $scope.overlay.close()
             $scope.defered.resolve()
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
 
     $scope.close = ->
         $scope.formOpened = false
@@ -295,23 +300,30 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
 
     $scope.sprintSubmit = ->
         if $scope.form.save is undefined
-            rs.createMilestone($scope.projectId, $scope.form).then (milestone) ->
-                $scope.milestones.unshift(milestone)
+            promise = rs.createMilestone($scope.projectId, $scope.form)
 
+            promise.then (milestone) ->
+                $scope.milestones.unshift(milestone)
                 # Clear the current form after creating
                 # of new sprint is completed
                 $scope.form = {}
                 $scope.sprintFormOpened = false
-
                 # Update the sprintId value for correct
                 # linking of dashboard menu item to the
                 # last created milestone
                 $rootScope.sprintId = milestone.id
 
+            promise.then null, (data) ->
+                $scope.checksleyErrors = data
         else
-            $scope.form.save().then ->
+            promise = $scope.form.save()
+
+            promise.then (data) ->
                 $scope.form = {}
                 $scope.sprintFormOpened = false
+
+            promise.then null, (data) ->
+                $scope.checksleyErrors = data
 
     $scope.$on "points:loaded", ->
         rs.getMilestones($rootScope.projectId).then (data) ->
@@ -322,8 +334,6 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
 
             calculateStats()
             $rootScope.$broadcast("milestones:loaded", $scope.milestones)
-
-
 
 BacklogMilestoneController = ($scope, rs) ->
 
@@ -358,17 +368,23 @@ BacklogMilestoneController = ($scope, rs) ->
             if item.isModified()
                 item.save()
 
-
     $scope.editFormOpened = false
+
     $scope.showEditForm = () ->
         $scope.editFormOpened = true
 
     $scope.submit = ->
-        $scope.ml.save().then ->
+        promise = $scope.ml.save()
+
+        promise.then (data) ->
             $scope.editFormOpened = false
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
 
     $scope.closeEditForm = ->
         $scope.editFormOpened = false
+        $scope.ml.refresh()
 
     calculateStats()
     $scope.$on("sortable:changed", normalizeMilestones)

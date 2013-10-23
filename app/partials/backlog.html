@@ -147,43 +147,54 @@
         <div class="milestone-form-box" ng-show="sprintFormOpened">
             <form action="" gm-checksley-form="sprintSubmit()">
                 <fieldset>
-                    <label>Sprint name:</label>
+                    <label for="name">Sprint name:</label>
                     <input type="text" data-required="true" ng-model="form.name"
-                        placeholder="Sprint name..."></input>
+                           name="name" placeholder="Sprint name..."></input>
                 </fieldset>
 
                 <fieldset>
                     <div class="subfield">
-                        <label>Estimated start:</label>
-                        <input type="text" gm-kalendae data-required="true" ng-model="form.estimated_start"></input>
+                        <label for="estimated_start">Estimated start:</label>
+                        <input type="text" gm-kalendae name="estimated_start"
+                               ng-model="form.estimated_start"></input>
                     </div>
                     <div class="subfield">
-                        <label>Estimated finish</label>
-                        <input type="text" gm-kalendae data-required="true" ng-model="form.estimated_finish"></input>
+                        <label for="estimated_finish">Estimated finish</label>
+                        <input type="text" gm-kalendae name="estimated_finish"
+                               ng-model="form.estimated_finish"></input>
                     </div>
                 </fieldset>
                 <div class="btn-group">
-                    <input type="submit" class="button button-success" gm-checksley-submit-button value="Save" />
+                    <input type="submit" class="button button-success"
+                           gm-checksley-submit-button value="Save" />
                     <a href="" class="button" ng-click="sprintFormOpened=false">Close</a>
                 </div>
             </form>
         </div>
 
-        <!-- <div class="project-extras"> -->
-            <!-- TODO: iocaine -->
-            <!-- <div class="iocaine-powder" data-icon="r">5 <span>iocaine doses</span></div> -->
-            <!-- <div class="labor-force" data-icon="s">90% <span>labor force</span></div> -->
-        <!-- </div> -->
+        <!-- TODO: iocaine
+        <div class="project-extras">
+            <div class="iocaine-powder" data-icon="r">5 <span>iocaine doses</span></div>
+            <div class="labor-force" data-icon="s">90% <span>labor force</span></div>
+        </div>
+        -->
 
         <div class="sprints-box">
             <p class="sprints-box-title">Sprints</p>
-            <p class="empty" ng-show="milestones.length == 0">There isn't Sprints. Create a new one.</p>
-            <div class="sprint-sbox" ng-repeat="ml in milestones" ng-controller="BacklogMilestoneController"
-                        ng-class="{first: $first}" ng-mouseover="showEditOption=true" ng-mouseout="showEditOption=false">
+            <p class="empty" ng-show="milestones.length == 0">
+                There isn't Sprints. Create a new one.
+            </p>
+            <div class="sprint-sbox" ng-repeat="ml in milestones"
+                 ng-controller="BacklogMilestoneController"
+                 ng-class="{first: $first}" ng-mouseover="showEditOption=true"
+                 ng-mouseout="showEditOption=false">
                 <div class="header">
                     <div class="title">
-                        <a class="name" href="{{ urls.taskboardUrl(projectId, ml.id) }}">{{ ml.name }}</a>
-                        <a class="edit" href="" ng-click="showEditForm(ml.id)" ng-show="showEditOption" data-icon="d"></a>
+                        <a class="name" href="{{ urls.taskboardUrl(projectId, ml.id) }}">
+                            {{ ml.name }}
+                        </a>
+                        <a class="edit" href="" ng-click="showEditForm(ml.id)"
+                           ng-show="showEditOption" data-icon="d"></a>
                         <span>from {{ ml.statrt_date|momentFormat:"L" }} to {{ ml.end_date|momentFormat:"L" }}</span>
                     </div>
                     <div class="stats">
@@ -224,21 +235,26 @@
                         <fieldset>
                             <label>Sprint name:</label>
                             <input type="text" data-required="true" ng-model="ml.name"
-                                placeholder="Sprint name..."></input>
+                                name="name" placeholder="Sprint name..."></input>
                         </fieldset>
 
                         <fieldset>
                             <div class="subfield">
                                 <label>Estimated start:</label>
-                                <input type="text" gm-kalendae data-required="true" ng-model="ml.estimated_start"></input>
+                                <input type="text" gm-kalendae data-required="true"
+                                       name="estimated_start"
+                                       ng-model="ml.estimated_start"></input>
                             </div>
                             <div class="subfield">
                                 <label>Estimated finish</label>
-                                <input type="text" gm-kalendae data-required="true" ng-model="ml.estimated_finish"></input>
+                                <input type="text" gm-kalendae data-required="true"
+                                       name="estimated_finish"
+                                       ng-model="ml.estimated_finish"></input>
                             </div>
                         </fieldset>
                         <div class="btn-group">
-                            <input type="submit" class="button button-success" gm-checksley-submit-button value="Save" />
+                            <input type="submit" class="button button-success"
+                                   gm-checksley-submit-button value="Save" />
                             <a href="" class="button" ng-click="closeEditForm()">Close</a>
                         </div>
                     </form>
@@ -264,42 +280,47 @@
                 <div class="fieldset-row">
                     <fieldset>
                         <label>Subject</label>
-                        <input class="subject" type="text" data-required="true"
-                            data-error-message="Required"
-                            ng-model="form.subject"></input>
+                        <input class="subject" type="text" ng-model="form.subject"
+                               name="subject" placeholder="A descriptive name..."></input>
                     </fieldset>
                 </div>
                 <div class="fieldset-row" gm-role-points-edition></div>
                 <div class="fieldset-row">
                     <fieldset>
                         <label>Status</label>
-                        <select class="status" name="status" ng-model="form.status" data-required="true"
-                            data-type="number" data-error-message="Required"
+                        <select class="status" name="status" ng-model="form.status"
+                            data-type="number" data-required="true"
+                            data-error-message="This field is required."
                             ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                     <fieldset>
                         <label>Tags</label>
-                        <input type="text" class="tags"
-                               name="status" value=""
-                               gm-tags-input ng-model="form.tags"></input>
+                        <input type="text" class="tags" name="tags" value=""
+                               gm-tags-input ng-model="form.tags"
+                               placeholder="Ex: backend, backoffice, ecommerce..."></input>
                     </fieldset>
                 </div>
                 <div class="fieldset-row">
                     <fieldset>
                         <label>Description</label>
-                        <textarea class="description" ng-model="form.description"></textarea>
+                        <textarea class="description" name="description"
+                                  placeholder="A good description..."
+                                  ng-model="form.description"></textarea>
                     </fieldset>
                 </div>
                 <div class="fieldset-row">
-                    <input type="checkbox" id="client-requirement" ng-model="form.client_requirement" name="client_requirement"/>
+                    <input type="checkbox" id="client-requirement"
+                           ng-model="form.client_requirement" name="client_requirement"/>
                     <label for="client-requirement">Client Requirement</label>
-                    <input type="checkbox"id="team-requirement" ng-model="form.team_requirement" name="team_requirement">
+                    <input type="checkbox"id="team-requirement"
+                           ng-model="form.team_requirement" name="team_requirement">
                     <label for="team-requirement" >Team Requirement</label>
                 </div>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="button button-success" gm-checksley-submit-button value="Save" />
+                <input type="submit" class="button button-success"
+                       gm-checksley-submit-button value="Save" />
                 <a href="" class="button button-cancel" ng-click="close()">Close</a>
             </div>
         </form>

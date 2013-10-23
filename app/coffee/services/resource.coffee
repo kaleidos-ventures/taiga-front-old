@@ -288,7 +288,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
             defered.resolve($model.make_model("milestones", data))
 
         promise.error (data, status) ->
-            defered.reject()
+            defered.reject(data)
 
         return defered.promise
 
