@@ -41,12 +41,16 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
 
 
 BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
-    calculateStats = ->
-        pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)
+    calculateTotalPoints = (us) ->
         total = 0
+        for roleId, pointId of us.points
+            total += $scope.constants.points[pointId].value
+        return total
 
+    calculateStats = ->
+        total = 0
         for us in $scope.unassingedUs
-            total += pointIdToOrder(us.points)
+            total += calculateTotalPoints(us)
 
         $scope.$emit("stats:update", {"notAssignedPoints": total})
 
@@ -266,16 +270,23 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
     # Local scope variables
     $scope.sprintFormOpened = false
 
+    calculateTotalPoints = (us) ->
+        total = 0
+        for roleId, pointId of us.points
+            total += $scope.constants.points[pointId].value
+        return total
+
     calculateStats = ->
-        pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)
+        # TODO: make more functional this calculs
         assigned = 0
         completed = 0
 
         for ml in $scope.milestones
             for us in ml.user_stories
-                assigned += pointIdToOrder(us.points)
+                points = calculateTotalPoints(us)
+                assigned += points
                 if us.is_closed
-                    completed += pointIdToOrder(us.points)
+                    completed += points
 
         $scope.$emit("stats:update", {
             "assignedPoints": assigned,
@@ -315,28 +326,21 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
 
 
 BacklogMilestoneController = ($scope, rs) ->
-    $scope.editFormOpened = false
 
-    $scope.showEditForm = () ->
-        $scope.editFormOpened = true
-
-    $scope.submit = ->
-        $scope.ml.save().then ->
-            $scope.editFormOpened = false
-
-    $scope.closeEditForm = ->
-        $scope.editFormOpened = false
+    calculateTotalPoints = (us) ->
+        total = 0
+        for roleId, pointId of us.points
+            total += $scope.constants.points[pointId].value
+        return total
 
     calculateStats = ->
-        pointIdToOrder = greenmine.utils.pointIdToOrder($scope.constants.pointsByOrder, $scope.roles)
         total = 0
         completed = 0
 
-        _.each $scope.ml.user_stories, (us) ->
-            total += pointIdToOrder(us.points)
-
-            if us.is_closed
-                completed += pointIdToOrder(us.points)
+        for us in $scope.ml.user_stories
+            points = calculateTotalPoints(us)
+            total += points
+            completed += points if us.is_closed
 
         $scope.stats =
             total: total
@@ -353,6 +357,18 @@ BacklogMilestoneController = ($scope, rs) ->
         _.each $scope.ml.user_stories, (item) ->
             if item.isModified()
                 item.save()
+
+
+    $scope.editFormOpened = false
+    $scope.showEditForm = () ->
+        $scope.editFormOpened = true
+
+    $scope.submit = ->
+        $scope.ml.save().then ->
+            $scope.editFormOpened = false
+
+    $scope.closeEditForm = ->
+        $scope.editFormOpened = false
 
     calculateStats()
     $scope.$on("sortable:changed", normalizeMilestones)
