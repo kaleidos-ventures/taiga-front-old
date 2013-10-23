@@ -2,7 +2,7 @@
 gmMarkitupConstructor = ($parse) ->
     require: "?ngModel",
     link: (scope, elm, attrs, ngModel) ->
-        wikiHelpUrl = "http://bywordapp.com/markdown/syntax.html"
+        wikiHelpUrl = "https://github.com/fletcher/MultiMarkdown/blob/master/Documentation/Markdown%20Syntax.md"
         openHelp = () ->
             window.open(wikiHelpUrl,'_blank')
 
