@@ -182,32 +182,30 @@
                 <h3>New issue:</h3>
             </div>
             <div class="modal-body">
+                <fieldset class="fieldset-row">
+                    <label>Subject</label>
+                    <input class="subject" type="text" data-required="true"
+                        data-error-message="Required"
+                        ng-model="form.subject"></input>
+                </fieldset>
                 <div class="fieldset-row">
-                    <fieldset>
-                        <label>Subject</label>
-                        <input class="subject" type="text" data-required="true"
-                            data-error-message="Required"
-                            ng-model="form.subject"></input>
-                    </fieldset>
-                </div>
-                <div class="fieldset-row">
-                    <fieldset>
-                        <label>Status</label>
-                        <select class="status" name="status" ng-model="form.status" data-required="true"
+                    <fieldset class="type">
+                        <label>Type</label>
+                        <select name="type" ng-model="form.type" data-required="true"
                             data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'"></select>
+                            ng-options="c.id as c.name for c in constants.issueTypesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
-                    <fieldset>
+                    <fieldset class="priority">
                         <label>Priority</label>
-                        <select class="priority" name="status" ng-model="form.priority" data-required="true"
+                        <select name="status" ng-model="form.priority" data-required="true"
                             data-type="number" data-error-message="Required"
                             ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
-                    <fieldset>
+                    <fieldset class="severity">
                         <label>Severity</label>
-                        <select class="severity" name="status" ng-model="form.severity" data-required="true"
+                        <select  name="status" ng-model="form.severity" data-required="true"
                             data-type="number" data-error-message="Required"
                             ng-options="c.id as c.name for c in constants.severitiesList|orderBy:'order'"></select>
                         </select>
@@ -219,10 +217,10 @@
                         <input type="text" class="tags" name="status" value="" ng-model="form.tags" gm-tags-input></input>
                     </fieldset>
                     <fieldset>
-                        <label>Type</label>
-                        <select class="type" name="type" ng-model="form.type" data-required="true"
+                        <label>Status</label>
+                        <select  name="status" ng-model="form.status" data-required="true"
                             data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.name for c in constants.issueTypesList|orderBy:'order'"></select>
+                            ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                 </div>

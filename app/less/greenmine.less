@@ -39,9 +39,9 @@
     }
     &.button-delete{
         background-color: #cc0000;
-        -webkit-box-shadow:  0 1px 1px #749a02;
-        -moz-box-shadow:  0 1px 1px #749a02;
-        box-shadow:  0 1px 1px #749a02;
+        -webkit-box-shadow:  0 1px 1px #666;
+        -moz-box-shadow:  0 1px 1px #666;
+        box-shadow:  0 1px 1px #666;
             &:hover {
             background-color: darken(#cc0000, 15%);
         }
@@ -2444,9 +2444,7 @@ body.login {
     }
     .wiki-buttons {
         padding: 5px;
-        padding-top: 2px;
-        float: right;
-        margin-right: 1%;
+        margin-top: 20px;
     }
 }
 
@@ -3098,24 +3096,31 @@ form {
 
     .issue-form,
     .task-form {
-        textarea.description {
-            width: 440px;
-            height: 100px;
+        input[type="text"],
+        textarea {
+            width: 96%;
         }
 
-
-        input.subject { width: 435px; }
+        select {
+            width: 98%;
+        }
+        
+        .description {
+            width: 96%;
+            height: 100px;
+        }
     }
 
     .issue-form {
-        select.status,
-        select.priority,
-        select.severity {
-            width: 140px;
+        .type,
+        .priority,
+        .severity {
+            width: 162px;
+            display: inline;
         }
 
-        select.type {
-            width: 100px;
+        .status {
+            width: 162px;
         }
 
         .select2-container {
