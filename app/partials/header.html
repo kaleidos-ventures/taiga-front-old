@@ -38,7 +38,8 @@
 
     <div class="search-box" gm-search-box>
         <form method="get">
-            <input type="text" name="search" placeholder="Search..." ng-model="term" />
+            <input type="text" id="search" name="search" placeholder="Find user stories, issues, tasks..." ng-model="term" />
+            <a href="" data-icon="F" class="search-button" title="Search" gm-forward-click="#search" />
         </form>
     </div>
 </div>
