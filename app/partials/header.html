@@ -7,8 +7,11 @@
             <li>
                 <a data-icon="b" ng-click="projectsList=!projectsList" href="" title="Show all projects">All Projects</a>
                 <ul class="project-list" ng-show="projectsList" ng-mouseleave="projectsList=false">
-                    <li ng-repeat="proj in auth.projects">
+                    <li ng-repeat="proj in auth.projects" ng-show="auth.projects.length">
                         <a title="{{ proj.name }}" href="{{ urls.backlogUrl(proj.id) }}">{{ proj.name }}</a>
+                    </li>
+                    <li ng-show="!auth.projects.length">
+                        <a title="You have no projects" href="#">You have no projects</a>
                     </li>
                 </ul>
             </li>
