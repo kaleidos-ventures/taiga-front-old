@@ -57,6 +57,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $dat
             rs.uploadTaskAttachment(projectId, taskId, $scope.attachment).then () ->
                 loadTask()
                 loadAttachments()
+                $rootScope.$broadcast("flash:new", true, "The task has been saved")
 
     $scope.removeAttachment = (attachment) ->
         $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
