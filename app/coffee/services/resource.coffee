@@ -374,7 +374,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
         xhr.open("POST", $gmUrls.api("issues/attachments"))
-        xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
+        xhr.setRequestHeader("Authorization", "Bearer #{$gmStorage.get('token')}")
         xhr.send(formData)
         return defered.promise
 
@@ -405,7 +405,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
         xhr.open("POST", $gmUrls.api("tasks/attachments"))
-        xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
+        xhr.setRequestHeader("Authorization", "Bearer #{$gmStorage.get('token')}")
         xhr.send(formData)
         return defered.promise
 
@@ -436,7 +436,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
         xhr.open("POST", $gmUrls.api("userstories/attachments"))
-        xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
+        xhr.setRequestHeader("Authorization", "Bearer #{$gmStorage.get('token')}")
         xhr.send(formData)
         return defered.promise
 
@@ -467,7 +467,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
         xhr.open("POST", $gmUrls.api("wiki/attachments"))
-        xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
+        xhr.setRequestHeader("Authorization", "Bearer #{$gmStorage.get('token')}")
         xhr.send(formData)
         return defered.promise
 
