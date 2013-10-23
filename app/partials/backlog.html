@@ -277,15 +277,15 @@
                 <h3 ng-switch-when="edit">Modify user story</h3>
             </div>
             <div class="modal-body">
-                <div class="fieldset-row">
+                <fieldset class="fieldset-row">
                     <fieldset>
                         <label>Subject</label>
                         <input class="subject" type="text" ng-model="form.subject"
                                name="subject" placeholder="A descriptive name..."></input>
                     </fieldset>
-                </div>
+                </fieldset>
                 <div class="fieldset-row" gm-role-points-edition></div>
-                <div class="fieldset-row">
+                <div class="fieldset-row clearfix status-tags">
                     <fieldset>
                         <label>Status</label>
                         <select class="status" name="status" ng-model="form.status"
@@ -301,13 +301,12 @@
                                placeholder="Ex: backend, backoffice, ecommerce..."></input>
                     </fieldset>
                 </div>
-                <div class="fieldset-row">
-                    <fieldset>
-                        <label>Description</label>
-                        <textarea class="description" name="description"
-                                  placeholder="A good description..."
-                                  ng-model="form.description"></textarea>
-                    </fieldset>
+                <fieldset class="fieldset-row">
+                    <label>Description</label>
+                    <textarea class="description" name="description"
+                              placeholder="A good description..."
+                              ng-model="form.description"></textarea>
+                </fieldset>
                 </div>
                 <div class="fieldset-row">
                     <input type="checkbox" id="client-requirement"

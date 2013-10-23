@@ -3035,8 +3035,26 @@ form {
     .modal-body {
         max-height: 430px;
     }
-
     .us-form {
+        input[type="text"],
+        select,
+        textarea {
+            width: 96%;
+        }
+        textarea {
+            height: 100px;
+        }
+        .status-tags{
+            fieldset {
+                float: left;
+                &:first-child {
+                    width: 35%;
+                }
+                &:last-child {
+                    width: 58%;
+                }
+            }
+        }
         fieldset.us-role-points {
             width: 100px;
             float: left;
@@ -3044,14 +3062,6 @@ form {
 
         select.points {
             width: 100px;
-        }
-
-        select.status { width: 150px; }
-        input.subject { width: 435px; }
-
-        textarea.description {
-            width: 515px;
-            height: 100px;
         }
     }
 }
@@ -3068,7 +3078,6 @@ form {
         }
 
         fieldset {
-            float: left;
             padding: 5px;
         }
 
