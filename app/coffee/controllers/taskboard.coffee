@@ -23,6 +23,12 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
     projectId = $routeParams.pid
     sprintId = $routeParams.sid || 1
 
+    calculateTotalPoints = (us) ->
+        total = 0
+        for roleId, pointId of us.points
+            total += $scope.constants.points[pointId].value
+        return total
+
     formatUserStoryTasks = ->
         $scope.usTasks = {}
         $scope.unassignedTasks = {}
@@ -47,8 +53,6 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
         return
 
     calculateStats = ->
-        pointIdToOrder = greenmine.utils.pointIdToOrder($rootScope.constants.pointsByOrder, $scope.roles)
-
         totalTasks = $scope.tasks.length
         totalUss = $scope.userstoriesList.length
         totalPoints = 0
@@ -57,14 +61,14 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
         compledUss = 0
         completedTasks = 0
 
-        _.each $scope.userstoriesList, (us) ->
-            totalPoints += pointIdToOrder(us.points)
+        for us in $scope.userstoriesList
+            totalPoints += calculateTotalPoints(us)
 
-        _.each $scope.usTasks, (statuses, usId) ->
+        for usId, statuses of $scope.usTasks
             hasOpenTasks = false
             hasTasks = false
 
-            _.each statuses, (tasks, statusId) ->
+            for statusId, tasks of statuses
                 hasTasks = true
                 if $scope.constants.taskStatusesList[statusId - 1].is_closed
                     completedTasks += tasks.length
@@ -74,8 +78,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
             if hasOpenTasks is false and hasTasks is true
                 compledUss += 1
                 us = $scope.userstories[usId]
-                points = pointIdToOrder(us.points)
-                completedPoints += points
+                completedPoints += calculateTotalPoints(us)
 
         $scope.stats =
             totalPoints: totalPoints

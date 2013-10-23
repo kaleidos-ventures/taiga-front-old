@@ -15,8 +15,13 @@ gmTaskboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
         getOptimalList = (totalPoints, numOfDays) ->
             (totalPoints-((totalPoints/(numOfDays-1))*dayNum) for dayNum in [0..numOfDays-1])
 
+        calculateTotalPoints = (us) ->
+            total = 0
+            for roleId, pointId of us.points
+                total += $scope.constants.points[pointId].value
+            return total
+
         getUSCompletionList = (userStories, numOfDays, startDay, totalPoints) ->
-            pointIdToOrder = greenmine.utils.pointIdToOrder(scope.constants.pointsByOrder, scope.roles)
             points = []
 
             for dayNum in [0..numOfDays-1]
@@ -32,7 +37,7 @@ gmTaskboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
                         return false
                 )
 
-                points.push(_.reduce(finishedUserStories, ((total, us) -> return total - pointIdToOrder(us.points)), totalPoints))
+                points.push(_.reduce(finishedUserStories, ((total, us) -> return total - calculateTotalPoints(us)), totalPoints))
             return points
 
 
