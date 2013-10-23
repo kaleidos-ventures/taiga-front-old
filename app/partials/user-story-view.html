@@ -32,14 +32,13 @@
                 <h3>User story data</h3>
             </div>
             <ul class="info-rows">
-               <li>Added by: <span>{{ userStory.owner }}</span></li>
-               <li>Date: <span>{{ userStory.created_date }}</span></li>
-               <li>Updated: <span>{{ userStory.modified_date }}</span></li>
-               <li>Finished: <span>{{ userStory.finish_date }}</span></li>
+               <li>Added by: <span>{{ constants.users[userStory.owner].username }}</span></li>
+               <li>Date: <span>{{ userStory.created_date|momentFormat:"LLL" }}</span></li>
+               <li>Updated: <span>{{ userStory.modified_date|momentFormat:"LLL" }}</span></li>
+               <li>Finished: <span>{{ userStory.finish_date|momentFormat:"LLL" }}</span></li>
                <li>Client requirement: <span>{{ userStory.client_requirement }}</span></li>
                <li>Team requirement: <span>{{ userStory.team_requirement }}</span></li>
-               <li class="priority-{{ userStory.priority }}">Priority: <span>{{ userStory.priority }}</span></li>
-               <li class="status-{{ userStory.status }}">Status: <span>{{ userStory.status }}</span></li>
+               <li class="status-{{ userStory.status }}">Status: <span>{{ constants.usStatuses[userStory.status].name }}</span></li>
                <li>Points:
                     <span ng-repeat="role in constants.computableRolesList">
                         {{ role.name }}: {{ points[role.id] }},
