@@ -30,7 +30,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $scope.currentPage = 0
 
     $scope.sortingOrder = 'severity'
-    $scope.reverse = false
+    $scope.reverse = true
 
     generateTagList = ->
         tagsDict = {}
