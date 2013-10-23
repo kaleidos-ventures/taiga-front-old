@@ -14,7 +14,7 @@
             <h2>{{ issue.subject }}</h2>
             <p>{{ issue.description }}</p>
             <div class="attachments" ng-show="attachments">
-                <h3>Attachments</h3>
+                <h3 data-icon="E">Attachments</h3>
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
@@ -29,13 +29,13 @@
                 <h3>Issue data</h3>
             </div>
             <ul class="info-rows">
-                <li>Added by: <span>{{ constants.users[issue.owner].username }}</span></li>
-                <li>Assigned to: <span>{{ constants.users[issue.assigned_to].username }}</span></li>
-                <li>Date: <span>{{ issue.modified_date|momentFormat:"LLL" }}</span></li>
-                <li>Updated: <span>{{ issue.modified_date|momentFormat:"LLL" }}</span></li>
-                <li class="priority-{{ issue.priority }}">Priority: <span>{{ constants.priorities[issue.priority].name }}</span></li>
-                <li class="status-{{ issue.status }}">Status: <span>{{ constants.issueStatuses[issue.status].name }}</span></li>
-                <li>Attachments: <span>{{ attachments.length }}</span></li>
+                <li data-icon="t">Added by: <span>{{ constants.users[issue.owner].username }}</span></li>
+                <li data-icon="u">Assigned to: <span>{{ constants.users[issue.assigned_to].username }}</span></li>
+                <li data-icon="w">Date: <span>{{ issue.modified_date|momentFormat:"LLL" }}</span></li>
+                <li data-icon="x">Updated: <span>{{ issue.modified_date|momentFormat:"LLL" }}</span></li>
+                <li data-icon="o" class="priority-{{ issue.priority }}">Priority: <span>{{ constants.priorities[issue.priority].name }}</span></li>
+                <li data-icon="y" class="status-{{ issue.status }}">Status: <span>{{ constants.issueStatuses[issue.status].name }}</span></li>
+                <li data-icon="z">Attachments: <span>{{ attachments.length }}</span></li>
             </ul>
         </div>
     </div>
