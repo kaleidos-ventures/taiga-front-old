@@ -252,6 +252,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             $rootScope.pageBreadcrumb = breadcrumb
 
     loadAttachments = ->
+        $scope.attachment = undefined
         rs.getIssueAttachments(projectId, issueId).then (attachments) ->
             $scope.attachments = attachments
 
@@ -264,15 +265,14 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         return ($scope.issue[property] == parseInt(id, 10))
 
     $scope.submit = ->
-        $rootScope.$broadcast("flash:new", true, "La issue se ha guardado!")
-        rs.uploadIssueAttachment(projectId, issueId, $scope.attachment)
-
         for key, value of $scope.form
             $scope.issue[key] = value
 
         $scope.issue.save().then (issue) ->
-            loadIssue()
-            loadAttachments()
+            rs.uploadIssueAttachment(projectId, issueId, $scope.attachment).then () ->
+                loadIssue()
+                loadAttachments()
+                $rootScope.$broadcast("flash:new", true, "The issue has been saved")
 
     $scope.removeAttachment = (attachment) ->
         $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})

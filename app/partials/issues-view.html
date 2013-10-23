@@ -112,8 +112,15 @@
                     </fieldset>
 
                     <fieldset class="issue-attachment">
-                        <a class="add-attachment" data-icon="E" title="Add Attachment" href="">Add Attachments</a>
-                        <input type="file" class="hidden" name="attachment" gm-file ng-model="attachment" />
+                        <a class="add-attachment" data-icon="E" title="Add Attachment"
+                            href="" ng-hide="attachment"
+                            gm-forward-click="#attachment_file_input" >Add Attachments</a>
+                        <span data-icon="E" class="add-attachment" ng-show="attachment">
+                            {{ attachment.name }} [{{ attachment.size|sizeFormat }}]
+                            <a href="" ng-click="attachment = undefined">(remove)</a>
+                        </span>
+                        <input type="file" class="hidden" name="attachment"
+                               id="attachment_file_input" gm-file ng-model="attachment" />
                     </fieldset>
 
                     <fieldset class="issue-edit-submit">
