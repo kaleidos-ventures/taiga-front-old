@@ -2,6 +2,10 @@
 gmMarkitupConstructor = ($parse) ->
     require: "?ngModel",
     link: (scope, elm, attrs, ngModel) ->
+        wikiHelpUrl = "http://bywordapp.com/markdown/syntax.html"
+        openHelp = () ->
+            window.open(wikiHelpUrl,'_blank')
+
         markdownSettings =
             nameSpace: 'markdown'
             onShiftEnter: {keepDefault:false, openWith:'\n\n'}
@@ -27,6 +31,8 @@ gmMarkitupConstructor = ($parse) ->
                 {name:'Code Block / Code', openWith:'(!(\t|!|`)!)', closeWith:'(!(`)!)'},
                 {separator:'---------------'},
                 {name:'Preview', call:'preview', className:"preview"}
+                {separator:'---------------'},
+                {name:'Help', call: openHelp , className:"help"}
             ]
             afterInsert: (event) ->
                 target = angular.element(event.textarea)
