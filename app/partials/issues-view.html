@@ -18,6 +18,7 @@
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
+                        <span>[{{ attachment.size|sizeFormat }}]</span>
                         <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
                         <a href="" ng-click="removeAttachment(attachment)">(remove)</a>
                     </li>
