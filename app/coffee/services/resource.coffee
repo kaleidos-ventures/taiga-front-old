@@ -15,10 +15,11 @@
 ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service = {}
     headers = ->
-        return {
-            "Authorization": "Bearer #{$gmStorage.get('token')}"
-            "X-DISABLE-PAGINATION": "true"
-        }
+        token = $gmStorage.get('token')
+
+        data = {"X-DISABLE-PAGINATION": "true"}
+        data["Authorization"] = "Bearer #{token}" if token
+        return data
 
     queryMany = (name, params, options) ->
         defauts = {method: "GET", headers:  headers()}

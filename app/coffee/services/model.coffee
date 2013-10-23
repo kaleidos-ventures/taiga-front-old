@@ -15,9 +15,10 @@
 
 ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
     headers = ->
-        return {
-            "Authorization": "Bearer #{$gmStorage.get('token')}"
-        }
+        token = $gmStorage.get('token')
+        if token
+            return {"Authorization":"Bearer #{token}"}
+        return {}
 
     class Model
         constructor: (name, data, dataTypes) ->
