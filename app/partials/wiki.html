@@ -4,7 +4,7 @@
         <div class="span12">
             <div class="wiki-container" gm-render-markdown="content"></div>
             <div class="attachments" ng-show="attachments">
-                <h3>Attachments</h3>
+                <h3 data-icon="E">Attachments</h3>
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
