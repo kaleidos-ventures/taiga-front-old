@@ -85,11 +85,11 @@
                                             <a href="{{ urls.userStoryUrl(projectId, us.id) }}">{{ us.subject }}</a>
                                             <ul class="us-points-per-role">
                                                 <li ng-repeat="role in constants.computableRolesList" class="us-point">
-                                                    {{ role.name }}: {{ constants.pointsByOrder[us.points[role.id]].name }}
+                                                    {{ role.name }}: {{ constants.points[us.points[role.id]].name }}
                                                 </li>
                                             </ul>
                                         </div>
-                                        
+
                                         <div class="description">
                                             <p>{{ us.description|truncate:140 }}</p>
                                         </div>
