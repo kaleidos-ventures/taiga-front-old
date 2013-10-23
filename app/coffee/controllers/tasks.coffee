@@ -26,6 +26,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $dat
     $scope.updateFormOpened = false
 
     loadAttachments = ->
+        $scope.attachment = undefined
         rs.getTaskAttachments(projectId, taskId).then (attachments) ->
             $scope.attachments = attachments
 
@@ -49,14 +50,13 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $dat
         return ($scope.task[property] == parseInt(id, 10))
 
     $scope.submit = ->
-        rs.uploadTaskAttachment(projectId, taskId, $scope.attachment)
-
         for key, value of $scope.form
             $scope.task[key] = value
 
         $scope.task.save().then (task) ->
-            loadTask()
-            loadAttachments()
+            rs.uploadTaskAttachment(projectId, taskId, $scope.attachment).then () ->
+                loadTask()
+                loadAttachments()
 
     $scope.removeAttachment = (attachment) ->
         $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
