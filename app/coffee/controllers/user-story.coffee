@@ -32,6 +32,11 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             total += $scope.constants.points[pointId].value
         return total
 
+    loadAttachments = ->
+        $scope.attachment = undefined
+        rs.getUserStoryAttachments(projectId, userStoryId).then (attachments) ->
+            $scope.attachments = attachments
+
     loadUserStory = ->
         rs.getUserStory(projectId, userStoryId).then (userStory) ->
             $scope.userStory = userStory
@@ -47,22 +52,24 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
                 $scope.points[roleId] = $scope.constants.points[pointId].name
 
     # Load initial data
-    promise = $q.all [
-        $data.loadProject($scope)
-        $data.loadUsersAndRoles($scope)
-    ]
-
-    # Initial load
-    promise.then ->
-        loadUserStory()
+    $data.loadProject($scope).then ->
+        $data.loadUsersAndRoles($scope).then ->
+            loadUserStory()
+            loadAttachments()
 
     $scope.submit = ->
-        $rootScope.$broadcast("flash:new", true, "La user story se ha guardado!")
         for key, value of $scope.form
             $scope.userStory[key] = value
 
         $scope.userStory.save().then (userStory)->
-            loadUserStory()
+            rs.uploadUserStoryAttachment(projectId, userStoryId, $scope.attachment).then () ->
+                loadUserStory()
+                loadAttachments()
+                $rootScope.$broadcast("flash:new", true, "The user story has been saved")
+
+    $scope.removeAttachment = (attachment) ->
+        $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
+        attachment.remove()
 
     $scope.removeUserStory = (userStory) ->
         userStory.remove().then ->

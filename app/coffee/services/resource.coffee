@@ -338,6 +338,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.getTaskAttachments = (projectId, taskId) ->
         return queryMany("tasks/attachments", {project: projectId, object_id: taskId})
 
+    service.getUserStoryAttachments = (projectId, userStoryId) ->
+        return queryMany("userstories/attachments", {project: projectId, object_id: userStoryId})
+
     service.getWikiPageAttachments = (projectId, wikiPageId) ->
         return queryMany("wiki/attachments", {project: projectId, object_id: wikiPageId})
 
@@ -399,6 +402,37 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
         xhr.open("POST", $gmUrls.api("tasks/attachments"))
+        xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
+        xhr.send(formData)
+        return defered.promise
+
+    service.uploadUserStoryAttachment = (projectId, userStoryId, file, progress) ->
+        defered = Q.defer()
+
+        if file is undefined
+            defered.resolve(null)
+            return defered.promise
+
+        uploadComplete = (evt) ->
+            data = JSON.parse(evt.target.responseText)
+            defered.resolve(data)
+
+        uploadFailed = (evt) ->
+            defered.reject("fail")
+
+        formData = new FormData()
+        formData.append("project", projectId)
+        formData.append("object_id", userStoryId)
+        formData.append("attached_file", file)
+
+        xhr = new XMLHttpRequest()
+
+        if progress != undefined
+            xhr.upload.addEventListener("progress", uploadProgress, false)
+
+        xhr.addEventListener("load", uploadComplete, false)
+        xhr.addEventListener("error", uploadFailed, false)
+        xhr.open("POST", $gmUrls.api("userstories/attachments"))
         xhr.setRequestHeader("X-SESSION-TOKEN", $gmStorage.get('token'))
         xhr.send(formData)
         return defered.promise

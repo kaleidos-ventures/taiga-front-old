@@ -15,6 +15,17 @@
         <div class="span8 task-data-description">
             <h2>{{ userStory.subject }}</h2>
             <p>{{ userStory.description }}</p>
+            <div class="attachments" ng-show="attachments">
+                <h3>Attachments</h3>
+                <ul class="attachments-items">
+                    <li class="attachments-item" ng-repeat="attachment in attachments">
+                        <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
+                        <span>[{{ attachment.size|sizeFormat }}]</span>
+                        <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
+                        <a href="" ng-click="removeAttachment(attachment)">(remove)</a>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="span4 task-metadata">
             <div class="info-header">
@@ -29,14 +40,13 @@
                <li>Team requirement: <span>{{ userStory.team_requirement }}</span></li>
                <li class="priority-{{ userStory.priority }}">Priority: <span>{{ userStory.priority }}</span></li>
                <li class="status-{{ userStory.status }}">Status: <span>{{ userStory.status }}</span></li>
-
                <li>Points:
                     <span ng-repeat="role in constants.computableRolesList">
                         {{ role.name }}: {{ points[role.id] }},
                     </span>
                     Total: {{ totalPoints }}
                </li>
-
+               <li>Attachments: <span>{{ attachments.length }}</span></li>
             </ul>
         </div>
     </div>
@@ -94,8 +104,15 @@
                     </fieldset>
 
                     <fieldset class="task-attachment">
-                        <a class="add-attachment" data-icon="E" title="Add Attachment" href="">Add Attachments</a>
-                        <input type="file" class="hidden" name="attachment" gm-file ng-model="attachment" />
+                        <a class="add-attachment" data-icon="E" title="Add Attachment"
+                            href="" ng-hide="attachment"
+                            gm-forward-click="#attachment_file_input" >Add Attachments</a>
+                        <span data-icon="E" class="add-attachment" ng-show="attachment">
+                            {{ attachment.name }} [{{ attachment.size|sizeFormat }}]
+                            <a href="" ng-click="attachment = undefined">(remove)</a>
+                        </span>
+                        <input type="file" class="hidden" name="attachment"
+                               id="attachment_file_input" gm-file ng-model="attachment" />
                     </fieldset>
 
                     <fieldset class="task-edit-submit">
