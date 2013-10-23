@@ -16,7 +16,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service = {}
     headers = ->
         return {
-            "X-SESSION-TOKEN": $gmStorage.get('token')
+            "Authorization": "Bearer #{$gmStorage.get('token')}"
             "X-DISABLE-PAGINATION": "true"
         }
 
