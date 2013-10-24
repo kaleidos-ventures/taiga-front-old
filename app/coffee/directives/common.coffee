@@ -185,11 +185,11 @@ GmPopoverDirective = ($parse, $compile) ->
                 element.data('state', 'closing')
                 _.delay(closeHandler, 2000)
 
-                next.on "mouseleave", ".popover-inner", (event) ->
+                next.on "mouseleave", ".popover-content", (event) ->
                     element.data('state', 'closing')
                     _.delay(closeHandler, 200)
 
-                next.on "mouseenter", ".popover-inner", (event) ->
+                next.on "mouseenter", ".popover-content", (event) ->
                     element.data('state', 'open')
 
 

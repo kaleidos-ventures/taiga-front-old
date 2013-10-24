@@ -117,23 +117,23 @@
                     </div>
                     <div class="issue-state">
                         <a href="" gm-popover="updateIssueStatus(issue, selectedId)"
-                            data-tmpl="#status-popover">{{ constants.issueStatuses[issue.status].name }}</a>
+                            data-tmpl="#status-popover" data-auto-hide="true">{{ constants.issueStatuses[issue.status].name }}</a>
                     </div>
                     <div class="issue-priority">
                         <a href="" gm-popover="updateIssuePriority(issue, selectedId)"
                             class="priority-{{ constants.priorities[issue.priority].name|lowercase }}"
-                                    data-tmpl="#priority-popover">{{ constants.priorities[issue.priority].name }}</a>
+                                    data-tmpl="#priority-popover" data-auto-hide="true">{{ constants.priorities[issue.priority].name }}</a>
                     </div>
                     <div class="issue-assignedto">
                         <div class="button-item" ng-show="issue.assigned_to" >
                             <i class="icon-user"></i>
-                            <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover">
+                            <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-auto-hide="true">
                                <span>{{ constants.users[issue.assigned_to].username }}</span>
                             </a>
                         </div>
                         <div class="button-item" ng-show="!issue.assigned_to">
                             <i class="icon-question-sign"></i>
-                            <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover">
+                            <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-auto-hide="true">
                                 <span>Unassigned</span>
                             </a>
                         </div>
@@ -150,7 +150,7 @@
                         </a>
                         <a data-icon="h" class="btn-small-remove" gm-popover="removeIssue(issue)"
                                 data-tmpl="#issue-remove-popover"
-                                data-auto-hide="false"
+                                data-auto-hide="true"
                                 data-placement="left">
                             <span class="help-box">Remove</span>
                         </a>
