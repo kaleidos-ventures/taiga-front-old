@@ -22,6 +22,17 @@
                     </fieldset>
 
                     <fieldset>
+                        <label>Notification level:</label>
+                        <select type="text" name="notify_level" data-required="true" ng-model="auth.notify_level">
+                            <option ng-selected="key == auth.notify_level" ng-repeat="(key, value) in notificationLevelOptions" value="{{ key }}">{{ value }}</option>
+                        </select>
+                    </fieldset>
+                    <fieldset>
+                        <label>Notify changes by me:</label>
+                        <input type="checkbox" name="notify_changes_by_me" ng-model="auth.notify_changes_by_me"></input>
+                    </fieldset>
+
+                    <fieldset>
                         <label>Email:</label>
                         <input type="text" data-type="email" name="last_name" data-required="true" value="" ng-model="auth.email"></input>
                     </fieldset>

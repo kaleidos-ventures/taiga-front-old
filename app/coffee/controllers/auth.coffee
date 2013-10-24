@@ -90,10 +90,11 @@ ChangePasswordController = ($scope, $rootScope, $location, rs) ->
             $scope.errorMessage = data.detail
 
 
-ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs) ->
+ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config) ->
     $rootScope.projectId = null
     $rootScope.pageSection = 'profile'
     $rootScope.pageBreadcrumb = ["Greenmine", "Profile"]
+    $scope.notificationLevelOptions = config.notificationLevelOptions
 
     $scope.formData = {}
 
@@ -113,4 +114,4 @@ module.controller("LoginController", ['$scope', '$rootScope', '$location', 'reso
 module.controller("RegisterController", ['$scope', '$rootScope', RegisterController])
 module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', RecoveryController])
 module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', 'resource',  ChangePasswordController])
-module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', ProfileController])
+module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', 'config', ProfileController])
