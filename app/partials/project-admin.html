@@ -77,7 +77,7 @@
         <ul class="members-list" ng-controller="MembershipsController">
             <li class="member" ng-repeat="mbr in project.memberships">
                 <a href="" data-icon="h"  title="Delete Member" ng-click="deleteMember(mbr)"></a>
-                <span>[<a href="" gm-popover="updateMemberRole(mbr, selectedId)"
+                <span>[<a href="" gm-popover="updateMemberRole(mbr, selectedId)" data-auto-hide="true"
                           data-tmpl="#role-popover">{{ mbr.role_name }}</a>]</span>
                 {{ mbr.full_name }}
             </li>
