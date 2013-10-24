@@ -23,7 +23,6 @@ UrlsProvider = ->
         scheme: {}
     }
 
-
     setHost = (ns, host, scheme) ->
         data.host[ns] = host
         data.scheme[ns] = scheme
@@ -56,6 +55,8 @@ UrlsProvider = ->
 
     @.$get = ->
         return service
+
+    return
 
 module = angular.module("gmUrls", [])
 module.provider('$gmUrls', UrlsProvider);
