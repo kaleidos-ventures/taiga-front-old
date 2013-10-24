@@ -35,16 +35,17 @@ GmBreadcrumbDirective = ($rootScope) ->
             items = []
 
             for item, index in breadcrumb
-                items.push(angular.element('<span class="title-item"></span>').text(item))
+                items.push(angular.element('<li data-icon="G" class="title-item"></li>').text(item))
 
-                if index != total
-                    items.push(angular.element('<span class="separator"> &rsaquo; </span>'))
+                #if index != total
+                #    items.push(angular.element('<span class="separator"> &rsaquo; </span>'))
 
             if not _.isEmpty(items)
                 first = items[0]
-                first.css('font-weight', 'bold')
-                first.css('color', 'black')
-                first.css('curso', 'pointer')
+                #first.css('font-weight', 'bold')
+                #first.css('color', 'black')
+                #first.css('curso', 'pointer')*/
+                first.addClass('first-breadcrumb').removeAttr('data-icon')
 
             for item in items
                 element.append(item)

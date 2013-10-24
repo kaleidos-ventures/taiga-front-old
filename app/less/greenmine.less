@@ -485,7 +485,25 @@ body.login {
             padding: 5px 20px;
             color: #333;
             font-family: @ColabReg;
-            font-size: .8em;
+            font-size: 12px;
+            margin: 0;
+            padding: 10px 15px;
+            list-style: none;
+            li {
+                float: left;
+                margin-right: 10px;
+                list-style: none;
+                &.first-breadcrumb {
+                    font-weight: bold;
+                    color: #333;
+                    cursor: pointer;
+                }
+                &:before {
+                    font-size: 9px;
+                    margin-right: 6px;
+                    color: #666;
+                }
+            }
         }
     }
 }
