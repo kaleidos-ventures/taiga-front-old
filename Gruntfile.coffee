@@ -9,6 +9,7 @@ module.exports = (grunt) ->
         'app/js/angular.js',
         'app/js/angular-route.js',
         'app/js/angular-sanitize.js',
+        'app/js/angular-animate.js',
         'app/js/bootstrap.js',
         'app/js/moment.js',
         'app/js/kalendae.js',
