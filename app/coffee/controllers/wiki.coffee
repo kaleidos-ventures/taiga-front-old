@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-WikiController = ($scope, $rootScope, $location, $routeParams, rs) ->
+WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs) ->
     $rootScope.pageSection = 'wiki'
-    $rootScope.pageBreadcrumb = ["Project", "Wiki", $routeParams.slug]
+    $rootScope.pageBreadcrumb = ["", "Wiki", $routeParams.slug]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     $scope.formOpened = false
@@ -22,6 +22,8 @@ WikiController = ($scope, $rootScope, $location, $routeParams, rs) ->
 
     projectId = $rootScope.projectId
     slug = $routeParams.slug
+
+    $data.loadProject($scope)
 
     promise = rs.getWikiPage(projectId, slug)
     promise.then (page) ->
@@ -75,4 +77,4 @@ WikiController = ($scope, $rootScope, $location, $routeParams, rs) ->
 
 
 module = angular.module("greenmine.controllers.wiki", [])
-module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', WikiController])
+module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams', '$data', 'resource', WikiController])

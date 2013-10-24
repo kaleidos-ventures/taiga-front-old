@@ -15,7 +15,7 @@
 IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm) ->
     # Global Scope Variables
     $rootScope.pageSection = 'issues'
-    $rootScope.pageBreadcrumb = ["", "Backlog"]
+    $rootScope.pageBreadcrumb = ["", "Issues"]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     projectId = $rootScope.projectId
