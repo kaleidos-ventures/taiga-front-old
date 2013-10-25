@@ -262,4 +262,14 @@ angular.module('greenmine', modules)
        .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', '$gmUrlsProvider', configCallback])
        .run(['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls', 'config', init])
 
-angular.module('greenmine.config', []).value('config', {host: "localhost:8000", scheme: "http"})
+angular.module('greenmine.config', []).value('config', {
+    host: "localhost:8000"
+    scheme: "http"
+    notificationLevelOptions: {
+        "all_owned_projects": "All events on my projects"
+        "only_watching": "Only events for objects i watch"
+        "only_assigned": "Only events for objects assigned to me"
+        "only_owner": "Only events for objects owned by me"
+        "no_events": "No events"
+    }
+})
