@@ -93,7 +93,10 @@ ChangePasswordController = ($scope, $rootScope, $location, rs) ->
 ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config) ->
     $rootScope.projectId = null
     $rootScope.pageSection = 'profile'
-    $rootScope.pageBreadcrumb = ["Greenmine", "Profile"]
+    $rootScope.pageBreadcrumb = [
+        ["Greenmine", $rootScope.urls.projectsUrl()],
+        ["Profile", null]
+    ]
     $scope.notificationLevelOptions = config.notificationLevelOptions
 
     $scope.formData = {}

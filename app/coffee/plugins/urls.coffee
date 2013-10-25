@@ -59,4 +59,4 @@ UrlsProvider = ->
     return
 
 module = angular.module("gmUrls", [])
-module.provider('$gmUrls', UrlsProvider);
+module.provider('$gmUrls', UrlsProvider)

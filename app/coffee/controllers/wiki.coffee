@@ -14,8 +14,12 @@
 
 WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs) ->
     $rootScope.pageSection = 'wiki'
-    $rootScope.pageBreadcrumb = ["", "Wiki", $routeParams.slug]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
+    $rootScope.pageBreadcrumb = [
+        ["", ""]
+        ["Wiki", $rootScope.urls.wikiUrl($rootScope.projectId, "home")]
+        [$routeParams.slug, null]
+    ]
 
     $scope.formOpened = false
     $scope.form = {}

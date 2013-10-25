@@ -15,7 +15,10 @@
 BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
     # Global Scope Variables
     $rootScope.pageSection = 'backlog'
-    $rootScope.pageBreadcrumb = ["", "Backlog"]
+    $rootScope.pageBreadcrumb = [
+        ["", ""]
+        ["Backlog", null]
+    ]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     $scope.stats = {}

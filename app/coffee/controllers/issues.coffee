@@ -15,7 +15,10 @@
 IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm) ->
     # Global Scope Variables
     $rootScope.pageSection = 'issues'
-    $rootScope.pageBreadcrumb = ["", "Issues"]
+    $rootScope.pageBreadcrumb = [
+        ["", ""],
+        ["Issues", null]
+    ]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     projectId = $rootScope.projectId
@@ -231,7 +234,10 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data,
                         $confirm) ->
     $rootScope.pageSection = 'issues'
-    $rootScope.pageBreadcrumb = ["", "Issues", ""]
+    $rootScope.pageBreadcrumb = [
+        ["", ""],
+        ["Issues", null],
+    ]
     $scope.projectId = parseInt($routeParams.pid, 10)
 
     projectId = $scope.projectId
@@ -247,7 +253,8 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             $scope.form = _.extend({}, $scope.issue._attrs)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[2] = "##{issue.ref}"
+            breadcrumb[1] = ["Issues", $rootScope.urls.issuesUrl(projectId)]
+            breadcrumb[2] = ["##{issue.ref}", null]
 
             $rootScope.pageBreadcrumb = breadcrumb
 

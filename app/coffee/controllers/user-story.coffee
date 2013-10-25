@@ -15,7 +15,10 @@
 
 UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data) ->
     $rootScope.pageSection = 'user-stories'
-    $rootScope.pageBreadcrumb = ["", "User stories", ""]
+    $rootScope.pageBreadcrumb = [
+        ["", ""],
+        ["User stories", null],
+    ]
     $scope.projectId = parseInt($routeParams.pid, 10)
 
     projectId = $scope.projectId
@@ -43,7 +46,11 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             $scope.form = _.clone($scope.userStory._attrs, true)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[2] = "##{userStory.ref}"
+            if $scope.userStory.milestone == null
+                breadcrumb[1] = ["Backlog", $rootScope.urls.backlogUrl(projectId)]
+            else
+                breadcrumb[1] = ["Taskboard", $rootScope.urls.taskboardUrl(projectId, $scope.userStory.milestone)]
+            breadcrumb[2] = ["##{userStory.ref}", null]
             $rootScope.pageBreadcrumb = breadcrumb
 
             $scope.totalPoints = calculateTotalPoints(userStory)

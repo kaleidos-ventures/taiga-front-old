@@ -35,7 +35,12 @@ GmBreadcrumbDirective = ($rootScope) ->
             items = []
 
             for item, index in breadcrumb
-                items.push(angular.element('<li data-icon="G" class="title-item"></li>').text(item))
+                if item[1] == null
+                    li = angular.element('<li data-icon="G" class="title-item"></li>').text(item[0])
+                else
+                    link = angular.element('<a></a>').text(item[0]).attr('href', item[1])
+                    li = angular.element('<li data-icon="G" class="title-item"></li>').append(link)
+                items.push(li)
 
             if not _.isEmpty(items)
                 first = items[0]

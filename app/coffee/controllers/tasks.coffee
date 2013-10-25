@@ -15,7 +15,10 @@
 
 TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data) ->
     $rootScope.pageSection = 'tasks'
-    $rootScope.pageBreadcrumb = ["", "Tasks", ""]
+    $rootScope.pageBreadcrumb = [
+        ["", ""],
+        ["Tasks", null],
+    ]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     projectId = $rootScope.projectId
@@ -36,7 +39,8 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $dat
             $scope.form = _.extend({}, $scope.task._attrs)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[2] = "##{task.ref}"
+            breadcrumb[1] = ["Taskboard", $rootScope.urls.taskboardUrl($rootScope.projectId, $scope.task.milestone)]
+            breadcrumb[2] = ["##{task.ref}", null]
 
             $rootScope.pageBreadcrumb = breadcrumb
 

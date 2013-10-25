@@ -15,7 +15,10 @@
 TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
     # Global Scope Variables
     $rootScope.pageSection = 'dashboard'
-    $rootScope.pageBreadcrumb = ["Project", "Taskboard"]
+    $rootScope.pageBreadcrumb = [
+        ["", ""],
+        ["Taskboard", null]
+    ]
 
     $scope.projectId = $routeParams.pid
     $scope.sprintId = $routeParams.sid

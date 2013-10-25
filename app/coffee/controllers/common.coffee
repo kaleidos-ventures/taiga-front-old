@@ -7,7 +7,7 @@ DataServiceProvider = ($rootScope, $q, rs) ->
             $rootScope.$broadcast("project:loaded", project)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[0] = project.name
+            breadcrumb[0] = [project.name, $rootScope.urls.backlogUrl(project.id)]
             $rootScope.pageBreadcrumb = breadcrumb
 
             # USs

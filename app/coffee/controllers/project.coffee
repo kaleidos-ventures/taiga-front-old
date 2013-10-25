@@ -14,7 +14,10 @@
 
 ProjectListController = ($scope, $rootScope, rs) ->
     $rootScope.pageSection = 'projects'
-    $rootScope.pageBreadcrumb = ["Greenmine", "Dashboard"]
+    $rootScope.pageBreadcrumb = [
+        ["Greenmine", $rootScope.urls.projectsUrl()],
+        ["Dashboard", null]
+    ]
     $rootScope.projectId = null
 
     rs.getProjects().then (projects) ->
@@ -24,7 +27,10 @@ ProjectListController = ($scope, $rootScope, rs) ->
 ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model,
                           $confirm) ->
     $rootScope.pageSection = 'admin'
-    $rootScope.pageBreadcrumb = ["", "Project Admin"]
+    $rootScope.pageBreadcrumb = [
+        ["", ""],
+        ["Project Admin", null]
+    ]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     # This attach "project" to $scope
