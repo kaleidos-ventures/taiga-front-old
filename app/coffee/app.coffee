@@ -28,6 +28,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when('/register', {templateUrl: 'partials/register.html', controller: "RegisterController"})
     $routeProvider.when('/recovery', {templateUrl: 'partials/recovery.html', controller: "RecoveryController"})
     $routeProvider.when('/change-password', {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController"})
+    $routeProvider.when('/change-password/:token', {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController"})
     $routeProvider.when('/profile', {templateUrl: 'partials/profile.html', controller: "ProfileController"})
 
     $routeProvider.when('/', {templateUrl: 'partials/project-list.html', controller: "ProjectListController"})

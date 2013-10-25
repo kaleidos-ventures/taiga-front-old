@@ -56,7 +56,7 @@ RecoveryController = ($scope, $rootScope, $location, rs) ->
             $scope.error = false
 
             gm.utils.delay 1000, ->
-                $location.url("/change-password")
+                $location.url("/login")
                 $scope.$apply()
 
         promise.then null, (data) ->
@@ -66,15 +66,21 @@ RecoveryController = ($scope, $rootScope, $location, rs) ->
             $scope.errorMessage = data.detail
 
 
-ChangePasswordController = ($scope, $rootScope, $location, rs) ->
+ChangePasswordController = ($scope, $rootScope, $location, $routeParams, rs) ->
     $rootScope.pageSection = 'login'
 
     $scope.error = false
     $scope.success = false
     $scope.formData = {}
+    if $routeParams.token?
+        $scope.tokenInParams = true
+    else
+        $scope.tokenInParams = false
+
 
     $scope.submit = ->
-        promise = rs.changePasswordFromRecovery($scope.formData.token, $scope.formData.password)
+        token = $routeParams.token or $scope.formData.token
+        promise = rs.changePasswordFromRecovery(token, $scope.formData.password)
         promise.then ->
             $scope.success = true
             $scope.error = false
@@ -116,5 +122,5 @@ module = angular.module("greenmine.controllers.auth", [])
 module.controller("LoginController", ['$scope', '$rootScope', '$location', 'resource', '$gmAuth', LoginController])
 module.controller("RegisterController", ['$scope', '$rootScope', RegisterController])
 module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', RecoveryController])
-module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', 'resource',  ChangePasswordController])
+module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource',  ChangePasswordController])
 module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', 'config', ProfileController])
