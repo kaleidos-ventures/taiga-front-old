@@ -28,6 +28,8 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
     $scope.form = {'points':{}}
     $scope.totalPoints = 0
     $scope.points = {}
+    $scope.newAttachments = []
+    $scope.attachments = []
 
     calculateTotalPoints = (us) ->
         total = 0
@@ -36,7 +38,6 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         return total
 
     loadAttachments = ->
-        $scope.attachment = undefined
         rs.getUserStoryAttachments(projectId, userStoryId).then (attachments) ->
             $scope.attachments = attachments
 
@@ -69,14 +70,22 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             $scope.userStory[key] = value
 
         $scope.userStory.save().then (userStory)->
-            rs.uploadUserStoryAttachment(projectId, userStoryId, $scope.attachment).then () ->
-                loadUserStory()
-                loadAttachments()
-                $rootScope.$broadcast("flash:new", true, "The user story has been saved")
+            loadUserStory()
+            saveNewAttachments()
+            $rootScope.$broadcast("flash:new", true, "The user story has been saved")
+
+    saveNewAttachments = ->
+        _.forEach $scope.newAttachments, (newAttach) ->
+            rs.uploadUserStoryAttachment(projectId, userStoryId, newAttach).then (attach) ->
+                $scope.removeNewAttachment(newAttach)
+                $scope.attachments.push(attach)
 
     $scope.removeAttachment = (attachment) ->
-        $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
+        $scope.attachments = _.without($scope.attachments, attachment)
         attachment.remove()
+
+    $scope.removeNewAttachment = (attachment) ->
+        $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
     $scope.removeUserStory = (userStory) ->
         userStory.remove().then ->
