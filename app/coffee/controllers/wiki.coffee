@@ -24,6 +24,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs) ->
     $scope.formOpened = false
     $scope.form = {}
     $scope.newAttachments = []
+    $scope.attachments = []
 
     projectId = $rootScope.projectId
     slug = $routeParams.slug
