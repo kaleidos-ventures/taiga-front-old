@@ -405,7 +405,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
         xhr.open("POST", $gmUrls.api("tasks/attachments"))
-        xhr.setRequestHeader("Authorization", "Bearer #{$gmStorage.get('token')}")
+        xhr.setRequestHeader("Authorization", "Bearer " + $gmStorage.get('token'))
         xhr.send(formData)
         return defered.promise
 
