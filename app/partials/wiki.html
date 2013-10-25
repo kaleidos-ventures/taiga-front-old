@@ -10,7 +10,6 @@
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
                         <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
-                        <a href="" ng-click="deleteAttachment(attachment)">(remove)</a>
                     </li>
                 </ul>
             </div>
@@ -25,14 +24,26 @@
             <div class="wikiform-container">
                 <textarea id="wiki" ng-model="content" gm-markitup></textarea>
             </div>
-            <a class="add-attachment" data-icon="E" title="Add Attachment" href="" ng-hide="attachment"
-               gm-forward-click="#attachment_file_input" >Add Attachments</a>
-            <span data-icon="E" class="add-attachment" ng-show="attachment">
-                {{ attachment.name }} [{{ attachment.size|sizeFormat }}]
-                <a href="" ng-click="attachment = undefined">(remove)</a>
-            </span>
-            <input type="file" class="hidden" name="attachment" id="attachment_file_input"
-                   gm-file ng-model="attachment" />
+            <a class="add-attachment" data-icon="E" title="Add Attachments" href=""
+               gm-forward-click="#attachment_file_input">Add Attachments</a>
+            <ul class="attachments-items">
+                <li class="attachments-item" ng-repeat="attachment in newAttachments">
+                    <span>{{ attachment.name }}</span>
+                    <span>[{{ attachment.size|sizeFormat }}]</span>
+                    <a class="delete" data-icon="h" href=""
+                       title="Delete the new attachment"
+                       ng-click="deleteNewAttachment(attachment)"></a>
+                </li>
+                <li class="attachments-item" ng-repeat="attachment in attachments">
+                    <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
+                    <span>[{{ attachment.size|sizeFormat }}]</span>
+                    <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
+                    <a class="delete" data-icon="h" href="" title="Delete attachment"
+                       ng-click="deleteAttachment(attachment)"></a>
+                </li>
+            </ul>
+            <input type="file" class="hidden" name="newAttachments" id="attachment_file_input"
+                   multiple="multiple" gm-files="newAttachments" ng-model="attachment" />
             <div class="wiki-buttons">
                 <a href="" class="button button-success" ng-click="savePage()">Save</a>
                 <a href="" class="button" ng-click="discartCurrentChanges()"

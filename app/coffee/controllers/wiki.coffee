@@ -23,6 +23,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs) ->
 
     $scope.formOpened = false
     $scope.form = {}
+    $scope.newAttachments = []
 
     projectId = $rootScope.projectId
     slug = $routeParams.slug
@@ -41,12 +42,14 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs) ->
     loadAttachments = (page) ->
         rs.getWikiPageAttachments(projectId, page.id).then (attachments) ->
             $scope.attachments = attachments
+        $scope.newAttachments = []
 
     $scope.openEditForm = ->
         $scope.formOpened = true
         $scope.content = $scope.page.content
 
     $scope.discartCurrentChanges = ->
+        $scope.newAttachments = []
         if $scope.page is undefined
             $scope.content = ""
         else
@@ -58,16 +61,19 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs) ->
             content = $scope.content
             rs.createWikiPage(projectId, slug, content).then (page) ->
                 $scope.page = page
+                saveNewAttachments()
                 $scope.formOpened = false
-                rs.uploadWikiPageAttachment(projectId, page.id, $scope.attachment).then ->
-                    loadAttachments($scope.page)
         else
             $scope.page.content = $scope.content
             $scope.page.save().then (page) ->
                 $scope.page = page
+                saveNewAttachments()
                 $scope.formOpened = false
-                rs.uploadWikiPageAttachment(projectId, page.id, $scope.attachment).then ->
-                    loadAttachments($scope.page)
+
+    saveNewAttachments = ->
+        _.forEach $scope.newAttachments, (newAttach) ->
+            rs.uploadWikiPageAttachment(projectId, $scope.page.id, newAttach).then (attach) ->
+                $scope.attachments.push(attach)
 
     $scope.deletePage = ->
         $scope.page.remove().then ->
@@ -76,8 +82,11 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs) ->
             $scope.formOpened = true
 
     $scope.deleteAttachment = (attachment) ->
-        $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
+        $scope.attachments = _.without($scope.attachments, attachment)
         attachment.remove()
+
+    $scope.deleteNewAttachment = (attachment) ->
+        $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
 
 module = angular.module("greenmine.controllers.wiki", [])
