@@ -1094,6 +1094,9 @@ body.login {
             border: 1px solid #666;
             padding: 10px;
             overflow: hidden;
+            &.nga-milestone {
+                .nga-slideToggle(.3s, ease-in-out, 200px);
+            }
             form{
                 margin-bottom: 0px;
                 fieldset {
@@ -3153,4 +3156,30 @@ form {
         }
     }
 
+}
+
+/* Angular animations */
+
+/* SlideDown */
+.nga-slideToggle(@duration, @animation, @height) { /* Animation duration, final height */
+    &.ng-hide-add,
+    &.ng-hide-remove {
+        -webkit-transition: @duration @animation all;
+        -moz-transition: @duration @animation all;
+        -o-transition: @duration @animation all;
+        transition: @duration @animation all;
+        display:block!important;
+    }
+    &.ng-hide-remove { /* SlideDown */
+        height: 0;
+        &.ng-hide-remove-active {
+            height: @height;
+        }
+    }
+    &.ng-hide-add { /* SlideUp */
+        height: @height;
+        &.ng-hide-add-active {
+           height: 0;
+        }
+    }
 }

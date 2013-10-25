@@ -139,7 +139,7 @@
         </div>
     </div>
 
-    <div class="milestones span4" ng-controller="BacklogMilestonesController">
+    <div class="milestones span4" ng-controller="BacklogMilestonesController" ng-init="sprintFormOpened=false">
         <div class="header-box">
             <div class="title-sbox">
                 <div class="title">{{ project.total_milestones }}</div>
@@ -148,7 +148,7 @@
             <a href="" data-icon="q" class="button new-sprint" ng-click="sprintFormOpened=!sprintFormOpened">New sprint</a>
         </div>
 
-        <div class="milestone-form-box" ng-show="sprintFormOpened">
+        <div class="milestone-form-box nga-milestone" ng-show="sprintFormOpened">
             <form action="" gm-checksley-form="sprintSubmit()">
                 <fieldset>
                     <label for="name">Sprint name:</label>
