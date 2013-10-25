@@ -246,6 +246,8 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
     $scope.issue = {}
     $scope.form = {}
     $scope.updateFormOpened = false
+    $scope.newAttachments = []
+    $scope.attachments = []
 
     loadIssue = ->
         rs.getIssue(projectId, issueId).then (issue) ->
@@ -259,7 +261,6 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             $rootScope.pageBreadcrumb = breadcrumb
 
     loadAttachments = ->
-        $scope.attachment = undefined
         rs.getIssueAttachments(projectId, issueId).then (attachments) ->
             $scope.attachments = attachments
 
@@ -275,15 +276,23 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         for key, value of $scope.form
             $scope.issue[key] = value
 
-        $scope.issue.save().then (issue) ->
-            rs.uploadIssueAttachment(projectId, issueId, $scope.attachment).then () ->
-                loadIssue()
-                loadAttachments()
-                $rootScope.$broadcast("flash:new", true, "The issue has been saved")
+        $scope.issue.save().then ->
+            loadIssue()
+            saveNewAttachments()
+            $rootScope.$broadcast("flash:new", true, "The issue has been saved")
+
+    saveNewAttachments = ->
+        _.forEach $scope.newAttachments, (newAttach) ->
+            rs.uploadIssueAttachment(projectId, issueId, newAttach).then (attach) ->
+                $scope.removeNewAttachment(newAttach)
+                $scope.attachments.push(attach)
 
     $scope.removeAttachment = (attachment) ->
-        $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
+        $scope.attachments = _.without($scope.attachments, attachment)
         attachment.remove()
+
+    $scope.removeNewAttachment = (attachment) ->
+        $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
     $scope.removeIssue = (issue) ->
         promise = $confirm.confirm("Are you sure?")
@@ -300,7 +309,6 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
         promise.then (issue) ->
             $scope.form = {}
             $scope.close()
-
             $rootScope.$broadcast("issue-form:create", issue)
 
     $scope.close = ->

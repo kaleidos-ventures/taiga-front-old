@@ -20,7 +20,8 @@
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
                         <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
-                        <a href="" ng-click="removeAttachment(attachment)">(remove)</a>
+                        <a class="delete" data-icon="h" href="" title="Delete attachment"
+                           ng-click="removeAttachment(attachment)"></a>
                     </li>
                 </ul>
             </div>
@@ -30,13 +31,27 @@
                 <h3>Issue data</h3>
             </div>
             <ul class="info-rows">
-                <li data-icon="t">Added by: <span>{{ constants.users[issue.owner].username }}</span></li>
-                <li data-icon="u">Assigned to: <span>{{ constants.users[issue.assigned_to].username }}</span></li>
-                <li data-icon="w">Date: <span>{{ issue.modified_date|momentFormat:"LLL" }}</span></li>
-                <li data-icon="x">Updated: <span>{{ issue.modified_date|momentFormat:"LLL" }}</span></li>
-                <li data-icon="o" class="priority-{{ issue.priority }}">Priority: <span>{{ constants.priorities[issue.priority].name }}</span></li>
-                <li data-icon="y" class="status-{{ issue.status }}">Status: <span>{{ constants.issueStatuses[issue.status].name }}</span></li>
-                <li data-icon="z">Attachments: <span>{{ attachments.length }}</span></li>
+                <li data-icon="t">
+                    Added by: <span>{{ constants.users[issue.owner].username }}</span>
+                </li>
+                <li data-icon="u">
+                    Assigned to: <span>{{ constants.users[issue.assigned_to].username }}</span>
+                </li>
+                <li data-icon="w">
+                    Date: <span>{{ issue.modified_date|momentFormat:"LLL" }}</span>
+                </li>
+                <li data-icon="x">
+                    Updated: <span>{{ issue.modified_date|momentFormat:"LLL" }}</span>
+                </li>
+                <li data-icon="o" class="priority-{{ issue.priority }}">
+                    Priority: <span>{{ constants.priorities[issue.priority].name }}</span>
+                </li>
+                <li data-icon="y" class="status-{{ issue.status }}">
+                    Status: <span>{{ constants.issueStatuses[issue.status].name }}</span>
+                </li>
+                <li data-icon="z">
+                    Attachments: <span>{{ attachments.length }}</span>
+                </li>
             </ul>
         </div>
     </div>
@@ -45,7 +60,8 @@
         <div class="span12">
             <div class="history">
                 <h3>History</h3>
-                <div class="history-items-container" ng-model="issue.history" gm-issue-history></div>
+                <div class="history-items-container" ng-model="issue.history"
+                     gm-issue-history></div>
             </div>
         </div>
     </div>
@@ -60,19 +76,19 @@
                         <fieldset class="issue-status">
                             <label class="control-label" for="inputEmail">Status</label>
 
-                            <select class="status" name="status" ng-model="form.status" data-required="true"
-                                data-type="number" data-error-message="Required"
-                                ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'"></select>
-                            </select>
+                            <select class="status" name="status" ng-model="form.status"
+                                    data-required="true"  data-type="number"
+                                    data-error-message="Required"
+                                    ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'"></select>
                         </fieldset>
 
                         <fieldset class="issue-priority">
                             <label>Priority</label>
 
-                            <select class="priority status" name="priority" ng-model="form.priority" data-required="true"
-                                data-type="number" data-error-message="Required"
-                                ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'"></select>
-                            </select>
+                            <select class="priority status" name="priority"
+                                    ng-model="form.priority" data-required="true"
+                                    data-type="number" data-error-message="Required"
+                                    ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'"></select>
                         </fieldset>
                     </div>
 
@@ -80,20 +96,23 @@
                         <fieldset class="issue-assigned">
                             <label>Assigned to</label>
 
-                            <select class="assigned-to" name="priority" ng-model="form.assigned_to"
-                                data-type="number" data-error-message="Required"
-                                ng-options="c.id as c.username for c in constants.usersList|orderBy:'order'"></select>
-                            </select>
+                            <select class="assigned-to" name="priority"
+                                    ng-model="form.assigned_to" data-type="number"
+                                    data-error-message="Required"
+                                    ng-options="c.id as c.username for c in constants.usersList|orderBy:'order'"></select>
                         </fieldset>
 
                         <fieldset class="issue-tags">
                             <label>Tags</label>
-                            <input type="text" name="status" value="" ng-model="form.tags" gm-tags-input></input>
+                            <input type="text" name="status" value="" ng-model="form.tags"
+                                   gm-tags-input></input>
                         </fieldset>
                     </div>
 
                     <div ng-hide="_showHiddenGroups">
-                        <p style="cursor: pointer" ng-click="_showHiddenGroups=true">Edit <b>Subject</b> and <b>Description</b>...</p>
+                        <p style="cursor: pointer" ng-click="_showHiddenGroups=true">
+                            Edit <b>Subject</b> and <b>Description</b>...
+                        </p>
                     </div>
 
                     <fieldset class="issue-subject" ng-show="_showHiddenGroups">
@@ -112,19 +131,28 @@
                     </fieldset>
 
                     <fieldset class="issue-attachment">
-                        <a class="add-attachment" data-icon="E" title="Add Attachment"
-                            href="" ng-hide="attachment"
-                            gm-forward-click="#attachment_file_input" >Add Attachments</a>
-                        <span data-icon="E" class="add-attachment" ng-show="attachment">
-                            {{ attachment.name }} [{{ attachment.size|sizeFormat }}]
-                            <a href="" ng-click="attachment = undefined">(remove)</a>
-                        </span>
-                        <input type="file" class="hidden" name="attachment"
-                               id="attachment_file_input" gm-file ng-model="attachment" />
+                        <a class="add-attachment" data-icon="E" title="Add attachments"
+                            gm-forward-click="#attachment_file_input" href="">
+                            Add attachments
+                        </a>
+                        <ul class="attachments-items">
+                            <li class="attachments-item"
+                                ng-repeat="attachment in newAttachments">
+                                <span>{{ attachment.name }}</span>
+                                <span>[{{ attachment.size|sizeFormat }}]</span>
+                                <a class="delete" data-icon="h" href=""
+                                   title="Delete the new attachment"
+                                   ng-click="removeNewAttachment(attachment)"></a>
+                            </li>
+                        </ul>
+                        <input type="file" class="hidden" name="newAttachments"
+                               id="attachment_file_input" multiple="multiple"
+                               gm-files="newAttachments"/>
                     </fieldset>
 
                     <fieldset class="issue-edit-submit">
-                        <button type="submit" class="button button-edit" gm-checksley-submit-button>Save</button>
+                        <button type="submit" class="button button-edit"
+                                gm-checksley-submit-button>Save</button>
                     </fieldset>
                 </form>
             </div>
