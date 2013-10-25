@@ -27,9 +27,10 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $dat
     $scope.task = {}
     $scope.form = {}
     $scope.updateFormOpened = false
+    $scope.newAttachments = []
+    $scope.attachments = []
 
     loadAttachments = ->
-        $scope.attachment = undefined
         rs.getTaskAttachments(projectId, taskId).then (attachments) ->
             $scope.attachments = attachments
 
@@ -58,14 +59,22 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $dat
             $scope.task[key] = value
 
         $scope.task.save().then (task) ->
-            rs.uploadTaskAttachment(projectId, taskId, $scope.attachment).then () ->
-                loadTask()
-                loadAttachments()
-                $rootScope.$broadcast("flash:new", true, "The task has been saved")
+            loadTask()
+            saveNewAttachments()
+            $rootScope.$broadcast("flash:new", true, "The task has been saved")
+
+    saveNewAttachments = ->
+        _.forEach $scope.newAttachments, (newAttach) ->
+            rs.uploadTaskAttachment(projectId, taskId, newAttach).then (attach) ->
+                $scope.removeNewAttachment(newAttach)
+                $scope.attachments.push(attach)
 
     $scope.removeAttachment = (attachment) ->
-        $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
+        $scope.attachments = _.without($scope.attachments, attachment)
         attachment.remove()
+
+    $scope.removeNewAttachment = (attachment) ->
+        $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
     $scope.removeTask = (task) ->
         milestone = task.milestone
