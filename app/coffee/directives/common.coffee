@@ -272,7 +272,7 @@ GmTagsInputDirective = ->
 GmRolePointsEditionDirective = ->
     compile: (element, attrs) ->
         template = """
-        <fieldset class="us-role-points" ng-repeat="role in roles">
+        <fieldset class="us-role-points" ng-repeat="role in constants.computableRolesList">
             {{ role.name }} (points)
             <select class="points" name="points" ng-model="form.points[role.id]" data-required="true"
                 data-error-message="Required"
