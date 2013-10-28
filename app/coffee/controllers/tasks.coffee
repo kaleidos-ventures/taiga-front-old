@@ -68,6 +68,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $dat
             rs.uploadTaskAttachment(projectId, taskId, newAttach).then (attach) ->
                 $scope.removeNewAttachment(newAttach)
                 $scope.attachments.push(attach)
+                $scope.$apply()
 
     $scope.removeAttachment = (attachment) ->
         $scope.attachments = _.without($scope.attachments, attachment)
