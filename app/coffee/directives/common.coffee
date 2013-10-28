@@ -160,7 +160,7 @@ GmPopoverDirective = ($parse, $compile) ->
                 state = element.data('state')
 
                 if state == "closing"
-                    element.popover('hide')
+                    element.popover('destroy')
                     element.data('state', 'closed')
 
 
@@ -174,11 +174,11 @@ GmPopoverDirective = ($parse, $compile) ->
                 scope.$apply ->
                     fn(scope, {"selectedId": id})
 
-                element.popover('hide')
+                element.popover('destroy')
                 next.off()
 
             next.on "click", cancelSelector, (event) ->
-                element.popover('hide')
+                element.popover('destroy')
                 next.off()
 
             if autoHide
