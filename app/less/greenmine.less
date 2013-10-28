@@ -664,6 +664,7 @@ body.login {
                     .issue-item{
                         padding: 0;
                         background: rgba(255,255,255,.6);
+                        .nga-opacityToggle(filter, 0.3s, linear, all, 0, 1, 10px, 0);
                         div{
                             color: #000;
                             border-right: 1px solid #666;
@@ -1027,8 +1028,6 @@ body.login {
                             -moz-box-flex: 1;
                         }
                     }
-
-
                     &.doomline { border-bottom: 1px solid red; }
                 }
                 .us-points {
@@ -1176,6 +1175,9 @@ body.login {
                             &:hover{
                                 color: darken(#666, 20%);
                             }
+                        }
+                        span {
+                            float: right;
                         }
                         .edit {
                             margin-left: 5px;
@@ -1334,7 +1336,6 @@ body.login {
                                 }
                             }
                             span{
-                                float: right;
                                 color: #fff;
                                 font-size: .9em;
                                 font-family: @ColabThi;
@@ -2244,6 +2245,7 @@ body.login {
             .issue-item{
                 border-bottom: 1px solid #efefef;
                 font-family: @ColabThi;
+                
                 &:hover {
                     background-color: #f9f9f9;
                 }
@@ -3204,36 +3206,47 @@ form {
 }
 
 /* Opacity */
-.nga-opacityToggle(@duration, @animation, @opacityStart, @opacityEnd, @animateLeftStart, @animateLeftEnd) {
-    &.ng-enter,
-    &.ng-leave,
-    &.ng-move {
-        -webkit-transition: @duration @animation all;
-        -moz-transition: @duration @animation all;
-        -o-transition: @duration @animation all;
-        transition: @duration @animation all;
-        display:block!important;
-        position:relative;
+/* .nga-opacityToggle(AnimationName, 0.3s, linear, all, 0, 1, 10px, 0) */
+.nga-opacityToggle(@name, @duration, @animation, @type:all, @opacityStart, @opacityEnd, @animateLeftStart, @animateLeftEnd) {
+
+    /* Attribute var bug fixing */
+    @animation-name: @name;
+
+    /* Common Stylez */
+    &.@{animation-name}-repeat-enter-setup,
+    &.@{animation-name}-repeat-leave-setup,
+    &.@{animation-name}-repeat-move-setup {
+        -webkit-transition: @duration @animation @type;
+        -moz-transition: @duration @animation @type;
+        -o-transition: @duration @animation @type;
+        transition: @duration @animation @type;
+        position: relative;
     }
-    &.ng-enter {
+
+    /* Start Styles */
+    &.@{animation-name}-repeat-enter-setup {
         opacity:@opacityStart;
         left: @animateLeftStart;
-        &.ng-enter-active {
+        &.@{animation-name}-repeat-enter-start{
             opacity:@opacityEnd;
             left: @animateLeftEnd;
         }
     }
-    &.ng-leave {
+
+    /* Leave Styles */
+    &.@{animation-name}-repeat-leave-setup {
         opacity:@opacityEnd;
         left: @animateLeftEnd;
-        &.ng-leave-active {
+        &.@{animation-name}-repeat-leave-start{
             opacity:@opacityStart;
             left: @animateLeftStart;
         }
     }
-    &.ng-move {
+
+    /* Movement Styles */
+    &.@{animation-name}-repeat-move-setup {
         opacity:@opacityEnd;
-        &.ng-move-active {
+        &.@{animation-name}-repeat-move-start{
             opacity:@opacityStart;
         }
     }
