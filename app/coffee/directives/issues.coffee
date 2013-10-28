@@ -22,29 +22,6 @@ GmIssuesSortDirective = ($parse) -> (scope, elm, attrs) ->
         scope.$digest()
 
 
-# TODO: remove, seems not used and deprecated
-GmIssueChangesDirective = ->
-    validFields = ["priority", "status", "severity", "tags", "subject", "description", "assigned_to"]
-    template = _.template($("#change-template").html())
-
-    return (scope, elm, attrs) ->
-        element = angular.element(elm)
-
-        #handleField = (name, field) ->
-        #    template(name: name, oldValue: field.old, newValue: field.new)
-
-        #elements = []
-        #for fieldName in validFields
-        #    field = scope.h[fieldName]
-
-        #    if field is undefined
-        #        continue
-
-        #    elements.push(handleField(fieldName, field))
-
-        #element.append(el) for el in elements
-
-
 GmIssueHistoryDirective = ($compile, $rootScope) ->
     restrict: "A"
     require: "?ngModel"
@@ -265,7 +242,6 @@ GmIssuesCreationGraphDirective = -> (scope, elm, attrs) ->
 
 module = angular.module('greenmine.directives.issues', [])
 module.directive('gmIssuesSort', ["$parse", GmIssuesSortDirective])
-module.directive("gmIssueChanges", GmIssueChangesDirective)
 module.directive("gmIssueHistory", GmIssueHistoryDirective)
 module.directive("gmPendingIssueGraph", GmPendingIssueGraphDirective)
 module.directive("gmYourIssuesGraph", GmYourIssuesGraphDirective)
