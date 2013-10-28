@@ -94,7 +94,7 @@ module.exports = (grunt) ->
 
             libs: {
                 files: externalSources,
-                tasks: ["uglify"],
+                tasks: ["concat"],
             }
         },
 
@@ -147,7 +147,7 @@ module.exports = (grunt) ->
     grunt.registerTask('dev', [
         'less',
         'coffee:dev',
-        'uglify:libs',
+        'concat:libs',
         'htmlmin',
     ])
 
