@@ -32,7 +32,7 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
                          ($scope.stats.assignedPoints || 0)
 
         completed = $scope.stats.completedPoints || 0
-        $scope.stats.completedPercentage = if total then ((completed * 100) / total).toFixed(1) else 0
+        $scope.stats.completedPercentage = if total then ((completed * 100) / total).toFixed(1) else 0.0
         $scope.stats.totalPoints = total
 
     $scope.$on "milestones:loaded", (ctx, data) ->
@@ -358,7 +358,7 @@ BacklogMilestoneController = ($scope, rs) ->
         $scope.stats =
             total: total
             completed: completed
-            percentage: ((completed * 100) / total).toFixed(1)
+            percentage: if total then ((completed * 100) / total).toFixed(1) else 0.0
 
     normalizeMilestones = ->
         _.each $scope.ml.user_stories, (item, index) ->
