@@ -40,8 +40,7 @@
                     <fieldset class="colorPicker">
                         <label>Color:</label>
                         <input type="text" name="color" data-required="true" value="" ng-model="auth.color"></input>
-                        <div class="colorSample" style="background-color: {{auth.color}}"></div>
-                        <div class="colorSelector" coffee-color-picker="auth.color = $color" coffee-color-picker-options="{color: {hue:100, sat: 100, lit: 25}}"></div>
+                        <div class="colorSample" style="background-color: {{auth.color}}" gm-popover="" data-tmpl="#color-picker-popover" data-auto-hide="true"></div>
                     </fieldset>
 
 
@@ -69,3 +68,7 @@
         </div>
     </div>
 </div>
+
+<script type="text/template" id="color-picker-popover">
+    <div class="colorSelector" coffee-color-picker="auth.color = $color" coffee-color-picker-options="{color: {hue:100, sat: 100, lit: 25}}"></div>
+</script>

@@ -13,9 +13,11 @@
       };
       this.settings = $.extend(true, {}, this.settings, options);
       this.el = el;
+      this.el.data("coffeeColorPicker", this);
       this._rect = el[0].getBoundingClientRect();
       this._color = this.settings.color;
       this._setColor(this._color.hue, this._color.sat, this._color.lit);
+      this._bindEvents();
     }
 
     CoffeeColorPicker.prototype.refresh = function() {
@@ -80,6 +82,9 @@
     };
 
     CoffeeColorPicker.prototype._move = function(y, x) {
+      if (this._rect.top === 0 || this._rect.left === 0) {
+        this.refresh();
+      }
       y = Math.max(0, y - this._rect.top);
       x = Math.max(0, x - this._rect.left);
       y /= this._rect.height;
@@ -96,9 +101,7 @@
   picker = function(el, options) {
     el = $(el);
     if (el.data("coffeeColorPicker") === void 0) {
-      picker = new CoffeeColorPicker(el, options);
-      picker._bindEvents();
-      return picker;
+      return new CoffeeColorPicker(el, options);
     }
     return el.data("coffeeColorPicker");
   };
