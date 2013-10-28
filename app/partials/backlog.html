@@ -99,7 +99,7 @@
                 </div>
                 <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs" gm-doomline>
                     <div class="empty" ng-show="(unassingedUs|onlyVisible).length == 0">There isn't unassigned User Stories. Create a new one.</div>
-                    <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
+                    <div class="us-item nga-us-item" ng-repeat="us in unassingedUs|onlyVisible"
                             gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}">
                         <div class="us-check">
                             <input type="checkbox" ng-model="us.selected" ng-change="changeUserStoriesSelection()"></input>

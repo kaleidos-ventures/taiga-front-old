@@ -502,6 +502,12 @@ body.login {
                     margin-right: 6px;
                     color: #666;
                 }
+                a {
+                    color: #333;
+                    &:hover {
+                        color: #666;
+                    }
+                }
             }
         }
     }
@@ -3193,6 +3199,42 @@ form {
         height: @height;
         &.ng-hide-add-active {
            height: 0;
+        }
+    }
+}
+
+/* Opacity */
+.nga-opacityToggle(@duration, @animation, @opacityStart, @opacityEnd, @animateLeftStart, @animateLeftEnd) {
+    &.ng-enter,
+    &.ng-leave,
+    &.ng-move {
+        -webkit-transition: @duration @animation all;
+        -moz-transition: @duration @animation all;
+        -o-transition: @duration @animation all;
+        transition: @duration @animation all;
+        display:block!important;
+        position:relative;
+    }
+    &.ng-enter {
+        opacity:@opacityStart;
+        left: @animateLeftStart;
+        &.ng-enter-active {
+            opacity:@opacityEnd;
+            left: @animateLeftEnd;
+        }
+    }
+    &.ng-leave {
+        opacity:@opacityEnd;
+        left: @animateLeftEnd;
+        &.ng-leave-active {
+            opacity:@opacityStart;
+            left: @animateLeftStart;
+        }
+    }
+    &.ng-move {
+        opacity:@opacityEnd;
+        &.ng-move-active {
+            opacity:@opacityStart;
         }
     }
 }
