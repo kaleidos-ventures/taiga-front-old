@@ -274,9 +274,9 @@ GmRolePointsEditionDirective = ->
         template = """
         <fieldset class="us-role-points" ng-repeat="role in constants.computableRolesList">
             {{ role.name }} (points)
+
             <select class="points" name="points" ng-model="form.points[role.id]" data-required="true"
-                data-error-message="Required"
-                ng-options="c.order as c.name for c in constants.pointsList|orderBy:'order'">
+                data-error-message="Required" ng-options="c.id as c.name for c in constants.pointsList|orderBy:'order'">
             </select>
         </fieldset>"""
 

@@ -19,6 +19,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         ["", ""],
         ["User stories", null],
     ]
+
     $scope.projectId = parseInt($routeParams.pid, 10)
 
     projectId = $scope.projectId
@@ -44,7 +45,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
     loadUserStory = ->
         rs.getUserStory(projectId, userStoryId).then (userStory) ->
             $scope.userStory = userStory
-            $scope.form = _.clone($scope.userStory._attrs, true)
+            $scope.form = _.clone($scope.userStory.getAttrs(), true)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
             if $scope.userStory.milestone == null
@@ -55,9 +56,9 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             $rootScope.pageBreadcrumb = breadcrumb
 
             $scope.totalPoints = calculateTotalPoints(userStory)
-
             for roleId, pointId of userStory.points
                 $scope.points[roleId] = $scope.constants.points[pointId].name
+
 
     # Load initial data
     $data.loadProject($scope).then ->
