@@ -24,9 +24,12 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
     $scope.stats = {}
 
     $scope.$on "stats:update", (ctx, data) ->
-        $scope.stats.notAssignedPoints = data.notAssignedPoints || 0
-        $scope.stats.completedPoints = data.completedPoints || 0
-        $scope.stats.assignedPoints = data.assignedPoints || 0
+        if data.notAssignedPoints != undefined
+            $scope.stats.notAssignedPoints = data.notAssignedPoints
+        if data.completedPoints != undefined
+            $scope.stats.completedPoints = data.completedPoints
+        if data.assignedPoints != undefined
+            $scope.stats.assignedPoints = data.assignedPoints
 
         total = ($scope.stats.notAssignedPoints || 0) +
                          ($scope.stats.assignedPoints || 0)
