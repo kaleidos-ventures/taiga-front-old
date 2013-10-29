@@ -69,12 +69,11 @@
         </div>
     </div>
 
-    <div class="row-fluid" ng-show="userStory.history">
+    <div class="row-fluid" gm-history="userstory" ng-model="userStory.history">
         <div class="span12">
             <div class="history">
                 <h3>History</h3>
-                <div class="history-items-container" ng-model="userStory.history"
-                     gm-userstory-history></div>
+                <div class="history-items-container"></div>
             </div>
         </div>
     </div>

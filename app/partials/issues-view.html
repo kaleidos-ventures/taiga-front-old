@@ -58,10 +58,9 @@
 
     <div class="row-fluid" ng-show="issue.history">
         <div class="span12">
-            <div class="history">
+            <div class="history" gm-history="issue" ng-model="issue.history">
                 <h3>History</h3>
-                <div class="history-items-container" ng-model="issue.history"
-                     gm-issue-history></div>
+                <div class="history-items-container"></div>
             </div>
         </div>
     </div>
