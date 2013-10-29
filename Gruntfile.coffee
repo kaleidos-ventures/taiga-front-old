@@ -5,6 +5,7 @@ module.exports = (grunt) ->
         'app/js/jquery.markitup.js',
         'app/js/markdown.js',
         'app/js/lodash.js',
+        'app/js/lazy.js',
         'app/js/underscore.string.js',
         'app/js/angular.js',
         'app/js/angular-route.js',
