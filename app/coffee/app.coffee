@@ -147,7 +147,7 @@ modules = [
     "greenmine.directives.taskboard",
     "greenmine.directives.tasks",
     "greenmine.directives.issues",
-    "greenmine.directives.userstories",
+    "greenmine.directives.history",
     "greenmine.directives.wiki",
     "greenmine.directives.backlog",
 
