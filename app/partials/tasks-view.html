@@ -57,10 +57,9 @@
 
     <div class="row-fluid" ng-show="task.history">
         <div class="span12">
-            <div class="history">
+            <div class="history" ng-model="task.history" gm-history="task">
                 <h3>History</h3>
-                <div class="history-items-container" ng-model="task.history"
-                     gm-task-history></div>
+                <div class="history-items-container"></div>
             </div>
         </div>
     </div>

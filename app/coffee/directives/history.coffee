@@ -18,12 +18,20 @@ GmHistoryDirective = ($compile, $rootScope) ->
                             return "Unassigned"
                         return scope.constants.users[value].email
                     else value
+            task: (name, value) ->
+                return switch name
+                    when "status" then scope.constants.taskStatuses[value].name
+                    when "assigned_to"
+                        if value == null
+                            return "Unassigned"
+                        return scope.constants.users[value].email
+                    else value
         }
 
         fields = {
             userstory: ["status", "tags", "subject"]
-            issue: ["priority", "status", "severity", "tags",
-                    "subject", "description", "assigned_to"]
+            issue: ["priority", "status", "tags", "subject", "assigned_to"]
+            task: ["status", "tags", "subject", "assigned_to"]
         }
 
         makeChangeItem = (name, field, type) ->
