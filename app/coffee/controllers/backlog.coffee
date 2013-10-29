@@ -187,7 +187,7 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
         $scope.milestones = data
 
     $scope.openCreateUserStoryForm = ->
-        promise = $modal.open("user-story-form", {"us": {us:[], points:{}, project:$scope.projectId}})
+        promise = $modal.open("user-story-form", {"us": {us:{}, points:{}, project:$scope.projectId}})
         promise.then ->
             loadUserStories()
 
@@ -275,6 +275,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs) ->
             $scope.form = {}
         else
             $scope.form.revert()
+    return
 
 
 BacklogMilestonesController = ($scope, $rootScope, rs) ->
