@@ -192,9 +192,11 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             regenerateTags()
             filterIssues()
 
-    $data.loadProject($scope)
-    $data.loadUsersAndRoles($scope).then ->
-        loadIssues()
+    # Load initial data
+    $data.loadProject($scope).then ->
+        $data.loadUsersAndRoles($scope).then ->
+            console.log $scope.constants.issueStatuses
+            loadIssues()
 
     $scope.updateIssueAssignation = (issue, id) ->
         issue.assigned_to = id || null
@@ -264,10 +266,12 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         rs.getIssueAttachments(projectId, issueId).then (attachments) ->
             $scope.attachments = attachments
 
-    $data.loadProject($scope)
-    $data.loadUsersAndRoles($scope).then ->
-        loadIssue()
-        loadAttachments()
+
+    # Load initial data
+    $data.loadProject($scope).then ->
+        $data.loadUsersAndRoles($scope).then ->
+            loadIssue()
+            loadAttachments()
 
     $scope.isSameAs = (property, id) ->
         return ($scope.issue[property] == parseInt(id, 10))
