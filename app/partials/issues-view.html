@@ -98,7 +98,7 @@
                             <select class="assigned-to" name="priority"
                                     ng-model="form.assigned_to" data-type="number"
                                     data-error-message="Required"
-                                    ng-options="c.id as c.username for c in constants.usersList|orderBy:'order'"></select>
+                                    ng-options="c.user as c.full_name for c in project.memberships"></select>
                         </fieldset>
 
                         <fieldset class="issue-tags">

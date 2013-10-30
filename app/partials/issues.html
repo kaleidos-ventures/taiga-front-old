@@ -269,8 +269,8 @@
         <p class="title">Select a user:</p>
         <ul>
             <li><a class="btn-accept" href="">Unassigned</a>
-            <li ng-repeat="obj in constants.usersList">
-                <a class="btn-accept" href="" data-id="{{ obj.id }}">{{ obj.username }}</a>
+            <li ng-repeat="obj in project.memberships">
+                <a class="btn-accept" href="" data-id="{{ obj.user }}">{{ obj.full_name }}</a>
             </li>
         </ul>
     </div>

@@ -171,7 +171,7 @@
                         <label>Assigned to</label>
                         <select class="status" name="assigned_to" ng-model="form.assigned_to"
                             data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.username for c in constants.usersList"></select>
+                            ng-options="c.user as c.full_name for c in project.memberships"></select>
                         </select>
                     </fieldset>
                 </div>
@@ -201,8 +201,8 @@
         <h3>Select a user:</h3>
         <ul>
             <li class="btn-accept"><a data-id="" href="">Unassigned</a>
-            <li ng-repeat="obj in constants.usersList" class="btn-accept" data-id="{{ obj.id }}">
-                <a href="">{{ obj.username }}</a>
+            <li ng-repeat="obj in project.memberships" class="btn-accept" data-id="{{ obj.user }}">
+                <a href="">{{ obj.full_name }}</a>
             </li>
         </ul>
     </div>
