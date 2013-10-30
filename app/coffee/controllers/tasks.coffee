@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data) ->
+TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm, rs, $data) ->
     $rootScope.pageSection = 'tasks'
     $rootScope.pageBreadcrumb = [
         ["", ""],
@@ -78,10 +78,12 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $dat
         $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
     $scope.removeTask = (task) ->
-        milestone = task.milestone
-        task.remove().then ->
-            $location.url("/project/#{projectId}/dashboard/#{milestone}/")
+        promise = $confirm.confirm("Are you sure?")
+        promise.then ->
+            milestone = task.milestone
+            task.remove().then ->
+                $location.url("/project/#{projectId}/taskboard/#{milestone}")
 
 
 module = angular.module("greenmine.controllers.tasks", [])
-module.controller("TasksViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", TasksViewController])
+module.controller("TasksViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', '$confirm', 'resource', "$data", TasksViewController])
