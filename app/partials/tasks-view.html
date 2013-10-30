@@ -34,10 +34,10 @@
             </div>
             <ul class="info-rows">
                 <li>
-                    Added by: <span>{{ constants.users[task.owner].username }}</span>
+                    Added by: <span>{{ constants.users[task.owner].full_name }}</span>
                 </li>
                 <li>
-                    Assigned to: <span>{{ constants.users[task.assigned_to].username }}</span>
+                    Assigned to: <span>{{ constants.users[task.assigned_to].full_name }}</span>
                 </li>
                 <li>
                     Date: <span>{{ task.created_date|momentFormat:"LLL" }}</span>

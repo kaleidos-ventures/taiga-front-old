@@ -148,7 +148,7 @@
                         <div class="button-item" ng-show="issue.assigned_to" >
                             <i class="icon-user"></i>
                             <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-auto-hide="true">
-                               <span>{{ constants.users[issue.assigned_to].username }}</span>
+                               <span>{{ constants.users[issue.assigned_to].full_name }}</span>
                             </a>
                         </div>
                         <div class="button-item" ng-show="!issue.assigned_to">
