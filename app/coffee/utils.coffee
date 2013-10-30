@@ -21,5 +21,9 @@ utils.delay = (timeout, func) ->
 utils.defer = (func) ->
     return _.defer(func)
 
+utils.defered = (func) ->
+    return ->
+        utils.defer(func)
+
 utils.debounced = (timeout, func) ->
     return _.debounce(func, timeout)

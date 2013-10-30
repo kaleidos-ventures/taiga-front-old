@@ -29,14 +29,24 @@
     <div class="filters-container">
         <div class="filters-bar-sbox">
             <div class="title-sbox">
-                <a data-icon="B" href="" ng-class="{active: filtersOpened}" ng-click="filtersOpened=!filtersOpened">Filters</a>
+                <div class="title">
+                    <a data-icon="B" href="" ng-class="{active: filtersOpened}" ng-click="filtersOpened=!filtersOpened">Filters</a>
+                </div>
+
+                <div class="tags-list-sbox">
+                    <div class="tag {{ tag.type }}-{{ tag.name | slugify }} selected" ng-repeat="tag in selectedTags"
+                         ng-click="selectTag(tag)">
+                        <div class="name">{{ tag.name }}</div>
+                        <div class="count">{{ tag.count }}</div>
+                    </div>
+                </div>
             </div>
             <ul class="filters-visual-box" ng-show="filtersOpened">
                 <li>
                     <h3>Status:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag status-{{ tag.name | slugify }}" ng-repeat="tag in statusTags"
-                             ng-click="selectTag(tag)" ng-class="{selected: tag.selected}">
+                             ng-click="selectTag(tag)" ng-class="{selected: isTagSelected(tag)}">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
@@ -46,7 +56,7 @@
                     <h3>Severity:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag severity-{{ tag.name | slugify }}" ng-repeat="tag in severityTags"
-                             ng-click="selectTag(tag)" ng-class="{selected: tag.selected}">
+                             ng-click="selectTag(tag)" ng-class="{selected: isTagSelected(tag)}">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
@@ -56,7 +66,7 @@
                     <h3>Priority:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag priority-{{ tag.name | slugify }}" ng-repeat="tag in priorityTags"
-                             ng-click="selectTag(tag)" ng-class="{selected: tag.selected}">
+                             ng-click="selectTag(tag)" ng-class="{selected: isTagSelected(tag)}">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
@@ -67,7 +77,7 @@
                     <div class="tags-list-sbox">
                         <!-- TODO - Add into tag a background-color with user own color from admin -->
                         <div class="tag" ng-repeat="tag in assignedToTags" ng-click="selectTag(tag)"
-                                ng-class="{selected: tag.selected}">
+                                ng-class="{selected: isTagSelected(tag)}">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
@@ -77,7 +87,7 @@
                     <h3>Tags:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
-                                ng-class="{selected: tag.selected}" gm-colorize-tag>
+                                ng-class="{selected: isTagSelected(tag)}" gm-colorize-tag>
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>

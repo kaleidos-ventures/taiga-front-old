@@ -1386,9 +1386,42 @@ body.login {
     }
 }
 
-/* filter-container */
 .filters-container {
     margin-top: 10px;
+
+    .tags-list-sbox {
+        overflow: hidden;
+        .tag {
+            position: relative;
+            cursor: pointer;
+            float: left;
+            width: 150px;
+            margin-bottom: 5px;
+            margin-right: 5px;
+            padding: 5px;
+            font-family: @ColabThi;
+            font-size: 1em;
+            color: #FFF;
+            opacity: .5;
+            border-radius: 4px;
+            &.selected {
+                opacity: 1;
+                box-shadow: 1px 1px 1px rgba(0,0,0,.4);
+                font-family: @ColabReg;
+                transition: all 0.3s ease-out;
+            }
+            .count {
+                position: absolute;
+                top: 5px;
+                right: 0px;
+                background: rgba(255,255,255,.3);
+                padding: 5px 8px;
+                margin-top: -5px;
+                border-radius: 0 4px 4px 0;
+            }
+        }
+    }
+
     .filters-bar-sbox {
         border-top: 1px solid #eee;
         border-bottom: 1px solid #eee;
@@ -1429,38 +1462,6 @@ body.login {
     .filters-visual-box {
         overflow: hidden;
         padding: 10px;
-        .tags-list-sbox {
-            overflow: hidden;
-            .tag {
-                position: relative;
-                cursor: pointer;
-                float: left;
-                width: 150px;
-                margin-bottom: 5px;
-                margin-right: 5px;
-                padding: 5px;
-                font-family: @ColabThi;
-                font-size: 1em;
-                color: #FFF;
-                opacity: .5;
-                border-radius: 4px;
-                &.selected {
-                    opacity: 1;
-                    box-shadow: 1px 1px 1px rgba(0,0,0,.4);
-                    font-family: @ColabReg;
-                    transition: all 0.3s ease-out;
-                }
-                .count {
-                    position: absolute;
-                    top: 5px;
-                    right: 0px;
-                    background: rgba(255,255,255,.3);
-                    padding: 5px 8px;
-                    margin-top: -5px;
-                    border-radius: 0 4px 4px 0;
-                }
-            }
-        }
     }
 }
 
@@ -2131,9 +2132,93 @@ body.login {
         }
     }
     .filters-container {
+        .tags-list-sbox {
+            .tag {
+                position: relative;
+                cursor: pointer;
+                float: left;
+                width: 150px;
+                margin-bottom: 5px;
+                margin-right: 5px;
+                padding: 4px;
+                font-family: @ColabThi;
+                font-size: 1em;
+                color: @white;
+                opacity: 0.4;
+                border-radius: 4px;
+                background-color: #666;
+                &.selected {
+                    opacity: 1;
+                    box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+                    font-family: @ColabReg;
+                    -webkit-transition: all 0.3s ease-out;
+                    -moz-transition: all 0.3s ease-out;
+                    -o-transition: all 0.3s ease-out;
+                    transition: all 0.3s ease-out;
+                }
+
+                // Status color
+                &.status-new{
+                background-color: #8C2318;
+                }
+                &.status-in-progress{
+                    background-color: #5E8C6A;
+                }
+                &.status-ready-for-test{
+                    background-color: #88A65E;
+                }
+                &.status-closed{
+                    background-color: #BFB35A;
+                }
+                &.status-needs-info{
+                    background-color: #89BAB4;
+                }
+                &.status-rejected{
+                    background-color: #CC0000;
+                }
+                &.status-postponed{
+                    background-color: #ccc;
+                }
+
+                // Severity colors
+                &.severity-wishlist{
+                    background-color: #CCC;
+                }
+                &.severity-minor{
+                    background-color: #669933;
+                }
+                &.severity-normal{
+                    background-color: blue;
+                }
+                &.severity-important{
+                    background-color: orange;
+                }
+                &.severity-critical{
+                    background-color: #CC0000;
+                }
+
+                // Priority colors
+                &.priority-low{
+                    background-color: #CCC;
+                }
+                &.priority-normal{
+                    background-color: #669933;
+                }
+                &.priority-high{
+                    background-color: #CC0000;
+                }
+            }
+        }
         .filters-bar-sbox {
             .buttons-sbox {
                 float: right;
+            }
+
+            .title-sbox {
+                .title {
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                }
             }
         }
         .filters-visual-box {
@@ -2141,83 +2226,6 @@ body.login {
                 margin: 0;
                 padding: 7px 0;
                 font-size: 16px;
-            }
-            .tags-list-sbox {
-                .tag {
-                    position: relative;
-                    cursor: pointer;
-                    float: left;
-                    width: 150px;
-                    margin-bottom: 5px;
-                    margin-right: 5px;
-                    padding: 4px;
-                    font-family: @ColabThi;
-                    font-size: 1em;
-                    color: @white;
-                    opacity: 0.4;
-                    border-radius: 4px;
-                    background-color: #666;
-                    &.selected {
-                        opacity: 1;
-                        box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-                        font-family: @ColabReg;
-                        -webkit-transition: all 0.3s ease-out;
-                        -moz-transition: all 0.3s ease-out;
-                        -o-transition: all 0.3s ease-out;
-                        transition: all 0.3s ease-out;
-                    }
-
-                    // Status color
-                    &.status-new{
-                    background-color: #8C2318;
-                    }
-                    &.status-in-progress{
-                        background-color: #5E8C6A;
-                    }
-                    &.status-ready-for-test{
-                        background-color: #88A65E;
-                    }
-                    &.status-closed{
-                        background-color: #BFB35A;
-                    }
-                    &.status-needs-info{
-                        background-color: #89BAB4;
-                    }
-                    &.status-rejected{
-                        background-color: #CC0000;
-                    }
-                    &.status-postponed{
-                        background-color: #ccc;
-                    }
-
-                    // Severity colors
-                    &.severity-wishlist{
-                        background-color: #CCC;
-                    }
-                    &.severity-minor{
-                        background-color: #669933;
-                    }
-                    &.severity-normal{
-                        background-color: blue;
-                    }
-                    &.severity-important{
-                        background-color: orange;
-                    }
-                    &.severity-critical{
-                        background-color: #CC0000;
-                    }
-
-                    // Priority colors
-                    &.priority-low{
-                        background-color: #CCC;
-                    }
-                    &.priority-normal{
-                        background-color: #669933;
-                    }
-                    &.priority-high{
-                        background-color: #CC0000;
-                    }
-                }
             }
         }
         .issue-form-sbox {

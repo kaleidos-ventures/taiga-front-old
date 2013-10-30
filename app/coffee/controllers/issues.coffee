@@ -12,17 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm) ->
+IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $gmStorage) ->
     # Global Scope Variables
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = [
         ["", ""],
         ["Issues", null]
     ]
+
     $rootScope.projectId = parseInt($routeParams.pid, 10)
-
-    projectId = $rootScope.projectId
-
     $scope.filtersOpened = false
 
     # Pagination variables
@@ -35,49 +33,95 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $scope.sortingOrder = 'severity'
     $scope.reverse = true
 
+    #####
+    ## Tags generation functions
+    #####
+
+    $scope.selectedTags = []
+    $scope.selectedMeta = {}
+
+    generateTagId = (tag) ->
+        return "#{tag.type}-#{tag.id or tag.name}"
+
+    isTagSelected = (tag) ->
+        return $scope.selectedMeta[generateTagId(tag)] == true
+
+    selectTag = (tag) ->
+        if $scope.selectedMeta[generateTagId(tag)] == undefined
+            $scope.selectedMeta[generateTagId(tag)] = true
+            $scope.selectedTags.push(tag)
+        else
+            delete $scope.selectedMeta[generateTagId(tag)]
+            $scope.selectedTags = _.reject($scope.selectedTags,
+                                        (x) -> generateTagId(tag) == generateTagId(x))
+
+
+        $gmStorage.set("issues-selected-tags", $scope.selectedMeta)
+
+        # tag.selected = if tag.selected then false else true
+        $scope.currentPage = 0
+        filterIssues()
+
+        console.log $scope.selectedTags
+        console.log $scope.selectedMeta
+
+    selectTagIfNotSelected = (tag) ->
+        if isTagSelected(tag)
+            $scope.selectedTags.push(tag)
+        return tag
+
     generateTagList = ->
         tagsDict = {}
         tags = []
 
-        _.each $scope.issues, (iss) ->
-            _.each iss.tags, (tag) ->
+        for iss in $scope.issues
+            for tag in iss.tags
                 if tagsDict[tag] is undefined
                     tagsDict[tag] = 1
                 else
                     tagsDict[tag] += 1
 
-        _.each tagsDict, (val, key) ->
-            tags.push({name:key, count:val})
+        for key, val of tagsDict
+            tag = {name:key, count:val, type: "tag"}
+            tags.push(selectTagIfNotSelected(tag))
 
         $scope.tags = tags
 
     generateAssignedToTags = ->
-        users = $scope.constants.usersList
-
-        $scope.assignedToTags = _.map users, (user) ->
+        makeTag = (user) ->
             issues = _.filter($scope.issues, {"assigned_to": user.id})
-            return {"id": user.id, "name": user.username, "count": issues.length}
+            return {"id": user.id, "name": user.username, "count": issues.length, "type": "assigned-to"}
+
+        $scope.assignedToTags = Lazy($scope.constants.usersList)
+                                    .map(makeTag)
+                                    .map(selectTagIfNotSelected).toArray()
 
     generateStatusTags = ->
-        statuses = $scope.constants.issueStatusesList
-
-        $scope.statusTags = _.map statuses, (status) ->
+        makeTag = (status) ->
             issues = _.filter($scope.issues, {"status": status.id})
-            return {"id": status.id, "name": status.name, "count": issues.length}
+            return {"id": status.id, "name": status.name, "count": issues.length, "type":"status"}
+
+        $scope.statusTags = Lazy($scope.constants.issueStatusesList)
+                                .map(makeTag)
+                                .map(selectTagIfNotSelected).toArray()
 
     generateSeverityTags = ->
-        severities = $rootScope.constants.severitiesList
-
-        $scope.severityTags = _.map severities, (severity) ->
+        makeTag = (severity) ->
             issues = _.filter($scope.issues, {"severity": severity.id})
-            return {"id": severity.id, "name": severity.name, "count": issues.length}
+            return {"id": severity.id, "name": severity.name, "count": issues.length, "type": "severity"}
+
+        $scope.severityTags = Lazy($rootScope.constants.severitiesList)
+                                .map(makeTag)
+                                .map(selectTagIfNotSelected).toArray()
 
     generatePriorityTags = ->
-        priorities = $rootScope.constants.prioritiesList
-
-        $scope.priorityTags = _.map priorities, (priority) ->
+        makeTag = (priority) ->
             issues = _.filter($scope.issues, {"priority": priority.id})
-            return {"id": priority.id, "name": priority.name, "count": issues.length}
+            return {"id": priority.id, "name": priority.name, "count": issues.length, "type": "priority"}
+
+        $scope.priorityTags = Lazy($rootScope.constants.prioritiesList)
+                                .map(makeTag)
+                                .map(selectTagIfNotSelected).toArray()
 
     regenerateTags = ->
         generateTagList()
@@ -86,13 +130,19 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         generatePriorityTags()
         generateStatusTags()
 
+    #####
+    ## Filters functions
+    #####
+
     filterIssues = ->
         for issue in $scope.issues
             issue.__hidden = false
 
         # Filter by generic tags
-        selectedTags = _.filter($scope.tags, "selected")
-        selectedTagsIds = _.map(selectedTags, "name")
+        # selectedTagsIds = _($scope.tags).filter("selected").map("name").value()
+        selectedTagsIds = _($scope.tags)
+                            .filter((x) -> isTagSelected(x))
+                            .map("name").value()
 
         if selectedTagsIds.length > 0
             for item in $scope.issues
@@ -104,7 +154,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
                     item.__hidden = false
 
         # Filter by assigned to tags
-        selectedUsers = _.filter($scope.assignedToTags, "selected")
+        selectedUsers = _.filter($scope.assignedToTags, (x) -> isTagSelected(x))
 
         if not _.isEmpty(selectedUsers)
             for item in $scope.issues
@@ -114,7 +164,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
                 item.__hidden = true if not result
 
         # Filter by priority tags
-        selectedPriorities = _.filter($scope.priorityTags, "selected")
+        selectedPriorities = _.filter($scope.priorityTags, (x) -> isTagSelected(x))
         if not _.isEmpty(selectedPriorities)
             for item in $scope.issues
                 continue if item.__hidden
@@ -123,7 +173,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
                 item.__hidden = true if not result
 
         # Filter by severity tags
-        selectedSeverities = _.filter($scope.severityTags, "selected")
+        selectedSeverities = _.filter($scope.severityTags, (x) -> isTagSelected(x))
         if not _.isEmpty(selectedSeverities)
             for item in $scope.issues
                 continue if item.__hidden
@@ -132,7 +182,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
                 item.__hidden = true if not result
 
         # Filter by status tags
-        selectedStatuses = _.filter($scope.statusTags, "selected")
+        selectedStatuses = _.filter($scope.statusTags, (x) -> isTagSelected(x))
         if not _.isEmpty(selectedStatuses)
             for item in $scope.issues
                 continue if item.__hidden
@@ -174,11 +224,8 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         ret.push(i) for i in [start..end-1]
         return ret
 
-    $scope.selectTag = (tag) ->
-        tag.selected = if tag.selected then false else true
-
-        $scope.currentPage = 0
-        filterIssues()
+    $scope.selectTag = selectTag
+    $scope.isTagSelected = isTagSelected
 
     $scope.openCreateIssueForm = ->
         $scope.$broadcast("issue-form:open")
@@ -187,6 +234,8 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $scope.$watch("reverse", groupToPages)
 
     loadIssues = ->
+        $scope.selectedMeta = $gmStorage.get("issues-selected-tags") or {}
+
         rs.getIssues($scope.projectId).then (issues) ->
             $scope.issues = issues
             regenerateTags()
@@ -331,10 +380,10 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
 
 
 module = angular.module("greenmine.controllers.issues", [])
+module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
+                  '$q', 'resource', "$data", "$confirm", "$gmStorage", IssuesController])
 module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
                   '$routeParams', '$q', 'resource', "$data", "$confirm",
                   IssuesViewController])
-module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
-                  '$q', 'resource', "$data", "$confirm", IssuesController])
 module.controller("IssuesFormController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
                   IssuesFormController])
