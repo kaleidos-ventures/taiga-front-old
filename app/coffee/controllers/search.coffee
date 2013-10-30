@@ -22,10 +22,13 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs) ->
 
     $data.loadProject($scope)
 
+    $scope.term = $routeParams.term
+
     $scope.resultTypeMap = {
-        userstories: "User Story"
-        tasks: "Task"
-        issues: "Issue"
+        userstories: "User Stories"
+        tasks: "Tasks"
+        issues: "Issues"
+        wikipages: "Wiki Pages"
     }
 
     $scope.translateResultType = (type) ->
@@ -33,11 +36,26 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs) ->
             return type
         return $scope.resultTypeMap[type]
 
-    $scope.translateTypeUrl = (type, projectId, itemId) ->
+    $scope.translateTypeUrl = (type, projectId, item) ->
         return switch type
-            when "userstories" then $rootScope.urls.userStoryUrl(projectId, itemId)
-            when "issues" then $rootScope.urls.issuesUrl(projectId, itemId)
-            when "tasks" then $rootScope.urls.tasksUrl(projectId, itemId)
+            when "userstories" then $rootScope.urls.userStoryUrl(projectId, item.id)
+            when "tasks" then $rootScope.urls.tasksUrl(projectId, item.id)
+            when "issues" then $rootScope.urls.issuesUrl(projectId, item.id)
+            when "wikipages" then $rootScope.urls.wikiUrl(projectId, item.slug)
+
+    $scope.translateTypeTitle = (type, item) ->
+        return switch type
+            when "userstories" then item.subject
+            when "tasks" then item.subject
+            when "issues" then item.subject
+            when "wikipages" then item.slug
+
+    $scope.translateTypeDescription = (type, item) ->
+        return switch type
+            when "userstories" then item.description
+            when "tasks" then item.description
+            when "issues" then item.description
+            when "wikipages" then item.content
 
     $scope.isTypeActive = (type) ->
         return type == $scope.activeType
