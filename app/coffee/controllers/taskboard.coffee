@@ -28,8 +28,11 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
 
     calculateTotalPoints = (us) ->
         total = 0
-        for roleId, pointId of us.points
+
+        for role in $scope.constants.computableRolesList
+            pointId = us.points[role.id]
             total += $scope.constants.points[pointId].value
+
         return total
 
     formatUserStoryTasks = ->
@@ -83,14 +86,15 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
                 us = $scope.userstories[usId]
                 completedPoints += calculateTotalPoints(us)
 
-        $scope.stats =
-            totalPoints: totalPoints
-            completedPoints: completedPoints.toFixed(0)
+        $scope.stats = {
+            totalPoints: totalPoints.toFixed(1)
+            completedPoints: completedPoints.toFixed(1)
             percentageCompletedPoints: ((completedPoints*100) / totalPoints).toFixed(1)
             totalUss: totalUss
             compledUss: compledUss.toFixed(0)
             totalTasks: totalTasks
             completedTasks: completedTasks
+        }
 
 
     loadTasks = ->
