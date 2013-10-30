@@ -175,9 +175,10 @@ TaskboardTaskController = ($scope, $rootScope, $q) ->
         task.save()
 
     $scope.getTaskColorStyle = (task) ->
-        return {
-            "border-color": $rootScope.constants.users[task.assigned_to].color or '#FFF5D8'
-        }
+        user = $rootScope.constants.users[task.assigned_to]
+        if user != undefined
+            return {"border-color": $rootScope.constants.users[task.assigned_to].color or '#FFF5D8'}
+        return '#FFF5D8'
 
 
 module = angular.module("greenmine.controllers.taskboard", [])
