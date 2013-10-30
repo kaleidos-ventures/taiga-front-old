@@ -195,7 +195,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     # Load initial data
     $data.loadProject($scope).then ->
         $data.loadUsersAndRoles($scope).then ->
-            console.log $scope.constants.issueStatuses
             loadIssues()
 
     $scope.updateIssueAssignation = (issue, id) ->

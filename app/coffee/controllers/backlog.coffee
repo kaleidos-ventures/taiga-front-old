@@ -42,8 +42,8 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
         if data.length > 0
             $rootScope.sprintId = data[0].id
 
-    $data.loadProject($scope)
-    $data.loadUsersAndRoles($scope)
+    $data.loadProject($scope).then ->
+        $data.loadUsersAndRoles($scope)
 
 
 BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
