@@ -38,10 +38,10 @@
                                 </div>
                                 <div class="row-item">
                                     <div class="row-label">Dates</div>
-                                    <div class="row-indicator">{{ milestone.start_date|momentFormat:"L" }}</div>
+                                    <div class="row-indicator">{{ milestone.estimated_start|momentFormat:"L" }}</div>
                                     <div class="row-help">start<br />date</div>
-                                    <div class="row-indicator">{{ milestone.end_date|momentFormat:"L" }}</div>
-                                    <div class="row-help">end<br />date</div>
+                                    <div class="row-indicator">{{ milestone.estimated_finish|momentFormat:"L" }}</div>
+                                    <div class="row-help">finish<br />date</div>
                                 </div>
                                 <!-- TODO: iocaine and labor force
                                 <div class="row-item sprint-data">
