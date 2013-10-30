@@ -175,27 +175,16 @@ GmSortableDirective = ($log) ->
 
             onStart = (e, ui) ->
                 $log.info "GmSortableDirective.onStart", ui.item.index()
-                # Save position of dragged item
                 ui.item.sortable = { index: ui.item.index() }
-                # console.log("onStart", ui.item.index())
 
             onUpdate = (e, ui) ->
                 $log.info "GmSortableDirective.onUpdate"
-                # For some reason the reference to ngModel in stop() is wrong
-                # console.log("onUpdate", ngModel.$modelValue)
                 ui.item.sortable.model = ngModel
                 ui.item.sortable.scope = scope
 
             onReceive = (e, ui) ->
                 $log.info "GmSortableDirective.onReceive"
-                # console.log("onReceive", ui.item.sortable.moved)
-
                 ui.item.sortable.relocate = true
-                # ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved)
-                # ngModel.$viewValue.splice(ui.item.index(), 0, ui.item.sortable.moved)
-
-                # scope.$digest()
-                # scope.$broadcast("backlog-resort")
 
             onRemove = (e, ui) ->
                 $log.info "GmSortableDirective.onRemove"
@@ -213,17 +202,13 @@ GmSortableDirective = ($log) ->
 
                     # Reorder array and apply change to scope
                     ui.item.sortable.model.$modelValue.splice(end-1, 0, ui.item.sortable.model.$modelValue.splice(start-1, 1)[0])
-                    # scope.$broadcast("sortable:changed")
                     scope.$emit("sortable:changed")
                 else
-                    scope.$apply ->
-                        ui.item.sortable.moved.order = ui.item.index()
-                        ui.item.sortable.model.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved)
+                    ui.item.sortable.moved.order = ui.item.index()
+                    ui.item.sortable.model.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved)
 
-                    scope.$apply ->
-                        # ui.item.sortable.scope.$broadcast("sortable:changed")
-                        ui.item.sortable.scope.$emit("sortable:changed")
-                        scope.$emit("sortable:changed")
+                    ui.item.sortable.scope.$emit("sortable:changed")
+                    scope.$emit("sortable:changed")
 
                 scope.$apply()
 
