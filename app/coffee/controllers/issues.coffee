@@ -363,6 +363,7 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
             $scope.form = {}
             $scope.close()
             $rootScope.$broadcast("issue-form:create", issue)
+            $rootScope.$broadcast("flash:new", true, "The issue has been saved")
 
     $scope.close = ->
         $scope.formOpened = false
