@@ -662,6 +662,7 @@ body.login {
                 }
                 .flex-body{
                     .issue-item{
+                        border-bottom: 1px solid #f1f1f1;
                         padding: 0;
                         background: rgba(255,255,255,.6);
                         .nga-opacityToggle(filter, 0.3s, linear, all, 0, 1, 10px, 0);
@@ -2243,9 +2244,8 @@ body.login {
         }
         .flex-body {
             .issue-item{
-                border-bottom: 1px solid #efefef;
                 font-family: @ColabThi;
-                
+
                 &:hover {
                     background-color: #f9f9f9;
                 }
@@ -2287,11 +2287,14 @@ body.login {
                 -moz-box-orient: horizontal;
                 width: 100%;
 
-                order-bottom: 1px solid #efefef;
+                border-bottom: 1px solid #efefef;
 
                 div:nth-child(2) {
                     -webkit-box-flex: 1;
                     -moz-box-flex: 1;
+                }
+                &:hover {
+                    background-color: #f8f8f8;
                 }
             }
 
