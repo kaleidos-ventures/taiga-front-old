@@ -34,8 +34,8 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     # This attach "project" to $scope
-    $data.loadProject($scope)
-    $data.loadUsersAndRoles($scope)
+    $data.loadProject($scope).then ->
+        $data.loadUsersAndRoles($scope)
 
     $scope.submit = ->
         promise = $scope.project.save()
