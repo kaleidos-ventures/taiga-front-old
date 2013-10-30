@@ -263,6 +263,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs) ->
             closeModal()
             $scope.overlay.close()
             $scope.defered.resolve()
+            $rootScope.$broadcast("flash:new", true, "The user story has been saved")
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -275,7 +276,6 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs) ->
             $scope.form = {}
         else
             $scope.form.revert()
-    return
 
 
 BacklogMilestonesController = ($scope, $rootScope, rs) ->
@@ -319,6 +319,8 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
                 # linking of dashboard menu item to the
                 # last created milestone
                 $rootScope.sprintId = milestone.id
+                # Show a success message
+                $rootScope.$broadcast("flash:new", true, "The sprint has been saved")
 
             promise.then null, (data) ->
                 $scope.checksleyErrors = data
@@ -328,6 +330,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
             promise.then (data) ->
                 $scope.form = {}
                 $scope.sprintFormOpened = false
+                $rootScope.$broadcast("flash:new", true, "The sprint has been saved")
 
             promise.then null, (data) ->
                 $scope.checksleyErrors = data

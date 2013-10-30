@@ -149,6 +149,7 @@ TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, rs) ->
             $rootScope.$broadcast("task-form:create", model)
             $scope.overlay.close()
             $scope.formOpened = false
+            $rootScope.$broadcast("flash:new", true, "The task has been saved")
 
     $scope.close = ->
         $scope.formOpened = false
