@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.0-4b653ae
+ * @license AngularJS v1.2.0-d434eab
  * (c) 2010-2012 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -871,7 +871,8 @@ function shallowCopy(src, dst) {
  * Two objects or values are considered equivalent if at least one of the following is true:
  *
  * * Both objects or values pass `===` comparison.
- * * Both objects or values are of the same type and all of their properties pass `===` comparison.
+ * * Both objects or values are of the same type and all of their properties are equal by
+ *   comparing them with `angular.equals`.
  * * Both values are NaN. (In JavaScript, NaN == NaN => false. But we consider two NaN as equal)
  * * Both values represent the same regular expression (In JavasScript,
  *   /abc/ == /abc/ => false. But we consider two regular expressions as equal when their textual
@@ -1780,7 +1781,7 @@ function setupModuleLoader(window) {
  * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
  */
 var version = {
-  full: '1.2.0-4b653ae',    // all of these placeholder strings will be replaced by grunt's
+  full: '1.2.0-d434eab',    // all of these placeholder strings will be replaced by grunt's
   major: 1,    // package task
   minor: "NG_VERSION_MINOR",
   dot: 0,
@@ -3113,7 +3114,7 @@ function annotate(fn) {
  *     providers and services.
  * * {@link AUTO.$provide#methods_value value(obj)} - registers a value/object that can only be accessed by
  *     services, not providers.
- * * {@link AUTO.$provide#factory factory(fn)} - registers a service **factory function**, `fn`,
+ * * {@link AUTO.$provide#methods_factory factory(fn)} - registers a service **factory function**, `fn`,
  *     that will be wrapped in a **service provider** object, whose `$get` property will contain the
  *     given factory function.
  * * {@link AUTO.$provide#methods_service service(class)} - registers a **constructor function**, `class` that
@@ -3231,7 +3232,7 @@ function annotate(fn) {
  * Register a **service factory**, which will be called to return the service instance.
  * This is short for registering a service where its provider consists of only a `$get` property,
  * which is the given service factory function.
- * You should use {@link AUTO.$provide#factory $provide.factor(getFn)} if you do not need to
+ * You should use {@link AUTO.$provide#factory $provide.factory(getFn)} if you do not need to
  * configure your service in a provider.
  *
  * @param {string} name The name of the instance.
@@ -5664,16 +5665,16 @@ function $CompileProvider($provide) {
 
       var terminalPriority = -Number.MAX_VALUE,
           newScopeDirective,
+          controllerDirectives = previousCompileContext.controllerDirectives,
           newIsolateScopeDirective = previousCompileContext.newIsolateScopeDirective,
           templateDirective = previousCompileContext.templateDirective,
+          transcludeDirective = previousCompileContext.transcludeDirective,
           $compileNode = templateAttrs.$$element = jqLite(compileNode),
           directive,
           directiveName,
           $template,
-          transcludeDirective = previousCompileContext.transcludeDirective,
           replaceDirective = originalReplaceDirective,
           childTranscludeFn = transcludeFn,
-          controllerDirectives,
           linkFn,
           directiveValue;
 
@@ -5738,9 +5739,14 @@ function $CompileProvider($provide) {
 
             childTranscludeFn = compile($template, transcludeFn, terminalPriority,
                                         replaceDirective && replaceDirective.name, {
-                                          newIsolateScopeDirective: newIsolateScopeDirective,
-                                          transcludeDirective: transcludeDirective,
-                                          templateDirective: templateDirective
+                                          // Don't pass in:
+                                          // - controllerDirectives - otherwise we'll create duplicates controllers
+                                          // - newIsolateScopeDirective or templateDirective - combining templates with
+                                          //   element transclusion doesn't make sense.
+                                          //
+                                          // We need only transcludeDirective so that we prevent putting transclusion
+                                          // on the same element more than once.
+                                          transcludeDirective: transcludeDirective
                                         });
           } else {
             $template = jqLite(jqLiteClone(compileNode)).contents();
@@ -5806,9 +5812,10 @@ function $CompileProvider($provide) {
 
           nodeLinkFn = compileTemplateUrl(directives.splice(i, directives.length - i), $compileNode,
               templateAttrs, jqCollection, childTranscludeFn, preLinkFns, postLinkFns, {
+                controllerDirectives: controllerDirectives,
                 newIsolateScopeDirective: newIsolateScopeDirective,
-                transcludeDirective: transcludeDirective,
-                templateDirective: templateDirective
+                templateDirective: templateDirective,
+                transcludeDirective: transcludeDirective
               });
           ii = directives.length;
         } else if (directive.compile) {
@@ -5962,7 +5969,7 @@ function $CompileProvider($provide) {
                   return parentGet(parentScope, locals);
                 };
                 break;
-              
+
               default:
                 throw $compileMinErr('iscp',
                     "Invalid isolate scope definition for directive '{0}'." +
@@ -6262,33 +6269,37 @@ function $CompileProvider($provide) {
       }
 
       directives.push({
-        priority: -100,
-        compile: valueFn(function attrInterpolateLinkFn(scope, element, attr) {
-          var $$observers = (attr.$$observers || (attr.$$observers = {}));
+        priority: 100,
+        compile: function() {
+            return {
+              pre: function attrInterpolatePreLinkFn(scope, element, attr) {
+                var $$observers = (attr.$$observers || (attr.$$observers = {}));
 
-          if (EVENT_HANDLER_ATTR_REGEXP.test(name)) {
-            throw $compileMinErr('nodomevents',
-                "Interpolations for HTML DOM event attributes are disallowed.  Please use the " +
-                "ng- versions (such as ng-click instead of onclick) instead.");
+                if (EVENT_HANDLER_ATTR_REGEXP.test(name)) {
+                  throw $compileMinErr('nodomevents',
+                      "Interpolations for HTML DOM event attributes are disallowed.  Please use the " +
+                          "ng- versions (such as ng-click instead of onclick) instead.");
+                }
+
+                // we need to interpolate again, in case the attribute value has been updated
+                // (e.g. by another directive's compile function)
+                interpolateFn = $interpolate(attr[name], true, getTrustedContext(node, name));
+
+                // if attribute was updated so that there is no interpolation going on we don't want to
+                // register any observers
+                if (!interpolateFn) return;
+
+                // TODO(i): this should likely be attr.$set(name, iterpolateFn(scope) so that we reset the
+                // actual attr value
+                attr[name] = interpolateFn(scope);
+                ($$observers[name] || ($$observers[name] = [])).$$inter = true;
+                (attr.$$observers && attr.$$observers[name].$$scope || scope).
+                    $watch(interpolateFn, function interpolateFnWatchAction(value) {
+                      attr.$set(name, value);
+                    });
+              }
+            };
           }
-
-          // we need to interpolate again, in case the attribute value has been updated
-          // (e.g. by another directive's compile function)
-          interpolateFn = $interpolate(attr[name], true, getTrustedContext(node, name));
-
-          // if attribute was updated so that there is no interpolation going on we don't want to
-          // register any observers
-          if (!interpolateFn) return;
-
-          // TODO(i): this should likely be attr.$set(name, iterpolateFn(scope) so that we reset the
-          // actual attr value
-          attr[name] = interpolateFn(scope);
-          ($$observers[name] || ($$observers[name] = [])).$$inter = true;
-          (attr.$$observers && attr.$$observers[name].$$scope || scope).
-            $watch(interpolateFn, function interpolateFnWatchAction(value) {
-              attr.$set(name, value);
-            });
-        })
       });
     }
 
@@ -6366,10 +6377,10 @@ function directiveNormalize(name) {
 /**
  * @ngdoc object
  * @name ng.$compile.directive.Attributes
- * 
+ *
  * @description
  * A shared object between directive compile / linking functions which contains normalized DOM
- * element attributes. The the values reflect current binding state `{{ }}`. The normalization is
+ * element attributes. The values reflect current binding state `{{ }}`. The normalization is
  * needed since all of these are treated as equivalent in Angular:
  *
  *    <span ng:bind="a" ng-bind="a" data-ng-bind="a" x-ng-bind="a">
@@ -6984,6 +6995,7 @@ function $HttpProvider() {
      *       'response': function(response) {
      *          // same as above
      *       }
+     *     };
      *   });
      * </pre>
      *
@@ -8668,6 +8680,35 @@ function $LocationProvider(){
       return html5Mode;
     }
   };
+    
+  /**
+   * @ngdoc event
+   * @name ng.$location#$locationChangeStart
+   * @eventOf ng.$location
+   * @eventType broadcast on root scope
+   * @description
+   * Broadcasted before a URL will change. This change can be prevented by calling
+   * `preventDefault` method of the event. See {@link ng.$rootScope.Scope#$on} for more
+   * details about event object. Upon successful change
+   * {@link ng.$location#$locationChangeSuccess $locationChangeSuccess} is fired.
+   *
+   * @param {Object} angularEvent Synthetic event object.
+   * @param {string} newUrl New URL
+   * @param {string=} oldUrl URL that was before it was changed.
+   */
+    
+  /**
+   * @ngdoc event
+   * @name ng.$location#$locationChangeSuccess
+   * @eventOf ng.$location
+   * @eventType broadcast on root scope
+   * @description
+   * Broadcasted after a URL was changed. 
+   *
+   * @param {Object} angularEvent Synthetic event object.
+   * @param {string} newUrl New URL
+   * @param {string=} oldUrl URL that was before it was changed.
+   */
 
   this.$get = ['$rootScope', '$browser', '$sniffer', '$rootElement',
       function( $rootScope,   $browser,   $sniffer,   $rootElement) {
@@ -10305,8 +10346,6 @@ function $ParseProvider() {
  * - $q is integrated with the {@link ng.$rootScope.Scope} Scope model observation
  *   mechanism in angular, which means faster propagation of resolution or rejection into your
  *   models and avoiding unnecessary browser repaints, which would result in flickering UI.
- * - $q promises are recognized by the templating engine in angular, which means that in templates
- *   you can treat promises attached to a scope as if they were the resulting values.
  * - Q has many more features than $q, but that comes at a cost of bytes. $q is tiny, but contains
  *   all the important functionality needed for common async tasks.
  *
@@ -10920,6 +10959,8 @@ function $RootScopeProvider(){
        * can compare the `newVal` and `oldVal`. If these two values are identical (`===`) then the
        * listener was called due to initialization.
        *
+       * The example below contains an illustration of using a function as your $watch listener
+       *
        *
        * # Example
        * <pre>
@@ -10941,6 +10982,36 @@ function $RootScopeProvider(){
            scope.name = 'adam';
            scope.$digest();
            expect(scope.counter).toEqual(1);
+
+
+
+           // Using a listener function 
+           var food;
+           scope.foodCounter = 0;
+           expect(scope.foodCounter).toEqual(0);
+           scope.$watch(
+             // This is the listener function
+             function() { return food; },
+             // This is the change handler
+             function(newValue, oldValue) {
+               if ( newValue !== oldValue ) {
+                 // Only increment the counter if the value changed
+                 scope.foodCounter = scope.foodCounter + 1;
+               }
+             }
+           );
+           // No digest has been run so the counter will be zero
+           expect(scope.foodCounter).toEqual(0);
+
+           // Run the digest but since food has not changed cout will still be zero
+           scope.$digest();
+           expect(scope.foodCounter).toEqual(0);
+
+           // Update food and run digest.  Now the counter will increment
+           food = 'cheeseburger';
+           scope.$digest();
+           expect(scope.foodCounter).toEqual(1);  
+
        * </pre>
        *
        *
@@ -11358,7 +11429,8 @@ function $RootScopeProvider(){
        *
        *    - `string`: execute using the rules as defined in  {@link guide/expression expression}.
        *    - `function(scope)`: execute the function with the current `scope` parameter.
-       *
+       * 
+       * @param {(object)=} locals Local variables object, useful for overriding values in scope.
        * @returns {*} The result of evaluating the expression.
        */
       $eval: function(expr, locals) {
@@ -14842,7 +14914,7 @@ function FormController(element, attrs) {
  * does not allow nesting of form elements. It is useful to nest forms, for example if the validity of a
  * sub-group of controls needs to be determined.
  *
- * @param {string=} name|ngForm Name of the form. If specified, the form controller will be published into
+ * @param {string=} ngForm|name Name of the form. If specified, the form controller will be published into
  *                       related scope, under this name.
  *
  */
@@ -14901,7 +14973,7 @@ function FormController(element, attrs) {
  *
  * - If a form has only one input field then hitting enter in this field triggers form submit
  * (`ngSubmit`)
- * - if a form has has 2+ input fields and no buttons or input[type=submit] then hitting enter
+ * - if a form has 2+ input fields and no buttons or input[type=submit] then hitting enter
  * doesn't trigger submit
  * - if a form has one or more input fields and one or more buttons or input[type=submit] then
  * hitting enter in any of the input fields will trigger the click handler on the *first* button or
@@ -15941,14 +16013,14 @@ var VALID_CLASS = 'ng-valid',
  * Note that if you have a directive with an isolated scope, you cannot require `ngModel`
  * since the model value will be looked up on the isolated scope rather than the outer scope.
  * When the directive updates the model value, calling `ngModel.$setViewValue()` the property
- * on the outer scope will not be updated.
+ * on the outer scope will not be updated. However you can get around this by using $parent.
  *
- * Here is an example of this situation.  You'll notice that even though both 'input' and 'div'
- * seem to be attached to the same model, they are not kept in synch.
+ * Here is an example of this situation.  You'll notice that the first div is not updating the input. 
+ * However the second div can update the input properly.
  *
  * <example module="badIsolatedDirective">
     <file name="script.js">
-		angular.module('badIsolatedDirective', []).directive('bad', function() {
+		angular.module('badIsolatedDirective', []).directive('isolate', function() {
       return {
         require: 'ngModel',
         scope: { },
@@ -15963,8 +16035,9 @@ var VALID_CLASS = 'ng-valid',
 		});
     </file>
     <file name="index.html">
-      <input ng-model="someModel">
-      <div bad ng-model="someModel"></div>
+        <input ng-model="someModel"/>
+        <div isolate ng-model="someModel"></div>
+        <div isolate ng-model="$parent.someModel"></div>
     </file>
  * </example>
  *
@@ -16612,6 +16685,29 @@ var ngBindTemplateDirective = ['$interpolate', function($interpolate) {
  *
  * @element ANY
  * @param {expression} ngBindHtml {@link guide/expression Expression} to evaluate.
+ *
+ * @example
+ * Try it here: enter text in text box and watch the greeting change.
+   <doc:example module="ngBindHtmlExample" deps="angular-sanitize.js" >
+     <doc:source>
+       <script>
+         angular.module('ngBindHtmlExample', ['ngSanitize'])
+
+         .controller('ngBindHtmlCtrl', ['$scope', function ngBindHtmlCtrl($scope) {
+           $scope.myHTML = 'I am an <code>HTML</code>string with <a href="#">links!</a> and other <em>stuff</em>';
+         }]);
+       </script>
+       <div ng-controller="ngBindHtmlCtrl">
+        <p ng-bind-html="myHTML"></p>
+       </div>
+     </doc:source>
+     <doc:scenario>
+       it('should check ng-bind-html', function() {
+         expect(using('.doc-example-live').binding('myHTML')).
+           toBe('I am an <code>HTML</code>string with <a href="#">links!</a> and other <em>stuff</em>');
+       });
+     </doc:scenario>
+   </doc:example>
  */
 var ngBindHtmlDirective = ['$sce', '$parse', function($sce, $parse) {
   return function(scope, element, attr) {
@@ -16721,7 +16817,7 @@ function classDirective(name, selector) {
  *   names of the properties whose values are truthy will be added as css classes to the
  *   element.
  *
- * @example Example that demostrates basic bindings via ngClass directive.
+ * @example Example that demonstrates basic bindings via ngClass directive.
    <example>
      <file name="index.html">
        <p ng-class="{strike: strike, bold: bold, red: red}">Map Syntax Example</p>
@@ -17010,7 +17106,10 @@ var ngCloakDirective = ngDirective({
  * * Controller — The `ngController` directive specifies a Controller class; the class contains business
  *   logic behind the application to decorate the scope with functions and values
  *
- * Note that an alternative way to define controllers is via the {@link ngRoute.$route $route} service.
+ * Note that you can also attach controllers to the DOM by declaring it in a route definition
+ * via the {@link ngRoute.$route $route} service. A common mistake is to declare the controller
+ * again using `ng-controller` in the template itself.  This will cause the controller to be attached
+ * and executed twice.
  *
  * @element ANY
  * @scope
@@ -17585,7 +17684,7 @@ forEach(
  * @priority 600
  * @param {expression} ngIf If the {@link guide/expression expression} is falsy then
  *     the element is removed from the DOM tree. If it is truthy a copy of the compiled
- *     eleent is added to the DOM tree.
+ *     element is added to the DOM tree.
  *
  * @example
   <example animations="true">
@@ -17934,7 +18033,7 @@ var ngInitDirective = ngDirective({
  * The `ngNonBindable` directive tells Angular not to compile or bind the contents of the current
  * DOM element. This is useful if the element contains what appears to be Angular directives and
  * bindings but which should be ignored by Angular. This could be the case if you have a site that
- * displays snippets of code. for instance.
+ * displays snippets of code, for instance.
  *
  * @element ANY
  *
@@ -19339,7 +19438,7 @@ var ngOptionsMinErr = minErr('ngOptions');
           Color (null allowed):
           <span  class="nullable">
             <select ng-model="color" ng-options="c.name for c in colors">
-              <option value="">-- chose color --</option>
+              <option value="">-- choose color --</option>
             </select>
           </span><br/>
 
