@@ -93,6 +93,8 @@
             <div class="flex-header" gm-issues-sort>
                 <div data-field="severity" class="issue-sortable-field issue-severity">Severity</div>
                 <div data-field="subject" class="issue-sortable-field issue-title">Subject</div>
+                <div data-field="created_date" class="issue-sortable-field issue-created-date">Created date</div>
+                <div data-field="modified_date" class="issue-sortable-field issue-modified-date">Modified date</div>
                 <div data-field="status" class="issue-sortable-field issue-state">Status</div>
                 <div data-field="priority" class="issue-sortable-field issue-priority">Priority</div>
                 <div data-field="assigned_to" class="issue-sortable-field issue-assignedto">Assigned to</div>
@@ -114,6 +116,14 @@
                             <span ng-repeat="tag in issue.tags" class="label" gm-colorize-tag>{{ tag }}</span>
                         </span>
                         <span class="title">{{ issue.subject }}</span>
+                    </div>
+
+                    <div class="issue-created-date">
+                        <span>{{ issue.created_date|momentFormat:"LLL" }}</span>
+                    </div>
+
+                    <div class="issue-created-date">
+                        <span>{{ issue.modified_date|momentFormat:"LLL" }}</span>
                     </div>
                     <div class="issue-state">
                         <a href="" gm-popover="updateIssueStatus(issue, selectedId)"

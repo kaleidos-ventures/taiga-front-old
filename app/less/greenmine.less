@@ -1970,7 +1970,10 @@ body.login {
                 overflow: hidden;
             }
             fieldset {
-                &.issue-status, &.issue-priority, &.issue-assigned, &.issue-tags{
+                &.issue-status,
+                &.issue-priority,
+                &.issue-assigned,
+                &.issue-tags {
                     width: 33%;
                     float: left;
                 }
@@ -2333,12 +2336,18 @@ body.login {
 
         .issue-state {
             padding: 10px;
-            width: 100px;
+            width: 90px;
+        }
+
+        .issue-created-date,
+        .issue-modified-date {
+            padding: 10px;
+            width: 160px;
         }
 
         .issue-priority {
             padding: 10px;
-            width: 90px;
+            width: 70px;
 
             .priority-low{
                 color: #ccc;
