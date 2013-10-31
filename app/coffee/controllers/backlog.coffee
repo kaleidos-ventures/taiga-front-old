@@ -353,8 +353,13 @@ BacklogMilestoneController = ($scope, rs) ->
         return total
 
     calculateStats = ->
-        total = $scope.ml.user_stories.length
-        closed = _.filter($scope.ml.user_stories, "is_closed").length
+        total = 0
+        closed = 0
+
+        for us in $scope.ml.user_stories
+            points = calculateTotalPoints(us)
+            total += points
+            closed += points if us.is_closed
 
         $scope.stats =
             total: total
