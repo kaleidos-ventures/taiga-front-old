@@ -5,7 +5,7 @@
     <div class="top-menu-sbox">
         <ul>
             <li>
-                <a data-icon="b" ng-click="projectsList=!projectsList" href="" title="Show all projects">All Projects</a>
+                <a data-icon="b" ng-click="projectsList=!projectsList" href="#/" title="Show all projects">All Projects</a>
                 <ul class="project-list" ng-show="projectsList" ng-mouseleave="projectsList=false">
                     <li ng-repeat="proj in auth.projects" ng-show="auth.projects.length">
                         <a title="{{ proj.name }}" href="{{ urls.backlogUrl(proj.id) }}">{{ proj.name }}</a>
