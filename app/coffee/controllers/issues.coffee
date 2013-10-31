@@ -341,8 +341,10 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
                 $scope.$apply()
 
     $scope.removeAttachment = (attachment) ->
-        $scope.attachments = _.without($scope.attachments, attachment)
-        attachment.remove()
+        promise = $confirm.confirm("Are you sure?")
+        promise.then () ->
+            $scope.attachments = _.without($scope.attachments, attachment)
+            attachment.remove()
 
     $scope.removeNewAttachment = (attachment) ->
         $scope.newAttachments = _.without($scope.newAttachments, attachment)

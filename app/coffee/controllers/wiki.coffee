@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs) ->
+WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm) ->
     $rootScope.pageSection = 'wiki'
     $rootScope.projectId = parseInt($routeParams.pid, 10)
     $rootScope.pageBreadcrumb = [
@@ -84,12 +84,14 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs) ->
             $scope.formOpened = true
 
     $scope.deleteAttachment = (attachment) ->
-        $scope.attachments = _.without($scope.attachments, attachment)
-        attachment.remove()
+        promise = $confirm.confirm("Are you sure?")
+        promise.then () ->
+            $scope.attachments = _.without($scope.attachments, attachment)
+            attachment.remove()
 
     $scope.deleteNewAttachment = (attachment) ->
         $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
 
 module = angular.module("greenmine.controllers.wiki", [])
-module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams', '$data', 'resource', WikiController])
+module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams', '$data', 'resource', "$confirm", WikiController])

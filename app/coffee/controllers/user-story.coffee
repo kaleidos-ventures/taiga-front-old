@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data) ->
+UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data, $confirm) ->
     $rootScope.pageSection = 'user-stories'
     $rootScope.pageBreadcrumb = [
         ["", ""],
@@ -83,8 +83,10 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
                 $scope.$apply()
 
     $scope.removeAttachment = (attachment) ->
-        $scope.attachments = _.without($scope.attachments, attachment)
-        attachment.remove()
+        promise = $confirm.confirm("Are you sure?")
+        promise.then () ->
+            $scope.attachments = _.without($scope.attachments, attachment)
+            attachment.remove()
 
     $scope.removeNewAttachment = (attachment) ->
         $scope.newAttachments = _.without($scope.newAttachments, attachment)
@@ -94,5 +96,5 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             $location.url("/project/#{projectId}/backlog")
 
 module = angular.module("greenmine.controllers.user-story", [])
-module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", UserStoryViewController])
+module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", UserStoryViewController])
 
