@@ -346,7 +346,6 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
             $rootScope.$broadcast("milestones:loaded", $scope.milestones)
 
 BacklogMilestoneController = ($scope, rs) ->
-
     calculateTotalPoints = (us) ->
         total = 0
         for roleId, pointId of us.points
@@ -354,18 +353,13 @@ BacklogMilestoneController = ($scope, rs) ->
         return total
 
     calculateStats = ->
-        total = 0
-        completed = 0
-
-        for us in $scope.ml.user_stories
-            points = calculateTotalPoints(us)
-            total += points
-            completed += points if us.is_closed
+        total = $scope.ml.user_stories.length
+        closed = _.filter($scope.ml.user_stories, "is_closed").length
 
         $scope.stats =
             total: total
-            completed: completed
-            percentage: if total then ((completed * 100) / total).toFixed(1) else 0.0
+            closed: closed
+            percentage: if total then ((closed * 100) / total).toFixed(1) else 0.0
 
     normalizeMilestones = ->
         _.each $scope.ml.user_stories, (item, index) ->
