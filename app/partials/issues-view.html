@@ -43,11 +43,14 @@
                 <li data-icon="x">
                     Updated: <span>{{ issue.modified_date|momentFormat:"LLL" }}</span>
                 </li>
+                <li data-icon="y" class="status-{{ issue.status }}">
+                    Status: <span>{{ constants.issueStatuses[issue.status].name }}</span>
+                </li>
                 <li data-icon="o" class="priority-{{ issue.priority }}">
                     Priority: <span>{{ constants.priorities[issue.priority].name }}</span>
                 </li>
-                <li data-icon="y" class="status-{{ issue.status }}">
-                    Status: <span>{{ constants.issueStatuses[issue.status].name }}</span>
+                <li data-icon="H" class="severity-{{ issue.severity }}">
+                    Severity: <span>{{ constants.severities[issue.severity].name }}</span>
                 </li>
                 <li data-icon="z">
                     Attachments: <span>{{ attachments.length }}</span>
@@ -92,6 +95,14 @@
                     </div>
 
                     <div>
+                        <fieldset class="issue-severity">
+                            <label>Severity</label>
+
+                            <select class="severity status" name="severity"
+                                    ng-model="form.severity" data-required="true"
+                                    data-type="number" data-error-message="Required"
+                                    ng-options="c.id as c.name for c in constants.severitiesList|orderBy:'order'"></select>
+                        </fieldset>
                         <fieldset class="issue-assigned">
                             <label>Assigned to</label>
 
@@ -100,7 +111,8 @@
                                     data-error-message="Required"
                                     ng-options="c.user as c.full_name for c in project.memberships"></select>
                         </fieldset>
-
+                    </div>
+                    <div>
                         <fieldset class="issue-tags">
                             <label>Tags</label>
                             <input type="text" name="status" value="" ng-model="form.tags"
