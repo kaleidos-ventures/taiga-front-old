@@ -76,6 +76,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
             rs.uploadWikiPageAttachment(projectId, $scope.page.id, newAttach).then (attach) ->
                 $scope.deleteNewAttachment(newAttach)
                 $scope.attachments.push(attach)
+                $scope.$apply()
 
     $scope.deletePage = ->
         $scope.page.remove().then ->
