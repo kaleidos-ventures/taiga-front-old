@@ -1633,13 +1633,23 @@ body.login {
                 overflow: hidden;
             }
             fieldset {
-                &.task-status, &.task-priority, &.task-assigned, &.task-tags{
+                &.task-status, &.task-priority, &.task-assigned, &.task-tags {
                     width: 33%;
                     float: left;
                 }
                 &.us-role-points {
                     width: 100px;
                     float:left;
+                }
+
+                &.meta-requirement {
+                    label {
+                        display: inline-block;
+                        margin-right: 10px;
+                    }
+                    input {
+                        display: inline-block;
+                    }
                 }
                 .select2-container {
                     //width: 91%;

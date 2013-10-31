@@ -124,6 +124,15 @@
                         <textarea ng-model="form.comment"></textarea>
                     </fieldset>
 
+                    <fieldset class="meta-requirement">
+                        <input type="checkbox" id="client-requirement"
+                               ng-model="form.client_requirement" name="client_requirement"/>
+                        <label for="client-requirement">Client Requirement</label>
+                        <input type="checkbox"id="team-requirement"
+                               ng-model="form.team_requirement" name="team_requirement">
+                        <label for="team-requirement" >Team Requirement</label>
+                    </fieldset>
+
                     <fieldset class="task-attachment">
                         <a class="add-attachment" data-icon="E" title="Add attachments"
                             gm-forward-click="#attachment_file_input" href="">
@@ -143,6 +152,7 @@
                                id="attachment_file_input" multiple="multiple"
                                gm-files="newAttachments"/>
                     </fieldset>
+
 
                     <fieldset class="task-edit-submit">
                         <button type="submit" class="button button-edit"
