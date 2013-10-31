@@ -55,7 +55,7 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs) ->
             when "userstories" then item.description
             when "tasks" then item.description
             when "issues" then item.description
-            when "wikipages" then item.content
+            when "wikipages" then _.str.stripTags(markdown.toHTML(item.content))
 
     $scope.isTypeActive = (type) ->
         return type == $scope.activeType
