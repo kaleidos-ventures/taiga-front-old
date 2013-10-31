@@ -259,7 +259,11 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     # Get a users with role developer for
     # one concret project.
     service.getUsers = (projectId) ->
-        return queryMany("users", {project: projectId})
+        if projectId
+            params = {project: projectId}
+        else
+            params = {}
+        return queryMany("users", params)
 
     service.createTask = (form) ->
         return $model.create("tasks", form)

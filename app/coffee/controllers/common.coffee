@@ -70,7 +70,7 @@ DataServiceProvider = ($rootScope, $q, rs) ->
     # NOTE: This method depends on getProject
     service.loadUsersAndRoles = ($scope) ->
         promise = $q.all [
-            rs.getUsers($scope.project.id),
+            rs.getUsers(),
             rs.getRoles($scope.project.id),
         ]
 

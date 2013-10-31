@@ -68,9 +68,9 @@ MembershipFormController = ($scope, $rootScope, rs) ->
 
     $scope.openForm = ->
         $scope.membership = {project: $rootScope.projectId}
-        $scope.noMemberUsersList = _.filter($scope.constants.usersList, (user) ->
-            return _.indexOf($scope.project.members, user.id) == -1
-        )
+        $scope.noMemberUsersList = _.filter $scope.constants.usersList, (user) ->
+            return not _.contains($scope.project.members, user.id)
+
         $scope.$broadcast("checksley:reset")
         $scope.formOpened = true
 
