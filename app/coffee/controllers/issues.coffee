@@ -62,9 +62,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         $scope.currentPage = 0
         filterIssues()
 
-        console.log $scope.selectedTags
-        console.log $scope.selectedMeta
-
     selectTagIfNotSelected = (tag) ->
         if isTagSelected(tag)
             $scope.selectedTags.push(tag)
@@ -124,6 +121,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
                                 .map(selectTagIfNotSelected).toArray()
 
     regenerateTags = ->
+        $scope.selectedTags = []
         generateTagList()
         generateAssignedToTags()
         generateSeverityTags()
