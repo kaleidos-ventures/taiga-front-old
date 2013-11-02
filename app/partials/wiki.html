@@ -28,18 +28,18 @@
                gm-forward-click="#attachment_file_input">Add Attachments</a>
             <ul class="attachments-items">
                 <li class="attachments-item" ng-repeat="attachment in newAttachments">
-                    <span>{{ attachment.name }}</span>
-                    <span>[{{ attachment.size|sizeFormat }}]</span>
                     <a class="delete" data-icon="h" href=""
                        title="Delete the new attachment"
                        ng-click="deleteNewAttachment(attachment)"></a>
+                    <span>{{ attachment.name }}</span>
+                    <span>[{{ attachment.size|sizeFormat }}]</span>
                 </li>
                 <li class="attachments-item" ng-repeat="attachment in attachments">
+                    <a class="delete" data-icon="h" href="" title="Delete attachment"
+                       ng-click="deleteAttachment(attachment)"></a>
                     <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                     <span>[{{ attachment.size|sizeFormat }}]</span>
                     <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
-                    <a class="delete" data-icon="h" href="" title="Delete attachment"
-                       ng-click="deleteAttachment(attachment)"></a>
                 </li>
             </ul>
             <input type="file" class="hidden" name="newAttachments" multiple="multiple"

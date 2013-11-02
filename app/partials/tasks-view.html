@@ -19,11 +19,11 @@
                 <h3>Attachments</h3>
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
+                        <a class="delete" data-icon="h" href="" title="Delete attachment"
+                           ng-click="removeAttachment(attachment)"></a>
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
                         <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
-                        <a class="delete" data-icon="h" href="" title="Delete attachment"
-                           ng-click="removeAttachment(attachment)"></a>
                     </li>
                 </ul>
             </div>
@@ -127,11 +127,11 @@
                         <ul class="attachments-items">
                             <li class="attachments-item"
                                 ng-repeat="attachment in newAttachments">
-                                <span>{{ attachment.name }}</span>
-                                <span>[{{ attachment.size|sizeFormat }}]</span>
                                 <a class="delete" data-icon="h" href=""
                                    title="Delete the new attachment"
                                    ng-click="removeNewAttachment(attachment)"></a>
+                                <span>{{ attachment.name }}</span>
+                                <span>[{{ attachment.size|sizeFormat }}]</span>
                             </li>
                         </ul>
                         <input type="file" class="hidden" name="newAttachments"
