@@ -38,10 +38,13 @@
                     Assigned to: <span>{{ constants.users[issue.assigned_to].full_name }}</span>
                 </li>
                 <li data-icon="w">
-                    Date: <span>{{ issue.modified_date|momentFormat:"LLL" }}</span>
+                    Created: <span>{{ issue.created_date|momentFormat:"LLL" }}</span>
                 </li>
                 <li data-icon="x">
                     Updated: <span>{{ issue.modified_date|momentFormat:"LLL" }}</span>
+                </li>
+                <li data-icon="w" ng-show="issue.finished_date">
+                    Finished: <span>{{ issue.finished_date|momentFormat:"LLL" }}</span>
                 </li>
                 <li data-icon="y" class="status-{{ issue.status }}">
                     Status: <span>{{ constants.issueStatuses[issue.status].name }}</span>
@@ -173,7 +176,7 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="view-footer">
-                <p class="title">Issue #{{ issue.id }}</p>
+                <p class="title">Issue #{{ issue.ref }}</p>
                 <div class="buttons">
                     <a class="button button-delete">Delete issue</a>
                 </div>

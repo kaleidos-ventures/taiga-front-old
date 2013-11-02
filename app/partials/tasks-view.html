@@ -40,10 +40,13 @@
                     Assigned to: <span>{{ constants.users[task.assigned_to].full_name }}</span>
                 </li>
                 <li>
-                    Date: <span>{{ task.created_date|momentFormat:"LLL" }}</span>
+                    Created: <span>{{ task.created_date|momentFormat:"LLL" }}</span>
                 </li>
                 <li>
                     Updated: <span>{{ task.modified_date|momentFormat:"LLL" }}</span>
+                </li>
+                <li ng.show="task.finished_date">
+                    Finished: <span>{{ task.finished_date|momentFormat:"LLL" }}</span>
                 </li>
                 <li class="status-{{ task.status }}">
                     Status: <span>{{ constants.taskStatuses[task.status].name }}</span>

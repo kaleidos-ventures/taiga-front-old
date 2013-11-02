@@ -39,12 +39,12 @@
                     Added by: <span>{{ constants.users[userStory.owner].full_name }}</span>
                 </li>
                 <li>
-                    Date: <span>{{ userStory.created_date|momentFormat:"LLL" }}</span>
+                    Created: <span>{{ userStory.created_date|momentFormat:"LLL" }}</span>
                 </li>
                 <li>
                     Updated: <span>{{ userStory.modified_date|momentFormat:"LLL" }}</span>
                 </li>
-                <li>
+                <li ng-show="userStory.finish_date">
                     Finished: <span>{{ userStory.finish_date|momentFormat:"LLL" }}</span>
                 </li>
                 <li>
