@@ -256,7 +256,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs) ->
         $scope.form = form
         $scope.formOpened = true
 
-    $scope.submit = ->
+    $scope.submit = gm.utils.debounced 400, ->
         promise = rs.createUserStory($scope.form)
 
         promise.then (data) ->
@@ -382,7 +382,7 @@ BacklogMilestoneController = ($scope, rs) ->
     $scope.showEditForm = () ->
         $scope.editFormOpened = true
 
-    $scope.submit = ->
+    $scope.submit = gm.utils.debounced 400, ->
         promise = $scope.ml.save()
 
         promise.then (data) ->

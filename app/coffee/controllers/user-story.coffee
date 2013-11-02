@@ -66,7 +66,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             loadUserStory()
             loadAttachments()
 
-    $scope.submit = ->
+    $scope.submit = gm.utils.debounced 400, ->
         for key, value of $scope.form
             $scope.userStory[key] = value
 
