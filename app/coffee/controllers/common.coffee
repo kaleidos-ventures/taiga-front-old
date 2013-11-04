@@ -1,6 +1,13 @@
 DataServiceProvider = ($rootScope, $q, rs) ->
     service = {}
 
+    service.loadProjectStats = ($scope) ->
+        promise = rs.getProjectStats($scope.projectId).then (projectStats) ->
+            $scope.projectStats = projectStats
+            $rootScope.$broadcast("project_stats:loaded", projectStats)
+
+        return promise
+
     service.loadProject = ($scope) ->
         promise = rs.getProject($scope.projectId).then (project) ->
             $scope.project = project

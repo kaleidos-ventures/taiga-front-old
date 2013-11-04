@@ -16,58 +16,6 @@ GmBacklogGraphDirective = ($parse) -> (scope, elm, attrs) ->
     element = angular.element(elm)
 
     redrawChart = () ->
-        getOptimalList = (totalPoints, numOfSprints) ->
-            (totalPoints-((totalPoints/(numOfSprints))*sprintNum) for sprintNum in [0..numOfSprints])
-
-        getLabels = (listOfMilestones, numOfSprints) ->
-            result = []
-            if listOfMilestones.length > numOfSprints
-                result = _.map(listOfMilestones, 'name')
-            else
-                difference = numOfSprints - listOfMilestones.length
-                counter = 0
-                for x in [0..numOfSprints-1]
-                    if listOfMilestones.length > x
-                        result.push listOfMilestones[x].name
-                    else
-                        counter++
-                        result.push "Future sprint #{counter}"
-            result.push ""
-            return result
-
-        getEvolutionPoints = (listOfMilestones, totalPoints) ->
-            listOfMilestones = _.filter(listOfMilestones, (milestone) -> moment(milestone.finish_date) <= moment())
-            result = [totalPoints]
-            _.each(listOfMilestones, (milestone, index) ->
-                if isNaN(result[index] - milestone.closed_points["1"])
-                    result.push(0)
-                else
-                    result.push(result[index] - milestone.closed_points["1"])
-            )
-            return result
-
-        getTeamIncrementPoints = (listOfMilestones) ->
-            listOfMilestones = _.filter(listOfMilestones, (milestone) -> moment(milestone.finish_date) <= moment())
-            result = [0]
-            _.each(listOfMilestones, (milestone, index) ->
-                if isNaN(result[index] - milestone.team_increment_points["1"])
-                    result.push(0)
-                else
-                    result.push(result[index] - milestone.team_increment_points["1"])
-            )
-            return result
-
-        getClientIncrementPoints = (listOfMilestones) ->
-            listOfMilestones = _.filter(listOfMilestones, (milestone) -> moment(milestone.finish_date) <= moment())
-            result = getTeamIncrementPoints(listOfMilestones)
-            _.each(listOfMilestones, (milestone, index) ->
-                if isNaN(result[index] - milestone.client_increment_points["1"])
-                    result.push(0)
-                else
-                    result[index+1] += (result[index] - milestone.client_increment_points["1"])
-            )
-            return result
-
         width = element.width()
         height = width/6
 
@@ -85,40 +33,48 @@ GmBacklogGraphDirective = ($parse) -> (scope, elm, attrs) ->
             datasetFillXAxis: 0
             datasetFillYAxis: 0
 
+
         data =
-            labels : getLabels(scope.project.list_of_milestones, scope.project.total_milestones)
+            labels : _.map(scope.projectStats.milestones, (ml) -> ml.name)
             datasets : [
+                {
+                    fillColor : "rgba(0,0,0,0)",
+                    strokeColor : "rgba(0,0,0,1)",
+                    pointColor : "rgba(0,0,0,0)",
+                    pointStrokeColor : "rgba(0,0,0,0)",
+                    data : _.map(scope.projectStats.milestones, (ml) -> 0)
+                },
                 {
                     fillColor : "rgba(120,120,120,0.2)",
                     strokeColor : "rgba(120,120,120,0.2)",
                     pointColor : "rgba(255,255,255,1)",
                     pointStrokeColor : "#ccc",
-                    data : getOptimalList(scope.project.total_story_points, scope.project.total_milestones)
+                    data : _.map(scope.projectStats.milestones, (ml) -> ml.optimal)
                 },
                 {
                     fillColor : "rgba(102,153,51,0.3)",
                     strokeColor : "rgba(102,153,51,1)",
                     pointColor : "rgba(255,255,255,1)",
-                    data : getEvolutionPoints(scope.project.list_of_milestones, scope.project.total_story_points)
+                    data : _.filter(_.map(scope.projectStats.milestones, (ml) -> ml.evolution), (evolution) -> evolution?)
                 },
                 {
                     fillColor : "rgba(153,51,51,0.3)",
                     strokeColor : "rgba(153,51,51,1)",
                     pointColor : "rgba(255,255,255,1)",
-                    data : getTeamIncrementPoints(scope.project.list_of_milestones)
+                    data : _.map(scope.projectStats.milestones, (ml) -> -ml['team-increment'])
                 },
                 {
                     fillColor : "rgba(255,51,51,0.3)",
                     strokeColor : "rgba(255,51,51,1)",
                     pointColor : "rgba(255,255,255,1)",
-                    data : getClientIncrementPoints(scope.project.list_of_milestones)
+                    data : _.map(scope.projectStats.milestones, (ml) -> -ml['team-increment']-ml['client-increment'])
                 }
             ]
 
         new Chart(ctx).Line(data, options)
 
-    scope.$watch 'project', (value) ->
-        if scope.project
+    scope.$watch 'projectStats', (value) ->
+        if scope.projectStats
             redrawChart()
 
 

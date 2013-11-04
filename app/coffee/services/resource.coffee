@@ -140,6 +140,10 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.getProject = (projectId) ->
         return queryOne("projects", projectId)
 
+    # Get a project stats
+    service.getProjectStats = (projectId) ->
+        return queryOne("projects", "#{projectId}/stats")
+
     # Create a memberships
     service.createMembership = (form) ->
         return $model.create("memberships", form)

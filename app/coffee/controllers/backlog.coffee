@@ -43,6 +43,7 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
             $rootScope.sprintId = data[0].id
 
     $data.loadProject($scope).then ->
+        $data.loadProjectStats($scope)
         $data.loadUsersAndRoles($scope)
 
 
