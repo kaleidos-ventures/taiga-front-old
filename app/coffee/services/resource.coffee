@@ -214,6 +214,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return _getMilestone().then(_makeUserStoryModels).then(_makeModel)
 
+    service.getMilestoneStats = (sprintId) ->
+        return queryOne("milestones", "#{sprintId}/stats")
+
     # Get unassigned user stories list for a project.
     service.getUnassignedUserStories = (projectId) ->
         return queryMany("userstories", {"project":projectId, "milestone": "null"})

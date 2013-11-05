@@ -59,45 +59,19 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
         return
 
     calculateStats = ->
-        totalTasks = $scope.tasks.length
-        totalUss = $scope.userstoriesList.length
-        totalPoints = 0
-
-        completedPoints = 0
-        compledUss = 0
-        completedTasks = 0
-
-        for us in $scope.userstoriesList
-            totalPoints += calculateTotalPoints(us)
-
-        for usId, statuses of $scope.usTasks
-            hasOpenTasks = false
-            hasTasks = false
-
-            for statusId, tasks of statuses
-                if tasks.length > 0
-                    hasTasks = true
-
-                if $scope.constants.taskStatuses[statusId].is_closed
-                    completedTasks += tasks.length
-                else if tasks.length > 0
-                    hasOpenTasks = true
-
-            if hasOpenTasks is false and hasTasks is true
-                compledUss += 1
-                us = $scope.userstories[usId]
-                completedPoints += calculateTotalPoints(us)
-
-        $scope.stats = {
-            totalPoints: totalPoints.toFixed(1)
-            completedPoints: completedPoints.toFixed(1)
-            percentageCompletedPoints: ((completedPoints*100) / totalPoints).toFixed(1)
-            totalUss: totalUss
-            compledUss: compledUss.toFixed(0)
-            totalTasks: totalTasks
-            completedTasks: completedTasks
-        }
-
+        rs.getMilestoneStats($scope.sprintId).then (milestoneStats) ->
+            totalPoints = _.reduce(milestoneStats.total_points, (x, y) -> x + y)
+            completedPoints = _.reduce(milestoneStats.completed_points, (x, y) -> x + y)
+            $scope.stats = {
+                totalPoints: totalPoints
+                completedPoints: completedPoints
+                percentageCompletedPoints: ((completedPoints*100) / totalPoints).toFixed(1)
+                totalUss: milestoneStats.total_userstories
+                compledUss: milestoneStats.completed_userstories
+                totalTasks: milestoneStats.total_tasks
+                completedTasks: milestoneStats.completed_tasks
+            }
+            $scope.milestoneStats = milestoneStats
 
     loadTasks = ->
         rs.getTasks($scope.projectId, $scope.sprintId).then (tasks) ->
@@ -125,21 +99,26 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
         formatUserStoryTasks()
         calculateStats()
 
+    $scope.$on "stats:reload", ->
+        calculateStats()
+
     $scope.$on "sortable:changed", ->
         for usId, statuses of $scope.usTasks
             for statusId, tasks of statuses
                 for task in tasks
                     task.user_story = parseInt(usId, 10)
                     task.status = parseInt(statusId, 10)
-                    task.save() if task.isModified()
+                    if task.isModified()
+                        task.save().then ->
+                            calculateStats()
 
         for statusId, tasks of $scope.unassignedTasks
             for task in tasks
                 task.user_story = null
                 task.status = parseInt(statusId, 10)
-                task.save() if task.isModified()
-
-        calculateStats()
+                if task.isModified()
+                    task.save().then ->
+                        calculateStats()
 
 
 TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, rs) ->
