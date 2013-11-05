@@ -3,9 +3,9 @@
     <div class="span8" ng-controller="BacklogUserStoriesController">
         <div class="graphics-container">
             <div class="user-story-stats" url="">
-                <div class="progress-box" ng-show="stats.completedPercentage">
+                <div class="progress-box">
                     <div class="progress progress-success">
-                        <div class="bar" style="width: {{ stats.completedPercentage }}%;"></div>
+                        <div class="bar" style="width: {{ (projectStats.closed_points * 100) / projectStats.total_points|number:1}}%;"></div>
                     </div>
                     <div class="progress-indicator indicator">{{ (projectStats.closed_points * 100) / projectStats.total_points|number:1 }}%</div>
                     <div class="progress-help help">completed</div>
