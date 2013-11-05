@@ -43,7 +43,6 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
             $gmFlash.info("Project saved successful!")
 
         promise.then null, (data) ->
-            console.error data
             $scope.checksleyErrors = data
 
     $scope.deleteMilestone = (milestone) ->
