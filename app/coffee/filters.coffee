@@ -39,12 +39,15 @@ SizeFormatFilter = ->
     return (input, precision) ->
         if isNaN(parseFloat(input)) or !isFinite(input)
             return '-'
+
+        if input == 0
+            return '0 bytes'
+
         if precision == 'undefined'
             precision = 1
 
         units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB']
         number = Math.floor(Math.log(input) / Math.log(1024))
-
         return (input / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' +
                units[number]
 
