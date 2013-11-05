@@ -24,42 +24,20 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
     $scope.stats = {}
 
     $scope.$on "stats:update", (ctx, data) ->
-        if data.notAssignedPoints != undefined
-            $scope.stats.notAssignedPoints = data.notAssignedPoints
-        if data.completedPoints != undefined
-            $scope.stats.completedPoints = data.completedPoints
-        if data.assignedPoints != undefined
-            $scope.stats.assignedPoints = data.assignedPoints
-
-        total = ($scope.stats.notAssignedPoints || 0) +
-                         ($scope.stats.assignedPoints || 0)
-
-        completed = $scope.stats.completedPoints || 0
-        $scope.stats.completedPercentage = if total then ((completed * 100) / total).toFixed(1) else 0.0
-        $scope.stats.totalPoints = total
+        $data.loadProjectStats($scope)
 
     $scope.$on "milestones:loaded", (ctx, data) ->
         if data.length > 0
             $rootScope.sprintId = data[0].id
 
     $data.loadProject($scope).then ->
-        $data.loadProjectStats($scope)
+        $scope.$emit("stats:update")
         $data.loadUsersAndRoles($scope)
 
 
 BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
-    calculateTotalPoints = (us) ->
-        total = 0
-        for roleId, pointId of us.points
-            total += $scope.constants.points[pointId].value
-        return total
-
     calculateStats = ->
-        total = 0
-        for us in $scope.unassingedUs
-            total += calculateTotalPoints(us)
-
-        $scope.$emit("stats:update", {"notAssignedPoints": total})
+        $scope.$emit("stats:update")
 
     generateTagList = ->
         tagsDict = {}
@@ -283,28 +261,8 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
     # Local scope variables
     $scope.sprintFormOpened = false
 
-    calculateTotalPoints = (us) ->
-        total = 0
-        for roleId, pointId of us.points
-            total += $scope.constants.points[pointId].value
-        return total
-
     calculateStats = ->
-        # TODO: make more functional this calculs
-        assigned = 0
-        completed = 0
-
-        for ml in $scope.milestones
-            for us in ml.user_stories
-                points = calculateTotalPoints(us)
-                assigned += points
-                if us.is_closed
-                    completed += points
-
-        $scope.$emit("stats:update", {
-            "assignedPoints": assigned,
-            "completedPoints": completed
-        })
+        $scope.$emit("stats:update")
 
     $scope.sprintSubmit = ->
         if $scope.form.save is undefined
