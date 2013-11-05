@@ -7,23 +7,23 @@
                     <div class="progress progress-success">
                         <div class="bar" style="width: {{ stats.completedPercentage }}%;"></div>
                     </div>
-                    <div class="progress-indicator indicator">{{ stats.completedPercentage }}%</div>
-                    <div class="progress-help help">completed points</div>
+                    <div class="progress-indicator indicator">{{ (projectStats.closed_points * 100) / projectStats.total_points|number:1 }}%</div>
+                    <div class="progress-help help">completed</div>
                 </div>
                 <div class="stats-box">
                     <div class="item">
-                        <div class="indicator">{{ stats.totalPoints }}</div>
-                        <div class="help">total <br />points</div>
+                        <div class="indicator">{{ projectStats.total_points }}</div>
+                        <div class="help">project points</div>
                     </div>
 
                     <div class="item">
-                        <div class="indicator">{{ stats.assignedPoints }}</div>
-                        <div class="help">assigned points</div>
+                        <div class="indicator">{{ projectStats.defined_points }}</div>
+                        <div class="help">defined points</div>
                     </div>
 
                     <div class="item">
-                        <div class="indicator">{{ stats.notAssignedPoints }}</div>
-                        <div class="help">not assigned points</div>
+                        <div class="indicator">{{ projectStats.closed_points }}</div>
+                        <div class="help">closed points</div>
                     </div>
                 </div>
                 <a class="button new-us-story" data-icon="m"
