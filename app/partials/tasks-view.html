@@ -37,7 +37,7 @@
                     Added by: <span>{{ constants.users[task.owner].full_name }}</span>
                 </li>
                 <li>
-                    Assigned to: <span>{{ constants.users[task.assigned_to].full_name }}</span>
+                    Assigned to: <span>{{ constants.users[task.assigned_to].full_name || "Unassigned" }}</span>
                 </li>
                 <li>
                     Created: <span>{{ task.created_date|momentFormat:"LLLL" }}</span>
@@ -89,7 +89,9 @@
                             <select class="assigned-to" name="priority"
                                     ng-model="form.assigned_to" data-type="number"
                                     data-error-message="Required"
-                                    ng-options="c.user as c.full_name for c in project.memberships"></select>
+                                    ng-options="c.user as c.full_name for c in project.memberships">
+                                <option value="">Unassigned</option>
+                            </select>
                         </fieldset>
                     </div>
 

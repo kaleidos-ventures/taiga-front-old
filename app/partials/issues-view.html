@@ -35,7 +35,7 @@
                     Added by: <span>{{ constants.users[issue.owner].full_name }}</span>
                 </li>
                 <li data-icon="u">
-                    Assigned to: <span>{{ constants.users[issue.assigned_to].full_name }}</span>
+                    Assigned to: <span>{{ constants.users[issue.assigned_to].full_name || "Unassigned" }}</span>
                 </li>
                 <li data-icon="w">
                     Created: <span>{{ issue.created_date|momentFormat:"LLLL" }}</span>
@@ -112,7 +112,9 @@
                             <select class="assigned-to" name="priority"
                                     ng-model="form.assigned_to" data-type="number"
                                     data-error-message="Required"
-                                    ng-options="c.user as c.full_name for c in project.memberships"></select>
+                                    ng-options="c.user as c.full_name for c in project.memberships">
+                                <option value="">Unassigned</option>
+                            </select>
                         </fieldset>
                     </div>
                     <div>
