@@ -21,7 +21,7 @@
                            ng-click="removeAttachment(attachment)"></a>
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
-                        <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
+                        <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>
                     </li>
                 </ul>
             </div>
@@ -38,13 +38,13 @@
                     Assigned to: <span>{{ constants.users[issue.assigned_to].full_name }}</span>
                 </li>
                 <li data-icon="w">
-                    Created: <span>{{ issue.created_date|momentFormat:"LLL" }}</span>
+                    Created: <span>{{ issue.created_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li data-icon="x">
-                    Updated: <span>{{ issue.modified_date|momentFormat:"LLL" }}</span>
+                    Updated: <span>{{ issue.modified_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li data-icon="w" ng-show="issue.finished_date">
-                    Finished: <span>{{ issue.finished_date|momentFormat:"LLL" }}</span>
+                    Finished: <span>{{ issue.finished_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li data-icon="y" class="status-{{ issue.status }}">
                     Status: <span>{{ constants.issueStatuses[issue.status].name }}</span>
@@ -189,7 +189,7 @@
             <li class="history-item" ng-repeat="hitem in historyItems">
                 <div class="title">
                     <span class="updated">Updated by {{ hitem.by }}</span>
-                    <span class="date">{{ hitem.modified_date|momentFormat:"LLL" }}</span>
+                    <span class="date">{{ hitem.modified_date|momentFormat:"LLLL" }}</span>
                 </div>
                 <div class="changes">
                     <div class="change" ng-repeat="change in hitem.changes">

@@ -23,7 +23,7 @@
                            ng-click="removeAttachment(attachment)"></a>
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
-                        <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
+                        <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>
                     </li>
                 </ul>
             </div>
@@ -40,13 +40,13 @@
                     Assigned to: <span>{{ constants.users[task.assigned_to].full_name }}</span>
                 </li>
                 <li>
-                    Created: <span>{{ task.created_date|momentFormat:"LLL" }}</span>
+                    Created: <span>{{ task.created_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li>
-                    Updated: <span>{{ task.modified_date|momentFormat:"LLL" }}</span>
+                    Updated: <span>{{ task.modified_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li ng.show="task.finished_date">
-                    Finished: <span>{{ task.finished_date|momentFormat:"LLL" }}</span>
+                    Finished: <span>{{ task.finished_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li class="status-{{ task.status }}">
                     Status: <span>{{ constants.taskStatuses[task.status].name }}</span>

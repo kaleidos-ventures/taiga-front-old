@@ -25,7 +25,7 @@
                            ng-click="removeAttachment(attachment)"></a>
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
-                        <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
+                        <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>
                     </li>
                 </ul>
             </div>
@@ -39,13 +39,13 @@
                     Added by: <span>{{ constants.users[userStory.owner].full_name }}</span>
                 </li>
                 <li>
-                    Created: <span>{{ userStory.created_date|momentFormat:"LLL" }}</span>
+                    Created: <span>{{ userStory.created_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li>
-                    Updated: <span>{{ userStory.modified_date|momentFormat:"LLL" }}</span>
+                    Updated: <span>{{ userStory.modified_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li ng-show="userStory.finish_date">
-                    Finished: <span>{{ userStory.finish_date|momentFormat:"LLL" }}</span>
+                    Finished: <span>{{ userStory.finish_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li>
                     Client requirement: <span>{{ userStory.client_requirement }}</span>

@@ -9,7 +9,7 @@
                     <li class="attachments-item" ng-repeat="attachment in attachments">
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
-                        <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
+                        <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>
                     </li>
                 </ul>
             </div>
@@ -39,7 +39,7 @@
                        ng-click="deleteAttachment(attachment)"></a>
                     <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                     <span>[{{ attachment.size|sizeFormat }}]</span>
-                    <span>on {{ attachment.created_date|momentFormat:"LLL" }}</span>
+                    <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>
                 </li>
             </ul>
             <input type="file" class="hidden" name="newAttachments" multiple="multiple"
