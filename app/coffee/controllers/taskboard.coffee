@@ -157,7 +157,7 @@ TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, rs) ->
 
 TaskboardTaskController = ($scope, $rootScope, $q) ->
     $scope.updateTaskAssignation = (task, id) ->
-        task.assigned_to = id ? id : null
+        task.assigned_to = id || null
         task.save()
 
     $scope.getTaskColorStyle = (task) ->
