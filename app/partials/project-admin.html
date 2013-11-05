@@ -43,6 +43,69 @@
                 <textarea id="description" name="description" ng-model="project.description"></textarea>
             </fieldset>
 
+            <fieldset class="project-default-points">
+                <label for="default_points">Default value for points selectors</label>
+                <select id="default_points" name="default_points"
+                        ng-model="project.default_points"
+                        ng-options="c.id as c.name for c in constants.pointsList|orderBy:'order'">
+                    <option value="">--------</option>
+                </select>
+            </fieldset>
+
+            <fieldset class="project-default-us-status">
+                <label for="default_us_status">Default value for US status selectors</label>
+                <select id="default_us_status" name="default_us_status"
+                        ng-model="project.default_us_status"
+                        ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'">
+                    <option value="">--------</option>
+                </select>
+            </fieldset>
+
+            <fieldset class="project-default-task-status">
+                <label for="default_task_status">Default value for task status selectors</label>
+                <select id="default_task_status" name="default_task_status"
+                        ng-model="project.default_task_status"
+                        ng-options="c.id as c.name for c in constants.taskStatusesList|orderBy:'order'">
+                    <option value="">--------</option>
+                </select>
+            </fieldset>
+
+            <fieldset class="project-default-priority">
+                <label for="default_priority">Default value for priority selectors</label>
+                <select id="default_priority" name="default_priority"
+                        ng-model="project.default_priority"
+                        ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'">
+                    <option value="">--------</option>
+                </select>
+            </fieldset>
+
+            <fieldset class="project-default-severity">
+                <label for="default_severity">Default value for severity selectors</label>
+                <select id="default_severity" name="default_severity"
+                        ng-model="project.default_severity"
+                        ng-options="c.id as c.name for c in constants.severitiesList|orderBy:'order'">
+                    <option value="">--------</option>
+                </select>
+            </fieldset>
+
+            <fieldset class="project-default-issue-type">
+                <label for="default_issue_type">Default value for issue type selectors</label>
+                <select id="default_issue_type" name="default_issue_type"
+                        ng-model="project.default_issue_type"
+                        ng-options="c.id as c.name for c in constants.issueTypesList|orderBy:'order'">
+                    <option value="">--------</option>
+                </select>
+            </fieldset>
+
+            <fieldset class="project-default-issue-status">
+                <label for="default_issue_status">Default value for issue status selectors</label>
+                <select id="default_issue_status" name="default_issue_status"
+                        ng-model="project.default_issue_status"
+                        ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'">
+                    <option value="">--------</option>
+                </select>
+            </fieldset>
+
             <fieldset class="project-submit">
                 <button type="submit" class="button button-edit" gm-checksley-submit-button>Save</button>
             </fieldset>
