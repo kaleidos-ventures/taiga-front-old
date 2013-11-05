@@ -177,18 +177,18 @@
                     </div>
                 </div>
             </div>
-            <div class="pagination issues-pagination">
+            <div class="pagination issues-pagination" ng-show="pagedItems.length > 1">
                 <ul>
                     <li ng-class="{disabled: currentPage == 0}">
-                        <a href ng-click="prevPage()">« Prev</a>
+                        <a href="" ng-click="prevPage()">« Prev</a>
                     </li>
                     <li ng-repeat="n in range(pagedItems.length)"
                         ng-class="{active: n == currentPage}"
-                    ng-click="setPage()">
-                        <a href ng-bind="n + 1">1</a>
+                        ng-click="setPage()">
+                        <a href="" ng-bind="n + 1">1</a>
                     </li>
                     <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
-                        <a href ng-click="nextPage()">Next »</a>
+                        <a href="" ng-click="nextPage()">Next »</a>
                     </li>
                 </ul>
             </div>
