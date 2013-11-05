@@ -88,8 +88,8 @@ GmDoomlineDirective = ->
             element.addClass("doomline")
 
         generateDoomline = (elements) ->
-            total_points = scope.project.total_story_points
-            current_sum = 0
+            total_points = scope.projectStats.total_points
+            current_sum = scope.projectStats.assigned_points
             added = false
 
             for element in elements
@@ -117,6 +117,7 @@ GmDoomlineDirective = ->
         scope.$on("userstories:loaded", reloadDoomlineLocation)
         scope.$on("sortable:changed", reloadDoomlineLocation)
         scope.$on("points:changed", reloadDoomlineLocation)
+        scope.$on("project_stats:loaded", reloadDoomlineLocation)
 
 
 GmSortableDirective = ($log) ->
