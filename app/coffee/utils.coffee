@@ -27,3 +27,6 @@ utils.defered = (func) ->
 
 utils.debounced = (timeout, func) ->
     return _.debounce(func, timeout)
+
+utils.truncate = (data, length) ->
+    return _.str.truncate(data, length)

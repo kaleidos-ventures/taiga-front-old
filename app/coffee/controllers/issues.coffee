@@ -87,9 +87,12 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     generateAssignedToTags = ->
         makeTag = (user) ->
             issues = _.filter($scope.issues, {"assigned_to": user.id})
-            return {"id": user.id, "name": user.username, "count": issues.length, "type": "assigned-to"}
+            return {
+                "id": user.user, "name": gm.utils.truncate(user.full_name, 17),
+                "count": issues.length, "type": "assigned-to"
+            }
 
-        $scope.assignedToTags = Lazy($scope.constants.usersList)
+        $scope.assignedToTags = Lazy($scope.project.memberships)
                                     .map(makeTag)
                                     .map(selectTagIfNotSelected).toArray()
 
