@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data, $confirm) ->
+UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data, $confirm, $gmFlash) ->
     $rootScope.pageSection = 'user-stories'
     $rootScope.pageBreadcrumb = [
         ["", ""],
@@ -89,7 +89,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         promise.then (userStory)->
             loadUserStory()
             saveNewAttachments()
-            $rootScope.$broadcast("flash:new", true, "The user story has been saved")
+            $gmFlash.info("The user story has been saved")
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -108,5 +108,5 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             $location.url("/project/#{projectId}/backlog")
 
 module = angular.module("greenmine.controllers.user-story", [])
-module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", UserStoryViewController])
+module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", UserStoryViewController])
 

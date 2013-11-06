@@ -285,7 +285,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
 
 IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data,
-                        $confirm) ->
+                        $confirm, $gmFlash) ->
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = [
         ["", ""],
@@ -351,7 +351,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             promise.then ->
                 loadIssue()
                 saveNewAttachments()
-                $rootScope.$broadcast("flash:new", true, "The issue has been saved")
+                $gmFlash.info("The issue has been saved")
 
             promise.then null, (data) ->
                 $scope.checksleyErrors = data
@@ -372,7 +372,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
                 $location.url("/project/#{projectId}/issues/")
 
 
-IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
+IssuesFormController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
     $scope.formOpened = false
 
     initialForm = ->
@@ -389,7 +389,7 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
             $scope.form = initialForm()
             $scope.close()
             $rootScope.$broadcast("issue-form:create", issue)
-            $rootScope.$broadcast("flash:new", true, "The issue has been saved")
+            $gmFlash.info("The issue has been saved")
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -415,7 +415,7 @@ module = angular.module("greenmine.controllers.issues", [])
 module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
                   '$q', 'resource', "$data", "$confirm", "$gmStorage", IssuesController])
 module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
-                  '$routeParams', '$q', 'resource', "$data", "$confirm",
+                  '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash",
                   IssuesViewController])
 module.controller("IssuesFormController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
-                  IssuesFormController])
+                  "$gmFlash", IssuesFormController])

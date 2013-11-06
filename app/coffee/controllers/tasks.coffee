@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm, rs, $data) ->
+TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm, rs, $data, $gmFlash) ->
     $rootScope.pageSection = 'tasks'
     $rootScope.pageBreadcrumb = [
         ["", ""],
@@ -77,7 +77,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
         promise.then (task) ->
             saveNewAttachments()
             loadTask()
-            $rootScope.$broadcast("flash:new", true, "The task has been saved")
+            $gmFlash.info("The task has been saved")
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -100,4 +100,4 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
 
 
 module = angular.module("greenmine.controllers.tasks", [])
-module.controller("TasksViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', '$confirm', 'resource', "$data", TasksViewController])
+module.controller("TasksViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', '$confirm', 'resource', "$data", "$gmFlash", TasksViewController])

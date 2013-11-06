@@ -121,7 +121,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
                         calculateStats()
 
 
-TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, rs) ->
+TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs) ->
     $scope.type = "create"
     $scope.formOpened = false
 
@@ -132,7 +132,7 @@ TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, rs) ->
             $rootScope.$broadcast("task-form:create", model)
             $scope.overlay.close()
             $scope.formOpened = false
-            $rootScope.$broadcast("flash:new", true, "The task has been saved")
+            $gmFlash.info("The task has been saved")
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -175,4 +175,4 @@ TaskboardTaskController = ($scope, $rootScope, $q) ->
 module = angular.module("greenmine.controllers.taskboard", [])
 module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', TaskboardTaskController])
 module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', TaskboardController])
-module.controller("TaskboardTaskFormController", ['$scope', '$rootScope', '$gmOverlay', 'resource', TaskboardTaskFormController])
+module.controller("TaskboardTaskFormController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', TaskboardTaskFormController])

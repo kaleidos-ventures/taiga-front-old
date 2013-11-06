@@ -217,7 +217,7 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
     $scope.$on("sortable:changed", resortUserStories)
 
 
-BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs) ->
+BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
     $scope.formOpened = false
 
     # Load data
@@ -253,7 +253,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs) ->
             closeModal()
             $scope.overlay.close()
             $scope.defered.resolve()
-            $rootScope.$broadcast("flash:new", true, "The user story has been saved")
+            $gmFlash.info("The user story has been saved")
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -268,7 +268,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs) ->
             $scope.form.revert()
 
 
-BacklogMilestonesController = ($scope, $rootScope, rs) ->
+BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash) ->
     # Local scope variables
     $scope.sprintFormOpened = false
 
@@ -290,7 +290,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
                 # last created milestone
                 $rootScope.sprintId = milestone.id
                 # Show a success message
-                $rootScope.$broadcast("flash:new", true, "The sprint has been saved")
+                $gmFlash.info("The sprint has been saved")
 
             promise.then null, (data) ->
                 $scope.checksleyErrors = data
@@ -300,7 +300,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
             promise.then (data) ->
                 $scope.form = {}
                 $scope.sprintFormOpened = false
-                $rootScope.$broadcast("flash:new", true, "The sprint has been saved")
+                $gmFlash.info("The sprint has been saved")
 
             promise.then null, (data) ->
                 $scope.checksleyErrors = data
@@ -372,7 +372,7 @@ BacklogMilestoneController = ($scope, rs) ->
 
 module = angular.module("greenmine.controllers.backlog", [])
 module.controller('BacklogMilestoneController', ['$scope', BacklogMilestoneController])
-module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', BacklogMilestonesController])
+module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', BacklogMilestonesController])
 module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', BacklogUserStoriesController])
 module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', BacklogController])
-module.controller('BacklogUserStoryModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', BacklogUserStoryModalController])
+module.controller('BacklogUserStoryModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', BacklogUserStoryModalController])
