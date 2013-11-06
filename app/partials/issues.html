@@ -235,15 +235,25 @@
                 </div>
                 <div class="fieldset-row">
                     <fieldset>
-                        <label>Tags</label>
-                        <input type="text" class="tags" name="tags" value="" ng-model="form.tags" gm-tags-input></input>
-                    </fieldset>
-                    <fieldset>
                         <label>Status</label>
                         <select name="status" ng-model="form.status" data-required="true"
                             data-type="number" data-error-message="Required"
                             ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'"></select>
                         </select>
+                    </fieldset>
+                    <fieldset>
+                        <label>Assigned to</label>
+
+                        <select name="assigned_to"
+                                ng-model="form.assigned_to" data-type="number"
+                                data-error-message="Required"
+                                ng-options="c.user as c.full_name for c in project.memberships">
+                            <option value="">Unassigned</option>
+                        </select>
+                    </fieldset>
+                    <fieldset>
+                        <label>Tags</label>
+                        <input type="text" class="tags" name="tags" value="" ng-model="form.tags" gm-tags-input></input>
                     </fieldset>
                 </div>
                 <div class="fieldset-row">
