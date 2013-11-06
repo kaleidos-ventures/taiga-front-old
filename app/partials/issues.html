@@ -128,7 +128,7 @@
                         <span class="tags">
                             <span ng-repeat="tag in issue.tags" class="label" gm-colorize-tag>{{ tag }}</span>
                         </span>
-                        <span class="title">{{ issue.subject }}</span>
+                        <span class="title">{{ issue.subject|truncate:60 }}</span>
                     </div>
 
                     <div class="issue-created-date">
