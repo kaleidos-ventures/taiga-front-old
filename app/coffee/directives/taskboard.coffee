@@ -15,10 +15,12 @@ gmTaskboardGraphConstructor = ($parse, rs) -> (scope, elm, attrs) ->
         ctx = $("#dashboard-chart").get(0).getContext("2d")
 
         options =
-            animation: false,
-            bezierCurve: false,
-            scaleFontFamily : "'ColabThi'",
+            animation: false
+            bezierCurve: false
+            scaleFontFamily : "'ColabThi'"
             scaleFontSize : 10
+            datasetFillXAxis: 0
+            datasetFillYAxis: 0
 
         data =
             labels : _.map(scope.milestoneStats.days, (day) -> day.name)
