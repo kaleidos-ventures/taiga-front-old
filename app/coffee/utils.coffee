@@ -13,7 +13,8 @@
 # limitations under the License.
 
 
-utils = @gm.utils = {}
+gm = @.gm
+utils = @.gm.utils = {}
 
 utils.delay = (timeout, func) ->
     return _.delay(func, timeout)
@@ -30,3 +31,18 @@ utils.debounced = (timeout, func) ->
 
 utils.truncate = (data, length) ->
     return _.str.truncate(data, length)
+
+gm.safeApply = (scope, fn) ->
+    if (scope.$$phase || scope.$root.$$phase)
+        fn()
+    else
+        scope.$apply(fn);
+
+
+# Function that return debounced function
+# but wrapping in safe $digest process.
+utils.safeDebounced = (scope, timeout, func) ->
+    wrapper = ->
+        gm.safeApply(scope, func)
+    utils.debounce(timeout, wrapper)
+

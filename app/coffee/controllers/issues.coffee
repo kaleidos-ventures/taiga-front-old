@@ -55,7 +55,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             $scope.selectedTags = _.reject($scope.selectedTags,
                                         (x) -> generateTagId(tag) == generateTagId(x))
 
-
         $gmStorage.set("issues-selected-tags", $scope.selectedMeta)
 
         # tag.selected = if tag.selected then false else true
@@ -312,7 +311,8 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             $rootScope.pageBreadcrumb = breadcrumb
 
     loadAttachments = ->
-        rs.getIssueAttachments(projectId, issueId).then (attachments) ->
+        promise = rs.getIssueAttachments(projectId, issueId)
+        promise.then (attachments) ->
             $scope.attachments = attachments
 
     saveNewAttachments = ->
@@ -326,8 +326,9 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
 
         promise = Q.all(promises)
         promise.then ->
-            $scope.newAttachments = []
-            loadAttachments()
+            gm.safeApply $scope, ->
+                $scope.newAttachments = []
+                loadAttachments()
 
     # Load initial data
     $data.loadProject($scope).then ->
@@ -342,17 +343,15 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         for key, value of $scope.form
             $scope.issue[key] = value
 
-        promise = $scope.issue.save()
+        gm.safeApply $scope, ->
+            promise = $scope.issue.save()
+            promise.then ->
+                loadIssue()
+                saveNewAttachments()
+                $rootScope.$broadcast("flash:new", true, "The issue has been saved")
 
-        promise.then ->
-            loadIssue()
-            saveNewAttachments()
-            $rootScope.$broadcast("flash:new", true, "The issue has been saved")
-
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
-
-        $scope.$apply()
+            promise.then null, (data) ->
+                $scope.checksleyErrors = data
 
     $scope.removeAttachment = (attachment) ->
         promise = $confirm.confirm("Are you sure?")
@@ -380,7 +379,7 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
             priority: $scope.project.default_priority
             severity: $scope.project.default_severity}
 
-    $scope.submit = gm.utils.debounced 400, ->
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         promise = rs.createIssue($rootScope.projectId, $scope.form)
 
         promise.then (issue) ->
