@@ -126,11 +126,16 @@ TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, rs) ->
     $scope.formOpened = false
 
     $scope.submit = ->
-        rs.createTask($scope.form).then (model) ->
+        promise = rs.createTask($scope.form)
+
+        promise.then (model) ->
             $rootScope.$broadcast("task-form:create", model)
             $scope.overlay.close()
             $scope.formOpened = false
             $rootScope.$broadcast("flash:new", true, "The task has been saved")
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
 
     $scope.close = ->
         $scope.formOpened = false

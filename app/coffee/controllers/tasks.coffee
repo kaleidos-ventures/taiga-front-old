@@ -58,10 +58,15 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
         for key, value of $scope.form
             $scope.task[key] = value
 
-        $scope.task.save().then (task) ->
+        promise = $scope.task.save()
+
+        promise.then (task) ->
             loadTask()
             saveNewAttachments()
             $rootScope.$broadcast("flash:new", true, "The task has been saved")
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
 
     saveNewAttachments = ->
         _.forEach $scope.newAttachments, (newAttach) ->

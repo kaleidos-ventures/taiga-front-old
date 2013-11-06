@@ -75,7 +75,7 @@
                 <form class="form-horizontal" gm-checksley-form="submit()">
                     <div>
                         <fieldset class="task-status">
-                            <label class="control-label" for="inputEmail">Status</label>
+                            <label class="control-label">Status</label>
 
                             <select class="status" name="status" ng-model="form.status"
                                     data-required="true" data-type="number"
@@ -86,7 +86,7 @@
                         <fieldset class="task-assigned">
                             <label>Assigned to</label>
 
-                            <select class="assigned-to" name="priority"
+                            <select class="assigned-to" name="assigned_to"
                                     ng-model="form.assigned_to" data-type="number"
                                     data-error-message="Required"
                                     ng-options="c.user as c.full_name for c in project.memberships">
@@ -98,7 +98,7 @@
                     <div>
                         <fieldset class="task-tags">
                             <label>Tags</label>
-                            <input type="text" name="status" value="" ng-model="form.tags"
+                            <input type="text" name="tags" ng-model="form.tags"
                                    gm-tags-input></input>
                         </fieldset>
                     </div>
@@ -111,17 +111,17 @@
 
                     <fieldset class="task-subject" ng-show="_showHiddenGroups">
                         <label for="inputEmail">Subject</label>
-                        <input type="text" ng-model="form.subject"></input>
+                        <input type="text" name="subject" ng-model="form.subject"></input>
                     </fieldset>
 
                     <fieldset class="task-description" ng-show="_showHiddenGroups">
                         <label for="inputEmail">Description</label>
-                        <textarea ng-model="form.description"></textarea>
+                        <textarea name="description" ng-model="form.description"></textarea>
                     </fieldset>
 
                     <fieldset class="task-comment">
                         <label for="inputEmail">Comment</label>
-                        <textarea ng-model="form.comment"></textarea>
+                        <textarea name="comment" ng-model="form.comment"></textarea>
                     </fieldset>
 
                     <fieldset class="task-attachment">

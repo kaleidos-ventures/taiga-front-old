@@ -40,6 +40,7 @@ LoginController = ($scope, $rootScope, $location, rs, $gmAuth) ->
 
 RegisterController = ($scope, $rootScope) ->
     $rootScope.pageSection = 'login'
+    # TODO
 
 
 RecoveryController = ($scope, $rootScope, $location, rs) ->
@@ -109,13 +110,22 @@ ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config) ->
 
     $scope.submitProfile = ->
         promise = $rootScope.auth.save()
+
         promise.then (user) ->
             $gmAuth.setUser(user)
             $gmFlash.info("Profile saved successful.")
 
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
+
     $scope.submitPassword = ->
-        rs.changePasswordForCurrentUser($scope.formData.password).then ->
+        promise = rs.changePasswordForCurrentUser($scope.formData.password)
+
+        promise.then (data) ->
             $gmFlash.info("Password changed successful.")
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
 
 
 module = angular.module("greenmine.controllers.auth", [])

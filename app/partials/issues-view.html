@@ -109,7 +109,7 @@
                         <fieldset class="issue-assigned">
                             <label>Assigned to</label>
 
-                            <select class="assigned-to" name="priority"
+                            <select class="assigned-to" name="assigned_to"
                                     ng-model="form.assigned_to" data-type="number"
                                     data-error-message="Required"
                                     ng-options="c.user as c.full_name for c in project.memberships">
@@ -120,7 +120,7 @@
                     <div>
                         <fieldset class="issue-tags">
                             <label>Tags</label>
-                            <input type="text" name="status" value="" ng-model="form.tags"
+                            <input type="text" name="tags" ng-model="form.tags"
                                    gm-tags-input></input>
                         </fieldset>
                     </div>
@@ -133,17 +133,17 @@
 
                     <fieldset class="issue-subject" ng-show="_showHiddenGroups">
                         <label for="inputEmail">Subject</label>
-                        <input type="text" ng-model="form.subject"></input>
+                        <input type="text" name="subject" ng-model="form.subject"></input>
                     </fieldset>
 
                     <fieldset class="issue-description" ng-show="_showHiddenGroups">
                         <label for="inputEmail">Description</label>
-                        <textarea ng-model="form.description"></textarea>
+                        <textarea name="description" ng-model="form.description"></textarea>
                     </fieldset>
 
                     <fieldset class="issue-comment">
                         <label for="inputEmail">Comment</label>
-                        <textarea ng-model="form.comment"></textarea>
+                        <textarea name="comment" ng-model="form.comment"></textarea>
                     </fieldset>
 
                     <fieldset class="issue-attachment">

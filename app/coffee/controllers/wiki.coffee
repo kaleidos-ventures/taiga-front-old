@@ -73,17 +73,29 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
     $scope.savePage = ->
         if $scope.page is undefined
             content = $scope.content
-            rs.createWikiPage(projectId, slug, content).then (page) ->
+
+            promise = rs.createWikiPage(projectId, slug, content)
+
+            promise.then (page) ->
                 $scope.page = page
                 saveNewAttachments()
                 $scope.formOpened = false
+
+            promise.then null, (data) ->
+                $scope.checksleyErrors = data
         else
             $scope.page.content = $scope.content
-            $scope.page.save().then (page) ->
+
+            promise = $scope.page.save()
+
+            promise.then (page) ->
                 $scope.page = page
                 $scope.formOpened = false
                 $scope.content = $scope.page.content
                 saveNewAttachments()
+
+            promise.then null, (data) ->
+                $scope.checksleyErrors = data
 
     $scope.deletePage = ->
         $scope.page.remove().then ->

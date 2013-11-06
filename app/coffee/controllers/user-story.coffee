@@ -70,10 +70,15 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         for key, value of $scope.form
             $scope.userStory[key] = value
 
-        $scope.userStory.save().then (userStory)->
+        promise = $scope.userStory.save()
+
+        promise.then (userStory)->
             loadUserStory()
             saveNewAttachments()
             $rootScope.$broadcast("flash:new", true, "The user story has been saved")
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
 
     saveNewAttachments = ->
         _.forEach $scope.newAttachments, (newAttach) ->

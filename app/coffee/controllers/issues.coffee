@@ -343,10 +343,14 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             $scope.issue[key] = value
 
         promise = $scope.issue.save()
+
         promise.then ->
             loadIssue()
             saveNewAttachments()
             $rootScope.$broadcast("flash:new", true, "The issue has been saved")
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
 
         $scope.$apply()
 
@@ -378,11 +382,15 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
 
     $scope.submit = gm.utils.debounced 400, ->
         promise = rs.createIssue($rootScope.projectId, $scope.form)
+
         promise.then (issue) ->
             $scope.form = initialForm()
             $scope.close()
             $rootScope.$broadcast("issue-form:create", issue)
             $rootScope.$broadcast("flash:new", true, "The issue has been saved")
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
 
     $scope.close = ->
         $scope.formOpened = false

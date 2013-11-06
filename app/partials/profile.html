@@ -32,7 +32,7 @@
 
                     <fieldset>
                         <label>Email:</label>
-                        <input type="text" data-type="email" name="last_name" data-required="true" value="" ng-model="auth.email"></input>
+                        <input type="text" data-type="email" name="email" data-required="true" value="" ng-model="auth.email"></input>
                     </fieldset>
 
                     <fieldset class="colorPicker">
@@ -55,7 +55,7 @@
                 <form class="form-horizontal" gm-checksley-form="submitPassword()">
                     <fieldset>
                         <label>Password:</label>
-                        <input type="password" ng-model="formData.password" data-minlength="6"></input>
+                        <input name="password" type="password" ng-model="formData.password" data-minlength="6"></input>
                     </fieldset>
 
                     <fieldset class="issue-edit-submit">

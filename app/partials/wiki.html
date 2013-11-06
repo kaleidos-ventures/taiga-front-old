@@ -22,7 +22,8 @@
     <div class="row-fluid" ng-show="formOpened">
         <div class="span12">
             <div class="wikiform-container">
-                <textarea id="wiki" ng-model="content" gm-markitup></textarea>
+                <textarea id="wiki" name="content" ng-model="content"
+                          gm-markitup></textarea>
             </div>
             <a class="add-attachment" data-icon="E" title="Add Attachments" href=""
                gm-forward-click="#attachment_file_input">Add Attachments</a>

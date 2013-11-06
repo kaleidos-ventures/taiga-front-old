@@ -154,7 +154,7 @@
                 <div class="fieldset-row">
                     <fieldset>
                         <label>Subject</label>
-                        <input class="subject" type="text" data-required="true"
+                        <input class="subject" type="text" name="subject" data-required="true"
                             data-error-message="Required"
                             ng-model="form.subject"></input>
                     </fieldset>
@@ -177,13 +177,13 @@
                 <div class="fieldset-row">
                     <fieldset>
                         <label>Tags</label>
-                        <input type="text" class="tags" name="status" value="" ng-model="form.tags" gm-tags-input></input>
+                        <input type="text" class="tags" name="tags" value="" ng-model="form.tags" gm-tags-input></input>
                     </fieldset>
                 </div>
                 <div class="fieldset-row">
                     <fieldset>
                         <label>Description</label>
-                        <textarea class="description" ng-model="form.description"></textarea>
+                        <textarea class="description" name="description" ng-model="form.description"></textarea>
                     </fieldset>
                 </div>
             </div>
