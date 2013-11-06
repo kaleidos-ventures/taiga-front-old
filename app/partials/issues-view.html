@@ -46,6 +46,9 @@
                 <li data-icon="w" ng-show="issue.finished_date">
                     Finished: <span>{{ issue.finished_date|momentFormat:"LLLL" }}</span>
                 </li>
+                <li data-icon="a" class="type-{{ issue.type }}">
+                    Type: <span>{{ constants.issueTypes[issue.type].name }}</span>
+                </li>
                 <li data-icon="y" class="status-{{ issue.status }}">
                     Status: <span>{{ constants.issueStatuses[issue.status].name }}</span>
                 </li>
@@ -78,6 +81,13 @@
 
                 <form class="form-horizontal" gm-checksley-form="submit()">
                     <div>
+                        <fieldset class="issue-type">
+                            <label>Type</label>
+                            <select name="type" ng-model="form.type" data-required="true"
+                                data-error-message="Required"
+                                ng-options="c.id as c.name for c in constants.issueTypesList|orderBy:'order'"></select>
+                            </select>
+                        </fieldset>
                         <fieldset class="issue-status">
                             <label class="control-label" for="inputEmail">Status</label>
 
@@ -86,7 +96,9 @@
                                     data-error-message="Required"
                                     ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'"></select>
                         </fieldset>
+                    </div>
 
+                    <div>
                         <fieldset class="issue-priority">
                             <label>Priority</label>
 
@@ -95,9 +107,6 @@
                                     data-type="number" data-error-message="Required"
                                     ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'"></select>
                         </fieldset>
-                    </div>
-
-                    <div>
                         <fieldset class="issue-severity">
                             <label>Severity</label>
 
@@ -106,6 +115,8 @@
                                     data-type="number" data-error-message="Required"
                                     ng-options="c.id as c.name for c in constants.severitiesList|orderBy:'order'"></select>
                         </fieldset>
+                    </div>
+                    <div>
                         <fieldset class="issue-assigned">
                             <label>Assigned to</label>
 
@@ -116,15 +127,12 @@
                                 <option value="">Unassigned</option>
                             </select>
                         </fieldset>
-                    </div>
-                    <div>
                         <fieldset class="issue-tags">
                             <label>Tags</label>
                             <input type="text" name="tags" ng-model="form.tags"
                                    gm-tags-input></input>
                         </fieldset>
                     </div>
-
                     <div ng-hide="_showHiddenGroups">
                         <p style="cursor: pointer" ng-click="_showHiddenGroups=true">
                             Edit <b>Subject</b> and <b>Description</b>...
