@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm) ->
+WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q) ->
     $rootScope.pageSection = 'wiki'
     $rootScope.projectId = parseInt($routeParams.pid, 10)
     $rootScope.pageBreadcrumb = [
@@ -31,6 +31,24 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
 
     $data.loadProject($scope)
 
+    loadAttachments = (page) ->
+        rs.getWikiPageAttachments(projectId, page.id).then (attachments) ->
+            $scope.attachments = attachments
+
+    saveNewAttachments = ->
+        if $scope.newAttachments.length == 0
+            return
+
+        promises = []
+        for attrachment in $scope.newAttachments
+            promise = rs.uploadWikiPageAttachment(projectId, $scope.page.id, attrachment)
+            promises.push(promise)
+
+        promise = Q.all(promises)
+        promise.then ->
+            $scope.newAttachments = []
+            loadAttachments($scope.page)
+
     promise = rs.getWikiPage(projectId, slug)
     promise.then (page) ->
         $scope.page = page
@@ -39,11 +57,6 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
 
     promise.then null, (data) ->
         $scope.formOpened = true
-
-    loadAttachments = (page) ->
-        rs.getWikiPageAttachments(projectId, page.id).then (attachments) ->
-            $scope.attachments = attachments
-        $scope.newAttachments = []
 
     $scope.openEditForm = ->
         $scope.formOpened = true
@@ -68,15 +81,9 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
             $scope.page.content = $scope.content
             $scope.page.save().then (page) ->
                 $scope.page = page
-                saveNewAttachments()
                 $scope.formOpened = false
-
-    saveNewAttachments = ->
-        _.forEach $scope.newAttachments, (newAttach) ->
-            rs.uploadWikiPageAttachment(projectId, $scope.page.id, newAttach).then (attach) ->
-                $scope.deleteNewAttachment(newAttach)
-                $scope.attachments.push(attach)
-                $scope.$apply()
+                $scope.content = $scope.page.content
+                saveNewAttachments()
 
     $scope.deletePage = ->
         $scope.page.remove().then ->
@@ -95,4 +102,5 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
 
 
 module = angular.module("greenmine.controllers.wiki", [])
-module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams', '$data', 'resource', "$confirm", WikiController])
+module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams',
+                                     '$data', 'resource', "$confirm", "$q", WikiController])
