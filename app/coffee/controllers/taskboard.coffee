@@ -88,6 +88,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
         options =
             status: $scope.project.default_task_status
             project: projectId
+            milestone: sprintId
 
         if us != undefined
             options.user_story = us.id
