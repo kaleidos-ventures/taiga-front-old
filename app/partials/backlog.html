@@ -70,20 +70,21 @@
                     <div class="us-options">Options</div>
                 </div>
                 <div class="flex-header second">
-<!--
+                    <!-- TODO
                     <div class="us-check"></div>
--->
+                    -->
                     <div class="us-title">
                         <div class="list-options">
                             <div class="option">
                                 <input id="show_tags" type="checkbox" ng-model="showTags"></input>
                                 <label for="show_tags">Show tags</label>
                             </div>
+                            <!-- TODO: total points col
                             <div class="option">
                                 <input id="show_total_points" type="checkbox" ng-model="showTotalPoints"></input>
-                                <!-- TODO: total points col -->
                                 <label for="show_total_points">Show total points (TODO)</label>
                             </div>
+                            -->
                             <div class="option" ng-show="selectedUserStories">
                                 <a href="" class="add-selected-us" data-icon="A"
                                     ng-click="moveSelectedUserStoriesToCurrentSprint()">Add selected US ({{ selectedStoryPoints }} points) to current sprint</a>
@@ -110,10 +111,6 @@
                             </div>
                         </div>
                         <div class="us-points">
-                            <!--
-                            <a href="" gm-popover="saveUsPoints(us, selectedId)"
-                                data-tmpl="#points-popover" data-auto-hide="true">{{ constants.points[us.points].name }}</a>
-                            -->
                             <div ng-repeat="role in constants.computableRolesList" class="role-point"
                                     gm-popover="saveUsPoints(us, role, selectedId)"
                                     data-tmpl="#points-popover" data-auto-hide="true">
