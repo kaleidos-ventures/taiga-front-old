@@ -88,6 +88,9 @@ GmDoomlineDirective = ->
             element.addClass("doomline")
 
         generateDoomline = (elements) ->
+            if not scope.projectStats?
+                return false
+
             total_points = scope.projectStats.total_points
             current_sum = scope.projectStats.assigned_points
             added = false
