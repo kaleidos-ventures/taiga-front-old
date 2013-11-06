@@ -1,8 +1,9 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container issues-content">
     <div class="new-issue">
-        <a class="button" gm-modal="#new-issue-modal"
+        <a class="new-button" gm-modal="#new-issue-modal"
            ng-click="openCreateIssueForm()" data-icon="a">New issue</a>
+       <a class="refresh-button" ng-click="refreshIssues()" data-icon="x">Refresh</a>
         <!--
         <fieldset class="show-graph">
             <label data-icon="k" for="show-graph">Show Graphs</label>

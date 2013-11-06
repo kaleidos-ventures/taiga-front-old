@@ -2080,20 +2080,34 @@ body.login {
             background: #669933;
             box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
             cursor: pointer;
-            &:hover{
-                background: #333333;
-                transition: all 0.3s ease-out;
+            &.new-button {
+                &:hover{
+                    background: #333333;
+                    transition: all 0.3s ease-out;
+                    &:before {
+                        position: relative;
+                        top: -30px;
+                        opacity: 0;
+                    }
+                }
                 &:before {
                     position: relative;
-                    top: -30px;
-                    opacity: 0;
+                    top: 2px;
+                    padding-right: 6px;
+                    transition: all 0.3s ease-out;
                 }
             }
-            &:before {
-                position: relative;
-                top: 2px;
-                padding-right: 6px;
-                transition: all 0.3s ease-out;
+            &.refresh-button {
+                &:hover{
+                    background: #333333;
+                    transition: all 0.3s linear;
+                }
+                &:before {
+                    position: relative;
+                    top: 2px;
+                    padding-right: 6px;
+                    transition: all 0.3s linear;
+                }
             }
         }
         /*.show-graph{

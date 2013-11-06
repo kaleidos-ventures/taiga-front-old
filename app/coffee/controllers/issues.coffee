@@ -230,6 +230,9 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $scope.openCreateIssueForm = ->
         $scope.$broadcast("issue-form:open")
 
+    $scope.refreshIssues = ->
+        loadIssues()
+
     $scope.$watch("sortingOrder", groupToPages)
     $scope.$watch("reverse", groupToPages)
 
