@@ -113,6 +113,9 @@
             </div>
             <div class="flex-separator"></div>
             <div class="flex-body">
+                <div class="empty" ng-show="pagedItems[currentPage].length == 0 || pagedItems.length == 0">
+                    There aren't issues to show.
+                </div>
                 <div class="issue-item" ng-repeat="issue in pagedItems[currentPage]">
                     <div class="issue-severity">
                         <a href="" gm-popover="updateIssueSeverity(issue, selectedId)"
