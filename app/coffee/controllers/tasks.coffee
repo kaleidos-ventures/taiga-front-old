@@ -45,6 +45,21 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
 
             $rootScope.pageBreadcrumb = breadcrumb
 
+    saveNewAttachments = ->
+        if $scope.newAttachments.length == 0
+            return
+
+        promises = []
+        for attachment in $scope.newAttachments
+            promise = rs.uploadTaskAttachment(projectId, taskId, attachment)
+            promises.push(promise)
+
+        promise = Q.all(promises)
+        promise.then ->
+            gm.safeApply $scope, ->
+                $scope.newAttachments = []
+                loadAttachments()
+
     # Load initial data
     $data.loadProject($scope).then ->
         $data.loadUsersAndRoles($scope).then ->
@@ -54,26 +69,18 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
     $scope.isSameAs = (property, id) ->
         return ($scope.task[property] == parseInt(id, 10))
 
-    $scope.submit = ->
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         for key, value of $scope.form
             $scope.task[key] = value
 
         promise = $scope.task.save()
-
         promise.then (task) ->
-            loadTask()
             saveNewAttachments()
+            loadTask()
             $rootScope.$broadcast("flash:new", true, "The task has been saved")
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
-
-    saveNewAttachments = ->
-        _.forEach $scope.newAttachments, (newAttach) ->
-            rs.uploadTaskAttachment(projectId, taskId, newAttach).then (attach) ->
-                $scope.removeNewAttachment(newAttach)
-                $scope.attachments.push(attach)
-                $scope.$apply()
 
     $scope.removeAttachment = (attachment) ->
         promise = $confirm.confirm("Are you sure?")

@@ -59,6 +59,20 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             for roleId, pointId of userStory.points
                 $scope.points[roleId] = $scope.constants.points[pointId].name
 
+    saveNewAttachments = ->
+        if $scope.newAttachments.length == 0
+            return
+
+        promises = []
+        for attachment in $scope.newAttachments
+            promise = rs.uploadUserStoryAttachment(projectId, userStoryId, attachment)
+            promises.push(promise)
+
+        promise = Q.all(promises)
+        promise.then ->
+            gm.safeApply $scope, ->
+                $scope.newAttachments = []
+                loadAttachments()
 
     # Load initial data
     $data.loadProject($scope).then ->
@@ -66,7 +80,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             loadUserStory()
             loadAttachments()
 
-    $scope.submit = gm.utils.debounced 400, ->
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         for key, value of $scope.form
             $scope.userStory[key] = value
 
@@ -79,13 +93,6 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
-
-    saveNewAttachments = ->
-        _.forEach $scope.newAttachments, (newAttach) ->
-            rs.uploadUserStoryAttachment(projectId, userStoryId, newAttach).then (attach) ->
-                $scope.removeNewAttachment(newAttach)
-                $scope.attachments.push(attach)
-                $scope.$apply()
 
     $scope.removeAttachment = (attachment) ->
         promise = $confirm.confirm("Are you sure?")

@@ -320,8 +320,8 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             return
 
         promises = []
-        for attrachment in $scope.newAttachments
-            promise = rs.uploadIssueAttachment(projectId, issueId, attrachment)
+        for attachment in $scope.newAttachments
+            promise = rs.uploadIssueAttachment(projectId, issueId, attachment)
             promises.push(promise)
 
         promise = Q.all(promises)
