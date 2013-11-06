@@ -86,7 +86,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
 
     $scope.openCreateTaskForm = (us) ->
         options =
-            status: $scope.constants.taskStatusesList[0].id
+            status: $scope.project.default_task_status
             project: projectId
 
         if us != undefined

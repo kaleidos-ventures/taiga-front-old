@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
     # Global Scope Variables
     $rootScope.pageSection = 'backlog'
@@ -165,8 +166,18 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
     $scope.$on "milestones:loaded", (ctx, data) ->
         $scope.milestones = data
 
+    initializeUsForm = ->
+        points = []
+        for role in $scope.constants.computableRolesList
+            points[role.id] = $scope.project.default_points
+
+        return {
+            points: points
+            project: $scope.projectId
+            status: $scope.project.default_us_status}
+
     $scope.openCreateUserStoryForm = ->
-        promise = $modal.open("user-story-form", {"us": {us:{}, points:{}, project:$scope.projectId}})
+        promise = $modal.open("user-story-form", {"us": initializeUsForm()})
         promise.then ->
             loadUserStories()
 
@@ -303,6 +314,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs) ->
 
             calculateStats()
             $rootScope.$broadcast("milestones:loaded", $scope.milestones)
+
 
 BacklogMilestoneController = ($scope, rs) ->
     calculateTotalPoints = (us) ->

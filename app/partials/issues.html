@@ -212,21 +212,21 @@
                     <fieldset class="type">
                         <label>Type</label>
                         <select name="type" ng-model="form.type" data-required="true"
-                            data-type="number" data-error-message="Required"
+                            data-error-message="Required"
                             ng-options="c.id as c.name for c in constants.issueTypesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                     <fieldset class="priority">
                         <label>Priority</label>
-                        <select name="status" ng-model="form.priority" data-required="true"
-                            data-type="number" data-error-message="Required"
+                        <select name="priority" ng-model="form.priority"
+                            data-required="true" data-error-message="Required"
                             ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                     <fieldset class="severity">
                         <label>Severity</label>
-                        <select  name="status" ng-model="form.severity" data-required="true"
-                            data-type="number" data-error-message="Required"
+                        <select name="severity" ng-model="form.severity"
+                            data-required="true" data-error-message="Required"
                             ng-options="c.id as c.name for c in constants.severitiesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
@@ -234,11 +234,11 @@
                 <div class="fieldset-row">
                     <fieldset>
                         <label>Tags</label>
-                        <input type="text" class="tags" name="status" value="" ng-model="form.tags" gm-tags-input></input>
+                        <input type="text" class="tags" name="tags" value="" ng-model="form.tags" gm-tags-input></input>
                     </fieldset>
                     <fieldset>
                         <label>Status</label>
-                        <select  name="status" ng-model="form.status" data-required="true"
+                        <select name="status" ng-model="form.status" data-required="true"
                             data-type="number" data-error-message="Required"
                             ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'"></select>
                         </select>

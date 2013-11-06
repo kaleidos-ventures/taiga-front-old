@@ -369,10 +369,17 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
 IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
     $scope.formOpened = false
 
+    initialForm = ->
+        return {
+            status: $scope.project.default_issue_status
+            type: $scope.project.default_issue_type
+            priority: $scope.project.default_priority
+            severity: $scope.project.default_severity}
+
     $scope.submit = gm.utils.debounced 400, ->
         promise = rs.createIssue($rootScope.projectId, $scope.form)
         promise.then (issue) ->
-            $scope.form = {}
+            $scope.form = initialForm()
             $scope.close()
             $rootScope.$broadcast("issue-form:create", issue)
             $rootScope.$broadcast("flash:new", true, "The issue has been saved")
@@ -381,8 +388,10 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
         $scope.formOpened = false
         $scope.overlay.close()
 
-    $scope.$on "issue-form:open", (ctx, form={}) ->
-        $scope.form = form
+    $scope.$on "issue-form:open", (ctx, form) ->
+        $scope.form = form || initialForm()
+        console.log $scope.form
+        console.log $scope.constants.issueStatusesList
         $scope.formOpened = true
 
         $scope.$broadcast("checksley:reset")
