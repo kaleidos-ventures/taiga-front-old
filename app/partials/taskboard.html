@@ -90,6 +90,11 @@
                                             </ul>
                                         </div>
 
+                                        <div class="us-status">
+                                            <div data-icon="I" ng-show="us.is_closed"></div>
+                                            <div data-icon="q" ng-show="!us.is_closed"></div>
+                                        </div>
+
                                         <div class="description">
                                             <p>{{ us.description|truncate:140 }}</p>
                                         </div>
