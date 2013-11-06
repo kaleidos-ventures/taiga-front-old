@@ -102,21 +102,19 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
             calculateStats()
 
     calculateStoryPoints = (selectedUserStories) ->
-        defered = $q.defer()
+        total = 0
 
-        gm.utils.defer ->
-            total = 0
+        if not selectedUserStories?
+            return 0
 
-            for us in selectedUserStories
-                for roleId, pointId of us.points
-                    pointsValue = $scope.constants.points[pointId].value
-                    if pointsValue is null
-                        pointsValue = 0
-                    total += pointsValue
+        for us in selectedUserStories
+            for roleId, pointId of us.points
+                pointsValue = $scope.constants.points[pointId].value
+                if pointsValue is null
+                    pointsValue = 0
+                total += pointsValue
 
-            defered.resolve(total)
-
-        return defered.promise
+        return total
 
     getSelectedUserStories = ->
         selected = _.filter($scope.unassingedUs, "selected")
@@ -155,10 +153,7 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
 
     $scope.changeUserStoriesSelection = ->
         selected = $scope.selectedUserStories = getSelectedUserStories()
-
-        promise = calculateStoryPoints(selected)
-        promise.then (points) ->
-            $scope.selectedStoryPoints = points
+        $scope.selectedStoryPoints = calculateStoryPoints(selected)
 
     $scope.$on("points:loaded", loadUserStories)
     $scope.$on("userstory-form:create", loadUserStories)
@@ -215,6 +210,10 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
 
     # Signal Handlign
     $scope.$on("sortable:changed", resortUserStories)
+    $scope.$on("sortable:changed", ->
+        selected = $scope.selectedUserStories = getSelectedUserStories()
+        $scope.selectedStoryPoints = calculateStoryPoints(selected)
+    )
 
 
 BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
