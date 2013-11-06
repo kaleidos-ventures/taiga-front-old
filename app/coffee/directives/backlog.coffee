@@ -151,7 +151,7 @@ GmSortableDirective = ($log) ->
                 if ngModel.$modelValue.length == 1
                     ui.item.sortable.moved = ngModel.$modelValue.splice(0, 1)[0]
                 else
-                    ui.item.sortable.moved =  ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0]
+                    ui.item.sortable.moved =  ngModel.$modelValue.splice(ui.item.sortable.index-1, 1)[0]
 
             onStop = (e, ui) ->
                 $log.info "GmSortableDirective.onStop"
@@ -168,7 +168,6 @@ GmSortableDirective = ($log) ->
                     ui.item.sortable.model.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved)
 
                     ui.item.sortable.scope.$emit("sortable:changed")
-                    scope.$emit("sortable:changed")
 
                 scope.$apply()
 
