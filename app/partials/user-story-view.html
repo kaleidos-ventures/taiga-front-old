@@ -35,16 +35,16 @@
                 <h3>User story data</h3>
             </div>
             <ul class="info-rows">
-                <li>
+                <li data-icon="t">
                     Added by: <span>{{ constants.users[userStory.owner].full_name }}</span>
                 </li>
-                <li>
+                <li data-icon="w">
                     Created: <span>{{ userStory.created_date|momentFormat:"LLLL" }}</span>
                 </li>
-                <li>
+                <li data-icon="x">
                     Updated: <span>{{ userStory.modified_date|momentFormat:"LLLL" }}</span>
                 </li>
-                <li ng-show="userStory.finish_date">
+                <li data-icon="w" ng-show="userStory.finish_date">
                     Finished: <span>{{ userStory.finish_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li>
@@ -53,7 +53,7 @@
                 <li>
                     Team requirement: <span>{{ userStory.team_requirement }}</span>
                 </li>
-                <li class="status-{{ userStory.status }}">
+                <li  data-icon="y" class="status-{{ userStory.status }}">
                     Status: <span>{{ constants.usStatuses[userStory.status].name }}</span>
                 </li>
                 <li>Points:
@@ -62,7 +62,7 @@
                     </span>
                     Total: {{ totalPoints }}
                 </li>
-                <li>
+                <li data-icon="z">
                     Attachments: <span>{{ attachments.length }}</span>
                 </li>
             </ul>

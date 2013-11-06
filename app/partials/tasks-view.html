@@ -33,25 +33,25 @@
                 <h3>Task data</h3>
             </div>
             <ul class="info-rows">
-                <li>
+                <li data-icon="t">
                     Added by: <span>{{ constants.users[task.owner].full_name }}</span>
                 </li>
-                <li>
+                <li data-icon="u">
                     Assigned to: <span>{{ constants.users[task.assigned_to].full_name || "Unassigned" }}</span>
                 </li>
-                <li>
+                <li data-icon="w">
                     Created: <span>{{ task.created_date|momentFormat:"LLLL" }}</span>
                 </li>
-                <li>
+                <li data-icon="x">
                     Updated: <span>{{ task.modified_date|momentFormat:"LLLL" }}</span>
                 </li>
-                <li ng.show="task.finished_date">
+                <li data-icon="w" ng.show="task.finished_date">
                     Finished: <span>{{ task.finished_date|momentFormat:"LLLL" }}</span>
                 </li>
-                <li class="status-{{ task.status }}">
+                <li data-icon="y" class="status-{{ task.status }}">
                     Status: <span>{{ constants.taskStatuses[task.status].name }}</span>
                 </li>
-                <li>
+                <li data-icon="z">
                     Attachments: <span>{{ attachments.length }}</span>
                 </li>
             </ul>
