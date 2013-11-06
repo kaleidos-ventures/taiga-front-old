@@ -167,7 +167,7 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
         $scope.milestones = data
 
     initializeUsForm = ->
-        points = []
+        points = {}
         for role in $scope.constants.computableRolesList
             points[role.id] = $scope.project.default_points
 
