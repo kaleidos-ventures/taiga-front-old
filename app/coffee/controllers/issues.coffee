@@ -315,6 +315,19 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         rs.getIssueAttachments(projectId, issueId).then (attachments) ->
             $scope.attachments = attachments
 
+    saveNewAttachments = ->
+        if $scope.newAttachments.length == 0
+            return
+
+        promises = []
+        for attrachment in $scope.newAttachments
+            promise = rs.uploadIssueAttachment(projectId, issueId, attrachment)
+            promises.push(promise)
+
+        promise = Q.all(promises)
+        promise.then ->
+            $scope.newAttachments = []
+            loadAttachments()
 
     # Load initial data
     $data.loadProject($scope).then ->
@@ -329,17 +342,13 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         for key, value of $scope.form
             $scope.issue[key] = value
 
-        $scope.issue.save().then ->
+        promise = $scope.issue.save()
+        promise.then ->
             loadIssue()
             saveNewAttachments()
             $rootScope.$broadcast("flash:new", true, "The issue has been saved")
 
-    saveNewAttachments = ->
-        _.forEach $scope.newAttachments, (newAttach) ->
-            rs.uploadIssueAttachment(projectId, issueId, newAttach).then (attach) ->
-                $scope.removeNewAttachment(newAttach)
-                $scope.attachments.push(attach)
-                $scope.$apply()
+        $scope.$apply()
 
     $scope.removeAttachment = (attachment) ->
         promise = $confirm.confirm("Are you sure?")
