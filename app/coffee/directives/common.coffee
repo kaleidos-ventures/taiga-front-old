@@ -290,6 +290,23 @@ GmRolePointsEditionDirective = ->
         if scope.form.points is undefined
             scope.form.points = {}
 
+GmColorizeUserDirective = ->
+    restrict: "A"
+    scope:
+        user: "="
+    link: (scope, elm, attrs) ->
+        updateColor = ->
+            element = angular.element(elm)
+            if scope.user and scope.user.color
+                element.css
+                    "padding": "0 5px"
+                    "border-left-width": "15px"
+                    "border-left-style": "solid"
+                    "border-left-color": scope.user.color
+                element.html scope.user.full_name
+
+        scope.$watch "user", (old_user, new_user) ->
+            updateColor()
 
 module = angular.module('greenmine.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
@@ -304,3 +321,4 @@ module.directive('gmChecksleySubmitButton', [GmChecksleySubmitButtonDirective])
 module.directive('gmTagsInput', [GmTagsInputDirective])
 module.directive('gmSearchBox', ["$rootScope", "$location", SearchBoxDirective])
 module.directive('gmRolePointsEdition', GmRolePointsEditionDirective)
+module.directive('gmColorizeUser', GmColorizeUserDirective)
