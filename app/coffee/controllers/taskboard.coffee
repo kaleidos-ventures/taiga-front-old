@@ -60,8 +60,8 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
 
     calculateStats = ->
         rs.getMilestoneStats($scope.sprintId).then (milestoneStats) ->
-            totalPoints = _.reduce(milestoneStats.total_points, (x, y) -> x + y)
-            completedPoints = _.reduce(milestoneStats.completed_points, (x, y) -> x + y)
+            totalPoints = _.reduce(milestoneStats.total_points, (x, y) -> x + y) || 0
+            completedPoints = _.reduce(milestoneStats.completed_points, (x, y) -> x + y) || 0
             $scope.stats = {
                 totalPoints: totalPoints
                 completedPoints: completedPoints
