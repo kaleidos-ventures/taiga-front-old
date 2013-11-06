@@ -25,7 +25,7 @@ ProjectListController = ($scope, $rootScope, rs) ->
 
 
 ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model,
-                          $confirm) ->
+                          $confirm, $location) ->
     $rootScope.pageSection = 'admin'
     $rootScope.pageBreadcrumb = [
         ["", ""],
@@ -44,6 +44,12 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
+
+    $scope.deleteProject = ->
+        promise = $confirm.confirm("Are you sure?")
+        promise.then () ->
+            $scope.project.remove().then ->
+                $location.url("/")
 
     $scope.deleteMilestone = (milestone) ->
         promise = $confirm.confirm("Are you sure?")
@@ -105,7 +111,7 @@ module = angular.module("greenmine.controllers.project", [])
 module.controller("ProjectListController", ['$scope', '$rootScope', 'resource',
                                             ProjectListController])
 module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routeParams",
-                                             "$data", "$gmFlash", "$model", "$confirm",
+                                             "$data", "$gmFlash", "$model", "$confirm", "$location",
                                              ProjectAdminController])
 module.controller("MembershipFormController", ["$scope", "$rootScope", 'resource',
                                                MembershipFormController])
