@@ -316,7 +316,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash) ->
             $rootScope.$broadcast("milestones:loaded", $scope.milestones)
 
 
-BacklogMilestoneController = ($scope, rs) ->
+BacklogMilestoneController = ($scope, rs, $gmFlash) ->
     calculateTotalPoints = (us) ->
         total = 0
         for roleId, pointId of us.points
@@ -358,6 +358,7 @@ BacklogMilestoneController = ($scope, rs) ->
 
         promise.then (data) ->
             $scope.editFormOpened = false
+            $gmFlash.info("The sprint has been modified")
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -371,7 +372,7 @@ BacklogMilestoneController = ($scope, rs) ->
 
 
 module = angular.module("greenmine.controllers.backlog", [])
-module.controller('BacklogMilestoneController', ['$scope', BacklogMilestoneController])
+module.controller('BacklogMilestoneController', ['$scope', 'resource', '$gmFlash', BacklogMilestoneController])
 module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', BacklogMilestonesController])
 module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', BacklogUserStoriesController])
 module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', BacklogController])
