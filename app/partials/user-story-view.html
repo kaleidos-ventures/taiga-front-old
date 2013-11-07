@@ -36,7 +36,7 @@
             </div>
             <ul class="info-rows">
                 <li data-icon="t">
-                    Added by: <span>{{ constants.users[userStory.owner].full_name }}</span>
+                    Added by: <span gm-colorize-user="constants.users[userStory.owner]">{{ constants.users[userStory.owner].full_name }}</span>
                 </li>
                 <li data-icon="w">
                     Created: <span>{{ userStory.created_date|momentFormat:"LLLL" }}</span>

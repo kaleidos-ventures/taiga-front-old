@@ -152,7 +152,7 @@
                         <div class="button-item" ng-show="issue.assigned_to" >
                             <i class="icon-user"></i>
                             <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-auto-hide="true">
-                               <span gm-colorize-user user="constants.users[issue.assigned_to]">
+                               <span gm-colorize-user="constants.users[issue.assigned_to]">
                                    {{ constants.users[issue.assigned_to].full_name }}
                                </span>
                             </a>
@@ -305,7 +305,8 @@
         <ul>
             <li><a class="btn-accept" href="">Unassigned</a>
             <li ng-repeat="obj in project.memberships">
-                <a class="btn-accept" href="" data-id="{{ obj.user }}">{{ obj.full_name }}</a>
+                <a class="btn-accept" href="" data-id="{{ obj.user }}"
+                   gm-colorize-user="constants.users[obj.user]">{{ obj.full_name }}</a>
             </li>
         </ul>
     </div>

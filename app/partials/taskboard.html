@@ -206,7 +206,7 @@
         <ul>
             <li class="btn-accept"><a data-id="" href="">Unassigned</a>
             <li ng-repeat="obj in project.memberships" class="btn-accept" data-id="{{ obj.user }}">
-                <a href="">{{ obj.full_name }}</a>
+                <a href="" gm-colorize-user="constants.users[obj.user]">{{ obj.full_name }}</a>
             </li>
         </ul>
     </div>

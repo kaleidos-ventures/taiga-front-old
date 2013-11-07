@@ -142,7 +142,7 @@
                 <a href="" data-icon="h"  title="Delete Member" ng-click="deleteMember(mbr)"></a>
                 <span>[<a href="" gm-popover="updateMemberRole(mbr, selectedId)" data-auto-hide="true"
                           data-tmpl="#role-popover">{{ mbr.role_name }}</a>]</span>
-                {{ mbr.full_name }}
+                <span class="user" gm-colorize-user="constants.users[mbr.user]">{{ mbr.full_name }}</span>
             </li>
         </ul>
     </div>

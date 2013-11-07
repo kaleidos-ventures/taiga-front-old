@@ -34,10 +34,10 @@
             </div>
             <ul class="info-rows">
                 <li data-icon="t">
-                    Added by: <span>{{ constants.users[task.owner].full_name }}</span>
+                    Added by: <span gm-colorize-user="constants.users[task.owner]">{{ constants.users[task.owner].full_name }}</span>
                 </li>
                 <li data-icon="u">
-                    Assigned to: <span>{{ constants.users[task.assigned_to].full_name || "Unassigned" }}</span>
+                    Assigned to: <span gm-colorize-user="constants.users[task.assigned_to]">{{ constants.users[task.assigned_to].full_name || "Unassigned" }}</span>
                 </li>
                 <li data-icon="w">
                     Created: <span>{{ task.created_date|momentFormat:"LLLL" }}</span>

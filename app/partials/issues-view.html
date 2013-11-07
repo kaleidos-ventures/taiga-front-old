@@ -32,10 +32,10 @@
             </div>
             <ul class="info-rows">
                 <li data-icon="t">
-                    Added by: <span>{{ constants.users[issue.owner].full_name }}</span>
+                    Added by: <span gm-colorize-user="constants.users[issue.owner]">{{ constants.users[issue.owner].full_name }}</span>
                 </li>
                 <li data-icon="u">
-                    Assigned to: <span>{{ constants.users[issue.assigned_to].full_name || "Unassigned" }}</span>
+                    Assigned to: <span gm-colorize-user="constants.users[issue.assigned_to]">{{ constants.users[issue.assigned_to].full_name || "Unassigned" }}</span>
                 </li>
                 <li data-icon="w">
                     Created: <span>{{ issue.created_date|momentFormat:"LLLL" }}</span>
