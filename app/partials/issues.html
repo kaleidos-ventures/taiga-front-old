@@ -277,6 +277,13 @@
 <script type="text/template" id="issue-preview-popover">
     <div class="issue-preview-popover">
         <section>
+            <strong>ID:</strong> #{{ issue.ref }}
+        </section>
+        <section>
+            <strong>Created by:</strong><br />
+            <span gm-colorize-user="constants.users[issue.owner]">{{ constants.users[issue.owner].full_name }}</span>
+        </section>
+        <section>
             <strong>Subject:</strong><br />{{ issue.subject }}
         </section>
         <section>
