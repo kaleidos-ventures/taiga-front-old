@@ -304,6 +304,11 @@ GmColorizeUserDirective = ($parse)->
                     "border-left-style": "solid"
                     "border-left-color": user.color
                 })
+            else
+                element.css({
+                    "padding": "0 0"
+                    "border-left-width": "0px"
+                })
 
         scope.$watch attrs.gmColorizeUser, () ->
             updateColor()

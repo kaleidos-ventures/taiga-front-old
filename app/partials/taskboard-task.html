@@ -2,9 +2,10 @@
 
     <div class="title">{{ task.subject }}</div>
 
-    <div class="assign-to" gm-colorize-user="constants.users[task.assigned_to]">
+    <div class="assign-to">
         <a href="" gm-popover="updateTaskAssignation(task, selectedId)"
-            data-tmpl="#developers-popover" data-auto-hide="false">
+            data-tmpl="#developers-popover" data-auto-hide="false"
+            gm-colorize-user="constants.users[task.assigned_to]">
                 {{ constants.users[task.assigned_to].username || "Unassigned" }}</a>
     </div>
     <a href="{{ urls.tasksUrl(projectId, task.id) }}" class="edit-task">Edit</a>
