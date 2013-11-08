@@ -74,6 +74,17 @@
                     </div>
                 </li>
                 <li>
+                    <h3>Added by:</h3>
+                    <div class="tags-list-sbox">
+                        <!-- TODO - Add into tag a background-color with user own color from admin -->
+                        <div class="tag" ng-repeat="tag in addedByTags" ng-click="selectTag(tag)"
+                                ng-class="{selected: isTagSelected(tag)}">
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
+                    </div>
+                </li>
+                <li>
                     <h3>Assigned to:</h3>
                     <div class="tags-list-sbox">
                         <!-- TODO - Add into tag a background-color with user own color from admin -->
@@ -104,11 +115,12 @@
             <div class="flex-header" gm-issues-sort>
                 <div data-field="severity" class="issue-sortable-field issue-severity">Severity</div>
                 <div data-field="subject" class="issue-sortable-field issue-title">Subject</div>
+                <div data-field="added_by" class="issue-sortable-field issue-added-by">Added by</div>
                 <div data-field="created_date" class="issue-sortable-field issue-created-date">Created date</div>
                 <div data-field="modified_date" class="issue-sortable-field issue-modified-date">Modified date</div>
                 <div data-field="status" class="issue-sortable-field issue-state">Status</div>
                 <div data-field="priority" class="issue-sortable-field issue-priority">Priority</div>
-                <div data-field="assigned_to" class="issue-sortable-field issue-assignedto">Assigned to</div>
+                <div data-field="assigned_to" class="issue-sortable-field issue-assigned-to">Assigned to</div>
 
                 <div class="issue-options">Options</div>
             </div>
@@ -132,6 +144,12 @@
                         <span class="title">{{ issue.subject|truncate:60 }}</span>
                     </div>
 
+                    <div class="issue-added-by">
+                        <span gm-colorize-user="constants.users[issue.owner]">
+                             {{ constants.users[issue.owner].full_name }}
+                        </span>
+                    </div>
+
                     <div class="issue-created-date">
                         <span>{{ issue.created_date|momentFormat:"LLL" }}</span>
                     </div>
@@ -148,7 +166,7 @@
                             class="priority-{{ constants.priorities[issue.priority].name|lowercase }}"
                                     data-tmpl="#priority-popover" data-auto-hide="true">{{ constants.priorities[issue.priority].name }}</a>
                     </div>
-                    <div class="issue-assignedto">
+                    <div class="issue-assigned-to">
                         <div class="button-item" ng-show="issue.assigned_to" >
                             <i class="icon-user"></i>
                             <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-auto-hide="true">

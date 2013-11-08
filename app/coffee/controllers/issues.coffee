@@ -83,9 +83,23 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
         $scope.tags = tags
 
+    generateAddedByTags = ->
+        makeTag = (user) ->
+            issues = _.filter($scope.issues, {"owner": user.id})
+            return {
+                "id": user.user, "name": gm.utils.truncate(user.full_name, 17),
+                "count": issues.length, "type": "added-by"
+            }
+
+        $scope.addedByTags = Lazy($scope.project.memberships)
+                                    .map(makeTag)
+                                    .map(selectTagIfNotSelected).toArray()
+
     generateAssignedToTags = ->
         makeTag = (user) ->
             issues = _.filter($scope.issues, {"assigned_to": user.id})
+            console.log "assigned-to", user.full_name, issues.length
+            console.log $scope.issues
             return {
                 "id": user.user, "name": gm.utils.truncate(user.full_name, 17),
                 "count": issues.length, "type": "assigned-to"
@@ -125,6 +139,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     regenerateTags = ->
         $scope.selectedTags = []
         generateTagList()
+        generateAddedByTags()
         generateAssignedToTags()
         generateSeverityTags()
         generatePriorityTags()
@@ -152,6 +167,16 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
                     item.__hidden = true
                 else
                     item.__hidden = false
+
+        # Filter by added by tags
+        selectedUsers = _.filter($scope.addedByTags, (x) -> isTagSelected(x))
+
+        if not _.isEmpty(selectedUsers)
+            for item in $scope.issues
+                continue if item.__hidden
+
+                result = _.some(selectedUsers, {"id": item.owner})
+                item.__hidden = true if not result
 
         # Filter by assigned to tags
         selectedUsers = _.filter($scope.assignedToTags, (x) -> isTagSelected(x))
