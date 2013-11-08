@@ -237,16 +237,15 @@
                     </fieldset>
                 </div>
                 <div class="fieldset-row">
-                    <fieldset>
+                    <fieldset class="status">
                         <label>Status</label>
                         <select name="status" ng-model="form.status" data-required="true"
                             data-type="number" data-error-message="Required"
                             ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
-                    <fieldset>
+                    <fieldset class="assigned-to">
                         <label>Assigned to</label>
-
                         <select name="assigned_to"
                                 ng-model="form.assigned_to" data-type="number"
                                 data-error-message="Required"
