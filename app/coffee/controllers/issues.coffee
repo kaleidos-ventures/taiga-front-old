@@ -87,7 +87,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         makeTag = (user) ->
             issues = _.filter($scope.issues, {"owner": user.user})
             return {
-                "id": user.user, "name": gm.utils.truncate(user.full_name, 17),
+                "id": user.user, "name": gm.utils.truncate(user.full_name, 14),
                 "count": issues.length, "type": "added-by"
             }
 
@@ -101,7 +101,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             console.log "assigned-to", user.full_name, issues.length
             console.log $scope.issues
             return {
-                "id": user.user, "name": gm.utils.truncate(user.full_name, 17),
+                "id": user.user, "name": gm.utils.truncate(user.full_name, 14),
                 "count": issues.length, "type": "assigned-to"
             }
 

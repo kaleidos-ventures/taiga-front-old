@@ -37,7 +37,15 @@
                 <div class="tags-list-sbox">
                     <div class="tag {{ tag.type }}-{{ tag.name | slugify }} selected" ng-repeat="tag in selectedTags"
                          ng-click="selectTag(tag)">
-                        <div class="name">{{ tag.name }}</div>
+                        <div class="name"
+                            ng-hide="tag.type == 'assigned-to' || tag.type == 'added-by'">
+                            {{ tag.name }}
+                        </div>
+                        <div class="name"
+                            ng-show="tag.type == 'assigned-to' || tag.type == 'added-by'"
+                            gm-colorize-user="constants.users[tag.id]">
+                            {{ tag.name }}
+                        </div>
                         <div class="count">{{ tag.count }}</div>
                     </div>
                 </div>
@@ -76,10 +84,11 @@
                 <li>
                     <h3>Added by:</h3>
                     <div class="tags-list-sbox">
-                        <!-- TODO - Add into tag a background-color with user own color from admin -->
                         <div class="tag" ng-repeat="tag in addedByTags" ng-click="selectTag(tag)"
                                 ng-class="{selected: isTagSelected(tag)}">
-                            <div class="name">{{ tag.name }}</div>
+                            <div class="name" gm-colorize-user="constants.users[tag.id]">
+                                {{ tag.name }}
+                            </div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
@@ -87,10 +96,11 @@
                 <li>
                     <h3>Assigned to:</h3>
                     <div class="tags-list-sbox">
-                        <!-- TODO - Add into tag a background-color with user own color from admin -->
                         <div class="tag" ng-repeat="tag in assignedToTags" ng-click="selectTag(tag)"
                                 ng-class="{selected: isTagSelected(tag)}">
-                            <div class="name">{{ tag.name }}</div>
+                            <div class="name" gm-colorize-user="constants.users[tag.id]">
+                                {{ tag.name }}
+                            </div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
