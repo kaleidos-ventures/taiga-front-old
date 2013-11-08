@@ -98,8 +98,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     generateAssignedToTags = ->
         makeTag = (user) ->
             issues = _.filter($scope.issues, {"assigned_to": user.user})
-            console.log "assigned-to", user.full_name, issues.length
-            console.log $scope.issues
             return {
                 "id": user.user, "name": gm.utils.truncate(user.full_name, 14),
                 "count": issues.length, "type": "assigned-to"
@@ -425,8 +423,6 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
 
     $scope.$on "issue-form:open", (ctx, form) ->
         $scope.form = form || initialForm()
-        console.log $scope.form
-        console.log $scope.constants.issueStatusesList
         $scope.formOpened = true
 
         $scope.$broadcast("checksley:reset")
