@@ -161,7 +161,7 @@ GmSortableDirective = ($log) ->
                     end = ui.item.index()
 
                     # Reorder array and apply change to scope
-                    ui.item.sortable.model.$modelValue.splice(end-1, 0, ui.item.sortable.model.$modelValue.splice(start-1, 1)[0])
+                    ui.item.sortable.model.$modelValue.splice(end, 0, ui.item.sortable.model.$modelValue.splice(start, 1)[0])
                     scope.$emit("sortable:changed")
                 else
                     ui.item.sortable.moved.order = ui.item.index()
