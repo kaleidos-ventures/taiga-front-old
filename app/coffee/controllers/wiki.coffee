@@ -70,7 +70,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
             $scope.formOpened = false
             $scope.content = $scope.page.content
 
-    $scope.savePage = ->
+    $scope.savePage = gm.utils.safeDebounced $scope, 400, ->
         if $scope.page is undefined
             content = $scope.content
 

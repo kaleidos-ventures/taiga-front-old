@@ -245,7 +245,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash)
         $scope.form = form
         $scope.formOpened = true
 
-    $scope.submit = gm.utils.debounced 400, ->
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         promise = rs.createUserStory($scope.form)
 
         promise.then (data) ->
@@ -274,7 +274,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash) ->
     calculateStats = ->
         $scope.$emit("stats:update")
 
-    $scope.sprintSubmit = ->
+    $scope.sprintSubmit = gm.utils.safeDebounced $scope, 400, ->
         if $scope.form.save is undefined
             promise = rs.createMilestone($scope.projectId, $scope.form)
 
@@ -352,7 +352,7 @@ BacklogMilestoneController = ($scope, rs, $gmFlash) ->
     $scope.showEditForm = () ->
         $scope.editFormOpened = true
 
-    $scope.submit = gm.utils.debounced 400, ->
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         promise = $scope.ml.save()
 
         promise.then (data) ->

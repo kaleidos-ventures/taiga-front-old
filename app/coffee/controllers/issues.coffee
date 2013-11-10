@@ -365,7 +365,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
     $scope.isSameAs = (property, id) ->
         return ($scope.issue[property] == parseInt(id, 10))
 
-    $scope.submit = gm.utils.debounced 400, ->
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         for key, value of $scope.form
             $scope.issue[key] = value
 

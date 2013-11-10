@@ -126,7 +126,7 @@ TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs) ->
     $scope.type = "create"
     $scope.formOpened = false
 
-    $scope.submit = ->
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         promise = rs.createTask($scope.form)
 
         promise.then (model) ->
