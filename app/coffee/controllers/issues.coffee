@@ -22,16 +22,10 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
     $rootScope.projectId = parseInt($routeParams.pid, 10)
     $scope.filtersOpened = false
-
-    # Pagination variables
-    $scope.filteredItems = []
-    $scope.groupedItems = []
-    $scope.itemsPerPage = 15
-    $scope.pagedItems = []
-    $scope.currentPage = 0
-
+    $scope.filtersData = {}
     $scope.sortingOrder = 'severity'
-    $scope.reverse = true
+    $scope.sortingReverse = true
+    $scope.page = 1
 
     #####
     ## Tags generation functions
@@ -57,7 +51,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
         $gmStorage.set("issues-selected-tags", $scope.selectedMeta)
 
-        # tag.selected = if tag.selected then false else true
         $scope.currentPage = 0
         filterIssues()
 
@@ -67,72 +60,72 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         return tag
 
     generateTagList = ->
-        tagsDict = {}
         tags = []
 
-        for iss in $scope.issues
-            for tag in iss.tags
-                if tagsDict[tag] is undefined
-                    tagsDict[tag] = 1
-                else
-                    tagsDict[tag] += 1
-
-        for key, val of tagsDict
-            tag = {name:key, count:val, type: "tag"}
+        for tagname, tagcount of $scope.filtersData.tags
+            tag = {id: tagname, name:tagname, count:tagcount, type: "tags"}
             tags.push(selectTagIfNotSelected(tag))
 
         $scope.tags = tags
 
-    generateAddedByTags = ->
-        makeTag = (user) ->
-            issues = _.filter($scope.issues, {"owner": user.user})
-            return {
-                "id": user.user, "name": gm.utils.truncate(user.full_name, 14),
-                "count": issues.length, "type": "added-by"
-            }
-
-        $scope.addedByTags = Lazy($scope.project.memberships)
-                                    .map(makeTag)
-                                    .map(selectTagIfNotSelected).toArray()
-
     generateAssignedToTags = ->
         makeTag = (user) ->
-            issues = _.filter($scope.issues, {"assigned_to": user.user})
-            return {
-                "id": user.user, "name": gm.utils.truncate(user.full_name, 14),
-                "count": issues.length, "type": "assigned-to"
+
+        tags = []
+        for userId, count of $scope.filtersData.assigned_to
+            user = $scope.constants.users[userId]
+            tag = {
+                "id": user.id,
+                "name": gm.utils.truncate(user.full_name, 17),
+                "count": count,
+                "type": "assigned-to"
             }
 
-        $scope.assignedToTags = Lazy($scope.project.memberships)
-                                    .map(makeTag)
-                                    .map(selectTagIfNotSelected).toArray()
+            tags.push(selectTagIfNotSelected(tag))
+
+        $scope.assignedToTags = tags
 
     generateStatusTags = ->
-        makeTag = (status) ->
-            issues = _.filter($scope.issues, {"status": status.id})
-            return {"id": status.id, "name": status.name, "count": issues.length, "type":"status"}
+        tags = []
+        for statusId, count of $scope.filtersData.statuses
+            status = $scope.constants.issueStatuses[statusId]
+            tag = {"id": status.id, "name": status.name, "count": count, "type":"status"}
+            tags.push(selectTagIfNotSelected(tag))
 
-        $scope.statusTags = Lazy($scope.constants.issueStatusesList)
-                                .map(makeTag)
-                                .map(selectTagIfNotSelected).toArray()
+        $scope.statusTags = tags
 
     generateSeverityTags = ->
-        makeTag = (severity) ->
-            issues = _.filter($scope.issues, {"severity": severity.id})
-            return {"id": severity.id, "name": severity.name, "count": issues.length, "type": "severity"}
+        tags = []
+        for severityId, count of $scope.filtersData.severities
+            severity = $scope.constants.severities[severityId]
+            tag = {"id": severity.id, "name": severity.name, "count": count, "type": "severity"}
+            tags.push(selectTagIfNotSelected(tag))
 
-        $scope.severityTags = Lazy($rootScope.constants.severitiesList)
-                                .map(makeTag)
-                                .map(selectTagIfNotSelected).toArray()
+        $scope.severityTags = tags
 
     generatePriorityTags = ->
-        makeTag = (priority) ->
-            issues = _.filter($scope.issues, {"priority": priority.id})
-            return {"id": priority.id, "name": priority.name, "count": issues.length, "type": "priority"}
+        tags = []
+        for priorityId, count of $scope.filtersData.priorities
+            priority = $scope.constants.priorities[priorityId]
+            tag = {"id": priority.id, "name": priority.name, "count": count, "type": "priority"}
+            tags.push(selectTagIfNotSelected(tag))
 
-        $scope.priorityTags = Lazy($rootScope.constants.prioritiesList)
-                                .map(makeTag)
-                                .map(selectTagIfNotSelected).toArray()
+        $scope.priorityTags = tags
+
+    generateAddedByTags = ->
+        tags = []
+        for userId, count of $scope.filtersData.owners
+            user = $scope.constants.users[userId]
+            tag = {
+                "id": user.id,
+                "name": gm.utils.truncate(user.full_name, 17),
+                "count": count,
+                "type": "owner"
+            }
+
+            tags.push(selectTagIfNotSelected(tag))
+
+        $scope.addedByTags = tags
 
     regenerateTags = ->
         $scope.selectedTags = []
@@ -143,109 +136,50 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         generatePriorityTags()
         generateStatusTags()
 
-    #####
-    ## Filters functions
-    #####
+    # $scope.range = (start, end) ->
+    #     ret = []
+    #     if not end?
+    #         end = start
+    #         start = 0
+
+    #     ret.push(i) for i in [start..end-1]
+    #     return ret
+
+    getFilterParams = ->
+        params = {"page": $scope.page}
+
+        for key, value of _.groupBy($scope.selectedTags, "type")
+            params[key] = _.map(value, "id").join(",")
+
+        return params
 
     filterIssues = ->
-        for issue in $scope.issues
-            issue.__hidden = false
+        params = getFilterParams()
 
-        # Filter by generic tags
-        # selectedTagsIds = _($scope.tags).filter("selected").map("name").value()
-        selectedTagsIds = _($scope.tags)
-                            .filter((x) -> isTagSelected(x))
-                            .map("name").value()
+        rs.getIssues($scope.projectId, params).then (result) ->
+            $scope.issues = result.models
+            $scope.count = result.count
+            $scope.paginatedBy = result.paginatedBy
 
-        if selectedTagsIds.length > 0
-            for item in $scope.issues
-                interSection = _.intersection(selectedTagsIds, item.tags)
+    loadIssuesData = ->
+        $scope.selectedMeta = $gmStorage.get("issues-selected-tags") or {}
 
-                if interSection.length == 0
-                    item.__hidden = true
-                else
-                    item.__hidden = false
+        promise = rs.getIssuesFiltersData($scope.projectId).then (data) ->
+            $scope.filtersData = data
+            regenerateTags()
+            return data
 
-        # Filter by added by tags
-        selectedUsers = _.filter($scope.addedByTags, (x) -> isTagSelected(x))
+        return promise
 
-        if not _.isEmpty(selectedUsers)
-            for item in $scope.issues
-                continue if item.__hidden
+    # Load initial data
+    $data.loadProject($scope).then ->
+        $data.loadUsersAndRoles($scope).then ->
+            loadIssuesData().then ->
+                filterIssues()
 
-                result = _.some(selectedUsers, {"id": item.owner})
-                item.__hidden = true if not result
-
-        # Filter by assigned to tags
-        selectedUsers = _.filter($scope.assignedToTags, (x) -> isTagSelected(x))
-
-        if not _.isEmpty(selectedUsers)
-            for item in $scope.issues
-                continue if item.__hidden
-
-                result = _.some(selectedUsers, {"id": item.assigned_to})
-                item.__hidden = true if not result
-
-        # Filter by priority tags
-        selectedPriorities = _.filter($scope.priorityTags, (x) -> isTagSelected(x))
-        if not _.isEmpty(selectedPriorities)
-            for item in $scope.issues
-                continue if item.__hidden
-
-                result = _.some(selectedPriorities, {"id": item.priority})
-                item.__hidden = true if not result
-
-        # Filter by severity tags
-        selectedSeverities = _.filter($scope.severityTags, (x) -> isTagSelected(x))
-        if not _.isEmpty(selectedSeverities)
-            for item in $scope.issues
-                continue if item.__hidden
-
-                result = _.some(selectedSeverities, {"id": item.severity})
-                item.__hidden = true if not result
-
-        # Filter by status tags
-        selectedStatuses = _.filter($scope.statusTags, (x) -> isTagSelected(x))
-        if not _.isEmpty(selectedStatuses)
-            for item in $scope.issues
-                continue if item.__hidden
-
-                result = _.some(selectedStatuses, {"id": item.status})
-                item.__hidden = true if not result
-
-        groupToPages()
-
-    groupToPages = ->
-        $scope.pagedItems = []
-
-        issues = _.reject($scope.issues, "__hidden")
-        issues = $filter("orderBy")(issues, $scope.sortingOrder, $scope.reverse)
-
-        for issue, i in issues
-            if i % $scope.itemsPerPage == 0
-                $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [issue]
-            else
-                $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push(issue)
-
-    $scope.prevPage = ->
-        if $scope.currentPage > 0
-            $scope.currentPage--
-
-    $scope.nextPage = ->
-        if $scope.currentPage < ($scope.pagedItems.length - 1)
-            $scope.currentPage++
-
-    $scope.setPage = ->
-        $scope.currentPage = this.n
-
-    $scope.range = (start, end) ->
-        ret = []
-        if not end?
-            end = start
-            start = 0
-
-        ret.push(i) for i in [start..end-1]
-        return ret
+    $scope.setPage = (n) ->
+        $scope.page = n
+        filterIssues()
 
     $scope.selectTag = selectTag
     $scope.isTagSelected = isTagSelected
@@ -254,23 +188,11 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         $scope.$broadcast("issue-form:open")
 
     $scope.refreshIssues = ->
-        loadIssues()
+        filterIssues()
 
-    $scope.$watch("sortingOrder", groupToPages)
-    $scope.$watch("reverse", groupToPages)
+    # $scope.$watch("sortingOrder", groupToPages)
+    # $scope.$watch("reverse", groupToPages)
 
-    loadIssues = ->
-        $scope.selectedMeta = $gmStorage.get("issues-selected-tags") or {}
-
-        rs.getIssues($scope.projectId).then (issues) ->
-            $scope.issues = issues
-            regenerateTags()
-            filterIssues()
-
-    # Load initial data
-    $data.loadProject($scope).then ->
-        $data.loadUsersAndRoles($scope).then ->
-            loadIssues()
 
     $scope.updateIssueAssignation = (issue, id) ->
         issue.assigned_to = id || null
@@ -284,6 +206,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
     $scope.updateIssueSeverity = (issue, id) ->
         issue.severity = id
+
         issue.save()
         regenerateTags()
 
@@ -299,6 +222,9 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
             regenerateTags()
             filterIssues()
+
+    # $scope.$watch("sortingOrder", groupToPages)
+    # $scope.$watch("reverse", groupToPages)
 
     $scope.$on "issue-form:create", (ctx, issue) ->
         $scope.issues.push(issue)

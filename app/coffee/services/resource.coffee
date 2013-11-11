@@ -14,11 +14,13 @@
 
 ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service = {}
-    headers = ->
+    headers = (diablePagination=true) ->
+        data = {}
         token = $gmStorage.get('token')
 
-        data = {"X-DISABLE-PAGINATION": "true"}
         data["Authorization"] = "Bearer #{token}" if token
+        data["X-DISABLE-PAGINATION"] = "true" if diablePagination
+
         return data
 
     queryMany = (name, params, options) ->
@@ -40,7 +42,13 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         return defered.promise
 
     queryOne = (name, id, params, options, cls) ->
-        defaultHttpParams = {method: "GET", headers:  headers(), url: "#{$gmUrls.api(name)}/#{id}"}
+        defaultHttpParams = {method: "GET", headers:  headers()}
+
+        if id
+            defaultHttpParams.url = "#{$gmUrls.api(name)}/#{id}"
+        else
+            defaultHttpParams.url = "#{$gmUrls.api(name)}"
+
         if not _.isEmpty(params)
             defaultHttpParams.params = params
 
@@ -57,6 +65,30 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return defered.promise
 
+    queryManyPaginated = (name, params, options, cls) ->
+        defaultHttpParams = {method: "GET", headers:  headers(false), url: $gmUrls.api(name)}
+        if not _.isEmpty(params)
+            defaultHttpParams.params = params
+
+        httpParams =  _.extend({}, defaultHttpParams, options)
+        defered = $q.defer()
+
+        promise = $http(httpParams)
+        promise.success (data, status, headersFn) ->
+            currentHeaders = headersFn()
+
+            result = {}
+            result.models = _.map(data, (attrs) -> $model.make_model(name, attrs, cls))
+            result.count = currentHeaders["x-pagination-count"]
+            result.current = currentHeaders["x-pagination-current"]
+            result.paginatedBy = currentHeaders["x-paginated-by"]
+
+            defered.resolve(result)
+
+        promise.error (data, status) ->
+            defered.reject()
+
+        return defered.promise
 
     # Resource Methods
 
@@ -143,6 +175,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     # Get a project stats
     service.getProjectStats = (projectId) ->
         return queryOne("projects", "#{projectId}/stats")
+
+    service.getIssuesFiltersData = (projectId) ->
+        return queryOne("projects", "#{projectId}/issue_filters_data")
 
     # Create a memberships
     service.createMembership = (form) ->
@@ -236,11 +271,15 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return queryMany("tasks", params)
 
-    service.getIssues = (projectId) ->
-        return queryMany("issues", {project:projectId})
+    service.getIssues = (projectId, filters={}) ->
+        parameters = _.extend({}, filters, {project:projectId})
+        return queryManyPaginated("issues", parameters)
 
     service.getIssue = (projectId, issueId) ->
         return queryOne("issues", issueId, {project:projectId})
+
+    service.getIssuesFiltersData = (projectId) ->
+        return queryOne("projects", "#{projectId}/issue_filters_data")
 
     service.getTask = (projectId, taskId) ->
         return queryOne("tasks", taskId, {project:projectId})

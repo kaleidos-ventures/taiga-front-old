@@ -313,6 +313,84 @@ GmColorizeUserDirective = ($parse)->
         scope.$watch attrs.gmColorizeUser, () ->
             updateColor()
 
+GmPaginator = ($parse) ->
+    # This directive build a pagination
+    # block. It has assumed that page_size is 10
+    #
+    # Also, it assume that scope contains a:
+    #  - count variable
+    #  - setPage(page) function
+
+    restrict: "A"
+    require: "?ngModel"
+    templateUrl: "partials/paginator.html"
+    link: (scope, elm, attrs, ctrl) ->
+        element = angular.element(elm)
+        element.hide()
+
+        scope.paginatorHidden = true
+
+        setPageVar = element.data('set-page-var') or 'setPage'
+        pageVar = element.data('page-var') or 'page'
+        countVar = element.data('count-var') or 'count'
+        after_current = element.data('after-current') or 5
+        before_current = element.data('before-current') or 5
+        at_begin = element.data('at-begin') or 2
+        at_end = element.data('at-end') or 2
+
+        scope.paginatorSetPage = (page) ->
+            return scope[setPageVar](page)
+
+        scope.paginatorGetPage = () ->
+            return scope[pageVar]
+
+        renderPaginator = ->
+            if scope[countVar] is undefined
+                return
+
+            numPages = scope[countVar] / scope.paginatedBy
+            if parseInt(numPages, 10) < numPages
+                numPages = parseInt(numPages, 10) + 1
+            else
+                numPages = parseInt(numPages, 10)
+
+            scope.paginationItems = []
+            scope.paginatorHidden = false
+
+            if scope[pageVar] > 1
+                scope.showPrevious = true
+            else
+                scope.showPrevious = false
+
+            if scope[pageVar] == numPages
+                scope.showNext = false
+            else
+                scope.showNext = true
+
+            if numPages <= 1
+                element.hide()
+            else
+                for i in [1..numPages]
+                    if i == (scope[pageVar] + after_current) and numPages > (scope[pageVar] + after_current + at_end)
+                        scope.paginationItems.push(classes:"dots", type:"dots")
+                    else if i == (scope[pageVar] - before_current) and scope[pageVar] > (at_begin + before_current)
+                        scope.paginationItems.push(classes:"dots", type:"dots")
+                    else if i > (scope[pageVar] + after_current) and i <= (numPages - at_end)
+                    else if i < (scope[pageVar] - before_current) and i > at_begin
+                    else if i == scope[pageVar]
+                        scope.paginationItems.push(classes:"page active", num:i, type:"page-active")
+                    else
+                        scope.paginationItems.push(classes:"page", num:i, type:"page")
+
+                element.show()
+
+            scope.$apply()
+
+        scope.$watch countVar, (value) ->
+            _.defer(renderPaginator)
+
+        scope.$watch pageVar, (value) ->
+            _.defer(renderPaginator)
 
 module = angular.module('greenmine.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
@@ -328,3 +406,4 @@ module.directive('gmTagsInput', [GmTagsInputDirective])
 module.directive('gmSearchBox', ["$rootScope", "$location", SearchBoxDirective])
 module.directive('gmRolePointsEdition', GmRolePointsEditionDirective)
 module.directive('gmColorizeUser', GmColorizeUserDirective)
+module.directive('gmPaginator', ['$parse', GmPaginator])
