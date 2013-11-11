@@ -184,9 +184,11 @@
             <p class="empty" ng-show="milestones.length == 0">
                 There isn't Sprints. Create a new one.
             </p>
-            <div class="sprint-sbox" ng-repeat="ml in milestones"
+
+            <!-- Xaviju FIXME: Removed the "first" class. Now all are first. -->
+            <div class="sprint-sbox first" ng-repeat="ml in milestones"
                  ng-controller="BacklogMilestoneController"
-                 ng-class="{first: $first}" ng-mouseover="showEditOption=true"
+                 ng-mouseover="showEditOption=true"
                  ng-mouseout="showEditOption=false">
                 <div class="header">
                     <div class="title">
@@ -214,13 +216,24 @@
                                 <div class="help">closed</div>
                             </div>
                         </div>
+                        <div class="us-viewer" ng-show="ml.closed" ng-switch="viewUSs">
+                           <!-- Xaviju FIXME: Added icons to show/hide actions -->
+                           <a data-icon="B" class="show" href="" ng-switch-when="false"
+                               ng-click="toggleViewUSs()">
+                               Show USs
+                           </a>
+                           <a data-icon="B" class="hide" href="" ng-switch-default
+                              ng-click="toggleViewUSs()">
+                               Hide USs
+                           </a>
+                        </div>
                     </div>
                 </div>
-                <div class="body">
-                    <div class="us-list" ng-hide="editFormOpened">
+                <div class="body" >
+                    <div class="us-list" ng-hide="editFormOpened || !viewUSs">
                         <div class="us-table-list">
                             <div class="flex-body" gm-sortable=".us-container .flex-body"
-                                    ng-model="milestones[$index].user_stories">
+                                    ng-model="milestones[$index].user_stories" >
                                 <div class="us-item" ng-repeat="us in ml.user_stories|orderBy:'is_closed'">
                                     <div class="us-icon">
                                         <div data-icon="I" ng-show="us.is_closed"></div>
@@ -254,6 +267,10 @@
                                 <input type="text" gm-kalendae data-required="true"
                                        name="estimated_finish"
                                        ng-model="ml.estimated_finish"></input>
+                            </div>
+                            <div class="subfield checkbox">
+                                <input type="checkbox" id="closed_{{ ml.id }}" name="closed" ng-model="ml.closed"></input>
+                                <label for="closed_{{ ml.id }}"> Is closed</label>
                             </div>
                         </fieldset>
                         <div class="btn-group">

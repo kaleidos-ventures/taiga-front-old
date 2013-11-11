@@ -348,9 +348,13 @@ BacklogMilestoneController = ($scope, rs, $gmFlash) ->
                 item.save()
 
     $scope.editFormOpened = false
+    $scope.viewUSs = not $scope.ml.closed
 
     $scope.showEditForm = () ->
         $scope.editFormOpened = true
+
+    $scope.toggleViewUSs = ->
+        $scope.viewUSs = not $scope.viewUSs
 
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         promise = $scope.ml.save()
