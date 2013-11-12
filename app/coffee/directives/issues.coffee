@@ -1,25 +1,36 @@
-GmIssuesSortDirective = ($parse) -> (scope, elm, attrs) ->
-    element = angular.element(elm)
+GmIssuesSortDirective = ($parse) ->
+    link: (scope, elm, attrs) ->
+        element = angular.element(elm)
+        callback = $parse(attrs.gmIssuesSort)
 
-    element.on "click", ".issue-sortable-field", (event) ->
-        target = angular.element(event.currentTarget)
-        if target.data('field') == scope.sortingOrder
-            scope.reverse = !scope.reverse
-        else
-            scope.sortingOrder = target.data('field')
-            scope.reverse = false
+        element.on "click", ".issue-sortable-field", (event) ->
+            target = angular.element(event.currentTarget)
+            if target.data('field') == scope.sortingOrder
+                scope.sortingReverse = !scope.sortingReverse
+            else
+                scope.sortingOrder = target.data('field')
+                scope.sortingReverse = false
 
-        icon = target.find("i")
-        icon.removeClass("icon-chevron-up")
-        icon.removeClass("icon-chevron-down")
+            locals = {
+                field: target.data('field')
+                reverse: scope.sortingReverse
+            }
 
-        if scope.reverse
-            icon.addClass("icon-chevron-up")
-        else
-            icon.addClass("icon-chevron-down")
+            scope.$apply ->
+                callback(scope, locals)
 
-        event.preventDefault()
-        scope.$digest()
+            icon = target.find("i")
+            icon.removeClass("icon-chevron-up")
+            icon.removeClass("icon-chevron-down")
+
+            if scope.sortingReverse
+                icon.addClass("icon-chevron-up")
+            else
+                icon.addClass("icon-chevron-down")
+
+            event.preventDefault()
+            # scope.$emit("sortingOrder")
+            # scope.$apply()
 
 
 GmPendingIssueGraphDirective = -> (scope, elm, attrs) ->

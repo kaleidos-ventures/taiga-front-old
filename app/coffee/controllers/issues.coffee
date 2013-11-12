@@ -23,7 +23,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $rootScope.projectId = parseInt($routeParams.pid, 10)
     $scope.filtersOpened = false
     $scope.filtersData = {}
-    $scope.sortingOrder = 'severity'
+    $scope.sortingOrder = 'created_date'
     $scope.sortingReverse = true
     $scope.page = 1
 
@@ -136,26 +136,23 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         generatePriorityTags()
         generateStatusTags()
 
-    # $scope.range = (start, end) ->
-    #     ret = []
-    #     if not end?
-    #         end = start
-    #         start = 0
-
-    #     ret.push(i) for i in [start..end-1]
-    #     return ret
-
     getFilterParams = ->
+
         params = {"page": $scope.page}
 
         for key, value of _.groupBy($scope.selectedTags, "type")
             params[key] = _.map(value, "id").join(",")
 
+        params["order_by"] = $scope.sortingOrder
+        if $scope.sortingReverse
+            params["order_by"] = "-#{params["order_by"]}"
+
         return params
 
     filterIssues = ->
-        params = getFilterParams()
         $scope.$emit("spinner:start")
+
+        params = getFilterParams()
 
         rs.getIssues($scope.projectId, params).then (result) ->
             $scope.issues = result.models
@@ -192,10 +189,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $scope.refreshIssues = ->
         filterIssues()
 
-    # $scope.$watch("sortingOrder", groupToPages)
-    # $scope.$watch("reverse", groupToPages)
-
-
     $scope.updateIssueAssignation = (issue, id) ->
         issue.assigned_to = id || null
         issue.save()
@@ -217,6 +210,11 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         issue.save()
         regenerateTags()
 
+    $scope.changeSort = (field, reverse) ->
+        $scope.sortingOrder = field
+        $scope.sortingReverse = reverse
+        filterIssues()
+
     $scope.removeIssue = (issue) ->
         issue.remove().then ->
             index = $scope.issues.indexOf(issue)
@@ -224,9 +222,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
             regenerateTags()
             filterIssues()
-
-    # $scope.$watch("sortingOrder", groupToPages)
-    # $scope.$watch("reverse", groupToPages)
 
     $scope.$on "issue-form:create", (ctx, issue) ->
         $scope.issues.push(issue)
