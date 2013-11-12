@@ -140,7 +140,6 @@ GmIssuesPieGraphDirective = ($parse, rs) -> (scope, elm, attrs) ->
                 color: x['color']
             }
         )
-        console.log data
 
         new Chart(ctx).Pie(data, options)
 
