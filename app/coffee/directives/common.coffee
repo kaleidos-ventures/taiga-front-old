@@ -313,10 +313,20 @@ GmColorizeUserDirective = ($parse)->
         scope.$watch attrs.gmColorizeUser, () ->
             updateColor()
 
+GmSpinner = ($parse, $rootScope) ->
+    restrict: "A"
+    link: (scope, element, attrs) ->
+        el = angular.element("<div/>", {"class": "spinner"})
+        element.append(el)
+
+        $rootScope.$on "spinner:start", ->
+            el.show()
+
+        $rootScope.$on "spinner:stop", ->
+            el.hide()
+
+
 GmPaginator = ($parse) ->
-    # This directive build a pagination
-    # block. It has assumed that page_size is 10
-    #
     # Also, it assume that scope contains a:
     #  - count variable
     #  - setPage(page) function
@@ -339,20 +349,28 @@ GmPaginator = ($parse) ->
         at_end = element.data('at-end') or 2
 
         scope.paginatorSetPage = (page) ->
-            return scope[setPageVar](page)
+            numPages = getNumPages()
+            console.log page, numPages
+            if page <= numPages and page > 0
+                scope[setPageVar](page)
 
         scope.paginatorGetPage = () ->
             return scope[pageVar]
 
-        renderPaginator = ->
-            if scope[countVar] is undefined
-                return
-
+        getNumPages = ->
             numPages = scope[countVar] / scope.paginatedBy
             if parseInt(numPages, 10) < numPages
                 numPages = parseInt(numPages, 10) + 1
             else
                 numPages = parseInt(numPages, 10)
+
+            return numPages
+
+        renderPaginator = ->
+            if scope[countVar] is undefined
+                return
+
+            numPages = getNumPages()
 
             scope.paginationItems = []
             scope.paginatorHidden = false
@@ -407,3 +425,4 @@ module.directive('gmSearchBox', ["$rootScope", "$location", SearchBoxDirective])
 module.directive('gmRolePointsEdition', GmRolePointsEditionDirective)
 module.directive('gmColorizeUser', GmColorizeUserDirective)
 module.directive('gmPaginator', ['$parse', GmPaginator])
+module.directive('gmSpinner', ['$parse', '$rootScope', GmSpinner])

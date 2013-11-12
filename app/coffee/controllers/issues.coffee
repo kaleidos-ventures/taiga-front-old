@@ -155,11 +155,13 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
     filterIssues = ->
         params = getFilterParams()
+        $scope.$emit("spinner:start")
 
         rs.getIssues($scope.projectId, params).then (result) ->
             $scope.issues = result.models
             $scope.count = result.count
             $scope.paginatedBy = result.paginatedBy
+            $scope.$emit("spinner:stop")
 
     loadIssuesData = ->
         $scope.selectedMeta = $gmStorage.get("issues-selected-tags") or {}
