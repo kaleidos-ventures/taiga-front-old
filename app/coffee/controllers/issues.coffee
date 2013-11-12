@@ -175,6 +175,8 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         $data.loadUsersAndRoles($scope).then ->
             loadIssuesData().then ->
                 filterIssues()
+    rs.getIssuesStats($scope.projectId).then (data) ->
+        $scope.issuesStats = data
 
     $scope.setPage = (n) ->
         $scope.page = n

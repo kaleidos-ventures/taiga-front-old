@@ -19,11 +19,10 @@ GmBacklogGraphDirective = ($parse) -> (scope, elm, attrs) ->
         width = element.width()
         height = width/6
 
-        element.empty()
         chart = $("<canvas />").attr("width", width).attr("height", height).attr("id", "burndown-chart")
+        element.empty()
         element.append(chart)
-
-        ctx = $("#burndown-chart").get(0).getContext("2d")
+        ctx = chart.get(0).getContext("2d")
 
         options =
             animation: false
@@ -85,11 +84,9 @@ GmTaskboardGraphDirective = ($parse, rs) -> (scope, elm, attrs) ->
         height = width/6
 
         chart = $("<canvas />").attr("width", width).attr("height", height).attr("id", "dashboard-chart")
-
         element.empty()
         element.append(chart)
-
-        ctx = $("#dashboard-chart").get(0).getContext("2d")
+        ctx = chart.get(0).getContext("2d")
 
         options =
             animation: false
@@ -123,6 +120,36 @@ GmTaskboardGraphDirective = ($parse, rs) -> (scope, elm, attrs) ->
         if scope.milestoneStats
             redrawChart()
 
+GmIssuesPieGraphDirective = ($parse, rs) -> (scope, elm, attrs) ->
+    element = angular.element(elm)
+
+    redrawChart = (dataToDraw) ->
+        width = element.width()
+        height = width
+        chart = $("<canvas />").attr("width", width).attr("height", height)
+
+        element.empty()
+        element.append(chart)
+
+        ctx = chart.get(0).getContext("2d")
+
+        options = {}
+        data = _.map(_.values(dataToDraw), (x) ->
+            {
+                value : x['count'],
+                color: x['color']
+            }
+        )
+        console.log data
+
+        new Chart(ctx).Pie(data, options)
+
+    scope.$watch attrs.gmIssuesPieGraph, () ->
+        value = scope.$eval(attrs.gmIssuesPieGraph)
+        if value
+            redrawChart(value)
+
 module = angular.module("greenmine.directives.graphs", [])
 module.directive("gmBacklogGraph", GmBacklogGraphDirective)
 module.directive("gmTaskboardGraph", ["$parse", "resource", GmTaskboardGraphDirective])
+module.directive("gmIssuesPieGraph", ["$parse", "resource", GmIssuesPieGraphDirective])

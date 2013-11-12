@@ -176,6 +176,10 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.getProjectStats = (projectId) ->
         return queryOne("projects", "#{projectId}/stats")
 
+    # Get a project stats
+    service.getIssuesStats = (projectId) ->
+        return queryOne("projects", "#{projectId}/issues_stats")
+
     service.getIssuesFiltersData = (projectId) ->
         return queryOne("projects", "#{projectId}/issue_filters_data")
 

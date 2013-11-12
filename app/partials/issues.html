@@ -11,22 +11,28 @@
         </fieldset>
         -->
     </div>
-    <!--
     <div class="graph-box">
-        <div class="graph-container current-issues">
-            <p>Opened vs. closed bugs</p>
-            <div class="graph" gm-pending-issue-graph></div>
+        <div class="graph-container">
+            <p>Bugs by status</p>
+            <div class="graph" gm-issues-pie-graph="issuesStats.issues_per_status"></div>
         </div>
-        <div class="graph-container your-issues">
-            <p>Your Issues</p>
-            <div class="graph" gm-your-issues-graph></div>
+        <div class="graph-container">
+            <p>Bugs by severity</p>
+            <div class="graph" gm-issues-pie-graph="issuesStats.issues_per_severity"></div>
         </div>
-        <div class="graph-container issues-creation">
-            <p>Issues creation rythm</p>
-            <div class="graph" gm-issues-creation-graph></div>
+        <div class="graph-container">
+            <p>Bugs by priority</p>
+            <div class="graph" gm-issues-pie-graph="issuesStats.issues_per_priority"></div>
+        </div>
+        <div class="graph-container">
+            <p>Bugs by owner</p>
+            <div class="graph" gm-issues-pie-graph="issuesStats.issues_per_owner"></div>
+        </div>
+        <div class="graph-container">
+            <p>Bugs by assigned to</p>
+            <div class="graph" gm-issues-pie-graph="issuesStats.issues_per_assigned_to"></div>
         </div>
     </div>
-    -->
     <div class="filters-container">
         <div class="filters-bar-sbox">
             <div class="title-sbox">
