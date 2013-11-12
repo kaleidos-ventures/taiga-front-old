@@ -144,7 +144,7 @@ modules = [
     "greenmine.services.resource",
     "greenmine.directives.generic",
     "greenmine.directives.common",
-    "greenmine.directives.taskboard",
+    "greenmine.directives.graphs",
     "greenmine.directives.tasks",
     "greenmine.directives.issues",
     "greenmine.directives.history",
