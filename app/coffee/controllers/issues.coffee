@@ -89,7 +89,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         tags = []
         for statusId, count of $scope.filtersData.statuses
             status = $scope.constants.issueStatuses[statusId]
-            tag = {"id": status.id, "name": status.name, "count": count, "type":"status"}
+            tag = {"id": status.id, "name": status.name, "count": count, "type":"status", color: status.color}
             tags.push(selectTagIfNotSelected(tag))
 
         $scope.statusTags = tags
@@ -98,7 +98,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         tags = []
         for severityId, count of $scope.filtersData.severities
             severity = $scope.constants.severities[severityId]
-            tag = {"id": severity.id, "name": severity.name, "count": count, "type": "severity"}
+            tag = {"id": severity.id, "name": severity.name, "count": count, "type": "severity", color: severity.color}
             tags.push(selectTagIfNotSelected(tag))
 
         $scope.severityTags = tags
@@ -107,7 +107,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         tags = []
         for priorityId, count of $scope.filtersData.priorities
             priority = $scope.constants.priorities[priorityId]
-            tag = {"id": priority.id, "name": priority.name, "count": count, "type": "priority"}
+            tag = {"id": priority.id, "name": priority.name, "count": count, "type": "priority", color: priority.color}
             tags.push(selectTagIfNotSelected(tag))
 
         $scope.priorityTags = tags
