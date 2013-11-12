@@ -16,7 +16,7 @@ GmHistoryDirective = ($compile, $rootScope) ->
                     when "assigned_to"
                         if value == null
                             return "Unassigned"
-                        return scope.constants.users[value].email
+                        return scope.constants.users[value].full_name
                     else value
             task: (name, value) ->
                 return switch name
@@ -24,7 +24,7 @@ GmHistoryDirective = ($compile, $rootScope) ->
                     when "assigned_to"
                         if value == null
                             return "Unassigned"
-                        return scope.constants.users[value].email
+                        return scope.constants.users[value].full_name
                     else value
         }
 
