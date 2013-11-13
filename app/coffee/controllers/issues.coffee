@@ -192,8 +192,8 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $scope.openCreateIssueForm = ->
         $scope.$broadcast("issue-form:open")
 
-    $scope.refreshIssues = ->
-        filterIssues()
+    $scope.toggleShowGraphs = gm.utils.safeDebounced $scope, 500, ->
+        $scope.showGraphs = not $scope.showGraphs
 
     $scope.updateIssueAssignation = (issue, id) ->
         issue.assigned_to = id || null

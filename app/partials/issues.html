@@ -4,7 +4,7 @@
         <a class="new-button" gm-modal="#new-issue-modal"
            ng-click="openCreateIssueForm()" data-icon="a">New issue</a>
         <a class="refresh-button" ng-click="refreshIssues()" data-icon="x">Refresh</a>
-        <a class="graphs-button" data-icon="k" ng-click="showGraphs = !showGraphs">Graphs</a>
+        <a class="graphs-button" data-icon="k" ng-click="toggleShowGraphs()">Graphs</a>
     </div>
     <div class="graph-box" ng-show="showGraphs">
         <div class="graph-container">
