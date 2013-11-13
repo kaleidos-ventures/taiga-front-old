@@ -125,25 +125,28 @@ GmIssuesPieGraphDirective = () -> (scope, elm, attrs) ->
 
     redrawChart = (dataToDraw) ->
         width = element.width()
-        height = width
-        chart = $("<canvas />").attr("width", width).attr("height", height)
-
-        element.empty()
-        element.append(chart)
-
-        ctx = chart.get(0).getContext("2d")
-
+        element.height(width)
+        data = _.map(_.values(dataToDraw), (d) -> { data: d.count, label: d.name})
         options =
-            animation: false
+            series:
+                pie:
+                    show: true
+                    radius: 1
+                    label:
+                        show: true
+                        radius: 3/4
+                        formatter: (label, slice) ->
+                            "<div class='pieLabelText'>#{label}<br/>#{slice.data[0][1]}</div>"
+                        background:
+                            opacity: 0.5
+                            color: 'white'
+            legend:
+                show: false
+            colors: _.map(_.values(dataToDraw), (d) -> d.color)
 
-        data = _.map(_.values(dataToDraw), (x) ->
-            {
-                value : x['count'],
-                color: x['color']
-            }
-        )
 
-        new Chart(ctx).Pie(data, options)
+        plot = element.plot(data, options).data("plot")
+
 
     scope.$watch attrs.gmIssuesPieGraph, () ->
         value = scope.$eval(attrs.gmIssuesPieGraph)
@@ -168,41 +171,47 @@ GmIssuesAccumulatedGraphDirective = () -> (scope, elm, attrs) ->
             return result
 
         width = element.width()
-        height = width/2
-        chart = $("<canvas />").attr("width", width).attr("height", height)
+        element.height(width / 2)
 
-        element.empty()
-        element.append(chart)
-
-        ctx = chart.get(0).getContext("2d")
-
-        options =
-            animation: false
-            scaleFontFamily : "'ColabThi'"
-            scaleFontSize : 10
-            datasetFillXAxis: 0
-            datasetFillYAxis: 0
-
-
-        data = {}
-        data.labels = _.map([27..0], (x) ->
-            moment().subtract('days', x).date()
+        days = _.map([27..0], (x) ->
+            moment().subtract('days', x)
         )
-        data.datasets = []
-        for row in dataToDraw
+        data = []
+        for d in _.values(dataToDraw)
             if accumulated_data?
-                accumulated_data = vectorsSum(accumulated_data, row.data)
+                accumulated_data = vectorsSum(accumulated_data, d.data)
             else
-                accumulated_data = row.data
+                accumulated_data = d.data
 
-            data.datasets.unshift({
-                fillColor: row.color
-                pointColor: 'transparent'
-                pointStrokeColor: 'transparent'
-                data: accumulated_data
+            data.unshift({
+                label: d.name
+                data: _.zip(days, accumulated_data)
             })
+        options =
+            legend:
+                position: "nw"
+            xaxis:
+                tickSize: [1, "day"],
+                min: moment().subtract('days', 27),
+                max: moment(),
+                mode: "time",
+                daysNames: days,
+                axisLabel: 'Day',
+                axisLabelUseCanvas: true,
+                axisLabelFontSizePixels: 12,
+                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                axisLabelPadding: 5
+            series:
+                shadowSize: 0
+                lines:
+                    show: true
+                    fill: true
+                    fillColor: { colors: _.map(_.values(dataToDraw), (d) -> {'color':d.color}).reverse() }
 
-        new Chart(ctx).Line(data, options)
+            colors: _.map(_.values(dataToDraw), (d) -> d.color).reverse()
+
+
+        plot = element.plot(data, options).data("plot")
 
     scope.$watch attrs.gmIssuesAccumulatedGraph, () ->
         value = scope.$eval(attrs.gmIssuesAccumulatedGraph)
@@ -220,40 +229,63 @@ GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
 
     redrawChart = (dataToDraw) ->
         width = element.width()
-        height = width/2
-        chart = $("<canvas />").attr("width", width).attr("height", height)
+        element.height(width / 2)
 
-        element.empty()
-        element.append(chart)
-
-        ctx = chart.get(0).getContext("2d")
-
-        options =
-            animation: false
-            scaleFontFamily : "'ColabThi'"
-            scaleFontSize : 10
-            scaleStepWidth: 1
-
-        data = {}
-        data.labels = _.map([27..0], (x) ->
-            moment().subtract('days', x).date()
+        days = _.map([27..0], (x) ->
+            moment().subtract('days', x)
         )
-        green = $.Color('green')
-        red = $.Color('red')
-        data.datasets = [
+        data = [
             {
-                fillColor: green.alpha(0.5).toRgbaString()
-                strokeColor: green.toRgbaString()
-                data: dataToDraw['closed']
+                label: 'Open'
+                data: _.zip(days, dataToDraw['open'])
+                color: 'red'
+                bars:
+                    show: true
+                    fill: true
+                    lineWidth: 1
+                    order: 1
+                    barWidth: 24*60*60*300
             },
             {
-                fillColor: red.alpha(0.5).toRgbaString()
-                strokeColor: red.toRgbaString()
-                data: dataToDraw['open']
+                label: 'Closed'
+                data: _.zip(days, dataToDraw['closed'])
+                color: 'green'
+                bars:
+                    show: true
+                    fill: true
+                    lineWidth: 1
+                    order: 2
+                    barWidth: 24*60*60*300
             }
         ]
+        options =
+            xaxis:
+                tickSize: [1, "day"],
+                min: moment().subtract('days', 27),
+                max: moment(),
+                mode: "time",
+                daysNames: days,
+                tickLength: 0
+                axisLabel: 'Day',
+                axisLabelUseCanvas: true,
+                axisLabelFontSizePixels: 12,
+                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                axisLabelPadding: 5
+            yaxis:
+                axisLabel: 'Value',
+                axisLabelUseCanvas: true,
+                axisLabelFontSizePixels: 12,
+                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                axisLabelPadding: 5
+            grid:
+                hoverable: true
+                clickable: false
+                borderWidth: 1
+            legend:
+                labelBoxBorderColor: "none"
+                position: "nw"
 
-        new Chart(ctx).Bar(data, options)
+        plot = element.plot(data, options).data("plot")
 
     scope.$watch attrs.gmIssuesOpenClosedGraph, () ->
         value = scope.$eval(attrs.gmIssuesOpenClosedGraph)
