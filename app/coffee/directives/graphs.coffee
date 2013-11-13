@@ -195,12 +195,10 @@ GmIssuesAccumulatedGraphDirective = () -> (scope, elm, attrs) ->
             else
                 accumulated_data = row.data
 
-            color = $.Color(row.color)
-
             data.datasets.unshift({
-                fillColor: color.toRgbaString()
-                pointColor: color.alpha(0).toRgbaString()
-                pointStrokeColor: color.alpha(0).toRgbaString()
+                fillColor: row.color
+                pointColor: 'transparent'
+                pointStrokeColor: 'transparent'
                 data: accumulated_data
             })
 
@@ -268,56 +266,9 @@ GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
                 redrawChart(value)
             , 200)
 
-GmIssuesOpenProgressionGraphDirective = () -> (scope, elm, attrs) ->
-    element = angular.element(elm)
-
-    redrawChart = (dataToDraw) ->
-        width = element.width()
-        height = width/2
-        chart = $("<canvas />").attr("width", width).attr("height", height)
-
-        element.empty()
-        element.append(chart)
-
-        ctx = chart.get(0).getContext("2d")
-
-        options =
-            animation: false
-            scaleFontFamily : "'ColabThi'"
-            scaleFontSize : 10
-            datasetFillXAxis: 0
-            datasetFillYAxis: 0
-
-
-        data = {}
-        data.labels = _.map([27..0], (x) ->
-            moment().subtract('days', x).date()
-        )
-        color = $.Color('red')
-        data.datasets = [{
-            fillColor: color.alpha(0.5).toRgbaString()
-            pointColor: color.alpha(0).toRgbaString()
-            pointStrokeColor: color.alpha(0).toRgbaString()
-            data: dataToDraw
-        }]
-
-        new Chart(ctx).Line(data, options)
-
-    scope.$watch attrs.gmIssuesOpenProgressionGraph, () ->
-        value = scope.$eval(attrs.gmIssuesOpenProgressionGraph)
-        if value and scope.showGraphs
-            redrawChart(value)
-    scope.$watch 'showGraphs', () ->
-        value = scope.$eval(attrs.gmIssuesOpenProgressionGraph)
-        if value and scope.showGraphs
-            setTimeout(->
-                redrawChart(value)
-            , 200)
-
 module = angular.module("greenmine.directives.graphs", [])
 module.directive("gmBacklogGraph", GmBacklogGraphDirective)
 module.directive("gmTaskboardGraph", GmTaskboardGraphDirective)
 module.directive("gmIssuesPieGraph", GmIssuesPieGraphDirective)
 module.directive("gmIssuesAccumulatedGraph", GmIssuesAccumulatedGraphDirective)
 module.directive("gmIssuesOpenClosedGraph", GmIssuesOpenClosedGraphDirective)
-module.directive("gmIssuesOpenProgressionGraph", GmIssuesOpenProgressionGraphDirective)
