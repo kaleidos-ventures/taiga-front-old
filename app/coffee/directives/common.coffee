@@ -317,6 +317,7 @@ GmSpinner = ($parse, $rootScope) ->
     restrict: "A"
     link: (scope, element, attrs) ->
         el = angular.element("<div/>", {"class": "spinner"})
+        el.hide()
         element.append(el)
 
         $rootScope.$on "spinner:start", ->

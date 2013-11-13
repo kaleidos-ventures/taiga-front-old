@@ -81,12 +81,14 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             loadAttachments()
 
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->
+        $scope.$emit("spinner:start")
         for key, value of $scope.form
             $scope.userStory[key] = value
 
         promise = $scope.userStory.save()
 
         promise.then (userStory)->
+            $scope.$emit("spinner:stop")
             loadUserStory()
             saveNewAttachments()
             $gmFlash.info("The user story has been saved")

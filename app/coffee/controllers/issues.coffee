@@ -304,9 +304,12 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         for key, value of $scope.form
             $scope.issue[key] = value
 
+        $scope.$emit("spinner:start")
+
         gm.safeApply $scope, ->
             promise = $scope.issue.save()
             promise.then ->
+                $scope.$emit("spinner:stop")
                 loadIssue()
                 saveNewAttachments()
                 $gmFlash.info("The issue has been saved")

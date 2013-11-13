@@ -70,11 +70,13 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
         return ($scope.task[property] == parseInt(id, 10))
 
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->
+        $scope.$emit("spinner:start")
         for key, value of $scope.form
             $scope.task[key] = value
 
         promise = $scope.task.save()
         promise.then (task) ->
+            $scope.$emit("spinner:stop")
             saveNewAttachments()
             loadTask()
             $gmFlash.info("The task has been saved")
