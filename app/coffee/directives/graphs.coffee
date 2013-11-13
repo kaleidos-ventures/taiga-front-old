@@ -139,7 +139,7 @@ GmIssuesPieGraphDirective = () -> (scope, elm, attrs) ->
                             "<div class='pieLabelText'>#{label}<br/>#{slice.data[0][1]}</div>"
                         background:
                             opacity: 0.5
-                            color: 'white'
+                            color: 'black'
             legend:
                 show: false
             colors: _.map(_.values(dataToDraw), (d) -> d.color)
