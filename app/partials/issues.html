@@ -3,15 +3,10 @@
     <div class="new-issue">
         <a class="new-button" gm-modal="#new-issue-modal"
            ng-click="openCreateIssueForm()" data-icon="a">New issue</a>
-       <a class="refresh-button" ng-click="refreshIssues()" data-icon="x">Refresh</a>
-        <!--
-        <fieldset class="show-graph">
-            <label data-icon="k" for="show-graph">Show Graphs</label>
-            <input id="show-graph" type="checkbox" ng-model="checked">
-        </fieldset>
-        -->
+        <a class="refresh-button" ng-click="refreshIssues()" data-icon="x">Refresh</a>
+        <a class="graphs-button" data-icon="k" ng-click="showGraphs = !showGraphs">Graphs</a>
     </div>
-    <div class="graph-box">
+    <div class="graph-box" ng-show="showGraphs">
         <div class="graph-container">
             <p>Bugs by status</p>
             <div class="graph" gm-issues-pie-graph="issuesStats.issues_per_status"></div>
@@ -33,7 +28,7 @@
             <div class="graph" gm-issues-pie-graph="issuesStats.issues_per_assigned_to"></div>
         </div>
     </div>
-    <div class="graph-box">
+    <div class="graph-box" ng-show="showGraphs">
         <div class="graph-container lines">
             <p>Progression by severity</p>
             <div class="graph" gm-issues-accumulated-graph="issuesStats.last_four_weeks_days.by_severity"></div>
@@ -43,7 +38,7 @@
             <div class="graph" gm-issues-accumulated-graph="issuesStats.last_four_weeks_days.by_priority"></div>
         </div>
     </div>
-    <div class="graph-box">
+    <div class="graph-box" ng-show="showGraphs">
         <div class="graph-container lines">
             <p>Open issues progression</p>
             <div class="graph" gm-issues-open-progression-graph="issuesStats.last_four_weeks_days.open_progress"></div>

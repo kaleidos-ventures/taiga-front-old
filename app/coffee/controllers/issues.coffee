@@ -26,6 +26,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $scope.sortingOrder = 'created_date'
     $scope.sortingReverse = true
     $scope.page = 1
+    $scope.showGraphs = false
 
     #####
     ## Tags generation functions

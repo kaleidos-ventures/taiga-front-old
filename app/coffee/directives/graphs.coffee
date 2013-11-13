@@ -134,9 +134,7 @@ GmIssuesPieGraphDirective = () -> (scope, elm, attrs) ->
         ctx = chart.get(0).getContext("2d")
 
         options =
-            animateRotate: false
-            animateScale: true
-            animationEasing : "easeOutQuart"
+            animation: false
 
         data = _.map(_.values(dataToDraw), (x) ->
             {
@@ -149,8 +147,14 @@ GmIssuesPieGraphDirective = () -> (scope, elm, attrs) ->
 
     scope.$watch attrs.gmIssuesPieGraph, () ->
         value = scope.$eval(attrs.gmIssuesPieGraph)
-        if value
+        if value and scope.showGraphs
             redrawChart(value)
+    scope.$watch 'showGraphs', () ->
+        value = scope.$eval(attrs.gmIssuesPieGraph)
+        if value and scope.showGraphs
+            setTimeout(->
+                redrawChart(value)
+            , 200)
 
 GmIssuesAccumulatedGraphDirective = () -> (scope, elm, attrs) ->
     element = angular.element(elm)
@@ -205,8 +209,14 @@ GmIssuesAccumulatedGraphDirective = () -> (scope, elm, attrs) ->
 
     scope.$watch attrs.gmIssuesAccumulatedGraph, () ->
         value = scope.$eval(attrs.gmIssuesAccumulatedGraph)
-        if value
+        if value and scope.showGraphs
             redrawChart(_.values(value))
+    scope.$watch 'showGraphs', () ->
+        value = scope.$eval(attrs.gmIssuesAccumulatedGraph)
+        if value and scope.showGraphs
+            setTimeout(->
+                redrawChart(_.values(value))
+            , 200)
 
 GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
     element = angular.element(elm)
@@ -253,8 +263,14 @@ GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
 
     scope.$watch attrs.gmIssuesOpenClosedGraph, () ->
         value = scope.$eval(attrs.gmIssuesOpenClosedGraph)
-        if value
+        if value and scope.showGraphs
             redrawChart(value)
+    scope.$watch 'showGraphs', () ->
+        value = scope.$eval(attrs.gmIssuesOpenClosedGraph)
+        if value and scope.showGraphs
+            setTimeout(->
+                redrawChart(value)
+            , 200)
 
 GmIssuesOpenProgressionGraphDirective = () -> (scope, elm, attrs) ->
     element = angular.element(elm)
@@ -294,8 +310,14 @@ GmIssuesOpenProgressionGraphDirective = () -> (scope, elm, attrs) ->
 
     scope.$watch attrs.gmIssuesOpenProgressionGraph, () ->
         value = scope.$eval(attrs.gmIssuesOpenProgressionGraph)
-        if value
+        if value and scope.showGraphs
             redrawChart(value)
+    scope.$watch 'showGraphs', () ->
+        value = scope.$eval(attrs.gmIssuesOpenProgressionGraph)
+        if value and scope.showGraphs
+            setTimeout(->
+                redrawChart(value)
+            , 200)
 
 module = angular.module("greenmine.directives.graphs", [])
 module.directive("gmBacklogGraph", GmBacklogGraphDirective)
