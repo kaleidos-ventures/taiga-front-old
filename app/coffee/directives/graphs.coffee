@@ -198,10 +198,9 @@ GmIssuesAccumulatedGraphDirective = () -> (scope, elm, attrs) ->
             color = $.Color(row.color)
 
             data.datasets.unshift({
-                fillColor: color.alpha(0.5).toRgbaString()
-                strokeColor: color.toRgbaString()
-                pointColor: color.alpha(0.5).toRgbaString()
-                pointStrokeColor: color.toRgbaString()
+                fillColor: color.toRgbaString()
+                pointColor: color.alpha(0).toRgbaString()
+                pointStrokeColor: color.alpha(0).toRgbaString()
                 data: accumulated_data
             })
 
@@ -236,9 +235,6 @@ GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
             scaleFontFamily : "'ColabThi'"
             scaleFontSize : 10
             scaleStepWidth: 1
-            datasetFillXAxis: 0
-            datasetFillYAxis: 0
-
 
         data = {}
         data.labels = _.map([27..0], (x) ->
@@ -300,9 +296,8 @@ GmIssuesOpenProgressionGraphDirective = () -> (scope, elm, attrs) ->
         color = $.Color('red')
         data.datasets = [{
             fillColor: color.alpha(0.5).toRgbaString()
-            strokeColor: color.toRgbaString()
-            pointColor: color.alpha(0.5).toRgbaString()
-            pointStrokeColor: color.toRgbaString()
+            pointColor: color.alpha(0).toRgbaString()
+            pointStrokeColor: color.alpha(0).toRgbaString()
             data: dataToDraw
         }]
 
