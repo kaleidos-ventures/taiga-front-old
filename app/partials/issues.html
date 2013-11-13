@@ -33,6 +33,26 @@
             <div class="graph" gm-issues-pie-graph="issuesStats.issues_per_assigned_to"></div>
         </div>
     </div>
+    <div class="graph-box">
+        <div class="graph-container lines">
+            <p>Progression by severity</p>
+            <div class="graph" gm-issues-accumulated-graph="issuesStats.last_four_weeks_days.by_severity"></div>
+        </div>
+        <div class="graph-container lines">
+            <p>Progression by priority</p>
+            <div class="graph" gm-issues-accumulated-graph="issuesStats.last_four_weeks_days.by_priority"></div>
+        </div>
+    </div>
+    <div class="graph-box">
+        <div class="graph-container lines">
+            <p>Open issues progression</p>
+            <div class="graph" gm-issues-open-progression-graph="issuesStats.last_four_weeks_days.open_progress"></div>
+        </div>
+        <div class="graph-container lines">
+            <p>Open/Closed issues per day</p>
+            <div class="graph" gm-issues-open-closed-graph="issuesStats.last_four_weeks_days.by_open_closed"></div>
+        </div>
+    </div>
     <div class="filters-container">
         <div class="filters-bar-sbox">
             <div class="title-sbox">

@@ -166,17 +166,20 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         promise = rs.getIssuesFiltersData($scope.projectId).then (data) ->
             $scope.filtersData = data
             regenerateTags()
+            loadStats()
             return data
 
         return promise
+
+    loadStats = ->
+        rs.getIssuesStats($scope.projectId).then (data) ->
+            $scope.issuesStats = data
 
     # Load initial data
     $data.loadProject($scope).then ->
         $data.loadUsersAndRoles($scope).then ->
             loadIssuesData().then ->
                 filterIssues()
-    rs.getIssuesStats($scope.projectId).then (data) ->
-        $scope.issuesStats = data
 
     $scope.setPage = (n) ->
         $scope.page = n
@@ -195,22 +198,26 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         issue.assigned_to = id || null
         issue.save()
         regenerateTags()
+        loadStats()
 
     $scope.updateIssueStatus = (issue, id) ->
         issue.status = id
         issue.save()
         regenerateTags()
+        loadStats()
 
     $scope.updateIssueSeverity = (issue, id) ->
         issue.severity = id
 
         issue.save()
         regenerateTags()
+        loadStats()
 
     $scope.updateIssuePriority = (issue, id) ->
         issue.priority = id
         issue.save()
         regenerateTags()
+        loadStats()
 
     $scope.changeSort = (field, reverse) ->
         $scope.sortingOrder = field
@@ -223,12 +230,14 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             $scope.issues.splice(index, 1)
 
             regenerateTags()
+            loadStats()
             filterIssues()
 
     $scope.$on "issue-form:create", (ctx, issue) ->
         $scope.issues.push(issue)
 
         regenerateTags()
+        loadStats()
         filterIssues()
 
 
