@@ -247,8 +247,10 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash)
 
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         promise = rs.createUserStory($scope.form)
+        $scope.$emit("spinner:start")
 
         promise.then (data) ->
+            $scope.$emit("spinner:stop")
             closeModal()
             $scope.overlay.close()
             $scope.defered.resolve()

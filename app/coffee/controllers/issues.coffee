@@ -341,10 +341,12 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
             severity: $scope.project.default_severity}
 
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->
+        $scope.$emit("spinner:start")
         promise = rs.createIssue($rootScope.projectId, $scope.form)
 
         promise.then (issue) ->
             $scope.form = initialForm()
+            $scope.$emit("spinner:stop")
             $scope.close()
             $rootScope.$broadcast("issue-form:create", issue)
             $gmFlash.info("The issue has been saved")
