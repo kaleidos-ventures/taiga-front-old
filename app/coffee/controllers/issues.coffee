@@ -197,28 +197,28 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
     $scope.updateIssueAssignation = (issue, id) ->
         issue.assigned_to = id || null
-        issue.save()
-        regenerateTags()
-        loadStats()
+        issue.save().then ->
+            regenerateTags()
+            loadStats()
 
     $scope.updateIssueStatus = (issue, id) ->
         issue.status = id
-        issue.save()
-        regenerateTags()
-        loadStats()
+        issue.save().then ->
+            regenerateTags()
+            loadStats()
 
     $scope.updateIssueSeverity = (issue, id) ->
         issue.severity = id
 
-        issue.save()
-        regenerateTags()
-        loadStats()
+        issue.save().then ->
+            regenerateTags()
+            loadStats()
 
     $scope.updateIssuePriority = (issue, id) ->
         issue.priority = id
-        issue.save()
-        regenerateTags()
-        loadStats()
+        issue.save().then ->
+            regenerateTags()
+            loadStats()
 
     $scope.changeSort = (field, reverse) ->
         $scope.sortingOrder = field

@@ -145,7 +145,8 @@ GmIssuesPieGraphDirective = () -> (scope, elm, attrs) ->
             colors: _.map(_.values(dataToDraw), (d) -> d.color)
 
 
-        plot = element.plot(data, options).data("plot")
+        element.empty()
+        element.plot(data, options).data("plot")
 
 
     scope.$watch attrs.gmIssuesPieGraph, () ->
@@ -211,7 +212,8 @@ GmIssuesAccumulatedGraphDirective = () -> (scope, elm, attrs) ->
             colors: _.map(_.values(dataToDraw), (d) -> d.color).reverse()
 
 
-        plot = element.plot(data, options).data("plot")
+        element.empty()
+        element.plot(data, options).data("plot")
 
     scope.$watch attrs.gmIssuesAccumulatedGraph, () ->
         value = scope.$eval(attrs.gmIssuesAccumulatedGraph)
@@ -285,7 +287,8 @@ GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
                 labelBoxBorderColor: "none"
                 position: "nw"
 
-        plot = element.plot(data, options).data("plot")
+        element.empty()
+        element.plot(data, options).data("plot")
 
     scope.$watch attrs.gmIssuesOpenClosedGraph, () ->
         value = scope.$eval(attrs.gmIssuesOpenClosedGraph)
