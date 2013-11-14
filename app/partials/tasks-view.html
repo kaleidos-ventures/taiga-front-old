@@ -58,15 +58,6 @@
         </div>
     </div>
 
-    <div class="row-fluid" ng-show="task.history">
-        <div class="span12">
-            <div class="history" ng-model="task.history" gm-history="task">
-                <h3>History</h3>
-                <div class="history-items-container"></div>
-            </div>
-        </div>
-    </div>
-
     <div class="row-fluid">
         <div class="span12">
             <div class="update-form">
@@ -150,6 +141,15 @@
                         <div gm-spinner class="spinner-container"></div>
                     </fieldset>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid" ng-show="task.history">
+        <div class="span12">
+            <div class="history" ng-model="task.history" gm-history="task">
+                <h3>History</h3>
+                <div class="history-items-container"></div>
             </div>
         </div>
     </div>
