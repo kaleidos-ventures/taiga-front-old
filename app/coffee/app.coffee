@@ -69,7 +69,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when('/project/:pid/admin', {
         controller: "ProjectAdminController", templateUrl: "partials/project-admin.html"})
 
-    #$routeProvider.otherwise({redirectTo: '/login'})
+    $routeProvider.otherwise({redirectTo: '/login'})
 
     defaultHeaders =
         "Content-Type": "application/json",
@@ -88,7 +88,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
                 return $q.reject(response)
 
     $provide.factory("authHttpIntercept", ["$q", "$location", authHttpIntercept])
-    # $httpProvider.responseInterceptors.push('authHttpIntercept')
+    $httpProvider.responseInterceptors.push('authHttpIntercept')
 
     apiUrls = {
         "auth": "/api/v1/auth"
