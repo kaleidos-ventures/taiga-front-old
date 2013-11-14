@@ -105,7 +105,7 @@
                             <input type="checkbox" ng-model="us.selected" ng-change="changeUserStoriesSelection()"></input>
                         </div>
                         <div class="us-title">
-                            <div class="title">{{ us.subject|truncate:140 }}</div>
+                            <div class="title">{{ us.subject }}</div>
                             <div class="tags" ng-hide="!showTags">
                                 <span ng-repeat="tag in us.tags" class="label" gm-colorize-tag>{{ tag }}</span>
                             </div>
@@ -239,7 +239,7 @@
                                         <div data-icon="I" ng-show="us.is_closed"></div>
                                         <div data-icon="q" ng-show="!us.is_closed"></div>
                                     </div>
-                                    <div class="us-title">{{ us.subject|truncate:50 }}</div>
+                                    <div class="us-title">{{ us.subject }}</div>
                                     <div class="us-points">{{ us.total_points }}</div>
                                 </div>
                             </div>

@@ -168,7 +168,7 @@
                         <span class="tags">
                             <span ng-repeat="tag in issue.tags" class="label" gm-colorize-tag>{{ tag }}</span>
                         </span>
-                        <span class="title">{{ issue.subject|truncate:60 }}</span>
+                        <span class="title">{{ issue.subject }}</span>
                     </div>
 
                     <div class="issue-added-by">
@@ -178,11 +178,11 @@
                     </div>
 
                     <div class="issue-created-date">
-                        <span>{{ issue.created_date|momentFormat:"LLL" }}</span>
+                        <span>{{ issue.created_date|momentFormat:"YYYY/mm/DD HH:MM" }}</span>
                     </div>
 
                     <div class="issue-created-date">
-                        <span>{{ issue.modified_date|momentFormat:"LLL" }}</span>
+                        <span>{{ issue.modified_date|momentFormat:"YYYY/mm/DD HH:MM" }}</span>
                     </div>
                     <div class="issue-state">
                         <a href="" gm-popover="updateIssueStatus(issue, selectedId)"

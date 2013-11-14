@@ -948,6 +948,9 @@ body.login {
                     font-size: 1.2em;
                     line-height: 20px;
                     font-family: @ColabThi;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
 
                 .list-options {
@@ -1320,6 +1323,11 @@ body.login {
                                     width: 100%;
                                     color: #999;
                                     cursor: move;
+                                    .us-title {
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                    }
                                 }
                                 .us-item > div:nth-child(2) {
                                     -webkit-box-flex: 1;
@@ -2427,6 +2435,9 @@ body.login {
 
         .issue-title {
             padding: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             .label {
                 margin-left: 5px;
             }
@@ -2460,7 +2471,7 @@ body.login {
         .issue-created-date,
         .issue-modified-date {
             padding: 10px;
-            width: 180px;
+            width: 110px;
         }
 
         .issue-priority {
@@ -2487,7 +2498,15 @@ body.login {
         .issue-added-by,
         .issue-assigned-to {
             padding: 10px;
-            width: 200px;
+            width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            .button-item {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         }
         a {
             color: #333;
