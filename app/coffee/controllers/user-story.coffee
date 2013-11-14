@@ -59,6 +59,10 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             for roleId, pointId of userStory.points
                 $scope.points[roleId] = $scope.constants.points[pointId].name
 
+    loadProjectTags = ->
+        rs.getProjectTags($scope.projectId).then (data) ->
+            $scope.projectTags = data
+
     saveNewAttachments = ->
         if $scope.newAttachments.length == 0
             return
@@ -79,6 +83,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         $data.loadUsersAndRoles($scope).then ->
             loadUserStory()
             loadAttachments()
+            loadProjectTags()
 
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         $scope.$emit("spinner:start")
@@ -108,6 +113,9 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
     $scope.removeUserStory = (userStory) ->
         userStory.remove().then ->
             $location.url("/project/#{projectId}/backlog")
+
+    $scope.$on "select2:changed", (ctx, value) ->
+        $scope.form.tags = value
 
 module = angular.module("greenmine.controllers.user-story", [])
 module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", UserStoryViewController])

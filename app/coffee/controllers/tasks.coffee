@@ -34,6 +34,10 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
         rs.getTaskAttachments(projectId, taskId).then (attachments) ->
             $scope.attachments = attachments
 
+    loadProjectTags = ->
+        rs.getProjectTags($scope.projectId).then (data) ->
+            $scope.projectTags = data
+
     loadTask = ->
         rs.getTask(projectId, taskId).then (task) ->
             $scope.task = task
@@ -65,6 +69,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
         $data.loadUsersAndRoles($scope).then ->
             loadAttachments()
             loadTask()
+            loadProjectTags()
 
     $scope.isSameAs = (property, id) ->
         return ($scope.task[property] == parseInt(id, 10))
@@ -99,6 +104,9 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
             milestone = task.milestone
             task.remove().then ->
                 $location.url("/project/#{projectId}/taskboard/#{milestone}")
+
+    $scope.$on "select2:changed", (ctx, value) ->
+        $scope.form.tags = value
 
 
 module = angular.module("greenmine.controllers.tasks", [])

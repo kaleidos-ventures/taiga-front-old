@@ -176,11 +176,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         rs.getIssuesStats($scope.projectId).then (data) ->
             $scope.issuesStats = data
 
-    loadProjectTags = ->
-        rs.getProjectTags($scope.projectId).then (data) ->
-            console.log data
-            $scope.projectTags = data
-
     # Load initial data
     $data.loadProject($scope).then ->
         $data.loadUsersAndRoles($scope).then ->
@@ -199,7 +194,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $scope.isTagSelected = isTagSelected
 
     $scope.openCreateIssueForm = ->
-        loadProjectTags()
         $scope.$broadcast("issue-form:open")
 
     $scope.toggleShowGraphs = gm.utils.safeDebounced $scope, 500, ->
@@ -281,6 +275,10 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
 
             $rootScope.pageBreadcrumb = breadcrumb
 
+    loadProjectTags = ->
+        rs.getProjectTags($scope.projectId).then (data) ->
+            $scope.projectTags = data
+
     loadAttachments = ->
         promise = rs.getIssueAttachments(projectId, issueId)
         promise.then (attachments) ->
@@ -306,6 +304,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         $data.loadUsersAndRoles($scope).then ->
             loadIssue()
             loadAttachments()
+            loadProjectTags()
 
     $scope.isSameAs = (property, id) ->
         return ($scope.issue[property] == parseInt(id, 10))
@@ -342,9 +341,16 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             issue.remove().then ->
                 $location.url("/project/#{projectId}/issues/")
 
+    $scope.$on "select2:changed", (ctx, value) ->
+        $scope.form.tags = value
+
 
 IssuesFormController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
     $scope.formOpened = false
+
+    loadProjectTags = ->
+        rs.getProjectTags($scope.projectId).then (data) ->
+            $scope.projectTags = data
 
     initialForm = ->
         return {
@@ -380,6 +386,8 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
         $scope.overlay = $gmOverlay()
         $scope.overlay.open().then ->
             $scope.formOpened = false
+
+        loadProjectTags()
 
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value

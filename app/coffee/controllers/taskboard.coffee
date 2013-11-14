@@ -126,6 +126,10 @@ TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs) ->
     $scope.type = "create"
     $scope.formOpened = false
 
+    loadProjectTags = ->
+        rs.getProjectTags($scope.projectId).then (data) ->
+            $scope.projectTags = data
+
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         promise = rs.createTask($scope.form)
         $scope.$emit("spinner:start")
@@ -160,8 +164,13 @@ TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs) ->
         $scope.overlay.open().then ->
             $scope.formOpened = false
 
+        loadProjectTags()
+
     $scope.$on "task-form:close", ->
         $scope.formOpened = false
+
+    $scope.$on "select2:changed", (ctx, value) ->
+        $scope.form.tags = value
 
 TaskboardTaskController = ($scope, $rootScope, $q) ->
     $scope.updateTaskAssignation = (task, id) ->

@@ -223,7 +223,12 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash)
     $scope.defered = null
     $scope.context = null
 
+    loadProjectTags = ->
+        rs.getProjectTags($scope.projectId).then (data) ->
+            $scope.projectTags = data
+
     openModal = ->
+        loadProjectTags()
         $scope.formOpened = true
         $scope.form = $scope.context.us
         $scope.$broadcast("checksley:reset")
@@ -268,6 +273,8 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash)
         else
             $scope.form.revert()
 
+    $scope.$on "select2:changed", (ctx, value) ->
+        $scope.form.tags = value
 
 BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash) ->
     # Local scope variables
