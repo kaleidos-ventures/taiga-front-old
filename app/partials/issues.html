@@ -179,11 +179,11 @@
                     </div>
 
                     <div class="issue-created-date">
-                        <span>{{ issue.created_date|momentFormat:"YYYY/mm/DD HH:MM" }}</span>
+                        <span>{{ issue.created_date|momentFormat:"lll" }}</span>
                     </div>
 
-                    <div class="issue-created-date">
-                        <span>{{ issue.modified_date|momentFormat:"YYYY/mm/DD HH:MM" }}</span>
+                    <div class="issue-modified-date">
+                        <span>{{ issue.modified_date|momentFormat:"lll" }}</span>
                     </div>
                     <div class="issue-state">
                         <a href="" gm-popover="updateIssueStatus(issue, selectedId)"
