@@ -59,6 +59,10 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             for roleId, pointId of userStory.points
                 $scope.points[roleId] = $scope.constants.points[pointId].name
 
+    loadUserStoryHistorical = ->
+        rs.getUserStoryHistorical(projectId, userStoryId).then (historical) ->
+            $scope.historical = historical
+
     loadProjectTags = ->
         rs.getProjectTags($scope.projectId).then (data) ->
             $scope.projectTags = data
@@ -83,6 +87,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         $data.loadUsersAndRoles($scope).then ->
             loadUserStory()
             loadAttachments()
+            loadUserStoryHistorical()
             loadProjectTags()
 
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->

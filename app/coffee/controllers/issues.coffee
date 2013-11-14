@@ -108,7 +108,13 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         tags = []
         for priorityId, count of $scope.filtersData.priorities
             priority = $scope.constants.priorities[priorityId]
-            tag = {"id": priority.id, "name": priority.name, "count": count, "type": "priority", color: priority.color}
+            tag = {
+                "id": priority.id,
+                "name": priority.name,
+                "count": count,
+                "type": "priority",
+                color: priority.color
+            }
             tags.push(selectTagIfNotSelected(tag))
 
         $scope.priorityTags = tags
@@ -275,6 +281,10 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
 
             $rootScope.pageBreadcrumb = breadcrumb
 
+    loadIssueHistorical = ->
+        rs.getIssueHistorical(projectId, issueId).then (historical) ->
+            $scope.historical = historical
+
     loadProjectTags = ->
         rs.getProjectTags($scope.projectId).then (data) ->
             $scope.projectTags = data
@@ -304,6 +314,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         $data.loadUsersAndRoles($scope).then ->
             loadIssue()
             loadAttachments()
+            loadIssueHistorical()
             loadProjectTags()
 
     $scope.isSameAs = (property, id) ->

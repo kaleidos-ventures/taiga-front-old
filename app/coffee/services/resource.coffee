@@ -23,8 +23,12 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return data
 
-    queryMany = (name, params, options) ->
-        defaultHttpParams = {method: "GET", headers:  headers(), url: $gmUrls.api(name)}
+    queryMany = (name, params, options, urlParams) ->
+        defaultHttpParams = {
+            method: "GET",
+            headers:  headers(),
+            url: $gmUrls.api(name, urlParams)
+        }
         if not _.isEmpty(params)
             defaultHttpParams.params = params
 
@@ -89,8 +93,12 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return defered.promise
 
-    queryManyPaginated = (name, params, options, cls) ->
-        defaultHttpParams = {method: "GET", headers:  headers(false), url: $gmUrls.api(name)}
+    queryManyPaginated = (name, params, options, cls, urlParams) ->
+        defaultHttpParams = {
+            method: "GET",
+            headers: headers(false),
+            url: $gmUrls.api(name, urlParams)
+        }
         if not _.isEmpty(params)
             defaultHttpParams.params = params
 
@@ -200,7 +208,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.getProjectStats = (projectId) ->
         return queryOne("projects", "#{projectId}/stats")
 
-    # Get a project stats
+    # Get a issues stats
     service.getIssuesStats = (projectId) ->
         return queryOne("projects", "#{projectId}/issues_stats")
 
@@ -208,6 +216,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.getProjectTags = (projectId) ->
         return queryRaw("projects", "#{projectId}/tags")
 
+    # Get a issues filters
     service.getIssuesFiltersData = (projectId) ->
         return queryOne("projects", "#{projectId}/issue_filters_data")
 
@@ -296,6 +305,12 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.getUserStory = (projectId, userStoryId) ->
         return queryOne("userstories", userStoryId, {project:projectId})
 
+    service.getUserStoryHistorical = (projectId, userStoryId, filters={}) ->
+        urlParams = [userStoryId]
+        parameters = _.extend({}, filters, {project:projectId})
+        return queryManyPaginated("userstories-historical", parameters, null , null,
+                                  urlParams)
+
     service.getTasks = (projectId, sprintId) ->
         params = {project:projectId}
         if sprintId != undefined
@@ -310,11 +325,21 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.getIssue = (projectId, issueId) ->
         return queryOne("issues", issueId, {project:projectId})
 
+    service.getIssueHistorical = (projectId, issueId, filters={}) ->
+        urlParams = [issueId]
+        parameters = _.extend({}, filters, {project:projectId})
+        return queryManyPaginated("issues-historical", parameters, null , null, urlParams)
+
     service.getIssuesFiltersData = (projectId) ->
         return queryOne("projects", "#{projectId}/issue_filters_data")
 
     service.getTask = (projectId, taskId) ->
         return queryOne("tasks", taskId, {project:projectId})
+
+    service.getTaskHistorical = (projectId, taskId, filters={}) ->
+        urlParams = [taskId]
+        parameters = _.extend({}, filters, {project:projectId})
+        return queryManyPaginated("tasks-historical", parameters, null , null, urlParams)
 
     service.search = (projectId, term) ->
         defered = $q.defer()

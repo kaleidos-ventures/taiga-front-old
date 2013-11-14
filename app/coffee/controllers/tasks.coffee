@@ -49,6 +49,10 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
 
             $rootScope.pageBreadcrumb = breadcrumb
 
+    loadTaskHistorical = ->
+        rs.getTaskHistorical(projectId, taskId).then (historical) ->
+            $scope.historical = historical
+
     saveNewAttachments = ->
         if $scope.newAttachments.length == 0
             return
@@ -67,8 +71,9 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
     # Load initial data
     $data.loadProject($scope).then ->
         $data.loadUsersAndRoles($scope).then ->
-            loadAttachments()
             loadTask()
+            loadAttachments()
+            loadTaskHistorical()
             loadProjectTags()
 
     $scope.isSameAs = (property, id) ->

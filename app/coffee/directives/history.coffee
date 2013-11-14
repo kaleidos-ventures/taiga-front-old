@@ -6,6 +6,7 @@ GmHistoryDirective = ($compile, $rootScope) ->
             userstory: (name, value) ->
                 return switch name
                     when "status" then scope.constants.usStatuses[value].name
+                    when "tags" then value.join(", ")
                     else value
 
             issue: (name, value) ->
@@ -13,6 +14,7 @@ GmHistoryDirective = ($compile, $rootScope) ->
                     when "priority" then scope.constants.priorities[value].name
                     when "status" then scope.constants.issueStatuses[value].name
                     when "severity" then scope.constants.severities[value].name
+                    when "tags" then value.join(", ")
                     when "assigned_to"
                         if value == null
                             return "Unassigned"
@@ -20,6 +22,7 @@ GmHistoryDirective = ($compile, $rootScope) ->
                     else value
             task: (name, value) ->
                 return switch name
+                    when "tags" then value.join(", ")
                     when "status" then scope.constants.taskStatuses[value].name
                     when "assigned_to"
                         if value == null
@@ -29,14 +32,15 @@ GmHistoryDirective = ($compile, $rootScope) ->
         }
 
         fields = {
-            userstory: ["status", "tags", "subject"]
-            issue: ["priority", "status", "tags", "subject", "assigned_to"]
-            task: ["status", "tags", "subject", "assigned_to"]
+            userstory: ["status", "tags", "subject", "description"]
+            issue: ["type", "status", "priority",  "severity", "assigned_to", "tags"
+                    "subject", "description"]
+            task: ["status", "assigned_to", "tags", "subject", "description"]
         }
 
         makeChangeItem = (name, field, type) ->
             change = {
-                name: name
+                name: field.name
                 new: resolvers[type](name, field.new)
                 old: resolvers[type](name, field.old)
             }
@@ -45,7 +49,7 @@ GmHistoryDirective = ($compile, $rootScope) ->
 
         makeHistoryItem = (item, type) ->
             changes = Lazy(fields[type])
-                        .map((name) -> {name: name, field: item[name]})
+                        .map((name) -> {name: name, field: item.changed_fields[name]})
                         .reject((x) -> _.isEmpty(x["field"]))
                         .map((x) -> makeChangeItem(x["name"], x["field"], type))
 
@@ -53,10 +57,16 @@ GmHistoryDirective = ($compile, $rootScope) ->
             if item.comment.length == 0 and changesArray.length == 0
                 return null
 
+            user = scope.constants.users[item.user]
+            if user?
+                changed_by = user.full_name
+            else
+                changed_by = "The Observer"
+
             historyItem = {
                 changes: changesArray
-                by: item.by
-                modified_date: item.modified_date
+                by: changed_by
+                modified_date: item.created_date
                 comment: item.comment
             }
 
@@ -80,7 +90,7 @@ GmHistoryDirective = ($compile, $rootScope) ->
             cachedScope.$destroy() if cachedScope != null
 
             # Make new list
-            historyItems = makeHistoryItems(items, type).toArray()
+            historyItems = makeHistoryItems(items.models, type).toArray()
 
             if historyItems.length == 0
                 element.hide()
