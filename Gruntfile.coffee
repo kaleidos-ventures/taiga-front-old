@@ -23,6 +23,7 @@ module.exports = (grunt) ->
         'app/js/jquery.flot.pie.js',
         'app/js/jquery.flot.time.js',
         'app/js/jquery.flot.orderBars.js',
+        'app/js/select2.js',
         'app/js/coffeeColorPicker.js',
         'app/js/coffeeColorPicker.angular.js'
     ]

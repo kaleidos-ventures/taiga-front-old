@@ -411,6 +411,17 @@ GmPaginator = ($parse) ->
         scope.$watch pageVar, (value) ->
             _.defer(renderPaginator)
 
+GmSelect2Tags = ->
+    restrict: "A"
+    link: (scope, elm, attrs) ->
+        element = angular.element(elm)
+
+        element.on "change", (e) ->
+            scope.$emit('select2:changed', e.val)
+
+        scope.$watch attrs.gmSelect2Tags, () ->
+            element.select2({tags: scope.$eval(attrs.gmSelect2Tags)})
+
 module = angular.module('greenmine.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
 module.directive('gmHeaderMenu', ["$rootScope", GmHeaderMenuDirective])
@@ -427,3 +438,4 @@ module.directive('gmRolePointsEdition', GmRolePointsEditionDirective)
 module.directive('gmColorizeUser', GmColorizeUserDirective)
 module.directive('gmPaginator', ['$parse', GmPaginator])
 module.directive('gmSpinner', ['$parse', '$rootScope', GmSpinner])
+module.directive('gmSelect2Tags', GmSelect2Tags)

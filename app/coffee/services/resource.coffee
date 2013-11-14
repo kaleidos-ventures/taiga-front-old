@@ -41,6 +41,30 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return defered.promise
 
+    queryRaw = (name, id, params, options, cls) ->
+        defaultHttpParams = {method: "GET", headers:  headers()}
+
+        if id
+            defaultHttpParams.url = "#{$gmUrls.api(name)}/#{id}"
+        else
+            defaultHttpParams.url = "#{$gmUrls.api(name)}"
+
+        if not _.isEmpty(params)
+            defaultHttpParams.params = params
+
+        httpParams =  _.extend({}, defaultHttpParams, options)
+
+        defered = $q.defer()
+
+        promise = $http(httpParams)
+        promise.success (data, status) ->
+            defered.resolve(data, cls)
+
+        promise.error (data, status) ->
+            defered.reject()
+
+        return defered.promise
+
     queryOne = (name, id, params, options, cls) ->
         defaultHttpParams = {method: "GET", headers:  headers()}
 
@@ -179,6 +203,10 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     # Get a project stats
     service.getIssuesStats = (projectId) ->
         return queryOne("projects", "#{projectId}/issues_stats")
+
+    # Get a project tags
+    service.getProjectTags = (projectId) ->
+        return queryRaw("projects", "#{projectId}/tags")
 
     service.getIssuesFiltersData = (projectId) ->
         return queryOne("projects", "#{projectId}/issue_filters_data")

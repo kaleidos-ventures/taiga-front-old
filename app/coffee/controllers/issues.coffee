@@ -176,6 +176,11 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         rs.getIssuesStats($scope.projectId).then (data) ->
             $scope.issuesStats = data
 
+    loadProjectTags = ->
+        rs.getProjectTags($scope.projectId).then (data) ->
+            console.log data
+            $scope.projectTags = data
+
     # Load initial data
     $data.loadProject($scope).then ->
         $data.loadUsersAndRoles($scope).then ->
@@ -194,6 +199,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $scope.isTagSelected = isTagSelected
 
     $scope.openCreateIssueForm = ->
+        loadProjectTags()
         $scope.$broadcast("issue-form:open")
 
     $scope.toggleShowGraphs = gm.utils.safeDebounced $scope, 500, ->
@@ -375,6 +381,8 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
         $scope.overlay.open().then ->
             $scope.formOpened = false
 
+    $scope.$on "select2:changed", (ctx, value) ->
+        $scope.form.tags = value
 
 module = angular.module("greenmine.controllers.issues", [])
 module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
