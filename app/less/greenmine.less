@@ -2499,13 +2499,21 @@ body.login {
         .issue-assigned-to {
             padding: 10px;
             width: 150px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
             .button-item {
-                white-space: nowrap;
+                span {
+                    width: 105px;
+                    display: block;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+            span {
+                width: 105px;
+                display: block;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                white-space: nowrap;
             }
         }
         a {
