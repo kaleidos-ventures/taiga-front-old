@@ -161,18 +161,27 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
     $scope.$on "milestones:loaded", (ctx, data) ->
         $scope.milestones = data
 
-    initializeUsForm = ->
-        points = {}
-        for role in $scope.constants.computableRolesList
-            points[role.id] = $scope.project.default_points
+    initializeUsForm = (us) ->
+        result = {}
+        if us?
+            result = us
+        else
+            points = {}
+            for role in $scope.constants.computableRolesList
+                points[role.id] = $scope.project.default_points
+            result['points'] = points
+            result['project'] = $scope.projectId
+            result['status'] = $scope.project.default_us_status
 
-        return {
-            points: points
-            project: $scope.projectId
-            status: $scope.project.default_us_status}
+        return result
 
     $scope.openCreateUserStoryForm = ->
         promise = $modal.open("user-story-form", {"us": initializeUsForm()})
+        promise.then ->
+            loadUserStories()
+
+    $scope.openEditUserStoryForm = (us) ->
+        promise = $modal.open("user-story-form", {"us": initializeUsForm(us)})
         promise.then ->
             loadUserStories()
 
@@ -251,7 +260,10 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash)
         $scope.formOpened = true
 
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->
-        promise = rs.createUserStory($scope.form)
+        if $scope.form.id?
+            promise = $scope.form.save(false)
+        else
+            promise = rs.createUserStory($scope.form)
         $scope.$emit("spinner:start")
 
         promise.then (data) ->

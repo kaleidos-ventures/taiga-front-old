@@ -121,7 +121,10 @@
                             <a class="btn-small-preview" data-icon="l" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">
                                 <span class="help-box">Preview</span>
                             </a>
-                            <a class="btn-small-edit" data-icon="j" href="{{ urls.userStoryUrl(projectId, us.id) }}">
+                            <a class="btn-small-view" data-icon="f" href="{{ urls.userStoryUrl(projectId, us.id) }}">
+                                <span class="help-box">View</span>
+                            </a>
+                            <a class="btn-small-edit" data-icon="j" ng-click="openEditUserStoryForm(us)">
                                 <span class="help-box">Edit</span>
                             </a>
                             <a class="btn-small-remove" data-icon="h" gm-popover="removeUs(us)"

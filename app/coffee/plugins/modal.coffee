@@ -22,6 +22,7 @@ ModalServiceFactory = ($rootScope, $q, $log) ->
 
     service.open = (name, ctx) ->
         dom = angular.element("##{modals[name]}")
+        $('body').scrollTop(0)
 
         defered = $q.defer()
 
