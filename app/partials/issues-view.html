@@ -194,19 +194,18 @@
             </div>
         </div>
     </div>
-
     <script type="text/angular-template" id="change-template">
         <ul class="history-items">
             <li class="history-item" ng-repeat="hitem in historyItems">
                 <div class="title">
                     <span class="updated">Updated by {{ hitem.by }}</span>
-                    <span class="date">{{ hitem.modified_date|momentFormat:"LLLL" }}</span>
+                    <span class="date">{{ hitem.modified_date|momentFromNow }}</span>
                 </div>
                 <div class="changes">
                     <div class="change" ng-repeat="change in hitem.changes">
-                        <strong>{{ change.name }}</strong>:
-                        <span class="old">{{ change.old }}</span> &gt;
-                        <span class="new">{{ change.new }}</span>
+                        <strong>{{ change.name|capitalize }}</strong>:
+                        from: <span class="old">{{ change.old }}</span>
+                        to <span class="new">{{ change.new }}</span>
                     </div>
                 </div>
                 <div class="comment" ng-show="hitem.comment">
