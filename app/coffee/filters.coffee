@@ -42,6 +42,10 @@ LowercaseFilter = ->
     return (input) ->
         return if input then input.toLowerCase() else ""
 
+CapitalizeFilter = ->
+    return (input) ->
+        return if input then input.charAt(0).toUpperCase() + input.slice(1) else ""
+
 SizeFormatFilter = ->
     return (input, precision) ->
         if isNaN(parseFloat(input)) or !isFinite(input)
@@ -61,6 +65,7 @@ SizeFormatFilter = ->
 
 module = angular.module('greenmine.filters', [])
 module.filter("lowercase", LowercaseFilter)
+module.filter("capitalize", CapitalizeFilter)
 module.filter("momentFormat", MomentFormatFilter)
 module.filter("momentFromNow", MomentFromNowFilter)
 module.filter("slugify", SlugifyFilter)
