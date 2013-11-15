@@ -280,10 +280,10 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash)
         $scope.formOpened = false
         $scope.overlay.close()
 
-        if $scope.type == "create"
-            $scope.form = {}
-        else
+        if $scope.form.id?
             $scope.form.revert()
+        else
+            $scope.form = {}
 
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value

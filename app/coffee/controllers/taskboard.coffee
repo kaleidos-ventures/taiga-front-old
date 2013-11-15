@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
+TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal) ->
     # Global Scope Variables
     $rootScope.pageSection = 'dashboard'
     $rootScope.pageBreadcrumb = [
@@ -93,7 +93,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
         if us != undefined
             options.user_story = us.id
 
-        $rootScope.$broadcast("task-form:open", "create", options)
+        promise = $modal.open("task-form", {'task': options})
 
     $scope.$on "task-form:create", (ctx, model) ->
         $scope.tasks.push(model)
@@ -122,40 +122,21 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
                         calculateStats()
 
 
-TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs) ->
+TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs) ->
     $scope.type = "create"
     $scope.formOpened = false
+
+    # Load data
+    $scope.defered = null
+    $scope.context = null
 
     loadProjectTags = ->
         rs.getProjectTags($scope.projectId).then (data) ->
             $scope.projectTags = data
 
-    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
-        promise = rs.createTask($scope.form)
-        $scope.$emit("spinner:start")
-
-        promise.then (model) ->
-            $scope.$emit("spinner:stop")
-            $rootScope.$broadcast("task-form:create", model)
-            $scope.overlay.close()
-            $scope.formOpened = false
-            $gmFlash.info("The task has been saved", false)
-
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
-
-    $scope.close = ->
-        $scope.formOpened = false
-        $scope.overlay.close()
-
-        if $scope.type == "create"
-            $scope.form = {}
-        else
-            $scope.form.revert()
-
-    $scope.$on "task-form:open", (ctx, type, form={}) ->
-        $scope.type = type
-        $scope.form = form
+    openModal = ->
+        loadProjectTags()
+        $scope.form = $scope.context.task
         $scope.formOpened = true
 
         $scope.$broadcast("checksley:reset")
@@ -164,10 +145,44 @@ TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs) ->
         $scope.overlay.open().then ->
             $scope.formOpened = false
 
-        loadProjectTags()
-
-    $scope.$on "task-form:close", ->
+    closeModal = ->
         $scope.formOpened = false
+
+    @.initialize = (dfr, ctx) ->
+        $scope.defered = dfr
+        $scope.context = ctx
+        openModal()
+
+    @.delete = ->
+        closeModal()
+        $scope.form = form
+        $scope.formOpened = true
+
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
+        if $scope.form.id?
+            promise = $scope.form.save(false)
+        else
+            promise = rs.createTask($scope.form)
+        $scope.$emit("spinner:start")
+
+        promise.then (data) ->
+            $scope.$emit("spinner:stop")
+            closeModal()
+            $scope.overlay.close()
+            $scope.defered.resolve()
+            $gmFlash.info("The user story has been saved")
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
+
+    $scope.close = ->
+        $scope.formOpened = false
+        $scope.overlay.close()
+
+        if $scope.form.id?
+            $scope.form.revert()
+        else
+            $scope.form = {}
 
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
@@ -179,5 +194,5 @@ TaskboardTaskController = ($scope, $rootScope, $q) ->
 
 module = angular.module("greenmine.controllers.taskboard", [])
 module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', TaskboardTaskController])
-module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', TaskboardController])
-module.controller("TaskboardTaskFormController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', TaskboardTaskFormController])
+module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', '$modal', TaskboardController])
+module.controller("TaskboardTaskModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', TaskboardTaskModalController])
