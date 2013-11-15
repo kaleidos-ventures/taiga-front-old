@@ -415,12 +415,29 @@ GmSelect2Tags = ->
     restrict: "A"
     link: (scope, elm, attrs) ->
         element = angular.element(elm)
+        colorizeTags = ->
+            for search_choice in element.siblings().find('.select2-search-choice')
+                hash = hex_sha1($(search_choice).text().trim().toLowerCase())
+                color = hash
+                    .substring(0,6)
+                    .replace('8','0')
+                    .replace('9','1')
+                    .replace('a','2')
+                    .replace('b','3')
+                    .replace('c','4')
+                    .replace('d','5')
+                    .replace('e','6')
+                    .replace('f','7')
+
+                $(search_choice).css('background', "##{color}")
 
         element.on "change", (e) ->
+            colorizeTags()
             scope.$emit('select2:changed', e.val)
 
         scope.$watch attrs.gmSelect2Tags, () ->
             element.select2({tags: scope.$eval(attrs.gmSelect2Tags)})
+            colorizeTags()
 
 module = angular.module('greenmine.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
