@@ -31,6 +31,13 @@ MomentFormatFilter = ->
     return (input, format) ->
         return moment(input).format(format)
 
+MomentFromNowFilter = ->
+    return (input, without_suffix) ->
+        if input
+            return moment(input).fromNow(without_suffix or false)
+        else
+           return ""
+
 LowercaseFilter = ->
     return (input) ->
         return if input then input.toLowerCase() else ""
@@ -55,6 +62,7 @@ SizeFormatFilter = ->
 module = angular.module('greenmine.filters', [])
 module.filter("lowercase", LowercaseFilter)
 module.filter("momentFormat", MomentFormatFilter)
+module.filter("momentFromNow", MomentFromNowFilter)
 module.filter("slugify", SlugifyFilter)
 module.filter("truncate", TruncateFilter)
 module.filter("onlyVisible", OnlyVisibleFilter)
