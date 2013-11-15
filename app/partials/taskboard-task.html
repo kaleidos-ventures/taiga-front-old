@@ -8,5 +8,6 @@
             gm-colorize-user="constants.users[task.assigned_to]">
                 {{ constants.users[task.assigned_to].username || "Unassigned" }}</a>
     </div>
-    <a href="{{ urls.tasksUrl(projectId, task.id) }}" class="edit-task">Edit</a>
+    <a ng-click="openEditTaskForm(task.us, task)" class="edit-task">Edit</a>
+    <a href="{{ urls.tasksUrl(projectId, task.id) }}" class="view-task">View</a>
 </div>

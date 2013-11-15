@@ -94,6 +94,15 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal) 
             options.user_story = us.id
 
         promise = $modal.open("task-form", {'task': options})
+        promise.then ->
+            formatUserStoryTasks()
+            calculateStats()
+
+    $scope.openEditTaskForm = (us, task) ->
+        promise = $modal.open("task-form", {'task': task})
+        promise.then ->
+            formatUserStoryTasks()
+            calculateStats()
 
     $scope.$on "task-form:create", (ctx, model) ->
         $scope.tasks.push(model)
