@@ -247,6 +247,7 @@ GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
                     lineWidth: 1
                     order: 1
                     barWidth: 24*60*60*300
+                    fillColor:  "red"
             },
             {
                 label: 'Closed'
@@ -258,6 +259,7 @@ GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
                     lineWidth: 1
                     order: 2
                     barWidth: 24*60*60*300
+                    fillColor:  "green"
             }
         ]
         options =
@@ -279,10 +281,6 @@ GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
                 axisLabelFontSizePixels: 12,
                 axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
                 axisLabelPadding: 5
-            grid:
-                hoverable: true
-                clickable: false
-                borderWidth: 1
             legend:
                 labelBoxBorderColor: "none"
                 position: "nw"
