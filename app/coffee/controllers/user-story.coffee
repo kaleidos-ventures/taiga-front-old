@@ -59,9 +59,25 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             for roleId, pointId of userStory.points
                 $scope.points[roleId] = $scope.constants.points[pointId].name
 
-    loadUserStoryHistorical = ->
-        rs.getUserStoryHistorical(projectId, userStoryId).then (historical) ->
+    loadHistorical = ->
+        if not page
+            filters = {page: if $scope.historical then $scope.historical.current else 1}
+        else
+            filters = {page: page}
+
+        rs.getUserStoryHistorical(userStoryId).then (historical) ->
+            if $scope.historical
+                historical.models = _.union($scope.historical.models, historical.models)
+            # HACK: because thew header don't have 'x-pagination-current'
+            #       (see directives/resource -> queryManyPaginated())
+            historical.current = Math.floor(historical.models.length / historical.paginatedBy)
+
+            $scope.showMoreHistoricaButton = historical.models.length < historical.count
             $scope.historical = historical
+
+    $scope.loadMoreHistorical = ->
+        page = if $scope.historical then $scope.historical.current + 1 else 1
+        loadHistorical(page=page)
 
     loadProjectTags = ->
         rs.getProjectTags($scope.projectId).then (data) ->
@@ -87,7 +103,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         $data.loadUsersAndRoles($scope).then ->
             loadUserStory()
             loadAttachments()
-            loadUserStoryHistorical()
+            loadHistorical()
             loadProjectTags()
 
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->
@@ -100,6 +116,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         promise.then (userStory)->
             $scope.$emit("spinner:stop")
             loadUserStory()
+            loadHistorical()
             saveNewAttachments()
             $gmFlash.info("The user story has been saved")
 

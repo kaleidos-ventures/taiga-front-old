@@ -281,9 +281,25 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
 
             $rootScope.pageBreadcrumb = breadcrumb
 
-    loadIssueHistorical = ->
-        rs.getIssueHistorical(projectId, issueId).then (historical) ->
+    loadHistorical = (page=null) ->
+        if not page
+            filters = {page: if $scope.historical then $scope.historical.current else 1}
+        else
+            filters = {page: page}
+
+        rs.getIssueHistorical(issueId, filters).then (historical) ->
+            if $scope.historical
+                historical.models = _.union($scope.historical.models, historical.models)
+            # HACK: because thew header don't have 'x-pagination-current'
+            #       (see directives/resource -> queryManyPaginated())
+            historical.current = Math.floor(historical.models.length / historical.paginatedBy)
+
+            $scope.showMoreHistoricaButton = historical.models.length < historical.count
             $scope.historical = historical
+
+    $scope.loadMoreHistorical = ->
+        page = if $scope.historical then $scope.historical.current + 1 else 1
+        loadHistorical(page=page)
 
     loadProjectTags = ->
         rs.getProjectTags($scope.projectId).then (data) ->
@@ -314,7 +330,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         $data.loadUsersAndRoles($scope).then ->
             loadIssue()
             loadAttachments()
-            loadIssueHistorical()
+            loadHistorical()
             loadProjectTags()
 
     $scope.isSameAs = (property, id) ->
@@ -331,6 +347,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             promise.then ->
                 $scope.$emit("spinner:stop")
                 loadIssue()
+                loadHistorical()
                 saveNewAttachments()
                 $gmFlash.info("The issue has been saved")
 

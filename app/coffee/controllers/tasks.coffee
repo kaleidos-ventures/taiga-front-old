@@ -49,9 +49,25 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
 
             $rootScope.pageBreadcrumb = breadcrumb
 
-    loadTaskHistorical = ->
-        rs.getTaskHistorical(projectId, taskId).then (historical) ->
+    loadHistorical = ->
+        if not page
+            filters = {page: if $scope.historical then $scope.historical.current else 1}
+        else
+            filters = {page: page}
+
+        rs.getTaskHistorical(taskId).then (historical) ->
+            if $scope.historical
+                historical.models = _.union($scope.historical.models, historical.models)
+            # HACK: because thew header don't have 'x-pagination-current'
+            #       (see directives/resource -> queryManyPaginated())
+            historical.current = Math.floor(historical.models.length / historical.paginatedBy)
+
+            $scope.showMoreHistoricaButton = historical.models.length < historical.count
             $scope.historical = historical
+
+    $scope.loadMoreHistorical = ->
+        page = if $scope.historical then $scope.historical.current + 1 else 1
+        loadHistorical(page=page)
 
     saveNewAttachments = ->
         if $scope.newAttachments.length == 0
@@ -73,7 +89,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
         $data.loadUsersAndRoles($scope).then ->
             loadTask()
             loadAttachments()
-            loadTaskHistorical()
+            loadHistorical()
             loadProjectTags()
 
     $scope.isSameAs = (property, id) ->
@@ -89,6 +105,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
             $scope.$emit("spinner:stop")
             saveNewAttachments()
             loadTask()
+            loadHistorical()
             $gmFlash.info("The task has been saved")
 
         promise.then null, (data) ->
