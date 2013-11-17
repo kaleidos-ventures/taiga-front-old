@@ -1,153 +1,165 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 
 <main class="project-admin-view">
-    <h2>{{ project.name }}</h2>
-    <div class="sprint-list-container">
-        <h3 data-icon="q">Created Sprints</h3>
-        <ul class="sprint-list">
-            <li class="sprint" ng-repeat="ml in project.list_of_milestones">
-                <a href="" data-icon="h" title="Delete Milestone" ng-click="deleteMilestone(ml)"></a>
-                {{ ml.name }}
-            </li>
-        </ul>
+
+    <ul class="tabs clearfix">
+        <li class="userstory-tab" ng-class="{active: isActive('data')}" ng-click="setActive('data')">Project profile</li>
+        <li class="userstory-tab" ng-class="{active: isActive('sprints')}" ng-click="setActive('sprints')">Sprints</li>
+        <li class="userstory-tab" ng-class="{active: isActive('memberships')}" ng-click="setActive('memberships')">Memberships</li>
+    </ul>
+
+    <div class="tab-container" ng-show="isActive('sprints')">
+        <div class="sprint-list-container">
+            <h3 data-icon="q">Created Sprints</h3>
+            <ul class="sprint-list">
+                <li class="sprint" ng-repeat="ml in project.list_of_milestones">
+                    <a href="" data-icon="h" title="Delete Milestone" ng-click="deleteMilestone(ml)"></a>
+                    {{ ml.name }}
+                </li>
+            </ul>
+        </div>
     </div>
 
-    <div class="update-form">
-        <h3 data-icon="f">Project data</h3>
-        <form class="form-horizontal" gm-checksley-form="submit()">
+    <div class="tab-container" ng-show="isActive('data')">
+        <div class="update-form">
+            <form class="form-horizontal" gm-checksley-form="submit()">
 
-            <fieldset class="project-name">
-                <label class="control-label" for="name">Name</label>
-                <input type="text" id="name" name="name" ng-model="project.name" data-error-message="Required" />
-            </fieldset>
-
-            <fieldset class="project-slug">
-                <label for="slug">Slug</label>
-                <input type="text" id="slug" name="slug" ng-model="project.slug" data-error-message="Required" />
-            </fieldset>
-
-            <fieldset class="project-total-milestones">
-                <label class="control-label" for="total_milestones">Num. Sprints:</label>
-                <input type="text" id="total_milestones" name="total_milestones"
-                    ng-model="project.total_milestones" data-error-message="Required" />
-            </fieldset>
-
-            <fieldset class="project-total-story-points">
-                <label for="slug">Total story-points:</label>
-                <input type="text" id="total_story_points" name="total_story_points"
-                    ng-model="project.total_story_points" data-error-message="Required" />
-            </fieldset>
-
-            <fieldset class="project-description">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" ng-model="project.description"></textarea>
-            </fieldset>
-
-            <fieldset class="project-default-points">
-                <label for="default_points">Default value for points selectors</label>
-                <select id="default_points" name="default_points"
-                        ng-model="project.default_points"
-                        ng-options="c.id as c.name for c in constants.pointsList|orderBy:'order'">
-                    <option value="">--------</option>
-                </select>
-            </fieldset>
-
-            <fieldset class="project-default-us-status">
-                <label for="default_us_status">Default value for US status selectors</label>
-                <select id="default_us_status" name="default_us_status"
-                        ng-model="project.default_us_status"
-                        ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'">
-                    <option value="">--------</option>
-                </select>
-            </fieldset>
-
-            <fieldset class="project-default-task-status">
-                <label for="default_task_status">Default value for task status selectors</label>
-                <select id="default_task_status" name="default_task_status"
-                        ng-model="project.default_task_status"
-                        ng-options="c.id as c.name for c in constants.taskStatusesList|orderBy:'order'">
-                    <option value="">--------</option>
-                </select>
-            </fieldset>
-
-            <fieldset class="project-default-priority">
-                <label for="default_priority">Default value for priority selectors</label>
-                <select id="default_priority" name="default_priority"
-                        ng-model="project.default_priority"
-                        ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'">
-                    <option value="">--------</option>
-                </select>
-            </fieldset>
-
-            <fieldset class="project-default-severity">
-                <label for="default_severity">Default value for severity selectors</label>
-                <select id="default_severity" name="default_severity"
-                        ng-model="project.default_severity"
-                        ng-options="c.id as c.name for c in constants.severitiesList|orderBy:'order'">
-                    <option value="">--------</option>
-                </select>
-            </fieldset>
-
-            <fieldset class="project-default-issue-type">
-                <label for="default_issue_type">Default value for issue type selectors</label>
-                <select id="default_issue_type" name="default_issue_type"
-                        ng-model="project.default_issue_type"
-                        ng-options="c.id as c.name for c in constants.issueTypesList|orderBy:'order'">
-                    <option value="">--------</option>
-                </select>
-            </fieldset>
-
-            <fieldset class="project-default-issue-status">
-                <label for="default_issue_status">Default value for issue status selectors</label>
-                <select id="default_issue_status" name="default_issue_status"
-                        ng-model="project.default_issue_status"
-                        ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'">
-                    <option value="">--------</option>
-                </select>
-            </fieldset>
-
-            <fieldset class="project-submit">
-                <button type="submit" class="button button-edit" gm-checksley-submit-button>Save</button>
-            </fieldset>
-
-        </form>
-    </div>
-    <div class="project-members" ng-controller="MembershipFormController">
-        <h3 data-icon="t">Project Members</h3>
-        <a href="" class="add-member" data-icon="A" title="Add member"
-           ng-click="toggleForm()">Add member</a>
-        <div class="add-member-form" ng-show="formOpened">
-            <h4>Add new member</h4>
-            <form gm-checksley-form="submit()">
-                <fieldset>
-                    <label class="control-label" for="role">Role</label>
-                    <select id="role" name="role" ng-model="membership.role" data-required="true"
-                            ng-options="r.id as r.name for r in constants.rolesList|orderBy:'order'">
-                    </select>
-                </fieldset>
                 <fieldset class="project-name">
-                    <label class="control-label" for="user">User</label>
-                    <select id="user" name="user" ng-model="membership.user" data-required="true"
-                            ng-options="u.id as u.full_name for u in noMemberUsersList|orderBy:'full_name'">
+                    <label class="control-label" for="name">Name</label>
+                    <input type="text" id="name" name="name" ng-model="project.name" data-error-message="Required" />
+                </fieldset>
+
+                <fieldset class="project-slug">
+                    <label for="slug">Slug</label>
+                    <input type="text" id="slug" name="slug" ng-model="project.slug" data-error-message="Required" />
+                </fieldset>
+
+                <fieldset class="project-total-milestones">
+                    <label class="control-label" for="total_milestones">Num. Sprints:</label>
+                    <input type="text" id="total_milestones" name="total_milestones"
+                        ng-model="project.total_milestones" data-error-message="Required" />
+                </fieldset>
+
+                <fieldset class="project-total-story-points">
+                    <label for="slug">Total story-points:</label>
+                    <input type="text" id="total_story_points" name="total_story_points"
+                        ng-model="project.total_story_points" data-error-message="Required" />
+                </fieldset>
+
+                <fieldset class="project-description">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" ng-model="project.description"></textarea>
+                </fieldset>
+
+                <fieldset class="project-default-points">
+                    <label for="default_points">Default value for points selectors</label>
+                    <select id="default_points" name="default_points"
+                            ng-model="project.default_points"
+                            ng-options="c.id as c.name for c in constants.pointsList|orderBy:'order'">
+                        <option value="">--------</option>
                     </select>
                 </fieldset>
-                <fieldset>
-                    <button type="submit" class="button button-edit"  gm-checksley-submit-button>Add member</button>
-                    <button type="submit" class="button button-cancel" ng-click="closeForm()">Cancel</button>
+
+                <fieldset class="project-default-us-status">
+                    <label for="default_us_status">Default value for US status selectors</label>
+                    <select id="default_us_status" name="default_us_status"
+                            ng-model="project.default_us_status"
+                            ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
                 </fieldset>
+
+                <fieldset class="project-default-task-status">
+                    <label for="default_task_status">Default value for task status selectors</label>
+                    <select id="default_task_status" name="default_task_status"
+                            ng-model="project.default_task_status"
+                            ng-options="c.id as c.name for c in constants.taskStatusesList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="project-default-priority">
+                    <label for="default_priority">Default value for priority selectors</label>
+                    <select id="default_priority" name="default_priority"
+                            ng-model="project.default_priority"
+                            ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="project-default-severity">
+                    <label for="default_severity">Default value for severity selectors</label>
+                    <select id="default_severity" name="default_severity"
+                            ng-model="project.default_severity"
+                            ng-options="c.id as c.name for c in constants.severitiesList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="project-default-issue-type">
+                    <label for="default_issue_type">Default value for issue type selectors</label>
+                    <select id="default_issue_type" name="default_issue_type"
+                            ng-model="project.default_issue_type"
+                            ng-options="c.id as c.name for c in constants.issueTypesList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="project-default-issue-status">
+                    <label for="default_issue_status">Default value for issue status selectors</label>
+                    <select id="default_issue_status" name="default_issue_status"
+                            ng-model="project.default_issue_status"
+                            ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="project-submit">
+                    <button type="submit" class="button button-edit" gm-checksley-submit-button>Save</button>
+                </fieldset>
+
             </form>
         </div>
-        <ul class="members-list" ng-controller="MembershipsController">
-            <li class="member" ng-repeat="mbr in project.memberships">
-                <a href="" data-icon="h"  title="Delete Member" ng-click="deleteMember(mbr)"></a>
-                <span>[<a href="" gm-popover="updateMemberRole(mbr, selectedId)" data-auto-hide="true"
-                          data-tmpl="#role-popover">{{ mbr.role_name }}</a>]</span>
-                <span class="user" gm-colorize-user="constants.users[mbr.user]">{{ mbr.full_name }}</span>
-            </li>
-        </ul>
     </div>
-    <a class="button button-delete" ng-click="deleteProject()">Delete project</a>
+    <div class="tab-container" ng-show="isActive('memberships')">
+        <div class="project-members" ng-controller="MembershipFormController">
+            <h3 data-icon="t">Project Members</h3>
+            <a href="" class="add-member" data-icon="A" title="Add member"
+               ng-click="toggleForm()">Add member</a>
+            <div class="add-member-form" ng-show="formOpened">
+                <h4>Add new member</h4>
+                <form gm-checksley-form="submit()">
+                    <fieldset>
+                        <label class="control-label" for="role">Role</label>
+                        <select id="role" name="role" ng-model="membership.role" data-required="true"
+                                ng-options="r.id as r.name for r in constants.rolesList|orderBy:'order'">
+                        </select>
+                    </fieldset>
+                    <fieldset class="project-name">
+                        <label class="control-label" for="user">User</label>
+                        <select id="user" name="user" ng-model="membership.user" data-required="true"
+                                ng-options="u.id as u.full_name for u in noMemberUsersList|orderBy:'full_name'">
+                        </select>
+                    </fieldset>
+                    <fieldset>
+                        <button type="submit" class="button button-edit"  gm-checksley-submit-button>Add member</button>
+                        <button type="submit" class="button button-cancel" ng-click="closeForm()">Cancel</button>
+                    </fieldset>
+                </form>
+            </div>
+            <ul class="members-list" ng-controller="MembershipsController">
+                <li class="member" ng-repeat="mbr in project.memberships">
+                    <a href="" data-icon="h"  title="Delete Member" ng-click="deleteMember(mbr)"></a>
+                    <span>[<a href="" gm-popover="updateMemberRole(mbr, selectedId)" data-auto-hide="true"
+                              data-tmpl="#role-popover">{{ mbr.role_name }}</a>]</span>
+                    <span class="user" gm-colorize-user="constants.users[mbr.user]">{{ mbr.full_name }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- <a class="button button-delete" ng-click="deleteProject()">Delete project</a>-->
 </main>
+
 <script type="text/template" id="role-popover">
     <div class="role-popover">
         <p class="title">Select role:</p>

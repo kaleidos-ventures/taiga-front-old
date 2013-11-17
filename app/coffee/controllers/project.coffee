@@ -33,6 +33,14 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
     ]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
+    $scope.activeTab = "data"
+
+    $scope.isActive = (type) ->
+        return type == $scope.activeTab
+
+    $scope.setActive = (type) ->
+        $scope.activeTab = type
+
     # This attach "project" to $scope
     $data.loadProject($scope).then ->
         $data.loadUsersAndRoles($scope)

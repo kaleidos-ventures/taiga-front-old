@@ -1729,140 +1729,6 @@ body.login {
 }
 
 
-.project-admin-view {
-    margin: auto;
-    width: 98.97%;
-    box-sizing: border-box;
-    h3{
-        margin-bottom: 8px;
-    }
-    .sprint-list-container{
-        width: 60%;
-        border: 1px solid #eee;
-        margin-bottom: 20px;
-        h3 {
-            padding: 8px;
-            background: #669900;
-            color: #FFF;
-            margin: 0;
-            &:before {
-                font-size: 15px;
-                margin-right: 5px;
-            }
-        }
-    }
-    .sprint-list,
-    .members-list {
-        list-style: none;
-        margin: 0;
-        padding: 8px;
-        li {
-            border-bottom: 1px solid #eee;
-            padding: 8px 0;
-            &:last-child {
-                border: none;
-            }
-            a {
-                position: relative;
-                margin-right: 3px;
-                display: inline-block;
-                padding: 1px;
-                border-radius: 50%;
-                padding: 2px;
-                color: #cc0000;
-                &:before {
-                    top: 1px;
-                    position: relative;
-                }
-                &:hover {
-                    opacity: .6;
-                }
-            }
-            span {
-                font-weight: bold;
-                a {
-                    color: #000;
-                    margin-right: 0px;
-                }
-                .popover {
-                    font-size: 14px;
-                    li {
-                        padding: 0;
-                        border-bottom: 0;
-                        a {
-                            font-weight: normal;
-                            color: #333;
-                        }
-                    }
-                }
-            }
-            .user{
-               font-weight: normal;
-            }
-        }
-    }
-    .update-form {
-        width: 60%;
-        border: 1px solid #eee;
-        margin-bottom: 20px;
-        h3 {
-            padding: 8px;
-            background: @green;
-            color: #FFF;
-            margin: 0;
-            &:before {
-                font-size: 15px;
-                margin-right: 5px;
-            }
-        }
-        form{
-            padding: 8px;
-        }
-        .project-total-milestones {
-            margin-right: 15px;
-        }
-        .project-total-milestones,
-        .project-total-story-points {
-            width: 48%;
-            display: inline-block;
-        }
-        .project-description {
-            textarea {
-                height: 200px;
-                min-width: 96%;
-                max-width: 96%;
-                width: 96%;
-            }
-        }
-    }
-    .project-members {
-        width: 60%;
-        border: 1px solid #eee;
-        margin-bottom: 20px;
-        position: relative;
-        h3 {
-            padding: 8px;
-            background: @green;
-            color: #FFF;
-            margin: 0;
-            &:before {
-                font-size: 15px;
-                margin-right: 5px;
-            }
-        }
-        .add-member {
-            color: @white;
-            position:absolute;
-            top: 8px;
-            right: 8px;
-            &:before {
-                margin-right: 5px;
-                position: relative;
-                top: 1px;
-            }
-        }
-    }
-}
 
 
 .issues-view {
@@ -3233,6 +3099,179 @@ form {
         }
     }
 }
+
+
+/* ====================================
+ * PROJECT ADMIN
+ * ==================================== */
+
+.project-admin-view {
+    margin: auto;
+    width: 98.97%;
+    box-sizing: border-box;
+    .tabs {
+        border-bottom: 1px solid #ccc;
+        margin: 0;
+        margin-top: 20px;
+        padding: 0;
+        list-style: none;
+        padding: 0 4px;
+        li {
+            float: left;
+            display: block;
+            padding: 8px 15px;
+            padding-left: 35px;
+            border: 1px solid #ccc;
+            color: #ccc;
+            border-bottom: none;
+            background: #FFF;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: all .2s ease-in;
+            &.active, &:hover {
+                color: #000;
+                position: relative;
+                top: 1px;
+                background-position: 9px -95px;
+            }
+            background: url('../img/search-results.png') no-repeat #FFF;
+            background-position: 9px -58px;
+        }
+    }
+
+    h3 {
+        margin-bottom: 8px;
+    }
+
+    .sprint-list-container {
+        width: 60%;
+        border: 1px solid #eee;
+        margin-bottom: 20px;
+        h3 {
+            padding: 8px;
+            background: #669900;
+            color: #FFF;
+            margin: 0;
+            &:before {
+                font-size: 15px;
+                margin-right: 5px;
+            }
+        }
+    }
+    .sprint-list,
+    .members-list {
+        list-style: none;
+        margin: 0;
+        padding: 8px;
+        li {
+            border-bottom: 1px solid #eee;
+            padding: 8px 0;
+            &:last-child {
+                border: none;
+            }
+            a {
+                position: relative;
+                margin-right: 3px;
+                display: inline-block;
+                padding: 1px;
+                border-radius: 50%;
+                padding: 2px;
+                color: #cc0000;
+                &:before {
+                    top: 1px;
+                    position: relative;
+                }
+                &:hover {
+                    opacity: .6;
+                }
+            }
+            span {
+                font-weight: bold;
+                a {
+                    color: #000;
+                    margin-right: 0px;
+                }
+                .popover {
+                    font-size: 14px;
+                    li {
+                        padding: 0;
+                        border-bottom: 0;
+                        a {
+                            font-weight: normal;
+                            color: #333;
+                        }
+                    }
+                }
+            }
+            .user{
+               font-weight: normal;
+            }
+        }
+    }
+    .update-form {
+        width: 60%;
+        border: 1px solid #eee;
+        margin-bottom: 20px;
+        margin-top: 20px;
+        h3 {
+            padding: 8px;
+            background: @green;
+            color: #FFF;
+            margin: 0;
+            &:before {
+                font-size: 15px;
+                margin-right: 5px;
+            }
+        }
+        form{
+            padding: 8px;
+        }
+        .project-total-milestones {
+            margin-right: 15px;
+        }
+        .project-total-milestones,
+        .project-total-story-points {
+            width: 48%;
+            display: inline-block;
+        }
+        .project-description {
+            textarea {
+                height: 200px;
+                min-width: 96%;
+                max-width: 96%;
+                width: 96%;
+            }
+        }
+    }
+    .project-members {
+        width: 60%;
+        border: 1px solid #eee;
+        margin-bottom: 20px;
+        position: relative;
+        h3 {
+            padding: 8px;
+            background: @green;
+            color: #FFF;
+            margin: 0;
+            &:before {
+                font-size: 15px;
+                margin-right: 5px;
+            }
+        }
+        .add-member {
+            color: @white;
+            position:absolute;
+            top: 8px;
+            right: 8px;
+            &:before {
+                margin-right: 5px;
+                position: relative;
+                top: 1px;
+            }
+        }
+    }
+}
+
 
 /* ====================================
  * SEARCH RESULTS
