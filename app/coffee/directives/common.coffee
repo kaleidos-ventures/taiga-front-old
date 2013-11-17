@@ -351,7 +351,6 @@ GmPaginator = ($parse) ->
 
         scope.paginatorSetPage = (page) ->
             numPages = getNumPages()
-            console.log page, numPages
             if page <= numPages and page > 0
                 scope[setPageVar](page)
 
