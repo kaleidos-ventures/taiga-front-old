@@ -56,11 +56,11 @@
                     <div class="tag selected" style="background: {{ tag.color }}" ng-repeat="tag in selectedTags"
                          ng-click="selectTag(tag)">
                         <div class="name"
-                            ng-hide="tag.type == 'assigned-to' || tag.type == 'owner'">
+                            ng-hide="tag.type == 'assigned_to' || tag.type == 'owner'">
                             {{ tag.name }}
                         </div>
                         <div class="name"
-                            ng-show="tag.type == 'assigned-to' || tag.type == 'owner'"
+                            ng-show="tag.type == 'assigned_to' || tag.type == 'owner'"
                             gm-colorize-user="constants.users[tag.id]">
                             {{ tag.name }}
                         </div>

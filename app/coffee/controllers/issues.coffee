@@ -60,32 +60,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             $scope.selectedTags.push(tag)
         return tag
 
-    generateTagList = ->
-        tags = []
-
-        for tagname, tagcount of $scope.filtersData.tags
-            tag = {id: tagname, name:tagname, count:tagcount, type: "tags"}
-            tags.push(selectTagIfNotSelected(tag))
-
-        $scope.tags = tags
-
-    generateAssignedToTags = ->
-        makeTag = (user) ->
-
-        tags = []
-        for userId, count of $scope.filtersData.assigned_to
-            user = $scope.constants.users[userId]
-            tag = {
-                "id": user.id,
-                "name": gm.utils.truncate(user.full_name, 17),
-                "count": count,
-                "type": "assigned-to"
-            }
-
-            tags.push(selectTagIfNotSelected(tag))
-
-        $scope.assignedToTags = tags
-
     generateStatusTags = ->
         tags = []
         for statusId, count of $scope.filtersData.statuses
@@ -134,14 +108,40 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
         $scope.addedByTags = tags
 
+    generateAssignedToTags = ->
+        makeTag = (user) ->
+
+        tags = []
+        for userId, count of $scope.filtersData.assigned_to
+            user = $scope.constants.users[userId]
+            tag = {
+                "id": user.id,
+                "name": gm.utils.truncate(user.full_name, 17),
+                "count": count,
+                "type": "assigned_to"
+            }
+
+            tags.push(selectTagIfNotSelected(tag))
+
+        $scope.assignedToTags = tags
+
+    generateTagList = ->
+        tags = []
+
+        for tagname, tagcount of $scope.filtersData.tags
+            tag = {id: tagname, name:tagname, count:tagcount, type: "tags"}
+            tags.push(selectTagIfNotSelected(tag))
+
+        $scope.tags = tags
+
     regenerateTags = ->
         $scope.selectedTags = []
-        generateTagList()
-        generateAddedByTags()
-        generateAssignedToTags()
+        generateStatusTags()
         generateSeverityTags()
         generatePriorityTags()
-        generateStatusTags()
+        generateAddedByTags()
+        generateAssignedToTags()
+        generateTagList()
 
     getFilterParams = ->
 
