@@ -111,9 +111,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
             result = {}
             result.models = _.map(data, (attrs) -> $model.make_model(name, attrs, cls))
-            result.count = currentHeaders["x-pagination-count"]
-            result.current = currentHeaders["x-pagination-current"]
-            result.paginatedBy = currentHeaders["x-paginated-by"]
+            result.count = parseInt(currentHeaders["x-pagination-count"], 10)
+            result.current = parseInt(currentHeaders["x-pagination-current"] or 1, 10)
+            result.paginatedBy = parseInt(currentHeaders["x-paginated-by"], 10)
 
             defered.resolve(result)
 
@@ -305,9 +305,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.getUserStory = (projectId, userStoryId) ->
         return queryOne("userstories", userStoryId, {project:projectId})
 
-    service.getUserStoryHistorical = (projectId, userStoryId, filters={}) ->
+    service.getUserStoryHistorical = (userStoryId, filters={}) ->
         urlParams = [userStoryId]
-        parameters = _.extend({}, filters, {project:projectId})
+        parameters = _.extend({}, filters)
         return queryManyPaginated("userstories-historical", parameters, null , null,
                                   urlParams)
 
@@ -325,9 +325,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.getIssue = (projectId, issueId) ->
         return queryOne("issues", issueId, {project:projectId})
 
-    service.getIssueHistorical = (projectId, issueId, filters={}) ->
+    service.getIssueHistorical = (issueId, filters={}) ->
         urlParams = [issueId]
-        parameters = _.extend({}, filters, {project:projectId})
+        parameters = _.extend({}, filters)
         return queryManyPaginated("issues-historical", parameters, null , null, urlParams)
 
     service.getIssuesFiltersData = (projectId) ->
@@ -336,9 +336,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.getTask = (projectId, taskId) ->
         return queryOne("tasks", taskId, {project:projectId})
 
-    service.getTaskHistorical = (projectId, taskId, filters={}) ->
+    service.getTaskHistorical = (taskId, filters={}) ->
         urlParams = [taskId]
-        parameters = _.extend({}, filters, {project:projectId})
+        parameters = _.extend({}, filters)
         return queryManyPaginated("tasks-historical", parameters, null , null, urlParams)
 
     service.search = (projectId, term) ->
