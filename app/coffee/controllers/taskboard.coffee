@@ -95,7 +95,8 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal) 
             options.user_story = us.id
 
         promise = $modal.open("task-form", {'task': options})
-        promise.then ->
+        promise.then (us) ->
+            $scope.tasks.push(us)
             formatUserStoryTasks()
             calculateStats()
 
@@ -104,11 +105,6 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal) 
         promise.then ->
             formatUserStoryTasks()
             calculateStats()
-
-    $scope.$on "task-form:create", (ctx, model) ->
-        $scope.tasks.push(model)
-        formatUserStoryTasks()
-        calculateStats()
 
     $scope.$on "stats:reload", ->
         calculateStats()
@@ -179,7 +175,7 @@ TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs) ->
             $scope.$emit("spinner:stop")
             closeModal()
             $scope.overlay.close()
-            $scope.defered.resolve()
+            $scope.defered.resolve($scope.form)
             $gmFlash.info("The user story has been saved")
 
         promise.then null, (data) ->
