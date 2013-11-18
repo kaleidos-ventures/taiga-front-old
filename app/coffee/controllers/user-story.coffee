@@ -59,7 +59,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             for roleId, pointId of userStory.points
                 $scope.points[roleId] = $scope.constants.points[pointId].name
 
-    loadHistorical = ->
+    loadHistorical = (page=null) ->
         if not page
             filters = {page: if $scope.historical then $scope.historical.current else 1}
         else

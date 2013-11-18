@@ -49,7 +49,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
 
             $rootScope.pageBreadcrumb = breadcrumb
 
-    loadHistorical = ->
+    loadHistorical = (page=null) ->
         if not page
             filters = {page: if $scope.historical then $scope.historical.current else 1}
         else
