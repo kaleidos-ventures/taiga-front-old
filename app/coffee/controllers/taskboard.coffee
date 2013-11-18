@@ -62,10 +62,11 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal) 
         rs.getMilestoneStats($scope.sprintId).then (milestoneStats) ->
             totalPoints = _.reduce(milestoneStats.total_points, (x, y) -> x + y) || 0
             completedPoints = _.reduce(milestoneStats.completed_points, (x, y) -> x + y) || 0
+            percentageCompletedPoints = ((completedPoints*100) / totalPoints).toFixed(1)
             $scope.stats = {
                 totalPoints: totalPoints
                 completedPoints: completedPoints
-                percentageCompletedPoints: ((completedPoints*100) / totalPoints).toFixed(1)
+                percentageCompletedPoints: if totalPoints == 0 then 0 else percentageCompletedPoints
                 totalUss: milestoneStats.total_userstories
                 compledUss: milestoneStats.completed_userstories
                 totalTasks: milestoneStats.total_tasks

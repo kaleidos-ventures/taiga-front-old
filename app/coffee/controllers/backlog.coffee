@@ -25,7 +25,11 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
     $scope.stats = {}
 
     $scope.$on "stats:update", (ctx, data) ->
-        $data.loadProjectStats($scope)
+        $data.loadProjectStats($scope).then ->
+            if $scope.projectStats.total_points > 0
+                $scope.percentageClosedPoints = ($scope.projectStats.closed_points * 100) / $scope.projectStats.total_points
+            else
+                $scope.percentageClosedPoints = 0
 
     $scope.$on "milestones:loaded", (ctx, data) ->
         if data.length > 0

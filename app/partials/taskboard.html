@@ -13,10 +13,10 @@
                             <div class="info-header">
                                 <div class="progress-box">
                                     <div class="progress">
-                                        <div class="bar" style="width: {{ stats.percentageCompletedPoints }}%"></div>
+                                        <div class="bar" style="width: {{ stats.percentageCompletedPoints|number:1 }}%"></div>
                                     </div>
 
-                                    <div class="progress-indicator">{{ stats.percentageCompletedPoints }}%</div>
+                                    <div class="progress-indicator">{{ stats.percentageCompletedPoints|number:1 }}%</div>
                                     <div class="help">completed<br />points</div>
                                 </div>
                             </div>
