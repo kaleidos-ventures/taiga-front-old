@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $gmStorage) ->
+IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $gmStorage, $modal) ->
     # Global Scope Variables
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = [
@@ -200,7 +200,19 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $scope.isTagSelected = isTagSelected
 
     $scope.openCreateIssueForm = ->
-        $scope.$broadcast("issue-form:open")
+        promise = $modal.open("issue-form", {})
+        promise.then (issue) ->
+            $scope.issues.push(issue)
+            regenerateTags()
+            loadStats()
+            filterIssues()
+
+    $scope.openEditIssueForm = (issue) ->
+        promise = $modal.open("issue-form", {'issue': issue})
+        promise.then ->
+            regenerateTags()
+            loadStats()
+            filterIssues()
 
     $scope.toggleShowGraphs = gm.utils.safeDebounced $scope, 500, ->
         $scope.showGraphs = not $scope.showGraphs
@@ -243,13 +255,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             regenerateTags()
             loadStats()
             filterIssues()
-
-    $scope.$on "issue-form:create", (ctx, issue) ->
-        $scope.issues.push(issue)
-
-        regenerateTags()
-        loadStats()
-        filterIssues()
 
 
 IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data,
@@ -373,40 +378,29 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         $scope.form.tags = value
 
 
-IssuesFormController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
+IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
+    $scope.type = "create"
     $scope.formOpened = false
+
+    # Load data
+    $scope.defered = null
+    $scope.context = null
 
     loadProjectTags = ->
         rs.getProjectTags($scope.projectId).then (data) ->
             $scope.projectTags = data
 
-    initialForm = ->
-        return {
-            status: $scope.project.default_issue_status
-            type: $scope.project.default_issue_type
-            priority: $scope.project.default_priority
-            severity: $scope.project.default_severity}
-
-    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
-        $scope.$emit("spinner:start")
-        promise = rs.createIssue($rootScope.projectId, $scope.form)
-
-        promise.then (issue) ->
-            $scope.form = initialForm()
-            $scope.$emit("spinner:stop")
-            $scope.close()
-            $rootScope.$broadcast("issue-form:create", issue)
-            $gmFlash.info("The issue has been saved")
-
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
-
-    $scope.close = ->
-        $scope.formOpened = false
-        $scope.overlay.close()
-
-    $scope.$on "issue-form:open", (ctx, form) ->
-        $scope.form = form || initialForm()
+    openModal = ->
+        loadProjectTags()
+        if $scope.context.issue?
+            $scope.form = $scope.context.issue
+        else
+            $scope.form = {
+                status: $scope.project.default_issue_status
+                type: $scope.project.default_issue_type
+                priority: $scope.project.default_priority
+                severity: $scope.project.default_severity
+            }
         $scope.formOpened = true
 
         $scope.$broadcast("checksley:reset")
@@ -415,16 +409,53 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
         $scope.overlay.open().then ->
             $scope.formOpened = false
 
-        loadProjectTags()
+    closeModal = ->
+        $scope.formOpened = false
+
+    @.initialize = (dfr, ctx) ->
+        $scope.defered = dfr
+        $scope.context = ctx
+        openModal()
+
+    @.delete = ->
+        closeModal()
+        $scope.form = form
+        $scope.formOpened = true
+
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
+        if $scope.form.id?
+            promise = $scope.form.save(false)
+        else
+            promise = rs.createIssue($rootScope.projectId, $scope.form)
+        $scope.$emit("spinner:start")
+
+        promise.then (data) ->
+            $scope.$emit("spinner:stop")
+            closeModal()
+            $scope.overlay.close()
+            $scope.defered.resolve($scope.form)
+            $gmFlash.info("The user story has been saved")
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
+
+    $scope.close = ->
+        $scope.formOpened = false
+        $scope.overlay.close()
+
+        if $scope.form.id?
+            $scope.form.revert()
+        else
+            $scope.form = {}
 
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
 
 module = angular.module("greenmine.controllers.issues", [])
 module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
-                  '$q', 'resource', "$data", "$confirm", "$gmStorage", IssuesController])
+                  '$q', 'resource', "$data", "$confirm", "$gmStorage", "$modal", IssuesController])
 module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
                   '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash",
                   IssuesViewController])
-module.controller("IssuesFormController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
-                  "$gmFlash", IssuesFormController])
+module.controller("IssuesModalController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
+                  "$gmFlash", IssuesModalController])

@@ -217,7 +217,10 @@
                                 data-placement="left">
                             <span class="help-box">Preview</span>
                         </a>
-                        <a data-icon="j" class="btn-small-edit" href="{{ urls.issuesUrl(projectId, issue.id) }}">
+                        <a data-icon="f" class="btn-small-edit" href="{{ urls.issuesUrl(projectId, issue.id) }}">
+                            <span class="help-box">View</span>
+                        </a>
+                        <a data-icon="j" class="btn-small-edit" ng-click="openEditIssueForm(issue)">
                             <span class="help-box">Edit</span>
                         </a>
                         <a data-icon="h" class="btn-small-remove" gm-popover="removeIssue(issue)"
@@ -233,7 +236,7 @@
         </div>
     </div>
 </div>
-<div ng-show="formOpened" ng-controller="IssuesFormController">
+<div ng-show="formOpened" ng-controller="IssuesModalController" gm-modal="issue-form">
     <div class="new-issue-modal modal">
         <form class="inline-form issue-form" gm-checksley-form="submit()">
             <div class="modal-header">
