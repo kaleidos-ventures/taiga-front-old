@@ -295,9 +295,6 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         rs.getIssueHistorical(issueId, filters).then (historical) ->
             if $scope.historical
                 historical.models = _.union($scope.historical.models, historical.models)
-            # HACK: because thew header don't have 'x-pagination-current'
-            #       (see directives/resource -> queryManyPaginated())
-            historical.current = Math.floor(historical.models.length / historical.paginatedBy)
 
             $scope.showMoreHistoricaButton = historical.models.length < historical.count
             $scope.historical = historical
