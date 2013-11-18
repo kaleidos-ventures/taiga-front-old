@@ -49,15 +49,10 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
 
             $rootScope.pageBreadcrumb = breadcrumb
 
-    loadHistorical = (page=null) ->
-        if not page
-            filters = {page: if $scope.historical then $scope.historical.current else 1}
-        else
-            filters = {page: page}
-
-        rs.getTaskHistorical(taskId).then (historical) ->
-            if $scope.historical
-                historical.models = _.union($scope.historical.models, historical.models)
+    loadHistorical = (page=1) ->
+        rs.getTaskHistorical(taskId, {page: page}).then (historical) ->
+            if $scope.historical and page != 1
+                historical.models = $scope.historical.models.concat(historical.models)
 
             $scope.showMoreHistoricaButton = historical.models.length < historical.count
             $scope.historical = historical

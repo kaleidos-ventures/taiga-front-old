@@ -286,14 +286,9 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
 
             $rootScope.pageBreadcrumb = breadcrumb
 
-    loadHistorical = (page=null) ->
-        if not page
-            filters = {page: if $scope.historical then $scope.historical.current else 1}
-        else
-            filters = {page: page}
-
-        rs.getIssueHistorical(issueId, filters).then (historical) ->
-            if $scope.historical
+    loadHistorical = (page=1) ->
+        rs.getIssueHistorical(issueId, {page: page}).then (historical) ->
+            if $scope.historical and page != 1
                 historical.models = _.union($scope.historical.models, historical.models)
 
             $scope.showMoreHistoricaButton = historical.models.length < historical.count

@@ -7,6 +7,10 @@ GmHistoryDirective = ($compile, $rootScope) ->
                 return switch name
                     when "status" then scope.constants.usStatuses[value].name
                     when "tags" then value.join(", ")
+                    when "tags"
+                        if value
+                            return value.join(", ")
+                        else '__without tags__'
                     else value
 
             issue: (name, value) ->
@@ -14,7 +18,10 @@ GmHistoryDirective = ($compile, $rootScope) ->
                     when "priority" then scope.constants.priorities[value].name
                     when "status" then scope.constants.issueStatuses[value].name
                     when "severity" then scope.constants.severities[value].name
-                    when "tags" then value.join(", ")
+                    when "tags"
+                        if value
+                            return value.join(", ")
+                        else '__without tags__'
                     when "assigned_to"
                         if value == null
                             return "Unassigned"
@@ -22,7 +29,10 @@ GmHistoryDirective = ($compile, $rootScope) ->
                     else value
             task: (name, value) ->
                 return switch name
-                    when "tags" then value.join(", ")
+                    when "tags"
+                        if value
+                            return value.join(", ")
+                        else '__without tags__'
                     when "status" then scope.constants.taskStatuses[value].name
                     when "assigned_to"
                         if value == null
@@ -32,10 +42,11 @@ GmHistoryDirective = ($compile, $rootScope) ->
         }
 
         fields = {
-            userstory: ["status", "tags", "subject", "description"]
+            userstory: ["status", "tags", "subject", "description", "client_requirement",
+                        "team_requirement"]
             issue: ["type", "status", "priority",  "severity", "assigned_to", "tags"
                     "subject", "description"]
-            task: ["status", "assigned_to", "tags", "subject", "description"]
+            task: ["status", "assigned_to", "tags", "subject", "description", "is_iocaine"]
         }
 
         makeChangeItem = (name, field, type) ->
@@ -48,6 +59,7 @@ GmHistoryDirective = ($compile, $rootScope) ->
             return change
 
         makeHistoryItem = (item, type) ->
+            console.log item.changed_fields
             changes = Lazy(fields[type])
                         .map((name) -> {name: name, field: item.changed_fields[name]})
                         .reject((x) -> _.isEmpty(x["field"]))

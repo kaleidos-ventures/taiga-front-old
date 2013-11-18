@@ -59,14 +59,9 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             for roleId, pointId of userStory.points
                 $scope.points[roleId] = $scope.constants.points[pointId].name
 
-    loadHistorical = (page=null) ->
-        if not page
-            filters = {page: if $scope.historical then $scope.historical.current else 1}
-        else
-            filters = {page: page}
-
-        rs.getUserStoryHistorical(userStoryId).then (historical) ->
-            if $scope.historical
+    loadHistorical = (page=1) ->
+        rs.getUserStoryHistorical(userStoryId, {page: page}).then (historical) ->
+            if $scope.historical and page != 1
                 historical.models = _.union($scope.historical.models, historical.models)
 
             $scope.showMoreHistoricaButton = historical.models.length < historical.count
