@@ -166,10 +166,11 @@ modules = [
     "gmStorage",
     "gmConfirm",
     "gmOverlay",
+    "i18next",
 ]
 
 
-init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, config) ->
+init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config) ->
     # Constants
     $rootScope.auth = $gmAuth.getUser()
     $rootScope.constants = {}
@@ -267,9 +268,11 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, config) ->
         $gmStorage.clear()
         $location.url("/login")
 
+    $i18next.initialize()
+
 angular.module('greenmine', modules)
        .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', '$gmUrlsProvider', configCallback])
-       .run(['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls', 'config', init])
+       .run(['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls', '$i18next', 'config', init])
 
 angular.module('greenmine.config', []).value('config', {
     host: "localhost:8000"
