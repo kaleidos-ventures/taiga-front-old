@@ -15,6 +15,7 @@
 WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q) ->
     $rootScope.pageSection = 'wiki'
     $rootScope.projectId = parseInt($routeParams.pid, 10)
+    $rootScope.slug = $routeParams.slug
     $rootScope.pageBreadcrumb = [
         ["", ""]
         ["Wiki", $rootScope.urls.wikiUrl($rootScope.projectId, "home")]
@@ -113,6 +114,37 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
         $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
 
+WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q) ->
+    $rootScope.pageSection = 'wiki'
+    $rootScope.projectId = parseInt($routeParams.pid, 10)
+    $rootScope.slug = $routeParams.slug
+    $rootScope.pageBreadcrumb = [
+        ["", ""]
+        ["Wiki", $rootScope.urls.wikiUrl($rootScope.projectId, "home")]
+        [$routeParams.slug, null]
+        ["Historical", null]
+    ]
+
+    $scope.attachments = []
+
+    projectId = $rootScope.projectId
+    slug = $routeParams.slug
+
+    $data.loadProject($scope)
+
+    loadAttachments = (page) ->
+        rs.getWikiPageAttachments(projectId, page.id).then (attachments) ->
+            $scope.attachments = attachments
+
+
+    promise = rs.getWikiPage(projectId, slug)
+    promise.then (page) ->
+        $scope.page = page
+        $scope.content = page.content
+        loadAttachments(page)
+
 module = angular.module("greenmine.controllers.wiki", [])
 module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams',
                                      '$data', 'resource', "$confirm", "$q", WikiController])
+module.controller("WikiHistoricalController", ['$scope', '$rootScope', '$location', '$routeParams',
+                                               '$data', 'resource', "$confirm", "$q",   WikiHistoricalController])

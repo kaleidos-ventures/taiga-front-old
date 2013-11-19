@@ -63,6 +63,9 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when('/project/:pid/wiki/:slug',
             {templateUrl: 'partials/wiki.html', controller: "WikiController"})
 
+    $routeProvider.when('/project/:pid/wiki/:slug/historical',
+            {templateUrl: 'partials/wiki-historical.html', controller: "WikiHistoricalController"})
+
     $routeProvider.when('/project/:pid/search', {
         controller: "SearchController", templateUrl: "partials/search.html"})
 
@@ -208,6 +211,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config) -
         task: "/project/%s/tasks/%s"
         tasks: "/project/%s/tasks/%s"
         wiki: "/project/%s/wiki/%s"
+        wikiHistorical: "/project/%s/wiki/%s/historical"
         search: "/project/%s/search"
         admin: "/project/%s/admin"
 
@@ -258,6 +262,9 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config) -
 
         wikiUrl: (projectId, pageName, raw) ->
             url = gm.format($rootScope.baseUrls.wiki, [projectId, pageName])
+            return conditionalUrl(url, raw)
+        wikiHistoricalUrl: (projectId, pageName, raw) ->
+            url = gm.format($rootScope.baseUrls.wikiHistorical, [projectId, pageName])
             return conditionalUrl(url, raw)
 
         searchUrl: (projectId, raw) ->
