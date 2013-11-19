@@ -15,4 +15,26 @@
             </div>
         </div>
     </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="history">
+                <h3>History</h3>
+                <div class="history-items-container">
+                    <ul class="history-items">
+                        <li class="history-item" ng-repeat="hitem in historical.models">
+                            <div class="title">
+                                <span class="updated">Updated by <span gm-colorize-user="constants.users[hitem.user]">{{ constants.users[hitem.user].full_name }}</span></span>
+                                <span class="date">{{ hitem.created_date|momentFromNow }}</span>
+                            </div>
+                            <div class="changes">
+                                <div class="change" gm-render-markdown="hitem.fields.content"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <a class="more" data-icon="C" href="" ng-click="loadMoreHistorical()"
+                   ng-show="showMoreHistoricaButton">See More</a>
+            </div>
+        </div>
+    </div>
 </div>

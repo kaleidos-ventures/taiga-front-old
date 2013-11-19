@@ -424,6 +424,11 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return defered.promise
 
+    service.getWikiPageHistorical = (wikiId, filters={}) ->
+        urlParams = [wikiId]
+        parameters = _.extend({}, filters)
+        return queryManyPaginated("wiki-historical", parameters, null , null, urlParams)
+
     service.createWikiPage = (projectId, slug, content) ->
         obj = {
             "content": content

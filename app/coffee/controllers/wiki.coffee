@@ -28,9 +28,6 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
     $scope.attachments = []
 
     projectId = $rootScope.projectId
-    slug = $routeParams.slug
-
-    $data.loadProject($scope)
 
     loadAttachments = (page) ->
         rs.getWikiPageAttachments(projectId, page.id).then (attachments) ->
@@ -50,14 +47,16 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
             $scope.newAttachments = []
             loadAttachments($scope.page)
 
-    promise = rs.getWikiPage(projectId, slug)
-    promise.then (page) ->
-        $scope.page = page
-        $scope.content = page.content
-        loadAttachments(page)
+    $data.loadProject($scope).then ->
+        $data.loadUsersAndRoles($scope).then ->
+            promise = rs.getWikiPage(projectId, $rootScope.slug)
+            promise.then (page) ->
+                $scope.page = page
+                $scope.content = page.content
+                loadAttachments(page)
 
-    promise.then null, (data) ->
-        $scope.formOpened = true
+            promise.then null, (data) ->
+                $scope.formOpened = true
 
     $scope.openEditForm = ->
         $scope.formOpened = true
@@ -75,7 +74,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
         if $scope.page is undefined
             content = $scope.content
 
-            promise = rs.createWikiPage(projectId, slug, content)
+            promise = rs.createWikiPage(projectId, $rootScope.slug, content)
 
             promise.then (page) ->
                 $scope.page = page
@@ -128,20 +127,32 @@ WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, 
     $scope.attachments = []
 
     projectId = $rootScope.projectId
-    slug = $routeParams.slug
 
-    $data.loadProject($scope)
+    $data.loadProject($scope).then ->
+        $data.loadUsersAndRoles($scope).then ->
+            promise = rs.getWikiPage(projectId, $rootScope.slug)
+            promise.then (page) ->
+                $scope.page = page
+                $scope.content = page.content
+                loadAttachments(page)
+                loadHistorical()
 
     loadAttachments = (page) ->
         rs.getWikiPageAttachments(projectId, page.id).then (attachments) ->
             $scope.attachments = attachments
 
+    loadHistorical = (page=1) ->
+        rs.getWikiPageHistorical($scope.page.id, {page: page}).then (historical) ->
+            if $scope.historical and page != 1
+                historical.models = _.union($scope.historical.models, historical.models)
 
-    promise = rs.getWikiPage(projectId, slug)
-    promise.then (page) ->
-        $scope.page = page
-        $scope.content = page.content
-        loadAttachments(page)
+            $scope.showMoreHistoricaButton = historical.models.length < historical.count
+            $scope.historical = historical
+
+    $scope.loadMoreHistorical = ->
+        page = if $scope.historical then $scope.historical.current + 1 else 1
+        loadHistorical(page=page)
+
 
 module = angular.module("greenmine.controllers.wiki", [])
 module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams',
