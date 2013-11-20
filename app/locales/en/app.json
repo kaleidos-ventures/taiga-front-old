@@ -222,5 +222,14 @@
         "no-recent-projects": "You have not recent projects jet.",
         "are-you-sure": "Are you sure?",
         "are-you-sure-long": "Are you sure you want to delete this project?"
+    },
+    "register": {
+        "username": "Username",
+        "first-name": "First name",
+        "last-name": "Last name",
+        "email": "Email",
+        "password": "Password",
+        "password-again": "Password again",
+        "register": "Register"
     }
 }

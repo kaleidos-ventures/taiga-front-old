@@ -222,5 +222,14 @@
         "no-recent-projects": "No tienes proyectos recientes todavía.",
         "are-you-sure": "¿Estás seguro?",
         "are-you-sure-long": "¿Estás seguro de que quieres borrar este proyecto?"
+    },
+    "register": {
+        "username": "Nombre de usuario",
+        "first-name": "Nombre",
+        "last-name": "Apellido",
+        "email": "Email",
+        "password": "Contraseña",
+        "password-again": "Repetir contraseña",
+        "register": "Registrarte"
     }
 }
