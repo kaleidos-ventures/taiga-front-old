@@ -383,10 +383,10 @@
 <script type="text/template" id="us-preview-popover">
     <div class="us-preview-popover">
         <section>
-            <strong>Subject:</strong><br />{{ us.subject }}
+            <strong i18next="backlog.subject-popover">Subject:</strong><br />{{ us.subject }}
         </section>
         <section>
-            <strong>Description:</strong>
+            <strong i18next="backlog.description-popover">Description:</strong>
             <p>{{ us.description }}</p>
         </section>
     </div>
@@ -395,12 +395,13 @@
 <script type="text/template" id="us-remove-popover">
     <div class="us-remove-popover">
         <section>
+            <!-- TODO: i18next integration pending -->
             <p>Are you sure you want to delete this user story:
                 <strong>{{ us.subject }}</strong></p>
         </section>
         <section>
-            <input type="button" class="button button-success" value="Delete" />
-            <input type="button" class="button button-delete" value="Cancel" />
+            <input type="button" class="button button-success" i18next="value:backlog.delete-popover" value="Delete" />
+            <input type="button" class="button button-delete" i18next="value:backlog.cancel-popover" value="Cancel" />
         </section>
     </div>
 </script>
