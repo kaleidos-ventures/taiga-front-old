@@ -1,6 +1,10 @@
 {
-    login: {
-        username: 'Username',
-        password: 'Password'
+    "login": {
+        "username-label": "Username:",
+        "password-label": "Password:",
+        "forgot-password": "Forgot your password?",
+        "your-email": "Your email",
+        "login": "Login",
+        "recover": "Recover"
     }
 }

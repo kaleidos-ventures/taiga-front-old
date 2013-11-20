@@ -1,6 +1,10 @@
 {
-    login: {
-        username: 'Nombre de usuario',
-        password: 'Contraseña'
+    "login": {
+        "username": "Nombre de usuario:",
+        "password": "Contraseña:",
+        "forgot-password": "¿Has olvidado tu contraseña?",
+        "your-email": "Tu email",
+        "login": "Entrar",
+        "recover": "Recuperar"
     }
 }
