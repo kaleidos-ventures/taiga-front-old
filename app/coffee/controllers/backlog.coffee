@@ -180,12 +180,12 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
         return result
 
     $scope.openCreateUserStoryForm = ->
-        promise = $modal.open("user-story-form", {"us": initializeUsForm()})
+        promise = $modal.open("user-story-form", {"us": initializeUsForm(), "type": "create"})
         promise.then ->
             loadUserStories()
 
     $scope.openEditUserStoryForm = (us) ->
-        promise = $modal.open("user-story-form", {"us": initializeUsForm(us)})
+        promise = $modal.open("user-story-form", {"us": initializeUsForm(us), "type": "edit"})
         promise.then ->
             loadUserStories()
 

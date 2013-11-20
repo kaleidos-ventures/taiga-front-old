@@ -47,9 +47,23 @@
         "estimated-finish": "Estimated finish:",
         "save": "Save",
         "close": "Close",
+        "is-closed": "Is closed",
         "sprints": "Sprints",
         "no-sprints": "There isn't Sprints. Create a new one.",
         "sprint-total": "total",
-        "sprint-closed": "closed"
+        "sprint-closed": "closed",
+        "sprint-show-uss": "Show USs",
+        "sprint-hide-uss": "Hide USs",
+        "subject": "Subject",
+        "subject-placeholder": "A descriptive name...",
+        "status": "Status",
+        "tags": "Tags",
+        "tags-placeholder": "Ex: backend, backoffice, ecommerce...",
+        "description": "Description",
+        "description-placeholder": "A good description...",
+        "client-requirement": "Client's requirement",
+        "team-requirement": "Team's requirement",
+        "create-user-story": "Create user story",
+        "modify-user-story": "Modify user story"
     }
 }

@@ -236,11 +236,11 @@
                         <div class="us-viewer" ng-show="ml.closed" ng-switch="viewUSs">
                            <!-- Xaviju FIXME: Added icons to show/hide actions -->
                            <a data-icon="C" class="show" href="" ng-switch-when="false"
-                               ng-click="toggleViewUSs()">
+                               ng-click="toggleViewUSs()" i18next="backlog.sprint-show-uss">
                                Show USs
                            </a>
                            <a data-icon="B" class="hide" href="" ng-switch-default
-                              ng-click="toggleViewUSs()">
+                              ng-click="toggleViewUSs()" i18next="backlog.sprint-hide-uss">
                                Hide USs
                            </a>
                         </div>
@@ -267,33 +267,34 @@
                 <div class="milestone-edit-form-box" ng-show="editFormOpened">
                     <form action="" gm-checksley-form="submit()">
                         <fieldset>
-                            <label>Sprint name:</label>
+                            <label i18next="backlog.sprint-name-label">Sprint name:</label>
                             <input type="text" data-required="true" ng-model="ml.name"
-                                name="name" placeholder="Sprint name..."></input>
+                                name="name" placeholder="Sprint name..."
+                                i18next="placeholder:backlog.sprint-name-placeholder"></input>
                         </fieldset>
 
                         <fieldset>
                             <div class="subfield">
-                                <label>Estimated start:</label>
+                                <label i18next="backlog.estimated-start">Estimated start:</label>
                                 <input type="text" gm-kalendae data-required="true"
                                        name="estimated_start"
                                        ng-model="ml.estimated_start"></input>
                             </div>
                             <div class="subfield">
-                                <label>Estimated finish</label>
+                                <label i18next="backlog.estimated-finish">Estimated finish</label>
                                 <input type="text" gm-kalendae data-required="true"
                                        name="estimated_finish"
                                        ng-model="ml.estimated_finish"></input>
                             </div>
                             <div class="subfield checkbox">
                                 <input type="checkbox" id="closed_{{ ml.id }}" name="closed" ng-model="ml.closed"></input>
-                                <label for="closed_{{ ml.id }}"> Is closed</label>
+                                <label for="closed_{{ ml.id }}" i18next="backlog.is-closed">Is closed</label>
                             </div>
                         </fieldset>
                         <div class="btn-group">
                             <input type="submit" class="button button-success"
-                                   gm-checksley-submit-button value="Save" />
-                            <a href="" class="button" ng-click="closeEditForm()">Close</a>
+                                   gm-checksley-submit-button value="Save" i18next="value:backlog.save"/>
+                            <a href="" class="button" ng-click="closeEditForm()" i18next="backlog.close">Close</a>
                         </div>
                     </form>
                 </div>
@@ -311,54 +312,59 @@
     <div class="new-us-modal modal">
         <form class="inline-form us-form" gm-checksley-form="submit()">
             <div class="modal-header" ng-switch on="context.type">
-                <h3 ng-switch-when="create">Create user story</h3>
-                <h3 ng-switch-when="edit">Modify user story</h3>
+                <h3 ng-switch-when="create" i18next="backlog.create-user-story">Create user story</h3>
+                <h3 ng-switch-when="edit" i18next="backlog.modify-user-story">Modify user story</h3>
             </div>
             <div class="modal-body">
                 <fieldset class="fieldset-row">
                     <fieldset>
-                        <label>Subject</label>
+                        <label i18next="backlog.subject">Subject</label>
                         <input class="subject" type="text" ng-model="form.subject" data-required="true"
-                               name="subject" placeholder="A descriptive name..." data-maxlength="500"></input>
+                               name="subject" placeholder="A descriptive name..." data-maxlength="500"
+                               i18next="placeholder:backlog.subject-placeholder"></input>
                     </fieldset>
                 </fieldset>
                 <div class="fieldset-row" gm-role-points-edition></div>
                 <div class="fieldset-row clearfix status-tags">
                     <fieldset>
-                        <label>Status</label>
+                        <label i18next="backlog.status">Status</label>
                         <select class="status" name="status" ng-model="form.status"
                             data-type="number" data-required="true"
                             data-error-message="This field is required."
-                            ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'"></select>
+                            ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'"
+                            i18next="data-error-message:field-required"
+                            ></select>
                         </select>
                     </fieldset>
                     <fieldset>
-                        <label>Tags</label>
+                        <label i18next="backlog.tags">Tags</label>
                         <input type="text" class="tags" name="tags" value=""
                                gm-select2-tags="projectTags" ng-model="form.tags"
-                               placeholder="Ex: backend, backoffice, ecommerce..."></input>
+                               placeholder="Ex: backend, backoffice, ecommerce..."
+                               i18next="placeholder:backlog.tags-placeholder"></input>
                     </fieldset>
                 </div>
                 <fieldset class="fieldset-row">
-                    <label>Description</label>
+                    <label i18next="backlog.description">Description</label>
                     <textarea class="description" name="description"
                               placeholder="A good description..."
+                              i18next="placeholder:backlog.description-placeholder"
                               ng-model="form.description"></textarea>
                 </fieldset>
                 <div class="fieldset-row">
                     <input type="checkbox" id="client-requirement"
                            ng-model="form.client_requirement" name="client_requirement"/>
-                    <label for="client-requirement">Client Requirement</label>
+                    <label for="client-requirement" i18next="backlog.client-requirement">Client Requirement</label>
                     <input type="checkbox"id="team-requirement"
                            ng-model="form.team_requirement" name="team_requirement">
-                    <label for="team-requirement" >Team Requirement</label>
+                    <label for="team-requirement" i18next="backlog.team-requirement">Team Requirement</label>
                 </div>
             </div>
             <div class="modal-footer">
                 <div gm-spinner class="spinner-container"></div>
                 <input type="submit" class="button button-success"
-                       gm-checksley-submit-button value="Save" />
-                <a href="" class="button button-cancel" ng-click="close()">Close</a>
+                       gm-checksley-submit-button value="Save" i18next="value:backlog.save" />
+                <a href="" class="button button-cancel" ng-click="close()" i18next="backlog.close">Close</a>
             </div>
         </form>
     </div>
