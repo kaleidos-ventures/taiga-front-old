@@ -210,7 +210,7 @@
                         <div class="button-item" ng-show="!issue.assigned_to">
                             <i class="icon-question-sign"></i>
                             <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-auto-hide="true">
-                                <span>Unassigned</span>
+                                <span i18next="issues.unassigned">Unassigned</span>
                             </a>
                         </div>
                     </div>
@@ -243,32 +243,33 @@
 <div ng-show="formOpened" ng-controller="IssuesModalController" gm-modal="issue-form">
     <div class="new-issue-modal modal">
         <form class="inline-form issue-form" gm-checksley-form="submit()">
-            <div class="modal-header">
-                <h3>New issue:</h3>
+            <div class="modal-header" ng-switch on="context.type">
+                <h3 ng-switch-when="create" i18next="issues.create-issue">Create issue</h3>
+                <h3 ng-switch-when="edit" i18next="issues.modify-issue">Modify issue</h3>
             </div>
             <div class="modal-body">
                 <fieldset class="fieldset-row">
-                    <label>Subject</label>
+                    <label i18next="issues.form-subject">Subject</label>
                     <input name="subject" class="subject" type="text" data-required="true"
                         ng-model="form.subject" data-maxlength="500"></input>
                 </fieldset>
                 <div class="fieldset-row">
                     <fieldset class="type">
-                        <label>Type</label>
+                        <label i18next="issues.form-type">Type</label>
                         <select name="type" ng-model="form.type" data-required="true"
                             data-error-message="Required"
                             ng-options="c.id as c.name for c in constants.issueTypesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                     <fieldset class="priority">
-                        <label>Priority</label>
+                        <label i18next="issues.form-priority">Priority</label>
                         <select name="priority" ng-model="form.priority"
                             data-required="true" data-error-message="Required"
                             ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                     <fieldset class="severity">
-                        <label>Severity</label>
+                        <label i18next="issues.form-severity">Severity</label>
                         <select name="severity" ng-model="form.severity"
                             data-required="true" data-error-message="Required"
                             ng-options="c.id as c.name for c in constants.severitiesList|orderBy:'order'"></select>
@@ -277,37 +278,40 @@
                 </div>
                 <div class="fieldset-row">
                     <fieldset class="status">
-                        <label>Status</label>
+                        <label i18next="issues.form-status">Status</label>
                         <select name="status" ng-model="form.status" data-required="true"
                             data-type="number" data-error-message="Required"
                             ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                     <fieldset class="assigned-to">
-                        <label>Assigned to</label>
+                        <label i18next="issues.form-assigned-to">Assigned to</label>
                         <select name="assigned_to"
                                 ng-model="form.assigned_to" data-type="number"
                                 data-error-message="Required"
                                 ng-options="c.user as c.full_name for c in project.memberships">
-                            <option value="">Unassigned</option>
+                            <option value="" i18next="issues.form-unassigned">Unassigned</option>
                         </select>
                     </fieldset>
                     <fieldset>
-                        <label>Tags</label>
-                        <input gm-select2-tags="projectTags" ng-model="form.tags" data-placeholder="Pick tags" />
+                        <label i18next="issues.form-tags">Tags</label>
+                        <input gm-select2-tags="projectTags" ng-model="form.tags"
+                            data-placeholder="Pick tags"
+                            i18next="data-placeholder:issues.form-tags-placeholder"
+                            />
                     </fieldset>
                 </div>
                 <div class="fieldset-row">
                     <fieldset>
-                        <label>Description</label>
+                        <label i18next="issues.form-description">Description</label>
                         <textarea name="description" class="description" ng-model="form.description"></textarea>
                     </fieldset>
                 </div>
             </div>
             <div class="modal-footer">
                 <div gm-spinner class="spinner-container"></div>
-                <input type="submit" gm-checksley-submit-button class="button button-success" value="Save" />
-                <a href="" class="button button-cancel" ng-click="close()">Close</a>
+                <input type="submit" gm-checksley-submit-button class="button button-success" value="Save"  i18next="value:issues.form-save"/>
+                <a href="" class="button button-cancel" ng-click="close()" i18next="issues.form-close">Close</a>
             </div>
         </form>
     </div>
@@ -316,17 +320,17 @@
 <script type="text/template" id="issue-preview-popover">
     <div class="issue-preview-popover">
         <section>
-            <strong>ID:</strong> #{{ issue.ref }}
+            <strong i18next="issues.id-popover">ID:</strong> #{{ issue.ref }}
         </section>
         <section>
-            <strong>Created by:</strong><br />
+            <strong i18next="issues.created-by-popover">Created by:</strong><br />
             <span gm-colorize-user="constants.users[issue.owner]">{{ constants.users[issue.owner].full_name }}</span>
         </section>
         <section>
-            <strong>Subject:</strong><br />{{ issue.subject }}
+            <strong i18next="issues.subject-popover">Subject:</strong><br />{{ issue.subject }}
         </section>
         <section>
-            <strong>Description:</strong>
+            <strong i18next="issues.description-popover">Description:</strong>
             <p>{{ issue.description }}</p>
         </section>
     </div>
@@ -335,21 +339,22 @@
 <script type="text/template" id="issue-remove-popover">
     <div class="issue-remove-popover">
         <section>
+            <!-- TODO: i18next integration pending -->
             <p>Are you sure you want to delete this user story:
                 <strong>{{ issue.subject }}</strong></p>
         </section>
         <section>
-            <input type="button" class="button button-success" value="Delete" />
-            <input type="button" class="button button-delete" value="Cancel" />
+            <input type="button" class="button button-success" value="Delete" i18next="value:issues.delete-popover" />
+            <input type="button" class="button button-delete" value="Cancel" i18next="value:issues.cancel-popover" />
         </section>
     </div>
 </script>
 
 <script type="text/template" id="developers-popover">
     <div class="developers-popover">
-        <p class="title">Select a user:</p>
+        <p class="title" i18next="issues.select-user-popover">Select a user:</p>
         <ul>
-            <li><a class="btn-accept" href="">Unassigned</a>
+            <li><a class="btn-accept" href="" i18next="issues.unassigned-popover">Unassigned</a>
             <li ng-repeat="obj in project.memberships">
                 <a class="btn-accept" href="" data-id="{{ obj.user }}"
                    gm-colorize-user="constants.users[obj.user]">{{ obj.full_name }}</a>
@@ -360,7 +365,7 @@
 
 <script type="text/template" id="severity-popover">
     <div class="severity-popover">
-        <p class="title">Select severity:</p>
+        <p class="title" i18next="issues.select-severity-popover">Select severity:</p>
         <ul>
             <li ng-repeat="obj in constants.severitiesList">
                 <a class="btn-accept" data-id="{{ obj.id }}" href="">{{ obj.name }}</a>
@@ -371,7 +376,7 @@
 
 <script type="text/template" id="priority-popover">
     <div class="priority-popover">
-        <p class="title">Select priority:</p>
+        <p class="title" i18next="issues.select-priority-popover">Select priority:</p>
         <ul>
             <li ng-repeat="obj in constants.prioritiesList">
                 <a href="" data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
@@ -382,7 +387,7 @@
 
 <script type="text/template" id="status-popover">
     <div class="status-popover">
-        <p class="title">Select status:</p>
+        <p class="title" i18next="issues.select-status-popover">Select status:</p>
         <ul>
             <li ng-repeat="obj in constants.issueStatusesList">
                 <a href="" data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>

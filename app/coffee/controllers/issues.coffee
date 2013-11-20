@@ -200,7 +200,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $scope.isTagSelected = isTagSelected
 
     $scope.openCreateIssueForm = ->
-        promise = $modal.open("issue-form", {})
+        promise = $modal.open("issue-form", {'type': 'create'})
         promise.then (issue) ->
             $scope.issues.push(issue)
             regenerateTags()
@@ -208,7 +208,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             filterIssues()
 
     $scope.openEditIssueForm = (issue) ->
-        promise = $modal.open("issue-form", {'issue': issue})
+        promise = $modal.open("issue-form", {'issue': issue, 'type': 'edit'})
         promise.then ->
             regenerateTags()
             loadStats()
