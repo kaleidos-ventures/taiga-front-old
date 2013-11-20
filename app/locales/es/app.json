@@ -175,5 +175,16 @@
         "see-more": "Ver más",
         "updated-by-history": "Actualizada por",
         "comment-history": "Comentario:"
+    },
+    "profile": {
+        "username": "Nombre de usuario:",
+        "first-name": "Nombre:",
+        "last-name": "Apellido:",
+        "notification-level": "Nivel de notificación:",
+        "notify-changes-by-me": "Notificarme mis propios cambios:",
+        "email": "Email:",
+        "color": "Color:",
+        "save": "Guardar",
+        "password": "Contraseña:"
     }
 }

@@ -5,45 +5,45 @@
             <div class="update-form">
                 <form class="form-horizontal" gm-checksley-form="submitProfile()">
                     <fieldset>
-                        <label>Username:</label>
+                        <label i18next="profile.username">Username:</label>
                         <input type="text" name="username" data-required="true" value="" ng-model="auth.username"></input>
                     </fieldset>
 
                     <fieldset>
-                        <label>First name:</label>
+                        <label i18next="profile.first-name">First name:</label>
                         <input type="text" name="first_name" data-required="true" value="" ng-model="auth.first_name"></input>
                     </fieldset>
 
                     <fieldset>
-                        <label>Last name:</label>
+                        <label i18next="profile.last-name">Last name:</label>
                         <input type="text" name="last_name" data-required="true" value="" ng-model="auth.last_name"></input>
                     </fieldset>
 
                     <fieldset>
-                        <label>Notification level:</label>
+                        <label i18next="profile.notification-level">Notification level:</label>
                         <select type="text" name="notify_level" data-required="true" ng-model="auth.notify_level">
                             <option ng-selected="key == auth.notify_level" ng-repeat="(key, value) in notificationLevelOptions" value="{{ key }}">{{ value }}</option>
                         </select>
                     </fieldset>
                     <fieldset>
-                        <label>Notify changes by me:</label>
+                        <label i18next="profile.notify-changes-by-me">Notify changes by me:</label>
                         <input type="checkbox" name="notify_changes_by_me" ng-model="auth.notify_changes_by_me"></input>
                     </fieldset>
 
                     <fieldset>
-                        <label>Email:</label>
+                        <label i18next="profile.email">Email:</label>
                         <input type="text" data-type="email" name="email" data-required="true" value="" ng-model="auth.email"></input>
                     </fieldset>
 
                     <fieldset class="colorPicker">
-                        <label>Color:</label>
+                        <label i18next="profile.color">Color:</label>
                         <input type="text" name="color" data-required="true" value="" ng-model="auth.color"></input>
                         <div class="colorSample" style="background-color: {{auth.color}}" gm-popover="" data-tmpl="#color-picker-popover" data-auto-hide="true"></div>
                     </fieldset>
 
 
                     <fieldset class="issue-edit-submit">
-                        <button type="submit" class="button button-edit" gm-checksley-submit-button>Save</button>
+                        <button type="submit" class="button button-edit" gm-checksley-submit-button i18next="profile.save">Save</button>
                     </fieldset>
                 </form>
             </div>
@@ -54,12 +54,12 @@
 
                 <form class="form-horizontal" gm-checksley-form="submitPassword()">
                     <fieldset>
-                        <label>Password:</label>
+                        <label i18next="profile.password">Password:</label>
                         <input name="password" type="password" ng-model="formData.password" data-minlength="6"></input>
                     </fieldset>
 
                     <fieldset class="issue-edit-submit">
-                        <button type="submit" class="button button-edit" gm-checksley-submit-button>Save</button>
+                        <button type="submit" class="button button-edit" gm-checksley-submit-button i18next="profile.save">Save</button>
                     </fieldset>
                 </form>
             </div>
