@@ -2,9 +2,13 @@
     "login": {
         "username-label": "Username:",
         "password-label": "Password:",
+        "username-placeholder": "username...",
+        "password-placeholder": "password...",
         "forgot-password": "Forgot your password?",
         "your-email": "Your email",
         "login": "Login",
+        "loading": "Our Oompa Loompas are identifying you, please wait...",
+        "error": "Your username or password are incorrect",
         "recover": "Recover"
     }
 }

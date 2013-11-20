@@ -1,10 +1,14 @@
 {
     "login": {
-        "username": "Nombre de usuario:",
-        "password": "Contraseña:",
+        "username-label": "Nombre de usuario:",
+        "password-label": "Contraseña:",
+        "username-placeholder": "nombre de usuario...",
+        "password-placeholder": "contraseña...",
         "forgot-password": "¿Has olvidado tu contraseña?",
         "your-email": "Tu email",
         "login": "Entrar",
+        "loading": "Nuestros Oompa Loompas te están identificando, por favor espere...",
+        "error": "Tu nombre de usuario o contraseña son incorrectos",
         "recover": "Recuperar"
     }
 }

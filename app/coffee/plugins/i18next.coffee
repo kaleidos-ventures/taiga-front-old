@@ -51,11 +51,11 @@ I18NextProvider = ($rootScope, storage, $q) ->
         defer = $q.defer()
 
         # Put to rootScope a initial values
-        $rootScope.currentLang = storage.get("lang", "es")
+        $rootScope.currentLang = storage.get("lang", "en")
 
         options =
             postProcess: "lodashTemplate",
-            fallbackLng: "es",
+            fallbackLng: "en",
             useLocalStorage: false,
             localStorageExpirationTime: 60*60*24*1000, # 1 day
             resGetPath: 'locales/__lng__/__ns__.json',

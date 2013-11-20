@@ -15,6 +15,7 @@
 angular.module('greenmine.config', []).value('config', {
     host: "localhost:8000"
     scheme: "http"
+    defaultLanguage: "en"
     notificationLevelOptions: {
         "all_owned_projects": "All events on my projects"
         "only_watching": "Only events for objects i watch"
