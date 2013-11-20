@@ -8,21 +8,24 @@
         <div class="form-container">
             <form id="login-form" class="login-form" method="post" action="" gm-checksley-form="submit()">
                 <fieldset class="form-field">
-                    <label>Username: </label>
+                    <label i18next="login.username-label">Username: </label>
                     <input type="text" ng-model="form.username"
                         data-required="true" data-minlength="3"
+                        i18next="placeholder:login.username-placeholder"
                         placeholder="username..." />
                 </fieldset>
                 <fieldset class="form-field">
-                    <label>Password</label>
+                    <label i18next="login.password-label">Password</label>
                     <input type="password" ng-model="form.password"
                         data-required="true" data-minlength="6"
-                        placeholder="password..." />
+                        placeholder="password..." 
+                        i18next="placeholder:login.password-placeholder"
+                        />
                 </fieldset>
-                <a class="forgot-pass" href="#/recovery">Forgot your password?</a>
+                <a class="forgot-pass" href="#/recovery" i18next="login.forgot-password">Forgot your password?</a>
 
                 <fieldset class="form-field clearfix">
-                    <input class="btn01" type="submit" value="Login" gm-checksley-submit-button />
+                    <input class="btn01" type="submit" value="Login" gm-checksley-submit-button i18next="value:login.login"/>
                 </fieldset>
 
                 <!--
@@ -34,8 +37,13 @@
 
                 <!-- if success {.loading } else {.error} -->
                 <div class="login-message">
-                    <p class="loading" ng-show="!error && loading"><span class="loading-ico"></span>Our Oompa Loompas are identifying you, please wait...</p>
-                    <p class="error" ng-show="error">Tu nombre de usuario o contraseña son incorrectos</p>
+                    <p class="loading" ng-show="!error && loading">
+                        <span class="loading-ico"></span>
+                        <span i18next="login.loading">Our Oompa Loompas are identifying you, please wait...</span>
+                    </p>
+                    <p class="error" ng-show="error" i18next="login.error">
+                        Your username or password are incorrect
+                    </p>
                 </div>
             </form>
         </div>
