@@ -3,9 +3,9 @@
     <div class="project-list">
 
         <div class="sidebar all-projects">
-            <p class="projects-title">All projects</p>
+            <p class="projects-title" i18next="projects.all-projects">All projects</p>
             <ul>
-                <li ng-show="projects.length == 0" class="empty">
+                <li ng-show="projects.length == 0" class="empty" i18next="projects.no-projects">
                     You have not projects jet.
                 </li>
                 <li ng-repeat="project in projects">
@@ -15,9 +15,9 @@
         </div>
 
         <div class="main projects-dashboard">
-            <p class="projects-title">Recent projects</p>
+            <p class="projects-title" i18next="projects.recent-projects">Recent projects</p>
             <ul class="latest-projects">
-                <li ng-show="(projects|limitTo:6).length == 0" class="empty">
+                <li ng-show="(projects|limitTo:6).length == 0" class="empty" i18next="projects.no-recent-projects">
                     You have not recent projects jet.
                 </li>
                 <li class="list-item" ng-repeat="project in projects|limitTo:6">
@@ -64,7 +64,7 @@
 
     </div>
 
-    <div class="delete-project-dialog" style="display: none" title="Are you sure?">
-        <p>Are you sure you want to delete this project?</p>
+    <div class="delete-project-dialog" style="display: none" title="Are you sure?" i18next="title:projects.are-you-sure">
+        <p i18next="title:projects.are-you-sure-long">Are you sure you want to delete this project?</p>
     </div>
 </div>

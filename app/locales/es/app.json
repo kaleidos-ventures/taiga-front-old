@@ -214,5 +214,13 @@
         "default-issue-type": "Valor por defecto del selector de tipos de peticion:",
         "default-issue-status": "Valor por defecto del selector de estados de peticion:",
         "save": "Guardar"
+    },
+    "projects": {
+        "all-projects": "Todos los proyectos",
+        "no-projects": "No tienes proyectos todavía",
+        "recent-projects": "Proyectos recientes",
+        "no-recent-projects": "No tienes proyectos recientes todavía.",
+        "are-you-sure": "¿Estás seguro?",
+        "are-you-sure-long": "¿Estás seguro de que quieres borrar este proyecto?"
     }
 }

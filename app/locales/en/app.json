@@ -214,5 +214,13 @@
         "default-issue-type": "Default value for issue type selectors:",
         "default-issue-status": "Default value for issue status selectors:",
         "save": "Save"
+    },
+    "projects": {
+        "all-projects": "All projects",
+        "no-projects": "You have not projects jet.",
+        "recent-projects": "Recent projects",
+        "no-recent-projects": "You have not recent projects jet.",
+        "are-you-sure": "Are you sure?",
+        "are-you-sure-long": "Are you sure you want to delete this project?"
     }
 }
