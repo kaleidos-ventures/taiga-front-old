@@ -94,14 +94,14 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal) 
         if us != undefined
             options.user_story = us.id
 
-        promise = $modal.open("task-form", {'task': options})
+        promise = $modal.open("task-form", {'task': options, 'type': 'create'})
         promise.then (us) ->
             $scope.tasks.push(us)
             formatUserStoryTasks()
             calculateStats()
 
     $scope.openEditTaskForm = (us, task) ->
-        promise = $modal.open("task-form", {'task': task})
+        promise = $modal.open("task-form", {'task': task, 'type': 'edit'})
         promise.then ->
             formatUserStoryTasks()
             calculateStats()

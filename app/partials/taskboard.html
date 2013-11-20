@@ -152,7 +152,7 @@
 
     <div class="new-task-modal modal">
         <form class="inline-form task-form" gm-checksley-form="submit()">
-            <div class="modal-header" ng-switch on="type">
+            <div class="modal-header" ng-switch on="context.type">
                 <h3 ng-switch-when="create">Create task</h3>
                 <h3 ng-switch-when="edit">Modify task</h3>
             </div>
