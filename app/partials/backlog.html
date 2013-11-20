@@ -8,26 +8,26 @@
                         <div class="bar" style="width: {{ percentageClosedPoints|number:1}}%;"></div>
                     </div>
                     <div class="progress-indicator indicator">{{ percentageClosedPoints|number:1 }}%</div>
-                    <div class="progress-help help">completed</div>
+                    <div class="progress-help help" i18next="backlog.completed">completed</div>
                 </div>
                 <div class="stats-box">
                     <div class="item">
                         <div class="indicator">{{ projectStats.total_points }}</div>
-                        <div class="help">project points</div>
+                        <div class="help" i18next="backlog.project-points">project points</div>
                     </div>
 
                     <div class="item">
                         <div class="indicator">{{ projectStats.defined_points }}</div>
-                        <div class="help">defined points</div>
+                        <div class="help" i18next="backlog.defined-points">defined points</div>
                     </div>
 
                     <div class="item">
                         <div class="indicator">{{ projectStats.closed_points }}</div>
-                        <div class="help">closed points</div>
+                        <div class="help" i18next="backlog.closed-points">closed points</div>
                     </div>
                 </div>
                 <a class="button new-us-story" data-icon="m"
-                    ng-click="openCreateUserStoryForm()">
+                    ng-click="openCreateUserStoryForm()" i18next="backlog.new-user-story">
                     New user story
                 </a>
                 <a class="button show-hide-graphics" data-icon="k" ng-show="milestones.length > 0" gm-ninja-graph>
@@ -44,7 +44,10 @@
         <div class="filters-container" ng-show="tags">
             <div class="filters-bar-sbox">
                 <div class="title-sbox">
-                    <a data-icon="B" href="" ng-class="{active: filtersOpened}" ng-click="filtersOpened=!filtersOpened">Filters</a>
+                    <a data-icon="B" href="" ng-class="{active: filtersOpened}"
+                       ng-click="filtersOpened=!filtersOpened" i18next="backlog.filters">
+                       Filters
+                   </a>
                 </div>
                 <div class="filters-visual-box" ng-show="filtersOpened">
                     <div class="tags-list-sbox">
@@ -65,9 +68,9 @@
 <!--
                     <div class="us-check"></div>
 -->
-                    <div class="us-title">User Story</div>
-                    <div class="us-points">Points</div>
-                    <div class="us-options">Options</div>
+                    <div class="us-title" i18next="backlog.user-story">User Story</div>
+                    <div class="us-points" i18next="backlog.points">Points</div>
+                    <div class="us-options" i18next="backlog.options">Options</div>
                 </div>
                 <div class="flex-header second">
                     <!-- TODO
@@ -77,7 +80,7 @@
                         <div class="list-options">
                             <div class="option">
                                 <input id="show_tags" type="checkbox" ng-model="showTags"></input>
-                                <label for="show_tags">Show tags</label>
+                                <label for="show_tags" i18next="backlog.show-tags">Show tags</label>
                             </div>
                             <!-- TODO: total points col
                             <div class="option">
@@ -87,7 +90,10 @@
                             -->
                             <div class="option" ng-show="selectedUserStories">
                                 <a href="" class="add-selected-us" data-icon="A"
-                                    ng-click="moveSelectedUserStoriesToCurrentSprint()">Add selected US ({{ selectedStoryPoints }} points) to current sprint</a>
+                                   ng-click="moveSelectedUserStoriesToCurrentSprint()">
+                                     <!-- TODO: i18next integration pending -->
+                                     Add selected US ({{ selectedStoryPoints }} points) to current sprint
+                                 </a>
                             </div>
                         </div>
                     </div>
@@ -119,17 +125,19 @@
                         </div>
                         <div class="us-options extra-options">
                             <a class="btn-small-preview" data-icon="l" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">
-                                <span class="help-box">Preview</span>
+                                <!-- TODO: Review this spanish translation, used Resumen because the Previsualizar was too long -->
+                                <span class="help-box" i18next="backlog.preview">Preview</span>
                             </a>
+
                             <a class="btn-small-view" data-icon="f" href="{{ urls.userStoryUrl(projectId, us.id) }}">
-                                <span class="help-box">View</span>
+                                <span class="help-box" i18next="backlog.view">View</span>
                             </a>
                             <a class="btn-small-edit" data-icon="j" ng-click="openEditUserStoryForm(us)">
-                                <span class="help-box">Edit</span>
+                                <span class="help-box" i18next="backlog.edit">Edit</span>
                             </a>
                             <a class="btn-small-remove" data-icon="h" gm-popover="removeUs(us)"
                                 data-tmpl="#us-remove-popover">
-                                <span class="help-box">Remove</span>
+                                <span class="help-box" i18next="backlog.remove">Remove</span>
                             </a>
                         </div>
                     </div>
@@ -142,35 +150,40 @@
         <div class="header-box">
             <div class="title-sbox">
                 <div class="title">{{ project.total_milestones }}</div>
-                <div class="help">sprints <br />planned</div>
+                <div class="help" i18next="backlog.sprints-planned">sprints <br />planned</div>
             </div>
-            <a href="" data-icon="q" class="button new-sprint" ng-click="sprintFormOpened=!sprintFormOpened">New sprint</a>
+            <a href="" data-icon="q" class="button new-sprint"
+               ng-click="sprintFormOpened=!sprintFormOpened"
+               i18next="backlog.new-sprint">
+                New sprint
+            </a>
         </div>
 
         <div class="milestone-form-box nga-milestone" ng-show="sprintFormOpened">
             <form action="" gm-checksley-form="sprintSubmit()">
                 <fieldset>
-                    <label for="name">Sprint name:</label>
-                    <input type="text" data-required="true" ng-model="form.name"
-                           name="name" placeholder="Sprint name..."></input>
+                    <label for="name" i18next="backlog.sprint-name-label">Sprint name:</label>
+                    <input type="text" data-required="true" ng-model="form.name" name="name"
+                           i18next="placeholder:backlog.sprint-name-placeholder"
+                           placeholder="Sprint name..."></input>
                 </fieldset>
 
                 <fieldset>
                     <div class="subfield">
-                        <label for="estimated_start">Estimated start:</label>
+                        <label for="estimated_start" i18next="backlog.estimated-start">Estimated start:</label>
                         <input type="text" gm-kalendae name="estimated_start"
                                ng-model="form.estimated_start"></input>
                     </div>
                     <div class="subfield">
-                        <label for="estimated_finish">Estimated finish</label>
+                        <label for="estimated_finish" i18next="backlog.estimated-finish">Estimated finish</label>
                         <input type="text" gm-kalendae name="estimated_finish"
                                ng-model="form.estimated_finish"></input>
                     </div>
                 </fieldset>
                 <div class="btn-group">
                     <input type="submit" class="button button-success"
-                           gm-checksley-submit-button value="Save" />
-                    <a href="" class="button" ng-click="sprintFormOpened=false">Close</a>
+                           gm-checksley-submit-button value="Save" i18next="value:backlog.save" />
+                    <a href="" class="button" ng-click="sprintFormOpened=false" i18next="backlog.close">Close</a>
                 </div>
             </form>
         </div>
@@ -183,8 +196,8 @@
         -->
 
         <div class="sprints-box">
-            <p class="sprints-box-title">Sprints</p>
-            <p class="empty" ng-show="milestones.length == 0">
+            <p class="sprints-box-title" i18next="backlog.sprints">Sprints</p>
+            <p class="empty" ng-show="milestones.length == 0" i18next="backlog.no-sprints">
                 There isn't Sprints. Create a new one.
             </p>
 
@@ -200,6 +213,7 @@
                         </a>
                         <a class="edit" href="" ng-click="showEditForm(ml.id)"
                            ng-show="showEditOption" data-icon="d"></a>
+                        <!-- TODO: i18next integration pending -->
                         <span>from {{ ml.estimated_start|momentFormat:"L" }} to {{ ml.estimated_finish|momentFormat:"L" }}</span>
                     </div>
                     <div class="stats">
@@ -212,11 +226,11 @@
                         <div class="sprint-status">
                             <div class="item">
                                 <div class="indicator">{{ stats.total }}</div>
-                                <div class="help">total</div>
+                                <div class="help" i18next="backlog.sprint-total">total</div>
                             </div>
                             <div class="item">
                                 <div class="indicator">{{ stats.closed }}</div>
-                                <div class="help">closed</div>
+                                <div class="help" i18next="backlog.sprint-closed">closed</div>
                             </div>
                         </div>
                         <div class="us-viewer" ng-show="ml.closed" ng-switch="viewUSs">

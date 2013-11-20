@@ -23,5 +23,33 @@
         "search-placeholder": "Find user stories, issues, tasks...",
         "all-projects": "All projects",
         "show-all-projects": "Show all projects"
+    },
+    "backlog": {
+        "completed": "completed",
+        "project-points": "project points",
+        "defined-points": "defined points",
+        "closed-points": "closed points",
+        "new-user-story": "New user story",
+        "filters": "Filters",
+        "user-story": "User stories",
+        "points": "Points",
+        "options": "Options",
+        "show-tags": "Show tags",
+        "preview": "Preview",
+        "view": "View",
+        "edit": "Edit",
+        "remove": "Remove",
+        "new-sprint": "New sprint",
+        "sprints-planned": "sprints planned",
+        "sprint-name-label": "Sprint name:",
+        "sprint-name-placeholder": "Sprint name...",
+        "estimated-start": "Estimated start:",
+        "estimated-finish": "Estimated finish:",
+        "save": "Save",
+        "close": "Close",
+        "sprints": "Sprints",
+        "no-sprints": "There isn't Sprints. Create a new one.",
+        "sprint-total": "total",
+        "sprint-closed": "closed"
     }
 }

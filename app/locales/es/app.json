@@ -23,5 +23,33 @@
         "search-placeholder": "Encuentra historias, peticiones, tareas...",
         "all-projects": "Todos los proyectos",
         "show-all-projects": "Muestra todos los proyectos"
+    },
+    "backlog": {
+        "completed": "completado",
+        "project-points": "puntos de proyecto",
+        "defined-points": "puntos definidos",
+        "closed-points": "puntos cerrados",
+        "new-user-story": "Nueva historia",
+        "filters": "Filtros",
+        "user-story": "Historia de usuario",
+        "points": "Puntos",
+        "options": "Opciones",
+        "show-tags": "Mostrar etiquetas",
+        "preview": "Resumen",
+        "view": "Ver",
+        "edit": "Editar",
+        "remove": "Eliminar",
+        "new-sprint": "Nuevo sprint",
+        "sprints-planned": "sprints planificados",
+        "sprint-name-label": "Nombre del sprint:",
+        "sprint-name-placeholder": "Nombre del sprint...",
+        "estimated-start": "Inicio estimado:",
+        "estimated-finish": "Final estimado:",
+        "save": "Guardar",
+        "close": "Cerrar",
+        "sprints": "Sprints",
+        "no-sprints": "No hay sprints. Crea uno nuevo.",
+        "sprint-total": "total",
+        "sprint-closed": "cerrados"
     }
 }
