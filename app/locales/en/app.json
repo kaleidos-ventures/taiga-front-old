@@ -9,7 +9,12 @@
         "login": "Login",
         "loading": "Our Oompa Loompas are identifying you, please wait...",
         "error": "Your username or password are incorrect",
-        "recover": "Recover"
+        "recover": "Recover",
+        "recover-success": "Email message sent successful.",
+        "token": "Token",
+        "new-password": "New password",
+        "change": "Change",
+        "password-change-success": "Password changed successful."
     },
     "common": {
         "no-projects": "You have no projects",

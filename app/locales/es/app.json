@@ -9,7 +9,12 @@
         "login": "Entrar",
         "loading": "Nuestros Oompa Loompas te están identificando, por favor espere...",
         "error": "Tu nombre de usuario o contraseña son incorrectos",
-        "recover": "Recuperar"
+        "recover": "Recuperar",
+        "recover-success": "Se ha enviado el email correctamente.",
+        "token": "Token",
+        "new-password": "Nueva contraseña",
+        "change": "Cambiar",
+        "password-change-success": "Contraseña cambiada correctamente."
     },
     "common": {
         "no-projects": "No tienes proyectos",
