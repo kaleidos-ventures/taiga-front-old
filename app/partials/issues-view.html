@@ -40,7 +40,7 @@
                 <li data-icon="u">
                     <strong i18next="issue.assigned-to">Assigned to:</strong>
                     <span gm-colorize-user="constants.users[issue.assigned_to]">
-                        {{ constants.users[issue.assigned_to].full_name || "Unassigned" }}
+                        {{ constants.users[issue.assigned_to].full_name || t("issue.unassigned") }}
                     </span>
                 </li>
                 <li data-icon="w">

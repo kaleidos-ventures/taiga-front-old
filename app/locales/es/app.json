@@ -252,6 +252,8 @@
         "description": "Descripción",
         "save": "Guardar",
         "close": "Cerrar",
+        "edit": "Editar",
+        "view": "Ver",
         "unassigned": "Sin asignar",
         "select-user": "Selecciona un usuario"
     }

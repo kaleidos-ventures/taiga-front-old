@@ -252,6 +252,8 @@
         "description": "Description",
         "save": "Save",
         "close": "Close",
+        "edit": "Edit",
+        "view": "View",
         "unassigned": "Unassigned",
         "select-user": "Select a user:"
     }
