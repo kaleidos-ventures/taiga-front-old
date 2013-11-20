@@ -1,9 +1,10 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container issues-view">
     <div class="view-header">
+        <!-- TODO: i18next integration pending -->
         <p class="title">Issue #{{ issue.ref }}</p>
         <div class="buttons">
-            <a class="button button-delete" ng-click="removeIssue(issue)">Delete issue</a>
+            <a class="button button-delete" ng-click="removeIssue(issue)" i18next="issue.delete-issue">Delete issue</a>
         </div>
     </div>
     <ul class="tags-list">
@@ -14,13 +15,14 @@
             <h2>{{ issue.subject }}</h2>
             <p>{{ issue.description }}</p>
             <div class="attachments" ng-show="attachments">
-                <h3 data-icon="E">Attachments</h3>
+                <h3 data-icon="E" i18next="issue.attachments">Attachments</h3>
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
                         <a class="delete" data-icon="h" href="" title="Delete attachment"
-                           ng-click="removeAttachment(attachment)"></a>
+                           ng-click="removeAttachment(attachment)" i18next="title:issue.delete-attachment"></a>
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
+                        <!-- TODO: i18next integration pending -->
                         <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>
                     </li>
                 </ul>
@@ -28,38 +30,50 @@
         </div>
         <div class="span4 issue-metadata">
             <div class="info-header">
-                <h3>Issue data</h3>
+                <h3 i18next="issue.issue-data">Issue data</h3>
             </div>
             <ul class="info-rows">
                 <li data-icon="t">
-                    Added by: <span gm-colorize-user="constants.users[issue.owner]">{{ constants.users[issue.owner].full_name }}</span>
+                    <strong i18next="issue.added-by">Added by:</strong>
+                    <span gm-colorize-user="constants.users[issue.owner]">{{ constants.users[issue.owner].full_name }}</span>
                 </li>
                 <li data-icon="u">
-                    Assigned to: <span gm-colorize-user="constants.users[issue.assigned_to]">{{ constants.users[issue.assigned_to].full_name || "Unassigned" }}</span>
+                    <strong i18next="issue.assigned-to">Assigned to:</strong>
+                    <span gm-colorize-user="constants.users[issue.assigned_to]">
+                        {{ constants.users[issue.assigned_to].full_name || "Unassigned" }}
+                    </span>
                 </li>
                 <li data-icon="w">
-                    Created: <span>{{ issue.created_date|momentFormat:"LLLL" }}</span>
+                    <strong i18next="issue.created">Created:</strong>
+                    {{ issue.created_date|momentFormat:"LLLL" }}
                 </li>
                 <li data-icon="x">
-                    Updated: <span>{{ issue.modified_date|momentFormat:"LLLL" }}</span>
+                    <strong i18next="issue.updated">Updated:</strong>
+                    {{ issue.modified_date|momentFormat:"LLLL" }}
                 </li>
                 <li data-icon="w" ng-show="issue.finished_date">
-                    Finished: <span>{{ issue.finished_date|momentFormat:"LLLL" }}</span>
+                    <strong i18next="issue.finished">Finished:</strong>
+                    {{ issue.finished_date|momentFormat:"LLLL" }}
                 </li>
                 <li data-icon="a" class="type-{{ issue.type }}">
-                    Type: <span>{{ constants.issueTypes[issue.type].name }}</span>
+                    <strong i18next="issue.type">Type:</strong>
+                    {{ constants.issueTypes[issue.type].name }}
                 </li>
                 <li data-icon="y" class="status-{{ issue.status }}">
-                    Status: <span>{{ constants.issueStatuses[issue.status].name }}</span>
+                    <strong i18next="issue.status">Status:</strong>
+                    {{ constants.issueStatuses[issue.status].name }}
                 </li>
                 <li data-icon="o" class="priority-{{ issue.priority }}">
-                    Priority: <span>{{ constants.priorities[issue.priority].name }}</span>
+                    <strong i18next="issue.priority">Priority:</strong>
+                    {{ constants.priorities[issue.priority].name }}
                 </li>
                 <li data-icon="H" class="severity-{{ issue.severity }}">
-                    Severity: <span>{{ constants.severities[issue.severity].name }}</span>
+                    <strong i18next="issue.severity">Severity:</strong>
+                    {{ constants.severities[issue.severity].name }}
                 </li>
                 <li data-icon="z">
-                    Attachments: <span>{{ attachments.length }}</span>
+                    <strong i18next="issue.attachments-count">Attachments:</strong>
+                    {{ attachments.length }}
                 </li>
             </ul>
         </div>
@@ -68,19 +82,19 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="update-form">
-                <h4>Update issue</h4>
+                <h4 i18next="issue.update-issue">Update issue</h4>
 
                 <form class="form-horizontal" gm-checksley-form="submit()">
                     <div>
                         <fieldset class="issue-type">
-                            <label>Type</label>
+                            <label i18next="issue.type-label">Type</label>
                             <select name="type" ng-model="form.type" data-required="true"
                                 data-error-message="Required"
                                 ng-options="c.id as c.name for c in constants.issueTypesList|orderBy:'order'"></select>
                             </select>
                         </fieldset>
                         <fieldset class="issue-status">
-                            <label class="control-label" for="inputEmail">Status</label>
+                            <label i18next="issue.status-label" class="control-label" for="inputEmail">Status</label>
 
                             <select class="status" name="status" ng-model="form.status"
                                     data-required="true"  data-type="number"
@@ -91,7 +105,7 @@
 
                     <div>
                         <fieldset class="issue-priority">
-                            <label>Priority</label>
+                            <label i18next="issue.priority-label">Priority</label>
 
                             <select class="priority status" name="priority"
                                     ng-model="form.priority" data-required="true"
@@ -99,7 +113,7 @@
                                     ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'"></select>
                         </fieldset>
                         <fieldset class="issue-severity">
-                            <label>Severity</label>
+                            <label i18next="issue.severity-label">Severity</label>
 
                             <select class="severity status" name="severity"
                                     ng-model="form.severity" data-required="true"
@@ -109,44 +123,45 @@
                     </div>
                     <div>
                         <fieldset class="issue-assigned">
-                            <label>Assigned to</label>
+                            <label i18next="issue.assigned-to-label">Assigned to</label>
 
                             <select class="assigned-to" name="assigned_to"
                                     ng-model="form.assigned_to" data-type="number"
                                     data-error-message="Required"
                                     ng-options="c.user as c.full_name for c in project.memberships">
-                                <option value="">Unassigned</option>
+                                <option value="" i18next="issue.unassigned">Unassigned</option>
                             </select>
                         </fieldset>
                         <fieldset class="issue-tags">
-                            <label>Tags</label>
+                            <label i18next="issue.tags-label">Tags</label>
                             <input type="text" name="tags" ng-model="form.tags" gm-select2-tags="projectTags"></input>
                         </fieldset>
                     </div>
                     <div ng-hide="_showHiddenGroups">
-                        <p style="cursor: pointer" ng-click="_showHiddenGroups=true">
+                        <p style="cursor: pointer" ng-click="_showHiddenGroups=true" i18next="issue.edit-subject-description">
                             Edit <b>Subject</b> and <b>Description</b>...
                         </p>
                     </div>
 
                     <fieldset class="issue-subject" ng-show="_showHiddenGroups">
-                        <label for="inputEmail">Subject</label>
+                        <label for="inputEmail" i18next="issue.subject-label">Subject</label>
                         <input type="text" name="subject" ng-model="form.subject"></input>
                     </fieldset>
 
                     <fieldset class="issue-description" ng-show="_showHiddenGroups">
-                        <label for="inputEmail">Description</label>
+                        <label for="inputEmail" i18next="issue.description-label">Description</label>
                         <textarea name="description" ng-model="form.description"></textarea>
                     </fieldset>
 
                     <fieldset class="issue-comment">
-                        <label for="inputEmail">Comment</label>
+                        <label for="inputEmail" i18next="issue.comment-label">Comment</label>
                         <textarea name="comment" ng-model="form.comment"></textarea>
                     </fieldset>
 
                     <fieldset class="issue-attachment">
                         <a class="add-attachment" data-icon="E" title="Add attachments"
-                            gm-forward-click="#attachment_file_input" href="">
+                            gm-forward-click="#attachment_file_input" href=""
+                            i18next="title:issue.add-attachments,issue.add-attachments">
                             Add attachments
                         </a>
                         <ul class="attachments-items">
@@ -154,6 +169,7 @@
                                 ng-repeat="attachment in newAttachments">
                                 <a class="delete" data-icon="h" href=""
                                    title="Delete the new attachment"
+                                   i18next="title:issue.delete-new-attachment"
                                    ng-click="removeNewAttachment(attachment)"></a>
                                 <span>{{ attachment.name }}</span>
                                 <span>[{{ attachment.size|sizeFormat }}]</span>
@@ -166,7 +182,7 @@
 
                     <fieldset class="issue-edit-submit submit">
                         <button type="submit" class="button button-edit"
-                                gm-checksley-submit-button>Save</button>
+                                gm-checksley-submit-button i18next="issue.save">Save</button>
 
                         <div gm-spinner class="spinner-container"></div>
                     </fieldset>
@@ -178,10 +194,10 @@
     <div class="row-fluid" ng-show="historical">
         <div class="span12">
             <div class="history" gm-history="issue" ng-model="historical">
-                <h3>History</h3>
+                <h3 i18next="issue.history">History</h3>
                 <div class="history-items-container"></div>
                 <a class="more" data-icon="C" href="" ng-click="loadMoreHistorical()"
-                   ng-show="showMoreHistoricaButton">See More</a>
+                   ng-show="showMoreHistoricaButton" i18next="issue.see-more">See more</a>
             </div>
         </div>
     </div>
@@ -189,9 +205,10 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="view-footer">
+                <!-- TODO: i18next integration pending -->
                 <p class="title">Issue #{{ issue.ref }}</p>
                 <div class="buttons">
-                    <a class="button button-delete">Delete issue</a>
+                    <a class="button button-delete" ng-click="removeIssue(issue)" i18next="issue.delete-issue">Delete issue</a>
                 </div>
             </div>
         </div>
@@ -200,18 +217,21 @@
         <ul class="history-items">
             <li class="history-item" ng-repeat="hitem in historyItems">
                 <div class="title">
-                    <span class="updated">Updated by <span gm-colorize-user="hitem.by">{{ hitem.by.full_name }}</span></span>
+                    <span class="updated">
+                        <span i18next="issue.updated-by-history">Updated by</span>
+                        <span gm-colorize-user="hitem.by">{{ hitem.by.full_name }}</span></span>
                     <span class="date">{{ hitem.modified_date|momentFromNow }}</span>
                 </div>
                 <div class="changes">
                     <div class="change" ng-repeat="change in hitem.changes">
+                        <!-- TODO: i18next integration pending -->
                         <strong>{{ change.name|capitalize }}</strong>:
                         from: <span class="old">{{ change.old }}</span>
                         to <span class="new">{{ change.new }}</span>
                     </div>
                 </div>
                 <div class="comment" ng-show="hitem.comment">
-                    <strong>Comment:</strong><br />{{ hitem.comment }}
+                    <strong i18next="issue.comment-history">Comment:</strong><br />{{ hitem.comment }}
                 </div>
             </li>
         </ul>
