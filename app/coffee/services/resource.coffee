@@ -429,6 +429,23 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         parameters = _.extend({}, filters)
         return queryManyPaginated("wiki-historical", parameters, null , null, urlParams)
 
+    service.createTask = (form) ->
+        return $model.create("tasks", form)
+
+    service.revertWikiPage = (wikiPageId, versionId) ->
+        url = "#{$gmUrls.api("wiki-revert", [wikiPageId])}/#{versionId}"
+
+        defered = $q.defer()
+
+        promise = $http.post(url, {}, {headers:headers()})
+        promise.success (data, status) ->
+            defered.resolve($model.make_model("wiki", data))
+
+        promise.error (data, status) ->
+            defered.reject(data, status)
+
+        return defered.promise
+
     service.createWikiPage = (projectId, slug, content) ->
         obj = {
             "content": content

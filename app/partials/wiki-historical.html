@@ -22,14 +22,28 @@
                 <h3 i18next="wiki-historical.history">History</h3>
                 <div class="history-items-container">
                     <ul class="history-items">
-                        <li class="history-item" ng-repeat="hitem in historical.models">
+                        <li class="history-item" ng-repeat="hitem in historical.models"
+                            ng-controller="WikiHistoricalItemController">
                             <div class="title">
+                                <a href="" data-icon="C" ng-show="showChanges" class="show-button"
+                                    ng-click="toggleShowChanges()"></a>
+                                <a href="" data-icon="B" ng-hide="showChanges" class="hide-button"
+                                    ng-click="toggleShowChanges()"></a>
+
                                 <!-- TODO: i18next integration pending -->
-                                <span class="updated">Updated by <span gm-colorize-user="constants.users[hitem.user]">{{ constants.users[hitem.user].full_name }}</span></span>
+                                <span class="updated">
+                                    Updated by
+                                    <span gm-colorize-user="constants.users[hitem.user]">
+                                        {{ constants.users[hitem.user].full_name }}
+                                    </span>
+                                </span>
                                 <span class="date">{{ hitem.created_date|momentFromNow }}</span>
                             </div>
-                            <div class="changes">
+                            <div class="changes" ng-show="showChanges">
                                 <div class="change" gm-render-markdown="hitem.fields.content"></div>
+                                <a href="" ng-click="revertWikiPage(hitem)"
+                                   class="button button-revert">Revert</a>
+
                             </div>
                         </li>
                     </ul>

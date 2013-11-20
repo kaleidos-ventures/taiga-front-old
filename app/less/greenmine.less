@@ -46,6 +46,24 @@
             background-color: darken(#cc0000, 15%);
         }
     }
+    &.button-historical{
+        background-color: #333;
+        -webkit-box-shadow:  0 1px 1px #666;
+        -moz-box-shadow:  0 1px 1px #666;
+        box-shadow:  0 1px 1px #666;
+            &:hover {
+            background-color: darken(#333, 15%);
+        }
+    }
+    &.button-revert{
+        background-color: #cc0000;
+        -webkit-box-shadow:  0 1px 1px #666;
+        -moz-box-shadow:  0 1px 1px #666;
+        box-shadow:  0 1px 1px #666;
+            &:hover {
+            background-color: darken(#cc0000, 15%);
+        }
+    }
 }
 
 select, textarea, input[type="text"],
@@ -2525,6 +2543,11 @@ body.login {
                     font-family: 'ColabReg';
                     overflow: hidden;
                     margin-bottom: 5px;
+                    .show-button,
+                    .hide-button {
+                        float: left;
+                        padding: 0 15px 0 5px;
+                    }
                     .updated{
                         float: left;
                     }

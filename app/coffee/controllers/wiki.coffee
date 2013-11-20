@@ -98,10 +98,12 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
                 $scope.checksleyErrors = data
 
     $scope.deletePage = ->
-        $scope.page.remove().then ->
-            $scope.page = undefined
-            $scope.content = ""
-            $scope.formOpened = true
+        promise = $confirm.confirm("Are you sure?")
+        promise.then () ->
+            $scope.page.remove().then ->
+                $scope.page = undefined
+                $scope.content = ""
+                $scope.formOpened = true
 
     $scope.deleteAttachment = (attachment) ->
         promise = $confirm.confirm("Are you sure?")
@@ -153,9 +155,42 @@ WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, 
         page = if $scope.historical then $scope.historical.current + 1 else 1
         loadHistorical(page=page)
 
+    $scope.$on "wiki:reverted", (ctx, data) ->
+        promise = rs.getWikiPage(projectId, $rootScope.slug)
+        promise.then (page) ->
+            $scope.page = page
+            $scope.content = page.content
+            loadAttachments(page)
+            loadHistorical()
+
+
+WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q) ->
+    $scope.showChanges = false
+
+    $scope.toggleShowChanges = ->
+        $scope.showChanges = not $scope.showChanges
+
+    $scope.revertWikiPage= (hitem) ->
+        date = moment(hitem.created_date).format("llll")
+
+        promise = $confirm.confirm "Are you sure you want to go back to '#{date}'?"
+        promise.then () ->
+            promise = rs.revertWikiPage(hitem.object_id, hitem.id)
+
+            promise.then (data) ->
+                $scope.$emit("wiki:reverted")
+                $gmFlash.info("The flux capacitor works correctly and now yow gone back to '#{date}'")
+
+            promise.then null, (data, status) ->
+                $gmFlash.error("An error happened. Maybe the flux capacitor is broken...")
+
 
 module = angular.module("greenmine.controllers.wiki", [])
 module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams',
                                      '$data', 'resource', "$confirm", "$q", WikiController])
 module.controller("WikiHistoricalController", ['$scope', '$rootScope', '$location', '$routeParams',
-                                               '$data', 'resource', "$confirm", "$q",   WikiHistoricalController])
+                                               '$data', 'resource', "$confirm", "$q",
+                                               WikiHistoricalController])
+module.controller("WikiHistoricalItemController", ['$scope', '$rootScope', 'resource', '$confirm',
+                                                   '$gmFlash',  '$q', WikiHistoricalItemController])
+
