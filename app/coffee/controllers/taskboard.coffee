@@ -66,11 +66,14 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal) 
             $scope.stats = {
                 totalPoints: totalPoints
                 completedPoints: completedPoints
+                remainingPoints: totalPoints - completedPoints
                 percentageCompletedPoints: if totalPoints == 0 then 0 else percentageCompletedPoints
                 totalUss: milestoneStats.total_userstories
                 compledUss: milestoneStats.completed_userstories
+                remainingUss: milestoneStats.completed_userstories - milestoneStats.completed_userstories
                 totalTasks: milestoneStats.total_tasks
                 completedTasks: milestoneStats.completed_tasks
+                remainingTasks: milestoneStats.total_tasks - milestoneStats.completed_tasks
             }
             $scope.milestoneStats = milestoneStats
 

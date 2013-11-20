@@ -233,12 +233,14 @@
         "register": "Registrarte"
     },
     "taskboard": {
-        "completed-points": "puntos<br />completados",
         "points": "Puntos",
         "total-points": "puntos<br />totales",
+        "completed-points": "puntos<br />completados",
+        "remaining-points": "puntos<br />restantes",
         "tasks": "Tareas",
         "total-tasks": "tareas<br />totales",
         "completed-tasks": "tareas<br />completadas",
+        "remaining-tasks": "tareas<br />restantes",
         "dates": "Fechas",
         "start-date": "fecha<br />de inicio",
         "finish-date": "fecha<br />de fin",
