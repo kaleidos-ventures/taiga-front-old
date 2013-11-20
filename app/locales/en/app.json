@@ -256,5 +256,10 @@
         "view": "View",
         "unassigned": "Unassigned",
         "select-user": "Select a user:"
+    },
+    "wiki-historical": {
+        "history": "History",
+        "attachments": "Attachments",
+        "see-more": "See more"
     }
 }

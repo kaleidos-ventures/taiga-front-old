@@ -256,5 +256,10 @@
         "view": "Ver",
         "unassigned": "Sin asignar",
         "select-user": "Selecciona un usuario"
+    },
+    "wiki-historical": {
+        "history": "Historial",
+        "attachments": "Adjuntos",
+        "see-more": "Ver más"
     }
 }

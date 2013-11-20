@@ -4,11 +4,12 @@
         <div class="span12">
             <div class="wiki-container" gm-render-markdown="content"></div>
             <div class="attachments" ng-show="attachments">
-                <h3 data-icon="E">Attachments</h3>
+                <h3 data-icon="E" i18next="wiki-historical.attachments">Attachments</h3>
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
+                        <!-- TODO: i18next integration pending -->
                         <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>
                     </li>
                 </ul>
@@ -18,11 +19,12 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="history">
-                <h3>History</h3>
+                <h3 i18next="wiki-historical.history">History</h3>
                 <div class="history-items-container">
                     <ul class="history-items">
                         <li class="history-item" ng-repeat="hitem in historical.models">
                             <div class="title">
+                                <!-- TODO: i18next integration pending -->
                                 <span class="updated">Updated by <span gm-colorize-user="constants.users[hitem.user]">{{ constants.users[hitem.user].full_name }}</span></span>
                                 <span class="date">{{ hitem.created_date|momentFromNow }}</span>
                             </div>
@@ -33,7 +35,7 @@
                     </ul>
                 </div>
                 <a class="more" data-icon="C" href="" ng-click="loadMoreHistorical()"
-                   ng-show="showMoreHistoricaButton">See More</a>
+                   ng-show="showMoreHistoricaButton" i18next="wiki-historical.see-more">See more</a>
             </div>
         </div>
     </div>
