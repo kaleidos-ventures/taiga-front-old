@@ -231,5 +231,28 @@
         "password": "Contraseña",
         "password-again": "Repetir contraseña",
         "register": "Registrarte"
+    },
+    "taskboard": {
+        "completed-points": "puntos<br />completados",
+        "points": "Puntos",
+        "total-points": "puntos<br />totales",
+        "tasks": "Tareas",
+        "total-tasks": "tareas<br />totales",
+        "completed-tasks": "tareas<br />completadas",
+        "dates": "Fechas",
+        "start-date": "fecha<br />de inicio",
+        "finish-date": "fecha<br />de fin",
+        "add-new-task": "Añadir nueva tarea",
+        "create-task": "Crear tarea",
+        "modify-task": "Modificar tarea",
+        "subject": "Titulo",
+        "status": "Estado",
+        "assigned-to": "Asignado a",
+        "tags": "Etiquetas",
+        "description": "Descripción",
+        "save": "Guardar",
+        "close": "Cerrar",
+        "unassigned": "Sin asignar",
+        "select-user": "Selecciona un usuario"
     }
 }
