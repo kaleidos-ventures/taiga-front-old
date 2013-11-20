@@ -2,46 +2,46 @@
 <div class="middle-container issues-content">
     <div class="new-issue">
         <a class="new-button" gm-modal="#new-issue-modal"
-           ng-click="openCreateIssueForm()" data-icon="a">New issue</a>
-        <a class="refresh-button" ng-click="refreshIssues()" data-icon="x">Refresh</a>
-        <a class="graphs-button" data-icon="k" ng-click="toggleShowGraphs()">Graphs</a>
-        <a class="tags-button" data-icon="f" ng-click="showTags = !showTags">Tags</a>
+           ng-click="openCreateIssueForm()" data-icon="a" i18next="issues.new-issue">New issue</a>
+        <a class="refresh-button" ng-click="refreshIssues()" data-icon="x" i18next="issues.refresh">Refresh</a>
+        <a class="graphs-button" data-icon="k" ng-click="toggleShowGraphs()" i18next="issues.graphs">Graphs</a>
+        <a class="tags-button" data-icon="f" ng-click="showTags = !showTags" i18next="issues.tags-button">Tags</a>
     </div>
     <div class="graph-box" ng-show="showGraphs">
         <div class="graph-container">
-            <p>Bugs by status</p>
+            <p i18next="issues.issues-by-status">Issues by status</p>
             <div class="graph" gm-issues-pie-graph="issuesStats.issues_per_status"></div>
         </div>
         <div class="graph-container">
-            <p>Bugs by severity</p>
+            <p i18next="issues.issues-by-severity">Issues by severity</p>
             <div class="graph" gm-issues-pie-graph="issuesStats.issues_per_severity"></div>
         </div>
         <div class="graph-container">
-            <p>Bugs by priority</p>
+            <p i18next="issues.issues-by-priority">Issues by priority</p>
             <div class="graph" gm-issues-pie-graph="issuesStats.issues_per_priority"></div>
         </div>
         <div class="graph-container">
-            <p>Bugs by owner</p>
+            <p i18next="issues.issues-by-owner">Issues by owner</p>
             <div class="graph" gm-issues-pie-graph="issuesStats.issues_per_owner"></div>
         </div>
         <div class="graph-container">
-            <p>Bugs by assigned to</p>
+            <p i18next="issues.issues-by-assigned-to">Issues by assigned to</p>
             <div class="graph" gm-issues-pie-graph="issuesStats.issues_per_assigned_to"></div>
         </div>
     </div>
     <div class="graph-box" ng-show="showGraphs">
         <div class="graph-container lines">
-            <p>Open issues by severity progression</p>
+            <p i18next="issues.open-by-severity-progression">Open issues by severity progression</p>
             <div class="graph" gm-issues-accumulated-graph="issuesStats.last_four_weeks_days.by_severity"></div>
         </div>
         <div class="graph-container lines">
-            <p>Open issues by priority progression</p>
+            <p i18next="issues.open-by-priority-progression">Open issues by priority progression</p>
             <div class="graph" gm-issues-accumulated-graph="issuesStats.last_four_weeks_days.by_priority"></div>
         </div>
     </div>
     <div class="graph-box" ng-show="showGraphs">
         <div class="graph-container lines">
-            <p>Open/Closed issues per day</p>
+            <p i18next="issues.open-closed-per-day">Open/Closed issues per day</p>
             <div class="graph" gm-issues-open-closed-graph="issuesStats.last_four_weeks_days.by_open_closed"></div>
         </div>
     </div>
@@ -49,7 +49,11 @@
         <div class="filters-bar-sbox">
             <div class="title-sbox">
                 <div class="title">
-                    <a data-icon="B" href="" ng-class="{active: filtersOpened}" ng-click="filtersOpened=!filtersOpened">Filters</a>
+                    <a data-icon="B" href="" ng-class="{active: filtersOpened}"
+                       ng-click="filtersOpened=!filtersOpened"
+                       i18next="issues.filters">
+                        Filters
+                    </a>
                 </div>
 
                 <div class="tags-list-sbox">
@@ -70,7 +74,7 @@
             </div>
             <ul class="filters-visual-box" ng-show="filtersOpened">
                 <li>
-                    <h3>Status:</h3>
+                    <h3 i18next="issues.status">Status:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in statusTags"
                              ng-click="selectTag(tag)" ng-class="{selected: isTagSelected(tag)}">
@@ -80,7 +84,7 @@
                     </div>
                 </li>
                 <li>
-                    <h3>Severity:</h3>
+                    <h3 i18next="issues.severity">Severity:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in severityTags"
                              ng-click="selectTag(tag)" ng-class="{selected: isTagSelected(tag)}" >
@@ -90,7 +94,7 @@
                     </div>
                 </li>
                 <li>
-                    <h3>Priority:</h3>
+                    <h3 i18next="issues.priority">Priority:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in priorityTags"
                              ng-click="selectTag(tag)" ng-class="{selected: isTagSelected(tag)}">
@@ -100,7 +104,7 @@
                     </div>
                 </li>
                 <li>
-                    <h3>Added by:</h3>
+                    <h3 i18next="issues.added-by">Added by:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" ng-repeat="tag in addedByTags" ng-click="selectTag(tag)"
                                 ng-class="{selected: isTagSelected(tag)}">
@@ -112,7 +116,7 @@
                     </div>
                 </li>
                 <li>
-                    <h3>Assigned to:</h3>
+                    <h3 i18next="issues.assigned-to">Assigned to:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" ng-repeat="tag in assignedToTags" ng-click="selectTag(tag)"
                                 ng-class="{selected: isTagSelected(tag)}">
@@ -124,7 +128,7 @@
                     </div>
                 </li>
                 <li>
-                    <h3>Tags:</h3>
+                    <h3 i18next="issues.tags">Tags:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
                                 ng-class="{selected: isTagSelected(tag)}" gm-colorize-tag>
@@ -141,16 +145,16 @@
     <div class="issues-container">
         <div class="issues-table-list">
             <div class="flex-header" gm-issues-sort="changeSort(field, reverse)">
-                <div data-field="severity" class="issue-sortable-field issue-severity">Severity</div>
-                <div data-field="subject" class="issue-sortable-field issue-title">Subject</div>
-                <div data-field="added_by" class="issue-sortable-field issue-added-by">Added by</div>
-                <div data-field="created_date" class="issue-sortable-field issue-created-date">Created date</div>
-                <div data-field="modified_date" class="issue-sortable-field issue-modified-date">Modified date</div>
-                <div data-field="status" class="issue-sortable-field issue-state">Status</div>
-                <div data-field="priority" class="issue-sortable-field issue-priority">Priority</div>
-                <div data-field="assigned_to" class="issue-sortable-field issue-assigned-to">Assigned to</div>
+                <div i18next="issues.severity-header"data-field="severity" class="issue-sortable-field issue-severity">Severity</div>
+                <div i18next="issues.subject-header"data-field="subject" class="issue-sortable-field issue-title">Subject</div>
+                <div i18next="issues.added-by-header"data-field="added_by" class="issue-sortable-field issue-added-by">Added by</div>
+                <div i18next="issues.created-date-header"data-field="created_date" class="issue-sortable-field issue-created-date">Created</div>
+                <div i18next="issues.modified-date-header"data-field="modified_date" class="issue-sortable-field issue-modified-date">Modificated</div>
+                <div i18next="issues.status-header"data-field="status" class="issue-sortable-field issue-state">Status</div>
+                <div i18next="issues.priority-header"data-field="priority" class="issue-sortable-field issue-priority">Priority</div>
+                <div i18next="issues.assigned-to-header"data-field="assigned_to" class="issue-sortable-field issue-assigned-to">Assigned to</div>
 
-                <div class="issue-options">Options</div>
+                <div i18next="issues.options" class="issue-options">Options</div>
             </div>
             <div class="flex-separator"></div>
             <div class="flex-body">
@@ -215,19 +219,19 @@
                                 data-tmpl="#issue-preview-popover"
                                 data-auto-hide="true"
                                 data-placement="left">
-                            <span class="help-box">Preview</span>
+                            <span class="help-box" i18next="issues.preview">Preview</span>
                         </a>
                         <a data-icon="f" class="btn-small-view" href="{{ urls.issuesUrl(projectId, issue.id) }}">
-                            <span class="help-box">View</span>
+                            <span class="help-box" i18next="issues.view">View</span>
                         </a>
                         <a data-icon="j" class="btn-small-edit" ng-click="openEditIssueForm(issue)">
-                            <span class="help-box">Edit</span>
+                            <span class="help-box" i18next="issues.edit">Edit</span>
                         </a>
                         <a data-icon="h" class="btn-small-remove" gm-popover="removeIssue(issue)"
                                 data-tmpl="#issue-remove-popover"
                                 data-auto-hide="true"
                                 data-placement="left">
-                            <span class="help-box">Remove</span>
+                            <span class="help-box" i18next="issues.remove">Remove</span>
                         </a>
                     </div>
                 </div>
