@@ -186,5 +186,33 @@
         "color": "Color:",
         "save": "Guardar",
         "password": "Contraseña:"
+    },
+    "admin": {
+        "project-profile": "Perfil del proyecto",
+        "sprints": "Sprints",
+        "memberships": "Miembros",
+        "created-sprints": "Sprints creados",
+        "delete-sprint": "Borrar sprint",
+        "project-members": "Miembros del proyecto",
+        "add-member": "Añadir miembro",
+        "add-new-member": "Añadir nuevo miembro",
+        "role": "Rol",
+        "user": "Usuario",
+        "cancel": "Cancelar",
+        "delete-member": "Borrar miembro",
+        "select-role": "Seleccionar rol:",
+        "name": "Nombre:",
+        "slug": "Slug:",
+        "num-of-sprints": "Num. Sprints:",
+        "total-story-points": "Puntos de historia:",
+        "description": "Descripción:",
+        "default-points": "Valor por defecto del selector de puntos:",
+        "default-us-status": "Valor por defecto del selector de estado de US:",
+        "default-task-status": "Valor por defecto del selector de estado de tarea:",
+        "default-priority": "Valor por defecto del selector de prioridad:",
+        "default-severity": "Valor por defecto del selector de severidad:",
+        "default-issue-type": "Valor por defecto del selector de tipos de peticion:",
+        "default-issue-status": "Valor por defecto del selector de estados de peticion:",
+        "save": "Guardar"
     }
 }

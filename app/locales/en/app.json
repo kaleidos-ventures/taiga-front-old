@@ -186,5 +186,33 @@
         "color": "Color:",
         "save": "Save",
         "password": "Password:"
+    },
+    "admin": {
+        "project-profile": "Project profile",
+        "sprints": "Sprints",
+        "memberships": "Memberships",
+        "created-sprints": "Created sprints",
+        "delete-sprint": "Delete sprint",
+        "project-members": "Project members",
+        "add-member": "Add member",
+        "add-new-member": "Add new member",
+        "role": "Role",
+        "user": "User",
+        "cancel": "Cancel",
+        "delete-member": "Delete member",
+        "select-role": "Select role:",
+        "name": "Name:",
+        "slug": "Slug:",
+        "num-of-sprints": "Num. Sprints:",
+        "total-story-points": "Total story-points:",
+        "description": "Description:",
+        "default-points": "Default value for points selectors:",
+        "default-us-status": "Default value for US status selectors:",
+        "default-task-status": "Default value for task status selectors:",
+        "default-priority": "Default value for priority selectors:",
+        "default-severity": "Default value for severity selectors:",
+        "default-issue-type": "Default value for issue type selectors:",
+        "default-issue-status": "Default value for issue status selectors:",
+        "save": "Save"
     }
 }
