@@ -10,5 +10,18 @@
         "loading": "Our Oompa Loompas are identifying you, please wait...",
         "error": "Your username or password are incorrect",
         "recover": "Recover"
+    },
+    "common": {
+        "no-projects": "You have no projects",
+        "logout": "Logout",
+        "admin": "Admin",
+        "admin-panel": "Administration panel",
+        "issues": "Issues",
+        "wiki": "Wiki",
+        "backlog": "Backlog",
+        "search": "Search",
+        "search-placeholder": "Find user stories, issues, tasks...",
+        "all-projects": "All projects",
+        "show-all-projects": "Show all projects"
     }
 }

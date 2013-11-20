@@ -5,41 +5,58 @@
     <div class="top-menu-sbox">
         <ul>
             <li>
-                <a data-icon="b" ng-click="projectsList=!projectsList" href="" title="Show all projects">All Projects</a>
+                <a data-icon="b" ng-click="projectsList=!projectsList"
+                   href="" title="Show all projects"
+                   i18next="common.all-projects,title:common.show-all-projects">
+                    All Projects
+                </a>
                 <ul class="project-list" ng-show="projectsList" ng-mouseleave="projectsList=false">
                     <li ng-repeat="proj in auth.projects" ng-show="auth.projects.length">
                         <a title="{{ proj.name }}" href="{{ urls.backlogUrl(proj.id) }}">{{ proj.name }}</a>
                     </li>
                     <li ng-show="!auth.projects.length">
-                        <a title="You have no projects">You have no projects</a>
+                        <a title="You have no projects" i18next="common.no-projects,title:common.no-projects">
+                            You have no projects
+                        </a>
                     </li>
                 </ul>
             </li>
             <li>
                 <a href="#/profile" data-icon="D" title="{{ auth.email }}">{{ auth.email }}</a>
             </li>
-            <li><a data-icon="p" href="" ng-click="logout()" title="Logout">Logout</a></li>
+            <li><a data-icon="p" href="" ng-click="logout()" title="Logout" i18next="common.logout,title:common.logout">Logout</a></li>
         </ul>
     </div>
 </div>
 <div class="nav" gm-header-menu ng-show="projectId">
     <ul>
-        <li class="backlog"><a data-icon="f" href="{{ urls.backlogUrl(projectId) }}" title="Backlog">Backlog</a></li>
+        <li class="backlog"><a data-icon="f" href="{{ urls.backlogUrl(projectId) }}" title="Backlog" i18next="common.backlog,title:common.backlog">Backlog</a></li>
         <!--
         <li class="dashboard" ng-show="sprintId"><a data-icon="n" href="{{ urls.taskboardUrl(projectId, sprintId) }}" title="Taskboard">Taskboard</a></li>
         -->
-        <li class="issues"><a data-icon="a" href="{{ urls.issuesUrl(projectId) }}" title="Issues">Issues</a></li>
-        <li class="wiki"><a data-icon="g" href="{{ urls.wikiUrl(projectId, 'home') }}" title="wiki">Wiki</a></li>
+        <li class="issues"><a data-icon="a" href="{{ urls.issuesUrl(projectId) }}" title="Issues" i18next="common.issues,title:common.issues">Issues</a></li>
+        <li class="wiki"><a data-icon="g" href="{{ urls.wikiUrl(projectId, 'home') }}" title="Wiki" i18next="common.wiki,title:common.wiki">Wiki</a></li>
         <!--
         <li class="questions"><a href="{{ urls.questionsUrl(projectId) }}" title="questions">Questions</a></li>
         -->
-        <li class="admin"><a data-icon="i" href="{{ urls.adminUrl(projectId) }}" title="Administration panel">Admin</a></li>
+        <li class="admin">
+            <a data-icon="i" href="{{ urls.adminUrl(projectId) }}"
+               title="Administration panel"
+               i18next="common.admin,title:common.admin-panel">
+                 Admin
+            </a>
+        </li>
     </ul>
 
     <div class="search-box" gm-search-box>
         <form method="get">
-            <input type="text" id="search" name="search" placeholder="Find user stories, issues, tasks..." ng-model="term" />
-            <a href="" data-icon="F" class="search-button" title="Search" gm-forward-click="#search" />
+            <input type="text" id="search" name="search"
+                   i18next="placeholder:common.search-placeholder"
+                   placeholder="Find user stories, issues, tasks..."
+                   ng-model="term" />
+            <a href="" data-icon="F"
+               class="search-button" title="Search"
+               gm-forward-click="#search" i18next="title:common.search"/>
         </form>
     </div>
 </div>

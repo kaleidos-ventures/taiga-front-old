@@ -10,5 +10,18 @@
         "loading": "Nuestros Oompa Loompas te están identificando, por favor espere...",
         "error": "Tu nombre de usuario o contraseña son incorrectos",
         "recover": "Recuperar"
+    },
+    "common": {
+        "no-projects": "No tienes proyectos",
+        "logout": "Salir",
+        "admin": "Administrar",
+        "admin-panel": "Panel de administración",
+        "issues": "Peticiones",
+        "wiki": "Wiki",
+        "backlog": "Backlog",
+        "search": "Buscar",
+        "search-placeholder": "Encuentra historias, peticiones, tareas...",
+        "all-projects": "Todos los proyectos",
+        "show-all-projects": "Muestra todos los proyectos"
     }
 }
