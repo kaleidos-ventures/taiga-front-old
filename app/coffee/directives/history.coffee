@@ -59,7 +59,6 @@ GmHistoryDirective = ($compile, $rootScope) ->
             return change
 
         makeHistoryItem = (item, type) ->
-            console.log item.changed_fields
             changes = Lazy(fields[type])
                         .map((name) -> {name: name, field: item.changed_fields[name]})
                         .reject((x) -> _.isEmpty(x["field"]))
@@ -71,9 +70,9 @@ GmHistoryDirective = ($compile, $rootScope) ->
 
             user = scope.constants.users[item.user]
             if user?
-                changed_by = user.full_name
+                changed_by = user
             else
-                changed_by = "The Observer"
+                changed_by = {full_name: "The Observer"}
 
             historyItem = {
                 changes: changesArray

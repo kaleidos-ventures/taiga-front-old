@@ -180,7 +180,7 @@
         <ul class="history-items">
             <li class="history-item" ng-repeat="hitem in historyItems">
                 <div class="title">
-                    <span class="updated">Updated by {{ hitem.by }}</span>
+                    <span class="updated">Updated by <span gm-colorize-user="hitem.by">{{ hitem.by.full_name }}</span></span>
                     <span class="date">{{ hitem.modified_date|momentFromNow }}</span>
                 </div>
                 <div class="changes">
