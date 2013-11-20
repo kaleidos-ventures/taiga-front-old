@@ -1,4 +1,8 @@
 {
+    "pagination": {
+        "next": "Next",
+        "prev": "Previous"
+    },
     "login": {
         "username-label": "Username:",
         "password-label": "Password:",
