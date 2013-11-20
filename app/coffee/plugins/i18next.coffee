@@ -21,7 +21,7 @@ I18NextDirective = ($parse, $rootScope) ->
             element = angular.element(elm)
             for value in attrs.i18next.split(",")
                 if value.indexOf(":") == -1
-                    element.text(t(value))
+                    element.html(t(value))
                 else
                     [ns, value] = value.split(":")
                     element.attr(ns, t(value))
