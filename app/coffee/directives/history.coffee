@@ -5,39 +5,52 @@ GmHistoryDirective = ($compile, $rootScope) ->
         resolvers = {
             userstory: (name, value) ->
                 return switch name
-                    when "status" then scope.constants.usStatuses[value].name
-                    when "tags" then value.join(", ")
+                    when "status"
+                        if value
+                            return scope.constants.usStatuses[value].name
+                        return null
                     when "tags"
                         if value
                             return value.join(", ")
-                        else '__without tags__'
+                        else null
                     else value
-
             issue: (name, value) ->
                 return switch name
-                    when "priority" then scope.constants.priorities[value].name
-                    when "status" then scope.constants.issueStatuses[value].name
-                    when "severity" then scope.constants.severities[value].name
+                    when "priority"
+                        if value
+                            return scope.constants.priorities[value].name
+                        return null
+                    when "status"
+                        if value
+                            return scope.constants.issueStatuses[value].name
+                        return null
+                    when "severity"
+                        if value
+                            return scope.constants.severities[value].name
+                        return null
                     when "tags"
                         if value
                             return value.join(", ")
-                        else '__without tags__'
+                        else null
                     when "assigned_to"
-                        if value == null
-                            return "Unassigned"
-                        return scope.constants.users[value].full_name
+                        if value
+                            return scope.constants.users[value].full_name
+                        return "Unassigned"
                     else value
             task: (name, value) ->
                 return switch name
                     when "tags"
                         if value
                             return value.join(", ")
-                        else '__without tags__'
-                    when "status" then scope.constants.taskStatuses[value].name
+                        else null
+                    when "status"
+                        if value
+                            return scope.constants.taskStatuses[value].name
+                        return null
                     when "assigned_to"
-                        if value == null
-                            return "Unassigned"
-                        return scope.constants.users[value].full_name
+                        if value
+                            return scope.constants.users[value].full_name
+                         return "Unassigned"
                     else value
         }
 
@@ -59,6 +72,15 @@ GmHistoryDirective = ($compile, $rootScope) ->
             return change
 
         makeHistoryItem = (item, type) ->
+            if item.type is 0
+                action = "add"
+            else if item.type is 1
+                action = "update"
+            else if item.type is 2
+                action = "delete"
+            else
+                action = ""
+
             changes = Lazy(fields[type])
                         .map((name) -> {name: name, field: item.changed_fields[name]})
                         .reject((x) -> _.isEmpty(x["field"]))
@@ -75,6 +97,7 @@ GmHistoryDirective = ($compile, $rootScope) ->
                 changed_by = {full_name: "The Observer"}
 
             historyItem = {
+                action: action
                 changes: changesArray
                 by: changed_by
                 modified_date: item.created_date

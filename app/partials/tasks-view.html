@@ -170,14 +170,17 @@
         <ul class="history-items">
             <li class="history-item" ng-repeat="hitem in historyItems">
                 <div class="title">
-                    <span class="updated">Updated by <span gm-colorize-user="hitem.by">{{ hitem.by.full_name }}</span></span>
+                    <span class="updated">
+                        <span ng-show="hitem.action == 'add'">Created by</span>
+                        <span ng-show="hitem.action == 'update'">Updated by</span>
+                        <span gm-colorize-user="hitem.by">{{ hitem.by.full_name }}</span></span>
                     <span class="date">{{ hitem.modified_date|momentFromNow }}</span>
                 </div>
                 <div class="changes">
                     <div class="change" ng-repeat="change in hitem.changes">
                         <strong>{{ change.name|capitalize }}</strong>:
-                        from: <span class="old">{{ change.old }}</span>
-                        to <span class="new">{{ change.new }}</span>
+                        <span ng-show="change.old">from: <span class="old">{{ change.old }}</span></span>
+                        <span>to <span class="new">{{ change.new || "''" }}</span></span>
                     </div>
                 </div>
                 <div class="comment" ng-show="hitem.comment">

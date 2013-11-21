@@ -218,7 +218,12 @@
             <li class="history-item" ng-repeat="hitem in historyItems">
                 <div class="title">
                     <span class="updated">
-                        <span i18next="issue.updated-by-history">Updated by</span>
+                        <span i18next="issue.created-by-history" ng-show="hitem.action == 'add'">
+                            Created by
+                        </span>
+                        <span i18next="issue.updated-by-history" ng-show="hitem.action == 'update'">
+                            Updated by
+                        </span>
                         <span gm-colorize-user="hitem.by">{{ hitem.by.full_name }}</span></span>
                     <span class="date">{{ hitem.modified_date|momentFromNow }}</span>
                 </div>
@@ -226,8 +231,8 @@
                     <div class="change" ng-repeat="change in hitem.changes">
                         <!-- TODO: i18next integration pending -->
                         <strong>{{ change.name|capitalize }}</strong>:
-                        from: <span class="old">{{ change.old }}</span>
-                        to <span class="new">{{ change.new }}</span>
+                        <span ng-show="change.old">from: <span class="old">{{ change.old }}</span></span>
+                        <span>to <span class="new">{{ change.new || "''" }}</span></span>
                     </div>
                 </div>
                 <div class="comment" ng-show="hitem.comment">
