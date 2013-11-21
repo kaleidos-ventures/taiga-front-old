@@ -77,7 +77,10 @@
         "client-requirement": "Client's requirement",
         "team-requirement": "Team's requirement",
         "create-user-story": "Create user story",
-        "modify-user-story": "Modify user story"
+        "modify-user-story": "Modify user story",
+        "user-story-saved": "The user story has been saved",
+        "sprint-saved": "The sprint has been saved",
+        "sprint-modified": "The sprint has been modified"
     },
     "issues": {
         "new-issue": "New issue",
@@ -178,6 +181,7 @@
         "comment-history": "Comment:"
     },
     "profile": {
+        "profile": "Profile",
         "username": "Username:",
         "first-name": "First name:",
         "last-name": "Last name:",
@@ -186,7 +190,9 @@
         "email": "Email:",
         "color": "Color:",
         "save": "Save",
-        "password": "Password:"
+        "password": "Password:",
+        "saved-successful": "Profile saved successful.",
+        "password-changed-successful": "Password changed successful."
     },
     "admin": {
         "project-profile": "Project profile",

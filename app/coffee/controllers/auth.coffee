@@ -102,7 +102,7 @@ ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config) ->
     $rootScope.pageSection = 'profile'
     $rootScope.pageBreadcrumb = [
         ["Greenmine", $rootScope.urls.projectsUrl()],
-        ["Profile", null]
+        [$rootScope.t("profile.profile"), null]
     ]
     $scope.notificationLevelOptions = config.notificationLevelOptions
 
@@ -113,7 +113,7 @@ ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config) ->
 
         promise.then (user) ->
             $gmAuth.setUser(user)
-            $gmFlash.info("Profile saved successful.")
+            $gmFlash.info($rootScope.t('profile.saved-successful'))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -122,7 +122,7 @@ ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config) ->
         promise = rs.changePasswordForCurrentUser($scope.formData.password)
 
         promise.then (data) ->
-            $gmFlash.info("Password changed successful.")
+            $gmFlash.info($rootScope.t('profile.password-changed-successful'))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data

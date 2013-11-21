@@ -77,7 +77,10 @@
         "client-requirement": "Requisito del cliente",
         "team-requirement": "Requisito del equipo",
         "create-user-story": "Crear historia de usuario",
-        "modify-user-story": "Modificar historia de usuario"
+        "modify-user-story": "Modificar historia de usuario",
+        "user-story-saved": "La historia de usuario ha sido guardada",
+        "sprint-saved": "El sprint ha sido guardado",
+        "sprint-modified": "El sprint ha sido modificado"
     },
     "issues": {
         "new-issue": "Nueva petición",
@@ -178,6 +181,7 @@
         "comment-history": "Comentario:"
     },
     "profile": {
+        "profile": "Perfil",
         "username": "Nombre de usuario:",
         "first-name": "Nombre:",
         "last-name": "Apellido:",
@@ -186,7 +190,9 @@
         "email": "Email:",
         "color": "Color:",
         "save": "Guardar",
-        "password": "Contraseña:"
+        "password": "Contraseña:",
+        "saved-successful": "Perfil guardado correctamente.",
+        "password-changed-successful": "Contraseña cambiada correctamente."
     },
     "admin": {
         "project-profile": "Perfil del proyecto",

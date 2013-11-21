@@ -18,7 +18,7 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
     $rootScope.pageSection = 'backlog'
     $rootScope.pageBreadcrumb = [
         ["", ""]
-        ["Backlog", null]
+        [$scope.t("common.backlog"), null]
     ]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
@@ -275,7 +275,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash)
             closeModal()
             $scope.overlay.close()
             $scope.defered.resolve()
-            $gmFlash.info("The user story has been saved")
+            $gmFlash.info($scope.t('backlog.user-story-saved'))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -314,7 +314,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash) ->
                 # last created milestone
                 $rootScope.sprintId = milestone.id
                 # Show a success message
-                $gmFlash.info("The sprint has been saved")
+                $gmFlash.info($scope.t('backlog.sprint-saved'))
 
             promise.then null, (data) ->
                 $scope.checksleyErrors = data
@@ -324,7 +324,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash) ->
             promise.then (data) ->
                 $scope.form = {}
                 $scope.sprintFormOpened = false
-                $gmFlash.info("The sprint has been saved")
+                $gmFlash.info($scope.t('backlog.sprint-saved'))
 
             promise.then null, (data) ->
                 $scope.checksleyErrors = data
@@ -386,7 +386,7 @@ BacklogMilestoneController = ($scope, rs, $gmFlash) ->
 
         promise.then (data) ->
             $scope.editFormOpened = false
-            $gmFlash.info("The sprint has been modified")
+            $gmFlash.info($scope.t('backlog.sprint-modified'))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
