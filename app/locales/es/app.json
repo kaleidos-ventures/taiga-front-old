@@ -21,6 +21,8 @@
         "password-change-success": "Contraseña cambiada correctamente."
     },
     "common": {
+        "dashboard": "Dashboard",
+        "taskboard": "Panel de tareas",
         "no-projects": "No tienes proyectos",
         "logout": "Salir",
         "admin": "Administrar",

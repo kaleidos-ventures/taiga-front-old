@@ -16,7 +16,7 @@ ProjectListController = ($scope, $rootScope, rs) ->
     $rootScope.pageSection = 'projects'
     $rootScope.pageBreadcrumb = [
         ["Greenmine", $rootScope.urls.projectsUrl()],
-        ["Dashboard", null]
+        [$scope.t('common.dashboard'), null]
     ]
     $rootScope.projectId = null
 
@@ -29,7 +29,7 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
     $rootScope.pageSection = 'admin'
     $rootScope.pageBreadcrumb = [
         ["", ""],
-        ["Project Admin", null]
+        [$scope.t('common.admin-panel'), null]
     ]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 

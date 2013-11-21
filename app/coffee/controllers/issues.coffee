@@ -17,7 +17,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = [
         ["", ""],
-        ["Issues", null]
+        [$scope.t('common.issues'), null]
     ]
 
     $rootScope.projectId = parseInt($routeParams.pid, 10)
@@ -262,7 +262,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = [
         ["", ""],
-        ["Issues", null],
+        [$scope.t('common.issues'), null],
     ]
     $scope.projectId = parseInt($routeParams.pid, 10)
 
@@ -281,7 +281,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             $scope.form = _.extend({}, $scope.issue._attrs)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[1] = ["Issues", $rootScope.urls.issuesUrl(projectId)]
+            breadcrumb[1] = [$scope.t('common.issues'), $rootScope.urls.issuesUrl(projectId)]
             breadcrumb[2] = ["##{issue.ref}", null]
 
             $rootScope.pageBreadcrumb = breadcrumb

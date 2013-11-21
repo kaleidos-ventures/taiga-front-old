@@ -17,7 +17,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal) 
     $rootScope.pageSection = 'dashboard'
     $rootScope.pageBreadcrumb = [
         ["", ""],
-        ["Taskboard", null]
+        [$scope.t('common.taskboard'), null]
     ]
 
     $scope.projectId = $routeParams.pid

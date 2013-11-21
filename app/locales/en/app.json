@@ -21,6 +21,8 @@
         "password-change-success": "Password changed successful."
     },
     "common": {
+        "dashboard": "Dashboard",
+        "taskboard": "Taskboard",
         "no-projects": "You have no projects",
         "logout": "Logout",
         "admin": "Admin",

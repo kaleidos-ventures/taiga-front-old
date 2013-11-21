@@ -17,7 +17,7 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs) ->
     $rootScope.projectId = parseInt($routeParams.pid, 10)
     $rootScope.pageBreadcrumb = [
         ["", ""]
-        ["Search", null]
+        [$scope.t("common.search"), null]
     ]
 
     $data.loadProject($scope)
