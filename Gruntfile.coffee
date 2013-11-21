@@ -26,7 +26,8 @@ module.exports = (grunt) ->
         'app/js/select2.js',
         'app/js/i18next.js',
         'app/js/coffeeColorPicker.js',
-        'app/js/coffeeColorPicker.angular.js'
+        'app/js/coffeeColorPicker.angular.js',
+        'app/js/diff_match_patch.js'
     ]
 
     grunt.initConfig({

@@ -167,10 +167,29 @@ WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, 
 WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q) ->
     $scope.showChanges = false
 
+    $scope.showContent = true
+    $scope.showPreviousDiff = false
+    $scope.showCurrentDiff = false
+
     $scope.toggleShowChanges = ->
         $scope.showChanges = not $scope.showChanges
 
-    $scope.revertWikiPage= (hitem) ->
+    $scope.activeShowContent = ->
+        $scope.showContent = true
+        $scope.showPreviousDiff = false
+        $scope.showCurrentDiff = false
+
+    $scope.activeShowPreviousDiff = ->
+        $scope.showContent = false
+        $scope.showPreviousDiff = true
+        $scope.showCurrentDiff = false
+
+    $scope.activeShowCurrentDiff = ->
+        $scope.showContent = false
+        $scope.showPreviousDiff = false
+        $scope.showCurrentDiff = true
+
+    $scope.revertWikiPage = (hitem) ->
         date = moment(hitem.created_date).format("llll")
 
         promise = $confirm.confirm "Are you sure you want to go back to '#{date}'?"

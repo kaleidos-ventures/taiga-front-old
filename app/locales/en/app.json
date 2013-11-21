@@ -263,6 +263,12 @@
     "wiki-historical": {
         "history": "History",
         "attachments": "Attachments",
+        "created-by-history": "Created by",
+        "updated-by-history": "Updated by",
+        "show-content": "Show content",
+        "show-current-diff": "Show diff with current version",
+        "show-previous-diff": "Show diff with previous version",
+        "restore": "Restore",
         "see-more": "See more"
     }
 }

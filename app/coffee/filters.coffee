@@ -62,6 +62,22 @@ SizeFormatFilter = ->
         return (input / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' +
                units[number]
 
+DiffFilter = ->
+    return (newText, oldText, semantic=true, efficiency=false) ->
+        newText = newText or ""
+        oldText = oldText or ""
+
+        dmp = new diff_match_patch()
+
+        d = dmp.diff_main(oldText, newText)
+        if semantic
+            dmp.diff_cleanupSemantic(d)
+        if efficiency
+            dmp.diff_cleanupEfficiency(d)
+
+        html_diff = dmp.diff_prettyHtml(d)
+
+        return html_diff
 
 module = angular.module('greenmine.filters', [])
 module.filter("lowercase", LowercaseFilter)
@@ -72,3 +88,4 @@ module.filter("slugify", SlugifyFilter)
 module.filter("truncate", TruncateFilter)
 module.filter("onlyVisible", OnlyVisibleFilter)
 module.filter("sizeFormat", SizeFormatFilter)
+module.filter("diff", DiffFilter)

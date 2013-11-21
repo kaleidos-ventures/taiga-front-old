@@ -55,7 +55,7 @@
             background-color: darken(#333, 15%);
         }
     }
-    &.button-revert{
+    &.button-restore{
         background-color: #cc0000;
         -webkit-box-shadow:  0 1px 1px #666;
         -moz-box-shadow:  0 1px 1px #666;
@@ -2558,6 +2558,39 @@ body.login {
 
                 .changes {
                     padding: 4px 10px;
+                    .last-diff,
+                    .current-diff {
+                        padding-top: 15px;
+                        padding-bottom: 15px;
+                    }
+                    .button-content,
+                    .button-previous-diff,
+                    .button-current-diff {
+                        float: right;
+                        margin-left: 10px;
+
+                        color: #999;
+                        background-color: #eee;
+                        -webkit-box-shadow:  0 1px 1px #666;
+                        -moz-box-shadow:  0 1px 1px #666;
+                        box-shadow:  0 1px 1px #666;
+                        &:hover {
+                            background-color: darken(#eee, 15%);
+                            color: darken(#999, 15%);
+                        }
+                    }
+                    .selected {
+                        color: #ffffff;
+                        background: #669933;
+                        background-color: #669933;
+                        -webkit-box-shadow:  0 1px 1px #666;
+                        -moz-box-shadow:  0 1px 1px #666;
+                        box-shadow:  0 1px 1px #666;
+                        &:hover {
+                            background-color: #669933;
+                            color: #ffffff;
+                        }
+                    }
                 }
             }
         }
