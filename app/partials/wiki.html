@@ -4,20 +4,23 @@
         <div class="span12">
             <div class="wiki-container" gm-render-markdown="content"></div>
             <div class="attachments" ng-show="attachments">
-                <h3 data-icon="E">Attachments</h3>
+                <h3 data-icon="E" i18next="wiki.attachments">Attachments</h3>
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
+                        <!-- TODO: i18next integration pending -->
                         <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>
                     </li>
                 </ul>
             </div>
             <div class="wiki-buttons">
-                <a href="" class="button button-edit" ng-click="openEditForm()">Edit</a>
-                <a href="{{ urls.wikiHistoricalUrl(projectId, slug) }}"
-                    class="button button-historical">Historical</a>
-                <a href="" class="button button-delete" ng-click="deletePage()">Delete</a>
+                <a href="" class="button button-edit" ng-click="openEditForm()"
+                    i18next="wiki.edit-button" >Edit</a>
+                <a href="{{ urls.wikiHistoricalUrl(projectId, slug) }}" class="button button-historical"
+                    i18next="wiki.historical-button">Historical</a>
+                <a href="" class="button button-delete" ng-click="deletePage()"
+                   i18next="wiki.delete-button">Delete</a>
             </div>
         </div>
     </div>
@@ -28,29 +31,33 @@
                           gm-markitup></textarea>
             </div>
             <a class="add-attachment" data-icon="E" title="Add Attachments" href=""
-               gm-forward-click="#attachment_file_input">Add Attachments</a>
+               gm-forward-click="#attachment_file_input"
+               i18next="wiki.add-attachments,title:wiki.add-attachments">Add Attachments</a>
             <ul class="attachments-items">
                 <li class="attachments-item" ng-repeat="attachment in newAttachments">
-                    <a class="delete" data-icon="h" href=""
-                       title="Delete the new attachment"
-                       ng-click="deleteNewAttachment(attachment)"></a>
+                    <a class="delete" data-icon="h" href="" title="Delete the new attachment"
+                       ng-click="deleteNewAttachment(attachment)"
+                       i18next="title:wiki.delete-new-attachment"></a>
                     <span>{{ attachment.name }}</span>
                     <span>[{{ attachment.size|sizeFormat }}]</span>
                 </li>
                 <li class="attachments-item" ng-repeat="attachment in attachments">
                     <a class="delete" data-icon="h" href="" title="Delete attachment"
-                       ng-click="deleteAttachment(attachment)"></a>
+                       ng-click="deleteAttachment(attachment)"
+                       i18next="title:wiki.delete-attachment"></a>
                     <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                     <span>[{{ attachment.size|sizeFormat }}]</span>
+                    <!-- TODO: i18next integration pending -->
                     <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>
                 </li>
             </ul>
             <input type="file" class="hidden" name="newAttachments" multiple="multiple"
                    id="attachment_file_input" gm-files="newAttachments" />
             <div class="wiki-buttons">
-                <a href="" class="button button-success" ng-click="savePage()">Save</a>
-                <a href="" class="button" ng-click="discartCurrentChanges()"
-                   ng-show="page">Cancel</a>
+                <a href="" class="button button-success" ng-click="savePage()"
+                   i18next="wiki.save-button">Save</a>
+                <a href="" class="button" ng-click="discartCurrentChanges()" ng-show="page"
+                   i18next="wiki.cancel-button">Cancel</a>
             </div>
         </div>
     </div>

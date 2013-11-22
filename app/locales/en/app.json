@@ -319,6 +319,15 @@
         "gone-back-error": "An error happened. Maybe the flux capacitor is broken..."
     },
     "wiki": {
+        "attachments": "Attachments",
+        "edit-button": "Edit",
+        "historical-button": "Historical",
+        "delete-button": "Delete",
+        "add-attachments": "Add Attachments",
+        "delete-new-attachment": "Delete the new attachment",
+        "delete-attachment": "Delete the attachment",
+        "save-button": "Save",
+        "cancel-button": "Cancel"
     },
     "user-story": {
         "user-story": "User storie",

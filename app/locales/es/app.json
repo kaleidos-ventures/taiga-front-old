@@ -319,6 +319,15 @@
         "gone-back-error": "Ha habído un error. Es posible que el condensador de flujo esté roto..."
     },
     "wiki": {
+        "attachments": "Adjuntos",
+        "edit-button": "Editat",
+        "historical-button": "Historial",
+        "delete-button": "Borrar",
+        "add-attachments": "Añadir adjuntos",
+        "delete-new-attachment": "Borrar el nuevo adjunto",
+        "delete-attachment": "Borrar el adjunto",
+        "save-button": "Guardar",
+        "cancel-button": "Cancelar"
     },
     "user-story": {
         "user-story": "Historia de usuario",
