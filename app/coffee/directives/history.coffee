@@ -1,4 +1,4 @@
-GmHistoryDirective = ($compile, $rootScope) ->
+GmHistoryDirective = ($compile, $rootScope, $i18next) ->
     restrict: "A"
     require: "?ngModel"
     link: (scope, elm, attrs, ngModel) ->
@@ -35,7 +35,7 @@ GmHistoryDirective = ($compile, $rootScope) ->
                     when "assigned_to"
                         if value
                             return scope.constants.users[value].full_name
-                        return "Unassigned"
+                        return i18next.t("common.unassigned")
                     else value
             task: (name, value) ->
                 return switch name
@@ -50,7 +50,7 @@ GmHistoryDirective = ($compile, $rootScope) ->
                     when "assigned_to"
                         if value
                             return scope.constants.users[value].full_name
-                         return "Unassigned"
+                        return i18next.t("common.unassigned")
                     else value
         }
 
@@ -144,4 +144,4 @@ GmHistoryDirective = ($compile, $rootScope) ->
             render(ngModel.$viewValue or [])
 
 module = angular.module('greenmine.directives.history', [])
-module.directive("gmHistory", GmHistoryDirective)
+module.directive("gmHistory", ['$i18next', GmHistoryDirective])

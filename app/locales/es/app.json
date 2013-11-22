@@ -34,6 +34,7 @@
         "search-placeholder": "Encuentra historias, peticiones, tareas...",
         "all-projects": "Todos los proyectos",
         "show-all-projects": "Muestra todos los proyectos",
+        "unassigned": "Sin asignar",
         "are-you-sure": "¿Estás seguro?"
     },
     "backlog": {
@@ -182,7 +183,7 @@
         "created-by-history": "Creado por",
         "updated-by-history": "Actualizada por",
         "comment-history": "Comentario:",
-        "issue-saved": "La petición ha sido guardada",
+        "issue-saved": "La petición ha sido guardada"
     },
     "profile": {
         "profile": "Perfil",
@@ -272,7 +273,7 @@
         "user-story-saved": "La historia de usuario ha sido guardada"
     },
     "task": {
-        "task-saved": "La tarea ha sido guardada",
+        "task-saved": "La tarea ha sido guardada"
     },
     "wiki-historical": {
         "history": "Historial",
@@ -294,6 +295,26 @@
     },
     "user-story": {
         "user-story": "Historia de usuario",
-        "user-story-saved": "La historia de usuario ha sido guardada",
+        "user-story-saved": "La historia de usuario ha sido guardada"
+    },
+    "wiki-editor": {
+        "heading-1": "Encabezado de primer nivel",
+        "heading-2": "Encabezado de segundo nivel",
+        "heading-3": "Encabezado 3",
+        "heading-4": "Encabezado 4",
+        "heading-5": "Encabezado 5",
+        "heading-6": "Encabezado 6",
+        "placeholder": "Tu título aquí...",
+        "bold": "Negrita",
+        "italic": "Cursiva",
+        "bulleted-list": "Lista de puntos",
+        "numeric-list": "Lista numerica",
+        "picture": "Foto",
+        "link": "Enlace",
+        "link-placeholder": "El texto de tu enlace aquí...",
+        "quotes": "Citas",
+        "code-block": "Bloque de Código / Código",
+        "preview": "Previsualizar",
+        "help": "Ayuda"
     }
 }

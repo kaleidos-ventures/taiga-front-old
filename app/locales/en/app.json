@@ -34,6 +34,7 @@
         "search-placeholder": "Find user stories, issues, tasks...",
         "all-projects": "All projects",
         "show-all-projects": "Show all projects",
+        "unassigned": "Unassigned",
         "are-you-sure": "Are you sure?"
     },
     "backlog": {
@@ -272,7 +273,7 @@
         "user-story-saved": "The user story has been saved"
     },
     "task": {
-        "task-saved": "The task has been saved",
+        "task-saved": "The task has been saved"
     },
     "wiki-historical": {
         "history": "History",
@@ -294,6 +295,26 @@
     },
     "user-story": {
         "user-story": "User storie",
-        "user-story-saved": "The user story has been saved",
+        "user-story-saved": "The user story has been saved"
+    },
+    "wiki-editor": {
+        "heading-1": "First Level Heading",
+        "heading-2": "Second Level Heading",
+        "heading-3": "Heading 3",
+        "heading-4": "Heading 4",
+        "heading-5": "Heading 5",
+        "heading-6": "Heading 6",
+        "placeholder": "Your title here...",
+        "bold": "Bold",
+        "italic": "Italic",
+        "bulleted-list": "Bulleted List",
+        "numeric-list": "Numeric List",
+        "picture": "Picture",
+        "link": "Link",
+        "link-placeholder": "Your text to link here...",
+        "quotes": "Quotes",
+        "code-block": "Code Block / Code",
+        "preview": "Preview",
+        "help": "Help"
     }
 }
