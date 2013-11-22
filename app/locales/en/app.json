@@ -272,6 +272,7 @@
     "wiki-historical": {
         "history": "History",
         "attachments": "Attachments",
+        "no-historical-items": "This wiki page has no past yet",
         "created-by-history": "Created by",
         "updated-by-history": "Updated by",
         "show-content": "Show content",

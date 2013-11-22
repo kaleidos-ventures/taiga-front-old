@@ -22,6 +22,9 @@
                 <h3 i18next="wiki-historical.history">History</h3>
                 <div class="history-items-container">
                     <ul class="history-items">
+                        <li ng-show="historical.models.length == 0" class="empty">
+                            <span i18next="wiki-historical.no-historical-items">This wiki page has no past yet</span>
+                        </li>
                         <li class="history-item" ng-repeat="hitem in historical.models"
                             ng-controller="WikiHistoricalItemController">
                             <div class="title">

@@ -271,6 +271,7 @@
     "wiki-historical": {
         "history": "Historial",
         "attachments": "Adjuntos",
+        "no-historical-items": "Esta página del wiki todavía no ha forjado un pasado",
         "created-by-history": "Creado por",
         "updated-by-history": "Actualizado por",
         "show-content": "Ver contenido",
