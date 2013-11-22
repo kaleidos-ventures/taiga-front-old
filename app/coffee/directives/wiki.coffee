@@ -1,5 +1,5 @@
 
-gmMarkitupConstructor = ($parse) ->
+gmMarkitupConstructor = ($parse, $i18next) ->
     require: "?ngModel",
     link: (scope, elm, attrs, ngModel) ->
         wikiHelpUrl = "https://github.com/fletcher/MultiMarkdown/blob/master/Documentation/Markdown%20Syntax.md"
@@ -11,28 +11,28 @@ gmMarkitupConstructor = ($parse) ->
             onShiftEnter: {keepDefault:false, openWith:'\n\n'}
             previewParser: (content) -> markdown.toHTML(content)
             markupSet: [
-                {name:$i18next.t('wiki-editor.heading-1', key:"1", placeHolder:$i18next.t('wiki-editor.placeholder'), closeWith:(markItUp) -> markdownTitle(markItUp, '=') },
-                {name:$i18next.t('wiki-editor.heading-2', key:"2", placeHolder:$i18next.t('wiki-editor.placeholder'), closeWith:(markItUp) -> markdownTitle(markItUp, '-') },
-                {name:$i18next.t('wiki-editor.heading-3', key:"3", openWith:'### ', placeHolder:$i18next.t('wiki-editor.placeholder') },
-                {name:$i18next.t('wiki-editor.heading-4', key:"4", openWith:'#### ', placeHolder:$i18next.t('wiki-editor.placeholder') },
-                {name:$i18next.t('wiki-editor.heading-5', key:"5", openWith:'##### ', placeHolder:$i18next.t('wiki-editor.placeholder') },
-                {name:$i18next.t('wiki-editor.heading-6', key:"6", openWith:'###### ', placeHolder:$i18next.t('wiki-editor.placeholder') },
+                {name:$i18next.t('wiki-editor.heading-1'), key:"1", placeHolder:$i18next.t('wiki-editor.placeholder'), closeWith:(markItUp) -> markdownTitle(markItUp, '=') },
+                {name:$i18next.t('wiki-editor.heading-2'), key:"2", placeHolder:$i18next.t('wiki-editor.placeholder'), closeWith:(markItUp) -> markdownTitle(markItUp, '-') },
+                {name:$i18next.t('wiki-editor.heading-3'), key:"3", openWith:'### ', placeHolder:$i18next.t('wiki-editor.placeholder') },
+                {name:$i18next.t('wiki-editor.heading-4'), key:"4", openWith:'#### ', placeHolder:$i18next.t('wiki-editor.placeholder') },
+                {name:$i18next.t('wiki-editor.heading-5'), key:"5", openWith:'##### ', placeHolder:$i18next.t('wiki-editor.placeholder') },
+                {name:$i18next.t('wiki-editor.heading-6'), key:"6", openWith:'###### ', placeHolder:$i18next.t('wiki-editor.placeholder') },
                 {separator:'---------------' },
-                {name:$i18next.t('wiki-editor.', key:"B", openWith:'**', closeWith:'**'},
-                {name:$i18next.t('wiki-editor.', key:"I", openWith:'_', closeWith:'_'},
+                {name:$i18next.t('wiki-editor.bold'), key:"B", openWith:'**', closeWith:'**'},
+                {name:$i18next.t('wiki-editor.italic'), key:"I", openWith:'_', closeWith:'_'},
                 {separator:'---------------' },
-                {name:$i18next.t('wiki-editor.', openWith:'- ' },
-                {name:$i18next.t('wiki-editor.', openWith:(markItUp) -> markItUp.line+'. '},
+                {name:$i18next.t('wiki-editor.bulleted-list'), openWith:'- ' },
+                {name:$i18next.t('wiki-editor.numeric-list'), openWith:(markItUp) -> markItUp.line+'. '},
                 {separator:'---------------' },
-                {name:$i18next.t('wiki-editor.', key:"P", replaceWith:'![[![Alternative text]!]]([![Url:!:http://]!] "[![Title]!]")'},
-                {name:$i18next.t('wiki-editor.', key:"L", openWith:'[', closeWith:']([![Url:!:http://]!] "[![Title]!]")', placeHolder: $i18next.t('wiki-editor.link-placeholder')},
+                {name:$i18next.t('wiki-editor.picture'), key:"P", replaceWith:'![[![Alternative text]!]]([![Url:!:http://]!] "[![Title]!]")'},
+                {name:$i18next.t('wiki-editor.link'), key:"L", openWith:'[', closeWith:']([![Url:!:http://]!] "[![Title]!]")', placeHolder: $i18next.t('wiki-editor.link-placeholder')},
                 {separator:'---------------'},
-                {name:$i18next.t('wiki-editor.', openWith:'> '},
-                {name:$i18next.t('wiki-editor.', openWith:'(!(\t|!|`)!)', closeWith:'(!(`)!)'},
+                {name:$i18next.t('wiki-editor.quotes'), openWith:'> '},
+                {name:$i18next.t('wiki-editor.code-block'), openWith:'(!(\t|!|`)!)', closeWith:'(!(`)!)'},
                 {separator:'---------------'},
-                {name:$i18next.t('wiki-editor.preview', call:'preview', className:"preview"}
+                {name:$i18next.t('wiki-editor.preview'), call:'preview', className:"preview"}
                 {separator:'---------------'},
-                {name:$i18next.t('wiki-editor.help', call: openHelp , className:"help"}
+                {name:$i18next.t('wiki-editor.help'), call: openHelp , className:"help"}
             ]
             afterInsert: (event) ->
                 target = angular.element(event.textarea)
@@ -90,5 +90,5 @@ GmRenderMarkdownDirective = ($rootScope, $parse) ->
 
 
 module = angular.module('greenmine.directives.wiki', [])
-module.directive('gmMarkitup', ["$parse", gmMarkitupConstructor])
+module.directive('gmMarkitup', ["$parse", "$i18next", gmMarkitupConstructor])
 module.directive("gmRenderMarkdown", ["$rootScope", "$parse", GmRenderMarkdownDirective])
