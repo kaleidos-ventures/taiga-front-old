@@ -104,7 +104,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
             $scope.checksleyErrors = data
 
     $scope.removeAttachment = (attachment) ->
-        promise = $confirm.confirm($i18next.t("task.are-you-sure"))
+        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
         promise.then () ->
             $scope.attachments = _.without($scope.attachments, attachment)
             attachment.remove()
@@ -113,7 +113,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
         $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
     $scope.removeTask = (task) ->
-        promise = $confirm.confirm($i18next.t("task.are-you-sure"))
+        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
         promise.then ->
             milestone = task.milestone
             task.remove().then ->

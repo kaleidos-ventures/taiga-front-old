@@ -33,7 +33,8 @@
         "search": "Buscar",
         "search-placeholder": "Encuentra historias, peticiones, tareas...",
         "all-projects": "Todos los proyectos",
-        "show-all-projects": "Muestra todos los proyectos"
+        "show-all-projects": "Muestra todos los proyectos",
+        "are-you-sure": "¿Estás seguro?"
     },
     "backlog": {
         "completed": "completado",
@@ -182,7 +183,6 @@
         "updated-by-history": "Actualizada por",
         "comment-history": "Comentario:",
         "issue-saved": "La petición ha sido guardada",
-        "are-you-sure": "¿Estás seguro?"
     },
     "profile": {
         "profile": "Perfil",
@@ -227,13 +227,11 @@
         "save": "Guardar"
     },
     "projects": {
-        "are-you-sure": "¿Estás seguro?",
         "saved-success": "Proyecto guardado correctamente",
         "all-projects": "Todos los proyectos",
         "no-projects": "No tienes proyectos todavía",
         "recent-projects": "Proyectos recientes",
         "no-recent-projects": "No tienes proyectos recientes todavía.",
-        "are-you-sure": "¿Estás seguro?",
         "are-you-sure-long": "¿Estás seguro de que quieres borrar este proyecto?"
     },
     "register": {
@@ -270,11 +268,11 @@
         "edit": "Editar",
         "view": "Ver",
         "unassigned": "Sin asignar",
-        "select-user": "Selecciona un usuario"
+        "select-user": "Selecciona un usuario",
+        "user-story-saved": "La historia de usuario ha sido guardada"
     },
     "task": {
         "task-saved": "La tarea ha sido guardada",
-        "are-you-sure": "¿Estás seguro?"
     },
     "wiki-historical": {
         "history": "Historial",
@@ -293,11 +291,9 @@
         "gone-back-error": "Ha habído un error. Es posible que el condensador de flujo esté roto..."
     },
     "wiki": {
-        "are-you-sure": "¿Estás seguro?"
     },
     "user-story": {
         "user-story": "Historia de usuario",
         "user-story-saved": "La historia de usuario ha sido guardada",
-        "are-you-sure": "¿Estás seguro?"
     }
 }

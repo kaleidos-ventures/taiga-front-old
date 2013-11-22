@@ -116,7 +116,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             $scope.checksleyErrors = data
 
     $scope.removeAttachment = (attachment) ->
-        promise = $confirm.confirm($i18next.t('user-story.are-you-sure'))
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
         promise.then () ->
             $scope.attachments = _.without($scope.attachments, attachment)
             attachment.remove()
@@ -125,7 +125,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
     $scope.removeUserStory = (userStory) ->
-        promise = $confirm.confirm($i18next.t('user-story.are-you-sure'))
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
         promise.then () ->
             userStory.remove().then ->
                 $location.url("/project/#{projectId}/backlog")

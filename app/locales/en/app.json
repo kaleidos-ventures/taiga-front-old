@@ -33,7 +33,8 @@
         "search": "Search",
         "search-placeholder": "Find user stories, issues, tasks...",
         "all-projects": "All projects",
-        "show-all-projects": "Show all projects"
+        "show-all-projects": "Show all projects",
+        "are-you-sure": "Are you sure?"
     },
     "backlog": {
         "completed": "completed",
@@ -181,8 +182,7 @@
         "created-by-history": "Created by",
         "updated-by-history": "Updated by",
         "comment-history": "Comment:",
-        "issue-saved": "The issue has been saved",
-        "are-you-sure": "Are you sure?"
+        "issue-saved": "The issue has been saved"
     },
     "profile": {
         "profile": "Profile",
@@ -227,13 +227,11 @@
         "save": "Save"
     },
     "projects": {
-        "are-you-sure": "Are you sure?",
         "saved-success": "Project saved successful",
         "all-projects": "All projects",
         "no-projects": "You have not projects jet.",
         "recent-projects": "Recent projects",
         "no-recent-projects": "You have not recent projects jet.",
-        "are-you-sure": "Are you sure?",
         "are-you-sure-long": "Are you sure you want to delete this project?"
     },
     "register": {
@@ -254,7 +252,6 @@
         "total-tasks": "total<br />tasks",
         "completed-tasks": "completed<br />tasks",
         "remaining-tasks": "remaining<br />tasks",
-
         "dates": "Dates",
         "start-date": "start<br />date",
         "finish-date": "finish<br />date",
@@ -276,7 +273,6 @@
     },
     "task": {
         "task-saved": "The task has been saved",
-        "are-you-sure": "Are you sure?"
     },
     "wiki-historical": {
         "history": "History",
@@ -295,11 +291,9 @@
         "gone-back-error": "An error happened. Maybe the flux capacitor is broken..."
     },
     "wiki": {
-        "are-you-sure": "Are you sure?"
     },
     "user-story": {
         "user-story": "User storie",
         "user-story-saved": "The user story has been saved",
-        "are-you-sure": "Are you sure?"
     }
 }

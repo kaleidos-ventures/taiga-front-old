@@ -96,7 +96,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
                 $scope.checksleyErrors = data
 
     $scope.deletePage = ->
-        promise = $confirm.confirm($i18next.t('wiki.are-you-sure'))
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
         promise.then () ->
             $scope.page.remove().then ->
                 $scope.page = undefined
@@ -106,7 +106,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
                 $scope.formOpened = true
 
     $scope.deleteAttachment = (attachment) ->
-        promise = $confirm.confirm($i18next.t('wiki.are-you-sure'))
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
         promise.then () ->
             $scope.attachments = _.without($scope.attachments, attachment)
             attachment.remove()

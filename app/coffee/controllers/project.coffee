@@ -54,13 +54,13 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
             $scope.checksleyErrors = data
 
     $scope.deleteProject = ->
-        promise = $confirm.confirm($i18next.t('are-you-sure'))
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
         promise.then () ->
             $scope.project.remove().then ->
                 $location.url("/")
 
     $scope.deleteMilestone = (milestone) ->
-        promise = $confirm.confirm($i18next.t('are-you-sure'))
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
         promise.then () ->
             $model.make_model('milestones', milestone).remove().then () ->
                 $data.loadProject($scope)
@@ -101,9 +101,9 @@ MembershipFormController = ($scope, $rootScope, rs) ->
             $scope.checksleyErrors = data
 
 
-MembershipsController = ($scope, $rootScope, $model, $confirm) ->
+MembershipsController = ($scope, $rootScope, $model, $confirm, $i18next) ->
     $scope.deleteMember = (member) ->
-        promise = $confirm.confirm("Are you sure?")
+        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
         promise.then () ->
             $model.make_model('memberships',member).remove().then () ->
                 $rootScope.$broadcast("membership:load-project")
@@ -123,5 +123,5 @@ module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routePara
                                              ProjectAdminController])
 module.controller("MembershipFormController", ["$scope", "$rootScope", 'resource',
                                                MembershipFormController])
-module.controller("MembershipsController", ["$scope", "$rootScope", "$model", "$confirm",
+module.controller("MembershipsController", ["$scope", "$rootScope", "$model", "$confirm", "$i18next",
                                             MembershipsController])
