@@ -27,7 +27,7 @@ GmTaskHistoryDirective = ($compile, $rootScope, $i18next) ->
                 when "status" then scope.constants.taskStatuses[value].name
                 when "assigned_to"
                     if value == null
-                        return i18next.t("common.unassigned")
+                        return $i18next.t("common.unassigned")
                     return scope.constants.users[value].email
                 else value
 

@@ -35,7 +35,7 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                     when "assigned_to"
                         if value
                             return scope.constants.users[value].full_name
-                        return i18next.t("common.unassigned")
+                        return $i18next.t("common.unassigned")
                     else value
             task: (name, value) ->
                 return switch name
@@ -50,7 +50,7 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                     when "assigned_to"
                         if value
                             return scope.constants.users[value].full_name
-                        return i18next.t("common.unassigned")
+                        return $i18next.t("common.unassigned")
                     else value
         }
 
