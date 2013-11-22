@@ -38,8 +38,8 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
             return
 
         promises = []
-        for attrachment in $scope.newAttachments
-            promise = rs.uploadWikiPageAttachment(projectId, $scope.page.id, attrachment)
+        for attachment in $scope.newAttachments
+            promise = rs.uploadWikiPageAttachment(projectId, $scope.page.id, attachment)
             promises.push(promise)
 
         promise = Q.all(promises)
@@ -72,20 +72,18 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
 
     $scope.savePage = gm.utils.safeDebounced $scope, 400, ->
         if $scope.page is undefined
-            content = $scope.content
-
-            promise = rs.createWikiPage(projectId, $rootScope.slug, content)
+            promise = rs.createWikiPage(projectId, $rootScope.slug, $scope.content)
 
             promise.then (page) ->
                 $scope.page = page
-                saveNewAttachments()
                 $scope.formOpened = false
+                $scope.content = $scope.page.content
+                saveNewAttachments()
 
             promise.then null, (data) ->
                 $scope.checksleyErrors = data
         else
             $scope.page.content = $scope.content
-
             promise = $scope.page.save()
 
             promise.then (page) ->
@@ -103,6 +101,8 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
             $scope.page.remove().then ->
                 $scope.page = undefined
                 $scope.content = ""
+                $scope.attachments = []
+                $scope.newAttachments = []
                 $scope.formOpened = true
 
     $scope.deleteAttachment = (attachment) ->

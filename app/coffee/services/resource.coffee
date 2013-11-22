@@ -457,7 +457,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         promise = $http.post($gmUrls.api("wiki"), obj, {headers:headers()})
         promise.success (data, status) ->
-            defered.resolve($model.make_model("wiki", slug))
+            defered.resolve($model.make_model("wiki", data))
 
         promise.error (data, status) ->
             defered.reject()
