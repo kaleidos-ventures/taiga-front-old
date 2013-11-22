@@ -47,6 +47,11 @@ I18NextProvider = ($rootScope, storage, $q) ->
     service.getCurrentLang = ->
         return $rootScope.currentLang
 
+    service.translate = (key, options)->
+        return $rootScope.t(key, options)
+
+    service.t = service.translate
+
     service.initialize = ->
         defer = $q.defer()
 
@@ -73,6 +78,11 @@ I18NextProvider = ($rootScope, storage, $q) ->
 
      return service
 
+I18NextTranslateFilter = ($i18next) ->
+    return (key, options) ->
+        return $i18next.t(key, options)
+
 module = angular.module('i18next', [])
 module.factory("$i18next", ['$rootScope', '$gmStorage', '$q', I18NextProvider])
 module.directive('i18next', ['$parse', '$rootScope', I18NextDirective])
+module.filter('i18next', ['$i18next', I18NextTranslateFilter])

@@ -225,6 +225,8 @@
         "save": "Save"
     },
     "projects": {
+        "are-you-sure": "Are you sure?",
+        "saved-success": "Project saved successful",
         "all-projects": "All projects",
         "no-projects": "You have not projects jet.",
         "recent-projects": "Recent projects",
@@ -269,8 +271,13 @@
         "unassigned": "Unassigned",
         "select-user": "Select a user:"
     },
+    "task": {
+        "task-saved": "The task has been saved",
+        "are-you-sure": "Are you sure?"
+    },
     "wiki-historical": {
         "history": "History",
+        "historical": "Historical",
         "attachments": "Attachments",
         "no-historical-items": "This wiki page has no past yet",
         "created-by-history": "Created by",
@@ -279,6 +286,12 @@
         "show-current-diff": "Show diff with current version",
         "show-previous-diff": "Show diff with previous version",
         "restore": "Restore",
-        "see-more": "See more"
+        "see-more": "See more",
+        "gone-back-sure": "Are you sure you want to go back to '__date__'?",
+        "gone-back-success": "The flux capacitor works correctly and now yow gone back to '__date__'",
+        "gone-back-error": "An error happened. Maybe the flux capacitor is broken..."
+    },
+    "wiki": {
+        "are-you-sure": "Are you sure?"
     }
 }

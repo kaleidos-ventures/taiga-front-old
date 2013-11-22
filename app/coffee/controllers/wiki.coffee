@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q) ->
+WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
     $rootScope.pageSection = 'wiki'
     $rootScope.projectId = parseInt($routeParams.pid, 10)
     $rootScope.slug = $routeParams.slug
     $rootScope.pageBreadcrumb = [
         ["", ""]
-        ["Wiki", $rootScope.urls.wikiUrl($rootScope.projectId, "home")]
+        [$i18next.t("common.wiki"), $rootScope.urls.wikiUrl($rootScope.projectId, "home")]
         [$routeParams.slug, null]
     ]
 
@@ -96,7 +96,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
                 $scope.checksleyErrors = data
 
     $scope.deletePage = ->
-        promise = $confirm.confirm("Are you sure?")
+        promise = $confirm.confirm($i18next.t('wiki.are-you-sure'))
         promise.then () ->
             $scope.page.remove().then ->
                 $scope.page = undefined
@@ -106,7 +106,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
                 $scope.formOpened = true
 
     $scope.deleteAttachment = (attachment) ->
-        promise = $confirm.confirm("Are you sure?")
+        promise = $confirm.confirm($i18next.t('wiki.are-you-sure'))
         promise.then () ->
             $scope.attachments = _.without($scope.attachments, attachment)
             attachment.remove()
@@ -115,15 +115,15 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
         $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
 
-WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q) ->
+WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
     $rootScope.pageSection = 'wiki'
     $rootScope.projectId = parseInt($routeParams.pid, 10)
     $rootScope.slug = $routeParams.slug
     $rootScope.pageBreadcrumb = [
         ["", ""]
-        ["Wiki", $rootScope.urls.wikiUrl($rootScope.projectId, "home")]
+        [$i18next.t("common.wiki"), $rootScope.urls.wikiUrl($rootScope.projectId, "home")]
         [$routeParams.slug, null]
-        ["Historical", null]
+        [$i18next.t("wiki-historical.historical"), null]
     ]
 
     $scope.attachments = []
@@ -164,7 +164,7 @@ WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, 
             loadHistorical()
 
 
-WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q) ->
+WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q, $i18next) ->
     $scope.showChanges = false
 
     $scope.showContent = true
@@ -192,24 +192,24 @@ WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q) 
     $scope.restoreWikiPage = (hitem) ->
         date = moment(hitem.created_date).format("llll")
 
-        promise = $confirm.confirm "Are you sure you want to go back to '#{date}'?"
+        promise = $confirm.confirm $i18next.t("wiki-historical.gone-back-sure", {'date': date})
         promise.then () ->
             promise = rs.restoreWikiPage(hitem.object_id, hitem.id)
 
             promise.then (data) ->
                 $scope.$emit("wiki:restored")
-                $gmFlash.info("The flux capacitor works correctly and now yow gone back to '#{date}'")
+                $gmFlash.info($i18next.t("wiki-historical.gone-back-success", {'date': date}))
 
             promise.then null, (data, status) ->
-                $gmFlash.error("An error happened. Maybe the flux capacitor is broken...")
+                $gmFlash.error($i18next.t("wiki-historical.gone-back-error"))
 
 
 module = angular.module("greenmine.controllers.wiki", [])
 module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams',
-                                     '$data', 'resource', "$confirm", "$q", WikiController])
+                                     '$data', 'resource', "$confirm", "$q", "$i18next", WikiController])
 module.controller("WikiHistoricalController", ['$scope', '$rootScope', '$location', '$routeParams',
-                                               '$data', 'resource', "$confirm", "$q",
+                                               '$data', 'resource', "$confirm", "$q", "$i18next",
                                                WikiHistoricalController])
 module.controller("WikiHistoricalItemController", ['$scope', '$rootScope', 'resource', '$confirm',
-                                                   '$gmFlash',  '$q', WikiHistoricalItemController])
+                                                   '$gmFlash',  '$q', "$i18next", WikiHistoricalItemController])
 

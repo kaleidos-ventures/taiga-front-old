@@ -13,12 +13,12 @@
 # limitations under the License.
 
 
-BacklogController = ($scope, $rootScope, $routeParams, rs, $data) ->
+BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next) ->
     # Global Scope Variables
     $rootScope.pageSection = 'backlog'
     $rootScope.pageBreadcrumb = [
         ["", ""]
-        [$scope.t("common.backlog"), null]
+        [$i18next.t("common.backlog"), null]
     ]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
@@ -229,7 +229,7 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
     )
 
 
-BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
+BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next) ->
     $scope.formOpened = false
 
     # Load data
@@ -275,7 +275,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash)
             closeModal()
             $scope.overlay.close()
             $scope.defered.resolve()
-            $gmFlash.info($scope.t('backlog.user-story-saved'))
+            $gmFlash.info($i18next.t('backlog.user-story-saved'))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -292,7 +292,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash)
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
 
-BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash) ->
+BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash, $i18next) ->
     # Local scope variables
     $scope.sprintFormOpened = false
 
@@ -314,7 +314,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash) ->
                 # last created milestone
                 $rootScope.sprintId = milestone.id
                 # Show a success message
-                $gmFlash.info($scope.t('backlog.sprint-saved'))
+                $gmFlash.info($i18next.t('backlog.sprint-saved'))
 
             promise.then null, (data) ->
                 $scope.checksleyErrors = data
@@ -324,7 +324,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash) ->
             promise.then (data) ->
                 $scope.form = {}
                 $scope.sprintFormOpened = false
-                $gmFlash.info($scope.t('backlog.sprint-saved'))
+                $gmFlash.info($i18next.t('backlog.sprint-saved'))
 
             promise.then null, (data) ->
                 $scope.checksleyErrors = data
@@ -340,7 +340,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash) ->
             $rootScope.$broadcast("milestones:loaded", $scope.milestones)
 
 
-BacklogMilestoneController = ($scope, rs, $gmFlash) ->
+BacklogMilestoneController = ($scope, rs, $gmFlash, $i18next) ->
     calculateTotalPoints = (us) ->
         total = 0
         for roleId, pointId of us.points
@@ -386,7 +386,7 @@ BacklogMilestoneController = ($scope, rs, $gmFlash) ->
 
         promise.then (data) ->
             $scope.editFormOpened = false
-            $gmFlash.info($scope.t('backlog.sprint-modified'))
+            $gmFlash.info($i18next.t('backlog.sprint-modified'))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -400,8 +400,8 @@ BacklogMilestoneController = ($scope, rs, $gmFlash) ->
 
 
 module = angular.module("greenmine.controllers.backlog", [])
-module.controller('BacklogMilestoneController', ['$scope', 'resource', '$gmFlash', BacklogMilestoneController])
+module.controller('BacklogMilestoneController', ['$scope', 'resource', '$gmFlash', '$i18next', BacklogMilestoneController])
 module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', BacklogMilestonesController])
-module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', BacklogUserStoriesController])
-module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', BacklogController])
-module.controller('BacklogUserStoryModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', BacklogUserStoryModalController])
+module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', '$i18next', BacklogUserStoriesController])
+module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', '$i18next', BacklogController])
+module.controller('BacklogUserStoryModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogUserStoryModalController])

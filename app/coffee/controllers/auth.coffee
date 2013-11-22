@@ -97,12 +97,12 @@ ChangePasswordController = ($scope, $rootScope, $location, $routeParams, rs) ->
             $scope.errorMessage = data.detail
 
 
-ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config) ->
+ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next) ->
     $rootScope.projectId = null
     $rootScope.pageSection = 'profile'
     $rootScope.pageBreadcrumb = [
         ["Greenmine", $rootScope.urls.projectsUrl()],
-        [$scope.t("profile.profile"), null]
+        [$i18next.t("profile.profile"), null]
     ]
     $scope.notificationLevelOptions = config.notificationLevelOptions
 
@@ -113,7 +113,7 @@ ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config) ->
 
         promise.then (user) ->
             $gmAuth.setUser(user)
-            $gmFlash.info($scope.t('profile.saved-successful'))
+            $gmFlash.info($i18next.t('profile.saved-successful'))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -122,7 +122,7 @@ ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config) ->
         promise = rs.changePasswordForCurrentUser($scope.formData.password)
 
         promise.then (data) ->
-            $gmFlash.info($scope.t('profile.password-changed-successful'))
+            $gmFlash.info($i18next.t('profile.password-changed-successful'))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -133,4 +133,4 @@ module.controller("LoginController", ['$scope', '$rootScope', '$location', 'reso
 module.controller("RegisterController", ['$scope', '$rootScope', RegisterController])
 module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', RecoveryController])
 module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource',  ChangePasswordController])
-module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', 'config', ProfileController])
+module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', 'config', '$i18next', ProfileController])

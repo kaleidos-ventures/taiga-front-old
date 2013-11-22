@@ -13,11 +13,11 @@
 # limitations under the License.
 
 
-TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm, rs, $data, $gmFlash) ->
+TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm, rs, $data, $gmFlash, $i18next) ->
     $rootScope.pageSection = 'tasks'
     $rootScope.pageBreadcrumb = [
         ["", ""],
-        ["Tasks", null],
+        [$i18next.t("common.tasks"), null],
     ]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
@@ -44,7 +44,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
             $scope.form = _.extend({}, $scope.task._attrs)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[1] = ["Taskboard", $rootScope.urls.taskboardUrl($rootScope.projectId, $scope.task.milestone)]
+            breadcrumb[1] = [$i18next.t('common.taskboard'), $rootScope.urls.taskboardUrl($rootScope.projectId, $scope.task.milestone)]
             breadcrumb[2] = ["##{task.ref}", null]
 
             $rootScope.pageBreadcrumb = breadcrumb
@@ -98,13 +98,13 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
             saveNewAttachments()
             loadTask()
             loadHistorical()
-            $gmFlash.info("The task has been saved")
+            $gmFlash.info($i18next.t("task.task-saved"))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
 
     $scope.removeAttachment = (attachment) ->
-        promise = $confirm.confirm("Are you sure?")
+        promise = $confirm.confirm($i18next.t("task.are-you-sure"))
         promise.then () ->
             $scope.attachments = _.without($scope.attachments, attachment)
             attachment.remove()
@@ -113,7 +113,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
         $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
     $scope.removeTask = (task) ->
-        promise = $confirm.confirm("Are you sure?")
+        promise = $confirm.confirm($i18next.t("task.are-you-sure"))
         promise.then ->
             milestone = task.milestone
             task.remove().then ->
@@ -124,4 +124,4 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
 
 
 module = angular.module("greenmine.controllers.tasks", [])
-module.controller("TasksViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', '$confirm', 'resource', "$data", "$gmFlash", TasksViewController])
+module.controller("TasksViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', '$confirm', 'resource', "$data", "$gmFlash", "$i18next", TasksViewController])

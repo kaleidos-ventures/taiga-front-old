@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ProjectListController = ($scope, $rootScope, rs) ->
+ProjectListController = ($scope, $rootScope, rs, $i18next) ->
     $rootScope.pageSection = 'projects'
     $rootScope.pageBreadcrumb = [
         ["Greenmine", $rootScope.urls.projectsUrl()],
-        [$scope.t('common.dashboard'), null]
+        [$i18next.t('common.dashboard'), null]
     ]
     $rootScope.projectId = null
 
@@ -25,11 +25,11 @@ ProjectListController = ($scope, $rootScope, rs) ->
 
 
 ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model,
-                          $confirm, $location) ->
+                          $confirm, $location, $i18next) ->
     $rootScope.pageSection = 'admin'
     $rootScope.pageBreadcrumb = [
         ["", ""],
-        [$scope.t('common.admin-panel'), null]
+        [$i18next.t('common.admin-panel'), null]
     ]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
 
@@ -48,19 +48,19 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
     $scope.submit = ->
         promise = $scope.project.save()
         promise.then (data) ->
-            $gmFlash.info("Project saved successful!")
+            $gmFlash.info($i18next.t("project.saved-success"))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
 
     $scope.deleteProject = ->
-        promise = $confirm.confirm("Are you sure?")
+        promise = $confirm.confirm($i18next.t('are-you-sure'))
         promise.then () ->
             $scope.project.remove().then ->
                 $location.url("/")
 
     $scope.deleteMilestone = (milestone) ->
-        promise = $confirm.confirm("Are you sure?")
+        promise = $confirm.confirm($i18next.t('are-you-sure'))
         promise.then () ->
             $model.make_model('milestones', milestone).remove().then () ->
                 $data.loadProject($scope)
@@ -116,10 +116,10 @@ MembershipsController = ($scope, $rootScope, $model, $confirm) ->
 
 
 module = angular.module("greenmine.controllers.project", [])
-module.controller("ProjectListController", ['$scope', '$rootScope', 'resource',
+module.controller("ProjectListController", ['$scope', '$rootScope', 'resource', '$i18next',
                                             ProjectListController])
-module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routeParams",
-                                             "$data", "$gmFlash", "$model", "$confirm", "$location",
+module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routeParams", "$data",
+                                             "$gmFlash", "$model", "$confirm", "$location", '$i18next',
                                              ProjectAdminController])
 module.controller("MembershipFormController", ["$scope", "$rootScope", 'resource',
                                                MembershipFormController])

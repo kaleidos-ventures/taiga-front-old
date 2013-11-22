@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-SearchController = ($scope, $rootScope, $routeParams, $data, rs) ->
+SearchController = ($scope, $rootScope, $routeParams, $data, rs, $i18next) ->
     $rootScope.pageSection = 'search'
     $rootScope.projectId = parseInt($routeParams.pid, 10)
     $rootScope.pageBreadcrumb = [
         ["", ""]
-        [$scope.t("common.search"), null]
+        [$i18next.t("common.search"), null]
     ]
 
     $data.loadProject($scope)
@@ -77,4 +77,4 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs) ->
 
 
 module = angular.module("greenmine.controllers.search", [])
-module.controller("SearchController", ["$scope", "$rootScope", "$routeParams", "$data", "resource", SearchController])
+module.controller("SearchController", ["$scope", "$rootScope", "$routeParams", "$data", "resource", "$i18next", SearchController])

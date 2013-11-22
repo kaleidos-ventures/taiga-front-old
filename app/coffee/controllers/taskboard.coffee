@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal) ->
+TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $i18next) ->
     # Global Scope Variables
     $rootScope.pageSection = 'dashboard'
     $rootScope.pageBreadcrumb = [
         ["", ""],
-        [$scope.t('common.taskboard'), null]
+        [$i18next.t('common.taskboard'), null]
     ]
 
     $scope.projectId = $routeParams.pid
@@ -203,5 +203,5 @@ TaskboardTaskController = ($scope, $rootScope, $q) ->
 
 module = angular.module("greenmine.controllers.taskboard", [])
 module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', TaskboardTaskController])
-module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', '$modal', TaskboardController])
+module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', '$modal', "$i18next", TaskboardController])
 module.controller("TaskboardTaskModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', TaskboardTaskModalController])

@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $gmStorage, $modal) ->
+IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $gmStorage, $modal, $i18next) ->
     # Global Scope Variables
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = [
         ["", ""],
-        [$scope.t('common.issues'), null]
+        [$i18next.t('common.issues'), null]
     ]
 
     $rootScope.projectId = parseInt($routeParams.pid, 10)
@@ -258,11 +258,11 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
 
 IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data,
-                        $confirm, $gmFlash) ->
+                        $confirm, $gmFlash, $i18next) ->
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = [
         ["", ""],
-        [$scope.t('common.issues'), null],
+        [$i18next.t('common.issues'), null],
     ]
     $scope.projectId = parseInt($routeParams.pid, 10)
 
@@ -281,7 +281,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             $scope.form = _.extend({}, $scope.issue._attrs)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[1] = [$scope.t('common.issues'), $rootScope.urls.issuesUrl(projectId)]
+            breadcrumb[1] = [$i18next.t('common.issues'), $rootScope.urls.issuesUrl(projectId)]
             breadcrumb[2] = ["##{issue.ref}", null]
 
             $rootScope.pageBreadcrumb = breadcrumb
@@ -445,9 +445,9 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
 
 module = angular.module("greenmine.controllers.issues", [])
 module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
-                  '$q', 'resource', "$data", "$confirm", "$gmStorage", "$modal", IssuesController])
+                  '$q', 'resource', "$data", "$confirm", "$gmStorage", "$modal", '$i18next', IssuesController])
 module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
-                  '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash",
+                  '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", '$i18next',
                   IssuesViewController])
 module.controller("IssuesModalController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
                   "$gmFlash", IssuesModalController])

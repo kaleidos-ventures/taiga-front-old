@@ -225,6 +225,8 @@
         "save": "Guardar"
     },
     "projects": {
+        "are-you-sure": "¿Estás seguro?",
+        "saved-success": "Proyecto guardado correctamente",
         "all-projects": "Todos los proyectos",
         "no-projects": "No tienes proyectos todavía",
         "recent-projects": "Proyectos recientes",
@@ -268,8 +270,13 @@
         "unassigned": "Sin asignar",
         "select-user": "Selecciona un usuario"
     },
+    "task": {
+        "task-saved": "La tarea ha sido guardada",
+        "are-you-sure": "¿Estás seguro?"
+    },
     "wiki-historical": {
         "history": "Historial",
+        "historical": "Historial",
         "attachments": "Adjuntos",
         "no-historical-items": "Esta página del wiki todavía no ha forjado un pasado",
         "created-by-history": "Creado por",
@@ -278,6 +285,12 @@
         "show-current-diff": "Ver diff con la versión actual",
         "show-previous-diff": "Ver diff con la versión previa",
         "restore": "Restaurar",
-        "see-more": "Ver más"
+        "see-more": "Ver más",
+        "gone-back-sure": "¿Estás seguro de que deseas volver a '__date__'?",
+        "gone-back-success": "El condensador de flujo ha funcionado correctamente y has vuelto a '__date__'",
+        "gone-back-error": "Ha habído un error. Es posible que el condensador de flujo esté roto..."
+    },
+    "wiki": {
+        "are-you-sure": "¿Estás seguro?"
     }
 }
