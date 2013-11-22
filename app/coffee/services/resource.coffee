@@ -432,8 +432,8 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.createTask = (form) ->
         return $model.create("tasks", form)
 
-    service.revertWikiPage = (wikiPageId, versionId) ->
-        url = "#{$gmUrls.api("wiki-revert", [wikiPageId])}/#{versionId}"
+    service.restoreWikiPage = (wikiPageId, versionId) ->
+        url = "#{$gmUrls.api("wiki-restore", [wikiPageId])}/#{versionId}"
 
         defered = $q.defer()
 

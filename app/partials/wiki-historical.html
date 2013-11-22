@@ -51,7 +51,7 @@
                                 <div ng-bind-html-unsafe="content|diff:hitem.changed_fields.content.new"
                                      ng-show="showCurrentDiff" class="current-diff" ></div>
 
-                                <a href="" ng-click="revertWikiPage(hitem)"
+                                <a href="" ng-click="restoreWikiPage(hitem)"
                                    class="button button-restore" i18next="wiki-historical.restore">Restore</a>
 
                                 <a href="" ng-click="activeShowCurrentDiff()"

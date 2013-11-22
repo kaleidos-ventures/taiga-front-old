@@ -155,7 +155,7 @@ WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, 
         page = if $scope.historical then $scope.historical.current + 1 else 1
         loadHistorical(page=page)
 
-    $scope.$on "wiki:reverted", (ctx, data) ->
+    $scope.$on "wiki:restored", (ctx, data) ->
         promise = rs.getWikiPage(projectId, $rootScope.slug)
         promise.then (page) ->
             $scope.page = page
@@ -189,15 +189,15 @@ WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q) 
         $scope.showPreviousDiff = false
         $scope.showCurrentDiff = true
 
-    $scope.revertWikiPage = (hitem) ->
+    $scope.restoreWikiPage = (hitem) ->
         date = moment(hitem.created_date).format("llll")
 
         promise = $confirm.confirm "Are you sure you want to go back to '#{date}'?"
         promise.then () ->
-            promise = rs.revertWikiPage(hitem.object_id, hitem.id)
+            promise = rs.restoreWikiPage(hitem.object_id, hitem.id)
 
             promise.then (data) ->
-                $scope.$emit("wiki:reverted")
+                $scope.$emit("wiki:restored")
                 $gmFlash.info("The flux capacitor works correctly and now yow gone back to '#{date}'")
 
             promise.then null, (data, status) ->
