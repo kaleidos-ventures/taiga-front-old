@@ -13,11 +13,11 @@
 # limitations under the License.
 
 
-UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data, $confirm, $gmFlash) ->
+UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data, $confirm, $gmFlash, $i18next) ->
     $rootScope.pageSection = 'user-stories'
     $rootScope.pageBreadcrumb = [
         ["", ""],
-        ["User stories", null],
+        [$i18next.t("user-story.user-story"), null],
     ]
 
     $scope.projectId = parseInt($routeParams.pid, 10)
@@ -49,10 +49,10 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
             if $scope.userStory.milestone == null
-                breadcrumb[1] = ["Backlog", $rootScope.urls.backlogUrl(projectId)]
+                breadcrumb[1] = [$i18next.t('common.backlog'), $rootScope.urls.backlogUrl(projectId)]
             else
-                breadcrumb[1] = ["Taskboard", $rootScope.urls.taskboardUrl(projectId, $scope.userStory.milestone)]
-            breadcrumb[2] = ["##{userStory.ref}", null]
+                breadcrumb[1] = [$i18next.t('common.taskboard'), $rootScope.urls.taskboardUrl(projectId, $scope.userStory.milestone)]
+            breadcrumb[2] = [$i18next.t("user-story.user-story") + " ##{userStory.ref}", null]
             $rootScope.pageBreadcrumb = breadcrumb
 
             $scope.totalPoints = calculateTotalPoints(userStory)
@@ -110,13 +110,13 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             loadUserStory()
             loadHistorical()
             saveNewAttachments()
-            $gmFlash.info("The user story has been saved")
+            $gmFlash.info($i18next.t('user-story.user-story-saved'))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
 
     $scope.removeAttachment = (attachment) ->
-        promise = $confirm.confirm("Are you sure?")
+        promise = $confirm.confirm($i18next.t('user-story.are-you-sure'))
         promise.then () ->
             $scope.attachments = _.without($scope.attachments, attachment)
             attachment.remove()
@@ -125,12 +125,14 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
     $scope.removeUserStory = (userStory) ->
-        userStory.remove().then ->
-            $location.url("/project/#{projectId}/backlog")
+        promise = $confirm.confirm($i18next.t('user-story.are-you-sure'))
+        promise.then () ->
+            userStory.remove().then ->
+                $location.url("/project/#{projectId}/backlog")
 
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
 
 module = angular.module("greenmine.controllers.user-story", [])
-module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", UserStoryViewController])
+module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", "$i18next", UserStoryViewController])
 

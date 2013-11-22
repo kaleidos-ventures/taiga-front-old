@@ -180,7 +180,9 @@
         "see-more": "See more",
         "created-by-history": "Created by",
         "updated-by-history": "Updated by",
-        "comment-history": "Comment:"
+        "comment-history": "Comment:",
+        "issue-saved": "The issue has been saved",
+        "are-you-sure": "Are you sure?"
     },
     "profile": {
         "profile": "Profile",
@@ -269,7 +271,8 @@
         "edit": "Edit",
         "view": "View",
         "unassigned": "Unassigned",
-        "select-user": "Select a user:"
+        "select-user": "Select a user:",
+        "user-story-saved": "The user story has been saved"
     },
     "task": {
         "task-saved": "The task has been saved",
@@ -292,6 +295,11 @@
         "gone-back-error": "An error happened. Maybe the flux capacitor is broken..."
     },
     "wiki": {
+        "are-you-sure": "Are you sure?"
+    },
+    "user-story": {
+        "user-story": "User storie",
+        "user-story-saved": "The user story has been saved",
         "are-you-sure": "Are you sure?"
     }
 }

@@ -180,7 +180,9 @@
         "see-more": "Ver más",
         "created-by-history": "Creado por",
         "updated-by-history": "Actualizada por",
-        "comment-history": "Comentario:"
+        "comment-history": "Comentario:",
+        "issue-saved": "La petición ha sido guardada",
+        "are-you-sure": "¿Estás seguro?"
     },
     "profile": {
         "profile": "Perfil",
@@ -291,6 +293,11 @@
         "gone-back-error": "Ha habído un error. Es posible que el condensador de flujo esté roto..."
     },
     "wiki": {
+        "are-you-sure": "¿Estás seguro?"
+    },
+    "user-story": {
+        "user-story": "Historia de usuario",
+        "user-story-saved": "La historia de usuario ha sido guardada",
         "are-you-sure": "¿Estás seguro?"
     }
 }

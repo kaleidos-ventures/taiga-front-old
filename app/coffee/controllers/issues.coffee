@@ -346,13 +346,13 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
                 loadIssue()
                 loadHistorical()
                 saveNewAttachments()
-                $gmFlash.info("The issue has been saved")
+                $gmFlash.info($i18next.t("issue.issue-saved"))
 
             promise.then null, (data) ->
                 $scope.checksleyErrors = data
 
     $scope.removeAttachment = (attachment) ->
-        promise = $confirm.confirm("Are you sure?")
+        promise = $confirm.confirm($i18next.t('issue.are-you-sure'))
         promise.then () ->
             $scope.attachments = _.without($scope.attachments, attachment)
             attachment.remove()
@@ -361,7 +361,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
     $scope.removeIssue = (issue) ->
-        promise = $confirm.confirm("Are you sure?")
+        promise = $confirm.confirm($i18next.t('issue.are-you-sure'))
         promise.then ->
             issue.remove().then ->
                 $location.url("/project/#{projectId}/issues/")
@@ -370,7 +370,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         $scope.form.tags = value
 
 
-IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
+IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next) ->
     $scope.type = "create"
     $scope.formOpened = false
 
@@ -426,7 +426,7 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash) ->
             closeModal()
             $scope.overlay.close()
             $scope.defered.resolve($scope.form)
-            $gmFlash.info("The user story has been saved")
+            $gmFlash.info($i18next.t('issue.issue-saved'))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -450,4 +450,4 @@ module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
                   '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", '$i18next',
                   IssuesViewController])
 module.controller("IssuesModalController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
-                  "$gmFlash", IssuesModalController])
+                  "$gmFlash", "$i18next", IssuesModalController])

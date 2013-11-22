@@ -131,7 +131,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
                         calculateStats()
 
 
-TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs) ->
+TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs, $i18next) ->
     $scope.type = "create"
     $scope.formOpened = false
 
@@ -179,7 +179,7 @@ TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs) ->
             closeModal()
             $scope.overlay.close()
             $scope.defered.resolve($scope.form)
-            $gmFlash.info("The user story has been saved")
+            $gmFlash.info($i18next.t('taskboard.user-story-saved'))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -204,4 +204,4 @@ TaskboardTaskController = ($scope, $rootScope, $q) ->
 module = angular.module("greenmine.controllers.taskboard", [])
 module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', TaskboardTaskController])
 module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', '$modal', "$i18next", TaskboardController])
-module.controller("TaskboardTaskModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', TaskboardTaskModalController])
+module.controller("TaskboardTaskModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', "$i18next", TaskboardTaskModalController])
