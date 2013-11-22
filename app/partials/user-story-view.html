@@ -1,9 +1,10 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container tasks-view">
     <div class="view-header">
+        <!-- TODO: i18next integration pending -->
         <p class="title">User story #{{ userStory.ref }}</p>
         <div class="buttons">
-            <a class="button button-delete" ng-click="removeUserStory(userStory)">
+            <a class="button button-delete" ng-click="removeUserStory(userStory)" i18next="user-story.delete-user-story">
                 Delete user story
             </a>
         </div>
@@ -18,13 +19,15 @@
             <h2>{{ userStory.subject }}</h2>
             <p>{{ userStory.description }}</p>
             <div class="attachments" ng-show="attachments">
-                <h3>Attachments</h3>
+                <h3 i18next="user-story.attachments">Attachments</h3>
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
                         <a class="delete" data-icon="h" href="" title="Delete attachment"
+                           i18next="title:user-story.delete-attachment"
                            ng-click="removeAttachment(attachment)"></a>
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
+                        <!-- TODO: i18next integration pending -->
                         <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>
                     </li>
                 </ul>
@@ -32,38 +35,48 @@
         </div>
         <div class="span4 task-metadata">
             <div class="info-header">
-                <h3>User story data</h3>
+                <h3 i18next="user-story.user-story-data">User story data</h3>
             </div>
             <ul class="info-rows">
                 <li data-icon="t">
-                    Added by: <span gm-colorize-user="constants.users[userStory.owner]">{{ constants.users[userStory.owner].full_name }}</span>
+                    <strong i18next="user-story.added-by">Added by:</strong>
+                    <span gm-colorize-user="constants.users[userStory.owner]">{{ constants.users[userStory.owner].full_name }}</span>
                 </li>
                 <li data-icon="w">
-                    Created: <span>{{ userStory.created_date|momentFormat:"LLLL" }}</span>
+                    <strong i18next="user-story.created">Created:</strong>
+                    <span>{{ userStory.created_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li data-icon="x">
-                    Updated: <span>{{ userStory.modified_date|momentFormat:"LLLL" }}</span>
+                    <strong i18next="user-story.updated">Updated:</strong>
+                    <span>{{ userStory.modified_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li data-icon="w" ng-show="userStory.finish_date">
-                    Finished: <span>{{ userStory.finish_date|momentFormat:"LLLL" }}</span>
+                    <strong i18next="user-story.finished">Finished:</strong>
+                    <span>{{ userStory.finish_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li>
-                    Client requirement: <span>{{ userStory.client_requirement }}</span>
+                    <strong i18next="user-story.client-requirement">Client requirement:</strong>
+                    <span>{{ userStory.client_requirement }}</span>
                 </li>
                 <li>
-                    Team requirement: <span>{{ userStory.team_requirement }}</span>
+                    <strong i18next="user-story.team-requirement">Team requirement:</strong>
+                    <span>{{ userStory.team_requirement }}</span>
                 </li>
                 <li  data-icon="y" class="status-{{ userStory.status }}">
+                    <strong i18next="user-story.status">Status:</strong>
                     Status: <span>{{ constants.usStatuses[userStory.status].name }}</span>
                 </li>
-                <li>Points:
+                <li>
+                    <strong i18next="user-story.points">Points:</strong>
                     <span ng-repeat="role in constants.computableRolesList">
                         {{ role.name }}: {{ points[role.id] }},
                     </span>
+                    <!-- TODO: i18next integration pending -->
                     Total: {{ totalPoints }}
                 </li>
                 <li data-icon="z">
-                    Attachments: <span>{{ attachments.length }}</span>
+                    <strong i18next="user-story.attachments-count">Attachments:</strong>
+                    <span>{{ attachments.length }}</span>
                 </li>
             </ul>
         </div>
@@ -72,12 +85,12 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="update-form">
-                <h4>Update user story</h4>
+                <h4 i18next="user-story.update-user-story">Update user story</h4>
 
                 <form class="form-horizontal" gm-checksley-form="submit()">
                     <div>
                         <fieldset class="task-status">
-                            <label class="control-label" for="inputEmail">Status</label>
+                            <label class="control-label" for="inputEmail" i18next="user-story.status-label">Status:</label>
 
                             <select class="status" name="status" ng-model="form.status"
                                     data-required="true"
@@ -86,7 +99,7 @@
                         </fieldset>
 
                         <fieldset class="task-tags">
-                            <label>Tags</label>
+                            <label i18next="user-story.tags-label">Tags</label>
                             <input type="text" name="tags" ng-model="form.tags"
                                    gm-select2-tags="projectTags"></input>
                         </fieldset>
@@ -95,38 +108,38 @@
                     <div gm-role-points-edition></div>
 
                     <div ng-hide="_showHiddenGroups">
-                        <p style="cursor: pointer" ng-click="_showHiddenGroups=true">
+                        <p style="cursor: pointer" ng-click="_showHiddenGroups=true" i18next="user-story.edit-subject-description">
                             Edit <b>Subject</b> and <b>Description</b>...
                         </p>
                     </div>
 
                     <fieldset class="task-subject" ng-show="_showHiddenGroups">
-                        <label for="inputEmail">Subject</label>
+                        <label for="inputEmail" i18next="user-story.subject-label">Subject</label>
                         <input type="text" name="subject" ng-model="form.subject"></input>
                     </fieldset>
 
                     <fieldset class="task-description" ng-show="_showHiddenGroups">
-                        <label for="inputEmail">Description</label>
+                        <label for="inputEmail" i18next="user-story.description-label">Description</label>
                         <textarea name="description" ng-model="form.description"></textarea>
                     </fieldset>
 
                     <fieldset class="task-comment">
-                        <label for="inputEmail">Comment</label>
+                        <label for="inputEmail" i18next="user-story.comment-label">Comment</label>
                         <textarea name="comment" ng-model="form.comment"></textarea>
                     </fieldset>
 
                     <fieldset class="meta-requirement">
                         <input type="checkbox" id="client-requirement"
                                ng-model="form.client_requirement" name="client_requirement"/>
-                        <label for="client-requirement">Client Requirement</label>
+                        <label for="client-requirement" i18next="user-story.client-requirement-label">Client Requirement</label>
                         <input type="checkbox"id="team-requirement"
                                ng-model="form.team_requirement" name="team_requirement">
-                        <label for="team-requirement" >Team Requirement</label>
+                        <label for="team-requirement" i18next="user-story.team-requirement-label">Team Requirement</label>
                     </fieldset>
 
                     <fieldset class="task-attachment">
                         <a class="add-attachment" data-icon="E" title="Add attachments"
-                            gm-forward-click="#attachment_file_input" href="">
+                            gm-forward-click="#attachment_file_input" href="" i18next="title:user-story.add-attachments,user-story.add-attachments">
                             Add attachments
                         </a>
                         <ul class="attachments-items">
@@ -134,6 +147,7 @@
                                 ng-repeat="attachment in newAttachments">
                                 <a class="delete" data-icon="h" href=""
                                    title="Delete the new attachment"
+                                   i18next="title:user-story.delete-new-attachment"
                                    ng-click="removeNewAttachment(attachment)"></a>
                                 <span>{{ attachment.name }}</span>
                                 <span>[{{ attachment.size|sizeFormat }}]</span>
@@ -147,7 +161,7 @@
 
                     <fieldset class="task-edit-submit submit">
                         <button type="submit" class="button button-edit"
-                                gm-checksley-submit-button>Save</button>
+                                gm-checksley-submit-button i18next="user-story.save">Save</button>
                         <div gm-spinner class="spinner-container"></div>
                     </fieldset>
                 </form>
@@ -158,10 +172,10 @@
     <div class="row-fluid" gm-history="userstory" ng-model="historical">
         <div class="span12">
             <div class="history">
-                <h3>History</h3>
+                <h3 i18next="user-story.history">History</h3>
                 <div class="history-items-container"></div>
                 <a class="more" data-icon="C" href="" ng-click="loadMoreHistorical()"
-                   ng-show="showMoreHistoricaButton">See More</a>
+                   ng-show="showMoreHistoricaButton" i18next="user-story.see-more">See More</a>
             </div>
         </div>
     </div>
@@ -169,9 +183,10 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="view-footer">
+                <!-- TODO: i18next integration pending -->
                 <p class="title">User story #{{ userStory.ref }}</p>
                 <div class="buttons">
-                    <a class="button button-delete" ng-click="removeUserStory(userStory)">Delete user story</a>
+                    <a class="button button-delete" ng-click="removeUserStory(userStory)" i18next="user-story.delete-user-story">Delete user story</a>
                 </div>
             </div>
         </div>
@@ -181,8 +196,8 @@
             <li class="history-item" ng-repeat="hitem in historyItems">
                 <div class="title">
                     <span class="updated">
-                        <span ng-show="hitem.action == 'add'">Created by</span>
-                        <span ng-show="hitem.action == 'update'">Updated by</span>
+                        <span ng-show="hitem.action == 'add'" i18next="user-story.created-by-history">Created by</span>
+                        <span ng-show="hitem.action == 'update'" i18next="user-story.updated-by-history">Updated by</span>
                         <span gm-colorize-user="hitem.by">{{ hitem.by.full_name }}</span></span>
                     <span class="date">{{ hitem.modified_date|momentFromNow }}</span>
                 </div>
@@ -190,11 +205,12 @@
                     <div class="change" ng-repeat="change in hitem.changes">
                         <strong>{{ change.name|capitalize }}</strong>:
                         <span ng-show="change.old">from: <span class="old">{{ change.old }}</span></span>
+                        <!-- TODO: i18next integration pending -->
                         <span>to <span class="new">{{ change.new || "''" }}</span></span>
                     </div>
                 </div>
                 <div class="comment" ng-show="hitem.comment">
-                    <strong>Comment:</strong><br />{{ hitem.comment }}
+                    <strong i18next="user-story.comment">Comment:</strong><br />{{ hitem.comment }}
                 </div>
             </li>
         </ul>
