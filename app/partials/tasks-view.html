@@ -1,9 +1,10 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container tasks-view">
     <div class="view-header">
+        <!-- TODO: i18next integration pending -->
         <p class="title">Task #{{ task.ref }}</p>
         <div class="buttons">
-            <a class="button button-delete" ng-click="removeTask(task)">Delete task</a>
+            <a class="button button-delete" ng-click="removeTask(task)" i18next="task.delete-task">Delete task</a>
         </div>
     </div>
 
@@ -16,13 +17,14 @@
             <h2>{{ task.subject }}</h2>
             <p>{{ task.description }}</p>
             <div class="attachments" ng-show="attachments">
-                <h3>Attachments</h3>
+                <h3 i18next="task.attachments">Attachments</h3>
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
-                        <a class="delete" data-icon="h" href="" title="Delete attachment"
-                           ng-click="removeAttachment(attachment)"></a>
+                        <a class="delete" data-icon="h" href="" i18next="title:task.delete-attachment"
+                           title="Delete attachment" ng-click="removeAttachment(attachment)"></a>
                         <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
+                        <!-- TODO: i18next integration pending -->
                         <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>
                     </li>
                 </ul>
@@ -30,29 +32,36 @@
         </div>
         <div class="span4 task-metadata">
             <div class="info-header">
-                <h3>Task data</h3>
+                <h3 i18next="task.task-data">Task data</h3>
             </div>
             <ul class="info-rows">
                 <li data-icon="t">
-                    Added by: <span gm-colorize-user="constants.users[task.owner]">{{ constants.users[task.owner].full_name }}</span>
+                    <strong i18next="task.added-by">Added by:</strong>
+                    <span gm-colorize-user="constants.users[task.owner]">{{ constants.users[task.owner].full_name }}</span>
                 </li>
                 <li data-icon="u">
-                    Assigned to: <span gm-colorize-user="constants.users[task.assigned_to]">{{ constants.users[task.assigned_to].full_name || "Unassigned" }}</span>
+                    <strong i18next="task.assigned-to">Assigned to:</strong>
+                    <span gm-colorize-user="constants.users[task.assigned_to]">{{ constants.users[task.assigned_to].full_name || "Unassigned" }}</span>
                 </li>
                 <li data-icon="w">
-                    Created: <span>{{ task.created_date|momentFormat:"LLLL" }}</span>
+                    <strong i18next="task.created">Created:</strong>
+                    <span>{{ task.created_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li data-icon="x">
-                    Updated: <span>{{ task.modified_date|momentFormat:"LLLL" }}</span>
+                    <strong i18next="task.updated">Updated:</strong>
+                    <span>{{ task.modified_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li data-icon="w" ng.show="task.finished_date">
-                    Finished: <span>{{ task.finished_date|momentFormat:"LLLL" }}</span>
+                    <strong i18next="task.finished">Finished:</strong>
+                    <span>{{ task.finished_date|momentFormat:"LLLL" }}</span>
                 </li>
                 <li data-icon="y" class="status-{{ task.status }}">
-                    Status: <span>{{ constants.taskStatuses[task.status].name }}</span>
+                    <strong i18next="task.status">Status:</strong>
+                    <span>{{ constants.taskStatuses[task.status].name }}</span>
                 </li>
                 <li data-icon="z">
-                    Attachments: <span>{{ attachments.length }}</span>
+                    <strong i18next="task.attachments-count">Attachments:</strong>
+                    <span>{{ attachments.length }}</span>
                 </li>
             </ul>
         </div>
@@ -61,12 +70,12 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="update-form">
-                <h4>Update task</h4>
+                <h4 i18next="task.update-task">Update task</h4>
 
                 <form class="form-horizontal" gm-checksley-form="submit()">
                     <div>
                         <fieldset class="task-status">
-                            <label class="control-label">Status</label>
+                            <label class="control-label" i18next="task.status-label">Status</label>
 
                             <select class="status" name="status" ng-model="form.status"
                                     data-required="true" data-type="number"
@@ -75,49 +84,49 @@
                         </fieldset>
 
                         <fieldset class="task-assigned">
-                            <label>Assigned to</label>
+                            <label i18next="task.assigned-to-label">Assigned to</label>
 
                             <select class="assigned-to" name="assigned_to"
                                     ng-model="form.assigned_to" data-type="number"
                                     data-error-message="Required"
                                     ng-options="c.user as c.full_name for c in project.memberships">
-                                <option value="">Unassigned</option>
+                                <option value="" i18next="task.unassigned">Unassigned</option>
                             </select>
                         </fieldset>
                     </div>
 
                     <div>
                         <fieldset class="task-tags">
-                            <label>Tags</label>
+                            <label i18next="task.tags-label">Tags</label>
                             <input type="text" name="tags" ng-model="form.tags"
                                    gm-select2-tags="projectTags"></input>
                         </fieldset>
                     </div>
 
                     <div ng-hide="_showHiddenGroups">
-                        <p style="cursor: pointer" ng-click="_showHiddenGroups=true">
+                        <p style="cursor: pointer" ng-click="_showHiddenGroups=true" i18next="task.edit-subject-description">
                             Edit <b>Subject</b> and <b>Description</b>...
                         </p>
                     </div>
 
                     <fieldset class="task-subject" ng-show="_showHiddenGroups">
-                        <label for="inputEmail">Subject</label>
+                        <label for="inputEmail" i18next="task.subject-label">Subject</label>
                         <input type="text" name="subject" ng-model="form.subject"></input>
                     </fieldset>
 
                     <fieldset class="task-description" ng-show="_showHiddenGroups">
-                        <label for="inputEmail">Description</label>
+                        <label for="inputEmail" i18next="task.description-label">Description</label>
                         <textarea name="description" ng-model="form.description"></textarea>
                     </fieldset>
 
                     <fieldset class="task-comment">
-                        <label for="inputEmail">Comment</label>
+                        <label for="inputEmail" i18next="task.comment-label">Comment</label>
                         <textarea name="comment" ng-model="form.comment"></textarea>
                     </fieldset>
 
                     <fieldset class="task-attachment">
                         <a class="add-attachment" data-icon="E" title="Add attachments"
-                            gm-forward-click="#attachment_file_input" href="">
+                            gm-forward-click="#attachment_file_input" href="" i18next="title:task.add-attachment,task.add-attachments">
                             Add attachments
                         </a>
                         <ul class="attachments-items">
@@ -125,6 +134,7 @@
                                 ng-repeat="attachment in newAttachments">
                                 <a class="delete" data-icon="h" href=""
                                    title="Delete the new attachment"
+                                   i18next="title:task.delete-new-attachment"
                                    ng-click="removeNewAttachment(attachment)"></a>
                                 <span>{{ attachment.name }}</span>
                                 <span>[{{ attachment.size|sizeFormat }}]</span>
@@ -137,7 +147,7 @@
 
                     <fieldset class="task-edit-submit submit">
                         <button type="submit" class="button button-edit"
-                                gm-checksley-submit-button>Save</button>
+                                gm-checksley-submit-button i18next="task.save">Save</button>
                         <div gm-spinner class="spinner-container"></div>
                     </fieldset>
                 </form>
@@ -148,10 +158,10 @@
     <div class="row-fluid" ng-show="historical">
         <div class="span12">
             <div class="history" gm-history="task" ng-model="historical">
-                <h3>History</h3>
+                <h3 i18next="task.history">History</h3>
                 <div class="history-items-container"></div>
                 <a class="more" data-icon="C" href="" ng-click="loadMoreHistorical()"
-                   ng-show="showMoreHistoricaButton">See More</a>
+                   ng-show="showMoreHistoricaButton" i18next="task.see-more">See More</a>
             </div>
         </div>
     </div>
@@ -161,7 +171,7 @@
             <div class="view-footer">
                 <p class="title">Task #{{ task.ref }}</p>
                 <div class="buttons">
-                    <a class="button button-delete" ng-click="removeTask(task)">Delete task</a>
+                    <a class="button button-delete" ng-click="removeTask(task)" i18next="task.delete-task">Delete task</a>
                 </div>
             </div>
         </div>
@@ -171,20 +181,21 @@
             <li class="history-item" ng-repeat="hitem in historyItems">
                 <div class="title">
                     <span class="updated">
-                        <span ng-show="hitem.action == 'add'">Created by</span>
-                        <span ng-show="hitem.action == 'update'">Updated by</span>
+                        <span ng-show="hitem.action == 'add'" i18next="task.created-by">Created by</span>
+                        <span ng-show="hitem.action == 'update'" i18next="task.updated-by">Updated by</span>
                         <span gm-colorize-user="hitem.by">{{ hitem.by.full_name }}</span></span>
                     <span class="date">{{ hitem.modified_date|momentFromNow }}</span>
                 </div>
                 <div class="changes">
                     <div class="change" ng-repeat="change in hitem.changes">
                         <strong>{{ change.name|capitalize }}</strong>:
+                        <!-- TODO: i18next integration pending -->
                         <span ng-show="change.old">from: <span class="old">{{ change.old }}</span></span>
                         <span>to <span class="new">{{ change.new || "''" }}</span></span>
                     </div>
                 </div>
                 <div class="comment" ng-show="hitem.comment">
-                    <strong>Comment:</strong><br />{{ hitem.comment }}
+                    <strong i18next="task.comment">Comment:</strong><br />{{ hitem.comment }}
                 </div>
             </li>
         </ul>
