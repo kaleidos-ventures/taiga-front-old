@@ -35,14 +35,6 @@ I18NextProvider = ($rootScope, storage, $q) ->
         template = _.template(value)
         return template(options.scope)
 
-    options =
-        postProcess: "lodashTemplate",
-        fallbackLng: "en",
-        useLocalStorage: false,
-        localStorageExpirationTime: 60*60*24*1000, # 1 day
-        resGetPath: 'locales/__lng__/__ns__.json',
-        ns: 'app'
-
     service = {}
 
     service.setLang = (lang) ->
@@ -66,7 +58,14 @@ I18NextProvider = ($rootScope, storage, $q) ->
         # Put to rootScope a initial values
         $rootScope.currentLang = storage.get("lang", "en")
 
-        options['lng'] = $rootScope.currentLang
+        options =
+            postProcess: "lodashTemplate"
+            fallbackLng: "en"
+            useLocalStorage: false
+            localStorageExpirationTime: 60*60*24*1000 # 1 day
+            lng: $rootScope.currentLang
+            ns: 'app'
+            resGetPath: 'locales/__lng__/__ns__.json'
 
         i18n.init options, (t) ->
             # Put translate function to a rootScope
@@ -81,13 +80,20 @@ I18NextProvider = ($rootScope, storage, $q) ->
         # Put to rootScope a initial values
         $rootScope.currentLang = storage.get("lang", "en")
 
-        options['lng'] = $rootScope.currentLang
+        options =
+            postProcess: "lodashTemplate"
+            fallbackLng: "en"
+            useLocalStorage: false
+            localStorageExpirationTime: 60*60*24*1000 # 1 day
+            lng: $rootScope.currentLang
+            ns: 'app'
+            resGetPath: 'locales/__lng__/__ns__.json'
 
         i18n.init options
-        $rootScope.t = i18n.t
-        $rootScope.translate = i18n.t
-        $rootScope.$broadcast("i18next:loadComplete", i18n.t)
-        return i18n.t
+        $rootScope.translate = _.bind(i18n.t, i18n)
+        $rootScope.t = $rootScope.translate
+        $rootScope.$broadcast("i18next:loadComplete", $rootScope.translate)
+        return $rootScope.translate
 
     return service
 
