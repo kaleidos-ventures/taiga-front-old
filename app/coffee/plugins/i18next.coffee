@@ -52,9 +52,7 @@ I18NextProvider = ($rootScope, storage, $q) ->
 
     service.t = service.translate
 
-    service.initialize = ->
-        defer = $q.defer()
-
+    service.initialize (async=true) = ->
         # Put to rootScope a initial values
         $rootScope.currentLang = storage.get("lang", "en")
 
@@ -67,33 +65,25 @@ I18NextProvider = ($rootScope, storage, $q) ->
             ns: 'app'
             resGetPath: 'locales/__lng__/__ns__.json'
 
-        i18n.init options, (t) ->
-            # Put translate function to a rootScope
+        if async
+            options['getAsync'] = true
+            defer = $q.defer()
+
+            i18n.init options, (t) ->
+                # Put translate function to a rootScope
+                $rootScope.$apply ->
+                    $rootScope.translate = t
+                    $rootScope.t = t
+                    defer.resolve(t)
+                    $rootScope.$broadcast("i18next:loadComplete", t)
+                return defer.promise
+        else
+            options['getAsync'] = false
+            i18n.init options
             $rootScope.$apply ->
-                $rootScope.translate = t
-                $rootScope.t = t
-                defer.resolve(t)
-                $rootScope.$broadcast("i18next:loadComplete", t)
-            return defer.promise
-
-    service.sync_initialize = ->
-        # Put to rootScope a initial values
-        $rootScope.currentLang = storage.get("lang", "en")
-
-        options =
-            postProcess: "lodashTemplate"
-            fallbackLng: "en"
-            useLocalStorage: false
-            localStorageExpirationTime: 60*60*24*1000 # 1 day
-            lng: $rootScope.currentLang
-            ns: 'app'
-            resGetPath: 'locales/__lng__/__ns__.json'
-
-        i18n.init options
-        $rootScope.translate = _.bind(i18n.t, i18n)
-        $rootScope.t = $rootScope.translate
-        $rootScope.$broadcast("i18next:loadComplete", $rootScope.translate)
-        return $rootScope.translate
+                $rootScope.translate = i18n.t
+                $rootScope.t = i18n.t
+                $rootScope.$broadcast("i18next:loadComplete", i18n.t)
 
     return service
 

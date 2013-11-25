@@ -275,7 +275,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config) -
         $gmStorage.clear()
         $location.url("/login")
 
-    $i18next.sync_initialize()
+    $i18next.initialize(false)
     lang = $gmStorage.get('lang', config.defaultLanguage)
     $i18next.setLang(lang)
 
@@ -286,6 +286,7 @@ angular.module('greenmine', modules)
 angular.module('greenmine.config', []).value('config', {
     host: "localhost:8000"
     scheme: "http"
+    defaultLanguage: "en"
     notificationLevelOptions: {
         "all_owned_projects": "All events on my projects"
         "only_watching": "Only events for objects i watch"
