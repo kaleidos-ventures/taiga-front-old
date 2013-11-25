@@ -144,4 +144,4 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
             render(ngModel.$viewValue or [])
 
 module = angular.module('greenmine.directives.history', [])
-module.directive("gmHistory", ['$i18next', GmHistoryDirective])
+module.directive("gmHistory", ['$compile', '$rootScope', '$i18next', GmHistoryDirective])
