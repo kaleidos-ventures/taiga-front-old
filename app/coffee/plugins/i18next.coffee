@@ -80,10 +80,9 @@ I18NextProvider = ($rootScope, storage, $q) ->
         else
             options['getAsync'] = false
             i18n.init options
-            $rootScope.$apply ->
-                $rootScope.translate = i18n.t
-                $rootScope.t = i18n.t
-                $rootScope.$broadcast("i18next:loadComplete", i18n.t)
+            $rootScope.translate = i18n.t
+            $rootScope.t = i18n.t
+            $rootScope.$broadcast("i18next:loadComplete", i18n.t)
 
     return service
 
