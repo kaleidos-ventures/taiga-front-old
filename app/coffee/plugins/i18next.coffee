@@ -52,7 +52,7 @@ I18NextProvider = ($rootScope, storage, $q) ->
 
     service.t = service.translate
 
-    service.initialize (async=true) = ->
+    service.initialize = (async=true) ->
         # Put to rootScope a initial values
         $rootScope.currentLang = storage.get("lang", "en")
 
