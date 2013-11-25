@@ -122,7 +122,7 @@ WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, 
     $rootScope.pageBreadcrumb = [
         ["", ""]
         [$i18next.t("common.wiki"), $rootScope.urls.wikiUrl($rootScope.projectId, "home")]
-        [$routeParams.slug, null]
+        [$routeParams.slug, $rootScope.urls.wikiUrl($rootScope.projectId, $routeParams.slug)]
         [$i18next.t("wiki-historical.historical"), null]
     ]
 
