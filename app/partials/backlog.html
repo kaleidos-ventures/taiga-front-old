@@ -102,7 +102,9 @@
                             {{ item.name }}
                         </div>
                     </div>
-                    <div class="us-options"></div>
+                    <div class="us-options">
+                        <a class="refresh-button" ng-click="refreshBacklog()" data-icon="x" i18next="issues.refresh">Refresh</a>
+                    </div>
                 </div>
                 <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs" gm-doomline>
                     <div class="us-item nga-us-item" ng-repeat="us in unassingedUs|onlyVisible"

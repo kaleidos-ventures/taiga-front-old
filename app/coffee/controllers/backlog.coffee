@@ -159,6 +159,9 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
         selected = $scope.selectedUserStories = getSelectedUserStories()
         $scope.selectedStoryPoints = calculateStoryPoints(selected)
 
+    $scope.refreshBacklog = ->
+        loadUserStories()
+
     $scope.$on("points:loaded", loadUserStories)
     $scope.$on("userstory-form:create", loadUserStories)
 
