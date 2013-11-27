@@ -87,7 +87,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         return (promise) ->
             return promise.then null, (response) ->
                 if response.status == 401 or response.status == 0
-                    $location.url("/login")
+                    $location.url("/login?next=#{$location.path()}")
                 return $q.reject(response)
 
     $provide.factory("authHttpIntercept", ["$q", "$location", authHttpIntercept])

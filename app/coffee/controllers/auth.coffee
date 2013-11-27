@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-LoginController = ($scope, $rootScope, $location, rs, $gmAuth) ->
+LoginController = ($scope, $rootScope, $location, $routeParams, rs, $gmAuth) ->
     $rootScope.pageSection = 'login'
 
     $scope.form = {}
@@ -25,8 +25,10 @@ LoginController = ($scope, $rootScope, $location, rs, $gmAuth) ->
         onSuccess = (user) ->
             $gmAuth.setUser(user)
             $rootScope.auth = user
-
-            $location.url("/")
+            if $routeParams['next']
+                $location.url($routeParams['next'])
+            else
+                $location.url("/")
 
         onError = (data) ->
             $scope.error = true
@@ -129,7 +131,7 @@ ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next
 
 
 module = angular.module("greenmine.controllers.auth", [])
-module.controller("LoginController", ['$scope', '$rootScope', '$location', 'resource', '$gmAuth', LoginController])
+module.controller("LoginController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$gmAuth', LoginController])
 module.controller("RegisterController", ['$scope', '$rootScope', RegisterController])
 module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', RecoveryController])
 module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource',  ChangePasswordController])
