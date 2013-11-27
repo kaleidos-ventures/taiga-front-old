@@ -269,6 +269,7 @@
         "edit": "Edit",
         "view": "View",
         "unassigned": "Unassigned",
+        "unassigned-tasks": "Unassigned tasks",
         "select-user": "Select a user:",
         "user-story-saved": "The user story has been saved"
     },
