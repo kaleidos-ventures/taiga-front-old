@@ -182,6 +182,11 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
 
         return result
 
+    $scope.openBulkUserStoriesForm = ->
+        promise = $modal.open("bulk-user-stories-form", {})
+        promise.then ->
+            loadUserStories()
+
     $scope.openCreateUserStoryForm = ->
         promise = $modal.open("user-story-form", {"us": initializeUsForm(), "type": "create"})
         promise.then ->
@@ -234,6 +239,7 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
 
 BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next) ->
     $scope.formOpened = false
+    $scope.bulkFormOpened = false
 
     # Load data
     $scope.defered = null
@@ -291,6 +297,57 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash,
             $scope.form.revert()
         else
             $scope.form = {}
+
+    $scope.$on "select2:changed", (ctx, value) ->
+        $scope.form.tags = value
+
+BacklogBulkUserStoriesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next) ->
+    $scope.bulkFormOpened = false
+
+    # Load data
+    $scope.defered = null
+    $scope.context = null
+
+    openModal = ->
+        $scope.bulkFormOpened = true
+        $scope.$broadcast("checksley:reset")
+
+        $scope.overlay = $gmOverlay()
+        $scope.overlay.open().then ->
+            $scope.bulkFormOpened = false
+
+    closeModal = ->
+        $scope.bulkFormOpened = false
+
+    @.initialize = (dfr, ctx) ->
+        $scope.defered = dfr
+        $scope.context = ctx
+        openModal()
+
+    @.delete = ->
+        closeModal()
+        $scope.form = form
+        $scope.bulkFormOpened = true
+
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
+        promise = rs.createBulkUserStories($scope.projectId, $scope.form)
+        $scope.$emit("spinner:start")
+
+        promise.then (data) ->
+            $scope.$emit("spinner:stop")
+            closeModal()
+            $scope.overlay.close()
+            $scope.defered.resolve()
+            $gmFlash.info($i18next.t('backlog.bulk-user-stories-created', { count: data.data.length }))
+            $scope.form = {}
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
+
+    $scope.close = ->
+        $scope.bulkFormOpened = false
+        $scope.overlay.close()
+        $scope.form = {}
 
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
@@ -408,3 +465,4 @@ module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resou
 module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', '$i18next', BacklogUserStoriesController])
 module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', '$i18next', BacklogController])
 module.controller('BacklogUserStoryModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogUserStoryModalController])
+module.controller('BacklogBulkUserStoriesModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogBulkUserStoriesModalController])

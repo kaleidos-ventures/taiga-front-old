@@ -84,7 +84,12 @@
         "modify-user-story": "Modify user story",
         "user-story-saved": "The user story has been saved",
         "sprint-saved": "The sprint has been saved",
-        "sprint-modified": "The sprint has been modified"
+        "sprint-modified": "The sprint has been modified",
+        "refresh": "Refresh",
+        "bulk-user-stories": "Create a bulk of USs",
+        "user-story-per-line": "One user story per line...",
+        "bulk-user-stories-created": "__count__ user story has been created.",
+        "bulk-user-stories-created_plural": "__count__ user stories has been created."
     },
     "issues": {
         "new-issue": "New issue",

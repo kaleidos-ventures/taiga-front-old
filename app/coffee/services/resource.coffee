@@ -387,6 +387,10 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.createUserStory = (data) ->
         return $model.create('userstories', data)
 
+    service.createBulkUserStories = (projectId, form) ->
+        obj = _.extend({}, form, {projectId: projectId})
+        return $http.post($gmUrls.api("bulkuserstories"), obj, {headers:headers()})
+
     service.createMilestone = (projectId, form) ->
         #return $model.create('milestones', data)
         obj = _.extend({}, form, {project: projectId})

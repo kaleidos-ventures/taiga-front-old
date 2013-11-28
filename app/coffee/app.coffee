@@ -100,6 +100,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         "memberships": "/api/v1/memberships"
         "milestones": "/api/v1/milestones"
         "userstories": "/api/v1/userstories"
+        "bulkuserstories": "/api/v1/userstories/bulk_create"
         "userstories-historical": "/api/v1/userstories/%s/historical"
         "userstories-restore": "/api/v1/userstories/%s/restore"
         "userstories/attachments": "/api/v1/userstory-attachments"

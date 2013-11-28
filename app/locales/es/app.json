@@ -84,7 +84,12 @@
         "modify-user-story": "Modificar historia de usuario",
         "user-story-saved": "La historia de usuario ha sido guardada",
         "sprint-saved": "El sprint ha sido guardado",
-        "sprint-modified": "El sprint ha sido modificado"
+        "sprint-modified": "El sprint ha sido modificado",
+        "refresh": "Refrescar",
+        "bulk-user-stories": "Crear USs en bloque",
+        "user-story-per-line": "Una historia de usuario por linea...",
+        "bulk-user-stories-created": "Se ha creado __count__ historia de usuario.",
+        "bulk-user-stories-created_plural": "Se han creado __count__ historias de usuario."
     },
     "issues": {
         "new-issue": "Nueva petición",

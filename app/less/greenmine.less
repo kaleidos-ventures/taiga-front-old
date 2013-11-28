@@ -731,6 +731,28 @@ body.login {
     .filters-container {
         .filters-bar-sbox {
             .title-sbox {
+                .us-bulk-button{
+                    float: right;
+                    margin: 0px 12px;
+                    color: white;
+                    padding: 3px 5px;
+                    border-radius: 4px;
+                    border: none;
+                    background: #669933;
+                    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+                    cursor: pointer;
+                    padding-left: 20px;
+                    &:hover{
+                        background: #333333;
+                        transition: all 0.3s linear;
+                    }
+                    &:before {
+                        position: absolute;
+                        top: 3px;
+                        left: 3px;
+                        transition: all .2s ease-in;
+                    }
+                }
                 .refresh-button {
                     float: right;
                     margin: 0px 12px;
