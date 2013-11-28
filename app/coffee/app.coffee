@@ -135,7 +135,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 
 modules = [
     # "ngRoute",
-    # "ngSanitize",
+    "ngSanitize",
     # "ngAnimate",
     "coffeeColorPicker",
 

@@ -55,7 +55,7 @@ gmMarkitupConstructor = ($parse, $i18next) ->
 
 
 
-GmRenderMarkdownDirective = ($rootScope, $parse) ->
+GmRenderMarkdownDirective = ($rootScope, $parse, $sanitize) ->
     parseMarkdownLinks = (scope, tree) ->
         if tree.length == 0
             return
@@ -86,9 +86,9 @@ GmRenderMarkdownDirective = ($rootScope, $parse) ->
                 for item in tree[1..tree.length]
                     parseMarkdownLinks(scope, item)
 
-                element.html(markdown.toHTML(tree))
+                element.html($sanitize(markdown.toHTML(tree)))
 
 
 module = angular.module('greenmine.directives.wiki', [])
 module.directive('gmMarkitup', ["$parse", "$i18next", gmMarkitupConstructor])
-module.directive("gmRenderMarkdown", ["$rootScope", "$parse", GmRenderMarkdownDirective])
+module.directive("gmRenderMarkdown", ["$rootScope", "$parse", "$sanitize", GmRenderMarkdownDirective])
