@@ -728,6 +728,46 @@ body.login {
 .backlog-content{
     width: 99%;
     margin: 10px;
+    .filters-container {
+        .filters-bar-sbox {
+            .title-sbox {
+                .refresh-button {
+                    float: right;
+                    margin: 0px 12px;
+                    color: white;
+                    padding: 3px 5px;
+                    border-radius: 4px;
+                    border: none;
+                    background: #669933;
+                    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+                    cursor: pointer;
+                    padding-left: 20px;
+                    &:hover{
+                        background: #333333;
+                        transition: all 0.3s linear;
+                        &:before {
+                            -webkit-transform: rotate(180deg);
+                            -moz-transform: rotate(180deg);
+                            -ms-transform: rotate(180deg);
+                            -o-transform: rotate(180deg);
+                            transform: rotate(180deg);
+                        }
+                    }
+                    &:before {
+                        position: absolute;
+                        top: 3px;
+                        left: 3px;
+                        -webkit-transform: rotate(0deg);
+                        -moz-transform: rotate(0deg);
+                        -ms-transform: rotate(0deg);
+                        -o-transform: rotate(0deg);
+                        transform: rotate(0deg);
+                        transition: all .2s ease-in;
+                    }
+                }
+            }
+        }
+    }
     .graphics-container {
         .user-story-stats {
             background-color: #444;
@@ -1038,26 +1078,6 @@ body.login {
             .us-options {
                 padding: 4px;
                 width: 130px;
-                .refresh-button {
-                    margin: 0px 12px;
-                    color: white;
-                    padding: 3px 5px;
-                    border-radius: 4px;
-                    border: none;
-                    background: #669933;
-                    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-                    cursor: pointer;
-                    &:hover{
-                        background: #333333;
-                        transition: all 0.3s linear;
-                    }
-                    &:before {
-                        position: relative;
-                        top: 2px;
-                        padding-right: 6px;
-                        transition: all 0.3s linear;
-                    }
-                }
             }
 
             .flex-body {
@@ -2041,6 +2061,7 @@ body.login {
             background: #669933;
             box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
             cursor: pointer;
+            position: relative;
             &.new-button {
                 &:hover{
                     background: #333333;
@@ -2058,7 +2079,31 @@ body.login {
                     transition: all 0.3s ease-out;
                 }
             }
-            &.refresh-button,
+            &.refresh-button {
+                padding-left: 30px;
+                &:hover{
+                    background: #333333;
+                    transition: all 0.3s linear;
+                    &:before {
+                        -webkit-transform: rotate(180deg);
+                        -moz-transform: rotate(180deg);
+                        -ms-transform: rotate(180deg);
+                        -o-transform: rotate(180deg);
+                        transform: rotate(180deg);
+                    }
+                }
+                &:before {
+                    position: absolute;
+                    top: 8px;
+                    left: 8px;
+                    -webkit-transform: rotate(0deg);
+                    -moz-transform: rotate(0deg);
+                    -ms-transform: rotate(0deg);
+                    -o-transform: rotate(0deg);
+                    transform: rotate(0deg);
+                    transition: all .2s ease-in;
+                }
+            }
             &.tags-button,
             &.graphs-button {
                 &:hover{
