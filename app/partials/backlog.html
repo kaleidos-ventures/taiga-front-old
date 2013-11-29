@@ -5,7 +5,7 @@
             <div class="user-story-stats" url="">
                 <div class="progress-box">
                     <div class="progress progress-success">
-                        <div class="bar" style="width: {{ percentageBarCompleted| number:1 }}%;"></div>
+                        <div class="bar" style="width: {{ percentageBarCompleted| number:1 }}%; background: {{ backgroundBar }};"></div>
                     </div>
                     <div class="progress-indicator indicator">{{ percentageClosedPoints|number:1 }}%</div>
                     <div class="progress-help help" i18next="backlog.completed">completed</div>
