@@ -81,8 +81,6 @@ GmRenderMarkdownDirective = ($rootScope, $parse, $sanitize) ->
         scope.$watch attrs.gmRenderMarkdown, ->
             data = scope.$eval(attrs.gmRenderMarkdown)
             if data != undefined
-                data = $sanitize(data)
-
                 tree = markdown.parse(data.replace("\r", ""))
                 for item in tree[1..tree.length]
                     parseMarkdownLinks(scope, item)
