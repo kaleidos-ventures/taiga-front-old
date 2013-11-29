@@ -31,6 +31,10 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next) ->
             else
                 $scope.percentageClosedPoints = 0
 
+            $scope.percentageBarCompleted = $scope.percentageClosedPoints
+            if $scope.percentageBarCompleted >= 100
+                $scope.percentageBarCompleted = 99
+
     $scope.$on "milestones:loaded", (ctx, data) ->
         if data.length > 0
             $rootScope.sprintId = data[0].id
