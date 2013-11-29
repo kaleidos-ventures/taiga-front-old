@@ -54,11 +54,11 @@
                     <strong i18next="user-story.finished">Finished:</strong>
                     <span>{{ userStory.finish_date|momentFormat:"LLLL" }}</span>
                 </li>
-                <li>
+                <li data-icon="J">
                     <strong i18next="user-story.client-requirement">Client requirement:</strong>
                     <span>{{ userStory.client_requirement }}</span>
                 </li>
-                <li>
+                <li data-icon="N">
                     <strong i18next="user-story.team-requirement">Team requirement:</strong>
                     <span>{{ userStory.team_requirement }}</span>
                 </li>
@@ -66,7 +66,7 @@
                     <strong i18next="user-story.status">Status:</strong>
                     Status: <span>{{ constants.usStatuses[userStory.status].name }}</span>
                 </li>
-                <li>
+                <li data-icon="L">
                     <strong i18next="user-story.points">Points:</strong>
                     <span ng-repeat="role in constants.computableRolesList">
                         {{ role.name }}: {{ points[role.id] }},
