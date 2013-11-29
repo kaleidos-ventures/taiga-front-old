@@ -202,9 +202,8 @@
             <p class="empty" ng-show="milestones.length == 0" i18next="backlog.no-sprints">
                 There isn't Sprints. Create a new one.
             </p>
-
-            <!-- Xaviju FIXME: Removed the "first" class. Now all are first. -->
-            <div class="sprint-sbox first" ng-repeat="ml in milestones"
+            
+            <div class="sprint-sbox active" ng-repeat="ml in milestones"
                  ng-controller="BacklogMilestoneController"
                  ng-mouseover="showEditOption=true"
                  ng-mouseout="showEditOption=false">
