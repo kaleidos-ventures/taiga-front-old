@@ -307,6 +307,40 @@
                         <textarea name="description" class="description" ng-model="form.description"></textarea>
                     </fieldset>
                 </div>
+                <div class="fieldset-row">
+                    <fieldset>
+                        <ul class="attachments-items">
+                            <li class="attachments-item"
+                                ng-repeat="attachment in attachments">
+                                <a class="delete" data-icon="h" href=""
+                                   title="Delete the new attachment"
+                                   i18next="title:issue.delete-new-attachment"
+                                   ng-click="removeAttachment(attachment)"></a>
+                                <span>{{ attachment.attached_file }}</span>
+                                <span>[{{ attachment.size|sizeFormat }}]</span>
+                            </li>
+                        </ul>
+                        <a class="add-attachment" data-icon="E" title="Add attachments"
+                            gm-forward-click="#attachment_file_input" href=""
+                            i18next="title:issue.add-attachments,issue.add-attachments">
+                            Add attachments
+                        </a>
+                        <ul class="attachments-items">
+                            <li class="attachments-item"
+                                ng-repeat="attachment in newAttachments">
+                                <a class="delete" data-icon="h" href=""
+                                   title="Delete the new attachment"
+                                   i18next="title:issue.delete-new-attachment"
+                                   ng-click="removeNewAttachment(attachment)"></a>
+                                <span>{{ attachment.name }}</span>
+                                <span>[{{ attachment.size|sizeFormat }}]</span>
+                            </li>
+                        </ul>
+                        <input type="file" class="hidden" name="newAttachments"
+                               id="attachment_file_input" multiple="multiple"
+                               gm-files="newAttachments"/>
+                    </fieldset>
+                </div>
             </div>
             <div class="modal-footer">
                 <div gm-spinner class="spinner-container"></div>

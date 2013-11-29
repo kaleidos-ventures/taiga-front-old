@@ -370,13 +370,44 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         $scope.form.tags = value
 
 
-IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next) ->
+IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next, $confirm) ->
     $scope.type = "create"
     $scope.formOpened = false
 
     # Load data
     $scope.defered = null
     $scope.context = null
+
+    $scope.newAttachments = []
+    $scope.attachments = []
+
+    saveNewAttachments = (projectId, issueId) ->
+        if $scope.newAttachments.length == 0
+            return
+
+        promises = []
+        for attachment in $scope.newAttachments
+            promise = rs.uploadIssueAttachment(projectId, issueId, attachment)
+            promises.push(promise)
+
+        promise = Q.all(promises)
+        promise.then ->
+            gm.safeApply $scope, ->
+                $scope.newAttachments = []
+
+    $scope.removeAttachment = (attachment) ->
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
+        promise.then () ->
+            $scope.attachments = _.without($scope.attachments, attachment)
+            attachment.remove()
+
+    $scope.removeNewAttachment = (attachment) ->
+        $scope.newAttachments = _.without($scope.newAttachments, attachment)
+
+    loadAttachments = (projectId, issueId) ->
+        promise = rs.getIssueAttachments(projectId, issueId)
+        promise.then (attachments) ->
+            $scope.attachments = attachments
 
     loadProjectTags = ->
         rs.getProjectTags($scope.projectId).then (data) ->
@@ -386,6 +417,7 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next)
         loadProjectTags()
         if $scope.context.issue?
             $scope.form = $scope.context.issue
+            loadAttachments($scope.projectId, $scope.form.id)
         else
             $scope.form = {
                 status: $scope.project.default_issue_status
@@ -424,6 +456,7 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next)
         promise.then (data) ->
             $scope.$emit("spinner:stop")
             closeModal()
+            saveNewAttachments($scope.projectId, data.id)
             $scope.overlay.close()
             $scope.defered.resolve($scope.form)
             $gmFlash.info($i18next.t('issue.issue-saved'))
@@ -450,4 +483,4 @@ module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
                   '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", '$i18next',
                   IssuesViewController])
 module.controller("IssuesModalController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
-                  "$gmFlash", "$i18next", IssuesModalController])
+                  "$gmFlash", "$i18next", "$confirm", IssuesModalController])
