@@ -22,7 +22,7 @@
                     <li class="attachments-item" ng-repeat="attachment in attachments">
                         <a class="delete" data-icon="h" href="" i18next="title:task.delete-attachment"
                            title="Delete attachment" ng-click="removeAttachment(attachment)"></a>
-                        <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
+                        <a href="{{ attachment.url }}">{{ attachment.name }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
                         <!-- TODO: i18next integration pending -->
                         <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>

@@ -7,7 +7,7 @@
                 <h3 data-icon="E" i18next="wiki-historical.attachments">Attachments</h3>
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
-                        <a href="{{ attachment.url }}">{{ attachment.attached_file }}</a>
+                        <a href="{{ attachment.url }}">{{ attachment.name }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
                         <!-- TODO: i18next integration pending -->
                         <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>
