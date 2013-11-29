@@ -204,7 +204,7 @@
             </p>
             
             <div class="sprint-sbox" ng-repeat="ml in milestones"
-                ng-class="active:!!sprint.is_closed"
+                ng-class="active:!sprint.is_closed"
                 ng-controller="BacklogMilestoneController"
                 ng-mouseover="showEditOption=true"
                 ng-mouseout="showEditOption=false">
