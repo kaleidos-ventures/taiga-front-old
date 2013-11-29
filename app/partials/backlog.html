@@ -202,9 +202,9 @@
             <p class="empty" ng-show="milestones.length == 0" i18next="backlog.no-sprints">
                 There isn't Sprints. Create a new one.
             </p>
-            
+
             <div class="sprint-sbox" ng-repeat="ml in milestones"
-                ng-class="active:!sprint.is_closed"
+                ng-class="{active: !ml.closed}"
                 ng-controller="BacklogMilestoneController"
                 ng-mouseover="showEditOption=true"
                 ng-mouseout="showEditOption=false">
