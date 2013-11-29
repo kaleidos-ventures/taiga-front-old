@@ -35,7 +35,6 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next) ->
             
             if $scope.percentageBarCompleted > 100
                 $scope.percentageBarCompleted = 99
-                $scope.backgroundBar = '#cc0000'
 
     $scope.$on "milestones:loaded", (ctx, data) ->
         if data.length > 0
