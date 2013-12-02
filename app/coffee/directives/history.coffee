@@ -16,6 +16,10 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                     else value
             issue: (name, value) ->
                 return switch name
+                    when "type"
+                        if value
+                            return scope.constants.issueTypes[value].name
+                        return null
                     when "priority"
                         if value
                             return scope.constants.priorities[value].name
