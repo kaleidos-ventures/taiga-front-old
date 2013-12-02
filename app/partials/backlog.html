@@ -26,15 +26,25 @@
                         <div class="help" i18next="backlog.closed-points">closed points</div>
                     </div>
                 </div>
-                <!-- 
-                <a class="button new-us-story" data-icon="m"
-                    ng-click="openCreateUserStoryForm()" i18next="backlog.new-user-story">
-                    New user story
-                </a>
+                <!-- NINJA GRAPH
                 <a class="button show-hide-graphics" data-icon="k" ng-show="milestones.length > 0" gm-ninja-graph>
                 </a>
                 -->
-                <a class="new-us-story" data-icon="C" i18next="backlog.new-user-story">New user story</a>
+                <div class="us-story-container">
+                    <a ng-class="{active: usDropdown}" ng-click="usDropdown=true" class="new-us-story" data-icon="C" i18next="backlog.new-user-story">New user story</a>
+                    <ul class="us-story-dropdown" ng-show="usDropdown" ng-mouseleave="usDropdown=false">
+                        <li>
+                            <a ng-click="openCreateUserStoryForm()" i18next="backlog.new-user-story">
+                                New user story
+                            </a>
+                        </li>
+                        <li>
+                            <a ng-click="openBulkUserStoriesForm()" i18next="backlog.bulk-user-stories">
+                                Bulk user stories
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="graph-box">
                 <div id="graphs">
@@ -52,7 +62,6 @@
                    </a>
                    <!-- TO REMOVE ASAP
                    <a class="refresh-button" ng-click="refreshBacklog()" data-icon="x" i18next="backlog.refresh">Refresh</a>
-                   <a class="us-bulk-button" ng-click="openBulkUserStoriesForm()" data-icon="f" i18next="backlog.bulk-user-stories">Bulk user stories</a>
                     -->
                 </div>
                 <div class="filters-visual-box" ng-show="filtersOpened">

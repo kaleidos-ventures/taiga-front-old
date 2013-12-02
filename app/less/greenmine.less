@@ -792,18 +792,15 @@ body.login {
         .user-story-stats {
             background-color: #444;
             padding: 10px;
-            overflow: hidden;
             color:#fff;
-            div {
-                float: left;
-            }
+            .clearfix();
             .progress-box {
-                float: left;
                 overflow: hidden;
                 line-height: 26px;
                 width: 35%;
                 .progress {
                     width: 50%;
+                    float: left;
                     .bar {
                         background-color: #669900;
                         height: 23px;
@@ -813,12 +810,14 @@ body.login {
                     }
                 }
                 .progress-indicator {
+                    float: left;
                     font-family: @LeagueGothicRegular;
                     font-size: 2em;
                     color: #FFFFFF;
                     margin-top: 2px;
                 }
                 .progress-help {
+                    float: left;
                     font-family: @ColabThi;
                     font-size: .9em;
                     color: #EEE;
@@ -854,23 +853,64 @@ body.login {
                     }
                 }
             }
-            .new-us-story {
-                color: @white;
+            .us-story-container {
+                float: right;
+                position: relative;
                 font-family: @LeagueGothicRegular;
                 font-size: 18px;
-                float: right;
-                padding: 4px 10px;
-                background: @green;
-                &:before {
-                    position: relative;
-                    top: 2px;
-                    margin-right: 4px;
+                .new-us-story {
+                    color: @white;
+                    float: right;
+                    padding: 4px 20px;
+                    background: @green;
+                    &:before {
+                        position: relative;
+                        top: 2px;
+                        margin-right: 4px;
+                        -webkit-transform: rotate(0deg);
+                        -moz-transform: rotate(0deg);
+                        -ms-transform: rotate(0deg);
+                        -o-transform: rotate(0deg);
+                        transform: rotate(0deg);
+                        transition: all .2s ease-in;
+                    }
+                    &:hover {
+                        background: @black;
+                        transition: all .3s ease-in;
+                        &:before {
+                            -webkit-transform: rotate(180deg);
+                            -moz-transform: rotate(180deg);
+                            -ms-transform: rotate(180deg);
+                            -o-transform: rotate(180deg);
+                            transform: rotate(180deg);
+                            transition: all .2s ease-in;
+                        }
+                    }
                 }
-                &:hover {
-                    background: @black;
-                    transition: all .3s ease-in;
+                ul {
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                    z-index: 99;
+                    position: absolute;
+                    background: #444;
+                    top: 30px;
+                    li {
+                        a {
+                            color: @white;
+                            display: block;
+                            padding: 11px 0;
+                            width: 140px;
+                            text-align: center;
+                            &:hover {
+                                background: @black;
+                                transition: all .3s ease-in;
+                            }
+                        }
+                    }
                 }
             }
+            
         }
         .graph-box{
             margin-top: 30px;
