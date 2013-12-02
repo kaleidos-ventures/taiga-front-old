@@ -1528,6 +1528,8 @@ body.login {
  * BACKLOG
  * ================================ */
 
+
+
 .tasks-view {
     margin: auto;
     width: 98.97%;
@@ -1567,6 +1569,7 @@ body.login {
             font-family: 'ColabThi';
             font-size: 1em;
             color: #FFF;
+            border-radius: 4px;
             margin-right: 5px;
         }
     }
@@ -2115,57 +2118,55 @@ body.login {
     }
     .filters-container {
         .tags-list-sbox {
-        
-                // Status color
-                &.status-new{
-                background-color: #8C2318;
-                }
-                &.status-in-progress{
-                    background-color: #5E8C6A;
-                }
-                &.status-ready-for-test{
-                    background-color: #88A65E;
-                }
-                &.status-closed{
-                    background-color: #BFB35A;
-                }
-                &.status-needs-info{
-                    background-color: #89BAB4;
-                }
-                &.status-rejected{
-                    background-color: #CC0000;
-                }
-                &.status-postponed{
-                    background-color: #ccc;
-                }
+            // Status color
+            &.status-new{
+            background-color: #8C2318;
+            }
+            &.status-in-progress{
+                background-color: #5E8C6A;
+            }
+            &.status-ready-for-test{
+                background-color: #88A65E;
+            }
+            &.status-closed{
+                background-color: #BFB35A;
+            }
+            &.status-needs-info{
+                background-color: #89BAB4;
+            }
+            &.status-rejected{
+                background-color: #CC0000;
+            }
+            &.status-postponed{
+                background-color: #ccc;
+            }
 
-                // Severity colors
-                &.severity-wishlist{
-                    background-color: #CCC;
-                }
-                &.severity-minor{
-                    background-color: #669933;
-                }
-                &.severity-normal{
-                    background-color: blue;
-                }
-                &.severity-important{
-                    background-color: orange;
-                }
-                &.severity-critical{
-                    background-color: #CC0000;
-                }
+            // Severity colors
+            &.severity-wishlist{
+                background-color: #CCC;
+            }
+            &.severity-minor{
+                background-color: #669933;
+            }
+            &.severity-normal{
+                background-color: blue;
+            }
+            &.severity-important{
+                background-color: orange;
+            }
+            &.severity-critical{
+                background-color: #CC0000;
+            }
 
-                // Priority colors
-                &.priority-low{
-                    background-color: #CCC;
-                }
-                &.priority-normal{
-                    background-color: #669933;
-                }
-                &.priority-high{
-                    background-color: #CC0000;
-                }
+            // Priority colors
+            &.priority-low{
+                background-color: #CCC;
+            }
+            &.priority-normal{
+                background-color: #669933;
+            }
+            &.priority-high{
+                background-color: #CC0000;
             }
         }
         .filters-bar-sbox {
