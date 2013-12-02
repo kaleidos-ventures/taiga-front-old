@@ -30,9 +30,9 @@
                 <a class="button show-hide-graphics" data-icon="k" ng-show="milestones.length > 0" gm-ninja-graph>
                 </a>
                 -->
-                <div class="us-story-container">
-                    <a ng-class="{active: usDropdown}" ng-click="usDropdown=true" class="new-us-story" data-icon="C" i18next="backlog.new-user-story">New user story</a>
-                    <ul class="us-story-dropdown" ng-show="usDropdown" ng-mouseleave="usDropdown=false">
+                <div class="us-story-container" ng-mouseleave="usDropdown=false">
+                    <a ng-class="{active: usDropdown}" ng-click="usDropdown=true" class="new-us-story" data-icon="B" i18next="backlog.new-user-story">New user story</a>
+                    <ul class="us-story-dropdown" ng-show="usDropdown">
                         <li>
                             <a ng-click="openCreateUserStoryForm()" i18next="backlog.new-user-story">
                                 New user story
@@ -60,9 +60,6 @@
                        ng-click="filtersOpened=!filtersOpened" i18next="backlog.filters">
                        Filters
                    </a>
-                   <!-- TO REMOVE ASAP
-                   <a class="refresh-button" ng-click="refreshBacklog()" data-icon="x" i18next="backlog.refresh">Refresh</a>
-                    -->
                 </div>
                 <div class="filters-visual-box" ng-show="filtersOpened">
                     <div class="tags-list-sbox">
@@ -80,10 +77,10 @@
         <div class="us-container">
             <div class="us-table-list">
                 <div class="flex-header">
-<!--
-                    <div class="us-check"></div>
--->
-                    <div class="us-title" i18next="backlog.user-story">User Story</div>
+                    <div class="us-title">
+                        <span i18next="backlog.user-story">User Story</span>
+                        <a class="refresh-button" ng-click="refreshBacklog()" data-icon="x"></a>
+                    </div>
                     <div class="us-points" i18next="backlog.points">Points</div>
                     <div class="us-options" i18next="backlog.options">Options</div>
                 </div>

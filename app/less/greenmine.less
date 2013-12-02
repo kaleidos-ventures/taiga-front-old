@@ -865,11 +865,12 @@ body.login {
                 .new-us-story {
                     color: @white;
                     float: right;
-                    padding: 4px 20px;
+                    padding: 3px 10px 3px 40px;
                     background: @green;
                     &:before {
-                        position: relative;
-                        top: 2px;
+                        position: absolute;
+                        top: 4px;
+                        left: 13px;
                         margin-right: 4px;
                         -webkit-transform: rotate(0deg);
                         -moz-transform: rotate(0deg);
@@ -890,6 +891,16 @@ body.login {
                             transition: all .2s ease-in;
                         }
                     }
+                    &.active {
+                        &:before {
+                            -webkit-transform: rotate(180deg);
+                            -moz-transform: rotate(180deg);
+                            -ms-transform: rotate(180deg);
+                            -o-transform: rotate(180deg);
+                            transform: rotate(180deg);
+                            transition: all .2s ease-in;
+                        }
+                    }
                 }
                 ul {
                     margin: 0;
@@ -899,12 +910,12 @@ body.login {
                     position: absolute;
                     background: #444;
                     top: 30px;
+                    width: 100%;
                     li {
                         a {
                             color: @white;
                             display: block;
                             padding: 11px 0;
-                            width: 140px;
                             text-align: center;
                             &:hover {
                                 background: @black;
@@ -996,6 +1007,39 @@ body.login {
                 }
                 .us-title {
                     padding-left: 8px;
+                    position: relative;
+                }
+                .refresh-button {
+                    font-size: 12px;
+                    color: @green;
+                    position: absolute;
+                    top: 8px;
+                    left: 95px;
+                    width: 12px;
+                    height: 12px;
+                    &:hover {
+                        -webkit-animation: spin .5s infinite linear;
+                        -moz-animation: spin .5s infinite linear;
+                        -o-animation: spin .5s infinite linear;
+                        -ms-animation: spin .5s infinite linear;
+                         color: @black;
+                        @-webkit-keyframes spin {
+                            0% { -webkit-transform: rotate(0deg);}
+                            100% { -webkit-transform: rotate(360deg);}
+                        }
+                        @-moz-keyframes spin {
+                            0% { -moz-transform: rotate(0deg);}
+                            100% { -moz-transform: rotate(360deg);}
+                        }
+                        @-o-keyframes spin {
+                            0% { -o-transform: rotate(0deg);}
+                            100% { -o-transform: rotate(360deg);}
+                        }
+                        @-ms-keyframes spin {
+                            0% { -ms-transform: rotate(0deg);}
+                            100% { -ms-transform: rotate(360deg);}
+                        }
+                    }
                 }
             }
 
@@ -1151,13 +1195,8 @@ body.login {
             }
             .new-sprint{
                 float: right;
-                background: #669933;
-                color: #fff;
-                padding: 7px 15px 7px 15px;
-                border: none;
-                box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-                cursor: pointer;
-                transition: all 0.3s ease-out;
+                padding: 5px 15px;
+                background: @green;
                 &:before {
                     padding-right: 6px;
                     position: relative;
@@ -1261,7 +1300,9 @@ body.login {
                         }
                         .edit {
                             margin-left: 5px;
-                            font-size: 15px;
+                            font-size: 14px;
+                            position: relative;
+                            top: 2px;
                         }
                     }
                     .stats {
