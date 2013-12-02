@@ -4,8 +4,8 @@
         <a class="button new-button" gm-modal="#new-issue-modal"
            ng-click="openCreateIssueForm()" data-icon="a" i18next="issues.new-issue">New issue</a>
         <a class="button refresh-button" ng-click="refreshIssues()" data-icon="x" i18next="issues.refresh">Refresh</a>
-        <a class="button graphs-button" data-icon="k" ng-click="toggleShowGraphs()" ng-class="{'active': showGraphs}" i18next="issues.graphs">Graphs</a>
-        <a class="button tags-button" data-icon="f" ng-click="showTags = !showTags" ng-class="{'active': showTags}" i18next="issues.tags-button">Tags</a>
+        <a class="button graphs-button" data-icon="k" ng-click="toggleShowGraphs()" i18next="issues.graphs">Graphs</a>
+        <a class="button tags-button" data-icon="f" ng-click="showTags = !showTags" i18next="issues.tags-button">Tags</a>
     </div>
     <div class="graph-box" ng-show="showGraphs">
         <div class="graph-container">
@@ -170,7 +170,9 @@
                         </a>
                     </div>
                     <div class="issue-title">
-                        <span class="title">{{ issue.subject }}</span>
+                        <a class="title" href="{{ urls.issuesUrl(projectId, issue.id) }}">
+                            {{ issue.subject }}
+                        </a>
                         <div class="tags" ng-show="showTags">
                             <span ng-repeat="tag in issue.tags" class="label" gm-colorize-tag>{{ tag }}</span>
                         </div>
@@ -220,9 +222,6 @@
                                 data-auto-hide="true"
                                 data-placement="left">
                             <span class="help-box" i18next="issues.preview">Preview</span>
-                        </a>
-                        <a data-icon="f" class="btn-small-view" href="{{ urls.issuesUrl(projectId, issue.id) }}">
-                            <span class="help-box" i18next="issues.view">View</span>
                         </a>
                         <a data-icon="j" class="btn-small-edit" ng-click="openEditIssueForm(issue)">
                             <span class="help-box" i18next="issues.edit">Edit</span>
