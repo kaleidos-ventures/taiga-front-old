@@ -14,6 +14,7 @@
 
 
 TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm, rs, $data, $gmFlash, $i18next) ->
+    $rootScope.pageTitle = $i18next.t("common.tasks")
     $rootScope.pageSection = 'tasks'
     $rootScope.pageBreadcrumb = [
         ["", ""],
@@ -44,8 +45,9 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
             $scope.form = _.extend({}, $scope.task._attrs)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[1] = [$i18next.t('common.taskboard'), $rootScope.urls.taskboardUrl($rootScope.projectId, $scope.task.milestone)]
+            breadcrumb[1] = [$i18next.t('common.tasks'), $rootScope.urls.taskboardUrl($rootScope.projectId, $scope.task.milestone)]
             breadcrumb[2] = ["##{task.ref}", null]
+            $rootScope.pageTitle = "#{$i18next.t("common.tasks")} - ##{task.ref}"
 
             $rootScope.pageBreadcrumb = breadcrumb
 

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 ProjectListController = ($scope, $rootScope, rs, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('common.dashboard')
     $rootScope.pageSection = 'projects'
     $rootScope.pageBreadcrumb = [
         ["Greenmine", $rootScope.urls.projectsUrl()],
@@ -26,6 +27,7 @@ ProjectListController = ($scope, $rootScope, rs, $i18next) ->
 
 ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model,
                           $confirm, $location, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('common.admin-panel')
     $rootScope.pageSection = 'admin'
     $rootScope.pageBreadcrumb = [
         ["", ""],

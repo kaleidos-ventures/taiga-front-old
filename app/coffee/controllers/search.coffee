@@ -13,6 +13,7 @@
 # limitations under the License.
 
 SearchController = ($scope, $rootScope, $routeParams, $data, rs, $i18next) ->
+    $rootScope.pageTitle = $i18next.t("common.search")
     $rootScope.pageSection = 'search'
     $rootScope.projectId = parseInt($routeParams.pid, 10)
     $rootScope.pageBreadcrumb = [

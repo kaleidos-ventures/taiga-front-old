@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-LoginController = ($scope, $rootScope, $location, $routeParams, rs, $gmAuth) ->
+LoginController = ($scope, $rootScope, $location, $routeParams, rs, $gmAuth, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('login.login-title')
     $rootScope.pageSection = 'login'
 
     $scope.form = {}
@@ -45,7 +46,8 @@ RegisterController = ($scope, $rootScope) ->
     # TODO
 
 
-RecoveryController = ($scope, $rootScope, $location, rs) ->
+RecoveryController = ($scope, $rootScope, $location, rs, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('login.password-recovery-title')
     $rootScope.pageSection = 'login'
 
     $scope.formData = {}
@@ -69,7 +71,8 @@ RecoveryController = ($scope, $rootScope, $location, rs) ->
             $scope.errorMessage = data.detail
 
 
-ChangePasswordController = ($scope, $rootScope, $location, $routeParams, rs) ->
+ChangePasswordController = ($scope, $rootScope, $location, $routeParams, rs, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('login.password-change-title')
     $rootScope.pageSection = 'login'
 
     $scope.error = false
@@ -100,6 +103,7 @@ ChangePasswordController = ($scope, $rootScope, $location, $routeParams, rs) ->
 
 
 ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('profile.profile')
     $rootScope.projectId = null
     $rootScope.pageSection = 'profile'
     $rootScope.pageBreadcrumb = [
@@ -131,8 +135,8 @@ ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next
 
 
 module = angular.module("greenmine.controllers.auth", [])
-module.controller("LoginController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$gmAuth', LoginController])
+module.controller("LoginController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$gmAuth', '$i18next', LoginController])
 module.controller("RegisterController", ['$scope', '$rootScope', RegisterController])
-module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', RecoveryController])
-module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource',  ChangePasswordController])
+module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', '$i18next', RecoveryController])
+module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$i18next', ChangePasswordController])
 module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', 'config', '$i18next', ProfileController])

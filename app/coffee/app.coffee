@@ -175,8 +175,9 @@ modules = [
 
 
 init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config) ->
-    # Constants
+    $rootScope.pageTitle = ""
     $rootScope.auth = $gmAuth.getUser()
+    # Constants
     $rootScope.constants = {}
 
     $rootScope.constants.usStatuses = {}

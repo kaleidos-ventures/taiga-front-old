@@ -13,6 +13,7 @@
 # limitations under the License.
 
 WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
+    $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug}"
     $rootScope.pageSection = 'wiki'
     $rootScope.projectId = parseInt($routeParams.pid, 10)
     $rootScope.slug = $routeParams.slug
@@ -116,6 +117,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
 
 
 WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
+    $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug} - #{$i18next.t("wiki-historical.historical")}"
     $rootScope.pageSection = 'wiki'
     $rootScope.projectId = parseInt($routeParams.pid, 10)
     $rootScope.slug = $routeParams.slug

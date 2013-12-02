@@ -14,6 +14,7 @@
 
 
 UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data, $confirm, $gmFlash, $i18next) ->
+    $rootScope.pageTitle = $i18next.t("user-story.user-story")
     $rootScope.pageSection = 'user-stories'
     $rootScope.pageBreadcrumb = [
         ["", ""],
@@ -53,6 +54,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             else
                 breadcrumb[1] = [$i18next.t('common.taskboard'), $rootScope.urls.taskboardUrl(projectId, $scope.userStory.milestone)]
             breadcrumb[2] = [$i18next.t("user-story.user-story") + " ##{userStory.ref}", null]
+            $rootScope.pageTitle = "#{$i18next.t("user-story.user-story")} - ##{userStory.ref}"
             $rootScope.pageBreadcrumb = breadcrumb
 
             $scope.totalPoints = calculateTotalPoints(userStory)

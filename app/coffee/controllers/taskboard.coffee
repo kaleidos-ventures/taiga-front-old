@@ -14,6 +14,7 @@
 
 TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $i18next) ->
     # Global Scope Variables
+    $rootScope.pageTitle = $i18next.t('common.taskboard')
     $rootScope.pageSection = 'dashboard'
     $rootScope.pageBreadcrumb = [
         ["", ""],

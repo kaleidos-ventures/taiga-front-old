@@ -14,6 +14,7 @@
 
 IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $gmStorage, $modal, $i18next) ->
     # Global Scope Variables
+    $rootScope.pageTitle = $i18next.t('common.issues')
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = [
         ["", ""],
@@ -259,6 +260,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
 IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data,
                         $confirm, $gmFlash, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('common.issues')
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = [
         ["", ""],
@@ -283,6 +285,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
             breadcrumb[1] = [$i18next.t('common.issues'), $rootScope.urls.issuesUrl(projectId)]
             breadcrumb[2] = ["##{issue.ref}", null]
+            $rootScope.pageTitle = "#{$i18next.t('common.issues')} - ##{issue.ref}"
 
             $rootScope.pageBreadcrumb = breadcrumb
 

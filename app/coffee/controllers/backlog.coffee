@@ -15,6 +15,7 @@
 
 BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next) ->
     # Global Scope Variables
+    $rootScope.pageTitle = $i18next.t("common.backlog")
     $rootScope.pageSection = 'backlog'
     $rootScope.pageBreadcrumb = [
         ["", ""]
@@ -32,7 +33,7 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next) ->
                 $scope.percentageClosedPoints = 0
 
             $scope.percentageBarCompleted = $scope.percentageClosedPoints
-            
+
             if $scope.percentageBarCompleted > 100
                 $scope.percentageBarCompleted = 99
 

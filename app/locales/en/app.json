@@ -18,11 +18,15 @@
         "token": "Token",
         "new-password": "New password",
         "change": "Change",
-        "password-change-success": "Password changed successful."
+        "password-change-success": "Password changed successful.",
+        "login-title": "Login",
+        "password-recovery-title": "Password recovery",
+        "password-change-title": "Password change"
     },
     "common": {
         "dashboard": "Dashboard",
         "taskboard": "Taskboard",
+        "tasks": "Tasks",
         "no-projects": "You have no projects",
         "logout": "Logout",
         "admin": "Admin",
