@@ -26,13 +26,15 @@
                         <div class="help" i18next="backlog.closed-points">closed points</div>
                     </div>
                 </div>
+                <!-- 
                 <a class="button new-us-story" data-icon="m"
                     ng-click="openCreateUserStoryForm()" i18next="backlog.new-user-story">
                     New user story
                 </a>
                 <a class="button show-hide-graphics" data-icon="k" ng-show="milestones.length > 0" gm-ninja-graph>
-                    <!-- Show graphics -->
                 </a>
+                -->
+                <a class="new-us-story" data-icon="C" i18next="backlog.new-user-story">New user story</a>
             </div>
             <div class="graph-box">
                 <div id="graphs">
@@ -48,8 +50,10 @@
                        ng-click="filtersOpened=!filtersOpened" i18next="backlog.filters">
                        Filters
                    </a>
+                   <!-- TO REMOVE ASAP
                    <a class="refresh-button" ng-click="refreshBacklog()" data-icon="x" i18next="backlog.refresh">Refresh</a>
                    <a class="us-bulk-button" ng-click="openBulkUserStoriesForm()" data-icon="f" i18next="backlog.bulk-user-stories">Bulk user stories</a>
+                    -->
                 </div>
                 <div class="filters-visual-box" ng-show="filtersOpened">
                     <div class="tags-list-sbox">

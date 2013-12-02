@@ -1,11 +1,11 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container issues-content">
     <div class="new-issue">
-        <a class="new-button" gm-modal="#new-issue-modal"
+        <a class="button new-button" gm-modal="#new-issue-modal"
            ng-click="openCreateIssueForm()" data-icon="a" i18next="issues.new-issue">New issue</a>
-        <a class="refresh-button" ng-click="refreshIssues()" data-icon="x" i18next="issues.refresh">Refresh</a>
-        <a class="graphs-button" data-icon="k" ng-click="toggleShowGraphs()" i18next="issues.graphs">Graphs</a>
-        <a class="tags-button" data-icon="f" ng-click="showTags = !showTags" i18next="issues.tags-button">Tags</a>
+        <a class="button refresh-button" ng-click="refreshIssues()" data-icon="x" i18next="issues.refresh">Refresh</a>
+        <a class="button graphs-button" data-icon="k" ng-click="toggleShowGraphs()" i18next="issues.graphs">Graphs</a>
+        <a class="button tags-button" data-icon="f" ng-click="showTags = !showTags" i18next="issues.tags-button">Tags</a>
     </div>
     <div class="graph-box" ng-show="showGraphs">
         <div class="graph-container">

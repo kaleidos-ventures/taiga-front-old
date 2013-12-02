@@ -11,18 +11,16 @@
     padding: 5px 10px 6px;
     border: none;
     text-decoration: none;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
     -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
     -moz-box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
     box-shadow:  0 1px 1px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
     border-bottom: 1px solid rgba(0,0,0,0.25);
     position: relative;
     cursor: pointer;
-    font-family: @ColabThi;
+    font-family: @LeagueGothicRegular;
     padding: 10px 30px;
     color: #ffffff;
-    font-size: 1em;
+    font-size: 18px;
     &:hover{
         background: darken(#999, 30%);
         color: darken(#fff, 30%);
@@ -856,52 +854,21 @@ body.login {
                     }
                 }
             }
-            .button{
-                text-shadow: -1px -1px #666, 1px 1px #888;
-                &.new-us-story{
-                    float: right;
-                    padding: 6px 15px 6px 15px;
-                    border-radius: 4px;
-                    border: none;
-                    background-color: #669933;
-                    -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
-                    -moz-box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
-                    box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
-                    cursor: pointer;
-                    &:hover, &.active{
-                        background-color: #111;
-                    }
-                    &:before {
-                        position: relative;
-                        top: 4px;
-                        font-size: 18px;
-                        padding-right: 5px;
-                    }
+            .new-us-story {
+                color: @white;
+                font-family: @LeagueGothicRegular;
+                font-size: 18px;
+                float: right;
+                padding: 4px 10px;
+                background: @green;
+                &:before {
+                    position: relative;
+                    top: 2px;
+                    margin-right: 4px;
                 }
-                &.show-hide-graphics {
-                    float: right;
-                    color: white;
-                    border: none;
-                    margin-right: 10px;
-                    padding: 3px 10px;
-                    border-radius: 4px;
-                    background: #669933;
-                    -webkit-box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
-                    -moz-box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
-                    box-shadow:  0 1px 1px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.5);
-                    cursor: pointer;
-                    &:hover, &.active{
-                        background-color: #111;
-                    }
-                    &:before {
-                        position: relative;
-                        top: 2px;
-                        font-size: 25px;
-                    }
-                }
-                &:hover, &.active{
+                &:hover {
+                    background: @black;
                     transition: all .3s ease-in;
-                    text-shadow: -1px -1px #333, 1px 1px #333;
                 }
             }
         }
@@ -909,37 +876,6 @@ body.login {
             margin-top: 30px;
         }
     }
-    /*.user-story-form-sbox {
-        background-color: #f2f2f2;
-        border: 1px solid #666;
-        padding: 10px;
-        textarea {
-            height: 120px;
-        }
-        .select2-container-multi{
-            &.select2-container-active{
-                .select2-choices{
-                    border: 1px solid rgba(102,154,51,.6);
-                }
-            }
-        }
-        .select2-container{
-            width: 97%;
-            .select2-choices{
-                .select2-search-field{
-                    .select2-input{
-                        width: 100%;
-                        padding: 8px 6px;
-                        font-family: @ColabThi;
-                        color: #999;
-                    }
-                }
-            }
-        }
-        .submit-button-container{
-            margin-right: 40px;
-        }
-    }*/
     .us-container {
         margin-top: 10px;
         .popover {
@@ -2072,21 +2008,19 @@ body.login {
         display: block;
         overflow: hidden;
         margin: 5px 0;
-        a{
-            float: right;
-            margin-right: 2%;
+        .button {
             float: right;
             color: white;
-            padding: 7px 15px;
-            border-radius: 4px;
-            border: none;
             background: #669933;
             box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-            cursor: pointer;
-            position: relative;
+            &:before {
+                margin-right: 6px;
+            }
+            &:hover{
+                background: #333333;
+            }
             &.new-button {
                 &:hover{
-                    background: #333333;
                     transition: all 0.3s ease-out;
                     &:before {
                         position: relative;
@@ -2097,12 +2031,11 @@ body.login {
                 &:before {
                     position: relative;
                     top: 2px;
-                    padding-right: 6px;
                     transition: all 0.3s ease-out;
                 }
             }
             &.refresh-button {
-                padding-left: 30px;
+                padding-left: 50px;
                 &:hover{
                     background: #333333;
                     transition: all 0.3s linear;
@@ -2116,8 +2049,8 @@ body.login {
                 }
                 &:before {
                     position: absolute;
-                    top: 8px;
-                    left: 8px;
+                    top: 11px;
+                    left: 25px;
                     -webkit-transform: rotate(0deg);
                     -moz-transform: rotate(0deg);
                     -ms-transform: rotate(0deg);
@@ -2129,7 +2062,6 @@ body.login {
             &.tags-button,
             &.graphs-button {
                 &:hover{
-                    background: #333333;
                     transition: all 0.3s linear;
                 }
                 &:before {
@@ -2140,35 +2072,6 @@ body.login {
                 }
             }
         }
-        /*.show-graph{
-            float: right;
-            border: none;
-            input{
-                visibility: hidden;
-                display: none;
-            }
-            label{
-                color: white;
-                padding: 7px 15px;
-                border-radius: 4px;
-                border: none;
-                background: #669933;
-                cursor: pointer;
-                &:hover{
-                    background: #333333;
-                    -webkit-transition: all 0.3s ease-out;
-                    -moz-transition: all 0.3s ease-out;
-                    -o-transition: all 0.3s ease-out;
-                    transition: all 0.3s ease-out;
-                }
-                &:before {
-                    position: relative;
-                    top: 2px;
-                    padding-right: 6px;
-                    font-size: 20px;
-                }
-            }
-        }*/
     }
     .graph-box{
         overflow: hidden;
