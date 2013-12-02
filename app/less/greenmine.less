@@ -1448,7 +1448,6 @@ body.login {
 
 .filters-container {
     margin-top: 10px;
-
     .tags-list-sbox {
         overflow: hidden;
         .tag {
@@ -1460,10 +1459,9 @@ body.login {
             margin-right: 5px;
             padding: 5px;
             font-family: @ColabThi;
-            font-size: 1em;
+            font-size: 16px;
             color: #FFF;
             opacity: .5;
-            border-radius: 4px;
             &.selected {
                 opacity: 1;
                 box-shadow: 1px 1px 1px rgba(0,0,0,.4);
@@ -1530,8 +1528,6 @@ body.login {
  * BACKLOG
  * ================================ */
 
-
-
 .tasks-view {
     margin: auto;
     width: 98.97%;
@@ -1571,7 +1567,6 @@ body.login {
             font-family: 'ColabThi';
             font-size: 1em;
             color: #FFF;
-            border-radius: 4px;
             margin-right: 5px;
         }
     }
@@ -2117,30 +2112,7 @@ body.login {
     }
     .filters-container {
         .tags-list-sbox {
-            .tag {
-                position: relative;
-                cursor: pointer;
-                float: left;
-                width: 160px;
-                margin-bottom: 5px;
-                margin-right: 5px;
-                padding: 4px;
-                font-family: @ColabThi;
-                font-size: 1em;
-                color: @white;
-                opacity: 0.4;
-                border-radius: 4px;
-                background-color: #666;
-                &.selected {
-                    opacity: 1;
-                    box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-                    font-family: @ColabReg;
-                    -webkit-transition: all 0.3s ease-out;
-                    -moz-transition: all 0.3s ease-out;
-                    -o-transition: all 0.3s ease-out;
-                    transition: all 0.3s ease-out;
-                }
-
+        
                 // Status color
                 &.status-new{
                 background-color: #8C2318;
