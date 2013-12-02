@@ -19,7 +19,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         token = $gmStorage.get('token')
 
         data["Authorization"] = "Bearer #{token}" if token
-        data["X-DISABLE-PAGINATION"] = "true" if diablePagination
+        data["X-Disable-Pagination"] = "true" if diablePagination
 
         return data
 
@@ -123,6 +123,22 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         return defered.promise
 
     # Resource Methods
+    service.register = (formdata) ->
+        defered = $q.defer()
+
+        onSuccess = (data, status) ->
+            $gmStorage.set("token", data["auth_token"])
+            user = $model.make_model("users", data)
+            defered.resolve(user)
+
+        onError = (data, status) ->
+            defered.reject(data)
+
+        promise = $http({method:'POST', url: $gmUrls.api('auth-register'), data: JSON.stringify(formdata)})
+        promise.success(onSuccess)
+        promise.error(onError)
+
+        return defered.promise
 
     # Login request
     service.login = (username, password) ->
@@ -602,6 +618,24 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         xhr.open("POST", $gmUrls.api("wiki/attachments"))
         xhr.setRequestHeader("Authorization", "Bearer #{$gmStorage.get('token')}")
         xhr.send(formData)
+        return defered.promise
+
+    service.getSiteInfo = () ->
+        httpParams = {
+            method: "HEAD"
+            headers: headers()
+            url: $gmUrls.api("sites")
+        }
+
+        defered = $q.defer()
+
+        promise = $http(httpParams)
+        promise.success (data, status, headersFn) ->
+            defered.resolve({"headers": headersFn(), "data": data})
+
+        promise.error ->
+            defered.reject()
+
         return defered.promise
 
     return service

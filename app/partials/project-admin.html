@@ -131,39 +131,59 @@
         </div>
     </div>
     <div class="tab-container" ng-show="isActive('memberships')">
-        <div class="project-members" ng-controller="MembershipFormController">
-            <h3 data-icon="t" i18next="admin.project-members">Project members</h3>
-            <a href="" class="add-member" data-icon="A" title="Add member"
-               ng-click="toggleForm()" i18next="title:admin.add-member,admin.add-member">Add member</a>
-            <div class="add-member-form" ng-show="formOpened">
-                <h4 i18next="admin.add-new-member">Add new member</h4>
-                <form gm-checksley-form="submit()">
-                    <fieldset>
-                        <label class="control-label" for="role" i18next="admin.role">Role</label>
-                        <select id="role" name="role" ng-model="membership.role" data-required="true"
-                                ng-options="r.id as r.name for r in constants.rolesList|orderBy:'order'">
-                        </select>
-                    </fieldset>
-                    <fieldset class="project-name">
-                        <label class="control-label" for="user" i18next="admin.user">User</label>
-                        <select id="user" name="user" ng-model="membership.user" data-required="true"
-                                ng-options="u.id as u.full_name for u in noMemberUsersList|orderBy:'full_name'">
-                        </select>
-                    </fieldset>
-                    <fieldset>
-                        <button type="submit" class="button button-edit"  gm-checksley-submit-button i18next="admin.add-member">Add member</button>
-                        <button type="submit" class="button button-cancel" ng-click="closeForm()" i18next="admin.cancel">Cancel</button>
-                    </fieldset>
-                </form>
+        <div class="project-members">
+            <div class="project-members-options">
+                <a href="" class="add-member" data-icon="A" title="Add member"
+                    ng-click="toggleForm()" i18next="title:admin.add-member,admin.add-member">Add member</a>
             </div>
-            <ul class="members-list" ng-controller="MembershipsController">
-                <li class="member" ng-repeat="mbr in project.memberships">
-                    <a href="" data-icon="h"  title="Delete Member" ng-click="deleteMember(mbr)" i18next="title:admin.delete-member"></a>
-                    <span>[<a href="" gm-popover="updateMemberRole(mbr, selectedId)" data-auto-hide="true"
-                              data-tmpl="#role-popover">{{ mbr.role_name }}</a>]</span>
-                    <span class="user" gm-colorize-user="constants.users[mbr.user]">{{ mbr.full_name }}</span>
-                </li>
-            </ul>
+            <div class="invitation-form">
+                <div class="add-member-form" ng-show="formOpened">
+                    <h4 i18next="admin.add-new-member">Add new member</h4>
+                    <form gm-checksley-form="submitMembership()">
+                        <fieldset>
+                            <label class="control-label" for="role" i18next="admin.role">Role</label>
+                            <select id="role" name="role" ng-model="membership.role" data-required="true"
+                                    ng-options="r.id as r.name for r in constants.rolesList|orderBy:'order'">
+                            </select>
+                        </fieldset>
+                        <fieldset class="project-name">
+                            <label class="control-label" for="email" i18next="admin.email">Email address</label>
+                            <input type="text" id="email" ng-model="membership.email"
+                                data-required="true" />
+                        </fieldset>
+                        <fieldset>
+                            <button type="submit" class="button button-edit"  gm-checksley-submit-button i18next="admin.add-member">Add member</button>
+                            <button type="submit" class="button button-cancel" ng-click="closeForm()" i18next="admin.cancel">Cancel</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="project-members-list" >
+                <table class="membership-list">
+                    <thead>
+                        <tr>
+                            <th class="user">Full name</td>
+                            <th class="email">Email</td>
+                            <th class="role">Role</th>
+                            <th class="status">Status</td>
+                            <th class="options"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="mbr in project.memberships">
+                            <td class="user"><span class="user" gm-colorize-user="constants.users[mbr.user]">{{ memberName(mbr) }}</span></td>
+                            <td class="email"><span class="email">{{ memberEmail(mbr) }}</span></td>
+                            <td class="role"><span class="role">[<a href="" gm-popover="updateMemberRole(mbr, selectedId)" data-auto-hide="true"
+                                        data-tmpl="#role-popover">{{ mbr.role_name }}</a>]</span></td>
+
+                            <td class="status"><span class="status">{{ memberStatus(mbr) }}</span></td>
+                            <td class="options">
+                                <a href="" data-icon="h"  title="Delete Member" ng-click="deleteMember(mbr)" i18next="title:admin.delete-member"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <!-- <a class="button button-delete" ng-click="deleteProject()">Delete project</a>-->

@@ -1,12 +1,12 @@
 <div id="login">
     <div class="center-box">
         <div class="logo-box">
-            <a href="">
-                <img src="img/logo.png"></img>
+            <a href="#/login">
+                <img src="/img/logo.png"></img>
             </a>
         </div>
         <div class="form-container">
-            <form id="register-form" method="post" action="" ui-parsley="submit()" >
+            <form id="register-form" method="post" action="" gm-checksley-form="submit()" >
                 <fieldset>
                     <div class="form-field">
                         <label i18next="register.username">Username</label>
@@ -33,10 +33,18 @@
                         <label i18next="register.password-again">Password again</label>
                         <input type="password" data-required="true" data-minlength="8" data-equalto="#password1" />
                     </div>
-                    <div class="form-field">
-                        <input class="btn01" type="submit" value="Register" i18next="value:register.register" />
-                    </div>
                 </fieldset>
+                <!-- <a class="forgot-pass" href="#/recovery"></a>-->
+
+                <fieldset class="form-field clearfix">
+                    <input class="btn01" type="submit" value="Register" i18next="value:register.register" gm-checksley-submit-button />
+                </fieldset>
+
+                <!-- if success {.loading } else {.error} -->
+                <div class="login-message">
+                    <p class="loading" ng-show="!error && loading"><span class="loading-ico"></span>Our Oompa Loompas are registring you, please wait...</p>
+                    <p class="error" ng-show="error">Tu nombre de usuario o contraseña son incorrectos</p>
+                </div>
             </form>
         </div>
     </div>

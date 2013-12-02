@@ -24,14 +24,15 @@ gm.format = (fmt, obj, named) ->
         return fmt.replace /%s/g, (match) -> String(obj.shift())
 
 configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider, $gmUrlsProvider) ->
+    $routeProvider.when('/', {templateUrl: 'partials/project-list.html', controller: "ProjectListController"})
     $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: "LoginController"})
-    $routeProvider.when('/register', {templateUrl: 'partials/register.html', controller: "RegisterController"})
     $routeProvider.when('/recovery', {templateUrl: 'partials/recovery.html', controller: "RecoveryController"})
     $routeProvider.when('/change-password', {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController"})
     $routeProvider.when('/change-password/:token', {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController"})
     $routeProvider.when('/profile', {templateUrl: 'partials/profile.html', controller: "ProfileController"})
-
-    $routeProvider.when('/', {templateUrl: 'partials/project-list.html', controller: "ProjectListController"})
+    $routeProvider.when("/register", {controller: "PublicRegisterController", templateUrl: "partials/register.html"})
+    $routeProvider.when("/invitation/:token", {
+        controller: "InvitationRegisterController", templateUrl: "partials/invitation-register.html"})
 
     $routeProvider.when('/project/:pid/backlog',
             {templateUrl: 'partials/backlog.html', controller: "BacklogController"})
@@ -74,14 +75,19 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 
     $routeProvider.otherwise({redirectTo: '/login'})
 
-    defaultHeaders =
-        "Content-Type": "application/json",
+    defaultHeaders = {
+        "Content-Type": "application/json"
         "Accept-Language": "en"
+        "X-Host": window.location.hostname
+    }
 
     $httpProvider.defaults.headers.delete = defaultHeaders
     $httpProvider.defaults.headers.patch = defaultHeaders
     $httpProvider.defaults.headers.post = defaultHeaders
     $httpProvider.defaults.headers.put = defaultHeaders
+    $httpProvider.defaults.headers.get = {
+        "X-Host": window.location.hostname
+    }
 
     authHttpIntercept = ($q, $location) ->
         return (promise) ->
@@ -95,6 +101,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 
     apiUrls = {
         "auth": "/api/v1/auth"
+        "auth-register": "/api/v1/auth/register"
         "roles": "/api/v1/roles"
         "projects": "/api/v1/projects"
         "memberships": "/api/v1/memberships"
@@ -124,6 +131,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         "choices/priorities": "/api/v1/priorities"
         "choices/severities": "/api/v1/severities"
         "search": "/api/v1/search"
+        "sites": "/api/v1/sites"
 
         "users": "/api/v1/users"
         "users-password-recovery": "/api/v1/users/password_recovery"
@@ -174,10 +182,9 @@ modules = [
 ]
 
 
-init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config) ->
+init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $data, $log) ->
     $rootScope.pageTitle = ""
     $rootScope.auth = $gmAuth.getUser()
-    # Constants
     $rootScope.constants = {}
 
     $rootScope.constants.usStatuses = {}
@@ -202,6 +209,10 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config) -
 
     # Configure on init a default host and scheme for api urls.
     $gmUrls.setHost("api", config.host, config.scheme)
+
+    $rootScope.allowPublicRegister = false
+    $data.loadSiteInfo($rootScope).then (sitedata) ->
+        $log.info "Site data:", sitedata
 
     $rootScope.baseUrls =
         projects: "/"
@@ -283,7 +294,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config) -
 
 angular.module('greenmine', modules)
        .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', '$gmUrlsProvider', configCallback])
-       .run(['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls', '$i18next', 'config', init])
+       .run(['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls', '$i18next', 'config', '$data', '$log', init])
 
 angular.module('greenmine.config', []).value('config', {
     host: "localhost:8000"

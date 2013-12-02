@@ -107,7 +107,7 @@ input[type="color"],
     z-index: 999;
     p{
         margin:0;
-        padding: 15px 15px 15px 50px;
+        padding: 17px 17px 17px 50px;
         font-family: @LeagueGothicRegular;
         font-size: 1.5em;
         color: #FFF;
@@ -202,6 +202,10 @@ body.login {
             padding: 20px;
             background: rgba(255,255,255,0.9);
             box-shadow: 0px 2px 25px 1px #666;
+
+            fieldset.register-select {
+                label { display: inline; }
+            }
 
             .login-message{
                 margin-top: 10px;
@@ -2361,7 +2365,7 @@ body.login {
         .issue-created-date,
         .issue-modified-date {
             padding: 10px;
-            width: 135px;
+            width: 150px;
         }
 
         .issue-priority {
@@ -3087,84 +3091,89 @@ body.login {
 form {
     margin: 0;
     padding: 0;
-    fieldset{
-        border: none;
-        margin: 0;
-        padding: 0;
-        margin-bottom: 10px;
-        label{
-            font-family: @ColabReg;
-            color: #666;
-            margin-bottom: 2px;
-            display: block;
-            font-size: small;
-            font-size: 1em;
-        }
-        input[type="color"],
-        input[type="email"],
-        input[type="password"],
-        input[type="search"],
-        input[type="tel"],
-        input[type="text"],
-        input[type="url"], {
-            width: 96%;
-            padding: 8px 6px;
-            font-family: @ColabThi;
-            color: #999;
-            border: 1px solid #aaa;
-            //box-shadow:inset 3px 3px 6px -1px rgba(0, 0, 0, 0.2);
+}
 
-            &:focus{
-                //box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
-                border-color: rgba(102,154,51,.6);
-                outline: 0;
-                color: #000;
-            }
-        }
-        input[type="number"]{}
-        input[type="date"] {
-            width: 96%;
-            padding: 8px 6px;
-            font-family: @ColabThi;
-            color: #999;
-            box-shadow:inset 3px 3px 6px -1px rgba(0, 0, 0, 0.2);
-            &:focus{
-                box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
-                border-color: rgba(102,154,51,.6);
-                outline: 0;
-                color: #000;
-            }
-        }
-        input[type="time"] {}
-        input[type="datetime"] {}
-        input[type="datetime-local"] {}
-        input[type="week"] {}
-        input[type="month"] {}
-        select{
-            width: 97%;
-            padding: 8px 6px;
-            font-family: @ColabThi;
+fieldset{
+    border: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 10px;
+    label{
+        font-family: @ColabReg;
+        color: #666;
+        margin-bottom: 2px;
+        display: block;
+        font-size: small;
+        font-size: 1em;
+    }
+    input[type="color"],
+    input[type="email"],
+    input[type="password"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="text"],
+    input[type="url"], {
+        width: 96%;
+        padding: 8px 6px;
+        font-family: @ColabThi;
+        color: #999;
+        border: 1px solid #aaa;
+        //box-shadow:inset 3px 3px 6px -1px rgba(0, 0, 0, 0.2);
+
+        &:focus{
+            //box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
+            border-color: rgba(102,154,51,.6);
+            outline: 0;
             color: #000;
-            background: #fff;
-            border: 1px solid #cfcfcf;
         }
-        textarea{
-            width: 96%;
-            padding: 8px 6px;
-            font-family: @ColabThi;
-            color: #ccc;
-            border: none;
-            border: 1px solid rgba(0,0,0,.2);
-            &:focus{
-                box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
-                border-color: rgba(102,154,51,.6);
-                outline: 0;
-                color: #000;
-            }
+    }
+    input[type="number"]{}
+    input[type="date"] {
+        width: 96%;
+        padding: 8px 6px;
+        font-family: @ColabThi;
+        color: #999;
+        box-shadow:inset 3px 3px 6px -1px rgba(0, 0, 0, 0.2);
+        &:focus{
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
+            border-color: rgba(102,154,51,.6);
+            outline: 0;
+            color: #000;
         }
-        input, textarea{
-            box-shadow:inset 0px 2px 9px -1px rgba(0, 0, 0, 0.2)
+    }
+    input[type="time"] {}
+    input[type="datetime"] {}
+    input[type="datetime-local"] {}
+    input[type="week"] {}
+    input[type="month"] {}
+    select{
+        width: 97%;
+        padding: 8px 6px;
+        font-family: @ColabThi;
+        color: #000;
+        background: #fff;
+        border: 1px solid #cfcfcf;
+    }
+    textarea{
+        width: 96%;
+        padding: 8px 6px;
+        font-family: @ColabThi;
+        color: #ccc;
+        border: none;
+        border: 1px solid rgba(0,0,0,.2);
+        &:focus{
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.2), 0 0 8px rgba(102,154,51,.6);
+            border-color: rgba(102,154,51,.6);
+            outline: 0;
+            color: #000;
         }
+    }
+    input, textarea{
+        box-shadow:inset 0px 2px 9px -1px rgba(0, 0, 0, 0.2)
+    }
+    input[type="radio"],
+    input[type="checkbox"] {
+        box-shadow: none;
     }
 }
 
@@ -3240,136 +3249,187 @@ form {
         }
     }
 
-    h3 {
-        margin-bottom: 8px;
-    }
+    .tab-container {
+        position: relative;
 
-    .sprint-list-container {
-        width: 60%;
-        border: 1px solid #eee;
-        margin-bottom: 20px;
-        h3 {
-            padding: 8px;
-            background: #669900;
-            color: #FFF;
-            margin: 0;
-            &:before {
-                font-size: 15px;
-                margin-right: 5px;
+        .sprint-list-container {
+            width: 60%;
+            border: 1px solid #eee;
+            margin-bottom: 20px;
+            h3 {
+                padding: 8px;
+                background: #669900;
+                color: #FFF;
+                margin: 0;
+                &:before {
+                    font-size: 15px;
+                    margin-right: 5px;
+                }
+            }
+
+            .sprint-list {
+                list-style: none;
+                margin: 0;
+                padding: 8px;
+                li {
+                    border-bottom: 1px solid #eee;
+                    padding: 8px 0;
+                    &:last-child {
+                        border: none;
+                    }
+                    a {
+                        position: relative;
+                        margin-right: 3px;
+                        display: inline-block;
+                        padding: 1px;
+                        border-radius: 50%;
+                        padding: 2px;
+                        color: #cc0000;
+                        &:before {
+                            top: 1px;
+                            position: relative;
+                        }
+                        &:hover {
+                            opacity: .6;
+                        }
+                    }
+                    span {
+                        font-weight: bold;
+                        a {
+                            color: #000;
+                            margin-right: 0px;
+                        }
+                        .popover {
+                            font-size: 14px;
+                            li {
+                                padding: 0;
+                                border-bottom: 0;
+                                a {
+                                    font-weight: normal;
+                                    color: #333;
+                                }
+                            }
+                        }
+                    }
+                    .user{
+                       font-weight: normal;
+                    }
+                }
             }
         }
-    }
-    .sprint-list,
-    .members-list {
-        list-style: none;
-        margin: 0;
-        padding: 8px;
-        li {
-            border-bottom: 1px solid #eee;
-            padding: 8px 0;
-            &:last-child {
-                border: none;
-            }
-            a {
-                position: relative;
-                margin-right: 3px;
-                display: inline-block;
-                padding: 1px;
-                border-radius: 50%;
-                padding: 2px;
-                color: #cc0000;
+
+        .update-form {
+            width: 60%;
+            border: 1px solid #eee;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            h3 {
+                padding: 8px;
+                background: @green;
+                color: #FFF;
+                margin: 0;
                 &:before {
-                    top: 1px;
-                    position: relative;
-                }
-                &:hover {
-                    opacity: .6;
+                    font-size: 15px;
+                    margin-right: 5px;
                 }
             }
-            span {
-                font-weight: bold;
-                a {
-                    color: #000;
-                    margin-right: 0px;
+            form{
+                padding: 8px;
+            }
+            .project-total-milestones {
+                margin-right: 15px;
+            }
+            .project-total-milestones,
+            .project-total-story-points {
+                width: 48%;
+                display: inline-block;
+            }
+            .project-description {
+                textarea {
+                    height: 200px;
+                    min-width: 96%;
+                    max-width: 96%;
+                    width: 96%;
                 }
-                .popover {
-                    font-size: 14px;
-                    li {
-                        padding: 0;
-                        border-bottom: 0;
-                        a {
-                            font-weight: normal;
-                            color: #333;
+            }
+        }
+
+        .project-members {
+            .project-members-options {
+                width: 60%;
+                position: relative;
+                height: 40px;
+
+                .add-member {
+                    position:absolute;
+                    top: 8px;
+                    right: 8px;
+                    &:before {
+                        margin-right: 5px;
+                        position: relative;
+                        top: 1px;
+                    }
+                }
+            }
+
+            .invitation-form {
+                width: 60%;
+
+                .add-member-form {
+                    padding: 10px;
+                    border: 1px solid #eee;
+                    margin-bottom: 20px;
+
+                    h4 {
+                        margin-top: 0px;
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+
+            .project-members-list {
+                width: 60%;
+                margin-bottom: 20px;
+                h3 {
+                    padding: 8px;
+                    background: @green;
+                    color: #FFF;
+                    margin: 0;
+                    &:before {
+                        font-size: 15px;
+                        margin-right: 5px;
+                    }
+                }
+                table.membership-list {
+                    width: 100%;
+                    padding: 5px;
+
+                    tr {
+                        th {
+                            text-align: left;
+                        }
+                        td {
+                            padding: 3px;
+                            border: 1px solid #eee;
+                        }
+
+                        td.options {
+                            width: 15px;
+                        }
+
+                        &:hover {
+                            td {
+                                background-color: #f4f4f4;
+                            }
                         }
                     }
                 }
             }
-            .user{
-               font-weight: normal;
-            }
         }
     }
-    .update-form {
-        width: 60%;
-        border: 1px solid #eee;
-        margin-bottom: 20px;
-        margin-top: 20px;
-        h3 {
-            padding: 8px;
-            background: @green;
-            color: #FFF;
-            margin: 0;
-            &:before {
-                font-size: 15px;
-                margin-right: 5px;
-            }
-        }
-        form{
-            padding: 8px;
-        }
-        .project-total-milestones {
-            margin-right: 15px;
-        }
-        .project-total-milestones,
-        .project-total-story-points {
-            width: 48%;
-            display: inline-block;
-        }
-        .project-description {
-            textarea {
-                height: 200px;
-                min-width: 96%;
-                max-width: 96%;
-                width: 96%;
-            }
-        }
-    }
-    .project-members {
-        width: 60%;
-        border: 1px solid #eee;
-        margin-bottom: 20px;
-        position: relative;
-        h3 {
-            padding: 8px;
-            background: @green;
-            color: #FFF;
-            margin: 0;
-            &:before {
-                font-size: 15px;
-                margin-right: 5px;
-            }
-        }
-        .add-member {
-            color: @white;
-            position:absolute;
-            top: 8px;
-            right: 8px;
-            &:before {
-                margin-right: 5px;
-                position: relative;
-                top: 1px;
-            }
-        }
+
+    h3 {
+        margin-bottom: 8px;
     }
 }
 

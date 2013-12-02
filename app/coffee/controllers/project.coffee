@@ -26,7 +26,7 @@ ProjectListController = ($scope, $rootScope, rs, $i18next) ->
 
 
 ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model,
-                          $confirm, $location, $i18next) ->
+                          rs, $confirm, $location, $i18next) ->
     $rootScope.pageTitle = $i18next.t('common.admin-panel')
     $rootScope.pageSection = 'admin'
     $rootScope.pageBreadcrumb = [
@@ -67,12 +67,35 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
             $model.make_model('milestones', milestone).remove().then () ->
                 $data.loadProject($scope)
 
-    $scope.$on "membership:load-project", (ctx) ->
-        $data.loadProject($scope)
-        $data.loadUsersAndRoles($scope)
+    $scope.deleteMember = (member) ->
+        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
+        promise.then () ->
+            memberModel = $model.make_model("memberships", member)
+            memberModel.remove().then ->
+                $data.loadProject($scope)
 
+    $scope.updateMemberRole = (member, roleId) ->
+        memberModel = $model.make_model('memberships',member)
+        memberModel.role = roleId
+        memberModel.save().then (data) ->
+            $data.loadProject($scope)
 
-MembershipFormController = ($scope, $rootScope, rs) ->
+    $scope.memberStatus = (member) ->
+        if member.user != null
+            return "Active"
+        else
+            return "Inactive"
+
+    $scope.memberName = (member) ->
+        if member.full_name
+            return member.full_name
+        return ""
+
+    $scope.memberEmail = (member) ->
+        if member.user and $scope.constants.users[member.user]
+            return $scope.constants.users[member.user].email
+        return member.email
+
     $scope.formOpened = false
 
     $scope.toggleForm = ->
@@ -83,23 +106,23 @@ MembershipFormController = ($scope, $rootScope, rs) ->
 
     $scope.openForm = ->
         $scope.membership = {project: $rootScope.projectId}
-        $scope.noMemberUsersList = _.filter $scope.constants.usersList, (user) ->
-            return not _.contains($scope.project.members, user.id)
-
         $scope.$broadcast("checksley:reset")
         $scope.formOpened = true
 
     $scope.closeForm = ->
         $scope.formOpened = false
 
-    $scope.submit = ->
+    $scope.submitMembership = ->
         promise = rs.createMembership($scope.membership)
 
         promise.then (data) ->
-            $rootScope.$broadcast("membership:load-project")
+            $data.loadProject($scope)
+            $data.loadUsersAndRoles($scope)
             $scope.closeForm()
 
         promise.then null, (data) ->
+            if data._error_message
+                $gmFlash.error(data._error_message, false)
             $scope.checksleyErrors = data
 
 
@@ -110,20 +133,13 @@ MembershipsController = ($scope, $rootScope, $model, $confirm, $i18next) ->
             $model.make_model('memberships',member).remove().then () ->
                 $rootScope.$broadcast("membership:load-project")
 
-    $scope.updateMemberRole = (member, roleId) ->
-        memberModel = $model.make_model('memberships',member)
-        memberModel.role = roleId
-        memberModel.save().then (data) ->
-            $rootScope.$broadcast("membership:load-project")
 
 
 module = angular.module("greenmine.controllers.project", [])
 module.controller("ProjectListController", ['$scope', '$rootScope', 'resource', '$i18next',
                                             ProjectListController])
 module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routeParams", "$data",
-                                             "$gmFlash", "$model", "$confirm", "$location", '$i18next',
+                                             "$gmFlash", "$model", "resource", "$confirm", "$location", '$i18next',
                                              ProjectAdminController])
-module.controller("MembershipFormController", ["$scope", "$rootScope", 'resource',
-                                               MembershipFormController])
 module.controller("MembershipsController", ["$scope", "$rootScope", "$model", "$confirm", "$i18next",
                                             MembershipsController])

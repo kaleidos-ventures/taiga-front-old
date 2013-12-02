@@ -18,22 +18,21 @@
                     <label i18next="login.password-label">Password</label>
                     <input type="password" ng-model="form.password"
                         data-required="true" data-minlength="6"
-                        placeholder="password..." 
-                        i18next="placeholder:login.password-placeholder"
-                        />
+                        placeholder="password..."
+                        i18next="placeholder:login.password-placeholder" />
                 </fieldset>
-                <a class="forgot-pass" href="#/recovery" i18next="login.forgot-password">Forgot your password?</a>
+
+                <div class="">
+                    <a class="forgot-pass" href="#/recovery" i18next="login.forgot-password">Forgot your password?</a>
+                </div>
+
+                <div class="" ng-show="site.allowPublicRegister">
+                    <a class="forgot-pass" href="#/register" >Join to greenmine</a>
+                </div>
 
                 <fieldset class="form-field clearfix">
                     <input class="btn01" type="submit" value="Login" gm-checksley-submit-button i18next="value:login.login"/>
                 </fieldset>
-
-                <!--
-                NOT ACTIVE FOR THE MOMENT
-                <p class="register">
-                    <a id="open-forgotten-password-form" href="#!/register">Join to greenmine</a>
-                </p>
-                -->
 
                 <!-- if success {.loading } else {.error} -->
                 <div class="login-message">

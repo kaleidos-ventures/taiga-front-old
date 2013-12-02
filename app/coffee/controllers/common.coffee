@@ -78,7 +78,7 @@ DataServiceProvider = ($rootScope, $q, rs) ->
     # NOTE: This method depends on getProject
     service.loadUsersAndRoles = ($scope) ->
         promise = $q.all [
-            rs.getUsers(),
+            rs.getUsers($scope.project.id),
             rs.getRoles($scope.project.id),
         ]
 
@@ -100,6 +100,28 @@ DataServiceProvider = ($rootScope, $q, rs) ->
                                                            .value()
             return results
         return promise
+
+    service.loadSiteInfo = ($scope) ->
+        $scope.site = {}
+        $scope.site.allowPublicRegister = null
+
+        defered = $q.defer()
+        promise = rs.getSiteInfo()
+        promise.then (data) ->
+            $scope.site = _.merge($scope.site, data)
+
+            if data.headers["x-site-register"] == "on"
+                $scope.site.allowPublicRegister = true
+            else
+                $scope.site.allowPublicRegister = false
+
+            defered.resolve($scope.site)
+
+        promise.then null, ->
+            defered.reject()
+
+        return defered.promise
+
     return service
 
 module = angular.module("greenmine.controllers.common", [])

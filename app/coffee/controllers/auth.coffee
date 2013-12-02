@@ -41,11 +41,6 @@ LoginController = ($scope, $rootScope, $location, $routeParams, rs, $gmAuth, $i1
             $scope.loading = false
 
 
-RegisterController = ($scope, $rootScope) ->
-    $rootScope.pageSection = 'login'
-    # TODO
-
-
 RecoveryController = ($scope, $rootScope, $location, rs, $i18next) ->
     $rootScope.pageTitle = $i18next.t('login.password-recovery-title')
     $rootScope.pageSection = 'login'
@@ -134,9 +129,49 @@ ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next
             $scope.checksleyErrors = data
 
 
+PublicRegisterController = ($scope, $rootScope, $location, rs, $data, $gmAuth) ->
+    $rootScope.pageSection = 'login'
+    $scope.form = {"type": "public"}
+
+    $scope.$watch "site.allowPublicRegister", (value) ->
+        if value == false
+            $location.url("/login")
+
+    $scope.submit = ->
+        form = _.clone($scope.form)
+
+        promise = rs.register(form)
+        promise.then (user) ->
+            $gmAuth.setUser(user)
+            $rootScope.auth = user
+            $location.url("/")
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
+
+
+InvitationRegisterController = ($scope, $params, $rootScope, $location, rs, $data, $gmAuth) ->
+    $rootScope.pageSection = 'login'
+    $scope.form = {existing: "on", "type": "private", "token": $params.token}
+
+    $scope.submit = ->
+        form = _.clone($scope.form)
+        form.existing = if form.existing == "on" then true else false
+
+        promise = rs.register(form)
+        promise.then (user) ->
+            $gmAuth.setUser(user)
+            $rootScope.auth = user
+            $location.url("/")
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
+
+
 module = angular.module("greenmine.controllers.auth", [])
 module.controller("LoginController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$gmAuth', '$i18next', LoginController])
-module.controller("RegisterController", ['$scope', '$rootScope', RegisterController])
 module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', '$i18next', RecoveryController])
 module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$i18next', ChangePasswordController])
 module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', 'config', '$i18next', ProfileController])
+module.controller("PublicRegisterController", ["$scope", "$rootScope", "$location", "resource", "$data", "$gmAuth", PublicRegisterController])
+module.controller("InvitationRegisterController", ["$scope", "$routeParams", "$rootScope", "$location", "resource", "$data", "$gmAuth", InvitationRegisterController])
