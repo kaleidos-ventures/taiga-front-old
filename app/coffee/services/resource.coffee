@@ -14,15 +14,21 @@
 
 ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service = {}
-    headers = ->
+    headers = (diablePagination=true) ->
+        data = {}
         token = $gmStorage.get('token')
 
-        data = {"X-DISABLE-PAGINATION": "true"}
         data["Authorization"] = "Bearer #{token}" if token
+        data["X-Disable-Pagination"] = "true" if diablePagination
+
         return data
 
-    queryMany = (name, params, options) ->
-        defaultHttpParams = {method: "GET", headers:  headers(), url: $gmUrls.api(name)}
+    queryMany = (name, params, options, urlParams) ->
+        defaultHttpParams = {
+            method: "GET",
+            headers:  headers(),
+            url: $gmUrls.api(name, urlParams)
+        }
         if not _.isEmpty(params)
             defaultHttpParams.params = params
 
@@ -39,8 +45,38 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return defered.promise
 
+    queryRaw = (name, id, params, options, cls) ->
+        defaultHttpParams = {method: "GET", headers:  headers()}
+
+        if id
+            defaultHttpParams.url = "#{$gmUrls.api(name)}/#{id}"
+        else
+            defaultHttpParams.url = "#{$gmUrls.api(name)}"
+
+        if not _.isEmpty(params)
+            defaultHttpParams.params = params
+
+        httpParams =  _.extend({}, defaultHttpParams, options)
+
+        defered = $q.defer()
+
+        promise = $http(httpParams)
+        promise.success (data, status) ->
+            defered.resolve(data, cls)
+
+        promise.error (data, status) ->
+            defered.reject()
+
+        return defered.promise
+
     queryOne = (name, id, params, options, cls) ->
-        defaultHttpParams = {method: "GET", headers:  headers(), url: "#{$gmUrls.api(name)}/#{id}"}
+        defaultHttpParams = {method: "GET", headers:  headers()}
+
+        if id
+            defaultHttpParams.url = "#{$gmUrls.api(name)}/#{id}"
+        else
+            defaultHttpParams.url = "#{$gmUrls.api(name)}"
+
         if not _.isEmpty(params)
             defaultHttpParams.params = params
 
@@ -57,8 +93,52 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return defered.promise
 
+    queryManyPaginated = (name, params, options, cls, urlParams) ->
+        defaultHttpParams = {
+            method: "GET",
+            headers: headers(false),
+            url: $gmUrls.api(name, urlParams)
+        }
+        if not _.isEmpty(params)
+            defaultHttpParams.params = params
+
+        httpParams =  _.extend({}, defaultHttpParams, options)
+        defered = $q.defer()
+
+        promise = $http(httpParams)
+        promise.success (data, status, headersFn) ->
+            currentHeaders = headersFn()
+
+            result = {}
+            result.models = _.map(data, (attrs) -> $model.make_model(name, attrs, cls))
+            result.count = parseInt(currentHeaders["x-pagination-count"], 10)
+            result.current = parseInt(currentHeaders["x-pagination-current"] or 1, 10)
+            result.paginatedBy = parseInt(currentHeaders["x-paginated-by"], 10)
+
+            defered.resolve(result)
+
+        promise.error (data, status) ->
+            defered.reject()
+
+        return defered.promise
 
     # Resource Methods
+    service.register = (formdata) ->
+        defered = $q.defer()
+
+        onSuccess = (data, status) ->
+            $gmStorage.set("token", data["auth_token"])
+            user = $model.make_model("users", data)
+            defered.resolve(user)
+
+        onError = (data, status) ->
+            defered.reject(data)
+
+        promise = $http({method:'POST', url: $gmUrls.api('auth-register'), data: JSON.stringify(formdata)})
+        promise.success(onSuccess)
+        promise.error(onError)
+
+        return defered.promise
 
     # Login request
     service.login = (username, password) ->
@@ -140,6 +220,22 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.getProject = (projectId) ->
         return queryOne("projects", projectId)
 
+    # Get a project stats
+    service.getProjectStats = (projectId) ->
+        return queryOne("projects", "#{projectId}/stats")
+
+    # Get a issues stats
+    service.getIssuesStats = (projectId) ->
+        return queryOne("projects", "#{projectId}/issues_stats")
+
+    # Get a project tags
+    service.getProjectTags = (projectId) ->
+        return queryRaw("projects", "#{projectId}/tags")
+
+    # Get a issues filters
+    service.getIssuesFiltersData = (projectId) ->
+        return queryOne("projects", "#{projectId}/issue_filters_data")
+
     # Create a memberships
     service.createMembership = (form) ->
         return $model.create("memberships", form)
@@ -210,6 +306,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return _getMilestone().then(_makeUserStoryModels).then(_makeModel)
 
+    service.getMilestoneStats = (sprintId) ->
+        return queryOne("milestones", "#{sprintId}/stats")
+
     # Get unassigned user stories list for a project.
     service.getUnassignedUserStories = (projectId) ->
         return queryMany("userstories", {"project":projectId, "milestone": "null"})
@@ -222,6 +321,12 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.getUserStory = (projectId, userStoryId) ->
         return queryOne("userstories", userStoryId, {project:projectId})
 
+    service.getUserStoryHistorical = (userStoryId, filters={}) ->
+        urlParams = [userStoryId]
+        parameters = _.extend({}, filters)
+        return queryManyPaginated("userstories-historical", parameters, null , null,
+                                  urlParams)
+
     service.getTasks = (projectId, sprintId) ->
         params = {project:projectId}
         if sprintId != undefined
@@ -229,14 +334,28 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return queryMany("tasks", params)
 
-    service.getIssues = (projectId) ->
-        return queryMany("issues", {project:projectId})
+    service.getIssues = (projectId, filters={}) ->
+        parameters = _.extend({}, filters, {project:projectId})
+        return queryManyPaginated("issues", parameters)
 
     service.getIssue = (projectId, issueId) ->
         return queryOne("issues", issueId, {project:projectId})
 
+    service.getIssueHistorical = (issueId, filters={}) ->
+        urlParams = [issueId]
+        parameters = _.extend({}, filters)
+        return queryManyPaginated("issues-historical", parameters, null , null, urlParams)
+
+    service.getIssuesFiltersData = (projectId) ->
+        return queryOne("projects", "#{projectId}/issue_filters_data")
+
     service.getTask = (projectId, taskId) ->
         return queryOne("tasks", taskId, {project:projectId})
+
+    service.getTaskHistorical = (taskId, filters={}) ->
+        urlParams = [taskId]
+        parameters = _.extend({}, filters)
+        return queryManyPaginated("tasks-historical", parameters, null , null, urlParams)
 
     service.search = (projectId, term) ->
         defered = $q.defer()
@@ -259,7 +378,11 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     # Get a users with role developer for
     # one concret project.
     service.getUsers = (projectId) ->
-        return queryMany("users", {project: projectId})
+        if projectId
+            params = {project: projectId}
+        else
+            params = {}
+        return queryMany("users", params)
 
     service.createTask = (form) ->
         return $model.create("tasks", form)
@@ -279,6 +402,10 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
     service.createUserStory = (data) ->
         return $model.create('userstories', data)
+
+    service.createBulkUserStories = (projectId, form) ->
+        obj = _.extend({}, form, {projectId: projectId})
+        return $http.post($gmUrls.api("bulkuserstories"), obj, {headers:headers()})
 
     service.createMilestone = (projectId, form) ->
         #return $model.create('milestones', data)
@@ -317,6 +444,28 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return defered.promise
 
+    service.getWikiPageHistorical = (wikiId, filters={}) ->
+        urlParams = [wikiId]
+        parameters = _.extend({}, filters)
+        return queryManyPaginated("wiki-historical", parameters, null , null, urlParams)
+
+    service.createTask = (form) ->
+        return $model.create("tasks", form)
+
+    service.restoreWikiPage = (wikiPageId, versionId) ->
+        url = "#{$gmUrls.api("wiki-restore", [wikiPageId])}/#{versionId}"
+
+        defered = $q.defer()
+
+        promise = $http.post(url, {}, {headers:headers()})
+        promise.success (data, status) ->
+            defered.resolve($model.make_model("wiki", data))
+
+        promise.error (data, status) ->
+            defered.reject(data, status)
+
+        return defered.promise
+
     service.createWikiPage = (projectId, slug, content) ->
         obj = {
             "content": content
@@ -328,7 +477,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         promise = $http.post($gmUrls.api("wiki"), obj, {headers:headers()})
         promise.success (data, status) ->
-            defered.resolve($model.make_model("wiki", slug))
+            defered.resolve($model.make_model("wiki", data))
 
         promise.error (data, status) ->
             defered.reject()
@@ -469,6 +618,24 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         xhr.open("POST", $gmUrls.api("wiki/attachments"))
         xhr.setRequestHeader("Authorization", "Bearer #{$gmStorage.get('token')}")
         xhr.send(formData)
+        return defered.promise
+
+    service.getSiteInfo = () ->
+        httpParams = {
+            method: "HEAD"
+            headers: headers()
+            url: $gmUrls.api("sites")
+        }
+
+        defered = $q.defer()
+
+        promise = $http(httpParams)
+        promise.success (data, status, headersFn) ->
+            defered.resolve({"headers": headersFn(), "data": data})
+
+        promise.error ->
+            defered.reject()
+
         return defered.promise
 
     return service

@@ -24,13 +24,15 @@ gm.format = (fmt, obj, named) ->
         return fmt.replace /%s/g, (match) -> String(obj.shift())
 
 configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider, $gmUrlsProvider) ->
+    $routeProvider.when('/', {templateUrl: 'partials/project-list.html', controller: "ProjectListController"})
     $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: "LoginController"})
-    $routeProvider.when('/register', {templateUrl: 'partials/register.html', controller: "RegisterController"})
     $routeProvider.when('/recovery', {templateUrl: 'partials/recovery.html', controller: "RecoveryController"})
     $routeProvider.when('/change-password', {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController"})
+    $routeProvider.when('/change-password/:token', {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController"})
     $routeProvider.when('/profile', {templateUrl: 'partials/profile.html', controller: "ProfileController"})
-
-    $routeProvider.when('/', {templateUrl: 'partials/project-list.html', controller: "ProjectListController"})
+    $routeProvider.when("/register", {controller: "PublicRegisterController", templateUrl: "partials/register.html"})
+    $routeProvider.when("/invitation/:token", {
+        controller: "InvitationRegisterController", templateUrl: "partials/invitation-register.html"})
 
     $routeProvider.when('/project/:pid/backlog',
             {templateUrl: 'partials/backlog.html', controller: "BacklogController"})
@@ -62,28 +64,36 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when('/project/:pid/wiki/:slug',
             {templateUrl: 'partials/wiki.html', controller: "WikiController"})
 
+    $routeProvider.when('/project/:pid/wiki/:slug/historical',
+            {templateUrl: 'partials/wiki-historical.html', controller: "WikiHistoricalController"})
+
     $routeProvider.when('/project/:pid/search', {
         controller: "SearchController", templateUrl: "partials/search.html"})
 
     $routeProvider.when('/project/:pid/admin', {
         controller: "ProjectAdminController", templateUrl: "partials/project-admin.html"})
 
-    #$routeProvider.otherwise({redirectTo: '/login'})
+    $routeProvider.otherwise({redirectTo: '/login'})
 
-    defaultHeaders =
-        "Content-Type": "application/json",
+    defaultHeaders = {
+        "Content-Type": "application/json"
         "Accept-Language": "en"
+        "X-Host": window.location.hostname
+    }
 
     $httpProvider.defaults.headers.delete = defaultHeaders
     $httpProvider.defaults.headers.patch = defaultHeaders
     $httpProvider.defaults.headers.post = defaultHeaders
     $httpProvider.defaults.headers.put = defaultHeaders
+    $httpProvider.defaults.headers.get = {
+        "X-Host": window.location.hostname
+    }
 
     authHttpIntercept = ($q, $location) ->
         return (promise) ->
             return promise.then null, (response) ->
                 if response.status == 401 or response.status == 0
-                    $location.url("/login")
+                    $location.url("/login?next=#{$location.path()}")
                 return $q.reject(response)
 
     $provide.factory("authHttpIntercept", ["$q", "$location", authHttpIntercept])
@@ -91,17 +101,27 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 
     apiUrls = {
         "auth": "/api/v1/auth"
+        "auth-register": "/api/v1/auth/register"
         "roles": "/api/v1/roles"
         "projects": "/api/v1/projects"
         "memberships": "/api/v1/memberships"
         "milestones": "/api/v1/milestones"
         "userstories": "/api/v1/userstories"
+        "bulkuserstories": "/api/v1/userstories/bulk_create"
+        "userstories-historical": "/api/v1/userstories/%s/historical"
+        "userstories-restore": "/api/v1/userstories/%s/restore"
         "userstories/attachments": "/api/v1/userstory-attachments"
         "tasks": "/api/v1/tasks"
+        "tasks-historical": "/api/v1/tasks/%s/historical"
+        "tasks-restore": "/api/v1/tasks/%s/restore"
         "tasks/attachments": "/api/v1/task-attachments"
         "issues": "/api/v1/issues"
+        "issues-historical": "/api/v1/issues/%s/historical"
+        "issues-restore": "/api/v1/issues/%s/restore"
         "issues/attachments": "/api/v1/issue-attachments"
         "wiki": "/api/v1/wiki"
+        "wiki-historical": "/api/v1/wiki/%s/historical"
+        "wiki-restore": "/api/v1/wiki/%s/restore"
         "wiki/attachments": "/api/v1/wiki-attachments"
         "choices/task-status": "/api/v1/task-statuses"
         "choices/issue-status": "/api/v1/issue-statuses"
@@ -111,6 +131,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         "choices/priorities": "/api/v1/priorities"
         "choices/severities": "/api/v1/severities"
         "search": "/api/v1/search"
+        "sites": "/api/v1/sites"
 
         "users": "/api/v1/users"
         "users-password-recovery": "/api/v1/users/password_recovery"
@@ -122,8 +143,9 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 
 
 modules = [
-    "ngRoute",
+    # "ngRoute",
     "ngSanitize",
+    # "ngAnimate",
     "coffeeColorPicker",
 
     "greenmine.controllers.common",
@@ -142,9 +164,10 @@ modules = [
     "greenmine.services.resource",
     "greenmine.directives.generic",
     "greenmine.directives.common",
-    "greenmine.directives.taskboard",
+    "greenmine.directives.graphs",
     "greenmine.directives.tasks",
     "greenmine.directives.issues",
+    "greenmine.directives.history",
     "greenmine.directives.wiki",
     "greenmine.directives.backlog",
 
@@ -155,11 +178,12 @@ modules = [
     "gmStorage",
     "gmConfirm",
     "gmOverlay",
+    "i18next",
 ]
 
 
-init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, config) ->
-    # Constants
+init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $data, $log) ->
+    $rootScope.pageTitle = ""
     $rootScope.auth = $gmAuth.getUser()
     $rootScope.constants = {}
 
@@ -186,6 +210,10 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, config) ->
     # Configure on init a default host and scheme for api urls.
     $gmUrls.setHost("api", config.host, config.scheme)
 
+    $rootScope.allowPublicRegister = false
+    $data.loadSiteInfo($rootScope).then (sitedata) ->
+        $log.info "Site data:", sitedata
+
     $rootScope.baseUrls =
         projects: "/"
         backlog: "/project/%s/backlog"
@@ -196,6 +224,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, config) ->
         task: "/project/%s/tasks/%s"
         tasks: "/project/%s/tasks/%s"
         wiki: "/project/%s/wiki/%s"
+        wikiHistorical: "/project/%s/wiki/%s/historical"
         search: "/project/%s/search"
         admin: "/project/%s/admin"
 
@@ -247,6 +276,9 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, config) ->
         wikiUrl: (projectId, pageName, raw) ->
             url = gm.format($rootScope.baseUrls.wiki, [projectId, pageName])
             return conditionalUrl(url, raw)
+        wikiHistoricalUrl: (projectId, pageName, raw) ->
+            url = gm.format($rootScope.baseUrls.wikiHistorical, [projectId, pageName])
+            return conditionalUrl(url, raw)
 
         searchUrl: (projectId, raw) ->
             url = gm.format($rootScope.baseUrls.search, [projectId])
@@ -256,8 +288,26 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, config) ->
         $gmStorage.clear()
         $location.url("/login")
 
+    $i18next.initialize(false, config.defaultLanguage)
+    $rootScope.$on "i18n:change", (event, lang) ->
+        if lang
+            $i18next.setLang(lang)
+        else
+            $i18next.setLang(config.defaultLanguage)
+
 angular.module('greenmine', modules)
        .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', '$gmUrlsProvider', configCallback])
-       .run(['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls', 'config', init])
+       .run(['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls', '$i18next', 'config', '$data', '$log', init])
 
-angular.module('greenmine.config', []).value('config', {host: "localhost:8000", scheme: "http"})
+angular.module('greenmine.config', []).value('config', {
+    host: "localhost:8000"
+    scheme: "http"
+    defaultLanguage: "en"
+    notificationLevelOptions: {
+        "all_owned_projects": "All events on my projects"
+        "only_watching": "Only events for objects i watch"
+        "only_assigned": "Only events for objects assigned to me"
+        "only_owner": "Only events for objects owned by me"
+        "no_events": "No events"
+    }
+})

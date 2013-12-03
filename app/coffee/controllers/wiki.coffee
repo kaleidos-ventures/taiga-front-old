@@ -12,67 +12,206 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-WikiController = ($scope, $rootScope, $location, $routeParams, rs) ->
+WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
+    $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug}"
     $rootScope.pageSection = 'wiki'
-    $rootScope.pageBreadcrumb = ["Project", "Wiki", $routeParams.slug]
     $rootScope.projectId = parseInt($routeParams.pid, 10)
+    $rootScope.slug = $routeParams.slug
+    $rootScope.pageBreadcrumb = [
+        ["", ""]
+        [$i18next.t("common.wiki"), $rootScope.urls.wikiUrl($rootScope.projectId, "home")]
+        [$routeParams.slug, null]
+    ]
 
     $scope.formOpened = false
     $scope.form = {}
+    $scope.newAttachments = []
+    $scope.attachments = []
 
     projectId = $rootScope.projectId
-    slug = $routeParams.slug
-
-    promise = rs.getWikiPage(projectId, slug)
-    promise.then (page) ->
-        $scope.page = page
-        $scope.content = page.content
-        loadAttachments(page)
-
-    promise.then null, (data) ->
-        $scope.formOpened = true
 
     loadAttachments = (page) ->
         rs.getWikiPageAttachments(projectId, page.id).then (attachments) ->
             $scope.attachments = attachments
+
+    saveNewAttachments = ->
+        if $scope.newAttachments.length == 0
+            return
+
+        promises = []
+        for attachment in $scope.newAttachments
+            promise = rs.uploadWikiPageAttachment(projectId, $scope.page.id, attachment)
+            promises.push(promise)
+
+        promise = Q.all(promises)
+        promise.then ->
+            $scope.newAttachments = []
+            loadAttachments($scope.page)
+
+    $data.loadProject($scope).then ->
+        $data.loadUsersAndRoles($scope).then ->
+            promise = rs.getWikiPage(projectId, $rootScope.slug)
+            promise.then (page) ->
+                $scope.page = page
+                $scope.content = page.content
+                loadAttachments(page)
+
+            promise.then null, (data) ->
+                $scope.formOpened = true
 
     $scope.openEditForm = ->
         $scope.formOpened = true
         $scope.content = $scope.page.content
 
     $scope.discartCurrentChanges = ->
+        $scope.newAttachments = []
         if $scope.page is undefined
             $scope.content = ""
         else
             $scope.formOpened = false
             $scope.content = $scope.page.content
 
-    $scope.savePage = ->
+    $scope.savePage = gm.utils.safeDebounced $scope, 400, ->
         if $scope.page is undefined
-            content = $scope.content
-            rs.createWikiPage(projectId, slug, content).then (page) ->
+            promise = rs.createWikiPage(projectId, $rootScope.slug, $scope.content)
+
+            promise.then (page) ->
                 $scope.page = page
                 $scope.formOpened = false
-                rs.uploadWikiPageAttachment(projectId, page.id, $scope.attachment).then ->
-                    loadAttachments($scope.page)
+                $scope.content = $scope.page.content
+                saveNewAttachments()
+
+            promise.then null, (data) ->
+                $scope.checksleyErrors = data
         else
             $scope.page.content = $scope.content
-            $scope.page.save().then (page) ->
+            promise = $scope.page.save()
+
+            promise.then (page) ->
                 $scope.page = page
                 $scope.formOpened = false
-                rs.uploadWikiPageAttachment(projectId, page.id, $scope.attachment).then ->
-                    loadAttachments($scope.page)
+                $scope.content = $scope.page.content
+                saveNewAttachments()
+
+            promise.then null, (data) ->
+                $scope.checksleyErrors = data
 
     $scope.deletePage = ->
-        $scope.page.remove().then ->
-            $scope.page = undefined
-            $scope.content = ""
-            $scope.formOpened = true
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
+        promise.then () ->
+            $scope.page.remove().then ->
+                $scope.page = undefined
+                $scope.content = ""
+                $scope.attachments = []
+                $scope.newAttachments = []
+                $scope.formOpened = true
 
     $scope.deleteAttachment = (attachment) ->
-        $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
-        attachment.remove()
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
+        promise.then () ->
+            $scope.attachments = _.without($scope.attachments, attachment)
+            attachment.remove()
+
+    $scope.deleteNewAttachment = (attachment) ->
+        $scope.newAttachments = _.without($scope.newAttachments, attachment)
+
+
+WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
+    $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug} - #{$i18next.t("wiki-historical.historical")}"
+    $rootScope.pageSection = 'wiki'
+    $rootScope.projectId = parseInt($routeParams.pid, 10)
+    $rootScope.slug = $routeParams.slug
+    $rootScope.pageBreadcrumb = [
+        ["", ""]
+        [$i18next.t("common.wiki"), $rootScope.urls.wikiUrl($rootScope.projectId, "home")]
+        [$routeParams.slug, $rootScope.urls.wikiUrl($rootScope.projectId, $routeParams.slug)]
+        [$i18next.t("wiki-historical.historical"), null]
+    ]
+
+    $scope.attachments = []
+
+    projectId = $rootScope.projectId
+
+    $data.loadProject($scope).then ->
+        $data.loadUsersAndRoles($scope).then ->
+            promise = rs.getWikiPage(projectId, $rootScope.slug)
+            promise.then (page) ->
+                $scope.page = page
+                $scope.content = page.content
+                loadAttachments(page)
+                loadHistorical()
+
+    loadAttachments = (page) ->
+        rs.getWikiPageAttachments(projectId, page.id).then (attachments) ->
+            $scope.attachments = attachments
+
+    loadHistorical = (page=1) ->
+        rs.getWikiPageHistorical($scope.page.id, {page: page}).then (historical) ->
+            if $scope.historical and page != 1
+                historical.models = _.union($scope.historical.models, historical.models)
+
+            $scope.showMoreHistoricaButton = historical.models.length < historical.count
+            $scope.historical = historical
+
+    $scope.loadMoreHistorical = ->
+        page = if $scope.historical then $scope.historical.current + 1 else 1
+        loadHistorical(page=page)
+
+    $scope.$on "wiki:restored", (ctx, data) ->
+        promise = rs.getWikiPage(projectId, $rootScope.slug)
+        promise.then (page) ->
+            $scope.page = page
+            $scope.content = page.content
+            loadAttachments(page)
+            loadHistorical()
+
+
+WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q, $i18next) ->
+    $scope.showChanges = false
+
+    $scope.showContent = true
+    $scope.showPreviousDiff = false
+    $scope.showCurrentDiff = false
+
+    $scope.toggleShowChanges = ->
+        $scope.showChanges = not $scope.showChanges
+
+    $scope.activeShowContent = ->
+        $scope.showContent = true
+        $scope.showPreviousDiff = false
+        $scope.showCurrentDiff = false
+
+    $scope.activeShowPreviousDiff = ->
+        $scope.showContent = false
+        $scope.showPreviousDiff = true
+        $scope.showCurrentDiff = false
+
+    $scope.activeShowCurrentDiff = ->
+        $scope.showContent = false
+        $scope.showPreviousDiff = false
+        $scope.showCurrentDiff = true
+
+    $scope.restoreWikiPage = (hitem) ->
+        date = moment(hitem.created_date).format("llll")
+
+        promise = $confirm.confirm $i18next.t("wiki-historical.gone-back-sure", {'date': date})
+        promise.then () ->
+            promise = rs.restoreWikiPage(hitem.object_id, hitem.id)
+
+            promise.then (data) ->
+                $scope.$emit("wiki:restored")
+                $gmFlash.info($i18next.t("wiki-historical.gone-back-success", {'date': date}))
+
+            promise.then null, (data, status) ->
+                $gmFlash.error($i18next.t("wiki-historical.gone-back-error"))
 
 
 module = angular.module("greenmine.controllers.wiki", [])
-module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', WikiController])
+module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams',
+                                     '$data', 'resource', "$confirm", "$q", "$i18next", WikiController])
+module.controller("WikiHistoricalController", ['$scope', '$rootScope', '$location', '$routeParams',
+                                               '$data', 'resource', "$confirm", "$q", "$i18next",
+                                               WikiHistoricalController])
+module.controller("WikiHistoricalItemController", ['$scope', '$rootScope', 'resource', '$confirm',
+                                                   '$gmFlash',  '$q', "$i18next", WikiHistoricalItemController])
+

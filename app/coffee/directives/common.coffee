@@ -35,16 +35,16 @@ GmBreadcrumbDirective = ($rootScope) ->
             items = []
 
             for item, index in breadcrumb
-                items.push(angular.element('<span class="title-item"></span>').text(item))
-
-                if index != total
-                    items.push(angular.element('<span class="separator"> &rsaquo; </span>'))
+                if item[1] == null
+                    li = angular.element('<li data-icon="G" class="title-item"></li>').text(item[0])
+                else
+                    link = angular.element('<a></a>').text(item[0]).attr('href', item[1])
+                    li = angular.element('<li data-icon="G" class="title-item"></li>').append(link)
+                items.push(li)
 
             if not _.isEmpty(items)
                 first = items[0]
-                first.css('font-weight', 'bold')
-                first.css('color', 'black')
-                first.css('curso', 'pointer')
+                first.addClass('first-breadcrumb').removeAttr('data-icon')
 
             for item in items
                 element.append(item)
@@ -160,7 +160,7 @@ GmPopoverDirective = ($parse, $compile) ->
                 state = element.data('state')
 
                 if state == "closing"
-                    element.popover('hide')
+                    element.popover('destroy')
                     element.data('state', 'closed')
 
 
@@ -174,22 +174,22 @@ GmPopoverDirective = ($parse, $compile) ->
                 scope.$apply ->
                     fn(scope, {"selectedId": id})
 
-                element.popover('hide')
+                element.popover('destroy')
                 next.off()
 
             next.on "click", cancelSelector, (event) ->
-                element.popover('hide')
+                element.popover('destroy')
                 next.off()
 
             if autoHide
                 element.data('state', 'closing')
                 _.delay(closeHandler, 2000)
 
-                next.on "mouseleave", ".popover-inner", (event) ->
+                next.on "mouseleave", ".popover-content", (event) ->
                     element.data('state', 'closing')
                     _.delay(closeHandler, 200)
 
-                next.on "mouseenter", ".popover-inner", (event) ->
+                next.on "mouseenter", ".popover-content", (event) ->
                     element.data('state', 'open')
 
 
@@ -272,11 +272,11 @@ GmTagsInputDirective = ->
 GmRolePointsEditionDirective = ->
     compile: (element, attrs) ->
         template = """
-        <fieldset class="us-role-points" ng-repeat="role in roles">
+        <fieldset class="us-role-points" ng-repeat="role in constants.computableRolesList">
             {{ role.name }} (points)
+
             <select class="points" name="points" ng-model="form.points[role.id]" data-required="true"
-                data-error-message="Required"
-                ng-options="c.order as c.name for c in constants.pointsList|orderBy:'order'">
+                data-error-message="Required" ng-options="c.id as c.name for c in constants.pointsList|orderBy:'order'">
             </select>
         </fieldset>"""
 
@@ -291,6 +291,153 @@ GmRolePointsEditionDirective = ->
             scope.form.points = {}
 
 
+GmColorizeUserDirective = ($parse)->
+    restrict: "A"
+    link: (scope, elm, attrs) ->
+        updateColor = ->
+            element = angular.element(elm)
+            user = $parse(attrs.gmColorizeUser)(scope)
+            if user and user.color
+                element.css({
+                    "padding": "0 5px"
+                    "border-left-width": "15px"
+                    "border-left-style": "solid"
+                    "border-left-color": user.color
+                })
+            else
+                element.css({
+                    "padding": "0 0"
+                    "border-left-width": "0px"
+                })
+
+        scope.$watch attrs.gmColorizeUser, () ->
+            updateColor()
+
+GmSpinner = ($parse, $rootScope) ->
+    restrict: "A"
+    link: (scope, element, attrs) ->
+        el = angular.element("<div/>", {"class": "spinner"})
+        el.hide()
+        element.append(el)
+
+        $rootScope.$on "spinner:start", ->
+            el.show()
+
+        $rootScope.$on "spinner:stop", ->
+            el.hide()
+
+
+GmPaginator = ($parse) ->
+    # Also, it assume that scope contains a:
+    #  - count variable
+    #  - setPage(page) function
+
+    restrict: "A"
+    require: "?ngModel"
+    templateUrl: "partials/paginator.html"
+    link: (scope, elm, attrs, ctrl) ->
+        element = angular.element(elm)
+        element.hide()
+
+        scope.paginatorHidden = true
+
+        setPageVar = element.data('set-page-var') or 'setPage'
+        pageVar = element.data('page-var') or 'page'
+        countVar = element.data('count-var') or 'count'
+        after_current = element.data('after-current') or 5
+        before_current = element.data('before-current') or 5
+        at_begin = element.data('at-begin') or 2
+        at_end = element.data('at-end') or 2
+
+        scope.paginatorSetPage = (page) ->
+            numPages = getNumPages()
+            if page <= numPages and page > 0
+                scope[setPageVar](page)
+
+        scope.paginatorGetPage = () ->
+            return scope[pageVar]
+
+        getNumPages = ->
+            numPages = scope[countVar] / scope.paginatedBy
+            if parseInt(numPages, 10) < numPages
+                numPages = parseInt(numPages, 10) + 1
+            else
+                numPages = parseInt(numPages, 10)
+
+            return numPages
+
+        renderPaginator = ->
+            if scope[countVar] is undefined
+                return
+
+            numPages = getNumPages()
+
+            scope.paginationItems = []
+            scope.paginatorHidden = false
+
+            if scope[pageVar] > 1
+                scope.showPrevious = true
+            else
+                scope.showPrevious = false
+
+            if scope[pageVar] == numPages
+                scope.showNext = false
+            else
+                scope.showNext = true
+
+            if numPages <= 1
+                element.hide()
+            else
+                for i in [1..numPages]
+                    if i == (scope[pageVar] + after_current) and numPages > (scope[pageVar] + after_current + at_end)
+                        scope.paginationItems.push(classes:"dots", type:"dots")
+                    else if i == (scope[pageVar] - before_current) and scope[pageVar] > (at_begin + before_current)
+                        scope.paginationItems.push(classes:"dots", type:"dots")
+                    else if i > (scope[pageVar] + after_current) and i <= (numPages - at_end)
+                    else if i < (scope[pageVar] - before_current) and i > at_begin
+                    else if i == scope[pageVar]
+                        scope.paginationItems.push(classes:"page active", num:i, type:"page-active")
+                    else
+                        scope.paginationItems.push(classes:"page", num:i, type:"page")
+
+                element.show()
+
+            scope.$apply()
+
+        scope.$watch countVar, (value) ->
+            _.defer(renderPaginator)
+
+        scope.$watch pageVar, (value) ->
+            _.defer(renderPaginator)
+
+GmSelect2Tags = ->
+    restrict: "A"
+    link: (scope, elm, attrs) ->
+        element = angular.element(elm)
+        colorizeTags = ->
+            for search_choice in element.siblings().find('.select2-search-choice')
+                hash = hex_sha1($(search_choice).text().trim().toLowerCase())
+                color = hash
+                    .substring(0,6)
+                    .replace('8','0')
+                    .replace('9','1')
+                    .replace('a','2')
+                    .replace('b','3')
+                    .replace('c','4')
+                    .replace('d','5')
+                    .replace('e','6')
+                    .replace('f','7')
+
+                $(search_choice).css('background', "##{color}")
+
+        element.on "change", (e) ->
+            colorizeTags()
+            scope.$emit('select2:changed', e.val)
+
+        scope.$watch attrs.gmSelect2Tags, () ->
+            element.select2({tags: scope.$eval(attrs.gmSelect2Tags)})
+            colorizeTags()
+
 module = angular.module('greenmine.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
 module.directive('gmHeaderMenu', ["$rootScope", GmHeaderMenuDirective])
@@ -304,3 +451,7 @@ module.directive('gmChecksleySubmitButton', [GmChecksleySubmitButtonDirective])
 module.directive('gmTagsInput', [GmTagsInputDirective])
 module.directive('gmSearchBox', ["$rootScope", "$location", SearchBoxDirective])
 module.directive('gmRolePointsEdition', GmRolePointsEditionDirective)
+module.directive('gmColorizeUser', GmColorizeUserDirective)
+module.directive('gmPaginator', ['$parse', GmPaginator])
+module.directive('gmSpinner', ['$parse', '$rootScope', GmSpinner])
+module.directive('gmSelect2Tags', GmSelect2Tags)

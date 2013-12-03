@@ -12,17 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-SearchController = ($scope, $rootScope, $routeParams, $data, rs) ->
+SearchController = ($scope, $rootScope, $routeParams, $data, rs, $i18next) ->
+    $rootScope.pageTitle = $i18next.t("common.search")
     $rootScope.pageSection = 'search'
     $rootScope.projectId = parseInt($routeParams.pid, 10)
-    $rootScope.pageBreadcrumb = ["", "Backlog"]
+    $rootScope.pageBreadcrumb = [
+        ["", ""]
+        [$i18next.t("common.search"), null]
+    ]
 
     $data.loadProject($scope)
 
+    $scope.term = $routeParams.term
+
     $scope.resultTypeMap = {
-        userstories: "User Story"
-        tasks: "Task"
-        issues: "Issue"
+        userstories: "User Stories"
+        tasks: "Tasks"
+        issues: "Issues"
+        wikipages: "Wiki Pages"
     }
 
     $scope.translateResultType = (type) ->
@@ -30,11 +37,26 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs) ->
             return type
         return $scope.resultTypeMap[type]
 
-    $scope.translateTypeUrl = (type, projectId, itemId) ->
+    $scope.translateTypeUrl = (type, projectId, item) ->
         return switch type
-            when "userstories" then $rootScope.urls.userStoryUrl(projectId, itemId)
-            when "issues" then $rootScope.urls.issuesUrl(projectId, itemId)
-            when "tasks" then $rootScope.urls.tasksUrl(projectId, itemId)
+            when "userstories" then $rootScope.urls.userStoryUrl(projectId, item.id)
+            when "tasks" then $rootScope.urls.tasksUrl(projectId, item.id)
+            when "issues" then $rootScope.urls.issuesUrl(projectId, item.id)
+            when "wikipages" then $rootScope.urls.wikiUrl(projectId, item.slug)
+
+    $scope.translateTypeTitle = (type, item) ->
+        return switch type
+            when "userstories" then item.subject
+            when "tasks" then item.subject
+            when "issues" then item.subject
+            when "wikipages" then item.slug
+
+    $scope.translateTypeDescription = (type, item) ->
+        return switch type
+            when "userstories" then item.description
+            when "tasks" then item.description
+            when "issues" then item.description
+            when "wikipages" then _.str.stripTags(markdown.toHTML(item.content))
 
     $scope.isTypeActive = (type) ->
         return type == $scope.activeType
@@ -56,4 +78,4 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs) ->
 
 
 module = angular.module("greenmine.controllers.search", [])
-module.controller("SearchController", ["$scope", "$rootScope", "$routeParams", "$data", "resource", SearchController])
+module.controller("SearchController", ["$scope", "$rootScope", "$routeParams", "$data", "resource", "$i18next", SearchController])

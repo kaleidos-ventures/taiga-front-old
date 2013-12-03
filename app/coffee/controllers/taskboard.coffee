@@ -12,10 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
+TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $i18next) ->
     # Global Scope Variables
+    $rootScope.pageTitle = $i18next.t('common.taskboard')
     $rootScope.pageSection = 'dashboard'
-    $rootScope.pageBreadcrumb = ["Project", "Taskboard"]
+    $rootScope.pageBreadcrumb = [
+        ["", ""],
+        [$i18next.t('common.taskboard'), null]
+    ]
 
     $scope.projectId = $routeParams.pid
     $scope.sprintId = $routeParams.sid
@@ -25,8 +29,11 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
 
     calculateTotalPoints = (us) ->
         total = 0
-        for roleId, pointId of us.points
+
+        for role in $scope.constants.computableRolesList
+            pointId = us.points[role.id]
             total += $scope.constants.points[pointId].value
+
         return total
 
     formatUserStoryTasks = ->
@@ -53,42 +60,23 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
         return
 
     calculateStats = ->
-        totalTasks = $scope.tasks.length
-        totalUss = $scope.userstoriesList.length
-        totalPoints = 0
-
-        completedPoints = 0
-        compledUss = 0
-        completedTasks = 0
-
-        for us in $scope.userstoriesList
-            totalPoints += calculateTotalPoints(us)
-
-        for usId, statuses of $scope.usTasks
-            hasOpenTasks = false
-            hasTasks = false
-
-            for statusId, tasks of statuses
-                hasTasks = true
-                if $scope.constants.taskStatuses[statusId].is_closed
-                    completedTasks += tasks.length
-                else if tasks.length > 0
-                    hasOpenTasks = true
-
-            if hasOpenTasks is false and hasTasks is true
-                compledUss += 1
-                us = $scope.userstories[usId]
-                completedPoints += calculateTotalPoints(us)
-
-        $scope.stats =
-            totalPoints: totalPoints
-            completedPoints: completedPoints.toFixed(0)
-            percentageCompletedPoints: ((completedPoints*100) / totalPoints).toFixed(1)
-            totalUss: totalUss
-            compledUss: compledUss.toFixed(0)
-            totalTasks: totalTasks
-            completedTasks: completedTasks
-
+        rs.getMilestoneStats($scope.sprintId).then (milestoneStats) ->
+            totalPoints = _.reduce(milestoneStats.total_points, (x, y) -> x + y) || 0
+            completedPoints = _.reduce(milestoneStats.completed_points, (x, y) -> x + y) || 0
+            percentageCompletedPoints = ((completedPoints*100) / totalPoints).toFixed(1)
+            $scope.stats = {
+                totalPoints: totalPoints
+                completedPoints: completedPoints
+                remainingPoints: totalPoints - completedPoints
+                percentageCompletedPoints: if totalPoints == 0 then 0 else percentageCompletedPoints
+                totalUss: milestoneStats.total_userstories
+                compledUss: milestoneStats.completed_userstories
+                remainingUss: milestoneStats.completed_userstories - milestoneStats.completed_userstories
+                totalTasks: milestoneStats.total_tasks
+                completedTasks: milestoneStats.completed_tasks
+                remainingTasks: milestoneStats.total_tasks - milestoneStats.completed_tasks
+            }
+            $scope.milestoneStats = milestoneStats
 
     loadTasks = ->
         rs.getTasks($scope.projectId, $scope.sprintId).then (tasks) ->
@@ -103,17 +91,26 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
 
     $scope.openCreateTaskForm = (us) ->
         options =
-            status: $scope.constants.taskStatusesList[0].id
+            status: $scope.project.default_task_status
             project: projectId
+            milestone: sprintId
 
         if us != undefined
             options.user_story = us.id
 
-        $rootScope.$broadcast("task-form:open", "create", options)
+        promise = $modal.open("task-form", {'task': options, 'type': 'create'})
+        promise.then (us) ->
+            $scope.tasks.push(us)
+            formatUserStoryTasks()
+            calculateStats()
 
-    $scope.$on "task-form:create", (ctx, model) ->
-        $scope.tasks.push(model)
-        formatUserStoryTasks()
+    $scope.openEditTaskForm = (us, task) ->
+        promise = $modal.open("task-form", {'task': task, 'type': 'edit'})
+        promise.then ->
+            formatUserStoryTasks()
+            calculateStats()
+
+    $scope.$on "stats:reload", ->
         calculateStats()
 
     $scope.$on "sortable:changed", ->
@@ -122,39 +119,34 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data) ->
                 for task in tasks
                     task.user_story = parseInt(usId, 10)
                     task.status = parseInt(statusId, 10)
-                    task.save() if task.isModified()
+                    if task.isModified()
+                        task.save().then ->
+                            calculateStats()
 
         for statusId, tasks of $scope.unassignedTasks
             for task in tasks
                 task.user_story = null
                 task.status = parseInt(statusId, 10)
-                task.save() if task.isModified()
+                if task.isModified()
+                    task.save().then ->
+                        calculateStats()
 
-        calculateStats()
 
-
-TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, rs) ->
+TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs, $i18next) ->
     $scope.type = "create"
     $scope.formOpened = false
 
-    $scope.submit = ->
-        rs.createTask($scope.form).then (model) ->
-            $rootScope.$broadcast("task-form:create", model)
-            $scope.overlay.close()
-            $scope.formOpened = false
+    # Load data
+    $scope.defered = null
+    $scope.context = null
 
-    $scope.close = ->
-        $scope.formOpened = false
-        $scope.overlay.close()
+    loadProjectTags = ->
+        rs.getProjectTags($scope.projectId).then (data) ->
+            $scope.projectTags = data
 
-        if $scope.type == "create"
-            $scope.form = {}
-        else
-            $scope.form.revert()
-
-    $scope.$on "task-form:open", (ctx, type, form={}) ->
-        $scope.type = type
-        $scope.form = form
+    openModal = ->
+        loadProjectTags()
+        $scope.form = $scope.context.task
         $scope.formOpened = true
 
         $scope.$broadcast("checksley:reset")
@@ -163,21 +155,54 @@ TaskboardTaskFormController = ($scope, $rootScope, $gmOverlay, rs) ->
         $scope.overlay.open().then ->
             $scope.formOpened = false
 
-    $scope.$on "task-form:close", ->
+    closeModal = ->
         $scope.formOpened = false
+
+    @.initialize = (dfr, ctx) ->
+        $scope.defered = dfr
+        $scope.context = ctx
+        openModal()
+
+    @.delete = ->
+        closeModal()
+        $scope.form = form
+        $scope.formOpened = true
+
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
+        if $scope.form.id?
+            promise = $scope.form.save(false)
+        else
+            promise = rs.createTask($scope.form)
+        $scope.$emit("spinner:start")
+
+        promise.then (data) ->
+            $scope.$emit("spinner:stop")
+            closeModal()
+            $scope.overlay.close()
+            $scope.defered.resolve($scope.form)
+            $gmFlash.info($i18next.t('taskboard.user-story-saved'))
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
+
+    $scope.close = ->
+        $scope.formOpened = false
+        $scope.overlay.close()
+
+        if $scope.form.id?
+            $scope.form.revert()
+        else
+            $scope.form = {}
+
+    $scope.$on "select2:changed", (ctx, value) ->
+        $scope.form.tags = value
 
 TaskboardTaskController = ($scope, $rootScope, $q) ->
     $scope.updateTaskAssignation = (task, id) ->
-        task.assigned_to = id ? id : null
+        task.assigned_to = id || null
         task.save()
-
-    $scope.getTaskColorStyle = (task) ->
-        return {
-            "border-color": $rootScope.constants.users[task.assigned_to].color or '#FFF5D8'
-        }
-
 
 module = angular.module("greenmine.controllers.taskboard", [])
 module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', TaskboardTaskController])
-module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', TaskboardController])
-module.controller("TaskboardTaskFormController", ['$scope', '$rootScope', '$gmOverlay', 'resource', TaskboardTaskFormController])
+module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', '$modal', "$i18next", TaskboardController])
+module.controller("TaskboardTaskModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', "$i18next", TaskboardTaskModalController])

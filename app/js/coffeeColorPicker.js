@@ -13,9 +13,11 @@
       };
       this.settings = $.extend(true, {}, this.settings, options);
       this.el = el;
+      this.el.data("coffeeColorPicker", this);
       this._rect = el[0].getBoundingClientRect();
       this._color = this.settings.color;
       this._setColor(this._color.hue, this._color.sat, this._color.lit);
+      this._bindEvents();
     }
 
     CoffeeColorPicker.prototype.refresh = function() {
@@ -33,7 +35,7 @@
     CoffeeColorPicker.prototype._onMouseWheel = function(event) {
       var delta, sat;
       event.preventDefault();
-      delta = event.originalEvent.wheelDelta;
+      delta = event.originalEvent.detail ? event.originalEvent.detail * (-120) : event.originalEvent.wheelDelta;
       delta += this._prev || 0;
       if (-500 > delta || 500 < delta) {
         return;
@@ -47,7 +49,7 @@
       var pickedColor;
       event.preventDefault();
       this.await = this.settings.freezeTime + new Date().getTime();
-      pickedColor = $.Color($(event.target), 'background').toHexString(0);
+      pickedColor = $.Color($(event.target), 'background-color').toHexString(0);
       return this.el.trigger('pick', pickedColor);
     };
 
@@ -57,6 +59,9 @@
         return _this._onMouseMove(event);
       });
       this.el.on("mousewheel", function(event) {
+        return _this._onMouseWheel(event);
+      });
+      this.el.on("DOMMouseScroll", function(event) {
         return _this._onMouseWheel(event);
       });
       return this.el.on("click", function(event) {
@@ -71,7 +76,7 @@
     };
 
     CoffeeColorPicker.prototype._setColor = function(hue, sat, lit) {
-      this.el.css("background", "hsla(" + hue + ", " + sat + "%, " + lit + "%, 1)");
+      this.el.css("background-color", "hsla(" + hue + ", " + sat + "%, " + lit + "%, 1)");
       return this._color = {
         hue: hue,
         sat: sat,
@@ -80,6 +85,9 @@
     };
 
     CoffeeColorPicker.prototype._move = function(y, x) {
+      if (this._rect.top === 0 || this._rect.left === 0) {
+        this.refresh();
+      }
       y = Math.max(0, y - this._rect.top);
       x = Math.max(0, x - this._rect.left);
       y /= this._rect.height;
@@ -96,9 +104,7 @@
   picker = function(el, options) {
     el = $(el);
     if (el.data("coffeeColorPicker") === void 0) {
-      picker = new CoffeeColorPicker(el, options);
-      picker._bindEvents();
-      return picker;
+      return new CoffeeColorPicker(el, options);
     }
     return el.data("coffeeColorPicker");
   };

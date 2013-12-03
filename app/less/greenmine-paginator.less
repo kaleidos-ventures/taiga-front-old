@@ -1,0 +1,68 @@
+@darkgray: #333333;
+
+/* Paginator */
+.paginator{
+    margin: 15px 0px 57px 0;
+    list-style: none;
+    padding: 20px;
+    padding-top: 5px;
+    margin-left: 35px;
+
+    .page, .dots {
+        float: left;
+        display: block;
+        .border-radius(2px 2px 2px 2px);
+
+        margin: 0px 10px 0px 0px;
+        &.active {
+            border: none;
+            background: @green;
+            color: @white;
+            padding: 8px 12px;
+            display: block;
+            &:hover{
+                border: none;
+            }
+        }
+        a {
+            padding: 8px 12px;
+            color: @green;
+            display: block;
+            &:visited{
+                background: @gray;
+            }
+        }
+    }
+    .page {
+        border: 1px solid @grayLight;
+        &:hover{
+            border: 1px solid @green;
+        }
+    }
+    .dots {
+        padding: 8px 12px;
+    }
+    .next_prev_button{
+        background: @white; /* Fallback */
+        display: block;
+        float: left;
+        padding: 8px 12px;
+        margin: 0px 10px 0px 0px;
+        color: @green;
+        background-clip: padding-box;
+        border: 1px solid @grayLight;
+        font-size: 0.9em;
+        &:hover{
+            border: 1px solid @green;
+        }
+        span {
+            color: @darkgray;
+        }
+    }
+    .previous{
+       .border-radius(2px 0 0 2px);
+    }
+    .next{
+        .border-radius(0 2px 2px 0);
+    }
+}

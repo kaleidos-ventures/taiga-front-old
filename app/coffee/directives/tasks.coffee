@@ -1,5 +1,18 @@
+# Copyright 2013 Andrey Antukh <niwi@niwi.be>
+#
+# Licensed under the Apache License, Version 2.0 (the "License")
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-GmTaskHistoryDirective = ($compile, $rootScope) ->
+GmTaskHistoryDirective = ($compile, $rootScope, $i18next) ->
     restrict: "A"
     require: "?ngModel"
     link: (scope, elm, attrs, ngModel) ->
@@ -14,7 +27,7 @@ GmTaskHistoryDirective = ($compile, $rootScope) ->
                 when "status" then scope.constants.taskStatuses[value].name
                 when "assigned_to"
                     if value == null
-                        return "Unassigned"
+                        return $i18next.t("common.unassigned")
                     return scope.constants.users[value].email
                 else value
 
@@ -72,4 +85,4 @@ GmTaskHistoryDirective = ($compile, $rootScope) ->
             render ngModel.$viewValue or []
 
 module = angular.module('greenmine.directives.tasks', [])
-module.directive("gmTaskHistory", GmTaskHistoryDirective)
+module.directive("gmTaskHistory", ['$i18next', GmTaskHistoryDirective])

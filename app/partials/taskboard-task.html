@@ -2,10 +2,12 @@
 
     <div class="title">{{ task.subject }}</div>
 
-    <div class="assign-to" ng-style="getTaskColorStyle(task)">
+    <div class="assign-to">
         <a href="" gm-popover="updateTaskAssignation(task, selectedId)"
-            data-tmpl="#developers-popover" data-auto-hide="false">
-                {{ constants.users[task.assigned_to].username || "Unassigned" }}</a>
+            data-tmpl="#developers-popover" data-auto-hide="false"
+            gm-colorize-user="constants.users[task.assigned_to]">
+                {{ constants.users[task.assigned_to].full_name || t("taskboard.unassigned") }}</a>
     </div>
-    <a href="{{ urls.tasksUrl(projectId, task.id) }}" class="edit-task">Edit</a>
+    <a ng-click="openEditTaskForm(task.us, task)" class="edit-task" i18next="taskboard.edit">Edit</a>
+    <a href="{{ urls.tasksUrl(projectId, task.id) }}" class="view-task" i18next="taskboard.view">View</a>
 </div>

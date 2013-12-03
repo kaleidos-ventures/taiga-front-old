@@ -1,16 +1,19 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container search-content">
     <div class="search-container">
-        <div class="search-header" >
-            <p ng-show="results.count > 0">Has buscado: <strong>{{ term }}</strong></p>
-            <p ng-show="results.count == 0">No hay resultados para <strong>{{ term }}</strong> ¡prueba a buscar de nuevo!</p>
+        <div class="search-header">
+            <!-- TODO: i18next integration pending -->
+            <p ng-show="results.count > 0">You searched: <strong>{{ term }}</strong></p>
+            <p ng-show="results.count == 0">There is no result to <strong>{{ term }}</strong>. Try again with another query!</p>
         </div>
 
         <ul class="results-tab clearfix" ng-show="results.count > 0">
             <li class="userstory-tab"
                 ng-repeat="type in resultTypes"
                 ng-class="{active: isTypeActive(type)}"
-                ng-click="setActiveType(type)">{{ translateResultType(type) }}</li>
+                ng-click="setActiveType(type)">
+                {{ translateResultType(type) }} ({{ results[type].length }})
+            </li>
         </ul>
 
         <div class="search-results">
@@ -18,12 +21,12 @@
                 <ul class="result-list">
                     <li class="result-item" ng-repeat="item in results[type]">
                         <div class="title">
-                            <a href="{{ translateTypeUrl(type, projectId, item.id) }}">
-                                {{ item.subject }}
+                            <a href="{{ translateTypeUrl(type, projectId, item) }}">
+                                {{ translateTypeTitle(type, item) }}
                             </a>
                         </div>
                         <div class="description">
-                            {{ item.description|truncate:200 }}
+                            {{ translateTypeDescription(type, item)|truncate:200 }}
                         </div>
                     </li>
                 </ul>

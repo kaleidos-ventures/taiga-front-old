@@ -1,42 +1,55 @@
 <div id="login">
     <div class="center-box">
         <div class="logo-box">
-            <a href="">
-                <img src="img/logo.png"></img>
+            <a href="#/login">
+                <img src="/img/logo.png"></img>
             </a>
         </div>
         <div class="form-container">
-            <form id="register-form" method="post" action="" ui-parsley="submit()" >
+            <form id="register-form" method="post" action="" gm-checksley-form="submit()" >
                 <fieldset>
                     <div class="form-field">
-                        <label>Username</label>
-                        <input type="text" ng-model="form.username" data-required="true" data-minlength="3" />
+                        <label i18next="register.username">Username</label>
+                        <input type="text" name="username" ng-model="form.username" data-required="true" data-minlength="3" />
                     </div>
                     <div class="form-field">
-                        <label>First name</label>
-                        <input type="text" ng-model="form.first_name" data-required="true" />
+                        <label i18next="register.first-name">First name</label>
+                        <input type="text" name="first_name" ng-model="form.first_name" data-required="true" />
                     </div>
                     <div class="form-field">
-                        <label>Last name</label>
-                        <input type="text" ng-model="form.last_name" data-required="true" />
+                        <label i18next="register.last-name">Last name</label>
+                        <input type="text" name="last_name" ng-model="form.last_name" data-required="true" />
                     </div>
                     <div class="form-field">
-                        <label>Email</label>
-                        <input type="email" ng-model="form.email" data-required="true" />
+                        <label i18next="register.email">Email</label>
+                        <input type="email" name="email" ng-model="form.email" data-required="true" />
                     </div>
 
                     <div class="form-field">
-                        <label>Password</label>
-                        <input type="password" id="password1" ng-model="form.password" data-required="true" data-minlength="8"  />
+                        <label i18next="register.password">Password</label>
+                        <input type="password" name="password" id="password1" ng-model="form.password" data-required="true" data-minlength="8"  />
                     </div>
                     <div class="form-field">
-                        <label>Password again</label>
+                        <label i18next="register.password-again">Password again</label>
                         <input type="password" data-required="true" data-minlength="8" data-equalto="#password1" />
                     </div>
-                    <div class="form-field">
-                        <input class="btn01" type="submit" value="Register" />
-                    </div>
                 </fieldset>
+                <!-- <a class="forgot-pass" href="#/recovery"></a>-->
+
+                <fieldset class="form-field clearfix">
+                    <input class="btn01" type="submit" value="Register" i18next="value:register.register" gm-checksley-submit-button />
+                </fieldset>
+
+                <!-- if success {.loading } else {.error} -->
+                <div class="login-message">
+                    <p class="loading" ng-show="!error && loading">
+                        <span class="loading-ico"></span>
+                        <span i18next="register.loading">Our Oompa Loompas are registering you, please wait...</span>
+                    </p>
+                    <p class="error" ng-show="error" i18next="register.error">
+                        Tu nombre de usuario o contraseña son incorrectos
+                    </p>
+                </div>
             </form>
         </div>
     </div>

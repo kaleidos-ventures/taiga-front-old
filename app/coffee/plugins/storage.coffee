@@ -14,10 +14,10 @@
 
 StorageProvider = ($rootScope) ->
     service = {}
-    service.get = (key) ->
+    service.get = (key, _default) ->
         serializedValue = localStorage.getItem(key)
         if serializedValue == null
-            return serializedValue
+            return _default or null
 
         return JSON.parse(serializedValue)
 

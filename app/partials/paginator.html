@@ -1,0 +1,23 @@
+<div gm-spinner class="spinner-container"></div>
+
+<ul class="paginator clearfix" ng-hide="paginatorHidden">
+    <li class="previous" ng-class="{disabled: !showPrevious}">
+        <a href=""class="previous next_prev_button" class="disabled" ng-click="paginatorSetPage(paginatorGetPage()-1)">
+            <span class="ico" sr="icon.arrow-left"></span>
+            <span i18next="pagination.prev">Prev</span>
+        </a>
+    </li>
+
+    <li ng-class="item.classes" ng-repeat="item in paginationItems" ng-switch="item.type">
+        <a href="" ng-switch-when="page" ng-click="paginatorSetPage(item.num)">{{ item.num }}</a>
+        <span ng-switch-when="page-active">{{ item.num }}</span>
+        <span ng-switch-when="dots">...</span>
+    </li>
+
+    <li class="next" ng-class="{disabled: !showNext}">
+        <a href=""class="next next_prev_button" class="disabled" ng-click="paginatorSetPage(paginatorGetPage()+1)">
+            <span i18next="pagination.next">Next</span>
+            <span class="ico" sr="icon.arrow-right"></span>
+        </a>
+    </li>
+</ul>

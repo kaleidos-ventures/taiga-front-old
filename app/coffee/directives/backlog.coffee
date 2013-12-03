@@ -12,116 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-GmBacklogGraphDirective = ($parse) -> (scope, elm, attrs) ->
-    element = angular.element(elm)
-
-    redrawChart = () ->
-        getOptimalList = (totalPoints, numOfSprints) ->
-            (totalPoints-((totalPoints/(numOfSprints))*sprintNum) for sprintNum in [0..numOfSprints])
-
-        getLabels = (listOfMilestones, numOfSprints) ->
-            result = []
-            if listOfMilestones.length > numOfSprints
-                result = _.map(listOfMilestones, 'name')
-            else
-                difference = numOfSprints - listOfMilestones.length
-                counter = 0
-                for x in [0..numOfSprints-1]
-                    if listOfMilestones.length > x
-                        result.push listOfMilestones[x].name
-                    else
-                        counter++
-                        result.push "Future sprint #{counter}"
-            result.push ""
-            return result
-
-        getEvolutionPoints = (listOfMilestones, totalPoints) ->
-            listOfMilestones = _.filter(listOfMilestones, (milestone) -> moment(milestone.finish_date) <= moment())
-            result = [totalPoints]
-            _.each(listOfMilestones, (milestone, index) ->
-                if isNaN(result[index] - milestone.closed_points["1"])
-                    result.push(0)
-                else
-                    result.push(result[index] - milestone.closed_points["1"])
-            )
-            return result
-
-        getTeamIncrementPoints = (listOfMilestones) ->
-            listOfMilestones = _.filter(listOfMilestones, (milestone) -> moment(milestone.finish_date) <= moment())
-            result = [0]
-            _.each(listOfMilestones, (milestone, index) ->
-                if isNaN(result[index] - milestone.team_increment_points["1"])
-                    result.push(0)
-                else
-                    result.push(result[index] - milestone.team_increment_points["1"])
-            )
-            return result
-
-        getClientIncrementPoints = (listOfMilestones) ->
-            listOfMilestones = _.filter(listOfMilestones, (milestone) -> moment(milestone.finish_date) <= moment())
-            result = getTeamIncrementPoints(listOfMilestones)
-            _.each(listOfMilestones, (milestone, index) ->
-                if isNaN(result[index] - milestone.client_increment_points["1"])
-                    result.push(0)
-                else
-                    result[index+1] += (result[index] - milestone.client_increment_points["1"])
-            )
-            return result
-
-        width = element.width()
-        height = width/6
-
-        element.empty()
-        chart = $("<canvas />").attr("width", width).attr("height", height).attr("id", "burndown-chart")
-        element.append(chart)
-
-        ctx = $("#burndown-chart").get(0).getContext("2d")
-
-        options =
-            animation: false
-            bezierCurve: false
-            scaleFontFamily : "'ColabThi'"
-            scaleFontSize : 10
-            datasetFillXAxis: 0
-            datasetFillYAxis: 0
-
-        data =
-            labels : getLabels(scope.project.list_of_milestones, scope.project.total_milestones)
-            datasets : [
-                {
-                    fillColor : "rgba(120,120,120,0.2)",
-                    strokeColor : "rgba(120,120,120,0.2)",
-                    pointColor : "rgba(255,255,255,1)",
-                    pointStrokeColor : "#ccc",
-                    data : getOptimalList(scope.project.total_story_points, scope.project.total_milestones)
-                },
-                {
-                    fillColor : "rgba(102,153,51,0.3)",
-                    strokeColor : "rgba(102,153,51,1)",
-                    pointColor : "rgba(255,255,255,1)",
-                    data : getEvolutionPoints(scope.project.list_of_milestones, scope.project.total_story_points)
-                },
-                {
-                    fillColor : "rgba(153,51,51,0.3)",
-                    strokeColor : "rgba(153,51,51,1)",
-                    pointColor : "rgba(255,255,255,1)",
-                    data : getTeamIncrementPoints(scope.project.list_of_milestones)
-                },
-                {
-                    fillColor : "rgba(255,51,51,0.3)",
-                    strokeColor : "rgba(255,51,51,1)",
-                    pointColor : "rgba(255,255,255,1)",
-                    data : getClientIncrementPoints(scope.project.list_of_milestones)
-                }
-            ]
-
-        new Chart(ctx).Line(data, options)
-
-    scope.$watch 'project', (value) ->
-        if scope.project
-            redrawChart()
-
-
 GmDoomlineDirective = ->
     priority: -20
     link: (scope, elm, attrs) ->
@@ -132,8 +22,11 @@ GmDoomlineDirective = ->
             element.addClass("doomline")
 
         generateDoomline = (elements) ->
-            total_points = scope.project.total_story_points
-            current_sum = 0
+            if not scope.projectStats?
+                return false
+
+            total_points = scope.projectStats.total_points
+            current_sum = scope.projectStats.assigned_points
             added = false
 
             for element in elements
@@ -161,6 +54,7 @@ GmDoomlineDirective = ->
         scope.$on("userstories:loaded", reloadDoomlineLocation)
         scope.$on("sortable:changed", reloadDoomlineLocation)
         scope.$on("points:changed", reloadDoomlineLocation)
+        scope.$on("project_stats:loaded", reloadDoomlineLocation)
 
 
 GmSortableDirective = ($log) ->
@@ -175,27 +69,16 @@ GmSortableDirective = ($log) ->
 
             onStart = (e, ui) ->
                 $log.info "GmSortableDirective.onStart", ui.item.index()
-                # Save position of dragged item
                 ui.item.sortable = { index: ui.item.index() }
-                # console.log("onStart", ui.item.index())
 
             onUpdate = (e, ui) ->
                 $log.info "GmSortableDirective.onUpdate"
-                # For some reason the reference to ngModel in stop() is wrong
-                # console.log("onUpdate", ngModel.$modelValue)
                 ui.item.sortable.model = ngModel
                 ui.item.sortable.scope = scope
 
             onReceive = (e, ui) ->
                 $log.info "GmSortableDirective.onReceive"
-                # console.log("onReceive", ui.item.sortable.moved)
-
                 ui.item.sortable.relocate = true
-                # ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved)
-                # ngModel.$viewValue.splice(ui.item.index(), 0, ui.item.sortable.moved)
-
-                # scope.$digest()
-                # scope.$broadcast("backlog-resort")
 
             onRemove = (e, ui) ->
                 $log.info "GmSortableDirective.onRemove"
@@ -212,18 +95,14 @@ GmSortableDirective = ($log) ->
                     end = ui.item.index()
 
                     # Reorder array and apply change to scope
-                    ui.item.sortable.model.$modelValue.splice(end-1, 0, ui.item.sortable.model.$modelValue.splice(start-1, 1)[0])
-                    # scope.$broadcast("sortable:changed")
+                    ui.item.sortable.model.$modelValue.splice(end, 0, ui.item.sortable.model.$modelValue.splice(start, 1)[0])
                     scope.$emit("sortable:changed")
                 else
-                    scope.$apply ->
-                        ui.item.sortable.moved.order = ui.item.index()
-                        ui.item.sortable.model.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved)
+                    ui.item.sortable.moved.order = ui.item.index()
+                    ui.item.sortable.model.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved)
 
-                    scope.$apply ->
-                        # ui.item.sortable.scope.$broadcast("sortable:changed")
-                        ui.item.sortable.scope.$emit("sortable:changed")
-                        scope.$emit("sortable:changed")
+                    ui.item.sortable.scope.$emit("sortable:changed")
+                    scope.$emit("sortable:changed")
 
                 scope.$apply()
 
@@ -239,5 +118,4 @@ GmSortableDirective = ($log) ->
 
 module = angular.module("greenmine.directives.backlog", [])
 module.directive('gmDoomline', GmDoomlineDirective)
-module.directive("gmBacklogGraph", GmBacklogGraphDirective)
 module.directive('gmSortable', ["$log", GmSortableDirective])

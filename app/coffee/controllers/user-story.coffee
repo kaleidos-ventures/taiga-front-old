@@ -13,9 +13,14 @@
 # limitations under the License.
 
 
-UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data) ->
+UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data, $confirm, $gmFlash, $i18next) ->
+    $rootScope.pageTitle = $i18next.t("user-story.user-story")
     $rootScope.pageSection = 'user-stories'
-    $rootScope.pageBreadcrumb = ["", "User stories", ""]
+    $rootScope.pageBreadcrumb = [
+        ["", ""],
+        [$i18next.t("user-story.user-story"), null],
+    ]
+
     $scope.projectId = parseInt($routeParams.pid, 10)
 
     projectId = $scope.projectId
@@ -25,6 +30,8 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
     $scope.form = {'points':{}}
     $scope.totalPoints = 0
     $scope.points = {}
+    $scope.newAttachments = []
+    $scope.attachments = []
 
     calculateTotalPoints = (us) ->
         total = 0
@@ -33,48 +40,101 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         return total
 
     loadAttachments = ->
-        $scope.attachment = undefined
         rs.getUserStoryAttachments(projectId, userStoryId).then (attachments) ->
             $scope.attachments = attachments
 
     loadUserStory = ->
         rs.getUserStory(projectId, userStoryId).then (userStory) ->
             $scope.userStory = userStory
-            $scope.form = _.clone($scope.userStory._attrs, true)
+            $scope.form = _.clone($scope.userStory.getAttrs(), true)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[2] = "##{userStory.ref}"
+            if $scope.userStory.milestone == null
+                breadcrumb[1] = [$i18next.t('common.backlog'), $rootScope.urls.backlogUrl(projectId)]
+            else
+                breadcrumb[1] = [$i18next.t('common.taskboard'), $rootScope.urls.taskboardUrl(projectId, $scope.userStory.milestone)]
+            breadcrumb[2] = [$i18next.t("user-story.user-story") + " ##{userStory.ref}", null]
+            $rootScope.pageTitle = "#{$i18next.t("user-story.user-story")} - ##{userStory.ref}"
             $rootScope.pageBreadcrumb = breadcrumb
 
             $scope.totalPoints = calculateTotalPoints(userStory)
-
             for roleId, pointId of userStory.points
                 $scope.points[roleId] = $scope.constants.points[pointId].name
+
+    loadHistorical = (page=1) ->
+        rs.getUserStoryHistorical(userStoryId, {page: page}).then (historical) ->
+            if $scope.historical and page != 1
+                historical.models = _.union($scope.historical.models, historical.models)
+
+            $scope.showMoreHistoricaButton = historical.models.length < historical.count
+            $scope.historical = historical
+
+    $scope.loadMoreHistorical = ->
+        page = if $scope.historical then $scope.historical.current + 1 else 1
+        loadHistorical(page=page)
+
+    loadProjectTags = ->
+        rs.getProjectTags($scope.projectId).then (data) ->
+            $scope.projectTags = data
+
+    saveNewAttachments = ->
+        if $scope.newAttachments.length == 0
+            return
+
+        promises = []
+        for attachment in $scope.newAttachments
+            promise = rs.uploadUserStoryAttachment(projectId, userStoryId, attachment)
+            promises.push(promise)
+
+        promise = Q.all(promises)
+        promise.then ->
+            gm.safeApply $scope, ->
+                $scope.newAttachments = []
+                loadAttachments()
 
     # Load initial data
     $data.loadProject($scope).then ->
         $data.loadUsersAndRoles($scope).then ->
             loadUserStory()
             loadAttachments()
+            loadHistorical()
+            loadProjectTags()
 
-    $scope.submit = ->
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
+        $scope.$emit("spinner:start")
         for key, value of $scope.form
             $scope.userStory[key] = value
 
-        $scope.userStory.save().then (userStory)->
-            rs.uploadUserStoryAttachment(projectId, userStoryId, $scope.attachment).then () ->
-                loadUserStory()
-                loadAttachments()
-                $rootScope.$broadcast("flash:new", true, "The user story has been saved")
+        promise = $scope.userStory.save()
+
+        promise.then (userStory)->
+            $scope.$emit("spinner:stop")
+            loadUserStory()
+            loadHistorical()
+            saveNewAttachments()
+            $gmFlash.info($i18next.t('user-story.user-story-saved'))
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
 
     $scope.removeAttachment = (attachment) ->
-        $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
-        attachment.remove()
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
+        promise.then () ->
+            $scope.attachments = _.without($scope.attachments, attachment)
+            attachment.remove()
+
+    $scope.removeNewAttachment = (attachment) ->
+        $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
     $scope.removeUserStory = (userStory) ->
-        userStory.remove().then ->
-            $location.url("/project/#{projectId}/backlog")
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
+        promise.then () ->
+            userStory.remove().then ->
+                $location.url("/project/#{projectId}/backlog")
+
+    $scope.$on "select2:changed", (ctx, value) ->
+        $scope.form.tags = value
 
 module = angular.module("greenmine.controllers.user-story", [])
-module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", UserStoryViewController])
+module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", "$i18next", UserStoryViewController])
 

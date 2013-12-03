@@ -12,206 +12,241 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm) ->
+IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $gmStorage, $modal, $i18next) ->
     # Global Scope Variables
+    $rootScope.pageTitle = $i18next.t('common.issues')
     $rootScope.pageSection = 'issues'
-    $rootScope.pageBreadcrumb = ["", "Backlog"]
+    $rootScope.pageBreadcrumb = [
+        ["", ""],
+        [$i18next.t('common.issues'), null]
+    ]
+
     $rootScope.projectId = parseInt($routeParams.pid, 10)
-
-    projectId = $rootScope.projectId
-
     $scope.filtersOpened = false
+    $scope.filtersData = {}
+    $scope.sortingOrder = 'created_date'
+    $scope.sortingReverse = true
+    $scope.page = 1
+    $scope.showGraphs = false
 
-    # Pagination variables
-    $scope.filteredItems = []
-    $scope.groupedItems = []
-    $scope.itemsPerPage = 15
-    $scope.pagedItems = []
-    $scope.currentPage = 0
+    #####
+    ## Tags generation functions
+    #####
 
-    $scope.sortingOrder = 'severity'
-    $scope.reverse = true
+    $scope.selectedTags = []
+    $scope.selectedMeta = {}
 
-    generateTagList = ->
-        tagsDict = {}
-        tags = []
+    generateTagId = (tag) ->
+        return "#{tag.type}-#{tag.id or tag.name}"
 
-        _.each $scope.issues, (iss) ->
-            _.each iss.tags, (tag) ->
-                if tagsDict[tag] is undefined
-                    tagsDict[tag] = 1
-                else
-                    tagsDict[tag] += 1
+    isTagSelected = (tag) ->
+        return $scope.selectedMeta[generateTagId(tag)] == true
 
-        _.each tagsDict, (val, key) ->
-            tags.push({name:key, count:val})
+    selectTag = (tag) ->
+        if $scope.selectedMeta[generateTagId(tag)] == undefined
+            $scope.selectedMeta[generateTagId(tag)] = true
+            $scope.selectedTags.push(tag)
+        else
+            delete $scope.selectedMeta[generateTagId(tag)]
+            $scope.selectedTags = _.reject($scope.selectedTags,
+                                        (x) -> generateTagId(tag) == generateTagId(x))
 
-        $scope.tags = tags
-
-    generateAssignedToTags = ->
-        users = $scope.constants.usersList
-
-        $scope.assignedToTags = _.map users, (user) ->
-            issues = _.filter($scope.issues, {"assigned_to": user.id})
-            return {"id": user.id, "name": user.username, "count": issues.length}
-
-    generateStatusTags = ->
-        statuses = $scope.constants.issueStatusesList
-
-        $scope.statusTags = _.map statuses, (status) ->
-            issues = _.filter($scope.issues, {"status": status.id})
-            return {"id": status.id, "name": status.name, "count": issues.length}
-
-    generateSeverityTags = ->
-        severities = $rootScope.constants.severitiesList
-
-        $scope.severityTags = _.map severities, (severity) ->
-            issues = _.filter($scope.issues, {"severity": severity.id})
-            return {"id": severity.id, "name": severity.name, "count": issues.length}
-
-    generatePriorityTags = ->
-        priorities = $rootScope.constants.prioritiesList
-
-        $scope.priorityTags = _.map priorities, (priority) ->
-            issues = _.filter($scope.issues, {"priority": priority.id})
-            return {"id": priority.id, "name": priority.name, "count": issues.length}
-
-    regenerateTags = ->
-        generateTagList()
-        generateAssignedToTags()
-        generateSeverityTags()
-        generatePriorityTags()
-        generateStatusTags()
-
-    filterIssues = ->
-        for issue in $scope.issues
-            issue.__hidden = false
-
-        # Filter by generic tags
-        selectedTags = _.filter($scope.tags, "selected")
-        selectedTagsIds = _.map(selectedTags, "name")
-
-        if selectedTagsIds.length > 0
-            for item in $scope.issues
-                interSection = _.intersection(selectedTagsIds, item.tags)
-
-                if interSection.length == 0
-                    item.__hidden = true
-                else
-                    item.__hidden = false
-
-        # Filter by assigned to tags
-        selectedUsers = _.filter($scope.assignedToTags, "selected")
-
-        if not _.isEmpty(selectedUsers)
-            for item in $scope.issues
-                continue if item.__hidden
-
-                result = _.some(selectedUsers, {"id": item.assigned_to})
-                item.__hidden = true if not result
-
-        # Filter by priority tags
-        selectedPriorities = _.filter($scope.priorityTags, "selected")
-        if not _.isEmpty(selectedPriorities)
-            for item in $scope.issues
-                continue if item.__hidden
-
-                result = _.some(selectedPriorities, {"id": item.priority})
-                item.__hidden = true if not result
-
-        # Filter by severity tags
-        selectedSeverities = _.filter($scope.severityTags, "selected")
-        if not _.isEmpty(selectedSeverities)
-            for item in $scope.issues
-                continue if item.__hidden
-
-                result = _.some(selectedSeverities, {"id": item.severity})
-                item.__hidden = true if not result
-
-        # Filter by status tags
-        selectedStatuses = _.filter($scope.statusTags, "selected")
-        if not _.isEmpty(selectedStatuses)
-            for item in $scope.issues
-                continue if item.__hidden
-
-                result = _.some(selectedStatuses, {"id": item.status})
-                item.__hidden = true if not result
-
-        groupToPages()
-
-    groupToPages = ->
-        $scope.pagedItems = []
-
-        issues = _.reject($scope.issues, "__hidden")
-        issues = $filter("orderBy")(issues, $scope.sortingOrder, $scope.reverse)
-
-        for issue, i in issues
-            if i % $scope.itemsPerPage == 0
-                $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [issue]
-            else
-                $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push(issue)
-
-    $scope.prevPage = ->
-        if $scope.currentPage > 0
-            $scope.currentPage--
-
-    $scope.nextPage = ->
-        if $scope.currentPage < ($scope.pagedItems.length - 1)
-            $scope.currentPage++
-
-    $scope.setPage = ->
-        $scope.currentPage = this.n
-
-    $scope.range = (start, end) ->
-        ret = []
-        if not end?
-            end = start
-            start = 0
-
-        ret.push(i) for i in [start..end-1]
-        return ret
-
-    $scope.selectTag = (tag) ->
-        tag.selected = if tag.selected then false else true
+        $gmStorage.set("issues-selected-tags", $scope.selectedMeta)
 
         $scope.currentPage = 0
         filterIssues()
 
-    $scope.openCreateIssueForm = ->
-        $scope.$broadcast("issue-form:open")
+    selectTagIfNotSelected = (tag) ->
+        if isTagSelected(tag)
+            $scope.selectedTags.push(tag)
+        return tag
 
-    $scope.$watch("sortingOrder", groupToPages)
-    $scope.$watch("reverse", groupToPages)
+    generateStatusTags = ->
+        tags = []
+        for statusId, count of $scope.filtersData.statuses
+            status = $scope.constants.issueStatuses[statusId]
+            tag = {"id": status.id, "name": status.name, "count": count, "type":"status", color: status.color}
+            tags.push(selectTagIfNotSelected(tag))
 
-    loadIssues = ->
-        rs.getIssues($scope.projectId).then (issues) ->
-            $scope.issues = issues
+        $scope.statusTags = tags
+
+    generateSeverityTags = ->
+        tags = []
+        for severityId, count of $scope.filtersData.severities
+            severity = $scope.constants.severities[severityId]
+            tag = {"id": severity.id, "name": severity.name, "count": count, "type": "severity", color: severity.color}
+            tags.push(selectTagIfNotSelected(tag))
+
+        $scope.severityTags = tags
+
+    generatePriorityTags = ->
+        tags = []
+        for priorityId, count of $scope.filtersData.priorities
+            priority = $scope.constants.priorities[priorityId]
+            tag = {
+                "id": priority.id,
+                "name": priority.name,
+                "count": count,
+                "type": "priority",
+                color: priority.color
+            }
+            tags.push(selectTagIfNotSelected(tag))
+
+        $scope.priorityTags = tags
+
+    generateAddedByTags = ->
+        tags = []
+        for userId, count of $scope.filtersData.owners
+            user = $scope.constants.users[userId]
+            tag = {
+                "id": user.id,
+                "name": gm.utils.truncate(user.full_name, 17),
+                "count": count,
+                "type": "owner"
+            }
+
+            tags.push(selectTagIfNotSelected(tag))
+
+        $scope.addedByTags = tags
+
+    generateAssignedToTags = ->
+        makeTag = (user) ->
+
+        tags = []
+        for userId, count of $scope.filtersData.assigned_to
+            user = $scope.constants.users[userId]
+            tag = {
+                "id": user.id,
+                "name": gm.utils.truncate(user.full_name, 17),
+                "count": count,
+                "type": "assigned_to"
+            }
+
+            tags.push(selectTagIfNotSelected(tag))
+
+        $scope.assignedToTags = tags
+
+    generateTagList = ->
+        tags = []
+
+        for tagname, tagcount of $scope.filtersData.tags
+            tag = {id: tagname, name:tagname, count:tagcount, type: "tags"}
+            tags.push(selectTagIfNotSelected(tag))
+
+        $scope.tags = tags
+
+    regenerateTags = ->
+        $scope.selectedTags = []
+        generateStatusTags()
+        generateSeverityTags()
+        generatePriorityTags()
+        generateAddedByTags()
+        generateAssignedToTags()
+        generateTagList()
+
+    getFilterParams = ->
+
+        params = {"page": $scope.page}
+
+        for key, value of _.groupBy($scope.selectedTags, "type")
+            params[key] = _.map(value, "id").join(",")
+
+        params["order_by"] = $scope.sortingOrder
+        if $scope.sortingReverse
+            params["order_by"] = "-#{params["order_by"]}"
+
+        return params
+
+    filterIssues = ->
+        $scope.$emit("spinner:start")
+
+        params = getFilterParams()
+
+        rs.getIssues($scope.projectId, params).then (result) ->
+            $scope.issues = result.models
+            $scope.count = result.count
+            $scope.paginatedBy = result.paginatedBy
+            $scope.$emit("spinner:stop")
+
+    loadIssuesData = ->
+        $scope.selectedMeta = $gmStorage.get("issues-selected-tags") or {}
+
+        promise = rs.getIssuesFiltersData($scope.projectId).then (data) ->
+            $scope.filtersData = data
             regenerateTags()
+            loadStats()
+            return data
+
+        return promise
+
+    loadStats = ->
+        rs.getIssuesStats($scope.projectId).then (data) ->
+            $scope.issuesStats = data
+
+    # Load initial data
+    $data.loadProject($scope).then ->
+        $data.loadUsersAndRoles($scope).then ->
+            loadIssuesData().then ->
+                filterIssues()
+
+    $scope.setPage = (n) ->
+        $scope.page = n
+        filterIssues()
+
+    $scope.refreshIssues = ->
+        loadIssuesData().then ->
             filterIssues()
 
-    $data.loadProject($scope)
-    $data.loadUsersAndRoles($scope).then ->
-        loadIssues()
+    $scope.selectTag = selectTag
+    $scope.isTagSelected = isTagSelected
+
+    $scope.openCreateIssueForm = ->
+        promise = $modal.open("issue-form", {'type': 'create'})
+        promise.then (issue) ->
+            $scope.issues.push(issue)
+            regenerateTags()
+            loadStats()
+            filterIssues()
+
+    $scope.openEditIssueForm = (issue) ->
+        promise = $modal.open("issue-form", {'issue': issue, 'type': 'edit'})
+        promise.then ->
+            regenerateTags()
+            loadStats()
+            filterIssues()
+
+    $scope.toggleShowGraphs = gm.utils.safeDebounced $scope, 500, ->
+        $scope.showGraphs = not $scope.showGraphs
 
     $scope.updateIssueAssignation = (issue, id) ->
         issue.assigned_to = id || null
-        issue.save()
-        regenerateTags()
+        issue.save().then ->
+            regenerateTags()
+            loadStats()
 
     $scope.updateIssueStatus = (issue, id) ->
         issue.status = id
-        issue.save()
-        regenerateTags()
+        issue.save().then ->
+            regenerateTags()
+            loadStats()
 
     $scope.updateIssueSeverity = (issue, id) ->
         issue.severity = id
-        issue.save()
-        regenerateTags()
+
+        issue.save().then ->
+            regenerateTags()
+            loadStats()
 
     $scope.updateIssuePriority = (issue, id) ->
         issue.priority = id
-        issue.save()
-        regenerateTags()
+        issue.save().then ->
+            regenerateTags()
+            loadStats()
+
+    $scope.changeSort = (field, reverse) ->
+        $scope.sortingOrder = field
+        $scope.sortingReverse = reverse
+        filterIssues()
 
     $scope.removeIssue = (issue) ->
         issue.remove().then ->
@@ -219,19 +254,18 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             $scope.issues.splice(index, 1)
 
             regenerateTags()
+            loadStats()
             filterIssues()
-
-    $scope.$on "issue-form:create", (ctx, issue) ->
-        $scope.issues.push(issue)
-
-        regenerateTags()
-        filterIssues()
 
 
 IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data,
-                        $confirm) ->
+                        $confirm, $gmFlash, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('common.issues')
     $rootScope.pageSection = 'issues'
-    $rootScope.pageBreadcrumb = ["", "Issues", ""]
+    $rootScope.pageBreadcrumb = [
+        ["", ""],
+        [$i18next.t('common.issues'), null],
+    ]
     $scope.projectId = parseInt($routeParams.pid, 10)
 
     projectId = $scope.projectId
@@ -240,6 +274,8 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
     $scope.issue = {}
     $scope.form = {}
     $scope.updateFormOpened = false
+    $scope.newAttachments = []
+    $scope.attachments = []
 
     loadIssue = ->
         rs.getIssue(projectId, issueId).then (issue) ->
@@ -247,61 +283,151 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             $scope.form = _.extend({}, $scope.issue._attrs)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[2] = "##{issue.ref}"
+            breadcrumb[1] = [$i18next.t('common.issues'), $rootScope.urls.issuesUrl(projectId)]
+            breadcrumb[2] = ["##{issue.ref}", null]
+            $rootScope.pageTitle = "#{$i18next.t('common.issues')} - ##{issue.ref}"
 
             $rootScope.pageBreadcrumb = breadcrumb
 
+    loadHistorical = (page=1) ->
+        rs.getIssueHistorical(issueId, {page: page}).then (historical) ->
+            if $scope.historical and page != 1
+                historical.models = _.union($scope.historical.models, historical.models)
+
+            $scope.showMoreHistoricaButton = historical.models.length < historical.count
+            $scope.historical = historical
+
+    $scope.loadMoreHistorical = ->
+        page = if $scope.historical then $scope.historical.current + 1 else 1
+        loadHistorical(page=page)
+
+    loadProjectTags = ->
+        rs.getProjectTags($scope.projectId).then (data) ->
+            $scope.projectTags = data
+
     loadAttachments = ->
-        $scope.attachment = undefined
-        rs.getIssueAttachments(projectId, issueId).then (attachments) ->
+        promise = rs.getIssueAttachments(projectId, issueId)
+        promise.then (attachments) ->
             $scope.attachments = attachments
 
-    $data.loadProject($scope)
-    $data.loadUsersAndRoles($scope).then ->
-        loadIssue()
-        loadAttachments()
+    saveNewAttachments = ->
+        if $scope.newAttachments.length == 0
+            return
+
+        promises = []
+        for attachment in $scope.newAttachments
+            promise = rs.uploadIssueAttachment(projectId, issueId, attachment)
+            promises.push(promise)
+
+        promise = Q.all(promises)
+        promise.then ->
+            gm.safeApply $scope, ->
+                $scope.newAttachments = []
+                loadAttachments()
+
+    # Load initial data
+    $data.loadProject($scope).then ->
+        $data.loadUsersAndRoles($scope).then ->
+            loadIssue()
+            loadAttachments()
+            loadHistorical()
+            loadProjectTags()
 
     $scope.isSameAs = (property, id) ->
         return ($scope.issue[property] == parseInt(id, 10))
 
-    $scope.submit = ->
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         for key, value of $scope.form
             $scope.issue[key] = value
 
-        $scope.issue.save().then (issue) ->
-            rs.uploadIssueAttachment(projectId, issueId, $scope.attachment).then () ->
+        $scope.$emit("spinner:start")
+
+        gm.safeApply $scope, ->
+            promise = $scope.issue.save()
+            promise.then ->
+                $scope.$emit("spinner:stop")
                 loadIssue()
-                loadAttachments()
-                $rootScope.$broadcast("flash:new", true, "The issue has been saved")
+                loadHistorical()
+                saveNewAttachments()
+                $gmFlash.info($i18next.t("issue.issue-saved"))
+
+            promise.then null, (data) ->
+                $scope.checksleyErrors = data
 
     $scope.removeAttachment = (attachment) ->
-        $scope.attachments = _.reject($scope.attachments, {"id": attachment.id})
-        attachment.remove()
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
+        promise.then () ->
+            $scope.attachments = _.without($scope.attachments, attachment)
+            attachment.remove()
+
+    $scope.removeNewAttachment = (attachment) ->
+        $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
     $scope.removeIssue = (issue) ->
-        promise = $confirm.confirm("Are you sure?")
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
         promise.then ->
             issue.remove().then ->
                 $location.url("/project/#{projectId}/issues/")
 
+    $scope.$on "select2:changed", (ctx, value) ->
+        $scope.form.tags = value
 
-IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
+
+IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next, $confirm) ->
+    $scope.type = "create"
     $scope.formOpened = false
 
-    $scope.submit = ->
-        promise = rs.createIssue($rootScope.projectId, $scope.form)
-        promise.then (issue) ->
-            $scope.form = {}
-            $scope.close()
+    # Load data
+    $scope.defered = null
+    $scope.context = null
 
-            $rootScope.$broadcast("issue-form:create", issue)
+    $scope.newAttachments = []
+    $scope.attachments = []
 
-    $scope.close = ->
-        $scope.formOpened = false
-        $scope.overlay.close()
+    saveNewAttachments = (projectId, issueId) ->
+        if $scope.newAttachments.length == 0
+            return
 
-    $scope.$on "issue-form:open", (ctx, form={}) ->
-        $scope.form = form
+        promises = []
+        for attachment in $scope.newAttachments
+            promise = rs.uploadIssueAttachment(projectId, issueId, attachment)
+            promises.push(promise)
+
+        promise = Q.all(promises)
+        promise.then ->
+            gm.safeApply $scope, ->
+                $scope.newAttachments = []
+
+    $scope.removeAttachment = (attachment) ->
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
+        promise.then () ->
+            $scope.attachments = _.without($scope.attachments, attachment)
+            attachment.remove()
+
+    $scope.removeNewAttachment = (attachment) ->
+        $scope.newAttachments = _.without($scope.newAttachments, attachment)
+
+    loadAttachments = (projectId, issueId) ->
+        promise = rs.getIssueAttachments(projectId, issueId)
+        promise.then (attachments) ->
+            $scope.attachments = attachments
+
+    loadProjectTags = ->
+        rs.getProjectTags($scope.projectId).then (data) ->
+            $scope.projectTags = data
+
+    openModal = ->
+        loadProjectTags()
+        if $scope.context.issue?
+            $scope.form = $scope.context.issue
+            loadAttachments($scope.projectId, $scope.form.id)
+        else
+            $scope.form = {
+                status: $scope.project.default_issue_status
+                type: $scope.project.default_issue_type
+                priority: $scope.project.default_priority
+                severity: $scope.project.default_severity
+            }
         $scope.formOpened = true
 
         $scope.$broadcast("checksley:reset")
@@ -310,12 +436,54 @@ IssuesFormController = ($scope, $rootScope, $gmOverlay, rs) ->
         $scope.overlay.open().then ->
             $scope.formOpened = false
 
+    closeModal = ->
+        $scope.formOpened = false
+
+    @.initialize = (dfr, ctx) ->
+        $scope.defered = dfr
+        $scope.context = ctx
+        openModal()
+
+    @.delete = ->
+        closeModal()
+        $scope.form = form
+        $scope.formOpened = true
+
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
+        if $scope.form.id?
+            promise = $scope.form.save(false)
+        else
+            promise = rs.createIssue($rootScope.projectId, $scope.form)
+        $scope.$emit("spinner:start")
+
+        promise.then (data) ->
+            $scope.$emit("spinner:stop")
+            closeModal()
+            saveNewAttachments($scope.projectId, data.id)
+            $scope.overlay.close()
+            $scope.defered.resolve($scope.form)
+            $gmFlash.info($i18next.t('issue.issue-saved'))
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
+
+    $scope.close = ->
+        $scope.formOpened = false
+        $scope.overlay.close()
+
+        if $scope.form.id?
+            $scope.form.revert()
+        else
+            $scope.form = {}
+
+    $scope.$on "select2:changed", (ctx, value) ->
+        $scope.form.tags = value
 
 module = angular.module("greenmine.controllers.issues", [])
-module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
-                  '$routeParams', '$q', 'resource', "$data", "$confirm",
-                  IssuesViewController])
 module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
-                  '$q', 'resource', "$data", "$confirm", IssuesController])
-module.controller("IssuesFormController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
-                  IssuesFormController])
+                  '$q', 'resource', "$data", "$confirm", "$gmStorage", "$modal", '$i18next', IssuesController])
+module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
+                  '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", '$i18next',
+                  IssuesViewController])
+module.controller("IssuesModalController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
+                  "$gmFlash", "$i18next", "$confirm", IssuesModalController])

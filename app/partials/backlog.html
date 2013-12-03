@@ -3,36 +3,48 @@
     <div class="span8" ng-controller="BacklogUserStoriesController">
         <div class="graphics-container">
             <div class="user-story-stats" url="">
-                <div class="progress-box" ng-show="stats.completedPercentage">
+                <div class="progress-box">
                     <div class="progress progress-success">
-                        <div class="bar" style="width: {{ stats.completedPercentage }}%;"></div>
+                        <div class="bar" style="width: {{ percentageBarCompleted| number:1 }}%; background: {{ backgroundBar }};"></div>
                     </div>
-                    <div class="progress-indicator indicator">{{ stats.completedPercentage }}%</div>
-                    <div class="progress-help help">completed points</div>
+                    <div class="progress-indicator indicator">{{ percentageClosedPoints|number:1 }}%</div>
+                    <div class="progress-help help" i18next="backlog.completed">completed</div>
                 </div>
                 <div class="stats-box">
                     <div class="item">
-                        <div class="indicator">{{ stats.totalPoints }}</div>
-                        <div class="help">total <br />points</div>
+                        <div class="indicator">{{ projectStats.total_points }}</div>
+                        <div class="help" i18next="backlog.project-points">project points</div>
                     </div>
 
                     <div class="item">
-                        <div class="indicator">{{ stats.assignedPoints }}</div>
-                        <div class="help">assigned points</div>
+                        <div class="indicator">{{ projectStats.defined_points }}</div>
+                        <div class="help" i18next="backlog.defined-points">defined points</div>
                     </div>
 
                     <div class="item">
-                        <div class="indicator">{{ stats.notAssignedPoints }}</div>
-                        <div class="help">not assigned points</div>
+                        <div class="indicator">{{ projectStats.closed_points }}</div>
+                        <div class="help" i18next="backlog.closed-points">closed points</div>
                     </div>
                 </div>
-                <a class="button new-us-story" data-icon="m"
-                    ng-click="openCreateUserStoryForm()">
-                    New user story
-                </a>
+                <!-- NINJA GRAPH
                 <a class="button show-hide-graphics" data-icon="k" ng-show="milestones.length > 0" gm-ninja-graph>
-                    <!-- Show graphics -->
                 </a>
+                -->
+                <div class="us-story-container" ng-mouseleave="usDropdown=false">
+                    <a ng-class="{active: usDropdown}" ng-click="usDropdown=true" class="new-us-story" data-icon="B" i18next="backlog.new-user-story">New user story</a>
+                    <ul class="us-story-dropdown" ng-show="usDropdown">
+                        <li>
+                            <a ng-click="openCreateUserStoryForm()" i18next="backlog.new-user-story">
+                                New user story
+                            </a>
+                        </li>
+                        <li>
+                            <a ng-click="openBulkUserStoriesForm()" i18next="backlog.bulk-user-stories">
+                                Bulk user stories
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="graph-box">
                 <div id="graphs">
@@ -41,10 +53,13 @@
             </div>
         </div>
 
-        <div class="filters-container" ng-show="tags">
+        <div class="filters-container">
             <div class="filters-bar-sbox">
                 <div class="title-sbox">
-                    <a data-icon="B" href="" ng-class="{active: filtersOpened}" ng-click="filtersOpened=!filtersOpened">Filters</a>
+                    <a data-icon="B" href="" ng-class="{active: filtersOpened}"
+                       ng-click="filtersOpened=!filtersOpened" i18next="backlog.filters">
+                       Filters
+                   </a>
                 </div>
                 <div class="filters-visual-box" ng-show="filtersOpened">
                     <div class="tags-list-sbox">
@@ -62,27 +77,35 @@
         <div class="us-container">
             <div class="us-table-list">
                 <div class="flex-header">
-                    <div class="us-check"></div>
-                    <div class="us-title">User Story</div>
-                    <div class="us-points">Points</div>
-                    <div class="us-options">Options</div>
+                    <div class="us-title">
+                        <span i18next="backlog.user-story">User Story</span>
+                        <a class="refresh-button" ng-click="refreshBacklog()" data-icon="x"></a>
+                    </div>
+                    <div class="us-points" i18next="backlog.points">Points</div>
+                    <div class="us-options" i18next="backlog.options">Options</div>
                 </div>
                 <div class="flex-header second">
+                    <!-- TODO
                     <div class="us-check"></div>
+                    -->
                     <div class="us-title">
                         <div class="list-options">
                             <div class="option">
                                 <input id="show_tags" type="checkbox" ng-model="showTags"></input>
-                                <label for="show_tags">Show tags</label>
+                                <label for="show_tags" i18next="backlog.show-tags">Show tags</label>
                             </div>
+                            <!-- TODO: total points col
                             <div class="option">
                                 <input id="show_total_points" type="checkbox" ng-model="showTotalPoints"></input>
-                                <!-- TODO: total points col -->
                                 <label for="show_total_points">Show total points (TODO)</label>
                             </div>
+                            -->
                             <div class="option" ng-show="selectedUserStories">
                                 <a href="" class="add-selected-us" data-icon="A"
-                                    ng-click="moveSelectedUserStoriesToCurrentSprint()">Add selected US ({{ selectedStoryPoints }} points) to current sprint</a>
+                                   ng-click="moveSelectedUserStoriesToCurrentSprint()">
+                                     <!-- TODO: i18next integration pending -->
+                                     Add selected US ({{ selectedStoryPoints }} points) to current sprint
+                                 </a>
                             </div>
                         </div>
                     </div>
@@ -91,26 +114,21 @@
                             {{ item.name }}
                         </div>
                     </div>
-                    <div class="us-options"></div>
+                    <div class="us-options"> </div>
                 </div>
                 <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs" gm-doomline>
-                    <div class="empty" ng-show="(unassingedUs|onlyVisible).length == 0">There isn't unassigned User Stories. Create a new one.</div>
-                    <div class="us-item" ng-repeat="us in unassingedUs|onlyVisible"
+                    <div class="us-item nga-us-item" ng-repeat="us in unassingedUs|onlyVisible"
                             gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}">
                         <div class="us-check">
                             <input type="checkbox" ng-model="us.selected" ng-change="changeUserStoriesSelection()"></input>
                         </div>
                         <div class="us-title">
-                            <div class="title">{{ us.subject|truncate:60 }}</div>
+                            <div class="title">{{ us.subject }}</div>
                             <div class="tags" ng-hide="!showTags">
                                 <span ng-repeat="tag in us.tags" class="label" gm-colorize-tag>{{ tag }}</span>
                             </div>
                         </div>
                         <div class="us-points">
-                            <!--
-                            <a href="" gm-popover="saveUsPoints(us, selectedId)"
-                                data-tmpl="#points-popover" data-auto-hide="true">{{ constants.points[us.points].name }}</a>
-                            -->
                             <div ng-repeat="role in constants.computableRolesList" class="role-point"
                                     gm-popover="saveUsPoints(us, role, selectedId)"
                                     data-tmpl="#points-popover" data-auto-hide="true">
@@ -119,14 +137,19 @@
                         </div>
                         <div class="us-options extra-options">
                             <a class="btn-small-preview" data-icon="l" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">
-                                <span class="help-box">Preview</span>
+                                <!-- TODO: Review this spanish translation, used Resumen because the Previsualizar was too long -->
+                                <span class="help-box" i18next="backlog.preview">Preview</span>
                             </a>
-                            <a class="btn-small-edit" data-icon="j" href="{{ urls.userStoryUrl(projectId, us.id) }}">
-                                <span class="help-box">Edit</span>
+
+                            <a class="btn-small-view" data-icon="f" href="{{ urls.userStoryUrl(projectId, us.id) }}">
+                                <span class="help-box" i18next="backlog.view">View</span>
+                            </a>
+                            <a class="btn-small-edit" data-icon="j" ng-click="openEditUserStoryForm(us)">
+                                <span class="help-box" i18next="backlog.edit">Edit</span>
                             </a>
                             <a class="btn-small-remove" data-icon="h" gm-popover="removeUs(us)"
                                 data-tmpl="#us-remove-popover">
-                                <span class="help-box">Remove</span>
+                                <span class="help-box" i18next="backlog.remove">Remove</span>
                             </a>
                         </div>
                     </div>
@@ -135,39 +158,44 @@
         </div>
     </div>
 
-    <div class="milestones span4" ng-controller="BacklogMilestonesController">
+    <div class="milestones span4" ng-controller="BacklogMilestonesController" ng-init="sprintFormOpened=false">
         <div class="header-box">
             <div class="title-sbox">
                 <div class="title">{{ project.total_milestones }}</div>
-                <div class="help">sprints <br />planned</div>
+                <div class="help" i18next="backlog.sprints-planned">sprints <br />planned</div>
             </div>
-            <a href="" data-icon="q" class="button new-sprint" ng-click="sprintFormOpened=!sprintFormOpened">New sprint</a>
+            <a href="" data-icon="q" class="button new-sprint"
+               ng-click="sprintFormOpened=!sprintFormOpened"
+               i18next="backlog.new-sprint">
+                New sprint
+            </a>
         </div>
 
-        <div class="milestone-form-box" ng-show="sprintFormOpened">
+        <div class="milestone-form-box nga-milestone" ng-show="sprintFormOpened">
             <form action="" gm-checksley-form="sprintSubmit()">
                 <fieldset>
-                    <label for="name">Sprint name:</label>
-                    <input type="text" data-required="true" ng-model="form.name"
-                           name="name" placeholder="Sprint name..."></input>
+                    <label for="name" i18next="backlog.sprint-name-label">Sprint name:</label>
+                    <input type="text" data-required="true" ng-model="form.name" name="name"
+                           i18next="placeholder:backlog.sprint-name-placeholder"
+                           placeholder="Sprint name..."></input>
                 </fieldset>
 
                 <fieldset>
                     <div class="subfield">
-                        <label for="estimated_start">Estimated start:</label>
+                        <label for="estimated_start" i18next="backlog.estimated-start">Estimated start:</label>
                         <input type="text" gm-kalendae name="estimated_start"
                                ng-model="form.estimated_start"></input>
                     </div>
                     <div class="subfield">
-                        <label for="estimated_finish">Estimated finish</label>
+                        <label for="estimated_finish" i18next="backlog.estimated-finish">Estimated finish</label>
                         <input type="text" gm-kalendae name="estimated_finish"
                                ng-model="form.estimated_finish"></input>
                     </div>
                 </fieldset>
                 <div class="btn-group">
                     <input type="submit" class="button button-success"
-                           gm-checksley-submit-button value="Save" />
-                    <a href="" class="button" ng-click="sprintFormOpened=false">Close</a>
+                           gm-checksley-submit-button value="Save" i18next="value:backlog.save" />
+                    <a href="" class="button" ng-click="sprintFormOpened=false" i18next="backlog.close">Close</a>
                 </div>
             </form>
         </div>
@@ -180,14 +208,16 @@
         -->
 
         <div class="sprints-box">
-            <p class="sprints-box-title">Sprints</p>
-            <p class="empty" ng-show="milestones.length == 0">
+            <p class="sprints-box-title" i18next="backlog.sprints">Sprints</p>
+            <p class="empty" ng-show="milestones.length == 0" i18next="backlog.no-sprints">
                 There isn't Sprints. Create a new one.
             </p>
+
             <div class="sprint-sbox" ng-repeat="ml in milestones"
-                 ng-controller="BacklogMilestoneController"
-                 ng-class="{first: $first}" ng-mouseover="showEditOption=true"
-                 ng-mouseout="showEditOption=false">
+                ng-class="{active: !ml.closed}"
+                ng-controller="BacklogMilestoneController"
+                ng-mouseover="showEditOption=true"
+                ng-mouseout="showEditOption=false">
                 <div class="header">
                     <div class="title">
                         <a class="name" href="{{ urls.taskboardUrl(projectId, ml.id) }}">
@@ -195,7 +225,8 @@
                         </a>
                         <a class="edit" href="" ng-click="showEditForm(ml.id)"
                            ng-show="showEditOption" data-icon="d"></a>
-                        <span>from {{ ml.statrt_date|momentFormat:"L" }} to {{ ml.end_date|momentFormat:"L" }}</span>
+                        <!-- TODO: i18next integration pending -->
+                        <span>from {{ ml.estimated_start|momentFormat:"L" }} to {{ ml.estimated_finish|momentFormat:"L" }}</span>
                     </div>
                     <div class="stats">
                         <div class="sprint-progress">
@@ -207,22 +238,37 @@
                         <div class="sprint-status">
                             <div class="item">
                                 <div class="indicator">{{ stats.total }}</div>
-                                <div class="help">total</div>
+                                <div class="help" i18next="backlog.sprint-total">total</div>
                             </div>
                             <div class="item">
-                                <div class="indicator">{{ stats.completed }}</div>
-                                <div class="help">completed</div>
+                                <div class="indicator">{{ stats.closed }}</div>
+                                <div class="help" i18next="backlog.sprint-closed">closed</div>
                             </div>
+                        </div>
+                        <div class="us-viewer" ng-show="ml.closed" ng-switch="viewUSs">
+                           <!-- Xaviju FIXME: Added icons to show/hide actions -->
+                           <a data-icon="C" class="show" href="" ng-switch-when="false"
+                               ng-click="toggleViewUSs()" i18next="backlog.sprint-show-uss">
+                               Show USs
+                           </a>
+                           <a data-icon="B" class="hide" href="" ng-switch-default
+                              ng-click="toggleViewUSs()" i18next="backlog.sprint-hide-uss">
+                               Hide USs
+                           </a>
                         </div>
                     </div>
                 </div>
-                <div class="body">
-                    <div class="us-list" ng-hide="editFormOpened">
+                <div class="body" >
+                    <div class="us-list" ng-hide="editFormOpened || !viewUSs">
                         <div class="us-table-list">
                             <div class="flex-body" gm-sortable=".us-container .flex-body"
-                                    ng-model="milestones[$index].user_stories">
-                                <div class="us-item" ng-repeat="us in ml.user_stories">
-                                    <div class="us-title">{{ us.subject|truncate:50 }}</div>
+                                    ng-model="milestones[$index].user_stories" >
+                                <div class="us-item" ng-repeat="us in ml.user_stories|orderBy:'is_closed'">
+                                    <div class="us-icon">
+                                        <div data-icon="I" ng-show="us.is_closed"></div>
+                                        <div data-icon="q" ng-show="!us.is_closed"></div>
+                                    </div>
+                                    <div class="us-title">{{ us.subject }}</div>
                                     <div class="us-points">{{ us.total_points }}</div>
                                 </div>
                             </div>
@@ -233,29 +279,34 @@
                 <div class="milestone-edit-form-box" ng-show="editFormOpened">
                     <form action="" gm-checksley-form="submit()">
                         <fieldset>
-                            <label>Sprint name:</label>
+                            <label i18next="backlog.sprint-name-label">Sprint name:</label>
                             <input type="text" data-required="true" ng-model="ml.name"
-                                name="name" placeholder="Sprint name..."></input>
+                                name="name" placeholder="Sprint name..."
+                                i18next="placeholder:backlog.sprint-name-placeholder"></input>
                         </fieldset>
 
                         <fieldset>
                             <div class="subfield">
-                                <label>Estimated start:</label>
+                                <label i18next="backlog.estimated-start">Estimated start:</label>
                                 <input type="text" gm-kalendae data-required="true"
                                        name="estimated_start"
                                        ng-model="ml.estimated_start"></input>
                             </div>
                             <div class="subfield">
-                                <label>Estimated finish</label>
+                                <label i18next="backlog.estimated-finish">Estimated finish</label>
                                 <input type="text" gm-kalendae data-required="true"
                                        name="estimated_finish"
                                        ng-model="ml.estimated_finish"></input>
                             </div>
+                            <div class="subfield checkbox">
+                                <input type="checkbox" id="closed_{{ ml.id }}" name="closed" ng-model="ml.closed"></input>
+                                <label for="closed_{{ ml.id }}" i18next="backlog.is-closed">Is closed</label>
+                            </div>
                         </fieldset>
                         <div class="btn-group">
                             <input type="submit" class="button button-success"
-                                   gm-checksley-submit-button value="Save" />
-                            <a href="" class="button" ng-click="closeEditForm()">Close</a>
+                                   gm-checksley-submit-button value="Save" i18next="value:backlog.save"/>
+                            <a href="" class="button" ng-click="closeEditForm()" i18next="backlog.close">Close</a>
                         </div>
                     </form>
                 </div>
@@ -273,62 +324,98 @@
     <div class="new-us-modal modal">
         <form class="inline-form us-form" gm-checksley-form="submit()">
             <div class="modal-header" ng-switch on="context.type">
-                <h3 ng-switch-when="create">Create user story</h3>
-                <h3 ng-switch-when="edit">Modify user story</h3>
+                <h3 ng-switch-when="create" i18next="backlog.create-user-story">Create user story</h3>
+                <h3 ng-switch-when="edit" i18next="backlog.modify-user-story">Modify user story</h3>
             </div>
             <div class="modal-body">
                 <fieldset class="fieldset-row">
                     <fieldset>
-                        <label>Subject</label>
-                        <input class="subject" type="text" ng-model="form.subject"
-                               name="subject" placeholder="A descriptive name..."></input>
+                        <label i18next="backlog.subject">Subject</label>
+                        <input class="subject" type="text" ng-model="form.subject" data-required="true"
+                               name="subject" placeholder="A descriptive name..." data-maxlength="500"
+                               i18next="placeholder:backlog.subject-placeholder"></input>
                     </fieldset>
                 </fieldset>
                 <div class="fieldset-row" gm-role-points-edition></div>
                 <div class="fieldset-row clearfix status-tags">
                     <fieldset>
-                        <label>Status</label>
+                        <label i18next="backlog.status">Status</label>
                         <select class="status" name="status" ng-model="form.status"
                             data-type="number" data-required="true"
                             data-error-message="This field is required."
-                            ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'"></select>
+                            ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'"
+                            i18next="data-error-message:field-required"
+                            ></select>
                         </select>
                     </fieldset>
                     <fieldset>
-                        <label>Tags</label>
+                        <label i18next="backlog.tags">Tags</label>
                         <input type="text" class="tags" name="tags" value=""
-                               gm-tags-input ng-model="form.tags"
-                               placeholder="Ex: backend, backoffice, ecommerce..."></input>
+                               gm-select2-tags="projectTags" ng-model="form.tags"
+                               placeholder="Ex: backend, backoffice, ecommerce..."
+                               i18next="placeholder:backlog.tags-placeholder"></input>
                     </fieldset>
                 </div>
                 <fieldset class="fieldset-row">
-                    <label>Description</label>
+                    <label i18next="backlog.description">Description</label>
                     <textarea class="description" name="description"
                               placeholder="A good description..."
+                              i18next="placeholder:backlog.description-placeholder"
                               ng-model="form.description"></textarea>
                 </fieldset>
                 <div class="fieldset-row">
                     <input type="checkbox" id="client-requirement"
                            ng-model="form.client_requirement" name="client_requirement"/>
-                    <label for="client-requirement">Client Requirement</label>
+                    <label for="client-requirement" i18next="backlog.client-requirement">Client Requirement</label>
                     <input type="checkbox"id="team-requirement"
                            ng-model="form.team_requirement" name="team_requirement">
-                    <label for="team-requirement" >Team Requirement</label>
+                    <label for="team-requirement" i18next="backlog.team-requirement">Team Requirement</label>
                 </div>
             </div>
             <div class="modal-footer">
+                <div gm-spinner class="spinner-container"></div>
                 <input type="submit" class="button button-success"
-                       gm-checksley-submit-button value="Save" />
-                <a href="" class="button button-cancel" ng-click="close()">Close</a>
+                       gm-checksley-submit-button value="Save" i18next="value:backlog.save" />
+                <a href="" class="button button-cancel" ng-click="close()" i18next="backlog.close">Close</a>
             </div>
         </form>
     </div>
 </div>
 
+<!-- user story form -->
+<div id="bulk-user-stories-modalform"
+    gm-modal="bulk-user-stories-form"
+    ng-show="bulkFormOpened"
+    ng-controller="BacklogBulkUserStoriesModalController">
+
+    <div class="bulk-us-modal modal">
+        <form class="inline-form us-form" gm-checksley-form="submit()">
+            <div class="modal-header" ng-switch on="context.type">
+                <h3 i18next="backlog.bulk-user-stories">Create a bulk of USs</h3>
+            </div>
+            <div class="modal-body">
+                <fieldset class="fieldset-row">
+                    <fieldset>
+                        <textarea ng-model="form.bulkStories" data-required="true"
+                            placeholder="One user story per line..." rows="20"
+                            i18next="placeholder:backlog.user-story-per-line"></textarea>
+                    </fieldset>
+                </fieldset>
+            <div class="modal-footer">
+                <div gm-spinner class="spinner-container"></div>
+                <input type="submit" class="button button-success"
+                       gm-checksley-submit-button value="Save" i18next="value:backlog.save" />
+                <a href="" class="button button-cancel" ng-click="close()" i18next="backlog.close">Close</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 <script type="text/template" id="points-popover">
     <div class="us-points-popover">
         <ul>
-            <li class="item btn-accept" ng-repeat="obj in constants.pointsList" data-id="{{ obj.order }}">
+            <li class="item btn-accept" ng-repeat="obj in constants.pointsList" data-id="{{ obj.id }}">
                 <a href="">{{ obj.name }}</a>
             </li>
         </ul>
@@ -338,10 +425,10 @@
 <script type="text/template" id="us-preview-popover">
     <div class="us-preview-popover">
         <section>
-            <strong>Subject:</strong><br />{{ us.subject }}
+            <strong i18next="backlog.subject-popover">Subject:</strong><br />{{ us.subject }}
         </section>
         <section>
-            <strong>Description:</strong>
+            <strong i18next="backlog.description-popover">Description:</strong>
             <p>{{ us.description }}</p>
         </section>
     </div>
@@ -350,12 +437,13 @@
 <script type="text/template" id="us-remove-popover">
     <div class="us-remove-popover">
         <section>
+            <!-- TODO: i18next integration pending -->
             <p>Are you sure you want to delete this user story:
                 <strong>{{ us.subject }}</strong></p>
         </section>
         <section>
-            <input type="button" class="button button-success" value="Delete" />
-            <input type="button" class="button button-delete" value="Cancel" />
+            <input type="button" class="button button-success" i18next="value:backlog.delete-popover" value="Delete" />
+            <input type="button" class="button button-delete" i18next="value:backlog.cancel-popover" value="Cancel" />
         </section>
     </div>
 </script>

@@ -5,10 +5,12 @@ module.exports = (grunt) ->
         'app/js/jquery.markitup.js',
         'app/js/markdown.js',
         'app/js/lodash.js',
+        'app/js/lazy.js',
         'app/js/underscore.string.js',
         'app/js/angular.js',
-        'app/js/angular-route.js',
+        # 'app/js/angular-route.js',
         'app/js/angular-sanitize.js',
+        # 'app/js/angular-animate.js',
         'app/js/bootstrap.js',
         'app/js/moment.js',
         'app/js/kalendae.js',
@@ -16,8 +18,16 @@ module.exports = (grunt) ->
         'app/js/q.js',
         'app/js/sha1.js',
         'app/js/Chart.js',
+        'app/js/excanvas.js',
+        'app/js/jquery.flot.js',
+        'app/js/jquery.flot.pie.js',
+        'app/js/jquery.flot.time.js',
+        'app/js/jquery.flot.orderBars.js',
+        'app/js/select2.js',
+        'app/js/i18next.js',
         'app/js/coffeeColorPicker.js',
-        'app/js/coffeeColorPicker.angular.js'
+        'app/js/coffeeColorPicker.angular.js',
+        'app/js/diff_match_patch.js'
     ]
 
     grunt.initConfig({
@@ -93,7 +103,7 @@ module.exports = (grunt) ->
 
             libs: {
                 files: externalSources,
-                tasks: ["uglify"],
+                tasks: ["concat"],
             }
         },
 
@@ -129,7 +139,7 @@ module.exports = (grunt) ->
 
     grunt.loadNpmTasks('grunt-contrib-uglify')
     grunt.loadNpmTasks('grunt-contrib-concat')
-    grunt.loadNpmTasks('assemble-less')
+    grunt.loadNpmTasks('grunt-contrib-less')
     grunt.loadNpmTasks('grunt-contrib-watch')
     grunt.loadNpmTasks('grunt-contrib-connect')
     grunt.loadNpmTasks('grunt-contrib-jshint')
@@ -146,7 +156,7 @@ module.exports = (grunt) ->
     grunt.registerTask('dev', [
         'less',
         'coffee:dev',
-        'uglify:libs',
+        'concat:libs',
         'htmlmin',
     ])
 

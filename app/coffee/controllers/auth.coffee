@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-LoginController = ($scope, $rootScope, $location, rs, $gmAuth) ->
+LoginController = ($scope, $rootScope, $location, $routeParams, rs, $gmAuth, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('login.login-title')
     $rootScope.pageSection = 'login'
 
     $scope.form = {}
@@ -25,8 +26,10 @@ LoginController = ($scope, $rootScope, $location, rs, $gmAuth) ->
         onSuccess = (user) ->
             $gmAuth.setUser(user)
             $rootScope.auth = user
-
-            $location.url("/")
+            if $routeParams['next']
+                $location.url($routeParams['next'])
+            else
+                $location.url("/")
 
         onError = (data) ->
             $scope.error = true
@@ -38,11 +41,8 @@ LoginController = ($scope, $rootScope, $location, rs, $gmAuth) ->
             $scope.loading = false
 
 
-RegisterController = ($scope, $rootScope) ->
-    $rootScope.pageSection = 'login'
-
-
-RecoveryController = ($scope, $rootScope, $location, rs) ->
+RecoveryController = ($scope, $rootScope, $location, rs, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('login.password-recovery-title')
     $rootScope.pageSection = 'login'
 
     $scope.formData = {}
@@ -51,30 +51,6 @@ RecoveryController = ($scope, $rootScope, $location, rs) ->
 
     $scope.submit = ->
         promise = rs.recovery($scope.formData.email)
-        promise.then ->
-            $scope.success = true
-            $scope.error = false
-
-            gm.utils.delay 1000, ->
-                $location.url("/change-password")
-                $scope.$apply()
-
-        promise.then null, (data) ->
-            $scope.error = true
-            $scope.success = false
-            $scope.formData = {}
-            $scope.errorMessage = data.detail
-
-
-ChangePasswordController = ($scope, $rootScope, $location, rs) ->
-    $rootScope.pageSection = 'login'
-
-    $scope.error = false
-    $scope.success = false
-    $scope.formData = {}
-
-    $scope.submit = ->
-        promise = rs.changePasswordFromRecovery($scope.formData.token, $scope.formData.password)
         promise.then ->
             $scope.success = true
             $scope.error = false
@@ -90,27 +66,121 @@ ChangePasswordController = ($scope, $rootScope, $location, rs) ->
             $scope.errorMessage = data.detail
 
 
-ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs) ->
+ChangePasswordController = ($scope, $rootScope, $location, $routeParams, rs, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('login.password-change-title')
+    $rootScope.pageSection = 'login'
+
+    $scope.error = false
+    $scope.success = false
+    $scope.formData = {}
+    if $routeParams.token?
+        $scope.tokenInParams = true
+    else
+        $scope.tokenInParams = false
+
+
+    $scope.submit = ->
+        token = $routeParams.token or $scope.formData.token
+        promise = rs.changePasswordFromRecovery(token, $scope.formData.password)
+        promise.then ->
+            $scope.success = true
+            $scope.error = false
+
+            gm.utils.delay 1000, ->
+                $location.url("/login")
+                $scope.$apply()
+
+        promise.then null, (data) ->
+            $scope.error = true
+            $scope.success = false
+            $scope.formData = {}
+            $scope.errorMessage = data.detail
+
+
+ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('profile.profile')
     $rootScope.projectId = null
     $rootScope.pageSection = 'profile'
-    $rootScope.pageBreadcrumb = ["Greenmine", "Profile"]
+    $rootScope.pageBreadcrumb = [
+        ["Greenmine", $rootScope.urls.projectsUrl()],
+        [$i18next.t("profile.profile"), null]
+    ]
+    $scope.notificationLevelOptions = config.notificationLevelOptions
+    $scope.languageOptions = config.languageOptions
 
     $scope.formData = {}
+    $scope.authForm = $scope.auth
 
-    $scope.submitProfile = ->
-        promise = $rootScope.auth.save()
+    if not $scope.authForm.notify_level?
+        $scope.authForm.notify_level = _.keys($scope.notificationLevelOptions)[0]
+    if not $scope.authForm.default_language?
+        $scope.authForm.default_language = _.keys($scope.languageOptions)[0]
+
+    $scope.submitProfile = (form) ->
+        promise = form.save()
+
         promise.then (user) ->
             $gmAuth.setUser(user)
-            $gmFlash.info("Profile saved successful.")
+            $gmFlash.info($i18next.t('profile.saved-successful'))
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
 
     $scope.submitPassword = ->
-        rs.changePasswordForCurrentUser($scope.formData.password).then ->
-            $gmFlash.info("Password changed successful.")
+        promise = rs.changePasswordForCurrentUser($scope.formData.password)
+
+        promise.then (data) ->
+            $gmFlash.info($i18next.t('profile.password-changed-successful'))
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
+
+
+PublicRegisterController = ($scope, $rootScope, $location, rs, $data, $gmAuth, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('register.register')
+    $rootScope.pageSection = 'login'
+    $scope.form = {"type": "public"}
+
+    $scope.$watch "site.allowPublicRegister", (value) ->
+        if value == false
+            $location.url("/login")
+
+    $scope.submit = ->
+        form = _.clone($scope.form)
+
+        promise = rs.register(form)
+        promise.then (user) ->
+            $gmAuth.setUser(user)
+            $rootScope.auth = user
+            $location.url("/")
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
+
+
+InvitationRegisterController = ($scope, $params, $rootScope, $location, rs, $data, $gmAuth, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('register.register')
+    $rootScope.pageSection = 'login'
+    $scope.form = {existing: "on", "type": "private", "token": $params.token}
+
+    $scope.submit = ->
+        form = _.clone($scope.form)
+        form.existing = if form.existing == "on" then true else false
+
+        promise = rs.register(form)
+        promise.then (user) ->
+            $gmAuth.setUser(user)
+            $rootScope.auth = user
+            $location.url("/")
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
 
 
 module = angular.module("greenmine.controllers.auth", [])
-module.controller("LoginController", ['$scope', '$rootScope', '$location', 'resource', '$gmAuth', LoginController])
-module.controller("RegisterController", ['$scope', '$rootScope', RegisterController])
-module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', RecoveryController])
-module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', 'resource',  ChangePasswordController])
-module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', ProfileController])
+module.controller("LoginController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$gmAuth', '$i18next', LoginController])
+module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', '$i18next', RecoveryController])
+module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$i18next', ChangePasswordController])
+module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', 'config', '$i18next', ProfileController])
+module.controller("PublicRegisterController", ["$scope", "$rootScope", "$location", "resource", "$data", "$gmAuth", "$i18next", PublicRegisterController])
+module.controller("InvitationRegisterController", ["$scope", "$routeParams", "$rootScope", "$location", "resource", "$data", "$gmAuth", "$i18next", InvitationRegisterController])
