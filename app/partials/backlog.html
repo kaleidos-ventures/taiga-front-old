@@ -30,9 +30,10 @@
                 <a class="button show-hide-graphics" data-icon="k" ng-show="milestones.length > 0" gm-ninja-graph>
                 </a>
                 -->
-                <div class="us-story-container" ng-mouseleave="usDropdown=false">
-                    <a ng-class="{active: usDropdown}" ng-click="usDropdown=true" class="new-us-story" data-icon="B" i18next="backlog.new-user-story">New user story</a>
-                    <ul class="us-story-dropdown" ng-show="usDropdown">
+                <div class="us-story-container">
+                    <a ng-class="{active: usDropdown}" ng-click="usDropdown=!usDropdown" class="new-us-story" data-icon="B"
+                        i18next="backlog.new-user-story">New user story</a>
+                    <ul class="us-story-dropdown" ng-show="usDropdown" ng-mouseleave="usDropdown=false">
                         <li>
                             <a ng-click="openCreateUserStoryForm()" i18next="backlog.new-user-story">
                                 New user story
