@@ -3043,6 +3043,43 @@ body.login {
                                             transition: all 0.3s ease-in;
                                         }
                                     }
+                                    .veil {
+                                        position: absolute;
+                                        top: 0px;
+                                        left: 0px;
+                                        margin: 0px;
+                                        width: 100%;
+                                        height: 100%;
+                                        background: white;
+                                        opacity: .7;
+                                        z-index: 100;
+                                        .spinner {
+                                            margin: auto;
+                                            margin-top: 30px;
+                                            opacity: .7;
+
+                                            -webkit-animation: spin .5s infinite linear;
+                                            -moz-animation: spin .5s infinite linear;
+                                            -o-animation: spin .5s infinite linear;
+                                            -ms-animation: spin .5s infinite linear;
+                                            @-webkit-keyframes spin {
+                                                0% { -webkit-transform: rotate(0deg);}
+                                                100% { -webkit-transform: rotate(360deg);}
+                                            }
+                                            @-moz-keyframes spin {
+                                                0% { -moz-transform: rotate(0deg);}
+                                                100% { -moz-transform: rotate(360deg);}
+                                            }
+                                            @-o-keyframes spin {
+                                                0% { -o-transform: rotate(0deg);}
+                                                100% { -o-transform: rotate(360deg);}
+                                            }
+                                            @-ms-keyframes spin {
+                                                0% { -ms-transform: rotate(0deg);}
+                                                100% { -ms-transform: rotate(360deg);}
+                                            }
+                                        }
+                                    }
                                     .title {
                                         font-family: 'DroidSerifBold';
                                         font-size: .9em;
