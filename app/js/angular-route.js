@@ -1,6 +1,6 @@
 /**
- * @license AngularJS v1.2.0-4b653ae
- * (c) 2010-2012 Google, Inc. http://angularjs.org
+ * @license AngularJS v1.2.3
+ * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
 (function(window, angular, undefined) {'use strict';
@@ -14,6 +14,9 @@
  *
  * The `ngRoute` module provides routing and deeplinking services and directives for angular apps.
  *
+ * ## Example
+ * See {@link ngRoute.$route#example $route} for an example of configuring and using `ngRoute`.
+ * 
  * {@installModule route}
  *
  * <div doc-module-components="ngRoute"></div>
@@ -29,8 +32,12 @@ var ngRouteModule = angular.module('ngRoute', ['ng']).
  *
  * @description
  *
- * Used for configuring routes. See {@link ngRoute.$route $route} for an example.
+ * Used for configuring routes.
+ * 
+ * ## Example
+ * See {@link ngRoute.$route#example $route} for an example of configuring and using `ngRoute`.
  *
+ * ## Dependencies
  * Requires the {@link ngRoute `ngRoute`} module to be installed.
  */
 function $RouteProvider(){
@@ -94,9 +101,14 @@ function $RouteProvider(){
    *        `$location.path()` by applying the current route
    *
    *    - `resolve` - `{Object.<string, function>=}` - An optional map of dependencies which should
-   *      be injected into the controller. If any of these dependencies are promises, they will be
-   *      resolved and converted to a value before the controller is instantiated and the
-   *      `$routeChangeSuccess` event is fired. The map object is:
+   *      be injected into the controller. If any of these dependencies are promises, the router
+   *      will wait for them all to be resolved or one to be rejected before the controller is
+   *      instantiated.
+   *      If all the promises are resolved successfully, the values of the resolved promises are
+   *      injected and {@link ngRoute.$route#$routeChangeSuccess $routeChangeSuccess} event is
+   *      fired. If any of the promises are rejected the
+   *      {@link ngRoute.$route#$routeChangeError $routeChangeError} event is fired. The map object
+   *      is:
    *
    *      - `key` – `{string}`: a name of a dependency to be injected into the controller.
    *      - `factory` - `{string|function}`: If `string` then it is an alias for a service.
@@ -264,7 +276,7 @@ function $RouteProvider(){
        Note that this example is using {@link ng.directive:script inlined templates}
        to get it working on jsfiddle as well.
 
-     <example module="ngView" deps="angular-route.js">
+     <example module="ngViewExample" deps="angular-route.js">
        <file name="index.html">
          <div ng-controller="MainCntl">
            Choose:
@@ -297,7 +309,9 @@ function $RouteProvider(){
        </file>
 
        <file name="script.js">
-         angular.module('ngView', ['ngRoute']).config(function($routeProvider, $locationProvider) {
+         angular.module('ngViewExample', ['ngRoute'])
+
+         .config(function($routeProvider, $locationProvider) {
            $routeProvider.when('/Book/:bookId', {
              templateUrl: 'book.html',
              controller: BookCntl,
@@ -664,8 +678,8 @@ ngRouteModule.directive('ngView', ngViewFactory);
           <a href="Book/Gatsby/ch/4?key=value">Gatsby: Ch4</a> |
           <a href="Book/Scarlet">Scarlet Letter</a><br/>
 
-          <div class="example-animate-container">
-            <div ng-view class="view-example"></div>
+          <div class="view-animate-container">
+            <div ng-view class="view-animate"></div>
           </div>
           <hr />
 
@@ -693,7 +707,9 @@ ngRouteModule.directive('ngView', ngViewFactory);
       </file>
 
       <file name="animations.css">
-        .example-animate-container {
+        .view-animate-container {
+          position:relative;
+          height:100px!important;
           position:relative;
           background:white;
           border:1px solid black;
@@ -701,14 +717,12 @@ ngRouteModule.directive('ngView', ngViewFactory);
           overflow:hidden;
         }
 
-        .example-animate-container > div {
+        .view-animate {
           padding:10px;
         }
 
-        .view-example.ng-enter, .view-example.ng-leave {
+        .view-animate.ng-enter, .view-animate.ng-leave {
           -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s;
-          -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s;
-          -o-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s;
           transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s;
 
           display:block;
@@ -723,20 +737,13 @@ ngRouteModule.directive('ngView', ngViewFactory);
           padding:10px;
         }
 
-        .example-animate-container {
-          position:relative;
-          height:100px;
-        }
-
-        .view-example.ng-enter {
+        .view-animate.ng-enter {
           left:100%;
         }
-        .view-example.ng-enter.ng-enter-active {
+        .view-animate.ng-enter.ng-enter-active {
           left:0;
         }
-
-        .view-example.ng-leave { }
-        .view-example.ng-leave.ng-leave-active {
+        .view-animate.ng-leave.ng-leave-active {
           left:-100%;
         }
       </file>
@@ -809,10 +816,10 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
     terminal: true,
     priority: 400,
     transclude: 'element',
-    compile: function(element, attr, linker) {
-      return function(scope, $element, attr) {
+    link: function(scope, $element, attr, ctrl, $transclude) {
         var currentScope,
             currentElement,
+            autoScrollExp = attr.autoscroll,
             onloadExp = attr.onload || '';
 
         scope.$on('$routeChangeSuccess', update);
@@ -835,40 +842,47 @@ function ngViewFactory(   $route,   $anchorScroll,   $compile,   $controller,   
 
           if (template) {
             var newScope = scope.$new();
-            linker(newScope, function(clone) {
-              clone.html(template);
-              $animate.enter(clone, null, currentElement || $element);
 
-              cleanupLastView();
-
-              var link = $compile(clone.contents()),
-                  current = $route.current;
-
-              currentScope = current.scope = newScope;
-              currentElement = clone;
-
-              if (current.controller) {
-                locals.$scope = currentScope;
-                var controller = $controller(current.controller, locals);
-                if (current.controllerAs) {
-                  currentScope[current.controllerAs] = controller;
-                }
-                clone.data('$ngControllerController', controller);
-                clone.children().data('$ngControllerController', controller);
+            // Note: This will also link all children of ng-view that were contained in the original
+            // html. If that content contains controllers, ... they could pollute/change the scope.
+            // However, using ng-view on an element with additional content does not make sense...
+            // Note: We can't remove them in the cloneAttchFn of $transclude as that
+            // function is called before linking the content, which would apply child
+            // directives to non existing elements.
+            var clone = $transclude(newScope, angular.noop);
+            clone.html(template);
+            $animate.enter(clone, null, currentElement || $element, function onNgViewEnter () {
+              if (angular.isDefined(autoScrollExp)
+                && (!autoScrollExp || scope.$eval(autoScrollExp))) {
+                $anchorScroll();
               }
-
-              link(currentScope);
-              currentScope.$emit('$viewContentLoaded');
-              currentScope.$eval(onloadExp);
-
-              // $anchorScroll might listen on event...
-              $anchorScroll();
             });
+
+            cleanupLastView();
+
+            var link = $compile(clone.contents()),
+                current = $route.current;
+
+            currentScope = current.scope = newScope;
+            currentElement = clone;
+
+            if (current.controller) {
+              locals.$scope = currentScope;
+              var controller = $controller(current.controller, locals);
+              if (current.controllerAs) {
+                currentScope[current.controllerAs] = controller;
+              }
+              clone.data('$ngControllerController', controller);
+              clone.children().data('$ngControllerController', controller);
+            }
+
+            link(currentScope);
+            currentScope.$emit('$viewContentLoaded');
+            currentScope.$eval(onloadExp);
           } else {
             cleanupLastView();
           }
         }
-      };
     }
   };
 }

@@ -143,10 +143,9 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
 
 
 modules = [
-    # "ngRoute",
+    "ngRoute",
+    "ngAnimate",
     "ngSanitize",
-    # "ngAnimate",
-    "coffeeColorPicker",
 
     "greenmine.controllers.common",
     "greenmine.controllers.auth",
@@ -170,6 +169,8 @@ modules = [
     "greenmine.directives.history",
     "greenmine.directives.wiki",
     "greenmine.directives.backlog",
+
+    "coffeeColorPicker",
 
     # Plugins modules.
     "gmUrls",
