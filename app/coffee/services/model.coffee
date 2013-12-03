@@ -55,6 +55,10 @@ ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
             @.applyCasts()
             @._isModified = false
 
+        setAttr: (name, value) ->
+            @._modifiedAttrs[name] = value
+            @._isModified = true
+
         initialize: () ->
             self = @
 

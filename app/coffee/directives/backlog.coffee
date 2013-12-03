@@ -57,7 +57,7 @@ GmDoomlineDirective = ->
         scope.$on("project_stats:loaded", reloadDoomlineLocation)
 
 
-GmSortableDirective = ($log) ->
+GmSortableDirective = ($log, $rootScope) ->
     require: '?ngModel'
     link: (scope, element, attrs, ngModel) ->
         opts = {connectWith: attrs.gmSortable}
@@ -89,22 +89,28 @@ GmSortableDirective = ($log) ->
 
             onStop = (e, ui) ->
                 $log.info "GmSortableDirective.onStop"
-                if ui.item.sortable.model and not ui.item.sortable.relocate
-                    # Fetch saved and current position of dropped element
-                    start = ui.item.sortable.index
-                    end = ui.item.index()
 
-                    # Reorder array and apply change to scope
-                    ui.item.sortable.model.$modelValue.splice(end, 0, ui.item.sortable.model.$modelValue.splice(start, 1)[0])
-                    scope.$emit("sortable:changed")
-                else
-                    ui.item.sortable.moved.order = ui.item.index()
-                    ui.item.sortable.model.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved)
+                $rootScope.$apply ->
+                    if ui.item.sortable.model and not ui.item.sortable.relocate
+                        # Fetch saved and current position of dropped element
+                        start = ui.item.sortable.index
+                        end = ui.item.index()
 
-                    ui.item.sortable.scope.$emit("sortable:changed")
-                    scope.$emit("sortable:changed")
+                        # Reorder array and apply change to scope
+                        ui.item.sortable.model.$modelValue.splice(end, 0, ui.item.sortable.model.$modelValue.splice(start, 1)[0])
+                        scope.$emit("sortable:changed")
+                    else
+                        ui.item.sortable.moved.setAttr("order", ui.item.index())
 
-                scope.$apply()
+                        values = _.clone(ui.item.sortable.model.$modelValue, false)
+                        values.splice(ui.item.index(), 0, ui.item.sortable.moved)
+
+                        for item in values
+                            delete item.$$hashKey
+
+                        ui.item.sortable.model.$setViewValue(values)
+                        ui.item.sortable.scope.$emit("sortable:changed")
+                        scope.$emit("sortable:changed")
 
             opts.start = onStart
             opts.stop = onStop
@@ -118,4 +124,4 @@ GmSortableDirective = ($log) ->
 
 module = angular.module("greenmine.directives.backlog", [])
 module.directive('gmDoomline', GmDoomlineDirective)
-module.directive('gmSortable', ["$log", GmSortableDirective])
+module.directive('gmSortable', ["$log", "$rootScope", GmSortableDirective])
