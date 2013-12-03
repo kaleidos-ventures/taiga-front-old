@@ -3,42 +3,51 @@
     <div class="profile-box">
         <div class="profile-data">
             <div class="update-form">
-                <form class="form-horizontal" gm-checksley-form="submitProfile()">
+                <form class="form-horizontal" gm-checksley-form="submitProfile(authForm)">
                     <fieldset>
                         <label i18next="profile.username">Username:</label>
-                        <input type="text" name="username" data-required="true" value="" ng-model="auth.username"></input>
+                        <input type="text" name="username" data-required="true" value="" ng-model="authForm.username"></input>
                     </fieldset>
 
                     <fieldset>
                         <label i18next="profile.first-name">First name:</label>
-                        <input type="text" name="first_name" data-required="true" value="" ng-model="auth.first_name"></input>
+                        <input type="text" name="first_name" data-required="true" value="" ng-model="authForm.first_name"></input>
                     </fieldset>
 
                     <fieldset>
                         <label i18next="profile.last-name">Last name:</label>
-                        <input type="text" name="last_name" data-required="true" value="" ng-model="auth.last_name"></input>
+                        <input type="text" name="last_name" data-required="true" value="" ng-model="authForm.last_name"></input>
                     </fieldset>
 
                     <fieldset>
                         <label i18next="profile.notification-level">Notification level:</label>
-                        <select type="text" name="notify_level" data-required="true" ng-model="auth.notify_level">
-                            <option ng-selected="key == auth.notify_level" ng-repeat="(key, value) in notificationLevelOptions" value="{{ key }}">{{ value }}</option>
+                        <select type="text" name="notify_level" data-required="true" ng-model="authForm.notify_level"
+                            ng-options="key as value for (key, value) in notificationLevelOptions" ng-required="true">
+                            <option value="" i18next="profile.select-option">Select one option</option>
                         </select>
                     </fieldset>
                     <fieldset>
                         <label i18next="profile.notify-changes-by-me">Notify changes by me:</label>
-                        <input type="checkbox" name="notify_changes_by_me" ng-model="auth.notify_changes_by_me"></input>
+                        <input type="checkbox" name="notify_changes_by_me" ng-model="authForm.notify_changes_by_me"></input>
                     </fieldset>
 
                     <fieldset>
                         <label i18next="profile.email">Email:</label>
-                        <input type="text" data-type="email" name="email" data-required="true" value="" ng-model="auth.email"></input>
+                        <input type="text" data-type="email" name="email" data-required="true" value="" ng-model="authForm.email"></input>
+                    </fieldset>
+
+                    <fieldset>
+                        <label i18next="profile.language">Language:</label>
+                        <select type="text" name="default_language" ng-model="authForm.default_language"
+                            ng-options="key as value for (key, value) in languageOptions">
+                            <option value="" i18next="profile.use-project-language">Use site language</option>
+                        </select>
                     </fieldset>
 
                     <fieldset class="colorPicker">
                         <label i18next="profile.color">Color:</label>
-                        <input type="text" name="color" data-required="true" value="" ng-model="auth.color"></input>
-                        <div class="colorSample" style="background-color: {{auth.color}}" gm-popover="" data-tmpl="#color-picker-popover" data-auto-hide="true"></div>
+                        <input type="text" name="color" data-required="true" value="" ng-model="authForm.color"></input>
+                        <div class="colorSample" style="background-color: {{authForm.color}}" gm-popover="" data-tmpl="#color-picker-popover" data-auto-hide="true"></div>
                     </fieldset>
 
 
@@ -68,5 +77,5 @@
 </div>
 
 <script type="text/template" id="color-picker-popover">
-    <div class="colorSelector" coffee-color-picker="auth.color = $color" coffee-color-picker-options="{color: {hue:100, sat: 100, lit: 25}}"></div>
+    <div class="colorSelector" coffee-color-picker="authForm.color = $color" coffee-color-picker-options="{color: {hue:100, sat: 100, lit: 25}}"></div>
 </script>

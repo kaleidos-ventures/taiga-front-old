@@ -13,20 +13,22 @@
 # limitations under the License.
 
 
-AuthProvider = ($gmStorage, $model) ->
+AuthProvider = ($rootScope, $gmStorage, $model) ->
     service = {}
 
     service.getUser = ->
         userData = $gmStorage.get('userInfo')
         if userData
+            $rootScope.$broadcast('i18n:change', userData.default_language)
             return $model.make_model("users", userData)
         return null
 
     service.setUser = (user) ->
+        $rootScope.$broadcast('i18n:change', user.default_language)
         $gmStorage.set("userInfo", user.getAttrs())
 
     return service
 
 
 module = angular.module('greenmine.services.common', [])
-module.factory("$gmAuth", ["$gmStorage", "$model", AuthProvider])
+module.factory("$gmAuth", ["$rootScope", "$gmStorage", "$model", AuthProvider])

@@ -106,11 +106,18 @@ ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next
         [$i18next.t("profile.profile"), null]
     ]
     $scope.notificationLevelOptions = config.notificationLevelOptions
+    $scope.languageOptions = config.languageOptions
 
     $scope.formData = {}
+    $scope.authForm = $scope.auth
 
-    $scope.submitProfile = ->
-        promise = $rootScope.auth.save()
+    if not $scope.authForm.notify_level?
+        $scope.authForm.notify_level = _.keys($scope.notificationLevelOptions)[0]
+    if not $scope.authForm.default_language?
+        $scope.authForm.default_language = _.keys($scope.languageOptions)[0]
+
+    $scope.submitProfile = (form) ->
+        promise = form.save()
 
         promise.then (user) ->
             $gmAuth.setUser(user)
