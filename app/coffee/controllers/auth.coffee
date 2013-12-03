@@ -40,6 +40,8 @@ LoginController = ($scope, $rootScope, $location, $routeParams, rs, $gmAuth, $i1
         promise.then ->
             $scope.loading = false
 
+    return
+
 
 RecoveryController = ($scope, $rootScope, $location, rs, $i18next) ->
     $rootScope.pageTitle = $i18next.t('login.password-recovery-title')
@@ -65,6 +67,8 @@ RecoveryController = ($scope, $rootScope, $location, rs, $i18next) ->
             $scope.formData = {}
             $scope.errorMessage = data.detail
 
+    return
+
 
 ChangePasswordController = ($scope, $rootScope, $location, $routeParams, rs, $i18next) ->
     $rootScope.pageTitle = $i18next.t('login.password-change-title')
@@ -73,11 +77,11 @@ ChangePasswordController = ($scope, $rootScope, $location, $routeParams, rs, $i1
     $scope.error = false
     $scope.success = false
     $scope.formData = {}
+
     if $routeParams.token?
         $scope.tokenInParams = true
     else
         $scope.tokenInParams = false
-
 
     $scope.submit = ->
         token = $routeParams.token or $scope.formData.token
@@ -95,6 +99,8 @@ ChangePasswordController = ($scope, $rootScope, $location, $routeParams, rs, $i1
             $scope.success = false
             $scope.formData = {}
             $scope.errorMessage = data.detail
+
+    return
 
 
 ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next) ->
@@ -135,6 +141,8 @@ ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next
         promise.then null, (data) ->
             $scope.checksleyErrors = data
 
+    return
+
 
 PublicRegisterController = ($scope, $rootScope, $location, rs, $data, $gmAuth, $i18next) ->
     $rootScope.pageTitle = $i18next.t('register.register')
@@ -157,6 +165,8 @@ PublicRegisterController = ($scope, $rootScope, $location, rs, $data, $gmAuth, $
         promise.then null, (data) ->
             $scope.checksleyErrors = data
 
+    return
+
 
 InvitationRegisterController = ($scope, $params, $rootScope, $location, rs, $data, $gmAuth, $i18next) ->
     $rootScope.pageTitle = $i18next.t('register.register')
@@ -175,6 +185,8 @@ InvitationRegisterController = ($scope, $params, $rootScope, $location, rs, $dat
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
+
+    return
 
 
 module = angular.module("greenmine.controllers.auth", [])

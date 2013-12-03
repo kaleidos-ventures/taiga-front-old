@@ -135,6 +135,8 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
 
+    return
+
 module = angular.module("greenmine.controllers.user-story", [])
 module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", "$i18next", UserStoryViewController])
 

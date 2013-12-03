@@ -124,6 +124,8 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
 
+    return
+
 
 module = angular.module("greenmine.controllers.tasks", [])
 module.controller("TasksViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', '$confirm', 'resource', "$data", "$gmFlash", "$i18next", TasksViewController])

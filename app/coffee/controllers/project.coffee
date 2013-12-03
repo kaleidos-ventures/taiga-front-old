@@ -24,6 +24,8 @@ ProjectListController = ($scope, $rootScope, rs, $i18next) ->
     rs.getProjects().then (projects) ->
         $scope.projects = projects
 
+    return
+
 
 ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model,
                           rs, $confirm, $location, $i18next) ->
@@ -125,6 +127,8 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
                 $gmFlash.error(data._error_message, false)
             $scope.checksleyErrors = data
 
+    return
+
 
 MembershipsController = ($scope, $rootScope, $model, $confirm, $i18next) ->
     $scope.deleteMember = (member) ->
@@ -133,6 +137,7 @@ MembershipsController = ($scope, $rootScope, $model, $confirm, $i18next) ->
             $model.make_model('memberships',member).remove().then () ->
                 $rootScope.$broadcast("membership:load-project")
 
+    return
 
 
 module = angular.module("greenmine.controllers.project", [])

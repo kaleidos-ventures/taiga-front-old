@@ -76,6 +76,8 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs, $i18next) ->
                 $scope.activeType = type
                 maxItemsCounter = $scope.results[type].length
 
+    return
+
 
 module = angular.module("greenmine.controllers.search", [])
 module.controller("SearchController", ["$scope", "$rootScope", "$routeParams", "$data", "resource", "$i18next", SearchController])

@@ -131,6 +131,8 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
                     task.save().then ->
                         calculateStats()
 
+    return
+
 
 TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs, $i18next) ->
     $scope.type = "create"
@@ -197,10 +199,16 @@ TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs, $i
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
 
+    return
+
+
 TaskboardTaskController = ($scope, $rootScope, $q) ->
     $scope.updateTaskAssignation = (task, id) ->
         task.assigned_to = id || null
         task.save()
+
+    return
+
 
 module = angular.module("greenmine.controllers.taskboard", [])
 module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', TaskboardTaskController])

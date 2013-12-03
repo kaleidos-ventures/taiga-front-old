@@ -115,6 +115,8 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
     $scope.deleteNewAttachment = (attachment) ->
         $scope.newAttachments = _.without($scope.newAttachments, attachment)
 
+    return
+
 
 WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
     $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug} - #{$i18next.t("wiki-historical.historical")}"
@@ -165,6 +167,8 @@ WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, 
             loadAttachments(page)
             loadHistorical()
 
+    return
+
 
 WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q, $i18next) ->
     $scope.showChanges = false
@@ -204,6 +208,8 @@ WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q, 
 
             promise.then null, (data, status) ->
                 $gmFlash.error($i18next.t("wiki-historical.gone-back-error"))
+
+    return
 
 
 module = angular.module("greenmine.controllers.wiki", [])

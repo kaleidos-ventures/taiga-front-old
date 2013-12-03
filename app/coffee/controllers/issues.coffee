@@ -257,6 +257,8 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             loadStats()
             filterIssues()
 
+    return
+
 
 IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data,
                         $confirm, $gmFlash, $i18next) ->
@@ -372,6 +374,8 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
 
+    return
+
 
 IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next, $confirm) ->
     $scope.type = "create"
@@ -478,6 +482,9 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next,
 
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
+
+    return
+
 
 module = angular.module("greenmine.controllers.issues", [])
 module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
