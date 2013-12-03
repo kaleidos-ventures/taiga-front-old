@@ -37,12 +37,23 @@ I18NextProvider = ($rootScope, storage, $q) ->
 
     service = {}
 
+    service.defaultOptions = {
+        postProcess: "lodashTemplate"
+        fallbackLng: "en"
+        useLocalStorage: false
+        localStorageExpirationTime: 60*60*24*1000 # 1 day
+        ns: 'app'
+        resGetPath: 'locales/__lng__/__ns__.json'
+        getAsync: false
+    }
+
     service.setLang = (lang) ->
         $rootScope.currentLang = lang
         storage.set("lang", lang)
 
-        i18n.setLng lang, (t) ->
-            $rootScope.$broadcast("i18next:changeLang")
+        options = _.clone(service.defaultOptions, true)
+        i18n.setLng(lang, options)
+        $rootScope.$broadcast("i18next:changeLang")
 
     service.getCurrentLang = ->
         return $rootScope.currentLang
@@ -52,34 +63,31 @@ I18NextProvider = ($rootScope, storage, $q) ->
 
     service.t = service.translate
 
-    service.initialize = (async=true) ->
-        # Put to rootScope a initial values
-        $rootScope.currentLang = storage.get("lang", "en")
+    service.initialize = (async=false, defaultLang="en") ->
+        if $rootScope.defaultLang == undefined
+            $rootScope.defaultLang = defaultLang
 
-        options =
-            postProcess: "lodashTemplate"
-            fallbackLng: "en"
-            useLocalStorage: false
-            localStorageExpirationTime: 60*60*24*1000 # 1 day
-            lng: $rootScope.currentLang
-            ns: 'app'
-            resGetPath: 'locales/__lng__/__ns__.json'
+        # Put to rootScope a initial values
+        options = _.clone(service.defaultOptions, true)
+        options.lng = $rootScope.currentLang = storage.get("lang", $rootScope.defaultLang)
 
         if async
-            options['getAsync'] = true
+            options.getAsync = true
             defer = $q.defer()
 
-            i18n.init options, (t) ->
-                # Put translate function to a rootScope
+            onI18nextInit = (t) ->
                 $rootScope.$apply ->
                     $rootScope.translate = t
                     $rootScope.t = t
                     defer.resolve(t)
                     $rootScope.$broadcast("i18next:loadComplete", t)
+
                 return defer.promise
+
+            i18n.init(options, onI18nextInit)
+
         else
-            options['getAsync'] = false
-            i18n.init options
+            i18n.init(options)
             $rootScope.translate = i18n.t
             $rootScope.t = i18n.t
             $rootScope.$broadcast("i18next:loadComplete", i18n.t)

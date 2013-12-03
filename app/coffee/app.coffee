@@ -288,9 +288,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
         $gmStorage.clear()
         $location.url("/login")
 
-    $i18next.initialize(false)
-    lang = $gmStorage.get('lang', config.defaultLanguage)
-    $i18next.setLang(lang)
+    $i18next.initialize(false, config.defaultLanguage)
 
 angular.module('greenmine', modules)
        .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', '$gmUrlsProvider', configCallback])
