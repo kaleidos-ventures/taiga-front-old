@@ -45,6 +45,8 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next) ->
         $scope.$emit("stats:update")
         $data.loadUsersAndRoles($scope)
 
+    return
+
 
 BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
     calculateStats = ->
@@ -307,6 +309,8 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash,
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
 
+    return
+
 BacklogBulkUserStoriesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next) ->
     $scope.bulkFormOpened = false
 
@@ -358,6 +362,9 @@ BacklogBulkUserStoriesModalController = ($scope, $rootScope, $gmOverlay, rs, $gm
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
 
+    return
+
+
 BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash, $i18next) ->
     # Local scope variables
     $scope.sprintFormOpened = false
@@ -404,6 +411,8 @@ BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash, $i18next) ->
 
             calculateStats()
             $rootScope.$broadcast("milestones:loaded", $scope.milestones)
+
+    return
 
 
 BacklogMilestoneController = ($scope, rs, $gmFlash, $i18next) ->
@@ -463,6 +472,8 @@ BacklogMilestoneController = ($scope, rs, $gmFlash, $i18next) ->
 
     calculateStats()
     $scope.$on("sortable:changed", normalizeMilestones)
+
+    return
 
 
 module = angular.module("greenmine.controllers.backlog", [])
