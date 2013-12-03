@@ -194,8 +194,10 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         filterIssues()
 
     $scope.refreshIssues = ->
+        $scope.refreshing = true
         loadIssuesData().then ->
-            filterIssues()
+            filterIssues().then ->
+                $scope.refreshing = false
 
     $scope.selectTag = selectTag
     $scope.isTagSelected = isTagSelected

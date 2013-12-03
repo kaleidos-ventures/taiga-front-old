@@ -80,7 +80,7 @@
                 <div class="flex-header">
                     <div class="us-title">
                         <span i18next="backlog.user-story">User Story</span>
-                        <a class="refresh-button" ng-click="refreshBacklog()" data-icon="x"></a>
+                        <a class="refresh-button" ng-class="{active: refreshing}" ng-click="refreshBacklog()" data-icon="x"></a>
                     </div>
                     <div class="us-points" i18next="backlog.points">Points</div>
                     <div class="us-options" i18next="backlog.options">Options</div>
