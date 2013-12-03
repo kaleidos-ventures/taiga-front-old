@@ -3,9 +3,12 @@
     <div class="new-issue">
         <a class="button new-button" gm-modal="#new-issue-modal"
            ng-click="openCreateIssueForm()" data-icon="a" i18next="issues.new-issue">New issue</a>
-        <a class="button refresh-button" ng-click="refreshIssues()" data-icon="x" ng-class="{active: refreshing}" i18next="issues.refresh">Refresh</a>
-        <a class="button graphs-button" data-icon="k" ng-click="toggleShowGraphs()" i18next="issues.graphs">Graphs</a>
-        <a class="button tags-button" data-icon="f" ng-click="showTags = !showTags" i18next="issues.tags-button">Tags</a>
+        <a class="button refresh-button" ng-click="refreshIssues()" data-icon="x"
+            ng-class="{active: refreshing}" i18next="issues.refresh">Refresh</a>
+        <a class="button graphs-button" data-icon="k" ng-click="toggleShowGraphs()"
+            ng-class="{'active': showGraphs}" i18next="issues.graphs">Graphs</a>
+        <a class="button tags-button" data-icon="f" ng-click="showTags = !showTags"
+            ng-class="{'active': showTags}" i18next="issues.tags-button">Tags</a>
     </div>
     <div class="graph-box" ng-show="showGraphs">
         <div class="graph-container">
