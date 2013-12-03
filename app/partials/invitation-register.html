@@ -9,7 +9,7 @@
             <div id="register-form">
                 <fieldset class="register-select">
                     <input type="radio" id="existing-off" ng-model="form.existing" value="off" name="existing"/>
-                    <label for="existing-off">You are new user?</label>
+                    <label for="existing-off" i18next="register.are-new-user">You are new user?</label>
                 </fieldset>
 
                 <form id="form1" method="post" action="" gm-checksley-form="submit()" ng-hide="form.existing == 'on'">
@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="form-field">
-                            <input class="btn01" type="submit" value="Register" gm-checksley-submit-button />
+                            <input class="btn01" type="submit" value="Register" gm-checksley-submit-button i18next="value:register.register" />
                         </div>
                     </fieldset>
 
@@ -49,7 +49,7 @@
 
                 <fieldset class="register-select">
                     <input type="radio" id="existing-on" ng-model="form.existing" value="on" name="existing" checked="checked" />
-                    <label for="existing-on">You are existing user?</label>
+                    <label for="existing-on" i18next="register.are-existing-user">You are existing user?</label>
                 </fieldset>
 
                 <form id="form1" method="post" action="" gm-checksley-form="submit()" ng-show="form.existing == 'on'">
@@ -64,7 +64,7 @@
                             <input type="password" name="password" id="password1" ng-model="form.password" data-required="true" data-minlength="4"  />
                         </div>
                         <div class="form-field">
-                            <input class="btn01" type="submit" value="Register" gm-checksley-submit-button />
+                            <input class="btn01" type="submit" value="Register" gm-checksley-submit-button i18next="value:register.register" />
                         </div>
                     </fieldset>
 
@@ -72,8 +72,13 @@
 
                 <!-- if success {.loading } else {.error} -->
                 <div class="login-message">
-                    <p class="loading" ng-show="!error && loading"><span class="loading-ico"></span>Our Oompa Loompas are registring you, please wait...</p>
-                    <p class="error" ng-show="error">Tu nombre de usuario o contraseña son incorrectos</p>
+                    <p class="loading" ng-show="!error && loading">
+                        <span class="loading-ico"></span>
+                        <span i18next="register.loading">Our Oompa Loompas are registering you, please wait...</span>
+                    </p>
+                    <p class="error" ng-show="error" i18next="register.error">
+                        Your username or password are incorrects.
+                    </p>
                 </div>
             </form>
         </div>

@@ -9,6 +9,7 @@
         "username-placeholder": "nombre de usuario...",
         "password-placeholder": "contraseña...",
         "forgot-password": "¿Has olvidado tu contraseña?",
+        "join": "Registrate en greenmine",
         "your-email": "Tu email",
         "login": "Entrar",
         "loading": "Nuestros Oompa Loompas te están identificando, por favor espere...",
@@ -219,6 +220,9 @@
         "add-new-member": "Añadir nuevo miembro",
         "role": "Rol",
         "user": "Usuario",
+        "full-name": "Nombre completo",
+        "email": "Email",
+        "status": "Estado",
         "cancel": "Cancelar",
         "delete-member": "Borrar miembro",
         "select-role": "Seleccionar rol:",
@@ -251,7 +255,11 @@
         "email": "Email",
         "password": "Contraseña",
         "password-again": "Repetir contraseña",
-        "register": "Registrarte"
+        "register": "Registrarte",
+        "loading": "Nuestros Oompa Loompas te están registrando, por favor espere...",
+        "error": "Tu nombre de usuario o contraseña son incorrectos",
+        "are-new-user": "¿Eres un nuevo usuario?",
+        "are-existing-user": "¿Ya eres usuario?"
     },
     "taskboard": {
         "points": "Puntos",

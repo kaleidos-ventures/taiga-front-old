@@ -129,7 +129,8 @@ ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next
             $scope.checksleyErrors = data
 
 
-PublicRegisterController = ($scope, $rootScope, $location, rs, $data, $gmAuth) ->
+PublicRegisterController = ($scope, $rootScope, $location, rs, $data, $gmAuth, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('register.register')
     $rootScope.pageSection = 'login'
     $scope.form = {"type": "public"}
 
@@ -150,7 +151,8 @@ PublicRegisterController = ($scope, $rootScope, $location, rs, $data, $gmAuth) -
             $scope.checksleyErrors = data
 
 
-InvitationRegisterController = ($scope, $params, $rootScope, $location, rs, $data, $gmAuth) ->
+InvitationRegisterController = ($scope, $params, $rootScope, $location, rs, $data, $gmAuth, $i18next) ->
+    $rootScope.pageTitle = $i18next.t('register.register')
     $rootScope.pageSection = 'login'
     $scope.form = {existing: "on", "type": "private", "token": $params.token}
 
@@ -173,5 +175,5 @@ module.controller("LoginController", ['$scope', '$rootScope', '$location', '$rou
 module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', '$i18next', RecoveryController])
 module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$i18next', ChangePasswordController])
 module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', 'config', '$i18next', ProfileController])
-module.controller("PublicRegisterController", ["$scope", "$rootScope", "$location", "resource", "$data", "$gmAuth", PublicRegisterController])
-module.controller("InvitationRegisterController", ["$scope", "$routeParams", "$rootScope", "$location", "resource", "$data", "$gmAuth", InvitationRegisterController])
+module.controller("PublicRegisterController", ["$scope", "$rootScope", "$location", "resource", "$data", "$gmAuth", "$i18next", PublicRegisterController])
+module.controller("InvitationRegisterController", ["$scope", "$routeParams", "$rootScope", "$location", "resource", "$data", "$gmAuth", "$i18next", InvitationRegisterController])

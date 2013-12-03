@@ -42,8 +42,13 @@
 
                 <!-- if success {.loading } else {.error} -->
                 <div class="login-message">
-                    <p class="loading" ng-show="!error && loading"><span class="loading-ico"></span>Our Oompa Loompas are registring you, please wait...</p>
-                    <p class="error" ng-show="error">Tu nombre de usuario o contraseña son incorrectos</p>
+                    <p class="loading" ng-show="!error && loading">
+                        <span class="loading-ico"></span>
+                        <span i18next="register.loading">Our Oompa Loompas are registering you, please wait...</span>
+                    </p>
+                    <p class="error" ng-show="error" i18next="register.error">
+                        Tu nombre de usuario o contraseña son incorrectos
+                    </p>
                 </div>
             </form>
         </div>
