@@ -3029,24 +3029,34 @@ body.login {
                                 .task-box-content {
                                     background-color: #FFF5D8;
                                     color: black;
-                                    /*overflow: hidden;*/
-                                    width: 90%;
                                     height: 90%;
-                                    padding: 7px;
                                     cursor: move;
                                     position: relative;
+                                    &:hover{
+                                        box-shadow: 0px 6px 15px -2px rgba(0,0,0,.3);
+                                        .edit-task{
+                                            opacity: 1;
+                                            transition: all 0.3s ease-in;
+                                        }
+                                        .view-task{
+                                            opacity: 1;
+                                            transition: all 0.3s ease-in;
+                                        }
+                                    }
                                     .title {
                                         font-family: 'DroidSerifBold';
                                         font-size: .9em;
                                         line-height: 15px;
                                         overflow: hidden;
                                         color: #333;
+                                        padding: 7px;
                                     }
                                     .assign-to{
                                         margin: 5px 0;
                                         white-space: nowrap;
                                         overflow: hidden;
                                         text-overflow: ellipsis;
+                                        padding: 0 7px;
                                         a{
                                             color: #666;
                                             font-size: .9em;
@@ -3068,45 +3078,18 @@ body.login {
                                         color: #000;
                                         margin-top: 4px;
                                     }
-                                    .view-task{
-                                        position: absolute;
-                                        bottom: 0px;
-                                        left: 0px;
-                                        padding: 5px 5px 5px 5px;
-                                        text-indent: 100%;
-                                        white-space: nowrap;
-                                        overflow: hidden;
-                                        width: 16px;
-                                        height: 16px;
-                                        display: block;
-                                        opacity: 0;
-                                        border-radius: 0 20px 0 0;
-                                        background: url('../img/backlog_sprite.png') no-repeat center 8px rgba(66,99,33,.6);
+                                    .us-options {
+                                        padding: 3px 7px;
+                                        background: #F2E8CB;
                                     }
+                                    .view-task,
                                     .edit-task{
-                                        position: absolute;
-                                        bottom: 0px;
-                                        right: 0px;
-                                        padding: 5px 5px 5px 5px;
-                                        text-indent: 100%;
                                         white-space: nowrap;
-                                        overflow: hidden;
-                                        width: 16px;
-                                        height: 16px;
-                                        display: block;
-                                        opacity: 0;
-                                        border-radius: 20px 0 0 0;
-                                        background: url('../img/backlog_sprite.png') no-repeat center -12px rgba(66,99,33,.6);
-                                    }
-                                    &:hover{
-                                        box-shadow: 0px 6px 15px -2px rgba(0,0,0,.3);
-                                        .edit-task{
-                                            opacity: 1;
-                                            transition: all 0.3s ease-in;
-                                        }
-                                        .view-task{
-                                            opacity: 1;
-                                            transition: all 0.3s ease-in;
+                                        color: darken(#F2E8CB, 20%);
+                                        margin-right: 2px;
+                                        &:hover {
+                                            color: darken(#F2E8CB, 40%);
+                                            transition: all .3s ease-in;
                                         }
                                     }
                                 }

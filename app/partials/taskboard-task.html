@@ -1,4 +1,4 @@
-<div class="task-box-content" ng-controller="TaskboardTaskController">
+<div class="task-box-content clearfix" ng-controller="TaskboardTaskController">
 
     <div class="title">{{ task.subject }}</div>
 
@@ -8,6 +8,8 @@
             gm-colorize-user="constants.users[task.assigned_to]">
                 {{ constants.users[task.assigned_to].full_name || t("taskboard.unassigned") }}</a>
     </div>
-    <a ng-click="openEditTaskForm(task.us, task)" class="edit-task" i18next="taskboard.edit">Edit</a>
-    <a href="{{ urls.tasksUrl(projectId, task.id) }}" class="view-task" i18next="taskboard.view">View</a>
+    <div class="us-options clearfix">
+        <a data-icon="j" ng-click="openEditTaskForm(task.us, task)" class="edit-task"></a>
+        <a data-icon="l" href="{{ urls.tasksUrl(projectId, task.id) }}" class="view-task"></a>
+    </div>
 </div>
