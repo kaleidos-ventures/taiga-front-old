@@ -89,10 +89,6 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
 
     resortUserStories = ->
         # Normalize user stories array
-        _.each $scope.unassingedUs, (item, index) ->
-            item.order = index
-            item.milestone = null
-
         for item, index in $scope.unassingedUs
             item.order = index
             item.milestone = null
