@@ -48,7 +48,7 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next) ->
     return
 
 
-BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
+BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $location) ->
     calculateStats = ->
         $scope.$emit("stats:update")
 
@@ -167,6 +167,9 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal) ->
         $scope.refreshing = true
         loadUserStories().then ->
             $scope.refreshing = false
+
+    $scope.openUserStory = (projectId, usId)->
+        $location.url("/project/#{projectId}/user-story/#{usId}")
 
     $scope.$on("points:loaded", loadUserStories)
     $scope.$on("userstory-form:create", loadUserStories)
@@ -477,7 +480,7 @@ BacklogMilestoneController = ($scope, rs, $gmFlash, $i18next) ->
 module = angular.module("greenmine.controllers.backlog", [])
 module.controller('BacklogMilestoneController', ['$scope', 'resource', '$gmFlash', '$i18next', BacklogMilestoneController])
 module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', BacklogMilestonesController])
-module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', '$i18next', BacklogUserStoriesController])
+module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', '$location', BacklogUserStoriesController])
 module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', '$i18next', BacklogController])
 module.controller('BacklogUserStoryModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogUserStoryModalController])
 module.controller('BacklogBulkUserStoriesModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogBulkUserStoriesModalController])

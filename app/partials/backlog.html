@@ -119,12 +119,16 @@
                 </div>
                 <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs" gm-doomline>
                     <div class="us-item nga-us-item" ng-repeat="us in unassingedUs|onlyVisible"
-                            gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}">
+                            gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}" ng-dblclick="openUserStory(projectId, us.id)">
                         <div class="us-check">
                             <input type="checkbox" ng-model="us.selected" ng-change="changeUserStoriesSelection()"></input>
                         </div>
                         <div class="us-title">
-                            <div class="title">{{ us.subject }}</div>
+                            <div class="title" ng-click="goToUs(us)">
+                                <a  href="{{ urls.userStoryUrl(projectId, us.id) }}">
+                                    {{ us.subject }}
+                                </a>
+                            </div>
                             <div class="tags" ng-hide="!showTags">
                                 <span ng-repeat="tag in us.tags" class="label" gm-colorize-tag>{{ tag }}</span>
                             </div>
@@ -140,10 +144,6 @@
                             <a class="btn-small-preview" data-icon="l" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">
                                 <!-- TODO: Review this spanish translation, used Resumen because the Previsualizar was too long -->
                                 <span class="help-box" i18next="backlog.preview">Preview</span>
-                            </a>
-
-                            <a class="btn-small-view" data-icon="f" href="{{ urls.userStoryUrl(projectId, us.id) }}">
-                                <span class="help-box" i18next="backlog.view">View</span>
                             </a>
                             <a class="btn-small-edit" data-icon="j" ng-click="openEditUserStoryForm(us)">
                                 <span class="help-box" i18next="backlog.edit">Edit</span>
