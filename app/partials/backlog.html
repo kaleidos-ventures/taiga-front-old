@@ -31,7 +31,7 @@
                 </a>
                 -->
                 <div class="us-story-container" ng-mouseleave="usDropdown=false">
-                    <a ng-class="{active: usDropdown}" ng-click="usDropdown=true" class="new-us-story" data-icon="B"
+                    <a ng-class="{active: usDropdown}" ng-click="usDropdown=!usDropdown" class="new-us-story" data-icon="B"
                         i18next="backlog.new-user-story">New user story</a>
                     <ul class="us-story-dropdown" ng-show="usDropdown" ng-mouseleave="usDropdown=false">
                         <li>
