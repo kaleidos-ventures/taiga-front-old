@@ -216,15 +216,18 @@ TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs, $i
     return
 
 
-TaskboardTaskController = ($scope, $rootScope, $q) ->
+TaskboardTaskController = ($scope, $rootScope, $q, $location) ->
     $scope.updateTaskAssignation = (task, id) ->
         task.assigned_to = id || null
         task.save()
+
+    $scope.openTask = (projectId, taskId)->
+        $location.url("/project/#{projectId}/tasks/#{taskId}")
 
     return
 
 
 module = angular.module("greenmine.controllers.taskboard", [])
-module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', TaskboardTaskController])
+module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', "$location", TaskboardTaskController])
 module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', '$modal', "$i18next", TaskboardController])
 module.controller("TaskboardTaskModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', "$i18next", TaskboardTaskModalController])

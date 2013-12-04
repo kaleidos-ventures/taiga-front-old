@@ -164,7 +164,7 @@
                 <div class="empty" ng-show="issues.length == 0">
                     There aren't issues to show.
                 </div>
-                <div class="issue-item" ng-repeat="issue in issues">
+                <div class="issue-item" ng-repeat="issue in issues" ng-dblclick="openIssue(projectId, issue.id)">
                     <div class="issue-severity">
                         <a href="" gm-popover="updateIssueSeverity(issue, selectedId)"
                             data-tmpl="#severity-popover" data-auto-hide="true"

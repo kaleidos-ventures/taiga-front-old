@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $gmStorage, $modal, $i18next) ->
+IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $gmStorage, $modal, $i18next, $location) ->
     # Global Scope Variables
     $rootScope.pageTitle = $i18next.t('common.issues')
     $rootScope.pageSection = 'issues'
@@ -259,6 +259,9 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             loadStats()
             filterIssues()
 
+    $scope.openIssue = (projectId, issueId)->
+        $location.url("/project/#{projectId}/issues/#{issueId}")
+
     return
 
 
@@ -490,7 +493,7 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next,
 
 module = angular.module("greenmine.controllers.issues", [])
 module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
-                  '$q', 'resource', "$data", "$confirm", "$gmStorage", "$modal", '$i18next', IssuesController])
+                  '$q', 'resource', "$data", "$confirm", "$gmStorage", "$modal", '$i18next', '$location', IssuesController])
 module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
                   '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", '$i18next',
                   IssuesViewController])
