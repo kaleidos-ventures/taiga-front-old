@@ -901,19 +901,9 @@ body.login {
                         transform: rotate(0deg);
                         transition: all .2s ease-in;
                     }
-                    &:hover {
+                    &.active {
                         background: @black;
                         transition: all .3s ease-in;
-                        &:before {
-                            -webkit-transform: rotate(180deg);
-                            -moz-transform: rotate(180deg);
-                            -ms-transform: rotate(180deg);
-                            -o-transform: rotate(180deg);
-                            transform: rotate(180deg);
-                            transition: all .2s ease-in;
-                        }
-                    }
-                    &.active {
                         &:before {
                             -webkit-transform: rotate(180deg);
                             -moz-transform: rotate(180deg);
@@ -931,7 +921,7 @@ body.login {
                     z-index: 99;
                     position: absolute;
                     background: #444;
-                    top: 30px;
+                    top: 28px;
                     width: 100%;
                     li {
                         a {
