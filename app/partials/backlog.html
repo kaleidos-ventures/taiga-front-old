@@ -153,6 +153,9 @@
                                 <span class="help-box" i18next="backlog.remove">Remove</span>
                             </a>
                         </div>
+                        <div class="veil" ng-show="us._moving">
+                            <span ng-class="{spinner: us._moving}" data-icon="x"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -271,6 +274,9 @@
                                     </div>
                                     <div class="us-title">{{ us.subject }}</div>
                                     <div class="us-points">{{ us.total_points }}</div>
+                                    <div class="veil" ng-show="us._moving">
+                                        <span ng-class="{spinner: us._moving}" data-icon="x"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

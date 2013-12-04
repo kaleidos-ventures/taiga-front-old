@@ -101,7 +101,10 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
 
         # TODO: defer each save.
         for item in $scope.unassingedUs
-            item.save() if item.isModified()
+            if item.isModified()
+                item._moving = true
+                item.save().then (us) ->
+                    us._moving = false
 
     loadUserStories = ->
         $data.loadUnassignedUserStories($scope).then ->
@@ -446,7 +449,9 @@ BacklogMilestoneController = ($scope, rs, $gmFlash, $i18next) ->
 
         _.each $scope.ml.user_stories, (item) ->
             if item.isModified()
-                item.save()
+                item._moving = true
+                item.save().then (us) ->
+                    us._moving = false
 
     $scope.editFormOpened = false
     $scope.viewUSs = not $scope.ml.closed

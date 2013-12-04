@@ -1163,6 +1163,7 @@ body.login {
             .flex-body {
                 min-height: 40px;
                 .us-item {
+                    position: relative;
                     display: -webkit-box;
                     display: -moz-box;
                     -webkit-box-orient: horizontal;
@@ -1187,6 +1188,43 @@ body.login {
                         }
                     }
                     &.doomline { border-bottom: 1px solid red; }
+                    .veil {
+                        position: absolute;
+                        top: 0px;
+                        left: 0px;
+                        margin: 0px;
+                        width: 100%;
+                        height: 100%;
+                        background: white;
+                        opacity: .7;
+                        z-index: 100;
+                        .spinner {
+                            margin: auto;
+                            margin-top: 10px;
+                            opacity: .7;
+
+                            -webkit-animation: spin .5s infinite linear;
+                            -moz-animation: spin .5s infinite linear;
+                            -o-animation: spin .5s infinite linear;
+                            -ms-animation: spin .5s infinite linear;
+                            @-webkit-keyframes spin {
+                                0% { -webkit-transform: rotate(0deg);}
+                                100% { -webkit-transform: rotate(360deg);}
+                            }
+                            @-moz-keyframes spin {
+                                0% { -moz-transform: rotate(0deg);}
+                                100% { -moz-transform: rotate(360deg);}
+                            }
+                            @-o-keyframes spin {
+                                0% { -o-transform: rotate(0deg);}
+                                100% { -o-transform: rotate(360deg);}
+                            }
+                            @-ms-keyframes spin {
+                                0% { -ms-transform: rotate(0deg);}
+                                100% { -ms-transform: rotate(360deg);}
+                            }
+                        }
+                    }
                 }
                 .us-points {
                     font-size: 1.3em;
@@ -1460,6 +1498,7 @@ body.login {
                             .flex-body {
                                 min-height: 20px;
                                 .us-item {
+                                    position: relative;
                                     display: -webkit-box;
                                     display: -moz-box;
                                     -webkit-box-orient: horizontal;
@@ -1472,6 +1511,44 @@ body.login {
                                         white-space: nowrap;
                                         overflow: hidden;
                                         text-overflow: ellipsis;
+                                    }
+                                    .veil {
+                                        position: absolute;
+                                        top: 0px;
+                                        left: 0px;
+                                        margin: 0px;
+                                        padding: 0px;
+                                        width: 100%;
+                                        height: 100%;
+                                        background: white;
+                                        opacity: .7;
+                                        z-index: 100;
+                                        .spinner {
+                                            margin: auto;
+                                            margin-top: 5px;
+                                            opacity: .7;
+
+                                            -webkit-animation: spin .5s infinite linear;
+                                            -moz-animation: spin .5s infinite linear;
+                                            -o-animation: spin .5s infinite linear;
+                                            -ms-animation: spin .5s infinite linear;
+                                            @-webkit-keyframes spin {
+                                                0% { -webkit-transform: rotate(0deg);}
+                                                100% { -webkit-transform: rotate(360deg);}
+                                            }
+                                            @-moz-keyframes spin {
+                                                0% { -moz-transform: rotate(0deg);}
+                                                100% { -moz-transform: rotate(360deg);}
+                                            }
+                                            @-o-keyframes spin {
+                                                0% { -o-transform: rotate(0deg);}
+                                                100% { -o-transform: rotate(360deg);}
+                                            }
+                                            @-ms-keyframes spin {
+                                                0% { -ms-transform: rotate(0deg);}
+                                                100% { -ms-transform: rotate(360deg);}
+                                            }
+                                        }
                                     }
                                 }
                                 .us-item > div:nth-child(2) {

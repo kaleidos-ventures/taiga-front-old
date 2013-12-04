@@ -120,13 +120,13 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
                     task.user_story = parseInt(usId, 10)
                     task.status = parseInt(statusId, 10)
                     if task.isModified()
-                        task.moving = true
+                        task._moving = true
                         task.save().then((task) ->
-                            task.moving = false
+                            task._moving = false
                             calculateStats()
                         , (error) ->
                             task.revert()
-                            task.moving = false
+                            task._moving = false
                             loadTasks()
                         )
 
@@ -135,13 +135,13 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
                 task.user_story = null
                 task.status = parseInt(statusId, 10)
                 if task.isModified()
-                    task.moving = true
+                    task._moving = true
                     task.save().then((task) ->
-                        task.moving = false
+                        task._moving = false
                         calculateStats()
                     , (error) ->
                         task.revert()
-                        task.moving = false
+                        task._moving = false
                         loadTasks()
                     )
 
