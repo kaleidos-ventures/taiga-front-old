@@ -234,7 +234,9 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
 
     $scope.saveUsStatus = (us, id) ->
         us.status = id
-        us.save()
+        us._moving = true
+        us.save().then (data) ->
+            data._moving = false
 
     # User Story Filters
     $scope.selectTag = (tag) ->
