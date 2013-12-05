@@ -82,6 +82,7 @@
                         <span i18next="backlog.user-story">User Story</span>
                         <a class="refresh-button" ng-class="{active: refreshing}" ng-click="refreshBacklog()" data-icon="x"></a>
                     </div>
+                    <div class="us-status"></div>
                     <div class="us-points" i18next="backlog.points">Points</div>
                     <div class="us-options" i18next="backlog.options">Options</div>
                 </div>
@@ -110,6 +111,7 @@
                             </div>
                         </div>
                     </div>
+                    <div class="us-status" i18next="backlog.status">Status</div>
                     <div class="us-points">
                         <div ng-repeat="item in constants.computableRolesList" class="role-point">
                             {{ item.name }}
@@ -132,6 +134,13 @@
                             <div class="tags" ng-hide="!showTags">
                                 <span ng-repeat="tag in us.tags" class="label" gm-colorize-tag>{{ tag }}</span>
                             </div>
+                        </div>
+                        <div class="us-status">
+                            <div class="label"
+                                    gm-popover="saveUsStatus(us, selectedId)"
+                                    data-tmpl="#usstatuses-popover"
+                                    data-auto-hide="false">
+                                {{ constants.usStatuses[us.status].name }}</div>
                         </div>
                         <div class="us-points">
                             <div ng-repeat="role in constants.computableRolesList" class="role-point"
@@ -423,6 +432,16 @@
     <div class="us-points-popover">
         <ul>
             <li class="item btn-accept" ng-repeat="obj in constants.pointsList" data-id="{{ obj.id }}">
+                <a href="">{{ obj.name }}</a>
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script type="text/template" id="usstatuses-popover">
+    <div class="us-status-popover">
+        <ul>
+            <li class="item btn-accept" ng-repeat="obj in constants.usStatusesList" data-id="{{ obj.id }}">
                 <a href="">{{ obj.name }}</a>
             </li>
         </ul>

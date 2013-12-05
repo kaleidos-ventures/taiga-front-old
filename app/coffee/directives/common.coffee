@@ -136,6 +136,7 @@ GmPopoverDirective = ($parse, $compile) ->
         acceptSelector = element.data('accept-selector') or '.popover-content .button-success, .popover-content .btn-accept'
         cancelSelector = element.data('cancel-selector') or '.popover-content .button-delete'
 
+
         element.on "click", (event) ->
             event.preventDefault()
 
@@ -144,6 +145,7 @@ GmPopoverDirective = ($parse, $compile) ->
 
             scope.$apply ->
                 template = $compile(template)(scope)
+
 
             element.popover({
                 content: template,

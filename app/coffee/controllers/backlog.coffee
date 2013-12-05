@@ -232,6 +232,10 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
         promise.then null, (data, status) ->
             us.revert()
 
+    $scope.saveUsStatus = (us, id) ->
+        us.status = id
+        us.save()
+
     # User Story Filters
     $scope.selectTag = (tag) ->
         if tag.selected
