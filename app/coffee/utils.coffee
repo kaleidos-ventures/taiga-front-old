@@ -45,4 +45,3 @@ utils.safeDebounced = (scope, timeout, func) ->
     wrapper = ->
         gm.safeApply(scope, func)
     utils.debounced(timeout, wrapper)
-

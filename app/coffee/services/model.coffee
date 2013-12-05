@@ -144,7 +144,7 @@ ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
             else
                 params.method = "PUT"
 
-            params.data = JSON.stringify(@getAttrs(patch))
+            params.data = JSON.stringify(@.getAttrs(patch))
 
             promise = $http(params)
             promise.success (data, status) ->

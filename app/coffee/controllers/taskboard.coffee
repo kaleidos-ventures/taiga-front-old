@@ -113,37 +113,35 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
     $scope.$on "stats:reload", ->
         calculateStats()
 
-    $scope.$on "sortable:changed", ->
+    $scope.$on "sortable:changed", gm.utils.safeDebounced $scope, 100, ->
+        saveTask = (task) ->
+            if not task.isModified()
+                return
+
+            task._moving = true
+
+            promise = task.save()
+            promise.then (task) ->
+                task._moving = false
+                calculateStats()
+
+            promise.then null, (error) ->
+                task.revert()
+                task._moving = false
+                loadTasks()
+
         for usId, statuses of $scope.usTasks
             for statusId, tasks of statuses
                 for task in tasks
                     task.user_story = parseInt(usId, 10)
                     task.status = parseInt(statusId, 10)
-                    if task.isModified()
-                        task._moving = true
-                        task.save().then((task) ->
-                            task._moving = false
-                            calculateStats()
-                        , (error) ->
-                            task.revert()
-                            task._moving = false
-                            loadTasks()
-                        )
+                    saveTask(task)
 
         for statusId, tasks of $scope.unassignedTasks
             for task in tasks
                 task.user_story = null
                 task.status = parseInt(statusId, 10)
-                if task.isModified()
-                    task._moving = true
-                    task.save().then((task) ->
-                        task._moving = false
-                        calculateStats()
-                    , (error) ->
-                        task.revert()
-                        task._moving = false
-                        loadTasks()
-                    )
+                saveTask(task)
 
     return
 
