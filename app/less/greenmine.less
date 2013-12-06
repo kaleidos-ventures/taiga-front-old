@@ -961,28 +961,7 @@ body.login {
             }
         }
 
-        .us-status-popover,
-        .us-points-popover {
-            ul {
-                overflow: hidden;
 
-                li {
-                    float: left;
-                    width: 40px;
-                    height: 15px;
-                    padding: 7px;
-                    margin-right: 2px;
-                    margin-bottom: 2px;
-                    background-color: #f3f3f3;
-                    cursor: pointer;
-                    text-align: center;
-
-                    &:hover {
-                        background-color: #ddd;
-                    }
-                }
-            }
-        }
 
         // Unassigned user story list on backlog.
         .us-table-list {
@@ -1001,6 +980,7 @@ body.login {
             .flex-header {
                 width: 100%;
                 font-family: @ColabReg;
+                font-size: 14px;
                 color: #333;
                 display: -webkit-box;
                 display: -moz-box;
@@ -1018,18 +998,55 @@ body.login {
                 .us-title {
                     padding-left: 8px;
                     position: relative;
+                    line-height: 25px;
+
+                    .list-options {
+                        font-size: 13px;
+
+                        .option {
+                            margin-right: 20px;
+                            display: inline-block;
+
+                            label {
+                                color: #777;
+                            }
+                            .add-selected-us{
+                                font-size: 12px;
+                                color: @green;
+                                &:before {
+                                    padding-right: 5px;
+                                    position: relative;
+                                    top: 1px;
+                                }
+                                &:hover {
+                                    color: @gray;
+                                }
+                            }
+
+                            &.refresh-option {
+                                label { padding-left: 15px; }
+                            }
+                        }
+                    }
+
                 }
 
                 .us-status {
-                    padding: 5px;
                     display: inline-block;
-                    font-size: 14px;
-                    color: darken(#CCC, 40%);
-                    line-height: 20px;
+                    line-height: 25px;
+                    width: 80px;
+                }
+
+                .us-points {
+                    line-height: 25px;
+                }
+
+                .us-options {
                 }
 
                 &.second {
                     border-bottom: 2px solid #666666;
+                    color: darken(#CCC, 40%);
                 }
 
                 .refresh-button {
@@ -1037,7 +1054,7 @@ body.login {
                     color: @green;
                     position: absolute;
                     top: 8px;
-                    left: 95px;
+                    // left: 95px;
                     width: 12px;
                     height: 12px;
                     &:hover {
@@ -1085,96 +1102,6 @@ body.login {
                 }
             }
 
-            .us-check {
-                width: 13px;
-                padding-top: 7px;
-                padding-left: 7px;
-                padding-right: 2px;
-            }
-
-            .us-title {
-                padding: 5px;
-                a {
-                    color: #333333;
-                }
-                .label {
-                    font-size: 1em;
-                    font-family: @ColabThi;
-                    margin-top: 5px;
-                    margin-right: 5px;
-                }
-                .title{
-                    font-size: 1.2em;
-                    line-height: 20px;
-                    font-family: @ColabThi;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-
-                .list-options {
-                    .option {
-                        margin-right: 10px;
-                        display: inline-block;
-
-                        label {
-                            font-size: 12px;
-                            color: #777;
-                        }
-                        .add-selected-us{
-                            font-size: 12px;
-                            color: @green;
-                            &:before {
-                                padding-right: 5px;
-                                position: relative;
-                                top: 1px;
-                            }
-                            &:hover {
-                                color: @gray;
-                            }
-                        }
-                    }
-                }
-            }
-
-            .us-status {
-                width: 50px;
-                text-align: center;
-                .label {
-                    cursor: pointer;
-                }
-            }
-
-            .us-points {
-                width: 250px;
-                text-align: center;
-                font-family: @ColabReg;
-                padding: 5px;
-
-                /* TODO: seems not used this block */
-                &>a {
-                    color: #333;
-                    text-decoration: none;
-                    padding: 7px 16px;
-                    cursor: pointer;
-                    font-size: 1.2em;
-                }
-
-                .role-point {
-                    cursor: pointer;
-                    display: inline-block;
-                    width: 50px;
-                    font-size: 14px;
-                    color: darken(#CCC, 40%);
-                    line-height: 20px;
-                }
-            }
-
-            .us-options {
-                padding: 4px;
-                width: 100px;
-            }
-
             .flex-body {
                 min-height: 40px;
                 .us-item {
@@ -1187,7 +1114,7 @@ body.login {
                     border-bottom: 1px solid #eee;
                     cursor: move;
                     font-family: @ColabReg;
-                    font-size: .8em;
+                    font-size: 14px;
                     width: 100%;
 
                     &:hover {
@@ -1243,11 +1170,23 @@ body.login {
 
                 }
 
+                .us-check {
+                    width: 13px;
+                    line-height: 36px;
+                    padding-left: 7px;
+                    padding-right: 10px;
+                }
+
+                .us-title {
+                    line-height: 36px;
+                }
+
                 .us-points {
-                    font-size: 1.3em;
+                    line-height: 36px;
                 }
 
                 .us-status {
+                    width: 80px;
                     line-height: 36px;
                     vertical-align: middle;
 
@@ -1256,6 +1195,121 @@ body.login {
                     }
                 }
             }
+
+
+            .us-title {
+                a {
+                    color: #333333;
+                }
+                .label {
+                    font-size: 1em;
+                    font-family: @ColabThi;
+                    margin-top: 5px;
+                    margin-right: 5px;
+                }
+
+                .title {
+                    font-family: @ColabThi;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .tags {
+                    line-height: 24px;
+                    margin-top: -10px;
+                }
+
+            }
+
+            .us-status {
+                width: 50px;
+                text-align: center;
+                .label {
+                    cursor: pointer;
+                }
+
+
+                .popover-content {
+                    width: 225px;
+                    .us-status-popover {
+                        ul {
+                            overflow: hidden;
+
+                            li {
+                                float: left;
+                                width: 40px;
+                                height: 15px;
+                                padding: 7px;
+                                margin-right: 2px;
+                                margin-bottom: 2px;
+                                background-color: #f3f3f3;
+                                cursor: pointer;
+                                text-align: center;
+
+                                &:hover {
+                                    background-color: #ddd;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .us-points {
+                width: 250px;
+                text-align: center;
+                font-family: @ColabReg;
+
+                /* TODO: seems not used this block */
+                &>a {
+                    color: #333;
+                    text-decoration: none;
+                    padding: 7px 16px;
+                    cursor: pointer;
+                    font-size: 1.2em;
+                }
+
+                .role-point {
+                    cursor: pointer;
+                    display: inline-block;
+                    width: 50px;
+                    font-size: 14px;
+                    color: darken(#CCC, 40%);
+                }
+
+                .popover-content {
+                    width: 225px;
+
+                    .us-points-popover {
+                        ul {
+                            overflow: hidden;
+
+                            li {
+                                float: left;
+                                width: 40px;
+                                padding: 7px;
+                                margin-right: 2px;
+                                margin-bottom: 2px;
+                                background-color: #f3f3f3;
+                                cursor: pointer;
+                                text-align: center;
+
+                                &:hover {
+                                    background-color: #ddd;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            .us-options {
+                padding: 4px;
+                width: 100px;
+            }
+
         }
     }
     .milestones {

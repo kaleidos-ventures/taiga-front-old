@@ -80,11 +80,10 @@
                 <div class="flex-header">
                     <div class="us-title">
                         <span i18next="backlog.user-story">User Story</span>
-                        <a class="refresh-button" ng-class="{active: refreshing}" ng-click="refreshBacklog()" data-icon="x"></a>
                     </div>
                     <div class="us-status"></div>
                     <div class="us-points" i18next="backlog.points">Points</div>
-                    <div class="us-options" i18next="backlog.options">Options</div>
+                    <div class="us-options"></div>
                 </div>
                 <div class="flex-header second">
                     <!-- TODO
@@ -95,6 +94,11 @@
                             <div class="option">
                                 <input id="show_tags" type="checkbox" ng-model="showTags"></input>
                                 <label for="show_tags" i18next="backlog.show-tags">Show tags</label>
+                            </div>
+
+                            <div class="option refresh-option">
+                                <label for="refresh-backlog" ng-click="refreshBacklog()">Refresh</label>
+                                <a class="refresh-button" id="refresh-backlog" ng-class="{active: refreshing}" ng-click="refreshBacklog()" data-icon="x"></a>
                             </div>
                             <!-- TODO: total points col
                             <div class="option">
@@ -117,7 +121,7 @@
                             {{ item.name }}
                         </div>
                     </div>
-                    <div class="us-options"> </div>
+                    <div class="us-options" i18next="backlog.options">Options</div>
                 </div>
                 <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs" gm-doomline>
                     <div class="us-item nga-us-item" ng-repeat="us in unassingedUs|onlyVisible"
@@ -145,7 +149,7 @@
                         <div class="us-points">
                             <div ng-repeat="role in constants.computableRolesList" class="role-point"
                                     gm-popover="saveUsPoints(us, role, selectedId)"
-                                    data-tmpl="#points-popover" data-auto-hide="true">
+                                    data-tmpl="#points-popover" data-auto-hide="false">
                                 {{ constants.points[us.points[role.id]].name }}
                             </div>
                         </div>
