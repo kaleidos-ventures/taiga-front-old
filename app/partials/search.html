@@ -2,9 +2,8 @@
 <div class="middle-container search-content">
     <div class="search-container">
         <div class="search-header">
-            <!-- TODO: i18next integration pending -->
-            <p ng-show="results.count > 0">You searched: <strong>{{ term }}</strong></p>
-            <p ng-show="results.count == 0">There is no result to <strong>{{ term }}</strong>. Try again with another query!</p>
+            <p ng-show="results.count > 0" ng-bind-html="'search.you-searched'|i18next:{term: term}"></p>
+            <p ng-show="results.count == 0" ng-bind-html="'search.no-results'|i18next:{term: term}"></p>
         </div>
 
         <ul class="results-tab clearfix" ng-show="results.count > 0">

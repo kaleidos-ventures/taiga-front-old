@@ -92,7 +92,7 @@
         "sprint-modified": "El sprint ha sido modificado",
         "refresh": "Refrescar",
         "selected-story-points": "Añadir USs selecionadas (__selectedStoryPoints__ puntos) al sprint actual",
-        "us-delete-sure": "¿Estas seguro de que quieres borrar la historia de usuario",
+        "us-delete-sure": "¿Estas seguro de que quieres borrar la historia de usuario <strong>__subject__</strong>?",
         "bulk-user-stories": "Crear USs en bloque",
         "user-story-per-line": "Una historia de usuario por linea...",
         "bulk-user-stories-created": "Se ha creado __count__ historia de usuario.",
@@ -406,5 +406,9 @@
         "code-block": "Bloque de Código / Código",
         "preview": "Previsualizar",
         "help": "Ayuda"
+    },
+    "search": {
+        "you-searched": "Has buscado: <strong>__term__</strong>",
+        "no-results": "No hay resultados para <strong>__term__</strong>. Inténtalo con otra consulta!"
     }
 }

@@ -466,7 +466,7 @@
 <script type="text/template" id="us-remove-popover">
     <div class="us-remove-popover">
         <section>
-            <p>{{ 'backlog.us-delete-sure'|i18next }} <strong>{{ us.subject }}</strong>?</p>
+            <p ng-bind-html="'backlog.us-delete-sure'|i18next:{subject: us.subject}"></p>
         </section>
         <section>
             <input type="button" class="button button-success" i18next="value:backlog.delete-popover" value="Delete" />
