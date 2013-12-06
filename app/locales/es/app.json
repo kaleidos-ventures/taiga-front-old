@@ -161,6 +161,9 @@
         "select-severity-popover": "Selecciona una severidad:"
     },
     "issue": {
+        "issue-ref": "Petición #__ref__",
+        "change-from": "de <span class='old'>__value__</span>",
+        "change-to": "a <span class='old'>__value__</span>",
         "delete-issue": "Borrar petición",
         "attachments": "Adjuntos",
         "delete-attachment": "Borrar adjunto",

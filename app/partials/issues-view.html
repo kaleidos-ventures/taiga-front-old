@@ -1,8 +1,7 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container issues-view">
     <div class="view-header">
-        <!-- TODO: i18next integration pending -->
-        <p class="title">Issue #{{ issue.ref }}</p>
+        <p class="title">{{ 'issue.issue-ref'|i18next:{ref: issue.ref} }}</p>
         <div class="buttons">
             <a class="button button-delete" ng-click="removeIssue(issue)" i18next="issue.delete-issue">Delete issue</a>
         </div>
@@ -205,8 +204,7 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="view-footer">
-                <!-- TODO: i18next integration pending -->
-                <p class="title">Issue #{{ issue.ref }}</p>
+                <p class="title">{{ 'issue.issue-ref'|i18next:{ref: issue.ref} }}</p>
                 <div class="buttons">
                     <a class="button button-delete" ng-click="removeIssue(issue)" i18next="issue.delete-issue">Delete issue</a>
                 </div>
@@ -229,10 +227,9 @@
                 </div>
                 <div class="changes">
                     <div class="change" ng-repeat="change in hitem.changes">
-                        <!-- TODO: i18next integration pending -->
                         <strong>{{ change.name|capitalize }}</strong>:
-                        <span ng-show="change.old">from: <span class="old">{{ change.old }}</span></span>
-                        <span>to <span class="new">{{ change.new || "''" }}</span></span>
+                        <span ng-show="change.old" ng-bind-html="'issue.change-from'|i18next:{value: change.old}"></span>
+                        <span ng-bind-html="'issue.change-to'|i18next:{value: change.new||''}"></span></span>
                     </div>
                 </div>
                 <div class="comment" ng-show="hitem.comment">

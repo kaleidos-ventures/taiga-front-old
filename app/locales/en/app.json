@@ -161,6 +161,9 @@
         "select-severity-popover": "Select a severity:"
     },
     "issue": {
+        "issue-ref": "Issue #__ref__",
+        "change-from": "from <span class='old'>__value__</span>",
+        "change-to": "to <span class='old'>__value__</span>",
         "delete-issue": "Delete issue",
         "attachments": "Attachments",
         "delete-attachment": "Delete attachment",
