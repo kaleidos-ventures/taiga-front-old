@@ -91,6 +91,8 @@
         "sprint-saved": "El sprint ha sido guardado",
         "sprint-modified": "El sprint ha sido modificado",
         "refresh": "Refrescar",
+        "selected-story-points": "Añadir USs selecionadas (__selectedStoryPoints__ puntos) al sprint actual",
+        "us-delete-sure": "¿Estas seguro de que quieres borrar la historia de usuario",
         "bulk-user-stories": "Crear USs en bloque",
         "user-story-per-line": "Una historia de usuario por linea...",
         "bulk-user-stories-created": "Se ha creado __count__ historia de usuario.",

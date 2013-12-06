@@ -109,8 +109,7 @@
                             <div class="option" ng-show="selectedUserStories">
                                 <a href="" class="add-selected-us" data-icon="A"
                                    ng-click="moveSelectedUserStoriesToCurrentSprint()">
-                                     <!-- TODO: i18next integration pending -->
-                                     Add selected US ({{ selectedStoryPoints }} points) to current sprint
+                                     {{ 'backlog.selected-story-points'|i18next:{selectedStoryPoints: selectedStoryPoints} }}
                                  </a>
                             </div>
                         </div>
@@ -467,9 +466,7 @@
 <script type="text/template" id="us-remove-popover">
     <div class="us-remove-popover">
         <section>
-            <!-- TODO: i18next integration pending -->
-            <p>Are you sure you want to delete this user story:
-                <strong>{{ us.subject }}</strong></p>
+            <p>{{ 'backlog.us-delete-sure'|i18next }} <strong>{{ us.subject }}</strong>?</p>
         </section>
         <section>
             <input type="button" class="button button-success" i18next="value:backlog.delete-popover" value="Delete" />

@@ -91,6 +91,8 @@
         "sprint-saved": "The sprint has been saved",
         "sprint-modified": "The sprint has been modified",
         "refresh": "Refresh",
+        "selected-story-points": "Add selected US (__selectedStoryPoints__ points) to current sprint",
+        "us-delete-sure": "Are you sure you want to delete this user story",
         "bulk-user-stories": "Create a bulk of USs",
         "user-story-per-line": "One user story per line...",
         "bulk-user-stories-created": "__count__ user story has been created.",
