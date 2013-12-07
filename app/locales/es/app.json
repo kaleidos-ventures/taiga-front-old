@@ -147,6 +147,7 @@
         "form-description": "Descripción",
         "form-save": "Guardar",
         "form-close": "Cerrar",
+        "issue-delete-sure": "¿Estas seguro de que quieres borrar la peticion <strong>__subject__</strong>?",
         "unassigend-popover": "Sin asignar",
         "id-popover": "ID:",
         "created-by-popover": "Creada por:",
@@ -299,6 +300,9 @@
         "user-story-saved": "La historia de usuario ha sido guardada"
     },
     "task": {
+        "task-ref": "Tarea #__ref__",
+        "change-from": "de <span class='old'>__value__</span>",
+        "change-to": "a <span class='old'>__value__</span>",
         "task-saved": "La tarea ha sido guardada",
         "delete-task": "Borrar tarea",
         "delete-attachment": "Borrar adjunto",

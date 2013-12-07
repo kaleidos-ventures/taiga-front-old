@@ -375,9 +375,7 @@
 <script type="text/template" id="issue-remove-popover">
     <div class="issue-remove-popover">
         <section>
-            <!-- TODO: i18next integration pending -->
-            <p>Are you sure you want to delete this issue:
-                <strong>{{ issue.subject }}</strong></p>
+            <p ng-bind-html="'issues.issue-delete-sure'|i18next:{subject: issue.subject}"></p>
         </section>
         <section>
             <input type="button" class="button button-success" value="Delete" i18next="value:issues.delete-popover" />

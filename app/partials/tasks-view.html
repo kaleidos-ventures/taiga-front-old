@@ -1,8 +1,7 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container tasks-view">
     <div class="view-header">
-        <!-- TODO: i18next integration pending -->
-        <p class="title">Task #{{ task.ref }}</p>
+        <p class="title">{{ 'task.task-ref'|i18next:{ref: task.ref} }}</p>
         <div class="buttons">
             <a class="button button-delete" ng-click="removeTask(task)" i18next="task.delete-task">Delete task</a>
         </div>
@@ -189,9 +188,8 @@
                 <div class="changes">
                     <div class="change" ng-repeat="change in hitem.changes">
                         <strong>{{ change.name|capitalize }}</strong>:
-                        <!-- TODO: i18next integration pending -->
-                        <span ng-show="change.old">from: <span class="old">{{ change.old }}</span></span>
-                        <span>to <span class="new">{{ change.new || "''" }}</span></span>
+                        <span ng-show="change.old" ng-bind-html="'task.change-from'|i18next:{value: change.old}"></span>
+                        <span ng-bind-html="'task.change-to'|i18next:{value: change.new||''}"></span></span>
                     </div>
                 </div>
                 <div class="comment" ng-show="hitem.comment">
