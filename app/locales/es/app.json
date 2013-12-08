@@ -361,6 +361,10 @@
         "cancel-button": "Cancelar"
     },
     "user-story": {
+        "user-story-ref": "Historia de usuario #__ref__",
+        "total-points": "Total: __points__",
+        "change-from": "de <span class='old'>__value__</span>",
+        "change-to": "a <span class='old'>__value__</span>",
         "user-story": "Historia de usuario",
         "user-story-saved": "La historia de usuario ha sido guardada",
         "delete-user-story": "Borrar historia de usuario",

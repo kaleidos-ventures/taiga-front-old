@@ -361,6 +361,10 @@
         "cancel-button": "Cancel"
     },
     "user-story": {
+        "user-story-ref": "User Story #__ref__",
+        "total-points": "Total: __points__",
+        "change-from": "from <span class='old'>__value__</span>",
+        "change-to": "to <span class='old'>__value__</span>",
         "user-story": "User storie",
         "user-story-saved": "The user story has been saved",
         "delete-user-story": "Delete user story",

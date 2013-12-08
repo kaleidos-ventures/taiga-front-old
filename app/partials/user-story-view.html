@@ -1,8 +1,7 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container tasks-view">
     <div class="view-header">
-        <!-- TODO: i18next integration pending -->
-        <p class="title">User story #{{ userStory.ref }}</p>
+        <p class="title">{{ 'user-story.user-story-ref'|i18next:{ref: userStory.ref} }}</p>
         <div class="buttons">
             <a class="button button-delete" ng-click="removeUserStory(userStory)" i18next="user-story.delete-user-story">
                 Delete user story
@@ -71,8 +70,7 @@
                     <span ng-repeat="role in constants.computableRolesList">
                         {{ role.name }}: {{ points[role.id] }},
                     </span>
-                    <!-- TODO: i18next integration pending -->
-                    Total: {{ totalPoints }}
+                    {{ 'user-story.total-points'|i18next:{points: totalPoints} }}
                 </li>
                 <li data-icon="z">
                     <strong i18next="user-story.attachments-count">Attachments:</strong>
@@ -183,8 +181,7 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="view-footer">
-                <!-- TODO: i18next integration pending -->
-                <p class="title">User story #{{ userStory.ref }}</p>
+                <p class="title">{{ 'user-story.user-story-ref'|i18next:{ref: userStory.ref} }}</p>
                 <div class="buttons">
                     <a class="button button-delete" ng-click="removeUserStory(userStory)" i18next="user-story.delete-user-story">Delete user story</a>
                 </div>
@@ -204,9 +201,8 @@
                 <div class="changes">
                     <div class="change" ng-repeat="change in hitem.changes">
                         <strong>{{ change.name|capitalize }}</strong>:
-                        <span ng-show="change.old">from: <span class="old">{{ change.old }}</span></span>
-                        <!-- TODO: i18next integration pending -->
-                        <span>to <span class="new">{{ change.new || "''" }}</span></span>
+                        <span ng-show="change.old" ng-bind-html="'user-story.change-from'|i18next:{value: change.old}"></span>
+                        <span ng-bind-html="'user-story.change-to'|i18next:{value: change.new||''}"></span></span>
                     </div>
                 </div>
                 <div class="comment" ng-show="hitem.comment">
