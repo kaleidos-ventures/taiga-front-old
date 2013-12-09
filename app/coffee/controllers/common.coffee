@@ -68,13 +68,13 @@ DataServiceProvider = ($rootScope, $q, rs) ->
 
     service.loadUnassignedUserStories = ($scope) ->
         promise = rs.getUnassignedUserStories($rootScope.projectId)
-        promise = promise.then (unassingedUs) ->
+        promise = promise.then (unassignedUs) ->
             projectId = parseInt($rootScope.projectId, 10)
 
-            $scope.unassingedUs = _.filter(unassingedUs, {"project": projectId, milestone: null})
-            $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order")
+            $scope.unassignedUs = _.filter(unassignedUs, {"project": projectId, milestone: null})
+            $scope.unassignedUs = _.sortBy($scope.unassignedUs, "order")
             $rootScope.$broadcast("userstories:loaded")
-            return $scope.unassingedUs
+            return $scope.unassignedUs
         return promise
 
     # NOTE: This method depends on getProject

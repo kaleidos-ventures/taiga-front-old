@@ -56,7 +56,7 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
         tagsDict = {}
         tags = []
 
-        for us in $scope.unassingedUs
+        for us in $scope.unassignedUs
             for tag in us.tags
                 if tagsDict[tag] is undefined
                     tagsDict[tag] = 1
@@ -75,7 +75,7 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
                              .value()
 
         if selectedTags.length > 0
-            for item in $scope.unassingedUs
+            for item in $scope.unassignedUs
                 itemTags = item.tags
                 interSection = _.intersection(selectedTags, itemTags)
 
@@ -85,22 +85,22 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
                     item.__hidden = false
 
         else
-            item.__hidden = false for item in $scope.unassingedUs
+            item.__hidden = false for item in $scope.unassignedUs
 
     resortUserStories = ->
         # Normalize user stories array
-        for item, index in $scope.unassingedUs
+        for item, index in $scope.unassignedUs
             item.order = index
             item.milestone = null
 
         # Sort again
-        $scope.unassingedUs = _.sortBy($scope.unassingedUs, "order")
+        $scope.unassignedUs = _.sortBy($scope.unassignedUs, "order")
 
         # Calculte new stats
         calculateStats()
 
         # TODO: defer each save.
-        for item in $scope.unassingedUs
+        for item in $scope.unassignedUs
             if item.isModified()
                 item._moving = true
                 item.save().then (us) ->
@@ -128,13 +128,13 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
         return total
 
     getSelectedUserStories = ->
-        selected = _.filter($scope.unassingedUs, "selected")
+        selected = _.filter($scope.unassignedUs, "selected")
         if selected.length == 0
             return null
         return selected
 
     getUnselectedUserStories = ->
-        selected = _.reject($scope.unassingedUs, "selected")
+        selected = _.reject($scope.unassignedUs, "selected")
         if selected.length == 0
             return null
         return selected
@@ -160,7 +160,7 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
             us.milestone = milestone.id
             us.save()
 
-        $scope.unassingedUs = unselected
+        $scope.unassignedUs = unselected
 
     $scope.changeUserStoriesSelection = ->
         selected = $scope.selectedUserStories = getSelectedUserStories()
@@ -211,8 +211,8 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
 
     $scope.removeUs = (us) ->
         us.remove().then ->
-            index = $scope.unassingedUs.indexOf(us)
-            $scope.unassingedUs.splice(index, 1)
+            index = $scope.unassignedUs.indexOf(us)
+            $scope.unassignedUs.splice(index, 1)
 
             calculateStats()
             generateTagList()
@@ -224,12 +224,15 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
 
         us.points = points
 
+        us._moving = true
         promise = us.save()
         promise.then ->
+            us._moving = false
             calculateStats()
             $scope.$broadcast("points:changed")
 
         promise.then null, (data, status) ->
+            us._moving = false
             us.revert()
 
     $scope.saveUsStatus = (us, id) ->

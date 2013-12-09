@@ -43,6 +43,7 @@
         "are-you-sure": "¿Estás seguro?"
     },
     "backlog": {
+        "total": "Total",
         "from-to": "de __from__ a __to__",
         "completed": "completado",
         "project-points": "puntos de proyecto",

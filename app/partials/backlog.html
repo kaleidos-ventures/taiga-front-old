@@ -100,12 +100,6 @@
                                 <label for="refresh-backlog" ng-click="refreshBacklog()">Refresh</label>
                                 <a class="refresh-button" id="refresh-backlog" ng-class="{active: refreshing}" ng-click="refreshBacklog()" data-icon="x"></a>
                             </div>
-                            <!-- TODO: total points col
-                            <div class="option">
-                                <input id="show_total_points" type="checkbox" ng-model="showTotalPoints"></input>
-                                <label for="show_total_points">Show total points (TODO)</label>
-                            </div>
-                            -->
                             <div class="option" ng-show="selectedUserStories">
                                 <a href="" class="add-selected-us" data-icon="A"
                                    ng-click="moveSelectedUserStoriesToCurrentSprint()">
@@ -119,11 +113,12 @@
                         <div ng-repeat="item in constants.computableRolesList" class="role-point">
                             {{ item.name }}
                         </div>
+                        <div class="role-point total" i18next="backlog.total"></div>
                     </div>
                     <div class="us-options" i18next="backlog.options">Options</div>
                 </div>
-                <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassingedUs" gm-doomline>
-                    <div class="us-item nga-us-item" ng-repeat="us in unassingedUs|onlyVisible"
+                <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassignedUs" gm-doomline>
+                    <div class="us-item nga-us-item" ng-repeat="us in unassignedUs|onlyVisible"
                             gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}" ng-dblclick="openUserStory(projectId, us.id)">
                         <div class="us-check">
                             <input type="checkbox" ng-model="us.selected" ng-change="changeUserStoriesSelection()"></input>
@@ -150,6 +145,9 @@
                                     gm-popover="saveUsPoints(us, role, selectedId)"
                                     data-tmpl="#points-popover" data-auto-hide="false">
                                 {{ constants.points[us.points[role.id]].name }}
+                            </div>
+                            <div class="role-point total">
+                                {{ us.total_points }}
                             </div>
                         </div>
                         <div class="us-options extra-options">
