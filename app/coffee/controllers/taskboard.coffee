@@ -89,6 +89,13 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
             promise = $data.loadTaskboardData($scope)
             promise.then(loadTasks)
 
+    $scope.saveUsStatus = (us, id) ->
+        us.status = id
+        us._moving = true
+        us.save().then (data) ->
+            data._moving = false
+
+
     $scope.openCreateTaskForm = (us) ->
         options =
             status: $scope.project.default_task_status
