@@ -88,23 +88,31 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
             item.__hidden = false for item in $scope.unassignedUs
 
     resortUserStories = ->
-        # Normalize user stories array
+        # Save only us that have milestone assigned
+        milestoneChangedUs = _.filter($scope.unassignedUs, "milestone")
+        for us in milestoneChangedUs
+            us.milestone = null
+            us.save()
+
         for item, index in $scope.unassignedUs
             item.order = index
-            item.milestone = null
 
-        # Sort again
-        $scope.unassignedUs = _.sortBy($scope.unassignedUs, "order")
 
-        # Calculte new stats
-        calculateStats()
+        modifiedUs = _.filter($scope.unassignedUs, (x) -> x.isModified())
+        bulkData = _.map($scope.unassignedUs, (value, index) -> [value.id, index])
 
-        # TODO: defer each save.
-        for item in $scope.unassignedUs
-            if item.isModified()
-                item._moving = true
-                item.save().then (us) ->
-                    us._moving = false
+        for item in modifiedUs
+            item._moving = true
+
+        promise = rs.updateBulkUserStoriesOrder($scope.projectId, bulkData)
+        promise.then ->
+            for us in modifiedUs
+                us.refresh()
+
+            for item in modifiedUs
+                item._moving = false
+
+            calculateStats()
 
     loadUserStories = ->
         $data.loadUnassignedUserStories($scope).then ->
