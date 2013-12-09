@@ -105,18 +105,11 @@ DataServiceProvider = ($rootScope, $q, rs) ->
 
     service.loadSiteInfo = ($scope) ->
         $scope.site = {}
-        $scope.site.allowPublicRegister = null
 
         defered = $q.defer()
         promise = rs.getSiteInfo()
         promise.then (data) ->
             $scope.site = _.merge($scope.site, data)
-
-            if data.headers["x-site-register"] == "on"
-                $scope.site.allowPublicRegister = true
-            else
-                $scope.site.allowPublicRegister = false
-
             defered.resolve($scope.site)
 
         promise.then null, ->

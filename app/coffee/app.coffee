@@ -213,7 +213,6 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
     # Configure on init a default host and scheme for api urls.
     $gmUrls.setHost("api", config.host, config.scheme)
 
-    $rootScope.allowPublicRegister = false
     $data.loadSiteInfo($rootScope).then (sitedata) ->
         $log.info "Site data:", sitedata
 
@@ -299,6 +298,9 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
         if lang
             $i18next.setLang(lang)
             moment.lang(lang)
+        else if $rootScope.site.data.default_language
+            $i18next.setLang($rootScope.site.data.default_language)
+            moment.lang($rootScope.site.data.default_language)
         else
             $i18next.setLang(config.defaultLanguage)
             moment.lang(config.defaultLanguage)

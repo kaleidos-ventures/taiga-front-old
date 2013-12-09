@@ -39,7 +39,7 @@
                     <fieldset>
                         <label i18next="profile.language">Language:</label>
                         <select type="text" name="default_language" ng-model="authForm.default_language"
-                            ng-options="key as value for (key, value) in languageOptions">
+                            ng-options="key as value for (key, value) in languageOptions" gm-select-fix>
                             <option value="" i18next="profile.use-site-language">Use site language</option>
                         </select>
                     </fieldset>

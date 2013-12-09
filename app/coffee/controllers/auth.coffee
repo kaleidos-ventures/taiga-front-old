@@ -149,7 +149,7 @@ PublicRegisterController = ($scope, $rootScope, $location, rs, $data, $gmAuth, $
     $rootScope.pageSection = 'login'
     $scope.form = {"type": "public"}
 
-    $scope.$watch "site.allowPublicRegister", (value) ->
+    $scope.$watch "site.data.public_register", (value) ->
         if value == false
             $location.url("/login")
 

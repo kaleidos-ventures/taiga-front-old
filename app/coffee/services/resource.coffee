@@ -622,11 +622,10 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
     service.getSiteInfo = () ->
         httpParams = {
-            method: "HEAD"
+            method: "GET"
             headers: headers()
             url: $gmUrls.api("sites")
         }
-
         defered = $q.defer()
 
         promise = $http(httpParams)

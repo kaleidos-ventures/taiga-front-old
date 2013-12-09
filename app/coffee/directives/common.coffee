@@ -440,6 +440,14 @@ GmSelect2Tags = ->
             element.select2({tags: scope.$eval(attrs.gmSelect2Tags)})
             colorizeTags()
 
+GmSelectFix = ->
+    require: 'ngModel',
+    link: (scope, element, attrs, ngModel) ->
+        ngModel.$parsers.push (value) ->
+            if (value == null)
+                value = ''
+            return value
+
 module = angular.module('greenmine.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
 module.directive('gmHeaderMenu', ["$rootScope", GmHeaderMenuDirective])
@@ -457,3 +465,4 @@ module.directive('gmColorizeUser', GmColorizeUserDirective)
 module.directive('gmPaginator', ['$parse', GmPaginator])
 module.directive('gmSpinner', ['$parse', '$rootScope', GmSpinner])
 module.directive('gmSelect2Tags', GmSelect2Tags)
+module.directive('gmSelectFix', GmSelectFix)
