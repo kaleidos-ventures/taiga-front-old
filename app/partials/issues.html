@@ -76,7 +76,7 @@
                 </div>
             </div>
             <ul class="filters-visual-box" ng-show="filtersOpened">
-                <li>
+                <li ng-show='statusTags.length>1'>
                     <h3 i18next="issues.status">Status:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in statusTags"
@@ -86,7 +86,17 @@
                         </div>
                     </div>
                 </li>
-                <li>
+                <li ng-show='typeTags.length>1'>
+                    <h3 i18next="issues.type">Type:</h3>
+                    <div class="tags-list-sbox">
+                        <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in typeTags"
+                             ng-click="selectTag(tag)" ng-class="{selected: isTagSelected(tag)}" >
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
+                    </div>
+                </li>
+                <li ng-show='severityTags.length>1'>
                     <h3 i18next="issues.severity">Severity:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in severityTags"
@@ -96,7 +106,7 @@
                         </div>
                     </div>
                 </li>
-                <li>
+                <li ng-show='priorityTags.length>1'>
                     <h3 i18next="issues.priority">Priority:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in priorityTags"
@@ -106,7 +116,7 @@
                         </div>
                     </div>
                 </li>
-                <li>
+                <li ng-show='addedByTags.length>1'>
                     <h3 i18next="issues.added-by">Added by:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" ng-repeat="tag in addedByTags" ng-click="selectTag(tag)"

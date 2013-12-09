@@ -107,6 +107,7 @@
         "filters": "Filtros",
         "status": "Estado:",
         "severity": "Severidad:",
+        "type": "Tipo:",
         "priority": "Prioridad:",
         "added-by": "Añadido por:",
         "assigned-to": "Asignado a:",

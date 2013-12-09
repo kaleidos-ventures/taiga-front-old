@@ -34,6 +34,8 @@ DataServiceProvider = ($rootScope, $q, rs) ->
             $scope.constants.taskStatusesList = _.sortBy(project.task_statuses, "order")
 
             # Issue statuses
+            _.each(project.issue_types, (item) -> $scope.constants.types[item.id] = item)
+            $scope.constants.typesList = _.sortBy(project.types, "order")
             _.each(project.severities, (item) -> $scope.constants.severities[item.id] = item)
             $scope.constants.severitiesList = _.sortBy(project.severities, "order")
             _.each(project.priorities, (item) -> $scope.constants.priorities[item.id] = item)

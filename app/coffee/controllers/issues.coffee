@@ -70,6 +70,15 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
         $scope.statusTags = tags
 
+    generateTypeTags = ->
+        tags = []
+        for typeId, count of $scope.filtersData.types
+            type = $scope.constants.types[typeId]
+            tag = {"id": type.id, "name": type.name, "count": count, "type": "type", color: type.color}
+            tags.push(selectTagIfNotSelected(tag))
+
+        $scope.typeTags = tags
+
     generateSeverityTags = ->
         tags = []
         for severityId, count of $scope.filtersData.severities
@@ -138,6 +147,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     regenerateTags = ->
         $scope.selectedTags = []
         generateStatusTags()
+        generateTypeTags()
         generateSeverityTags()
         generatePriorityTags()
         generateAddedByTags()

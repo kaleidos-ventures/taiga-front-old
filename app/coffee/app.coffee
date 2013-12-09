@@ -197,6 +197,8 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
     $rootScope.constants.taskStatuses = {}
     $rootScope.constants.taskStatusesList = []
 
+    $rootScope.constants.types = {}
+    $rootScope.constants.typesList = []
     $rootScope.constants.severities = {}
     $rootScope.constants.severitiesList = []
     $rootScope.constants.priorities = {}
