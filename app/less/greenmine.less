@@ -1250,9 +1250,13 @@ body.login {
                                 background-color: #f3f3f3;
                                 cursor: pointer;
                                 text-align: center;
-
+                                opacity: 0.5;
                                 &:hover {
-                                    background-color: #ddd;
+                                    opacity: 1;
+                                    transition: all 0.3s ease-out;
+                                }
+                                a {
+                                    color: #ffffff;
                                 }
                             }
                         }

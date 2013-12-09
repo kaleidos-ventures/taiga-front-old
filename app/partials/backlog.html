@@ -137,13 +137,15 @@
                             <div class="label"
                                     gm-popover="saveUsStatus(us, selectedId)"
                                     data-tmpl="#usstatuses-popover"
-                                    data-auto-hide="true">
+                                    data-auto-hide="true"
+                                    style="background-color: {{ constants.usStatuses[us.status].color }}">
                                 {{ constants.usStatuses[us.status].name }}</div>
                         </div>
                         <div class="us-points">
                             <div ng-repeat="role in constants.computableRolesList" class="role-point"
                                     gm-popover="saveUsPoints(us, role, selectedId)"
-                                    data-tmpl="#points-popover" data-auto-hide="false">
+                                    data-tmpl="#points-popover"
+                                    data-auto-hide="true">
                                 {{ constants.points[us.points[role.id]].name }}
                             </div>
                             <div class="role-point total">
@@ -441,7 +443,8 @@
 <script type="text/template" id="usstatuses-popover">
     <div class="us-status-popover">
         <ul>
-            <li class="item btn-accept" ng-repeat="obj in constants.usStatusesList" data-id="{{ obj.id }}">
+            <li class="item btn-accept" ng-repeat="obj in constants.usStatusesList" data-id="{{ obj.id }}"
+                style="background-color: {{ obj.color }}">
                 <a href="">{{ obj.name }}</a>
             </li>
         </ul>
