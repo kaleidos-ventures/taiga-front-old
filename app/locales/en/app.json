@@ -43,6 +43,7 @@
         "are-you-sure": "Are you sure?"
     },
     "backlog": {
+        "from-to": "from __from__ to __to__",
         "completed": "completed",
         "project-points": "project points",
         "defined-points": "defined points",
@@ -165,6 +166,7 @@
         "issue-ref": "Issue #__ref__",
         "change-from": "from <span class='old'>__value__</span>",
         "change-to": "to <span class='old'>__value__</span>",
+        "on-date": "on __date__",
         "delete-issue": "Delete issue",
         "attachments": "Attachments",
         "delete-attachment": "Delete attachment",
@@ -304,6 +306,7 @@
         "change-from": "from <span class='old'>__value__</span>",
         "change-to": "to <span class='old'>__value__</span>",
         "task-saved": "The task has been saved",
+        "on-date": "on __date__",
         "delete-task": "Delete task",
         "delete-attachment": "Delete attachment",
         "attachments": "Attachments",
@@ -334,6 +337,7 @@
         "comment-history": "Comment:"
     },
     "wiki-historical": {
+        "on-date": "on __date__",
         "history": "History",
         "historical": "Historical",
         "attachments": "Attachments",
@@ -350,6 +354,7 @@
         "gone-back-error": "An error happened. Maybe the flux capacitor is broken..."
     },
     "wiki": {
+        "on-date": "on __date__",
         "attachments": "Attachments",
         "edit-button": "Edit",
         "historical-button": "Historical",
@@ -365,6 +370,7 @@
         "total-points": "Total: __points__",
         "change-from": "from <span class='old'>__value__</span>",
         "change-to": "to <span class='old'>__value__</span>",
+        "on-date": "on __date__",
         "user-story": "User storie",
         "user-story-saved": "The user story has been saved",
         "delete-user-story": "Delete user story",

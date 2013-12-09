@@ -285,6 +285,9 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
             url = gm.format($rootScope.baseUrls.search, [projectId])
             return conditionalUrl(url, raw)
 
+    $rootScope.momentFormat = (input, format) ->
+        return moment(input).format(format)
+
     $rootScope.logout = () ->
         $gmStorage.clear()
         $location.url("/login")
@@ -293,8 +296,10 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
     $rootScope.$on "i18n:change", (event, lang) ->
         if lang
             $i18next.setLang(lang)
+            moment.lang(lang)
         else
             $i18next.setLang(config.defaultLanguage)
+            moment.lang(config.defaultLanguage)
 
 angular.module('greenmine', modules)
        .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', '$gmUrlsProvider', configCallback])

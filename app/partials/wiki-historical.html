@@ -9,8 +9,7 @@
                     <li class="attachments-item" ng-repeat="attachment in attachments">
                         <a href="{{ attachment.url }}">{{ attachment.name }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
-                        <!-- TODO: i18next integration pending -->
-                        <span>on {{ attachment.created_date|momentFormat:"LLLL" }}</span>
+                        <span>{{ "wiki-historical.on-date"|i18next:{date:momentFormat(attachment.created_date, 'LLLL')} }}</span>
                     </li>
                 </ul>
             </div>
