@@ -95,8 +95,14 @@
                                         </div>
 
                                         <div class="status">
-                                            <div data-icon="I" ng-show="us.is_closed"></div>
-                                            <div data-icon="q" ng-show="!us.is_closed"></div>
+                                            <div class="icon" data-icon="I" ng-show="us.is_closed"></div>
+                                            <div class="icon" data-icon="q" ng-show="!us.is_closed"></div>
+                                            <div class="label"
+                                                    gm-popover="saveUsStatus(us, selectedId)"
+                                                    data-tmpl="#usstatuses-popover"
+                                                    data-auto-hide="true"
+                                                    style="background-color: {{ constants.usStatuses[us.status].color }}">
+                                                {{ constants.usStatuses[us.status].name }}</div>
                                         </div>
 
                                         <div class="description">
@@ -221,6 +227,16 @@
             <li class="btn-accept"><a data-id="" href="" i18next="taskboard.unassigned">Unassigned</a>
             <li ng-repeat="obj in project.memberships" class="btn-accept" data-id="{{ obj.user }}">
                 <a href="" gm-colorize-user="constants.users[obj.user]">{{ obj.full_name }}</a>
+            </li>
+        </ul>
+    </div>
+</script>
+<script type="text/template" id="usstatuses-popover">
+    <div class="us-status-popover">
+        <ul>
+            <li class="item btn-accept" ng-repeat="obj in constants.usStatusesList" data-id="{{ obj.id }}"
+                style="background-color: {{ obj.color }}">
+                <a href="">{{ obj.name }}</a>
             </li>
         </ul>
     </div>

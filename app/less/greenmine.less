@@ -3141,7 +3141,51 @@ body.login {
                                     }
                                 }
                                 .status {
+                                    font-family: 'ColabReg';
                                     padding-left: 25px;
+                                    div {
+                                        display: inline-block;
+                                    }
+                                    .icon {
+                                        position: relative;
+                                        top: 4px;
+                                    }
+
+                                    .label {
+                                        cursor: pointer;
+                                    }
+
+                                    .popover-content {
+                                        width: 225px;
+                                        .us-status-popover {
+                                            ul {
+                                                overflow: hidden;
+
+                                                li {
+                                                    font-family: 'ColabReg';
+                                                    font-size: 0.8em;
+
+                                                    float: left;
+                                                    width: 40px;
+                                                    height: 15px;
+                                                    padding: 7px;
+                                                    margin-right: 2px;
+                                                    margin-bottom: 2px;
+                                                    background-color: #f3f3f3;
+                                                    cursor: pointer;
+                                                    text-align: center;
+                                                    opacity: 0.5;
+                                                    &:hover {
+                                                        opacity: 1;
+                                                        transition: all 0.3s ease-out;
+                                                    }
+                                                    a {
+                                                        color: #ffffff;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 .description {
                                     text-align: center;
