@@ -89,6 +89,23 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
             promise = $data.loadTaskboardData($scope)
             promise.then(loadTasks)
 
+    $scope.saveUsPoints = (us, role, ref) ->
+        points = _.clone(us.points)
+        points[role.id] = ref
+
+        us.points = points
+
+        us._moving = true
+        promise = us.save()
+        promise.then ->
+            us._moving = false
+            calculateStats()
+            $scope.$broadcast("points:changed")
+
+        promise.then null, (data, status) ->
+            us._moving = false
+            us.revert()
+
     $scope.saveUsStatus = (us, id) ->
         us.status = id
         us._moving = true

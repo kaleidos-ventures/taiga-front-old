@@ -88,7 +88,11 @@
                                         <div class="title clearfix">
                                             <a href="{{ urls.userStoryUrl(projectId, us.id) }}">{{ us.subject }}</a>
                                             <ul class="us-points-per-role">
-                                                <li ng-repeat="role in constants.computableRolesList" class="us-point">
+                                                <li ng-repeat="role in constants.computableRolesList"
+                                                    class="us-point"
+                                                    gm-popover="saveUsPoints(us, role, selectedId)"
+                                                    data-tmpl="#points-popover"
+                                                    data-auto-hide="true">
                                                     {{ role.name }}: {{ constants.points[us.points[role.id]].name }}
                                                 </li>
                                             </ul>
@@ -227,6 +231,15 @@
             <li class="btn-accept"><a data-id="" href="" i18next="taskboard.unassigned">Unassigned</a>
             <li ng-repeat="obj in project.memberships" class="btn-accept" data-id="{{ obj.user }}">
                 <a href="" gm-colorize-user="constants.users[obj.user]">{{ obj.full_name }}</a>
+            </li>
+        </ul>
+    </div>
+</script>
+<script type="text/template" id="points-popover">
+    <div class="us-points-popover">
+        <ul>
+            <li class="item btn-accept" ng-repeat="obj in constants.pointsList" data-id="{{ obj.id }}">
+                <a href="">{{ obj.name }}</a>
             </li>
         </ul>
     </div>

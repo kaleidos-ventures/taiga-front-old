@@ -3123,14 +3123,14 @@ body.login {
                                 .title {
                                     padding: 10px 25px;
                                     font-family: @ColabReg;
-                                    a {
+                                    & > a {
                                         color: @white;
                                         font-weight: bold;
                                         float: left;
                                         font-size: 16px;
                                         width: 65%;
                                     }
-                                    ul{
+                                    & > ul{
                                         float: right;
                                         width: 30%;
                                         text-align: right;
@@ -3138,6 +3138,40 @@ body.login {
                                         list-style: none;
                                         margin: 0;
                                         padding: 0;
+                                    }
+                                    .us-point {
+                                        cursor: pointer;
+                                    }
+                                    .popover-content {
+                                        width: 225px;
+
+                                        .us-points-popover {
+                                            ul {
+                                                overflow: hidden;
+                                                list-style-type: none;
+                                                margin: 10px 0;
+                                                padding: 0;
+                                                li {
+                                                    float: left;
+                                                    width: 40px;
+                                                    padding: 7px;
+                                                    margin-right: 2px;
+                                                    margin-bottom: 2px;
+                                                    background-color: #f3f3f3;
+                                                    cursor: pointer;
+                                                    text-align: center;
+                                                    line-height: 36px;
+                                                    a {
+                                                        font-family: 'DroidSansRegular';
+                                                        font-size: 14px;
+                                                        color: #333333;
+                                                    }
+                                                    &:hover {
+                                                        background-color: #ddd;
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                                 .status {
