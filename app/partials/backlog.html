@@ -491,7 +491,7 @@
     <div class="project-defined-points-popover">
         <ul>
             <li ng-repeat="role in constants.computableRolesList">
-                <span>{{  role.name }}:</span> {{ projectStats.defined_points_per_role[role.id] }}
+                <span>{{  role.name }}:</span> {{ projectStats.defined_points_per_role[role.id] || 0 }}
             </li>
         </ul>
     </div>
@@ -500,7 +500,7 @@
     <div class="project-assigned-points-popover">
         <ul>
             <li ng-repeat="role in constants.computableRolesList">
-                <span>{{  role.name }}:</span> {{ projectStats.assigned_points_per_role[role.id] }}
+                <span>{{  role.name }}:</span> {{ projectStats.assigned_points_per_role[role.id] || 0 }}
             </li>
         </ul>
     </div>
@@ -509,7 +509,7 @@
     <div class="project-closed-points-popover">
         <ul>
             <li ng-repeat="role in constants.computableRolesList">
-                <span>{{  role.name }}:</span> {{ projectStats.closed_points_per_role[role.id] }}
+                <span>{{  role.name }}:</span> {{ projectStats.closed_points_per_role[role.id] || 0 }}
             </li>
         </ul>
     </div>
