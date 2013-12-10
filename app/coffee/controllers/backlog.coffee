@@ -109,10 +109,8 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
             promise = rs.updateBulkUserStoriesOrder($scope.projectId, bulkData)
             promise = promise.then ->
                 for us in modifiedUs
-                    us.refresh()
-
-                for item in modifiedUs
-                    item._moving = false
+                    us.markSaved()
+                    us._moving = false
 
             return promise
 
