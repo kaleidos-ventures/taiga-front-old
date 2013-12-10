@@ -504,7 +504,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         return queryMany("wiki/attachments", {project: projectId, object_id: wikiPageId})
 
     service.uploadIssueAttachment = (projectId, issueId, file, progress) ->
-        defered = Q.defer()
+        defered = $q.defer()
 
         if file is undefined
             defered.resolve(null)
@@ -535,7 +535,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         return defered.promise
 
     service.uploadTaskAttachment = (projectId, taskId, file, progress) ->
-        defered = Q.defer()
+        defered = $q.defer()
 
         if file is undefined
             defered.resolve(null)
@@ -566,7 +566,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         return defered.promise
 
     service.uploadUserStoryAttachment = (projectId, userStoryId, file, progress) ->
-        defered = Q.defer()
+        defered = $q.defer()
 
         if file is undefined
             defered.resolve(null)
@@ -597,7 +597,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         return defered.promise
 
     service.uploadWikiPageAttachment = (projectId, wikiPageId, file, progress) ->
-        defered = Q.defer()
+        defered = $q.defer()
 
         if file is undefined
             defered.resolve(null)

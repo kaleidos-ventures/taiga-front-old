@@ -336,7 +336,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             promise = rs.uploadIssueAttachment(projectId, issueId, attachment)
             promises.push(promise)
 
-        promise = Q.all(promises)
+        promise = $q.all(promises)
         promise.then ->
             gm.safeApply $scope, ->
                 $scope.newAttachments = []
@@ -412,7 +412,7 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next,
             promise = rs.uploadIssueAttachment(projectId, issueId, attachment)
             promises.push(promise)
 
-        promise = Q.all(promises)
+        promise = $q.all(promises)
         promise.then ->
             gm.safeApply $scope, ->
                 $scope.newAttachments = []

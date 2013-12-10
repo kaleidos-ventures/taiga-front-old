@@ -72,7 +72,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
             promise = rs.uploadTaskAttachment(projectId, taskId, attachment)
             promises.push(promise)
 
-        promise = Q.all(promises)
+        promise = $q.all(promises)
         promise.then ->
             gm.safeApply $scope, ->
                 $scope.newAttachments = []

@@ -43,7 +43,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
             promise = rs.uploadWikiPageAttachment(projectId, $scope.page.id, attachment)
             promises.push(promise)
 
-        promise = Q.all(promises)
+        promise = $q.all(promises)
         promise.then ->
             $scope.newAttachments = []
             loadAttachments($scope.page)
