@@ -241,7 +241,13 @@ TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs, $i
 TaskboardTaskController = ($scope, $rootScope, $q, $location) ->
     $scope.updateTaskAssignation = (task, id) ->
         task.assigned_to = id || null
-        task.save()
+        task._moving = true
+        task.save().then((task) ->
+            task._moving = false
+        , ->
+            task.revert()
+            task._moving = false
+        )
 
     $scope.openTask = (projectId, taskId)->
         $location.url("/project/#{projectId}/tasks/#{taskId}")
