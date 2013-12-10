@@ -21,12 +21,12 @@ OverlayProvider = ($rootScope, $q, $log) ->
             _.bindAll(@)
 
         close: ->
-            $log.info "OverlayService.close"
+            $log.debug "OverlayService.close"
             @.el.off()
             @.el.remove()
 
         open: ->
-            $log.info "OverlayService.open"
+            $log.debug "OverlayService.open"
             self = @
 
             @.el.on "click", (event) ->

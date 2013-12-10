@@ -185,6 +185,9 @@ modules = [
 
 
 init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $data, $log) ->
+    if not config.debug
+        $log.debug = ->
+
     $rootScope.pageTitle = ""
     $rootScope.auth = $gmAuth.getUser()
     $rootScope.constants = {}
@@ -215,7 +218,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
     $gmUrls.setHost("api", config.host, config.scheme)
 
     $data.loadSiteInfo($rootScope).then (sitedata) ->
-        $log.info "Site data:", sitedata
+        $log.debug "Site data:", sitedata
 
     $rootScope.baseUrls =
         projects: "/"

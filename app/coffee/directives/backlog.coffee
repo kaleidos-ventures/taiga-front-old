@@ -64,31 +64,31 @@ GmSortableDirective = ($log, $rootScope) ->
 
         if ngModel
             ngModel.$render = ->
-                $log.info "GmSortableDirective.$render"
+                $log.debug "GmSortableDirective.$render"
                 element.sortable( "refresh" )
 
             onStart = (e, ui) ->
-                $log.info "GmSortableDirective.onStart", ui.item.index()
+                $log.debug "GmSortableDirective.onStart", ui.item.index()
                 ui.item.sortable = { index: ui.item.index() }
 
             onUpdate = (e, ui) ->
-                $log.info "GmSortableDirective.onUpdate"
+                $log.debug "GmSortableDirective.onUpdate"
                 ui.item.sortable.model = ngModel
                 ui.item.sortable.scope = scope
 
             onReceive = (e, ui) ->
-                $log.info "GmSortableDirective.onReceive"
+                $log.debug "GmSortableDirective.onReceive"
                 ui.item.sortable.relocate = true
 
             onRemove = (e, ui) ->
-                $log.info "GmSortableDirective.onRemove"
+                $log.debug "GmSortableDirective.onRemove"
                 if ngModel.$modelValue.length == 1
                     ui.item.sortable.moved = ngModel.$modelValue.splice(0, 1)[0]
                 else
                     ui.item.sortable.moved =  ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0]
 
             onStop = (e, ui) ->
-                $log.info "GmSortableDirective.onStop"
+                $log.debug "GmSortableDirective.onStop"
 
                 $rootScope.$apply ->
                     if ui.item.sortable.model and not ui.item.sortable.relocate

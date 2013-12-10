@@ -17,7 +17,7 @@ ModalServiceFactory = ($rootScope, $q, $log) ->
     service = {}
 
     service.register = (name, domId) ->
-        $log.info "registering modal: #{name}"
+        $log.debug "registering modal: #{name}"
         modals[name] = domId
 
     service.open = (name, ctx) ->
