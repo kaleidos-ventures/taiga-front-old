@@ -297,14 +297,43 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
     $i18next.initialize(false, config.defaultLanguage)
     $rootScope.$on "i18n:change", (event, lang) ->
         if lang
-            $i18next.setLang(lang)
-            moment.lang(lang)
+            new_lang = lang
         else if $rootScope.site.data.default_language
-            $i18next.setLang($rootScope.site.data.default_language)
-            moment.lang($rootScope.site.data.default_language)
+            new_lang = $rootScope.site.data.default_language
         else
-            $i18next.setLang(config.defaultLanguage)
-            moment.lang(config.defaultLanguage)
+            new_lang = config.defaultLanguage
+
+        $i18next.setLang(lang)
+        moment.lang(lang)
+
+    $rootScope.$on "i18next:changeLang", ->
+        messages = {
+            defaultMessage: $i18next.t('checksley.defaultMessage')
+            type:
+                email: $i18next.t('checksley.type-email')
+                url: $i18next.t('checksley.type-url')
+                urlstrict: $i18next.t('checksley.type-urlstrict')
+                number: $i18next.t('checksley.type-number')
+                digits: $i18next.t('checksley.type-digits')
+                dateIso: $i18next.t('checksley.type-dateIso')
+                alphanum: $i18next.t('checksley.type-alphanum')
+                phone: $i18next.t('checksley.type-phone')
+            notnull: $i18next.t('checksley.notnull')
+            notblank: $i18next.t('checksley.notblank')
+            required: $i18next.t('checksley.required')
+            regexp: $i18next.t('checksley.regexp')
+            min: $i18next.t('checksley.min')
+            max: $i18next.t('checksley.max')
+            range: $i18next.t('checksley.range')
+            minlength: $i18next.t('checksley.minlength')
+            maxlength: $i18next.t('checksley.maxlength')
+            rangelength: $i18next.t('checksley.rangelength')
+            mincheck: $i18next.t('checksley.mincheck')
+            maxcheck: $i18next.t('checksley.maxcheck')
+            rangecheck: $i18next.t('checksley.rangecheck')
+            equalto: $i18next.t('checksley.equalto')
+        }
+        checksley.updateMessages('default', messages)
 
 angular.module('greenmine', modules)
        .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', '$gmUrlsProvider', configCallback])

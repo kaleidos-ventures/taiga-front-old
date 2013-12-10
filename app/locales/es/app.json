@@ -1,4 +1,29 @@
 {
+    "checksley": {
+        "defaultMessage": "Este valor no es válido.",
+        "type-email": "Este valor debe ser un email válido.",
+        "type-url": "Este valor debe ser una url válida.",
+        "type-urlstrict": "Este valor debe ser una url válida.",
+        "type-number": "Este valor debe ser un númer válido.",
+        "type-digits": "Este valor debe ser dígitos.",
+        "type-dateIso": "Este valor debe ser una fecha válida.",
+        "type-alphanum": "Este valor debe ser alfanumérico.",
+        "type-phone": "Este valor debe ser un número de telefono válido.",
+        "notnull": "Este valor debe ser no nulo.",
+        "notblank": "Este valor no debe estar en blanco.",
+        "required": "Este valor es necesario.",
+        "regexp": "Este valor no es válido.",
+        "min": "Este valor debe ser mayor o igual que %s.",
+        "max": "Este valor debe ser menor o igual que %s.",
+        "range": "Este valor debe estar entre %s y %s.",
+        "minlength": "Este valor es demasiado corto, debe tener %s caracteres o más.",
+        "maxlength": "Este valor es demasiado largo, debe tener %s caracteres o menos.",
+        "rangelength": "La longitud de este valor no es válida, debe estar entre %s y %s caracteres.",
+        "mincheck": "Debes selecionar al menos %s opciones.",
+        "maxcheck": "Debes selecionar %s opciones o menos.",
+        "rangecheck": "Debes seleccionar entre %s y %s opciones.",
+        "equalto": "El valo debe ser el mismo."
+    },
     "pagination": {
         "next": "Siguiente",
         "prev": "Anterior"
