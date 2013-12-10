@@ -390,12 +390,15 @@ BacklogBulkUserStoriesModalController = ($scope, $rootScope, $gmOverlay, rs, $gm
     return
 
 
-BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash, $i18next) ->
+BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash, $i18next, $location) ->
     # Local scope variables
     $scope.sprintFormOpened = false
 
     calculateStats = ->
         $scope.$emit("stats:update")
+
+    $scope.openUserStory = (projectId, usId)->
+        $location.url("/project/#{projectId}/user-story/#{usId}")
 
     $scope.sprintSubmit = gm.utils.safeDebounced $scope, 400, ->
         if $scope.form.save is undefined
@@ -525,7 +528,7 @@ BacklogMilestoneController = ($scope, $q, rs, $gmFlash, $i18next) ->
 
 module = angular.module("greenmine.controllers.backlog", [])
 module.controller('BacklogMilestoneController', ['$scope', '$q', 'resource', '$gmFlash', '$i18next', BacklogMilestoneController])
-module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', BacklogMilestonesController])
+module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', '$i18next', '$location', BacklogMilestonesController])
 module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', '$location', BacklogUserStoriesController])
 module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', '$i18next', BacklogController])
 module.controller('BacklogUserStoryModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogUserStoryModalController])
