@@ -191,8 +191,11 @@ GmIssuesAccumulatedGraphDirective = () -> (scope, elm, attrs) ->
         width = element.width()
         element.height(width / 2)
 
+        today = ->
+            moment().hour(0).minute(0)
+
         days = _.map([27..0], (x) ->
-            moment().hour(0).minute(0).subtract('days', x)
+            today().subtract('days', x)
         )
         data = []
         for d in _.values(dataToDraw)
@@ -210,8 +213,8 @@ GmIssuesAccumulatedGraphDirective = () -> (scope, elm, attrs) ->
                 position: "nw"
             xaxis:
                 tickSize: [1, "day"],
-                min: moment().subtract('days', 27),
-                max: moment(),
+                min: today().subtract('days', 27),
+                max: today(),
                 mode: "time",
                 daysNames: days,
                 axisLabel: 'Day',
@@ -250,8 +253,11 @@ GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
         width = element.width()
         element.height(width / 2)
 
+        today = ->
+            moment().hour(0).minute(0)
+
         days = _.map([27..0], (x) ->
-            moment().hour(0).minute(0).subtract('days', x)
+            today().subtract('days', x)
         )
         data = [
             {
@@ -282,8 +288,8 @@ GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
         options =
             xaxis:
                 tickSize: [1, "day"],
-                min: moment().subtract('days', 27),
-                max: moment(),
+                min: today().subtract('days', 27),
+                max: today(),
                 mode: "time",
                 daysNames: days,
                 tickLength: 0
