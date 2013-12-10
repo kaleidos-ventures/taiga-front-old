@@ -61,7 +61,7 @@ DataServiceProvider = ($rootScope, $q, rs) ->
 
             $scope.userstories = {}
             _.each(userstories, (us) -> $scope.userstories[us.id] = us)
-            $scope.userstoriesList = _.sortBy(userstories, 'id')
+            $scope.userstoriesList = userstories
             $scope.$emit("stats:reload")
             return results
         return promise
