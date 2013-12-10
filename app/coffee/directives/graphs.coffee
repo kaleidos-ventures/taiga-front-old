@@ -212,6 +212,9 @@ GmIssuesAccumulatedGraphDirective = () -> (scope, elm, attrs) ->
                     fit: true
             })
         options =
+            grid:
+                borderWidth: { top: 0, right: 1, left:0, bottom: 0 }
+                borderColor: '#ccc'
             legend:
                 position: "nw"
             xaxis:
@@ -293,6 +296,8 @@ GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
             }
         ]
         options =
+            grid:
+                borderWidth: 0
             xaxis:
                 tickSize: [1, "day"],
                 min: today().subtract('days', 27),
