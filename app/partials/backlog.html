@@ -16,12 +16,26 @@
                         <div class="help" i18next="backlog.project-points">project points</div>
                     </div>
 
-                    <div class="item">
+                    <div class="item with-popover"
+                            gm-popover
+                            data-tmpl="#project-defined-points-popover"
+                            data-auto-hide="true">
                         <div class="indicator">{{ projectStats.defined_points }}</div>
                         <div class="help" i18next="backlog.defined-points">defined points</div>
                     </div>
 
-                    <div class="item">
+                    <div class="item with-popover"
+                            gm-popover
+                            data-tmpl="#project-assigned-points-popover"
+                            data-auto-hide="true">
+                        <div class="indicator">{{ projectStats.assigned_points }}</div>
+                        <div class="help" i18next="backlog.assigned-points">assigned points</div>
+                    </div>
+
+                    <div class="item with-popover"
+                            gm-popover
+                            data-tmpl="#project-closed-points-popover"
+                            data-auto-hide="true">
                         <div class="indicator">{{ projectStats.closed_points }}</div>
                         <div class="help" i18next="backlog.closed-points">closed points</div>
                     </div>
@@ -471,5 +485,32 @@
             <input type="button" class="button button-success" i18next="value:backlog.delete-popover" value="Delete" />
             <input type="button" class="button button-delete" i18next="value:backlog.cancel-popover" value="Cancel" />
         </section>
+    </div>
+</script>
+<script type="text/template" id="project-defined-points-popover">
+    <div class="project-defined-points-popover">
+        <ul>
+            <li ng-repeat="role in constants.computableRolesList">
+                <span>{{  role.name }}:</span> {{ projectStats.defined_points_per_role[role.id] }}
+            </li>
+        </ul>
+    </div>
+</script>
+<script type="text/template" id="project-assigned-points-popover">
+    <div class="project-assigned-points-popover">
+        <ul>
+            <li ng-repeat="role in constants.computableRolesList">
+                <span>{{  role.name }}:</span> {{ projectStats.assigned_points_per_role[role.id] }}
+            </li>
+        </ul>
+    </div>
+</script>
+<script type="text/template" id="project-closed-points-popover">
+    <div class="project-closed-points-popover">
+        <ul>
+            <li ng-repeat="role in constants.computableRolesList">
+                <span>{{  role.name }}:</span> {{ projectStats.closed_points_per_role[role.id] }}
+            </li>
+        </ul>
     </div>
 </script>

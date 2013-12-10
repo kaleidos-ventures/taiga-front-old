@@ -73,6 +73,7 @@
         "completed": "completed",
         "project-points": "project points",
         "defined-points": "defined points",
+        "assigned-points": "assigned points",
         "closed-points": "closed points",
         "new-user-story": "New user story",
         "filters": "Filters",
