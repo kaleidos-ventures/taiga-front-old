@@ -148,7 +148,7 @@ GmIssuesPieGraphDirective = () -> (scope, elm, attrs) ->
             series:
                 pie:
                     show: true
-                    radius: 1
+                    radius: 100
                     label:
                         show: true
                         radius: 3/4
@@ -192,7 +192,7 @@ GmIssuesAccumulatedGraphDirective = () -> (scope, elm, attrs) ->
         element.height(width / 2)
 
         days = _.map([27..0], (x) ->
-            moment().subtract('days', x)
+            moment().hour(0).minute(0).subtract('days', x)
         )
         data = []
         for d in _.values(dataToDraw)
@@ -251,7 +251,7 @@ GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
         element.height(width / 2)
 
         days = _.map([27..0], (x) ->
-            moment().subtract('days', x)
+            moment().hour(0).minute(0).subtract('days', x)
         )
         data = [
             {

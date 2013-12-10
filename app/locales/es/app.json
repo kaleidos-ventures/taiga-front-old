@@ -158,7 +158,7 @@
         "issues-by-severity": "Peticiones por severidad",
         "issues-by-priority": "Peticiones por prioridad",
         "issues-by-owner": "Peticiones por propietario",
-        "issues-assigned-to": "Peticiones por asignación",
+        "issues-by-assigned-to": "Peticiones por asignación",
         "open-by-severity-progression": "Progresión de peticiones por severidad",
         "open-by-priority-progression": "Progresión de peticiones por prioridad",
         "open-closed-per-day": "Peticiones Abiertas/Cerradas por día",

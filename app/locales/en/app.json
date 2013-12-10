@@ -158,7 +158,7 @@
         "issues-by-severity": "Issues by severity",
         "issues-by-priority": "Issues by priority",
         "issues-by-owner": "Issues by owner",
-        "issues-assigned-to": "Issues assigned to",
+        "issues-by-assigned-to": "Issues assigned to",
         "open-by-severity-progression": "Open issues by severity progression",
         "open-by-priority-progression": "Open issues by priority progression",
         "open-closed-per-day": "Open/Closed issues per day",
