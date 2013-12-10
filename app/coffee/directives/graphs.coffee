@@ -20,31 +20,32 @@ GmBacklogGraphDirective = () -> (scope, elm, attrs) ->
         element.height(width/6)
 
         milestones = _.map(scope.projectStats.milestones, (ml) -> ml.name)
+        milestonesRange = [0..(milestones.length - 1)]
         data = []
         data.push({
-            data: _.zip([0..milestones.length], _.map(dataToDraw.milestones, (ml) -> 0))
+            data: _.zip(milestonesRange, _.map(dataToDraw.milestones, (ml) -> 0))
             lines:
                 fillColor : "rgba(0,0,0,0)"
             points:
                 show: false
         })
         data.push({
-            data: _.zip([0..milestones.length], _.map(dataToDraw.milestones, (ml) -> ml.optimal))
+            data: _.zip(milestonesRange, _.map(dataToDraw.milestones, (ml) -> ml.optimal))
             lines:
                 fillColor : "rgba(120,120,120,0.2)"
         })
         data.push({
-            data: _.zip([0..milestones.length], _.filter(_.map(dataToDraw.milestones, (ml) -> ml.evolution), (evolution) -> evolution?))
+            data: _.zip(milestonesRange, _.filter(_.map(dataToDraw.milestones, (ml) -> ml.evolution), (evolution) -> evolution?))
             lines:
                 fillColor : "rgba(102,153,51,0.3)"
         })
         data.push({
-            data: _.zip([0..milestones.length], _.map(dataToDraw.milestones, (ml) -> -ml['team-increment']))
+            data: _.zip(milestonesRange, _.map(dataToDraw.milestones, (ml) -> -ml['team-increment']))
             lines:
                 fillColor : "rgba(153,51,51,0.3)"
         })
         data.push({
-            data: _.zip([0..milestones.length], _.map(dataToDraw.milestones, (ml) -> -ml['team-increment']-ml['client-increment']))
+            data: _.zip(milestonesRange, _.map(dataToDraw.milestones, (ml) -> -ml['team-increment']-ml['client-increment']))
             lines:
                 fillColor : "rgba(255,51,51,0.3)"
         })
@@ -56,7 +57,7 @@ GmBacklogGraphDirective = () -> (scope, elm, attrs) ->
                 borderWidth: { top: 0, right: 1, left:0, bottom: 0 }
                 borderColor: '#ccc'
             xaxis:
-                ticks: _.zip([0..milestones.length], milestones)
+                ticks: _.zip(milestonesRange, milestones)
                 axisLabelUseCanvas: true
                 axisLabelFontSizePixels: 12
                 axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif'
