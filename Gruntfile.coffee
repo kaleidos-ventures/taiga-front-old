@@ -17,7 +17,6 @@ module.exports = (grunt) ->
         'app/js/checksley.js',
         'app/js/q.js',
         'app/js/sha1.js',
-        'app/js/Chart.js',
         'app/js/excanvas.js',
         'app/js/jquery.flot.js',
         'app/js/jquery.flot.pie.js',
