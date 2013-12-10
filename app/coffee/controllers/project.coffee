@@ -52,7 +52,7 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
     $scope.submit = ->
         promise = $scope.project.save()
         promise.then (data) ->
-            $gmFlash.info($i18next.t("project.saved-success"))
+            $gmFlash.info($i18next.t("projects.saved-success"))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
