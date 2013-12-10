@@ -24,14 +24,14 @@ GmBacklogGraphDirective = () -> (scope, elm, attrs) ->
         data.push({
             data: _.zip([0..milestones.length], _.map(dataToDraw.milestones, (ml) -> 0))
             lines:
-                fillColor : "rgba(0,0,0,0)",
+                fillColor : "rgba(0,0,0,0)"
             points:
                 show: false
         })
         data.push({
             data: _.zip([0..milestones.length], _.map(dataToDraw.milestones, (ml) -> ml.optimal))
             lines:
-                fillColor : "rgba(120,120,120,0.2)",
+                fillColor : "rgba(120,120,120,0.2)"
         })
         data.push({
             data: _.zip([0..milestones.length], _.filter(_.map(dataToDraw.milestones, (ml) -> ml.evolution), (evolution) -> evolution?))
@@ -56,10 +56,10 @@ GmBacklogGraphDirective = () -> (scope, elm, attrs) ->
                 borderWidth: { top: 0, right: 1, left:0, bottom: 0 }
                 borderColor: '#ccc'
             xaxis:
-                ticks: _.zip([0..milestones.length], milestones),
-                axisLabelUseCanvas: true,
-                axisLabelFontSizePixels: 12,
-                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                ticks: _.zip([0..milestones.length], milestones)
+                axisLabelUseCanvas: true
+                axisLabelFontSizePixels: 12
+                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif'
                 axisLabelPadding: 5
             series:
                 shadowSize: 0
@@ -106,15 +106,15 @@ GmTaskboardGraphDirective = () -> (scope, elm, attrs) ->
                 borderWidth: { top: 0, right: 1, left:0, bottom: 0 }
                 borderColor: '#ccc'
             xaxis:
-                tickSize: [1, "day"],
-                min: days[0],
-                max: _.last(days),
-                mode: "time",
-                daysNames: days,
-                axisLabel: 'Day',
-                axisLabelUseCanvas: true,
-                axisLabelFontSizePixels: 12,
-                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                tickSize: [1, "day"]
+                min: days[0]
+                max: _.last(days)
+                mode: "time"
+                daysNames: days
+                axisLabel: 'Day'
+                axisLabelUseCanvas: true
+                axisLabelFontSizePixels: 12
+                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif'
                 axisLabelPadding: 5
             yaxis:
                 min: 0
@@ -207,22 +207,29 @@ GmIssuesAccumulatedGraphDirective = () -> (scope, elm, attrs) ->
             data.unshift({
                 label: d.name
                 data: _.zip(days, accumulated_data)
+                curvedLines:
+                    apply: true
+                    fit: true
             })
         options =
             legend:
                 position: "nw"
             xaxis:
-                tickSize: [1, "day"],
-                min: today().subtract('days', 27),
-                max: today(),
-                mode: "time",
-                daysNames: days,
-                axisLabel: 'Day',
-                axisLabelUseCanvas: true,
-                axisLabelFontSizePixels: 12,
-                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                tickSize: [1, "day"]
+                min: today().subtract('days', 27)
+                max: today()
+                mode: "time"
+                daysNames: days
+                axisLabel: 'Day'
+                axisLabelUseCanvas: true
+                axisLabelFontSizePixels: 12
+                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif'
                 axisLabelPadding: 5
+            yaxis:
+                min: 0
             series:
+                curvedLines:
+                    active: true
                 shadowSize: 0
                 lines:
                     show: true
