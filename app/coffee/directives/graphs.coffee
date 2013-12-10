@@ -15,73 +15,76 @@
 GmBacklogGraphDirective = () -> (scope, elm, attrs) ->
     element = angular.element(elm)
 
-    redrawChart = () ->
+    redrawChart = (dataToDraw) ->
         width = element.width()
-        height = width/6
+        element.height(width/6)
 
-        chart = $("<canvas />").attr("width", width).attr("height", height).attr("id", "burndown-chart")
-        element.empty()
-        element.append(chart)
-        ctx = chart.get(0).getContext("2d")
+        milestones = _.map(scope.projectStats.milestones, (ml) -> ml.name)
+        data = []
+        data.push({
+            data: _.zip([0..milestones.length], _.map(dataToDraw.milestones, (ml) -> 0))
+            lines:
+                fillColor : "rgba(0,0,0,0)",
+            points:
+                show: false
+        })
+        data.push({
+            data: _.zip([0..milestones.length], _.map(dataToDraw.milestones, (ml) -> ml.optimal))
+            lines:
+                fillColor : "rgba(120,120,120,0.2)",
+        })
+        data.push({
+            data: _.zip([0..milestones.length], _.filter(_.map(dataToDraw.milestones, (ml) -> ml.evolution), (evolution) -> evolution?))
+            lines:
+                fillColor : "rgba(102,153,51,0.3)"
+        })
+        data.push({
+            data: _.zip([0..milestones.length], _.map(dataToDraw.milestones, (ml) -> -ml['team-increment']))
+            lines:
+                fillColor : "rgba(153,51,51,0.3)"
+        })
+        data.push({
+            data: _.zip([0..milestones.length], _.map(dataToDraw.milestones, (ml) -> -ml['team-increment']-ml['client-increment']))
+            lines:
+                fillColor : "rgba(255,51,51,0.3)"
+        })
+
+        colors = ["rgba(0,0,0,1)", "rgba(120,120,120,0.2)", "rgba(102,153,51,1)", "rgba(153,51,51,1)", "rgba(255,51,51,1)"]
 
         options =
-            animation: false
-            bezierCurve: false
-            scaleFontFamily : "'ColabThi'"
-            scaleFontSize : 10
-            datasetFillXAxis: 0
-            datasetFillYAxis: 0
+            grid:
+                borderWidth: { top: 0, right: 1, left:0, bottom: 0 }
+                borderColor: '#ccc'
+            xaxis:
+                ticks: _.zip([0..milestones.length], milestones),
+                axisLabelUseCanvas: true,
+                axisLabelFontSizePixels: 12,
+                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                axisLabelPadding: 5
+            series:
+                shadowSize: 0
+                lines:
+                    show: true
+                    fill: true
+                points:
+                    show: true
+                    fill: true
+                    radius: 4
+                    lineWidth: 2
+            colors: colors
 
-
-        data =
-            labels : _.map(scope.projectStats.milestones, (ml) -> ml.name)
-            datasets : [
-                {
-                    fillColor : "rgba(0,0,0,0)",
-                    strokeColor : "rgba(0,0,0,1)",
-                    pointColor : "rgba(0,0,0,0)",
-                    pointStrokeColor : "rgba(0,0,0,0)",
-                    data : _.map(scope.projectStats.milestones, (ml) -> 0)
-                },
-                {
-                    fillColor : "rgba(120,120,120,0.2)",
-                    strokeColor : "rgba(120,120,120,0.2)",
-                    pointColor : "rgba(255,255,255,1)",
-                    pointStrokeColor : "#ccc",
-                    data : _.map(scope.projectStats.milestones, (ml) -> ml.optimal)
-                },
-                {
-                    fillColor : "rgba(102,153,51,0.3)",
-                    strokeColor : "rgba(102,153,51,1)",
-                    pointColor : "rgba(255,255,255,1)",
-                    data : _.filter(_.map(scope.projectStats.milestones, (ml) -> ml.evolution), (evolution) -> evolution?)
-                },
-                {
-                    fillColor : "rgba(153,51,51,0.3)",
-                    strokeColor : "rgba(153,51,51,1)",
-                    pointColor : "rgba(255,255,255,1)",
-                    data : _.map(scope.projectStats.milestones, (ml) -> -ml['team-increment'])
-                },
-                {
-                    fillColor : "rgba(255,51,51,0.3)",
-                    strokeColor : "rgba(255,51,51,1)",
-                    pointColor : "rgba(255,255,255,1)",
-                    data : _.map(scope.projectStats.milestones, (ml) -> -ml['team-increment']-ml['client-increment'])
-                }
-            ]
-
-        new Chart(ctx).Line(data, options)
+        element.empty()
+        element.plot(data, options).data("plot")
 
     scope.$watch 'projectStats', (value) ->
         if scope.projectStats
-            redrawChart()
+            redrawChart(scope.projectStats)
 
 GmTaskboardGraphDirective = () -> (scope, elm, attrs) ->
     element = angular.element(elm)
 
     redrawChart = (dataToDraw) ->
         width = element.width()
-        element.height(width/6)
         element.height(190)
 
         days = _.map(dataToDraw, (x) -> moment(x.day))
