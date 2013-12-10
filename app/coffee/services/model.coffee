@@ -105,6 +105,11 @@ ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
         isModified: () ->
             return this._isModified
 
+        markSaved: () ->
+            @._isModified = false
+            @._attrs = @.getAttrs()
+            @._modifiedAttrs = {}
+
         revert: () ->
             @_modifiedAttrs = {}
             @_isModified = false

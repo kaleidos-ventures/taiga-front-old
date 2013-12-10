@@ -89,30 +89,36 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
 
     resortUserStories = ->
         # Save only us that have milestone assigned
-        milestoneChangedUs = _.filter($scope.unassignedUs, "milestone")
-        for us in milestoneChangedUs
-            us.milestone = null
-            us.save()
+        saveChangedMilestone = ->
+            pchain = _.map(_.filter($scope.unassignedUs, "milestone"), (us) ->
+                                us.milestone = null
+                                return us.save())
 
-        for item, index in $scope.unassignedUs
-            item.order = index
+            return $q.all(pchain)
 
+        saveChangedOrder = ->
+            for item, index in $scope.unassignedUs
+                item.order = index
 
-        modifiedUs = _.filter($scope.unassignedUs, (x) -> x.isModified())
-        bulkData = _.map($scope.unassignedUs, (value, index) -> [value.id, index])
-
-        for item in modifiedUs
-            item._moving = true
-
-        promise = rs.updateBulkUserStoriesOrder($scope.projectId, bulkData)
-        promise.then ->
-            for us in modifiedUs
-                us.refresh()
+            modifiedUs = _.filter($scope.unassignedUs, (x) -> x.isModified())
+            bulkData = _.map($scope.unassignedUs, (value, index) -> [value.id, index])
 
             for item in modifiedUs
-                item._moving = false
+                item._moving = true
 
-            calculateStats()
+            promise = rs.updateBulkUserStoriesOrder($scope.projectId, bulkData)
+            promise = promise.then ->
+                for us in modifiedUs
+                    us.refresh()
+
+                for item in modifiedUs
+                    item._moving = false
+
+            return promise
+
+        $q.when(saveChangedMilestone())
+          .then(saveChangedOrder)
+          .then(calculateStats)
 
     loadUserStories = ->
         $data.loadUnassignedUserStories($scope).then ->
@@ -436,7 +442,7 @@ BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash, $i18next) ->
     return
 
 
-BacklogMilestoneController = ($scope, rs, $gmFlash, $i18next) ->
+BacklogMilestoneController = ($scope, $q, rs, $gmFlash, $i18next) ->
     calculateTotalPoints = (us) ->
         total = 0
         for roleId, pointId of us.points
@@ -458,17 +464,37 @@ BacklogMilestoneController = ($scope, rs, $gmFlash, $i18next) ->
             percentage: if total then ((closed * 100) / total).toFixed(1) else 0.0
 
     normalizeMilestones = ->
-        _.each $scope.ml.user_stories, (item, index) ->
-            item.milestone = $scope.ml.id
+        saveChangedMilestone = ->
+            console.log "saveChangedMilestone"
+            for item, index in $scope.ml.user_stories
+                item.milestone = $scope.ml.id
 
-        # Calculte new stats
-        calculateStats()
+            filtered = _.filter($scope.ml.user_stories, (x) -> x.isModified())
+            pchain = _.map(filtered, (x) -> x.save())
 
-        _.each $scope.ml.user_stories, (item) ->
-            if item.isModified()
-                item._moving = true
-                item.save().then (us) ->
-                    us._moving = false
+            return $q.all(pchain)
+
+        saveChangedOrder = ->
+            console.log "saveChangedOrder"
+            for item, index in $scope.ml.user_stories
+                item.order = index
+                if item.isModified()
+                    item._moving = true
+
+            bulkData = _.map($scope.ml.user_stories, (value, index) -> [value.id, index])
+            return rs.updateBulkUserStoriesOrder($scope.projectId, bulkData)
+
+        markAsSaved = ->
+            for item in $scope.ml.user_stories
+                item._moving = false
+                item.markSaved()
+
+            return null
+
+        $q.when(saveChangedMilestone())
+          .then(saveChangedOrder)
+          .then(markAsSaved)
+          .then(calculateStats)
 
     $scope.editFormOpened = false
     $scope.viewUSs = not $scope.ml.closed
@@ -500,7 +526,7 @@ BacklogMilestoneController = ($scope, rs, $gmFlash, $i18next) ->
 
 
 module = angular.module("greenmine.controllers.backlog", [])
-module.controller('BacklogMilestoneController', ['$scope', 'resource', '$gmFlash', '$i18next', BacklogMilestoneController])
+module.controller('BacklogMilestoneController', ['$scope', '$q', 'resource', '$gmFlash', '$i18next', BacklogMilestoneController])
 module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', BacklogMilestonesController])
 module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', '$location', BacklogUserStoriesController])
 module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', '$i18next', BacklogController])
