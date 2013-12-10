@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $i18next) ->
+TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $model, $i18next) ->
     # Global Scope Variables
     $rootScope.pageTitle = $i18next.t('common.taskboard')
     $rootScope.pageSection = 'dashboard'
@@ -123,8 +123,9 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
             options.user_story = us.id
 
         promise = $modal.open("task-form", {'task': options, 'type': 'create'})
-        promise.then (us) ->
-            $scope.tasks.push(us)
+        promise.then (task) ->
+            newTask = $model.make_model("tasks", task)
+            $scope.tasks.push(newTask)
             formatUserStoryTasks()
             calculateStats()
 
@@ -257,5 +258,5 @@ TaskboardTaskController = ($scope, $rootScope, $q, $location) ->
 
 module = angular.module("greenmine.controllers.taskboard", [])
 module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', "$location", TaskboardTaskController])
-module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', '$modal', "$i18next", TaskboardController])
+module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', '$modal', "$model", "$i18next", TaskboardController])
 module.controller("TaskboardTaskModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', "$i18next", TaskboardTaskModalController])
