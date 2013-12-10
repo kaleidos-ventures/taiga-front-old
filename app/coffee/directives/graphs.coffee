@@ -79,46 +79,59 @@ GmBacklogGraphDirective = () -> (scope, elm, attrs) ->
 GmTaskboardGraphDirective = () -> (scope, elm, attrs) ->
     element = angular.element(elm)
 
-    redrawChart = () ->
+    redrawChart = (dataToDraw) ->
         width = element.width()
-        height = width/6
+        element.height(width/6)
 
-        chart = $("<canvas />").attr("width", width).attr("height", height).attr("id", "dashboard-chart")
-        element.empty()
-        element.append(chart)
-        ctx = chart.get(0).getContext("2d")
+        days = _.map(dataToDraw, (x) -> moment(x.day))
+
+        data = []
+        data.unshift({
+            data: _.zip(days, _.map(dataToDraw, (d) -> d.optimal_points))
+            lines:
+                fillColor : "rgba(120,120,120,0.2)"
+        })
+        data.unshift({
+            data: _.zip(days, _.map(dataToDraw, (d) -> d.open_points))
+            lines:
+                fillColor : "rgba(102,153,51,0.3)"
+        })
 
         options =
-            animation: false
-            bezierCurve: false
-            scaleFontFamily : "'ColabThi'"
-            scaleFontSize : 10
-            datasetFillXAxis: 0
-            datasetFillYAxis: 0
+            grid:
+                borderWidth: { top: 0, right: 1, left:0, bottom: 0 }
+                borderColor: '#ccc'
+            xaxis:
+                tickSize: [1, "day"],
+                min: days[0],
+                max: _.last(days),
+                mode: "time",
+                daysNames: days,
+                axisLabel: 'Day',
+                axisLabelUseCanvas: true,
+                axisLabelFontSizePixels: 12,
+                axisLabelFontFamily: 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                axisLabelPadding: 5
+            yaxis:
+                min: 0
+            series:
+                shadowSize: 0
+                lines:
+                    show: true
+                    fill: true
+                points:
+                    show: true
+                    fill: true
+                    radius: 4
+                    lineWidth: 2
+            colors: ["rgba(102,153,51,1)", "rgba(120,120,120,0.2)"]
 
-        data =
-            labels : _.map(scope.milestoneStats.days, (day) -> day.name)
-            datasets : [
-                {
-                    fillColor : "rgba(120,120,120,0.2)",
-                    strokeColor : "rgba(120,120,120,0.2)",
-                    pointColor : "rgba(255,255,255,1)",
-                    pointStrokeColor : "#ccc",
-                    data : _.map(scope.milestoneStats.days, (day) -> day.optimal_points)
-                },
-                {
-                    fillColor : "rgba(102,153,51,0.3)",
-                    strokeColor : "rgba(102,153,51,1)",
-                    pointColor : "rgba(255,255,255,1)",
-                    data : _.map(scope.milestoneStats.days, (day) -> day.open_points)
-                }
-            ]
-
-        new Chart(ctx).Line(data, options)
+        element.empty()
+        element.plot(data, options).data("plot")
 
     scope.$watch 'milestoneStats', (value) ->
         if scope.milestoneStats
-            redrawChart()
+            redrawChart(scope.milestoneStats.days)
 
 GmIssuesPieGraphDirective = () -> (scope, elm, attrs) ->
     element = angular.element(elm)
