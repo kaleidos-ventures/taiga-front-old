@@ -437,7 +437,9 @@ GmSelect2Tags = ->
             scope.$emit('select2:changed', e.val)
 
         scope.$watch attrs.gmSelect2Tags, () ->
-            element.select2({tags: scope.$eval(attrs.gmSelect2Tags)})
+            tags = scope.$eval(attrs.gmSelect2Tags)
+            tags = if tags then tags else []
+            element.select2({tags: tags})
             colorizeTags()
 
 GmSelectFix = ->
