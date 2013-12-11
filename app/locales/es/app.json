@@ -50,6 +50,7 @@
         "password-change-title": "Cambiar contraseña"
     },
     "common": {
+        "loading": "Cargando",
         "dashboard": "Dashboard",
         "taskboard": "Panel de tareas",
         "tasks": "Tareas",
