@@ -5,20 +5,23 @@
     </div>
     <div class="top-menu-sbox">
         <ul>
-            <li>
-                <a data-icon="b" ng-click="projectsList=!projectsList"
+            <li ng-controller="ShowProjectsController">
+                <a data-icon="b" ng-click="showProjects()"
                    href="" title="Show all projects"
                    i18next="common.all-projects,title:common.show-all-projects">
                     All Projects
                 </a>
-                <ul class="project-list" ng-show="projectsList" ng-mouseleave="projectsList=false">
-                    <li ng-repeat="proj in auth.projects" ng-show="auth.projects.length">
+                <ul class="project-list" ng-show="showingProjects" ng-mouseleave="showingProjects=false">
+                    <li ng-repeat="proj in myProjects" ng-show="myProjects.length && !loading">
                         <a title="{{ proj.name }}" href="{{ urls.backlogUrl(proj.id) }}">{{ proj.name }}</a>
                     </li>
-                    <li ng-show="!auth.projects.length">
+                    <li ng-show="!myProjects.length && !loading">
                         <a title="You have no projects" i18next="common.no-projects,title:common.no-projects">
                             You have no projects
                         </a>
+                    </li>
+                    <li ng-show="loading">
+                        <span ng-class="{loading: loading}" data-icon="x"></span>Loading
                     </li>
                 </ul>
             </li>

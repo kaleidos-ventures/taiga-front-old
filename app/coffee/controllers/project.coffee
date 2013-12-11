@@ -139,6 +139,24 @@ MembershipsController = ($scope, $rootScope, $model, $confirm, $i18next) ->
 
     return
 
+ShowProjectsController = ($scope, $rootScope, $model, rs) ->
+    $scope.loading = false
+    $scope.showingProjects = false
+    $scope.myProjects = []
+    $scope.showProjects = ->
+        $scope.loading = true
+        $scope.showingProjects = true
+
+        rs.getProjects().then (projects) ->
+            $scope.myProjects = projects
+            $scope.loading = false
+
+        rs.getProjects().then null, ->
+            $scope.myProjects = []
+            $scope.loading = false
+
+    return
+
 
 module = angular.module("greenmine.controllers.project", [])
 module.controller("ProjectListController", ['$scope', '$rootScope', 'resource', '$i18next',
@@ -148,3 +166,4 @@ module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routePara
                                              ProjectAdminController])
 module.controller("MembershipsController", ["$scope", "$rootScope", "$model", "$confirm", "$i18next",
                                             MembershipsController])
+module.controller("ShowProjectsController", ["$scope", "$rootScope", "$model", 'resource', ShowProjectsController])
