@@ -5,6 +5,12 @@
     </div>
     <div class="top-menu-sbox">
         <ul>
+            <li ng-show="auth.is_site_owner || auth.is_site_staff">
+                <a href="#/admin" data-icon="i" title="Administer site"
+                   i18next="title:common.administer-site,common.administer-site">
+                    Administer site
+                </a>
+            </li>
             <li ng-controller="ShowProjectsController">
                 <a data-icon="b" ng-click="showProjects()"
                    href="" title="Show all projects"

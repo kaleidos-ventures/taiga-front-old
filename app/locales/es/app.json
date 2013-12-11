@@ -50,6 +50,7 @@
         "password-change-title": "Cambiar contraseña"
     },
     "common": {
+        "administer-site": "Administrar sitio",
         "loading": "Cargando",
         "dashboard": "Dashboard",
         "taskboard": "Panel de tareas",
@@ -456,5 +457,34 @@
     "search": {
         "you-searched": "Has buscado: <strong>__term__</strong>",
         "no-results": "No hay resultados para <strong>__term__</strong>. Inténtalo con otra consulta!"
+    },
+    "admin-site": {
+        "site-profile": "Perfil del sitio",
+        "public-register": "Registro publico",
+        "memberships": "Miembros",
+        "add-member": "Añadir miembro",
+        "role": "Rol",
+        "user": "Usuario",
+        "full-name": "Nombre completo",
+        "email": "Email",
+        "actions": "Acciones",
+        "save": "Guardar",
+        "default-language": "Idioma por defecto",
+        "use-system-language": "Usar el idioma del sistema",
+        "normal-user": "Usuario normal",
+        "owner": "Propietario",
+        "staff": "Administrador",
+        "role-changed": "Rol modificado.",
+        "projects": "Proyectos",
+        "delete-project": "Borrar proyecto",
+        "add-project": "Añadir proyecto",
+        "add-new-project": "Añadir nuevo proyecto",
+        "name": "Nombre",
+        "description": "Descripción",
+        "cancel": "Cancelar",
+        "sprints": "Sprints",
+        "points": "Puntos",
+        "project-created": "Proyecto creado.",
+        "saved-success": "Sitio guardado correctamente."
     }
 }

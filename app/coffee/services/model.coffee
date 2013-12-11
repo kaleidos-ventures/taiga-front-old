@@ -132,7 +132,7 @@ ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
 
             return defered.promise
 
-        save: (patch=true) ->
+        save: (patch=true, extraParams) ->
             self = @
             defered = $q.defer()
 
@@ -150,6 +150,8 @@ ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
                 params.method = "PUT"
 
             params.data = JSON.stringify(@.getAttrs(patch))
+
+            params = _.extend({}, params, extraParams)
 
             promise = $http(params)
             promise.success (data, status) ->

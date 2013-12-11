@@ -50,6 +50,7 @@
         "password-change-title": "Password change"
     },
     "common": {
+        "administer-site": "Administer site",
         "loading": "Loading",
         "dashboard": "Dashboard",
         "taskboard": "Taskboard",
@@ -456,6 +457,34 @@
     "search": {
         "you-searched": "You searched: <strong>__term__</strong>",
         "no-results": "There is no result to <strong>__term__</strong>. Try again with another query!"
+    },
+    "admin-site": {
+        "site-profile": "Site profile",
+        "public-register": "Public register",
+        "memberships": "Memberships",
+        "add-member": "Add member",
+        "role": "Role",
+        "user": "User",
+        "full-name": "Full name",
+        "email": "Email",
+        "actions": "Actions",
+        "save": "Save",
+        "default-language": "Default language",
+        "use-system-language": "Use system language",
+        "normal-user": "Normal user",
+        "owner": "Owner",
+        "staff": "Staff",
+        "role-changed": "Role changed.",
+        "projects": "Projects",
+        "delete-project": "Delete project",
+        "add-project": "Add project",
+        "add-new-project": "Add new project",
+        "name": "Name",
+        "description": "Description",
+        "cancel": "Cancel",
+        "sprints": "Sprints",
+        "points": "Points",
+        "project-created": "Project created.",
+        "saved-success": "Site saved successful."
     }
-
 }

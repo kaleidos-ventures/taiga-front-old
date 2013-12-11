@@ -30,7 +30,7 @@ I18NextDirective = ($parse, $rootScope) ->
         $rootScope.$on "i18next:changeLang", ->
             evaluateTranslation()
 
-I18NextProvider = ($rootScope, storage, $q) ->
+I18NextProvider = ($rootScope, $q) ->
     i18n.addPostProcessor "lodashTemplate", (value, key, options) ->
         template = _.template(value)
         return template(options.scope)
@@ -49,11 +49,9 @@ I18NextProvider = ($rootScope, storage, $q) ->
 
     service.setLang = (lang) ->
         $rootScope.currentLang = lang
-        storage.set("lang", lang)
-
         options = _.clone(service.defaultOptions, true)
-        i18n.setLng(lang, options)
-        $rootScope.$broadcast("i18next:changeLang")
+        i18n.setLng lang, options, ->
+            $rootScope.$broadcast("i18next:changeLang")
 
     service.getCurrentLang = ->
         return $rootScope.currentLang
@@ -64,12 +62,9 @@ I18NextProvider = ($rootScope, storage, $q) ->
     service.t = service.translate
 
     service.initialize = (async=false, defaultLang="en") ->
-        if $rootScope.defaultLang == undefined
-            $rootScope.defaultLang = defaultLang
-
         # Put to rootScope a initial values
         options = _.clone(service.defaultOptions, true)
-        options.lng = $rootScope.currentLang = storage.get("lang", $rootScope.defaultLang)
+        options.lng = $rootScope.currentLang = defaultLang
 
         if async
             options.getAsync = true
@@ -100,6 +95,6 @@ I18NextTranslateFilter = ($i18next) ->
         return $i18next.t(key, options)
 
 module = angular.module('i18next', [])
-module.factory("$i18next", ['$rootScope', '$gmStorage', '$q', I18NextProvider])
+module.factory("$i18next", ['$rootScope', '$q', I18NextProvider])
 module.directive('i18next', ['$parse', '$rootScope', I18NextDirective])
 module.filter('i18next', ['$i18next', I18NextTranslateFilter])

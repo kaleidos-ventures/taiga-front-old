@@ -87,6 +87,9 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when('/project/:pid/admin', {
         controller: "ProjectAdminController", templateUrl: "partials/project-admin.html"})
 
+    $routeProvider.when('/admin', {
+        controller: "SiteAdminController", templateUrl: "partials/site-admin.html"})
+
     $routeProvider.otherwise({redirectTo: '/login'})
 
     defaultHeaders = {
@@ -147,7 +150,8 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         "choices/severities": "/api/v1/severities"
         "search": "/api/v1/search"
         "sites": "/api/v1/sites"
-
+        "site-members": "/api/v1/site-members"
+        "site-projects": "/api/v1/site-projects"
         "users": "/api/v1/users"
         "users-password-recovery": "/api/v1/users/password_recovery"
         "users-change-password-from-recovery": "/api/v1/users/change_password_from_recovery"
@@ -172,6 +176,7 @@ modules = [
     "greenmine.controllers.project",
     "greenmine.controllers.tasks",
     "greenmine.controllers.wiki",
+    "greenmine.controllers.site",
     "greenmine.filters",
     "greenmine.services.common",
     "greenmine.services.model",
@@ -315,13 +320,15 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
     $rootScope.$on "i18n:change", (event, lang) ->
         if lang
             new_lang = lang
+        else if $rootScope.auth.default_language
+            new_lang = $rootScope.auth.default_language
         else if $rootScope.site.data.default_language
             new_lang = $rootScope.site.data.default_language
         else
             new_lang = config.defaultLanguage
 
-        $i18next.setLang(lang)
-        moment.lang(lang)
+        $i18next.setLang(new_lang)
+        moment.lang(new_lang)
 
     $rootScope.$on "i18next:changeLang", ->
         messages = {

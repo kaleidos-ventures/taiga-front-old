@@ -213,6 +213,16 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return defered.promise
 
+    # Get a site
+    service.getSite = -> queryOne('sites')
+
+    # Get a members list
+    service.getSiteMembers = -> queryMany('site-members')
+
+    # Create a project
+    service.createProject = (data) ->
+        return $model.create("site-projects", data)
+
     # Get a project list
     service.getProjects = -> queryMany('projects')
 
