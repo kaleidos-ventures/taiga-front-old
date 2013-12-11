@@ -90,9 +90,10 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
     resortUserStories = ->
         # Save only us that have milestone assigned
         saveChangedMilestone = ->
-            pchain = _.map(_.filter($scope.unassignedUs, "milestone"), (us) ->
-                                us.milestone = null
-                                return us.save())
+            ussWithMilestones = _.filter($scope.unassignedUs, "milestone")
+            pchain = _.map ussWithMilestones, (us) ->
+                us.milestone = null
+                return us.save()
 
             return $q.all(pchain)
 

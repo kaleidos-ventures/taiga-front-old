@@ -22,35 +22,46 @@ GmBacklogGraphDirective = () -> (scope, elm, attrs) ->
         milestones = _.map(scope.projectStats.milestones, (ml) -> ml.name)
         milestonesRange = [0..(milestones.length - 1)]
         data = []
+        zero_line = _.map(dataToDraw.milestones, (ml) -> 0)
         data.push({
-            data: _.zip(milestonesRange, _.map(dataToDraw.milestones, (ml) -> 0))
+            data: _.zip(milestonesRange, zero_line)
             lines:
                 fillColor : "rgba(0,0,0,0)"
             points:
                 show: false
         })
+        optimal_line = _.map(dataToDraw.milestones, (ml) -> ml.optimal)
         data.push({
-            data: _.zip(milestonesRange, _.map(dataToDraw.milestones, (ml) -> ml.optimal))
+            data: _.zip(milestonesRange, optimal_line)
             lines:
                 fillColor : "rgba(120,120,120,0.2)"
         })
+        evolution_line = _.filter(_.map(dataToDraw.milestones, (ml) -> ml.evolution), (evolution) -> evolution?)
         data.push({
-            data: _.zip(milestonesRange, _.filter(_.map(dataToDraw.milestones, (ml) -> ml.evolution), (evolution) -> evolution?))
+            data: _.zip(milestonesRange, evolution_line)
             lines:
                 fillColor : "rgba(102,153,51,0.3)"
         })
+        team_increment_line = _.map(dataToDraw.milestones, (ml) -> -ml['team-increment'])
         data.push({
-            data: _.zip(milestonesRange, _.map(dataToDraw.milestones, (ml) -> -ml['team-increment']))
+            data: _.zip(milestonesRange, team_increment_line)
             lines:
                 fillColor : "rgba(153,51,51,0.3)"
         })
+        client_increment_line = _.map(dataToDraw.milestones, (ml) -> -ml['team-increment']-ml['client-increment'])
         data.push({
-            data: _.zip(milestonesRange, _.map(dataToDraw.milestones, (ml) -> -ml['team-increment']-ml['client-increment']))
+            data: _.zip(milestonesRange, client_increment_line)
             lines:
                 fillColor : "rgba(255,51,51,0.3)"
         })
 
-        colors = ["rgba(0,0,0,1)", "rgba(120,120,120,0.2)", "rgba(102,153,51,1)", "rgba(153,51,51,1)", "rgba(255,51,51,1)"]
+        colors = [
+            "rgba(0,0,0,1)"
+            "rgba(120,120,120,0.2)"
+            "rgba(102,153,51,1)"
+            "rgba(153,51,51,1)"
+            "rgba(255,51,51,1)"
+        ]
 
         options =
             grid:

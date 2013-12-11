@@ -36,7 +36,7 @@ gm.safeApply = (scope, fn) ->
     if (scope.$$phase || scope.$root.$$phase)
         fn()
     else
-        scope.$apply(fn);
+        scope.$apply(fn)
 
 
 # Function that return debounced function

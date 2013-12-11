@@ -11,28 +11,111 @@ gmMarkitupConstructor = ($parse, $i18next) ->
             onShiftEnter: {keepDefault:false, openWith:'\n\n'}
             previewParser: (content) -> markdown.toHTML(content)
             markupSet: [
-                {name:$i18next.t('wiki-editor.heading-1'), key:"1", placeHolder:$i18next.t('wiki-editor.placeholder'), closeWith:(markItUp) -> markdownTitle(markItUp, '=') },
-                {name:$i18next.t('wiki-editor.heading-2'), key:"2", placeHolder:$i18next.t('wiki-editor.placeholder'), closeWith:(markItUp) -> markdownTitle(markItUp, '-') },
-                {name:$i18next.t('wiki-editor.heading-3'), key:"3", openWith:'### ', placeHolder:$i18next.t('wiki-editor.placeholder') },
-                {name:$i18next.t('wiki-editor.heading-4'), key:"4", openWith:'#### ', placeHolder:$i18next.t('wiki-editor.placeholder') },
-                {name:$i18next.t('wiki-editor.heading-5'), key:"5", openWith:'##### ', placeHolder:$i18next.t('wiki-editor.placeholder') },
-                {name:$i18next.t('wiki-editor.heading-6'), key:"6", openWith:'###### ', placeHolder:$i18next.t('wiki-editor.placeholder') },
-                {separator:'---------------' },
-                {name:$i18next.t('wiki-editor.bold'), key:"B", openWith:'**', closeWith:'**'},
-                {name:$i18next.t('wiki-editor.italic'), key:"I", openWith:'_', closeWith:'_'},
-                {separator:'---------------' },
-                {name:$i18next.t('wiki-editor.bulleted-list'), openWith:'- ' },
-                {name:$i18next.t('wiki-editor.numeric-list'), openWith:(markItUp) -> markItUp.line+'. '},
-                {separator:'---------------' },
-                {name:$i18next.t('wiki-editor.picture'), key:"P", replaceWith:'![[![Alternative text]!]]([![Url:!:http://]!] "[![Title]!]")'},
-                {name:$i18next.t('wiki-editor.link'), key:"L", openWith:'[', closeWith:']([![Url:!:http://]!] "[![Title]!]")', placeHolder: $i18next.t('wiki-editor.link-placeholder')},
-                {separator:'---------------'},
-                {name:$i18next.t('wiki-editor.quotes'), openWith:'> '},
-                {name:$i18next.t('wiki-editor.code-block'), openWith:'(!(\t|!|`)!)', closeWith:'(!(`)!)'},
-                {separator:'---------------'},
-                {name:$i18next.t('wiki-editor.preview'), call:'preview', className:"preview"}
-                {separator:'---------------'},
-                {name:$i18next.t('wiki-editor.help'), call: openHelp , className:"help"}
+                {
+                    name: $i18next.t('wiki-editor.heading-1')
+                    key: "1"
+                    placeHolder: $i18next.t('wiki-editor.placeholder')
+                    closeWith: (markItUp) -> markdownTitle(markItUp, '=')
+                },
+                {
+                    name: $i18next.t('wiki-editor.heading-2')
+                    key: "2"
+                    placeHolder: $i18next.t('wiki-editor.placeholder')
+                    closeWith: (markItUp) -> markdownTitle(markItUp, '-')
+                },
+                {
+                    name: $i18next.t('wiki-editor.heading-3')
+                    key: "3"
+                    openWith: '### '
+                    placeHolder: $i18next.t('wiki-editor.placeholder')
+                },
+                {
+                    name: $i18next.t('wiki-editor.heading-4')
+                    key: "4"
+                    openWith: '#### '
+                    placeHolder: $i18next.t('wiki-editor.placeholder')
+                },
+                {
+                    name: $i18next.t('wiki-editor.heading-5')
+                    key: "5"
+                    openWith: '##### '
+                    placeHolder: $i18next.t('wiki-editor.placeholder')
+                },
+                {
+                    name: $i18next.t('wiki-editor.heading-6')
+                    key: "6"
+                    openWith: '###### '
+                    placeHolder: $i18next.t('wiki-editor.placeholder')
+                },
+                {
+                    separator: '---------------'
+                },
+                {
+                    name: $i18next.t('wiki-editor.bold')
+                    key: "B"
+                    openWith: '**'
+                    closeWith: '**'
+                },
+                {
+                    name: $i18next.t('wiki-editor.italic')
+                    key: "I"
+                    openWith: '_'
+                    closeWith: '_'
+                },
+                {
+                    separator: '---------------'
+                },
+                {
+                    name: $i18next.t('wiki-editor.bulleted-list')
+                    openWith: '- '
+                },
+                {
+                    name: $i18next.t('wiki-editor.numeric-list')
+                    openWith: (markItUp) -> markItUp.line+'. '
+                },
+                {
+                    separator: '---------------'
+                },
+                {
+                    name: $i18next.t('wiki-editor.picture')
+                    key: "P"
+                    replaceWith: '![[![Alternative text]!]]([![Url:!:http://]!] "[![Title]!]")'
+                },
+                {
+                    name: $i18next.t('wiki-editor.link')
+                    key: "L"
+                    openWith: '['
+                    closeWith: ']([![Url:!:http://]!] "[![Title]!]")'
+                    placeHolder: $i18next.t('wiki-editor.link-placeholder')
+                },
+                {
+                    separator: '---------------'
+                },
+                {
+                    name: $i18next.t('wiki-editor.quotes')
+                    openWith: '> '
+                },
+                {
+                    name: $i18next.t('wiki-editor.code-block')
+                    openWith: '(!(\t|!|`)!)'
+                    closeWith: '(!(`)!)'
+                },
+                {
+                    separator: '---------------'
+                },
+                {
+                    name: $i18next.t('wiki-editor.preview')
+                    call: 'preview'
+                    className: "preview"
+                }
+                {
+                    separator: '---------------'
+                },
+                {
+                    name: $i18next.t('wiki-editor.help')
+                    call: openHelp
+                    className: "help"
+                }
             ]
             afterInsert: (event) ->
                 target = angular.element(event.textarea)

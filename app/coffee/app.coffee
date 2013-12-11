@@ -24,13 +24,27 @@ gm.format = (fmt, obj, named) ->
         return fmt.replace /%s/g, (match) -> String(obj.shift())
 
 configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider, $gmUrlsProvider) ->
-    $routeProvider.when('/', {templateUrl: 'partials/project-list.html', controller: "ProjectListController"})
-    $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: "LoginController"})
-    $routeProvider.when('/recovery', {templateUrl: 'partials/recovery.html', controller: "RecoveryController"})
-    $routeProvider.when('/change-password', {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController"})
-    $routeProvider.when('/change-password/:token', {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController"})
-    $routeProvider.when('/profile', {templateUrl: 'partials/profile.html', controller: "ProfileController"})
-    $routeProvider.when("/register", {controller: "PublicRegisterController", templateUrl: "partials/register.html"})
+    $routeProvider.when('/',
+        {templateUrl: 'partials/project-list.html', controller: "ProjectListController"})
+
+    $routeProvider.when('/login',
+        {templateUrl: 'partials/login.html', controller: "LoginController"})
+
+    $routeProvider.when('/recovery',
+        {templateUrl: 'partials/recovery.html', controller: "RecoveryController"})
+
+    $routeProvider.when('/change-password',
+        {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController"})
+
+    $routeProvider.when('/change-password/:token',
+        {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController"})
+
+    $routeProvider.when('/profile',
+        {templateUrl: 'partials/profile.html', controller: "ProfileController"})
+
+    $routeProvider.when("/register",
+        {controller: "PublicRegisterController", templateUrl: "partials/register.html"})
+
     $routeProvider.when("/invitation/:token", {
         controller: "InvitationRegisterController", templateUrl: "partials/invitation-register.html"})
 

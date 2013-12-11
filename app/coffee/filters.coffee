@@ -36,7 +36,7 @@ MomentFromNowFilter = ->
         if input
             return moment(input).fromNow(without_suffix or false)
         else
-           return ""
+            return ""
 
 LowercaseFilter = ->
     return (input) ->
