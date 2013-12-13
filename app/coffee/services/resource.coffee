@@ -654,6 +654,55 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         return defered.promise
 
+    service.getUserStoryStatuses = (projectId, filters={}) ->
+        parameters = _.extend({}, filters, {project:projectId})
+        return queryMany("choices/userstory-statuses", parameters)
+
+    service.createUserStoryStatus = (form) ->
+        return $model.create("choices/userstory-statuses", form)
+
+    service.getPoints = (projectId, filters={}) ->
+        parameters = _.extend({}, filters, {project:projectId})
+        return queryMany("choices/points", parameters)
+
+    service.createPoints = (form) ->
+        return $model.create("choices/points", form)
+
+    service.getTaskStatuses = (projectId, filters={}) ->
+        parameters = _.extend({}, filters, {project:projectId})
+        return queryMany("choices/task-statuses", parameters)
+
+    service.createTaskStatus = (form) ->
+        return $model.create("choices/task-statuses", form)
+
+    service.getIssueStatuses = (projectId, filters={}) ->
+        parameters = _.extend({}, filters, {project:projectId})
+        return queryMany("choices/issue-statuses", parameters)
+
+    service.createIssueStatus = (form) ->
+        return $model.create("choices/issue-statuses", form)
+
+    service.getIssueTypes = (projectId, filters={}) ->
+        parameters = _.extend({}, filters, {project:projectId})
+        return queryMany("choices/issue-types", parameters)
+
+    service.createIssueType = (form) ->
+        return $model.create("choices/issue-types", form)
+
+    service.getPriorities = (projectId, filters={}) ->
+        parameters = _.extend({}, filters, {project:projectId})
+        return queryMany("choices/priorities", parameters)
+
+    service.createPriority = (form) ->
+        return $model.create("choices/priorities", form)
+
+    service.getSeverities = (projectId, filters={}) ->
+        parameters = _.extend({}, filters, {project:projectId})
+        return queryMany("choices/severities", parameters)
+
+    service.createSeverity = (form) ->
+        return $model.create("choices/severities", form)
+
     return service
 
 module = angular.module('greenmine.services.resource', ['greenmine.config'])

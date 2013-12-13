@@ -7,6 +7,11 @@
             ng-click="setActive('data')" i18next="admin.project-profile">
             Project profile
         </li>
+        <li class="userstory-tab" ng-class="{active: isActive('values')}"
+            ng-click="setActive('values')" i18next="admin.project-values">
+            Project values
+        </li>
+
         <li class="userstory-tab" ng-class="{active: isActive('sprints')}"
             ng-click="setActive('sprints')" i18next="admin.sprints">
             Sprints
@@ -16,18 +21,6 @@
             Memberships
         </li>
     </ul>
-
-    <div class="tab-container" ng-show="isActive('sprints')">
-        <div class="sprint-list-container">
-            <h3 data-icon="q" i18next="admin.created-sprints">Created sprints</h3>
-            <ul class="sprint-list">
-                <li class="sprint" ng-repeat="ml in project.list_of_milestones">
-                    <a href="" data-icon="h" title="Delete sprint" i18next="title:admin.delete-sprint" ng-click="deleteMilestone(ml)"></a>
-                    {{ ml.name }}
-                </li>
-            </ul>
-        </div>
-    </div>
 
     <div class="tab-container" ng-show="isActive('data')">
         <div class="update-form">
@@ -130,6 +123,563 @@
             </form>
         </div>
     </div>
+
+    <div class="tab-container" ng-show="isActive('values')">
+        <div class="project-values-container">
+            <div class="value-container" ng-controller="UserStoryStatusesAdminController">
+                <div class="header">
+                    <p data-icon="y" class="title">US statuses</p>
+                    <div class="buttons">
+                        <a class="button btn-value btn-add" data-icon="A"
+                                ng-click="openForm()" ng-hide="formOpened">
+                            Add new US status</a>
+                    </div>
+                </div>
+                <div class="value-list us-statuses-values">
+                    <div class="flex-header">
+                        <div class="item name">Name</div>
+                        <div class="item is-closed">Is closed</div>
+                        <div class="item color">Color</div>
+                        <div class="options"></div>
+                    </div>
+                    <div class="flex-body us-statuses-sortables" gm-sortable=".us-statuses-sortables">
+                        <form class="flex-row new-form" gm-sortable-index="{{$index}}" ng-show="formOpened"
+                                gm-checksley-form="create()">
+                            <fieldset class="item name">
+                                <input type="text" name="name" ng-model="status.name"
+                                       data-required="true" data-error-message="Required" />
+                            </fieldset>
+                            <fieldset class="item is-closed">
+                                <input type="checkbox" name="is-closed" ng-model="status.is_closed"/>
+                            </fieldset>
+                            <fieldset class="item color">
+                                <input type="text" name="color" ng-model="status.color"
+                                        data-required="true" data-error-message="Required" />
+                                <div class="color-sample" style="background-color: {{ status.color }}">
+                                </div>
+                            </fieldset>
+                            <fieldset class="options">
+                                <button class="btn-small btn-save" data-icon="z"
+                                        gm-checksley-submit-button></button>
+                                <button class="btn-small btn-cancel" data-icon="p"
+                                        ng-click="closeForm()"></button>
+                            </fieldset>
+                        </form>
+                        <div class="flex-row"  ng-repeat="status in userStoryStatuses"
+                                gm-sortable-index="{{$index}}">
+                            <div class="row-value" ng-controller="UserStoryStatusController">
+                                <div class="data" ng-hide="formOpened">
+                                    <div class="item name">{{ status.name }}</div>
+                                    <div class="item is-closed">{{ status.is_closed }}</div>
+                                    <div class="item color">
+                                        <div class="color-sample"
+                                                style="background-color: {{ status.color }}"></div>
+                                    </div>
+                                    <div class="options">
+                                        <a class="btn-small btn-edit" data-icon="j"
+                                                ng-click="openForm()"></a>
+                                        <a class="btn-small btn-remove" data-icon="h"
+                                                ng-click="delete(status)"></a>
+                                    </div>
+                                </div>
+                                <form class="modify-form" ng-show="formOpened"
+                                        gm-checksley-form="update(status)">
+                                    <fieldset class="item name">
+                                        <input type="text" name="name" ng-model="status.name"
+                                               data-required="true" data-error-message="Required" />
+                                    </fieldset>
+                                    <fieldset class="item is-closed">
+                                        <input type="checkbox" name="is-closed" ng-model="status.is_closed"/>
+                                    </fieldset>
+                                    <fieldset class="item color">
+                                        <input type="text" name="color" ng-model="status.color"
+                                                data-required="true" data-error-message="Required" />
+                                        <div class="color-sample" style="background-color: {{ status.color }}">
+                                        </div>
+                                    </fieldset>
+                                    <fieldset class="options">
+                                        <button class="btn-small btn-save" data-icon="z"
+                                                gm-checksley-submit-button></button>
+                                        <button class="btn-small btn-cancel" data-icon="p"
+                                                ng-click="closeForm(status)"></button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="value-container" ng-controller="PointsAdminController">
+                <div class="header">
+                    <p data-icon="L" class="title">US Points</p>
+                    <div class="buttons">
+                        <a class="button btn-value btn-add" data-icon="A"
+                                ng-click="openForm()" ng-hide="formOpened">
+                            Add new US points</a>
+                    </div>
+                </div>
+                <div class="value-list points-values">
+                    <div class="flex-header">
+                        <div class="item name">Name</div>
+                        <div class="item value">Value</div>
+                        <div class="options"></div>
+                    </div>
+                    <div class="flex-body project-points-sortables" gm-sortable=".project-points-sortables">
+                        <form class="flex-row new-form" gm-sortable-index="{{$index}}" ng-show="formOpened"
+                                gm-checksley-form="create()">
+                            <fieldset class="item name">
+                                <input type="text" name="name" ng-model="point.name"
+                                        data-required="true" data-error-message="Required" />
+                            </fieldset>
+                            <fieldset class="item value">
+                                <input type="text" name="is-closed" ng-model="point.value" />
+                            </fieldset>
+                            <fieldset class="options">
+                                <button class="btn-small btn-save" data-icon="z"
+                                        gm-checksley-submit-button></button>
+                                <button class="btn-small btn-cancel" data-icon="p"
+                                        ng-click="closeForm()"></button>
+                            </fieldset>
+                        </form>
+                        <div class="flex-row" ng-repeat="point in points"
+                                gm-sortable-index="{{$index}}">
+                            <div class="row-value" ng-controller="PointsController">
+                                <div class="data" ng-hide="formOpened">
+                                    <div class="item name">{{ point.name }}</div>
+                                    <div class="item value">{{ point.value }}</div>
+                                    <div class="options">
+                                        <a class="btn-small btn-edit" data-icon="j"
+                                                ng-click="openForm()"></a>
+                                        <a class="btn-small btn-remove" data-icon="h"
+                                                ng-click="delete(point)"></a>
+                                    </div>
+                                </div>
+                                <form class="modify-form" ng-show="formOpened"
+                                        gm-checksley-form="update(point)">
+                                    <fieldset class="item name">
+                                        <input type="text" name="name" ng-model="point.name"
+                                                data-required="true" data-error-message="Required" />
+                                    </fieldset>
+                                    <fieldset class="item value">
+                                        <input type="text" name="is-closed" ng-model="point.value" />
+                                    </fieldset>
+                                    <fieldset class="options">
+                                        <button class="btn-small btn-save" data-icon="z"
+                                                gm-checksley-submit-button></button>
+                                        <button class="btn-small btn-cancel" data-icon="p"
+                                                ng-click="closeForm(point)"></button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="value-container" ng-controller="TaskStatusesAdminController">
+                <div class="header">
+                    <p data-icon="y" class="title">Task Statuses</p>
+                    <div class="buttons">
+                        <a class="button btn-value btn-add" data-icon="A"
+                                ng-click="openForm()" ng-hide="formOpened">
+                            Add new task status</a>
+                    </div>
+                </div>
+                <div class="value-list task-statuses-values">
+                    <div class="flex-header">
+                        <div class="item name">Name</div>
+                        <div class="item is-closed">Is closed</div>
+                        <div class="item color">Color</div>
+                        <div class="options"></div>
+                    </div>
+                    <div class="flex-body task-statuses-sortables" gm-sortable=".task-statuses-sortables">
+                        <form class="flex-row new-form" gm-sortable-index="{{$index}}" ng-show="formOpened"
+                                gm-checksley-form="create()">
+                            <fieldset class="item name">
+                                <input type="text" name="name" ng-model="status.name"i
+                                       data-required="true" data-error-message="Required" />
+                            </fieldset>
+                            <fieldset class="item is-closed">
+                                <input type="checkbox" name="is-closed" ng-model="status.is_closed" />
+                            </fieldset>
+                            <fieldset class="item color">
+                                <input type="text" name="color" ng-model="status.color"
+                                       data-required="true" data-error-message="Required" />
+                                <div class="color-sample" style="background-color: {{ status.color }}"></div>
+                            </fieldset>
+                            <fieldset class="options">
+                                <button class="btn-small btn-save" data-icon="z"
+                                        gm-checksley-submit-button></button>
+                                <button class="btn-small btn-cancel" data-icon="p"
+                                        ng-click="closeForm()"></button>
+                            </fieldset>
+                        </form>
+                        <div class="flex-row" ng-repeat="status in taskStatuses"
+                                gm-sortable-index="{{$index}}">
+                            <div class="row-value" ng-controller="TaskStatusController">
+                                <div class="data" ng-hide="formOpened">
+                                    <div class="item name">{{ status.name }}</div>
+                                    <div class="item is-closed">{{ status.is_closed }}</div>
+                                    <div class="item color">
+                                        <div class="color-sample" style="background-color: {{ status.color }}">
+                                        </div>
+                                    </div>
+                                    <div class="options">
+                                        <a class="btn-small btn-edit" data-icon="j"
+                                                ng-click="openForm()"></a>
+                                        <a class="btn-small btn-remove" data-icon="h"
+                                                ng-click="delete(status)"></a>
+                                    </div>
+                                </div>
+                                <form class="modify-form" ng-show="formOpened"
+                                        gm-checksley-form="update(status)">
+                                    <fieldset class="item name">
+                                        <input type="text" name="name" ng-model="status.name"i
+                                               data-required="true" data-error-message="Required" />
+                                    </fieldset>
+                                    <fieldset class="item is-closed">
+                                        <input type="checkbox" name="is-closed" ng-model="status.is_closed" />
+                                    </fieldset>
+                                    <fieldset class="item color">
+                                        <input type="text" name="color" ng-model="status.color"
+                                               data-required="true" data-error-message="Required" />
+                                        <div class="color-sample" style="background-color: {{ status.color }}">
+                                        </div>
+                                    </fieldset>
+                                    <fieldset class="options">
+                                        <button class="btn-small btn-save" data-icon="z"
+                                                gm-checksley-submit-button></button>
+                                        <button class="btn-small btn-cancel" data-icon="p"
+                                                ng-click="closeForm(status)"></button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="value-container" ng-controller="IssueStatusesAdminController">
+                <div class="header">
+                    <p data-icon="y" class="title">Issue statuses</p>
+                    <div class="buttons">
+                        <a class="button btn-value btn-add" data-icon="A"
+                                ng-click="openForm()" ng-hide="formOpened">
+                            Add new issue status</a>
+                    </div>
+                </div>
+                <div class="value-list issue-statuses-values">
+                    <div class="flex-header">
+                        <div class="item name">Name</div>
+                        <div class="item is-closed">Is closed</div>
+                        <div class="item color">Color</div>
+                        <div class="options"></div>
+                    </div>
+                    <div class="flex-body issue-statuses-sortables" gm-sortable=".issue-statuses-sortables">
+                        <form class="flex-row new-form" gm-sortable-index="{{$index}}" ng-show="formOpened"
+                                gm-checksley-form="create()">
+                            <fieldset class="item name">
+                                <input type="text" name="name" ng-model="status.name"
+                                        data-required="true" data-error-message="Required" />
+                            </fieldset>
+                            <fieldset class="item is-closed">
+                                <input type="checkbox" name="is-closed" ng-model="status.is_closed" />
+                            </fieldset>
+                            <fieldset class="item color">
+                                <input type="text" name="color"ng-model="status.color"
+                                        data-required="true" data-error-message="Required" />
+                                <div class="color-sample" style="background-color: {{ status.color }}">
+                                </div>
+                            </fieldset>
+                            <fieldset class="options">
+                                <button class="btn-small btn-save" data-icon="z"
+                                        gm-checksley-submit-button></button>
+                                <button class="btn-small btn-cancel" data-icon="p"
+                                        ng-click="closeForm()"></button>
+                            </fieldset>
+                        </form>
+                        <div class="flex-row" ng-repeat="status in issueStatuses"
+                                gm-sortable-index="{{$index}}">
+                            <div class="row-value" ng-controller="IssueStatusController">
+                                <div class="data" ng-hide="formOpened">
+                                    <div class="item name">{{ status.name }}</div>
+                                    <div class="item is-closed">{{ status.is_closed }}</div>
+                                    <div class="item color">
+                                        <div class="color-sample" style="background-color: {{ status.color }}">i
+                                        </div>
+                                    </div>
+                                    <div class="options">
+                                        <a class="btn-small btn-edit" data-icon="j"
+                                                ng-click="openForm()"></a>
+                                        <a class="btn-small btn-remove" data-icon="h"
+                                                ng-click="delete(status)"></a>
+                                    </div>
+                                </div>
+                                <form class="modify-form" ng-show="formOpened"
+                                        gm-checksley-form="update(status)">
+                                    <fieldset class="item name">
+                                        <input type="text" name="name" ng-model="status.name"
+                                                data-required="true" data-error-message="Required" />
+                                    </fieldset>
+                                    <fieldset class="item is-closed">
+                                        <input type="checkbox" name="is-closed" ng-model="status.is_closed" />
+                                    </fieldset>
+                                    <fieldset class="item color">
+                                        <input type="text" name="color"ng-model="status.color"
+                                                data-required="true" data-error-message="Required" />
+                                        <div class="color-sample" style="background-color: {{ status.color }}">
+                                        </div>
+                                    </fieldset>
+                                    <fieldset class="options">
+                                        <button class="btn-small btn-save" data-icon="z"
+                                                gm-checksley-submit-button></button>
+                                        <button class="btn-small btn-cancel" data-icon="p"
+                                                ng-click="closeForm(status)"></button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="value-container" ng-controller="IssueTypesAdminController">
+                <div class="header">
+                    <p data-icon="a" class="title">Issue types</p>
+                    <div class="buttons">
+                        <a class="button btn-value btn-add" data-icon="A"
+                                ng-click="openForm()" ng-hide="formOpened">
+                            Add new issue type</a>
+                    </div>
+                </div>
+                <div class="value-list issue-types-values">
+                    <div class="flex-header">
+                        <div class="item name">Name</div>
+                        <div class="item color">Color</div>
+                        <div class="options"></div>
+                    </div>
+                    <div class="flex-body issue-types-sortables" gm-sortable=".issue-types-sortables">
+                        <form class="flex-row new-form" gm-sortable-index="{{$index}}" ng-show="formOpened"
+                                gm-checksley-form="create()">
+                            <fieldset class="item name">
+                                <input type="text" name="name" ng-model="type.name"
+                                       data-required="true" data-error-message="Required" />
+                            </fieldset>
+                            <fieldset class="item color">
+                                <input type="text" name="color" ng-model="type.color"
+                                       data-required="true" data-error-message="Required" />
+                                <div class="color-sample" style="background-color: {{ type.color }}">
+                                </div>
+                            </fieldset>
+                            <fieldset class="options">
+                                <button class="btn-small btn-save" data-icon="z"
+                                        gm-checksley-submit-button></button>
+                                <button class="btn-small btn-cancel" data-icon="p"
+                                        ng-click="closeForm()"></button>
+                            </fieldset>
+                        </form>
+                        <div class="flex-row" ng-repeat="type in issueTypes"
+                                gm-sortable-index="{{$index}}">
+                            <div class="row-value" ng-controller="IssueTypeController">
+                                <div class="data" ng-hide="formOpened">
+                                    <div class="item name">{{ type.name }}</div>
+                                    <div class="item color">
+                                        <div class="color-sample" style="background-color: {{ type.color }}">
+                                        </div>
+                                    </div>
+                                    <div class="options">
+                                        <a class="btn-small btn-edit" data-icon="j"
+                                                ng-click="openForm()"></a>
+                                        <a class="btn-small btn-remove" data-icon="h"
+                                                ng-click="delete(type)"></a>
+                                    </div>
+                                </div>
+                                <form class="modify-form" ng-show="formOpened"
+                                        gm-checksley-form="update(type)">
+                                    <fieldset class="item name">
+                                        <input type="text" name="name" ng-model="type.name"
+                                               data-required="true" data-error-message="Required" />
+                                    </fieldset>
+                                    <fieldset class="item color">
+                                        <input type="text" name="color" ng-model="type.color"
+                                               data-required="true" data-error-message="Required" />
+                                        <div class="color-sample" style="background-color: {{ type.color }}">
+                                        </div>
+                                    </fieldset>
+                                    <fieldset class="options">
+                                        <button class="btn-small btn-save" data-icon="z"
+                                                gm-checksley-submit-button></button>
+                                        <button class="btn-small btn-cancel" data-icon="p"
+                                                ng-click="closeForm(type)"></button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="value-container" ng-controller="PrioritiesAdminController">
+                <div class="header">
+                    <p data-icon="o" class="title">Priorities</p>
+                    <div class="buttons">
+                        <a class="button btn-value btn-add" data-icon="A"
+                                ng-click="openForm()" ng-hide="formOpened">
+                            Add new priority</a>
+                    </div>
+                </div>
+                <div class="value-list priorities-values">
+                    <div class="flex-header">
+                        <div class="item name">Name</div>
+                        <div class="item color">Color</div>
+                        <div class="options"></div>
+                    </div>
+                    <div class="flex-body priorities-sortables" gm-sortable=".priorities-sortables">
+                        <form class="flex-row new-form" gm-sortable-index="{{$index}}" ng-show="formOpened"
+                                gm-checksley-form="create()">
+                            <fieldset class="item name">
+                                <input type="text" name="name" ng-model="priority.name"
+                                        data-required="true" data-error-message="Required" />
+                            </fieldset>
+                            <fieldset class="item color">
+                                <input type="text" name="color" ng-model="priority.color"
+                                        data-required="true" data-error-message="Required" />
+                                <div class="color-sample" style="background-color: {{ priority.color }}">
+                                </div>
+                            </fieldset>
+                            <fieldset class="options">
+                                <button class="btn-small btn-save" data-icon="z"
+                                        gm-checksley-submit-button></button>
+                                <button class="btn-small btn-cancel" data-icon="p"
+                                        ng-click="closeForm()"></button>
+                            </fieldset>
+                        </form>
+                        <div class="flex-row" ng-repeat="priority in priorities"
+                                gm-sortable-index="{{$index}}">
+                            <div class="row-value" ng-controller="PriorityController">
+                                <div class="data" ng-hide="formOpened">
+                                    <div class="item name">{{ priority.name }}</div>
+                                    <div class="item color">
+                                        <div class="color-sample" style="background-color: {{ priority.color }}">
+                                        </div>
+                                    </div>
+                                    <div class="options">
+                                        <a class="btn-small btn-edit" data-icon="j"
+                                                ng-click="openForm()"></a>
+                                        <a class="btn-small btn-remove" data-icon="h"
+                                                ng-click="delete(priority)"></a>
+                                    </div>
+                                </div>
+                                <form class="modify-form" ng-show="formOpened"
+                                        gm-checksley-form="update(priority)">
+                                    <fieldset class="item name">
+                                        <input type="text" name="name" ng-model="priority.name"
+                                                data-required="true" data-error-message="Required" />
+                                    </fieldset>
+                                    <fieldset class="item color">
+                                        <input type="text" name="color" ng-model="priority.color"
+                                                data-required="true" data-error-message="Required" />
+                                        <div class="color-sample" style="background-color: {{ priority.color }}">
+                                        </div>
+                                    </fieldset>
+                                    <fieldset class="options">
+                                        <button class="btn-small btn-save" data-icon="z"
+                                                gm-checksley-submit-button></button>
+                                        <button class="btn-small btn-cancel" data-icon="p"
+                                                ng-click="closeForm(priority)"></button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="value-container" ng-controller="SeveritiesAdminController">
+                <div class="header">
+                    <p data-icon="H" class="title">Severities</p>
+                    <div class="buttons">
+                        <a class="button btn-value btn-add" data-icon="A"
+                                ng-click="openForm()" ng-hide="formOpened">
+                            Add new severity</a>
+                    </div>
+                </div>
+                <div class="value-list severities-values">
+                    <div class="flex-header">
+                        <div class="item name">Name</div>
+                        <div class="item color">Color</div>
+                        <div class="options"></div>
+                    </div>
+                    <div class="flex-body severities-sortables" gm-sortable=".severities-sortables">
+                        <form class="flex-row new-form" gm-sortable-index="{{$index}}" ng-show="formOpened"
+                                gm-checksley-form="create()">
+                            <fieldset class="item name">
+                                <input type="text" name="name" ng-model="severity.name"
+                                        data-required="true" data-error-message="Required" />
+                            </fieldset>
+                            <fieldset class="item color">
+                                <input type="text" name="color" ng-model="severity.color"
+                                        data-required="true" data-error-message="Required" />
+                                <div class="color-sample" style="background-color: {{ severity.color }}">
+                                </div>
+                            </fieldset>
+                            <fieldset class="options">
+                                <button class="btn-small btn-save" data-icon="z"
+                                        gm-checksley-submit-button></button>
+                                <button class="btn-small btn-cancel" data-icon="p"
+                                        ng-click="closeForm()"></button>
+                            </fieldset>
+                        </form>
+                        <div class="flex-row"  ng-repeat="severity in severities"
+                                gm-sortable-index="{{$index}}">
+                            <div class="row-value" ng-controller="SeverityController">
+                                <div class="data" ng-hide="formOpened">
+                                    <div class="item name">{{ severity.name }}</div>
+                                    <div class="item color">
+                                        <div class="color-sample" style="background-color: {{ severity.color }}">
+                                        </div>
+                                    </div>
+                                    <div class="options">
+                                        <a class="btn-small btn-edit" data-icon="j"
+                                                ng-click="openForm()"></a>
+                                        <a class="btn-small btn-remove" data-icon="h"
+                                                ng-click="delete(severity)"></a>
+                                    </div>
+                                </div>
+                                <form class="modify-form" ng-show="formOpened"
+                                        gm-checksley-form="update(severity)">
+                                    <fieldset class="item name">
+                                        <input type="text" name="name" ng-model="severity.name"
+                                                data-required="true" data-error-message="Required" />
+                                    </fieldset>
+                                    <fieldset class="item color">
+                                        <input type="text" name="color" ng-model="severity.color"
+                                                data-required="true" data-error-message="Required" />
+                                        <div class="color-sample" style="background-color: {{ severity.color }}">
+                                        </div>
+                                    </fieldset>
+                                    <fieldset class="options">
+                                        <button class="btn-small btn-save" data-icon="z"
+                                                gm-checksley-submit-button></button>
+                                        <button class="btn-small btn-cancel" data-icon="p"
+                                                ng-click="closeForm(severity)"></button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-container" ng-show="isActive('sprints')">
+        <div class="sprint-list-container">
+            <h3 data-icon="q" i18next="admin.created-sprints">Created sprints</h3>
+            <ul class="sprint-list">
+                <li class="sprint" ng-repeat="ml in project.list_of_milestones">
+                    <a href="" data-icon="h" title="Delete sprint" i18next="title:admin.delete-sprint" ng-click="deleteMilestone(ml)"></a>
+                    {{ ml.name }}
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <div class="tab-container" ng-show="isActive('memberships')">
         <div class="project-members">
             <div class="project-members-options">
@@ -152,7 +702,7 @@
                                 data-required="true" />
                         </fieldset>
                         <fieldset>
-                            <button type="submit" class="button button-edit"  gm-checksley-submit-button i18next="admin.add-member">Add member</button>
+                            <button type="submit" class="button button-edit" gm-checksley-submit-button i18next="admin.add-member">Add member</button>
                             <button type="submit" class="button button-cancel" ng-click="closeForm()" i18next="admin.cancel">Cancel</button>
                         </fieldset>
                     </form>

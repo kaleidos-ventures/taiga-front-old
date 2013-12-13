@@ -3664,6 +3664,254 @@ fieldset{
     .tab-container {
         position: relative;
 
+        .project-values-container {
+            width: 60%;
+            border: 1px solid #eee;
+            margin: 10px;
+
+            .value-container {
+                border: 1px solid #eee;
+                margin: 15px 10px 15px 10px;
+
+                .header {
+                    padding: 10px;
+                    background: #666;
+                    color: #FFF;
+                    overflow: hidden;
+
+                    .title {
+                        font-size: 20px;
+                        font-weight: bold;
+                        float: left;
+                        margin: 5px;
+
+                        &:before {
+                            font-size: 17px;
+                            margin-right: 5px;
+                        }
+                    }
+                    .buttons {
+                        float: right;
+                        display: block;
+
+                        .btn-value{
+                            align: right;
+                            display: inline-block;
+                            position: relative;
+                            padding: 5px 5px 5px 30px;
+                            background: @green;
+                            font-size: 18px;
+
+                            &:hover{
+                                background: #333333;
+                                transition: all .3s linear;
+                                &:before {
+                                    -webkit-animation: spin .5s infinite linear;
+                                    -moz-animation: spin .5s infinite linear;
+                                    -o-animation: spin .5s infinite linear;
+                                    -ms-animation: spin .5s infinite linear;
+                                    @-webkit-keyframes spin {
+                                        0% { -webkit-transform: rotate(0deg);}
+                                        100% { -webkit-transform: rotate(360deg);}
+                                    }
+                                    @-moz-keyframes spin {
+                                        0% { -moz-transform: rotate(0deg);}
+                                        100% { -moz-transform: rotate(360deg);}
+                                    }
+                                    @-o-keyframes spin {
+                                        0% { -o-transform: rotate(0deg);}
+                                        100% { -o-transform: rotate(360deg);}
+                                    }
+                                    @-ms-keyframes spin {
+                                        0% { -ms-transform: rotate(0deg);}
+                                        100% { -ms-transform: rotate(360deg);}
+                                    }
+                                }
+                            }
+                            &:before {
+                                position: absolute;
+                                top: 7px;
+                                left: 7px;
+                                transition: all .3s ease-in;
+                            }
+                            &.active {
+                                -webkit-animation: spin .5s infinite linear;
+                                -moz-animation: spin .5s infinite linear;
+                                -o-animation: spin .5s infinite linear;
+                                -ms-animation: spin .5s infinite linear;
+                                @-webkit-keyframes spin {
+                                    0% { -webkit-transform: rotate(0deg);}
+                                    100% { -webkit-transform: rotate(360deg);}
+                                }
+                                @-moz-keyframes spin {
+                                    0% { -moz-transform: rotate(0deg);}
+                                    100% { -moz-transform: rotate(360deg);}
+                                }
+                                @-o-keyframes spin {
+                                    0% { -o-transform: rotate(0deg);}
+                                    100% { -o-transform: rotate(360deg);}
+                                }
+                                @-ms-keyframes spin {
+                                    0% { -ms-transform: rotate(0deg);}
+                                    100% { -ms-transform: rotate(360deg);}
+                                }
+                            }
+                        }
+                        .btn-add {
+                            background: @green;
+                        }
+                    }
+                }
+
+                .value-list {
+                    margin: 0;
+                    padding: 8px;
+                    position: relative;
+
+                    .flex-header {
+                        font-family: 'ColabReg';
+                        font-size: 14px;
+                        line-height: 36px;
+                        color: #666666;
+                        border-bottom: 1px solid #666;
+
+                        .item {
+                            display: inline-block;
+                        }
+                        .options {
+                            display: inline-block;
+                        }
+                    }
+                    .flex-row {
+                        font-family: 'ColabThi';
+                        font-size: 14px;
+                        line-height: 36px;
+                        border-bottom: 1px solid #ddd;
+                        cursor: move;
+                        .item {
+                            display: inline-block;
+                            .color-sample {
+                                width: 16px;
+                                height: 16px;
+                                border-radius: 30%;
+                                padding: 3px;
+                                margin-top: 2px;
+                                display: inline-block;
+                                vertical-align: middle;
+                            }
+                        }
+                        .options {
+                            display: inline-block;
+                            .btn-small {
+                                background: #666;
+                                color: #FFF;
+                                font-size: 14px;
+                                border-radius: 50%;
+                                border: 0px;
+                                padding: 3px;
+                                margin-right: 2px;
+                            }
+                            .btn-edit {
+                                background: #669933;
+                            }
+                            .btn-remove {
+                                background: #cc0000;
+                            }
+                            .btn-save {
+                                background: #669933;
+                            }
+                            .btn-cancel {
+                                background: #4d4d4d;
+                            }
+                        }
+                    }
+                }
+                .points-values {
+                    .name {
+                        width: 60%;
+                    }
+                    .value {
+                        width: 30%;
+                    }
+                }
+                .us-statuses-values {
+                    .name {
+                        width: 50%;
+                    }
+                    .is-closed {
+                        width: 20%;
+                    }
+                    .color {
+                        width: 20%;
+                        input {
+                            width: 50%
+                        }
+                    }
+                }
+                .task-statuses-values {
+                    .name {
+                        width: 50%;
+                    }
+                    .is-closed {
+                        width: 20%;
+                    }
+                    .color {
+                        width: 20%;
+                        input {
+                            width: 50%
+                        }
+                    }
+                }
+                .issue-statuses-values {
+                    .name {
+                        width: 50%;
+                    }
+                    .is-closed {
+                        width: 20%;
+                    }
+                    .color {
+                        width: 20%;
+                        input {
+                            width: 50%
+                        }
+                    }
+                }
+                .issue-types-values {
+                    .name {
+                        width: 60%;
+                    }
+                    .color {
+                        width: 30%;
+                        input {
+                            width: 50%
+                        }
+                    }
+                }
+                .priorities-values {
+                    .name {
+                        width: 60%;
+                    }
+                    .color {
+                        width: 30%;
+                        input {
+                            width: 50%
+                        }
+                    }
+                }
+                .severities-values {
+                    .name {
+                        width: 60%;
+                    }
+                    .color {
+                        width: 30%;
+                        input {
+                            width: 50%
+                        }
+                    }
+                }
+            }
+        }
+
         .sprint-list-container {
             width: 60%;
             border: 1px solid #eee;

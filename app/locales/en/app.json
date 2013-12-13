@@ -252,6 +252,7 @@
     },
     "admin": {
         "project-profile": "Project profile",
+        "project-values": "Project values",
         "sprints": "Sprints",
         "memberships": "Memberships",
         "created-sprints": "Created sprints",
