@@ -85,11 +85,14 @@
     };
 
     CoffeeColorPicker.prototype._move = function(y, x) {
+      var x_offset, y_offset;
       if (this._rect.top === 0 || this._rect.left === 0) {
         this.refresh();
       }
-      y = Math.max(0, y - this._rect.top);
-      x = Math.max(0, x - this._rect.left);
+      y_offset = $(document).scrollTop();
+      x_offset = $(document).scrollLeft();
+      y = Math.max(0, y - (this._rect.top + y_offset));
+      x = Math.max(0, x - (this._rect.left + x_offset));
       y /= this._rect.height;
       x /= this._rect.width;
       return this._setColor(x * 360, this._color.sat, y * 100);
