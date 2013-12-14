@@ -661,12 +661,26 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.createUserStoryStatus = (form) ->
         return $model.create("choices/userstory-statuses", form)
 
+    service.updateBulkUserStoryStatusesOrder = (projectId, data) ->
+        obj = {
+            project: projectId
+            bulk_userstory_statuses: data
+        }
+        return $http.post($gmUrls.api("choices/userstory-statuses/bulk-update-order"), obj, {headers:headers()})
+
     service.getPoints = (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
         return queryMany("choices/points", parameters)
 
     service.createPoints = (form) ->
         return $model.create("choices/points", form)
+
+    service.updateBulkPointsOrder = (projectId, data) ->
+        obj = {
+            project: projectId
+            bulk_points: data
+        }
+        return $http.post($gmUrls.api("choices/points/bulk-update-order"), obj, {headers:headers()})
 
     service.getTaskStatuses = (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
@@ -675,12 +689,26 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.createTaskStatus = (form) ->
         return $model.create("choices/task-statuses", form)
 
+    service.updateBulkTaskStatusesOrder = (projectId, data) ->
+        obj = {
+            project: projectId
+            bulk_task_statuses: data
+        }
+        return $http.post($gmUrls.api("choices/task-statuses/bulk-update-order"), obj, {headers:headers()})
+
     service.getIssueStatuses = (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
         return queryMany("choices/issue-statuses", parameters)
 
     service.createIssueStatus = (form) ->
         return $model.create("choices/issue-statuses", form)
+
+    service.updateBulkIssueStatusesOrder = (projectId, data) ->
+        obj = {
+            project: projectId
+            bulk_issue_statuses: data
+        }
+        return $http.post($gmUrls.api("choices/issue-statuses/bulk-update-order"), obj, {headers:headers()})
 
     service.getIssueTypes = (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
@@ -689,6 +717,13 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.createIssueType = (form) ->
         return $model.create("choices/issue-types", form)
 
+    service.updateBulkIssueTypesOrder = (projectId, data) ->
+        obj = {
+            project: projectId
+            bulk_issue_types: data
+        }
+        return $http.post($gmUrls.api("choices/issue-types/bulk-update-order"), obj, {headers:headers()})
+
     service.getPriorities = (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
         return queryMany("choices/priorities", parameters)
@@ -696,12 +731,26 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.createPriority = (form) ->
         return $model.create("choices/priorities", form)
 
+    service.updateBulkPrioritiesOrder = (projectId, data) ->
+        obj = {
+            project: projectId
+            bulk_priorities: data
+        }
+        return $http.post($gmUrls.api("choices/priorities/bulk-update-order"), obj, {headers:headers()})
+
     service.getSeverities = (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
         return queryMany("choices/severities", parameters)
 
     service.createSeverity = (form) ->
         return $model.create("choices/severities", form)
+
+    service.updateBulkSeveritiesOrder = (projectId, data) ->
+        obj = {
+            project: projectId
+            bulk_severities: data
+        }
+        return $http.post($gmUrls.api("choices/severities/bulk-update-order"), obj, {headers:headers()})
 
     return service
 

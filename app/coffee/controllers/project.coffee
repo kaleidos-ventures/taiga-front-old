@@ -205,8 +205,8 @@ UserStoryStatusesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, 
                     obj._moving = false
 
             return promise
-        # TODO
-        #saveChangedOrder()
+
+        saveChangedOrder()
 
     $scope.$on("userstory-statuses:refresh", loadUserStoryStatuses)
     $scope.$on("sortable:changed", resortUserStoryStatuses)
@@ -298,8 +298,8 @@ PointsAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs,
                     obj._moving = false
 
             return promise
-        # TODO
-        #saveChangedOrder()
+
+        saveChangedOrder()
 
     $scope.$on("points:refresh", loadPoints)
     $scope.$on("sortable:changed", resortPoints)
@@ -381,8 +381,8 @@ TaskStatusesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $mode
                     obj._moving = false
 
             return promise
-        # TODO
-        #saveChangedOrder()
+
+        saveChangedOrder()
 
     $scope.$on("task-statuses:refresh", loadTaskStatuses)
     $scope.$on("sortable:changed", resortTaskStatuses)
@@ -464,8 +464,8 @@ IssueStatusesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $mod
                     obj._moving = false
 
             return promise
-        # TODO
-        #saveChangedOrder()
+
+        saveChangedOrder()
 
     $scope.$on("issue-statuses:refresh", loadIssueStatuses)
     $scope.$on("sortable:changed", resortIssueStatuses)
@@ -547,8 +547,8 @@ IssueTypesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model,
                     obj._moving = false
 
             return promise
-        # TODO
-        #saveChangedOrder()
+
+        saveChangedOrder()
 
     $scope.$on("issue-types:refresh", loadIssueTypes)
     $scope.$on("sortable:changed", resortIssueTypes)
@@ -630,8 +630,8 @@ PrioritiesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model,
                     obj._moving = false
 
             return promise
-        # TODO
-        #saveChangedOrder()
+
+        saveChangedOrder()
 
     $scope.$on("priorities:refresh", loadPriorities)
     $scope.$on("sortable:changed", resortPriorities)
@@ -713,8 +713,8 @@ SeveritiesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model,
                     obj._moving = false
 
             return promise
-        # TODO
-        #saveChangedOrder()
+
+        saveChangedOrder()
 
     $scope.$on("severities:refresh", loadSeverities)
     $scope.$on("sortable:changed", resortSeverities)
