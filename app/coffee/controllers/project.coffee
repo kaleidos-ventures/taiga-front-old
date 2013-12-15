@@ -158,8 +158,7 @@ ShowProjectsController = ($scope, $rootScope, $model, rs) ->
     return
 
 
-UserStoryStatusesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                                    $location, $i18next) ->
+UserStoryStatusesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
     $scope.status = {}
     $scope.formOpened = false
 
@@ -214,8 +213,7 @@ UserStoryStatusesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, 
     loadUserStoryStatuses()
 
 
-UserStoryStatusController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                             $location, $i18next) ->
+UserStoryStatusController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
     $scope.formOpened = false
 
     $scope.openForm = ->
@@ -241,8 +239,7 @@ UserStoryStatusController = ($scope, $rootScope, $routeParams, $gmFlash, $model,
             $gmFlash.error($i18next.t("common.error-on-delete"), false)
 
 
-PointsAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                         $location, $i18next) ->
+PointsAdminController = ($scope, $rootScope, $gmFlash, rs) ->
     $scope.point = {}
     $scope.formOpened = false
 
@@ -307,8 +304,7 @@ PointsAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs,
     loadPoints()
 
 
-PointsController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                    $location, $i18next) ->
+PointsController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
     $scope.formOpened = false
 
     $scope.openForm = ->
@@ -334,8 +330,7 @@ PointsController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $con
             $gmFlash.error($i18next.t("common.error-on-delete"), false)
 
 
-TaskStatusesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                               $location, $i18next) ->
+TaskStatusesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
     $scope.status = {}
     $scope.formOpened = false
 
@@ -390,8 +385,7 @@ TaskStatusesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $mode
     loadTaskStatuses()
 
 
-TaskStatusController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                        $location, $i18next) ->
+TaskStatusController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
     $scope.formOpened = false
 
     $scope.openForm = ->
@@ -417,8 +411,7 @@ TaskStatusController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, 
             $gmFlash.error($i18next.t("common.error-on-delete"), false)
 
 
-IssueStatusesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                                $location, $i18next) ->
+IssueStatusesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
     $scope.status = {}
     $scope.formOpened = false
 
@@ -473,8 +466,7 @@ IssueStatusesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $mod
     loadIssueStatuses()
 
 
-IssueStatusController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                         $location, $i18next) ->
+IssueStatusController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
     $scope.formOpened = false
 
     $scope.openForm = ->
@@ -500,8 +492,7 @@ IssueStatusController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs,
             $gmFlash.error($i18next.t("common.error-on-delete"), false)
 
 
-IssueTypesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                             $location, $i18next) ->
+IssueTypesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
     $scope.type = {}
     $scope.formOpened = false
 
@@ -556,8 +547,7 @@ IssueTypesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model,
     loadIssueTypes()
 
 
-IssueTypeController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                       $location, $i18next) ->
+IssueTypeController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
     $scope.formOpened = false
 
     $scope.openForm = ->
@@ -583,8 +573,7 @@ IssueTypeController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $
             $gmFlash.error($i18next.t("common.error-on-delete"), false)
 
 
-PrioritiesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                             $location, $i18next) ->
+PrioritiesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
     $scope.priority = {}
     $scope.formOpened = false
 
@@ -639,8 +628,7 @@ PrioritiesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model,
     loadPriorities()
 
 
-PriorityController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                      $location, $i18next) ->
+PriorityController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
     $scope.formOpened = false
 
     $scope.openForm = ->
@@ -666,8 +654,7 @@ PriorityController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $c
             $gmFlash.error($i18next.t("common.error-on-delete"), false)
 
 
-SeveritiesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                             $location, $i18next) ->
+SeveritiesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
     $scope.severity = {}
     $scope.formOpened = false
 
@@ -722,8 +709,7 @@ SeveritiesAdminController = ($scope, $rootScope, $routeParams, $gmFlash, $model,
     loadSeverities()
 
 
-SeverityController = ($scope, $rootScope, $routeParams, $gmFlash, $model, rs, $confirm,
-                             $location, $i18next) ->
+SeverityController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
     $scope.formOpened = false
 
     $scope.openForm = ->
@@ -757,61 +743,33 @@ module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routePara
                                              '$i18next', ProjectAdminController])
 module.controller("MembershipsController", ["$scope", "$rootScope", "$model", "$confirm", "$i18next",
                                             MembershipsController])
-module.controller("ShowProjectsController", ["$scope", "$rootScope", "$model", 'resource', ShowProjectsController])
-
-module.controller("UserStoryStatusesAdminController", ["$scope", "$rootScope", "$routeParams",
-                                                       "$gmFlash", "$model", "resource", "$confirm",
-                                                       "$location", '$i18next',
+module.controller("ShowProjectsController", ["$scope", "$rootScope", "$model", 'resource',
+                                             ShowProjectsController])
+module.controller("UserStoryStatusesAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
                                                        UserStoryStatusesAdminController])
-module.controller("UserStoryStatusController", ["$scope", "$rootScope", "$routeParams",
-                                                "$gmFlash", "$model", "resource", "$confirm",
-                                                "$location", '$i18next',
+module.controller("UserStoryStatusController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
                                                 UserStoryStatusController])
-module.controller("PointsAdminController", ["$scope", "$rootScope", "$routeParams",
-                                            "$gmFlash", "$model", "resource", "$confirm",
-                                            "$location", '$i18next',
+module.controller("PointsAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
                                             PointsAdminController])
-module.controller("PointsController", ["$scope", "$rootScope", "$routeParams",
-                                       "$gmFlash", "$model", "resource", "$confirm",
-                                       "$location", '$i18next',
+module.controller("PointsController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
                                        PointsController])
-module.controller("TaskStatusesAdminController", ["$scope", "$rootScope", "$routeParams",
-                                                  "$gmFlash", "$model", "resource", "$confirm",
-                                                  "$location", '$i18next',
+module.controller("TaskStatusesAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
                                                   TaskStatusesAdminController])
-module.controller("TaskStatusController", ["$scope", "$rootScope", "$routeParams",
-                                           "$gmFlash", "$model", "resource", "$confirm",
-                                           "$location", '$i18next',
+module.controller("TaskStatusController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
                                            TaskStatusController])
-module.controller("IssueStatusesAdminController", ["$scope", "$rootScope", "$routeParams",
-                                                   "$gmFlash", "$model", "resource", "$confirm",
-                                                   "$location", '$i18next',
+module.controller("IssueStatusesAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
                                                    IssueStatusesAdminController])
-module.controller("IssueStatusController", ["$scope", "$rootScope", "$routeParams",
-                                            "$gmFlash", "$model", "resource", "$confirm",
-                                            "$location", '$i18next',
+module.controller("IssueStatusController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
                                             IssueStatusController])
-module.controller("IssueTypesAdminController", ["$scope", "$rootScope", "$routeParams",
-                                                "$gmFlash", "$model", "resource", "$confirm",
-                                                "$location", '$i18next',
+module.controller("IssueTypesAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
                                                 IssueTypesAdminController])
-module.controller("IssueTypeController", ["$scope", "$rootScope", "$routeParams",
-                                          "$gmFlash", "$model", "resource", "$confirm",
-                                          "$location", '$i18next',
+module.controller("IssueTypeController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
                                           IssueTypeController])
-module.controller("PrioritiesAdminController", ["$scope", "$rootScope", "$routeParams",
-                                                "$gmFlash", "$model", "resource", "$confirm",
-                                                "$location", '$i18next',
+module.controller("PrioritiesAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
                                                 PrioritiesAdminController])
-module.controller("PriorityController", ["$scope", "$rootScope", "$routeParams",
-                                         "$gmFlash", "$model", "resource", "$confirm",
-                                         "$location", '$i18next',
+module.controller("PriorityController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
                                          PriorityController])
-module.controller("SeveritiesAdminController", ["$scope", "$rootScope", "$routeParams",
-                                                "$gmFlash", "$model", "resource", "$confirm",
-                                                "$location", '$i18next',
+module.controller("SeveritiesAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
                                                 SeveritiesAdminController])
-module.controller("SeverityController", ["$scope", "$rootScope", "$routeParams",
-                                         "$gmFlash", "$model", "resource", "$confirm",
-                                         "$location", '$i18next',
+module.controller("SeverityController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
                                          SeverityController])
