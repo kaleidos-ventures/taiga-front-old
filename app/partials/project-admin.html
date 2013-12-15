@@ -128,18 +128,19 @@
         <div class="project-values-container">
             <div class="value-container" ng-controller="UserStoryStatusesAdminController">
                 <div class="header">
-                    <p data-icon="y" class="title">US statuses</p>
+                    <p data-icon="y" class="title" i18next="admin.us-statuses">US statuses</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened">
+                                ng-click="openForm()" ng-hide="formOpened"
+                                i18next="admin.add-us-status">
                             Add new US status</a>
                     </div>
                 </div>
                 <div class="value-list us-statuses-values">
                     <div class="flex-header">
-                        <div class="item name">Name</div>
-                        <div class="item is-closed">Is closed</div>
-                        <div class="item color">Color</div>
+                        <div class="item name" i18next="admin.us-status-name">Name</div>
+                        <div class="item is-closed" i18next="admin.us-status-is-closed">Is closed</div>
+                        <div class="item color" i18next="admin.us-status-color">Color</div>
                         <div class="options"></div>
                     </div>
                     <div class="flex-body">
@@ -218,17 +219,18 @@
             </div>
             <div class="value-container" ng-controller="PointsAdminController">
                 <div class="header">
-                    <p data-icon="L" class="title">US Points</p>
+                    <p data-icon="L" class="title" i18next="admin.points">US Points</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened">
+                                ng-click="openForm()" ng-hide="formOpened"
+                                i18next="admin.add-points">
                             Add new US points</a>
                     </div>
                 </div>
                 <div class="value-list points-values">
                     <div class="flex-header">
-                        <div class="item name">Name</div>
-                        <div class="item value">Value</div>
+                        <div class="item name" i18next="admin.points-name">Name</div>
+                        <div class="item value" i18next="admin.points-value">Value</div>
                         <div class="options"></div>
                     </div>
                     <div class="flex-body">
@@ -287,18 +289,19 @@
             </div>
             <div class="value-container" ng-controller="TaskStatusesAdminController">
                 <div class="header">
-                    <p data-icon="y" class="title">Task Statuses</p>
+                    <p data-icon="y" class="title" i18next="admin.task-statuses">Task Statuses</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened">
+                                ng-click="openForm()" ng-hide="formOpened"
+                                i18next="admin.add-task-status">
                             Add new task status</a>
                     </div>
                 </div>
                 <div class="value-list task-statuses-values">
                     <div class="flex-header">
-                        <div class="item name">Name</div>
-                        <div class="item is-closed">Is closed</div>
-                        <div class="item color">Color</div>
+                        <div class="item name" i18next="admin.task-status-name">Name</div>
+                        <div class="item is-closed" i18next="admin.task-status-is-closed">Is closed</div>
+                        <div class="item color" i18next="admin.task-status-color">Color</div>
                         <div class="options"></div>
                     </div>
                     <div class="flex-body">
@@ -378,18 +381,19 @@
             </div>
             <div class="value-container" ng-controller="IssueStatusesAdminController">
                 <div class="header">
-                    <p data-icon="y" class="title">Issue statuses</p>
+                    <p data-icon="y" class="title" i18next="admin.issue-statuses">Issue statuses</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened">
+                                ng-click="openForm()" ng-hide="formOpened"
+                                i18next="admin.add-issue-status">
                             Add new issue status</a>
                     </div>
                 </div>
                 <div class="value-list issue-statuses-values">
                     <div class="flex-header">
-                        <div class="item name">Name</div>
-                        <div class="item is-closed">Is closed</div>
-                        <div class="item color">Color</div>
+                        <div class="item name" i18next="admin.issue-status-name">Name</div>
+                        <div class="item is-closed" i18next="admin.issue-status-is-closed">Is closed</div>
+                        <div class="item color" i18next="admin.issue-status-color">Color</div>
                         <div class="options"></div>
                     </div>
                     <div class="flex-body">
@@ -469,17 +473,18 @@
             </div>
             <div class="value-container" ng-controller="IssueTypesAdminController">
                 <div class="header">
-                    <p data-icon="a" class="title">Issue types</p>
+                    <p data-icon="a" class="title" i18next="admin.issue-types">Issue types</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened">
+                                ng-click="openForm()" ng-hide="formOpened"
+                                i18next="admin.add-issue-type">
                             Add new issue type</a>
                     </div>
                 </div>
                 <div class="value-list issue-types-values">
                     <div class="flex-header">
-                        <div class="item name">Name</div>
-                        <div class="item color">Color</div>
+                        <div class="item name" i18next="admin.issue-type-name">Name</div>
+                        <div class="item color" i18next="admin.issue-type-color">Color</div>
                         <div class="options"></div>
                     </div>
                     <div class="flex-body">
@@ -551,17 +556,18 @@
             </div>
             <div class="value-container" ng-controller="PrioritiesAdminController">
                 <div class="header">
-                    <p data-icon="o" class="title">Priorities</p>
+                    <p data-icon="o" class="title" i18next="admin.priorities">Priorities</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened">
+                                ng-click="openForm()" ng-hide="formOpened"
+                                i18next="admin.add-priority">
                             Add new priority</a>
                     </div>
                 </div>
                 <div class="value-list priorities-values">
                     <div class="flex-header">
-                        <div class="item name">Name</div>
-                        <div class="item color">Color</div>
+                        <div class="item name" i18next="admin.priority-name">Name</div>
+                        <div class="item color" i18next="admin.priority-color">Color</div>
                         <div class="options"></div>
                     </div>
                     <div class="flex-body">
@@ -633,17 +639,18 @@
             </div>
             <div class="value-container" ng-controller="SeveritiesAdminController">
                 <div class="header">
-                    <p data-icon="H" class="title">Severities</p>
+                    <p data-icon="H" class="title" i18next="admin.severities">Severities</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened">
+                                ng-click="openForm()" ng-hide="formOpened"
+                                i18next="admin.add-severity">
                             Add new severity</a>
                     </div>
                 </div>
                 <div class="value-list severities-values">
                     <div class="flex-header">
-                        <div class="item name">Name</div>
-                        <div class="item color">Color</div>
+                        <div class="item name" i18next="admin.severity-name">Name</div>
+                        <div class="item color" i18next="admin.severity-color">Color</div>
                         <div class="options"></div>
                     </div>
                     <div class="flex-body">
