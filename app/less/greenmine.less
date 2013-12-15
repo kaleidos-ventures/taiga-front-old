@@ -3450,6 +3450,8 @@ body.login {
             margin: 5px;
             float: right;
             cursor: pointer;
+            border: 1px solid @grayLighter;
+            border-radius: 30%;
         }
         input {
             width: 87%;
@@ -3798,6 +3800,10 @@ fieldset{
                                 margin-top: 2px;
                                 display: inline-block;
                                 vertical-align: middle;
+                                border: 1px solid @grayLighter;
+                                &.pointer {
+                                    cursor: pointer;
+                                }
                             }
                             .colorSelector {
                                 width: 200px;
