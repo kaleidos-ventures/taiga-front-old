@@ -415,7 +415,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
     service.createBulkUserStories = (projectId, form) ->
         obj = _.extend({}, form, {projectId: projectId})
-        return $http.post($gmUrls.api(""), obj, {headers:headers()})
+        return $http.post($gmUrls.api("bulk-create-us"), obj, {headers:headers()})
 
     service.updateBulkUserStoriesOrder = (projectId, data) ->
         obj = {
