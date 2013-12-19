@@ -8,3 +8,4 @@ node_modules
 
 app/dist/*
 app/coffee/config.coffee
+.venv
