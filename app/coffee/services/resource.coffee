@@ -356,9 +356,6 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         parameters = _.extend({}, filters)
         return queryManyPaginated("issues-historical", parameters, null , null, urlParams)
 
-    service.getIssuesFiltersData = (projectId) ->
-        return queryOne("projects", "#{projectId}/issue_filters_data")
-
     service.getTask = (projectId, taskId) ->
         return queryOne("tasks", taskId, {project:projectId})
 

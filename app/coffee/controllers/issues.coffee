@@ -61,97 +61,54 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             $scope.selectedTags.push(tag)
         return tag
 
-    generateStatusTags = ->
+    generateTagsFromList = (list, constants, type, scopeVar)->
         tags = []
-        for statusId, count of $scope.filtersData.statuses
-            status = $scope.constants.issueStatuses[statusId]
-            tag = {"id": status.id, "name": status.name, "count": count, "type":"status", color: status.color}
-            tags.push(selectTagIfNotSelected(tag))
-
-        $scope.statusTags = tags
-
-    generateTypeTags = ->
-        tags = []
-        for typeId, count of $scope.filtersData.types
-            type = $scope.constants.types[typeId]
-            tag = {"id": type.id, "name": type.name, "count": count, "type": "type", color: type.color}
-            tags.push(selectTagIfNotSelected(tag))
-
-        $scope.typeTags = tags
-
-    generateSeverityTags = ->
-        tags = []
-        for severityId, count of $scope.filtersData.severities
-            severity = $scope.constants.severities[severityId]
-            tag = {"id": severity.id, "name": severity.name, "count": count, "type": "severity", color: severity.color}
-            tags.push(selectTagIfNotSelected(tag))
-
-        $scope.severityTags = tags
-
-    generatePriorityTags = ->
-        tags = []
-        for priorityId, count of $scope.filtersData.priorities
-            priority = $scope.constants.priorities[priorityId]
+        for counter in list
+            element = constants[counter[0]]
             tag = {
-                "id": priority.id,
-                "name": priority.name,
-                "count": count,
-                "type": "priority",
-                color: priority.color
+                "id": element.id,
+                "name": element.name,
+                "count": counter[1],
+                "type": type,
+                color: element.color
             }
             tags.push(selectTagIfNotSelected(tag))
 
-        $scope.priorityTags = tags
+        $scope[scopeVar] = tags
 
-    generateAddedByTags = ->
+    generateTagsFromUsers = (list, type, scopeVar)->
         tags = []
-        for userId, count of $scope.filtersData.owners
-            user = $scope.constants.users[userId]
+        for userCounter in $scope.filtersData.owners
+            user = $scope.constants.users[userCounter[0]]
             tag = {
                 "id": user.id,
                 "name": gm.utils.truncate(user.full_name, 17),
-                "count": count,
-                "type": "owner"
+                "count": userCounter[1],
+                "type": type
             }
 
             tags.push(selectTagIfNotSelected(tag))
 
-        $scope.addedByTags = tags
-
-    generateAssignedToTags = ->
-        makeTag = (user) ->
-
-        tags = []
-        for userId, count of $scope.filtersData.assigned_to
-            user = $scope.constants.users[userId]
-            tag = {
-                "id": user.id,
-                "name": gm.utils.truncate(user.full_name, 17),
-                "count": count,
-                "type": "assigned_to"
-            }
-
-            tags.push(selectTagIfNotSelected(tag))
-
-        $scope.assignedToTags = tags
+        $scope[scopeVar] = tags
 
     generateTagList = ->
         tags = []
 
-        for tagname, tagcount of $scope.filtersData.tags
-            tag = {id: tagname, name:tagname, count:tagcount, type: "tags"}
+        for tagCounter in $scope.filtersData.tags
+            tag = {id: tagCounter[0], name: tagCounter[0], count: tagCounter[1], type: "tags"}
             tags.push(selectTagIfNotSelected(tag))
 
         $scope.tags = tags
 
     regenerateTags = ->
         $scope.selectedTags = []
-        generateStatusTags()
-        generateTypeTags()
-        generateSeverityTags()
-        generatePriorityTags()
-        generateAddedByTags()
-        generateAssignedToTags()
+
+        generateTagsFromList($scope.filtersData.statuses, $scope.constants.issueStatuses, "status", "statusTags")
+        generateTagsFromList($scope.filtersData.types, $scope.constants.types, "type", "typeTags")
+        generateTagsFromList($scope.filtersData.severities, $scope.constants.severities, "severity", "severityTags")
+        generateTagsFromList($scope.filtersData.priorities, $scope.constants.priorities, "priority", "priorityTags")
+        generateTagsFromUsers($scope.filtersData.owners, "owner", "addedByTags")
+        generateTagsFromUsers($scope.filtersData.assigned_to, "assigned_to", "assignedToTags")
         generateTagList()
 
     getFilterParams = ->
