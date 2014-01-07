@@ -15,13 +15,11 @@
 SearchController = ($scope, $rootScope, $routeParams, $data, rs, $i18next) ->
     $rootScope.pageTitle = $i18next.t("common.search")
     $rootScope.pageSection = 'search'
-    $rootScope.projectId = parseInt($routeParams.pid, 10)
+
     $rootScope.pageBreadcrumb = [
         ["", ""]
         [$i18next.t("common.search"), null]
     ]
-
-    $data.loadProject($scope)
 
     $scope.term = $routeParams.term
 
@@ -37,12 +35,12 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs, $i18next) ->
             return type
         return $scope.resultTypeMap[type]
 
-    $scope.translateTypeUrl = (type, projectId, item) ->
+    $scope.translateTypeUrl = (type, projectSlug, item) ->
         return switch type
-            when "userstories" then $rootScope.urls.userStoryUrl(projectId, item.id)
-            when "tasks" then $rootScope.urls.tasksUrl(projectId, item.id)
-            when "issues" then $rootScope.urls.issuesUrl(projectId, item.id)
-            when "wikipages" then $rootScope.urls.wikiUrl(projectId, item.slug)
+            when "userstories" then $rootScope.urls.userStoryUrl(projectSlug, item.ref)
+            when "tasks" then $rootScope.urls.tasksUrl(projectSlug, item.ref)
+            when "issues" then $rootScope.urls.issuesUrl(projectSlug, item.ref)
+            when "wikipages" then $rootScope.urls.wikiUrl(projectSlug, item.slug)
 
     $scope.translateTypeTitle = (type, item) ->
         return switch type
@@ -64,17 +62,23 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs, $i18next) ->
     $scope.setActiveType = (type) ->
         $scope.activeType = type
 
-    rs.search($rootScope.projectId, $routeParams.term).then (results) ->
-        $scope.results = results
-        $scope.resultTypes = _.reject(_.keys($scope.results), (x) -> x == "count")
 
-        $scope.activeType = null
-        maxItemsCounter = 0
+    rs.resolve($routeParams.pslug).then (data) ->
+        $rootScope.projectSlug = $routeParams.pslug
+        $rootScope.projectId = data.project
+        $data.loadProject($scope)
 
-        for type in $scope.resultTypes
-            if $scope.results[type].length > maxItemsCounter
-                $scope.activeType = type
-                maxItemsCounter = $scope.results[type].length
+        rs.search($rootScope.projectId, $routeParams.term).then (results) ->
+            $scope.results = results
+            $scope.resultTypes = _.reject(_.keys($scope.results), (x) -> x == "count")
+
+            $scope.activeType = null
+            maxItemsCounter = 0
+
+            for type in $scope.resultTypes
+                if $scope.results[type].length > maxItemsCounter
+                    $scope.activeType = type
+                    maxItemsCounter = $scope.results[type].length
 
     return
 

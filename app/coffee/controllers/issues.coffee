@@ -21,7 +21,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         [$i18next.t('common.issues'), null]
     ]
 
-    $rootScope.projectId = parseInt($routeParams.pid, 10)
     $scope.filtersOpened = false
     $scope.filtersData = {}
     $scope.sortingOrder = 'created_date'
@@ -151,10 +150,13 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             $scope.issuesStats = data
 
     # Load initial data
-    $data.loadProject($scope).then ->
-        $data.loadUsersAndRoles($scope).then ->
-            loadIssuesData().then ->
-                filterIssues()
+    rs.resolve($routeParams.pslug).then (data) ->
+        $rootScope.projectSlug = $routeParams.pslug
+        $rootScope.projectId = data.project
+        $data.loadProject($scope).then ->
+            $data.loadUsersAndRoles($scope).then ->
+                loadIssuesData().then ->
+                    filterIssues()
 
     $scope.setPage = (n) ->
         $scope.page = n
@@ -226,8 +228,8 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             loadStats()
             filterIssues()
 
-    $scope.openIssue = (projectId, issueId)->
-        $location.url("/project/#{projectId}/issues/#{issueId}")
+    $scope.openIssue = (projectSlug, issueRef)->
+        $location.url("/project/#{projectSlug}/issues/#{issueRef}")
 
     return
 
@@ -240,10 +242,6 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         ["", ""],
         [$i18next.t('common.issues'), null],
     ]
-    $scope.projectId = parseInt($routeParams.pid, 10)
-
-    projectId = $scope.projectId
-    issueId = $routeParams.issueid
 
     $scope.issue = {}
     $scope.form = {}
@@ -252,19 +250,19 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
     $scope.attachments = []
 
     loadIssue = ->
-        rs.getIssue(projectId, issueId).then (issue) ->
+        rs.getIssue($scope.projectId, $scope.issueId).then (issue) ->
             $scope.issue = issue
             $scope.form = _.extend({}, $scope.issue._attrs)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[1] = [$i18next.t('common.issues'), $rootScope.urls.issuesUrl(projectId)]
+            breadcrumb[1] = [$i18next.t('common.issues'), $rootScope.urls.issuesUrl($scope.projectSlug)]
             breadcrumb[2] = ["##{issue.ref}", null]
             $rootScope.pageTitle = "#{$i18next.t('common.issues')} - ##{issue.ref}"
 
             $rootScope.pageBreadcrumb = breadcrumb
 
     loadHistorical = (page=1) ->
-        rs.getIssueHistorical(issueId, {page: page}).then (historical) ->
+        rs.getIssueHistorical($scope.issueId, {page: page}).then (historical) ->
             if $scope.historical and page != 1
                 historical.models = _.union($scope.historical.models, historical.models)
 
@@ -280,7 +278,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
             $scope.projectTags = data
 
     loadAttachments = ->
-        promise = rs.getIssueAttachments(projectId, issueId)
+        promise = rs.getIssueAttachments($scope.projectId, $scope.issueId)
         promise.then (attachments) ->
             $scope.attachments = attachments
 
@@ -290,7 +288,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
 
         promises = []
         for attachment in $scope.newAttachments
-            promise = rs.uploadIssueAttachment(projectId, issueId, attachment)
+            promise = rs.uploadIssueAttachment($scope.projectId, $scope.issueId, attachment)
             promises.push(promise)
 
         promise = $q.all(promises)
@@ -299,13 +297,17 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
                 $scope.newAttachments = []
                 loadAttachments()
 
-    # Load initial data
-    $data.loadProject($scope).then ->
-        $data.loadUsersAndRoles($scope).then ->
-            loadIssue()
-            loadAttachments()
-            loadHistorical()
-            loadProjectTags()
+    rs.resolve($routeParams.pslug, undefined, undefined, $routeParams.ref).then (data) ->
+        $rootScope.projectSlug = $routeParams.pslug
+        $rootScope.projectId = data.project
+        $rootScope.issueId = data.issue
+
+        $data.loadProject($scope).then ->
+            $data.loadUsersAndRoles($scope).then ->
+                loadIssue()
+                loadAttachments()
+                loadHistorical()
+                loadProjectTags()
 
     $scope.isSameAs = (property, id) ->
         return ($scope.issue[property] == parseInt(id, 10))
@@ -341,7 +343,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         promise = $confirm.confirm($i18next.t('common.are-you-sure'))
         promise.then ->
             issue.remove().then ->
-                $location.url("/project/#{projectId}/issues/")
+                $location.url("/project/#{$scope.projectSlug}/issues/")
 
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value

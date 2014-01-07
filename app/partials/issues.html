@@ -174,7 +174,7 @@
                 <div class="empty" ng-show="issues.length == 0">
                     There aren't issues to show.
                 </div>
-                <div class="issue-item" ng-repeat="issue in issues" ng-dblclick="openIssue(projectId, issue.id)">
+                <div class="issue-item" ng-repeat="issue in issues" ng-dblclick="openIssue(projectSlug, issue.ref)">
                     <div class="issue-severity">
                         <a href="" gm-popover="updateIssueSeverity(issue, selectedId)"
                             data-tmpl="#severity-popover" data-auto-hide="true"
@@ -183,7 +183,7 @@
                         </a>
                     </div>
                     <div class="issue-title">
-                        <a class="title" href="{{ urls.issuesUrl(projectId, issue.id) }}">
+                        <a class="title" href="{{ urls.issuesUrl(projectSlug, issue.ref) }}">
                             {{ issue.subject }}
                         </a>
                         <div class="tags" ng-show="showTags">

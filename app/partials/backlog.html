@@ -133,13 +133,13 @@
                 </div>
                 <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassignedUs" gm-doomline>
                     <div class="us-item nga-us-item" ng-repeat="us in unassignedUs|onlyVisible"
-                            gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}" ng-dblclick="openUserStory(projectId, us.id)">
+                            gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}" ng-dblclick="openUserStory(projectSlug, us.ref)">
                         <div class="us-check">
                             <input type="checkbox" ng-model="us.selected" ng-change="changeUserStoriesSelection()"></input>
                         </div>
                         <div class="us-title">
                             <div class="title" ng-click="goToUs(us)">
-                                <a  href="{{ urls.userStoryUrl(projectId, us.id) }}">
+                                <a  href="{{ urls.userStoryUrl(projectSlug, us.ref) }}">
                                     {{ us.subject }}
                                 </a>
                             </div>
@@ -250,7 +250,7 @@
                 ng-mouseout="showEditOption=false">
                 <div class="header">
                     <div class="title">
-                        <a class="name" href="{{ urls.taskboardUrl(projectId, ml.id) }}">
+                        <a class="name" href="{{ urls.taskboardUrl(projectSlug, ml.slug) }}">
                             {{ ml.name }}
                         </a>
                         <a class="edit" href="" ng-click="showEditForm(ml.id)"
@@ -292,7 +292,7 @@
                             <div class="flex-body" gm-sortable=".us-container .flex-body"
                                     ng-model="milestones[$index].user_stories" >
                                 <div class="us-item" ng-repeat="us in ml.user_stories|orderBy:'order'"
-                                    ng-dblclick="openUserStory(projectId, us.id)">
+                                    ng-dblclick="openUserStory(projectSlug, us.ref)">
                                     <div class="us-icon">
                                         <div data-icon="I" ng-show="us.is_closed"></div>
                                         <div data-icon="q" ng-show="!us.is_closed"></div>

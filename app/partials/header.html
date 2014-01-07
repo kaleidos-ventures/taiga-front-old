@@ -19,7 +19,7 @@
                 </a>
                 <ul class="project-list" ng-show="showingProjects" ng-mouseleave="showingProjects=false">
                     <li ng-repeat="proj in myProjects" ng-show="myProjects.length && !loading">
-                        <a title="{{ proj.name }}" href="{{ urls.backlogUrl(proj.id) }}">{{ proj.name }}</a>
+                        <a title="{{ proj.name }}" href="{{ urls.backlogUrl(proj.slug) }}">{{ proj.name }}</a>
                     </li>
                     <li ng-show="!myProjects.length && !loading">
                         <a title="You have no projects" i18next="common.no-projects,title:common.no-projects">
@@ -39,19 +39,19 @@
         </ul>
     </div>
 </div>
-<div class="nav" gm-header-menu ng-show="projectId">
+<div class="nav" gm-header-menu ng-show="projectSlug">
     <ul>
-        <li class="backlog"><a data-icon="f" href="{{ urls.backlogUrl(projectId) }}" title="Backlog" i18next="common.backlog,title:common.backlog">Backlog</a></li>
+        <li class="backlog"><a data-icon="f" href="{{ urls.backlogUrl(projectSlug) }}" title="Backlog" i18next="common.backlog,title:common.backlog">Backlog</a></li>
         <!--
-        <li class="dashboard" ng-show="sprintId"><a data-icon="n" href="{{ urls.taskboardUrl(projectId, sprintId) }}" title="Taskboard">Taskboard</a></li>
+        <li class="dashboard" ng-show="sprintId"><a data-icon="n" href="{{ urls.taskboardUrl(projectSlug, sprintId) }}" title="Taskboard">Taskboard</a></li>
         -->
-        <li class="issues"><a data-icon="a" href="{{ urls.issuesUrl(projectId) }}" title="Issues" i18next="common.issues,title:common.issues">Issues</a></li>
-        <li class="wiki"><a data-icon="g" href="{{ urls.wikiUrl(projectId, 'home') }}" title="Wiki" i18next="common.wiki,title:common.wiki">Wiki</a></li>
+        <li class="issues"><a data-icon="a" href="{{ urls.issuesUrl(projectSlug) }}" title="Issues" i18next="common.issues,title:common.issues">Issues</a></li>
+        <li class="wiki"><a data-icon="g" href="{{ urls.wikiUrl(projectSlug, 'home') }}" title="Wiki" i18next="common.wiki,title:common.wiki">Wiki</a></li>
         <!--
-        <li class="questions"><a href="{{ urls.questionsUrl(projectId) }}" title="questions">Questions</a></li>
+        <li class="questions"><a href="{{ urls.questionsUrl(projectSlug) }}" title="questions">Questions</a></li>
         -->
         <li class="admin">
-            <a data-icon="i" href="{{ urls.adminUrl(projectId) }}"
+            <a data-icon="i" href="{{ urls.adminUrl(projectSlug) }}"
                title="Administration panel"
                i18next="common.admin,title:common.admin-panel">
                  Admin

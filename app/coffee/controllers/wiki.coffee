@@ -15,11 +15,9 @@
 WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
     $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug}"
     $rootScope.pageSection = 'wiki'
-    $rootScope.projectId = parseInt($routeParams.pid, 10)
-    $rootScope.slug = $routeParams.slug
     $rootScope.pageBreadcrumb = [
         ["", ""]
-        [$i18next.t("common.wiki"), $rootScope.urls.wikiUrl($rootScope.projectId, "home")]
+        [$i18next.t("common.wiki"), $rootScope.urls.wikiUrl($rootScope.projectSlug, "home")]
         [$routeParams.slug, null]
     ]
 
@@ -31,7 +29,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
     projectId = $rootScope.projectId
 
     loadAttachments = (page) ->
-        rs.getWikiPageAttachments(projectId, page.id).then (attachments) ->
+        rs.getWikiPageAttachments($scope.projectId, page.id).then (attachments) ->
             $scope.attachments = attachments
 
     saveNewAttachments = ->
@@ -40,7 +38,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
 
         promises = []
         for attachment in $scope.newAttachments
-            promise = rs.uploadWikiPageAttachment(projectId, $scope.page.id, attachment)
+            promise = rs.uploadWikiPageAttachment($scope.projectId, $scope.page.id, attachment)
             promises.push(promise)
 
         promise = $q.all(promises)
@@ -48,16 +46,22 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
             $scope.newAttachments = []
             loadAttachments($scope.page)
 
-    $data.loadProject($scope).then ->
-        $data.loadUsersAndRoles($scope).then ->
-            promise = rs.getWikiPage(projectId, $rootScope.slug)
-            promise.then (page) ->
-                $scope.page = page
-                $scope.content = page.content
-                loadAttachments(page)
 
-            promise.then null, (data) ->
-                $scope.formOpened = true
+    rs.resolve($routeParams.pslug).then (data) ->
+        $rootScope.projectSlug = $routeParams.pslug
+        $rootScope.projectId = data.project
+        $rootScope.slug = $routeParams.slug
+
+        $data.loadProject($scope).then ->
+            $data.loadUsersAndRoles($scope).then ->
+                promise = rs.getWikiPage($scope.projectId, $rootScope.slug)
+                promise.then (page) ->
+                    $scope.page = page
+                    $scope.content = page.content
+                    loadAttachments(page)
+
+                promise.then null, (data) ->
+                    $scope.formOpened = true
 
     $scope.openEditForm = ->
         $scope.formOpened = true
@@ -73,7 +77,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
 
     $scope.savePage = gm.utils.safeDebounced $scope, 400, ->
         if $scope.page is undefined
-            promise = rs.createWikiPage(projectId, $rootScope.slug, $scope.content)
+            promise = rs.createWikiPage($scope.projectId, $rootScope.slug, $scope.content)
 
             promise.then (page) ->
                 $scope.page = page
@@ -121,30 +125,31 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
 WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
     $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug} - #{$i18next.t("wiki-historical.historical")}"
     $rootScope.pageSection = 'wiki'
-    $rootScope.projectId = parseInt($routeParams.pid, 10)
-    $rootScope.slug = $routeParams.slug
     $rootScope.pageBreadcrumb = [
         ["", ""]
-        [$i18next.t("common.wiki"), $rootScope.urls.wikiUrl($rootScope.projectId, "home")]
-        [$routeParams.slug, $rootScope.urls.wikiUrl($rootScope.projectId, $routeParams.slug)]
+        [$i18next.t("common.wiki"), $rootScope.urls.wikiUrl($rootScope.projectSlug, "home")]
+        [$routeParams.slug, $rootScope.urls.wikiUrl($rootScope.projectSlug, $routeParams.slug)]
         [$i18next.t("wiki-historical.historical"), null]
     ]
 
     $scope.attachments = []
 
-    projectId = $rootScope.projectId
+    rs.resolve($routeParams.pslug).then (data) ->
+        $rootScope.projectSlug = $routeParams.pslug
+        $rootScope.projectId = data.project
+        $rootScope.slug = $routeParams.slug
 
-    $data.loadProject($scope).then ->
-        $data.loadUsersAndRoles($scope).then ->
-            promise = rs.getWikiPage(projectId, $rootScope.slug)
-            promise.then (page) ->
-                $scope.page = page
-                $scope.content = page.content
-                loadAttachments(page)
-                loadHistorical()
+        $data.loadProject($scope).then ->
+            $data.loadUsersAndRoles($scope).then ->
+                promise = rs.getWikiPage($scope.projectId, $rootScope.slug)
+                promise.then (page) ->
+                    $scope.page = page
+                    $scope.content = page.content
+                    loadAttachments(page)
+                    loadHistorical()
 
     loadAttachments = (page) ->
-        rs.getWikiPageAttachments(projectId, page.id).then (attachments) ->
+        rs.getWikiPageAttachments($scope.projectId, page.id).then (attachments) ->
             $scope.attachments = attachments
 
     loadHistorical = (page=1) ->
@@ -160,7 +165,7 @@ WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, 
         loadHistorical(page=page)
 
     $scope.$on "wiki:restored", (ctx, data) ->
-        promise = rs.getWikiPage(projectId, $rootScope.slug)
+        promise = rs.getWikiPage($scope.projectId, $rootScope.slug)
         promise.then (page) ->
             $scope.page = page
             $scope.content = page.content

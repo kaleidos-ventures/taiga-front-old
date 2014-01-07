@@ -21,7 +21,6 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next) ->
         ["", ""]
         [$i18next.t("common.backlog"), null]
     ]
-    $rootScope.projectId = parseInt($routeParams.pid, 10)
 
     $scope.stats = {}
 
@@ -41,10 +40,12 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next) ->
         if data.length > 0
             $rootScope.sprintId = data[0].id
 
-    $data.loadProject($scope).then ->
-        $scope.$emit("stats:update")
-        $data.loadUsersAndRoles($scope)
-
+    rs.resolve($routeParams.pslug).then (data) ->
+        $rootScope.projectSlug = $routeParams.pslug
+        $rootScope.projectId = data.project
+        $data.loadProject($scope).then ->
+            $scope.$emit("stats:update")
+            $data.loadUsersAndRoles($scope)
     return
 
 
@@ -184,8 +185,8 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
         loadUserStories().then ->
             $scope.refreshing = false
 
-    $scope.openUserStory = (projectId, usId)->
-        $location.url("/project/#{projectId}/user-story/#{usId}")
+    $scope.openUserStory = (projectSlug, usRef)->
+        $location.url("/project/#{projectSlug}/user-story/#{usRef}")
 
     $scope.$on("points:loaded", loadUserStories)
     $scope.$on("userstory-form:create", loadUserStories)
@@ -398,8 +399,8 @@ BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash, $i18next, $loca
     calculateStats = ->
         $scope.$emit("stats:update")
 
-    $scope.openUserStory = (projectId, usId)->
-        $location.url("/project/#{projectId}/user-story/#{usId}")
+    $scope.openUserStory = (projectSlug, usRef)->
+        $location.url("/project/#{projectSlug}/user-story/#{usRef}")
 
     $scope.sprintSubmit = gm.utils.safeDebounced $scope, 400, ->
         if $scope.form.save is undefined

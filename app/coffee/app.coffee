@@ -48,19 +48,19 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when("/invitation/:token", {
         controller: "InvitationRegisterController", templateUrl: "partials/invitation-register.html"})
 
-    $routeProvider.when('/project/:pid/backlog',
+    $routeProvider.when('/project/:pslug/backlog',
             {templateUrl: 'partials/backlog.html', controller: "BacklogController"})
 
-    $routeProvider.when('/project/:pid/user-story/:userstoryid',
+    $routeProvider.when('/project/:pslug/user-story/:ref',
             {templateUrl: 'partials/user-story-view.html', controller: "UserStoryViewController"})
 
-    $routeProvider.when('/project/:pid/issues',
+    $routeProvider.when('/project/:pslug/issues',
             {templateUrl: 'partials/issues.html', controller: "IssuesController"})
 
-    $routeProvider.when('/project/:pid/issues/:issueid',
+    $routeProvider.when('/project/:pslug/issues/:ref',
             {templateUrl: 'partials/issues-view.html', controller: "IssuesViewController"})
 
-    $routeProvider.when('/project/:pid/tasks/:taskid',
+    $routeProvider.when('/project/:pslug/tasks/:ref',
             {templateUrl: 'partials/tasks-view.html', controller: "TasksViewController"})
 
     # $routeProvider.when('/project/:pid/questions',
@@ -72,19 +72,19 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     # $routeProvider.when('/project/:pid/tasks',
     #         {templateUrl: 'partials/tasks.html', controller: TasksController})
 
-    $routeProvider.when('/project/:pid/taskboard/:sid',
+    $routeProvider.when('/project/:pslug/taskboard/:sslug',
             {templateUrl: 'partials/taskboard.html', controller: "TaskboardController"})
 
-    $routeProvider.when('/project/:pid/wiki/:slug',
+    $routeProvider.when('/project/:pslug/wiki/:slug',
             {templateUrl: 'partials/wiki.html', controller: "WikiController"})
 
-    $routeProvider.when('/project/:pid/wiki/:slug/historical',
+    $routeProvider.when('/project/:pslug/wiki/:slug/historical',
             {templateUrl: 'partials/wiki-historical.html', controller: "WikiHistoricalController"})
 
-    $routeProvider.when('/project/:pid/search', {
+    $routeProvider.when('/project/:pslug/search', {
         controller: "SearchController", templateUrl: "partials/search.html"})
 
-    $routeProvider.when('/project/:pid/admin', {
+    $routeProvider.when('/project/:pslug/admin', {
         controller: "ProjectAdminController", templateUrl: "partials/project-admin.html"})
 
     $routeProvider.when('/admin', {
@@ -163,6 +163,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         "users-password-recovery": "/api/v1/users/password_recovery"
         "users-change-password-from-recovery": "/api/v1/users/change_password_from_recovery"
         "users-change-password": "/api/v1/users/change_password"
+        "resolver": "/api/v1/resolver"
     }
 
     $gmUrlsProvider.setUrls("api", apiUrls)

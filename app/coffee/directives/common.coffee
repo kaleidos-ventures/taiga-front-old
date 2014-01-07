@@ -60,7 +60,7 @@ SearchBoxDirective = ($rootScope, $location) ->
             value = form.find("input").val()
 
             scope.$apply ->
-                path = $rootScope.urls.searchUrl(scope.projectId, true)
+                path = $rootScope.urls.searchUrl(scope.projectSlug, true)
                 $location.path(path).search({term: value})
 
 

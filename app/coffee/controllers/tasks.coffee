@@ -20,11 +20,6 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
         ["", ""],
         [$i18next.t("common.tasks"), null],
     ]
-    $rootScope.projectId = parseInt($routeParams.pid, 10)
-
-    projectId = $rootScope.projectId
-    taskId = $routeParams.taskid
-
     $scope.task = {}
     $scope.form = {}
     $scope.updateFormOpened = false
@@ -32,7 +27,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
     $scope.attachments = []
 
     loadAttachments = ->
-        rs.getTaskAttachments(projectId, taskId).then (attachments) ->
+        rs.getTaskAttachments($scope.projectId, $scope.taskId).then (attachments) ->
             $scope.attachments = attachments
 
     loadProjectTags = ->
@@ -40,19 +35,19 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
             $scope.projectTags = data
 
     loadTask = ->
-        rs.getTask(projectId, taskId).then (task) ->
+        rs.getTask($scope.projectId, $scope.taskId).then (task) ->
             $scope.task = task
             $scope.form = _.extend({}, $scope.task._attrs)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[1] = [$i18next.t('common.tasks'), $rootScope.urls.taskboardUrl($rootScope.projectId, $scope.task.milestone)]
+            breadcrumb[1] = [$i18next.t('common.tasks'), $rootScope.urls.taskboardUrl($rootScope.projectSlug, $scope.task.milestone_slug)]
             breadcrumb[2] = ["##{task.ref}", null]
             $rootScope.pageTitle = "#{$i18next.t("common.tasks")} - ##{task.ref}"
 
             $rootScope.pageBreadcrumb = breadcrumb
 
     loadHistorical = (page=1) ->
-        rs.getTaskHistorical(taskId, {page: page}).then (historical) ->
+        rs.getTaskHistorical($scope.taskId, {page: page}).then (historical) ->
             if $scope.historical and page != 1
                 historical.models = $scope.historical.models.concat(historical.models)
 
@@ -69,7 +64,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
 
         promises = []
         for attachment in $scope.newAttachments
-            promise = rs.uploadTaskAttachment(projectId, taskId, attachment)
+            promise = rs.uploadTaskAttachment($scope.projectId, $scope.taskId, attachment)
             promises.push(promise)
 
         promise = $q.all(promises)
@@ -79,12 +74,18 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
                 loadAttachments()
 
     # Load initial data
-    $data.loadProject($scope).then ->
-        $data.loadUsersAndRoles($scope).then ->
-            loadTask()
-            loadAttachments()
-            loadHistorical()
-            loadProjectTags()
+    rs.resolve($routeParams.pslug, undefined, $routeParams.ref).then (data) ->
+        $rootScope.projectSlug = $routeParams.pslug
+        $rootScope.projectId = data.project
+        $rootScope.taskId = data.task
+        $rootScope.taskRef = $routeParams.ref
+
+        $data.loadProject($scope).then ->
+            $data.loadUsersAndRoles($scope).then ->
+                loadTask()
+                loadAttachments()
+                loadHistorical()
+                loadProjectTags()
 
     $scope.isSameAs = (property, id) ->
         return ($scope.task[property] == parseInt(id, 10))
@@ -117,9 +118,8 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
     $scope.removeTask = (task) ->
         promise = $confirm.confirm($i18next.t("common.are-you-sure"))
         promise.then ->
-            milestone = task.milestone
             task.remove().then ->
-                $location.url("/project/#{projectId}/taskboard/#{milestone}")
+                $location.url("/project/#{$scope.projectSlug}/taskboard/#{task.milestone_slug}")
 
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value

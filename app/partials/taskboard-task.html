@@ -1,4 +1,4 @@
-<div class="task-box-content clearfix" ng-controller="TaskboardTaskController" ng-dblclick="openTask(projectId, task.id)">
+<div class="task-box-content clearfix" ng-controller="TaskboardTaskController" ng-dblclick="openTask(projectSlug, task.ref)">
     <div class="veil" ng-show="task._moving">
         <span ng-class="{spinner: task._moving}" data-icon="x"></span>
     </div>
@@ -13,6 +13,6 @@
     </div>
     <div class="us-options clearfix">
         <a data-icon="j" ng-click="openEditTaskForm(task.us, task)" class="edit-task"></a>
-        <a data-icon="l" href="{{ urls.tasksUrl(projectId, task.id) }}" class="view-task"></a>
+        <a data-icon="l" href="{{ urls.tasksUrl(projectSlug, task.ref) }}" class="view-task"></a>
     </div>
 </div>

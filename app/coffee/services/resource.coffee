@@ -14,6 +14,8 @@
 
 ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service = {}
+    cache = new Cache(250)
+
     headers = (diablePagination=true) ->
         data = {}
         token = $gmStorage.get('token')
@@ -212,6 +214,40 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
             .error(onError)
 
         return defered.promise
+
+    service.resolve = (projectSlug, usRef, taskRef, issueRef, milestoneSlug) ->
+        key = ""
+        params = {}
+        if projectSlug?
+            params.project = projectSlug
+            key += projectSlug
+        key += ":"
+        if usRef?
+            params.us = usRef
+            key += usRef
+        key += ":"
+        if taskRef?
+            params.task = taskRef
+            key += taskRef
+        key += ":"
+        if issueRef?
+            params.issue = issueRef
+            key += issueRef
+        key += ":"
+        if milestoneSlug?
+            params.milestone = milestoneSlug
+            key += milestoneSlug
+
+        value = cache.getItem(key)
+        if value?
+            return value
+        else
+            value = queryRaw('resolver', undefined, params)
+            if key[-4:-1] = "::::"
+                cache.setItem(key, value, { priority: Cache.Priority.HIGH })
+            else
+                cache.setItem(key, value)
+            return value
 
     # Get a site
     service.getSite = -> queryOne('sites')

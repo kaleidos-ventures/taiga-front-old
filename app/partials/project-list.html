@@ -9,7 +9,7 @@
                     You have not projects jet.
                 </li>
                 <li ng-repeat="project in projects">
-                    <a href="{{ urls.backlogUrl(project.id) }}">{{ project.name }}</a>
+                    <a href="{{ urls.backlogUrl(project.slug) }}">{{ project.name }}</a>
                 </li>
             </ul>
         </div>
@@ -21,7 +21,7 @@
                     You have not recent projects jet.
                 </li>
                 <li class="list-item" ng-repeat="project in projects|limitTo:6">
-                    <a class="project-{{ $index }}" href="{{ urls.backlogUrl(project.id) }}">{{ project.name }}</a>
+                    <a class="project-{{ $index }}" href="{{ urls.backlogUrl(project.slug) }}">{{ project.name }}</a>
                 </li>
             </ul>
 

@@ -35,8 +35,6 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
         ["", ""],
         [$i18next.t('common.admin-panel'), null]
     ]
-    $rootScope.projectId = parseInt($routeParams.pid, 10)
-
     $scope.activeTab = "data"
 
     $scope.isActive = (type) ->
@@ -46,8 +44,11 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
         $scope.activeTab = type
 
     # This attach "project" to $scope
-    $data.loadProject($scope).then ->
-        $data.loadUsersAndRoles($scope)
+    rs.resolve($routeParams.pslug).then (data) ->
+        $rootScope.projectSlug = $routeParams.pslug
+        $rootScope.projectId = data.project
+        $data.loadProject($scope).then ->
+            $data.loadUsersAndRoles($scope)
 
     $scope.submit = ->
         promise = $scope.project.save()

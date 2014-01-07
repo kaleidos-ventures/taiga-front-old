@@ -21,12 +21,6 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
         [$i18next.t('common.taskboard'), null]
     ]
 
-    $scope.projectId = $routeParams.pid
-    $scope.sprintId = $routeParams.sid
-
-    projectId = $routeParams.pid
-    sprintId = $routeParams.sid || 1
-
     calculateTotalPoints = (us) ->
         total = 0
 
@@ -84,10 +78,16 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
             formatUserStoryTasks()
             calculateStats()
 
-    $data.loadProject($scope).then ->
-        $data.loadUsersAndRoles($scope).then ->
-            promise = $data.loadTaskboardData($scope)
-            promise.then(loadTasks)
+    rs.resolve($routeParams.pslug, undefined, undefined, undefined, $routeParams.sslug).then (data) ->
+        $rootScope.projectSlug = $routeParams.pslug
+        $rootScope.projectId = data.project
+        $rootScope.sprintSlug = $routeParams.sid
+        $rootScope.sprintId = data.milestone
+
+        $data.loadProject($scope).then ->
+            $data.loadUsersAndRoles($scope).then ->
+                promise = $data.loadTaskboardData($scope)
+                promise.then(loadTasks)
 
     $scope.saveUsPoints = (us, role, ref) ->
         points = _.clone(us.points)
@@ -116,8 +116,8 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
     $scope.openCreateTaskForm = (us) ->
         options =
             status: $scope.project.default_task_status
-            project: projectId
-            milestone: sprintId
+            project: $scope.projectId
+            milestone: $scope.sprintId
 
         if us != undefined
             options.user_story = us.id
@@ -250,8 +250,8 @@ TaskboardTaskController = ($scope, $rootScope, $q, $location) ->
             task._moving = false
         )
 
-    $scope.openTask = (projectId, taskId)->
-        $location.url("/project/#{projectId}/tasks/#{taskId}")
+    $scope.openTask = (projectSlug, taskRef)->
+        $location.url("/project/#{projectSlug}/tasks/#{taskRef}")
 
     return
 

@@ -16,6 +16,7 @@ module.exports = (grunt) ->
         'app/js/kalendae.js',
         'app/js/checksley.js',
         'app/js/sha1.js',
+        'app/js/cache.js',
         'app/js/jquery.flot.js',
         'app/js/jquery.flot.pie.js',
         'app/js/jquery.flot.time.js',

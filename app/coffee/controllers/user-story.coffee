@@ -21,11 +21,6 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         [$i18next.t("user-story.user-story"), null],
     ]
 
-    $scope.projectId = parseInt($routeParams.pid, 10)
-
-    projectId = $scope.projectId
-    userStoryId = $routeParams.userstoryid
-
     $scope.userStory = {}
     $scope.form = {'points':{}}
     $scope.totalPoints = 0
@@ -40,19 +35,19 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         return total
 
     loadAttachments = ->
-        rs.getUserStoryAttachments(projectId, userStoryId).then (attachments) ->
+        rs.getUserStoryAttachments($scope.projectId, $scope.userStoryId).then (attachments) ->
             $scope.attachments = attachments
 
     loadUserStory = ->
-        rs.getUserStory(projectId, userStoryId).then (userStory) ->
+        rs.getUserStory($scope.projectId, $scope.userStoryId).then (userStory) ->
             $scope.userStory = userStory
             $scope.form = _.clone($scope.userStory.getAttrs(), true)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
             if $scope.userStory.milestone == null
-                breadcrumb[1] = [$i18next.t('common.backlog'), $rootScope.urls.backlogUrl(projectId)]
+                breadcrumb[1] = [$i18next.t('common.backlog'), $rootScope.urls.backlogUrl($scope.projectId)]
             else
-                breadcrumb[1] = [$i18next.t('common.taskboard'), $rootScope.urls.taskboardUrl(projectId, $scope.userStory.milestone)]
+                breadcrumb[1] = [$i18next.t('common.taskboard'), $rootScope.urls.taskboardUrl($scope.projectId, $scope.userStory.milestone)]
             breadcrumb[2] = [$i18next.t("user-story.user-story") + " ##{userStory.ref}", null]
             $rootScope.pageTitle = "#{$i18next.t("user-story.user-story")} - ##{userStory.ref}"
             $rootScope.pageBreadcrumb = breadcrumb
@@ -62,7 +57,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
                 $scope.points[roleId] = $scope.constants.points[pointId].name
 
     loadHistorical = (page=1) ->
-        rs.getUserStoryHistorical(userStoryId, {page: page}).then (historical) ->
+        rs.getUserStoryHistorical($scope.userStoryId, {page: page}).then (historical) ->
             if $scope.historical and page != 1
                 historical.models = _.union($scope.historical.models, historical.models)
 
@@ -83,7 +78,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
 
         promises = []
         for attachment in $scope.newAttachments
-            promise = rs.uploadUserStoryAttachment(projectId, userStoryId, attachment)
+            promise = rs.uploadUserStoryAttachment($scope.projectId, $scope.userStoryId, attachment)
             promises.push(promise)
 
         promise = $q.all(promises)
@@ -93,12 +88,17 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
                 loadAttachments()
 
     # Load initial data
-    $data.loadProject($scope).then ->
-        $data.loadUsersAndRoles($scope).then ->
-            loadUserStory()
-            loadAttachments()
-            loadHistorical()
-            loadProjectTags()
+    rs.resolve($routeParams.pslug, $routeParams.ref).then (data) ->
+        $rootScope.projectSlug = $routeParams.pslug
+        $rootScope.projectId = data.project
+        $rootScope.userStoryId = data.us
+
+        $data.loadProject($scope).then ->
+            $data.loadUsersAndRoles($scope).then ->
+                loadUserStory()
+                loadAttachments()
+                loadHistorical()
+                loadProjectTags()
 
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         $scope.$emit("spinner:start")
@@ -130,7 +130,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
         promise = $confirm.confirm($i18next.t('common.are-you-sure'))
         promise.then () ->
             userStory.remove().then ->
-                $location.url("/project/#{projectId}/backlog")
+                $location.url("/project/#{$scope.projectSlug}/backlog")
 
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
