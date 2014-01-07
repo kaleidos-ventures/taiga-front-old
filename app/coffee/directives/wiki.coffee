@@ -168,7 +168,7 @@ GmRenderMarkdownDirective = ($rootScope, $parse, $sanitize) ->
                 for item in tree[1..tree.length]
                     parseMarkdownLinks(scope, item)
 
-                element.html(markdown.toHTML(tree))
+                element.html($sanitize(markdown.toHTML(tree)))
 
 
 module = angular.module('greenmine.directives.wiki', [])
