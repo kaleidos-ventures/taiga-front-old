@@ -62,7 +62,7 @@ SizeFormatFilter = ->
         return (input / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' +
                units[number]
 
-DiffFilter = ->
+DiffFilter = ($sce) ->
     return (newText, oldText, semantic=true, efficiency=false) ->
         newText = newText or ""
         oldText = oldText or ""
@@ -77,7 +77,7 @@ DiffFilter = ->
 
         html_diff = dmp.diff_prettyHtml(d)
 
-        return html_diff
+        return $sce.trustAsHtml(html_diff)
 
 module = angular.module('greenmine.filters', [])
 module.filter("lowercase", LowercaseFilter)

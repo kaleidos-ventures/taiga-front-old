@@ -48,9 +48,9 @@
                             <div class="changes" ng-show="showChanges">
                                 <div gm-render-markdown="hitem.fields.content"
                                      ng-show="showContent" class="content" ></div>
-                                <div ng-bind-html-unsafe="hitem.changed_fields.content.new|diff:hitem.changed_fields.content.old"
+                                <div ng-bind-html="hitem.changed_fields.content.new|diff:hitem.changed_fields.content.old"
                                      ng-show="showPreviousDiff" class="previous-diff" ></div>
-                                <div ng-bind-html-unsafe="content|diff:hitem.changed_fields.content.new"
+                                <div ng-bind-html="content|diff:hitem.changed_fields.content.new"
                                      ng-show="showCurrentDiff" class="current-diff" ></div>
 
                                 <a href="" ng-click="restoreWikiPage(hitem)"
