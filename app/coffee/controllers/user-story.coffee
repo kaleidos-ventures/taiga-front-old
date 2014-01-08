@@ -45,9 +45,9 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
             if $scope.userStory.milestone == null
-                breadcrumb[1] = [$i18next.t('common.backlog'), $rootScope.urls.backlogUrl($scope.projectId)]
+                breadcrumb[1] = [$i18next.t('common.backlog'), $rootScope.urls.backlogUrl($scope.projectSlug)]
             else
-                breadcrumb[1] = [$i18next.t('common.taskboard'), $rootScope.urls.taskboardUrl($scope.projectId, $scope.userStory.milestone)]
+                breadcrumb[1] = [$i18next.t('common.taskboard'), $rootScope.urls.taskboardUrl($scope.projectSlug, $scope.userStory.milestone_slug)]
             breadcrumb[2] = [$i18next.t("user-story.user-story") + " ##{userStory.ref}", null]
             $rootScope.pageTitle = "#{$i18next.t("user-story.user-story")} - ##{userStory.ref}"
             $rootScope.pageBreadcrumb = breadcrumb
