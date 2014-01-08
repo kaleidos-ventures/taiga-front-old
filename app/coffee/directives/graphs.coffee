@@ -97,7 +97,7 @@ GmTaskboardGraphDirective = () -> (scope, elm, attrs) ->
 
     redrawChart = (dataToDraw) ->
         width = element.width()
-        element.height(190)
+        element.height(240)
 
         days = _.map(dataToDraw, (x) -> moment(x.day))
 

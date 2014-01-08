@@ -21,7 +21,7 @@
                                 </div>
                             </div>
                             <div class="info-rows">
-                                <div class="row-item">
+                                <div class="row-item points">
                                     <div class="row-label" i18next="taskboard.points">Points</div>
                                     <div class="row-indicator">{{ stats.totalPoints }}</div>
                                     <div class="row-help" i18next="taskboard.total-points">total <br />points</div>
@@ -31,7 +31,7 @@
                                     <div class="row-help" i18next="taskboard.remaining-points">remaining <br />points</div>
                                 </div>
 
-                                <div class="row-item">
+                                <div class="row-item tasks">
                                     <div class="row-label" i18next="taskboard.tasks">Tasks</div>
                                     <div class="row-indicator">{{ stats.totalTasks }}</div>
                                     <div class="row-help" i18next="taskboard.total-tasks">total <br />tasks</div>
@@ -40,20 +40,18 @@
                                     <div class="row-indicator">{{ stats.remainingTasks }}</div>
                                     <div class="row-help" i18next="taskboard.remaining-tasks">remaining <br />tasks</div>
                                 </div>
-                                <div class="row-item">
+                                <div class="row-item dates">
                                     <div class="row-label" i18next="taskboard.dates">Dates</div>
                                     <div class="row-indicator">{{ milestone.estimated_start|momentFormat:"L" }}</div>
                                     <div class="row-help" i18next="taskboard.start-date">start<br />date</div>
                                     <div class="row-indicator">{{ milestone.estimated_finish|momentFormat:"L" }}</div>
                                     <div class="row-help" i18next="taskboard.finish-date">finish<br />date</div>
                                 </div>
-                                <!-- TODO: iocaine and labor force
-                                <div class="row-item sprint-data">
-                                    <div class="row-label">Data</div>
-                                    <div class="iocaine-powder" data-icon="r">5 <span>iocaine doses</span></div>
-                                    <div class="labor-force" data-icon="s">90% <span>labor force</span></div>
+                                <div class="row-item data">
+                                    <div class="row-label" i18next="taskboard.data">Data</div>
+                                    <div class="row-indicator" data-icon="r">{{ stats.iocaineDoses }} <span i18next="taskboard.iocaine-doses">iocaine doses</span></div>
+                                    <!--<div class="labor-force" data-icon="s">90% <span>labor force</span></div>-->
                                 </div>
-                                -->
                             </div>
                         </div>
                     </div>
@@ -200,6 +198,12 @@
                         <select class="status" name="assigned_to" ng-model="form.assigned_to"
                             ng-options="c.user as c.full_name for c in project.memberships"></select>
                         </select>
+                    </fieldset>
+                </div>
+                <div class="fieldset-row">
+                    <fieldset>
+                        <label i18next="taskboard.is-iocaine">Is iocaine</label>
+                        <input type="checkbox" class="iocaine" name="iocaine" value="" ng-model="form.is_iocaine"></input>
                     </fieldset>
                 </div>
                 <div class="fieldset-row">

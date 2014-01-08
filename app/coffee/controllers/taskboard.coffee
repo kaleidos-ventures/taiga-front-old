@@ -69,6 +69,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
                 totalTasks: milestoneStats.total_tasks
                 completedTasks: milestoneStats.completed_tasks
                 remainingTasks: milestoneStats.total_tasks - milestoneStats.completed_tasks
+                iocaineDoses: milestoneStats.iocaine_doses
             }
             $scope.milestoneStats = milestoneStats
 
