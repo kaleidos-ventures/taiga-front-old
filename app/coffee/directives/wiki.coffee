@@ -1,5 +1,5 @@
 
-gmMarkitupConstructor = ($parse, $i18next) ->
+gmMarkitupConstructor = ($parse, $i18next, $sanitize) ->
     require: "?ngModel",
     link: (scope, elm, attrs, ngModel) ->
         wikiHelpUrl = "https://github.com/fletcher/MultiMarkdown/blob/master/Documentation/Markdown%20Syntax.md"
@@ -9,7 +9,7 @@ gmMarkitupConstructor = ($parse, $i18next) ->
         markdownSettings =
             nameSpace: 'markdown'
             onShiftEnter: {keepDefault:false, openWith:'\n\n'}
-            previewParser: (content) -> markdown.toHTML(content)
+            previewParser: (content) -> $sanitize(markdown.toHTML(content))
             markupSet: [
                 {
                     name: $i18next.t('wiki-editor.heading-1')
@@ -172,5 +172,5 @@ GmRenderMarkdownDirective = ($rootScope, $parse, $sanitize) ->
 
 
 module = angular.module('greenmine.directives.wiki', [])
-module.directive('gmMarkitup', ["$parse", "$i18next", gmMarkitupConstructor])
+module.directive('gmMarkitup', ["$parse", "$i18next", "$sanitize", gmMarkitupConstructor])
 module.directive("gmRenderMarkdown", ["$rootScope", "$parse", "$sanitize", GmRenderMarkdownDirective])
