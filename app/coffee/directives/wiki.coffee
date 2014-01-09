@@ -146,7 +146,7 @@ GmRenderMarkdownDirective = ($rootScope, $parse, $sanitize) ->
         if tree[0] == "link"
             if tree[1].href == _.string.slugify(tree[1].href)
                 # It's an internal link to a wiki page
-                tree[1].href = scope.urls.wikiUrl(scope.projectId, tree[1].href)
+                tree[1].href = scope.urls.wikiUrl(scope.projectSlug, tree[1].href)
             return null
 
         for t in tree
