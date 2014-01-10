@@ -196,7 +196,8 @@
                     <fieldset>
                         <label i18next="taskboard.assigned-to">Assigned to</label>
                         <select class="status" name="assigned_to" ng-model="form.assigned_to"
-                            ng-options="c.user as c.full_name for c in project.memberships"></select>
+                                ng-options="c.user as c.full_name for c in project.memberships">
+                            <option value="" i18next="task.unassigned">Unassigned</option>
                         </select>
                     </fieldset>
                 </div>
