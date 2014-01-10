@@ -13,6 +13,12 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                         if value
                             return value.join(", ")
                         else null
+                    when "team_requirement", "client_requirement"
+                        if value is true
+                            return $i18next.t("common.yes")
+                        else if value is false
+                            return $i18next.t("common.no")
+                        else null
                     else value
             issue: (name, value) ->
                 return switch name
@@ -55,6 +61,12 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                         if value
                             return scope.constants.users[value].full_name
                         return $i18next.t("common.unassigned")
+                    when "is_iocaine"
+                        if value is true
+                            return $i18next.t("common.yes")
+                        else if value is false
+                            return $i18next.t("common.no")
+                        else null
                     else value
         }
 
@@ -67,13 +79,17 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
         }
 
         makeChangeItem = (name, field, type) ->
-            change = {
-                name: field.name
-                new: resolvers[type](name, field.new)
-                old: resolvers[type](name, field.old)
-            }
+            new_val = resolvers[type](name, field.new)
+            old_val = resolvers[type](name, field.old)
 
-            return change
+            if new_val or old_val
+                change = {
+                    name: field.name
+                    new: new_val
+                    old: old_val
+                }
+                return change
+            return null
 
         makeHistoryItem = (item, type) ->
             if item.type is 0
@@ -89,8 +105,10 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                         .map((name) -> {name: name, field: item.changed_fields[name]})
                         .reject((x) -> _.isEmpty(x["field"]))
                         .map((x) -> makeChangeItem(x["name"], x["field"], type))
+                        .reject((x) -> x is null)
 
             changesArray = changes.toArray()
+
             if item.comment.length == 0 and changesArray.length == 0
                 return null
 

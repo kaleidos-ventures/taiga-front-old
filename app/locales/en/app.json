@@ -68,7 +68,9 @@
         "show-all-projects": "Show all projects",
         "unassigned": "Unassigned",
         "are-you-sure": "Are you sure?",
-        "error-on-delete": "The item has not been deleted"
+        "error-on-delete": "The item has not been deleted",
+        "yes": "Yes",
+        "no": "No"
     },
     "backlog": {
         "total": "Total",

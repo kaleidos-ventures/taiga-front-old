@@ -68,7 +68,9 @@
         "show-all-projects": "Muestra todos los proyectos",
         "unassigned": "Sin asignar",
         "are-you-sure": "¿Estás seguro?",
-        "error-on-delete": "El elemento no se ha borrado"
+        "error-on-delete": "El elemento no se ha borrado",
+        "yes": "Si",
+        "no": "No"
     },
     "backlog": {
         "total": "Total",
