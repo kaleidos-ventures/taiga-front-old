@@ -108,7 +108,7 @@ ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next
     $rootScope.projectId = null
     $rootScope.pageSection = 'profile'
     $rootScope.pageBreadcrumb = [
-        ["Greenmine", $rootScope.urls.projectsUrl()],
+        ["Taiga", $rootScope.urls.projectsUrl()],
         [$i18next.t("profile.profile"), null]
     ]
     $scope.notificationLevelOptions = config.notificationLevelOptions

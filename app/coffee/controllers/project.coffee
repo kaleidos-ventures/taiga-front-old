@@ -16,7 +16,7 @@ ProjectListController = ($scope, $rootScope, rs, $i18next) ->
     $rootScope.pageTitle = $i18next.t('common.dashboard')
     $rootScope.pageSection = 'projects'
     $rootScope.pageBreadcrumb = [
-        ["Greenmine", $rootScope.urls.projectsUrl()],
+        ["Taiga", $rootScope.urls.projectsUrl()],
         [$i18next.t('common.dashboard'), null]
     ]
     $rootScope.projectId = null
