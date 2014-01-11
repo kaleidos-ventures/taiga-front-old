@@ -19,14 +19,13 @@ GmIssuesSortDirective = ($parse) ->
             scope.$apply ->
                 callback(scope, locals)
 
-            icon = target.find("i")
-            icon.removeClass("icon-chevron-up")
-            icon.removeClass("icon-chevron-down")
+            target.parent().children().removeClass("icon-chevron-down")
+            target.parent().children().removeClass("icon-chevron-up")
 
             if scope.sortingReverse
-                icon.addClass("icon-chevron-up")
+                target.addClass("icon-chevron-up")
             else
-                icon.addClass("icon-chevron-down")
+                target.addClass("icon-chevron-down")
 
             event.preventDefault()
 
