@@ -1,4 +1,4 @@
-taiga-front
+Taiga Front
 ===============
 
 .. image:: http://kaleidos.net/static/img/badge.png
