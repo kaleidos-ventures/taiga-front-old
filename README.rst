@@ -1,4 +1,4 @@
-greenmine-front
+taiga-front
 ===============
 
 .. image:: http://kaleidos.net/static/img/badge.png
