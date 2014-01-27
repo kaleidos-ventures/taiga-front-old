@@ -3,7 +3,7 @@
         <span ng-class="{spinner: task._moving}" data-icon="x"></span>
     </div>
 
-    <div class="title">{{ task.subject }}</div>
+    <div class="title">#{{ task.ref}} {{ task.subject }}</div>
 
     <div class="assign-to">
         <a href="" gm-popover="updateTaskAssignation(task, selectedId)"

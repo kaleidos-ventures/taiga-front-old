@@ -84,7 +84,7 @@
                                 <td class="row-us-description" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
                                     <div class="info">
                                         <div class="title clearfix">
-                                            <a href="{{ urls.userStoryUrl(projectSlug, us.ref) }}">{{ us.subject }}</a>
+                                            <a href="{{ urls.userStoryUrl(projectSlug, us.ref) }}">#{{ us.ref }} {{ us.subject }}</a>
                                             <ul class="us-points-per-role">
                                                 <li ng-repeat="role in constants.computableRolesList"
                                                     class="us-point"

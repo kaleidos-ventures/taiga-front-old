@@ -184,7 +184,7 @@
                     </div>
                     <div class="issue-title">
                         <a class="title" href="{{ urls.issuesUrl(projectSlug, issue.ref) }}">
-                            {{ issue.subject }}
+                            #{{ issue.ref }} {{ issue.subject }}
                         </a>
                         <div class="tags" ng-show="showTags">
                             <span ng-repeat="tag in issue.tags" class="label" gm-colorize-tag>{{ tag }}</span>
