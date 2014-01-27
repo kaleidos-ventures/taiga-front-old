@@ -84,5 +84,5 @@ GmTaskHistoryDirective = ($compile, $rootScope, $i18next) ->
         ngModel.$render = () ->
             render ngModel.$viewValue or []
 
-module = angular.module('greenmine.directives.tasks', [])
+module = angular.module('taiga.directives.tasks', [])
 module.directive("gmTaskHistory", ['$i18next', GmTaskHistoryDirective])

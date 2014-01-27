@@ -460,7 +460,7 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next,
     return
 
 
-module = angular.module("greenmine.controllers.issues", [])
+module = angular.module("taiga.controllers.issues", [])
 module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
                   '$q', 'resource', "$data", "$confirm", "$gmStorage", "$modal", '$i18next', '$location', IssuesController])
 module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',

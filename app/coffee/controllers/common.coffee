@@ -119,5 +119,5 @@ DataServiceProvider = ($rootScope, $q, rs) ->
 
     return service
 
-module = angular.module("greenmine.controllers.common", [])
+module = angular.module("taiga.controllers.common", [])
 module.factory("$data", ["$rootScope", "$q", "resource", DataServiceProvider])

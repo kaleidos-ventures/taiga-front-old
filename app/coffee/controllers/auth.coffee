@@ -189,7 +189,7 @@ InvitationRegisterController = ($scope, $params, $rootScope, $location, rs, $dat
     return
 
 
-module = angular.module("greenmine.controllers.auth", [])
+module = angular.module("taiga.controllers.auth", [])
 module.controller("LoginController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$gmAuth', '$i18next', LoginController])
 module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', '$i18next', RecoveryController])
 module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$i18next', ChangePasswordController])

@@ -217,7 +217,7 @@ WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q, 
     return
 
 
-module = angular.module("greenmine.controllers.wiki", [])
+module = angular.module("taiga.controllers.wiki", [])
 module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams',
                                      '$data', 'resource', "$confirm", "$q", "$i18next", WikiController])
 module.controller("WikiHistoricalController", ['$scope', '$rootScope', '$location', '$routeParams',

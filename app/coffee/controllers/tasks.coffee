@@ -127,5 +127,5 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
     return
 
 
-module = angular.module("greenmine.controllers.tasks", [])
+module = angular.module("taiga.controllers.tasks", [])
 module.controller("TasksViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', '$confirm', 'resource', "$data", "$gmFlash", "$i18next", TasksViewController])

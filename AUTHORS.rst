@@ -6,12 +6,12 @@ The PRIMARY AUTHORS are:
 - Xavi Julian <xavier.julian@kaleidos.net>
 - Alejandro Alonso <alejandro.alonso@kaleidos.net>
 
-Special thanks to Kaleidos Open Source S.L for provice time for greenmine
+Special thanks to Kaleidos Open Source S.L for provice time for taiga
 development.
 
 And here is an inevitably incomplete list of MUCH-APPRECIATED CONTRIBUTORS --
 people who have submitted patches, reported bugs, added translations, helped
-answer newbie questions, and generally made greenmine that much better:
+answer newbie questions, and generally made taiga that much better:
 
 - Pilar Esteban <pilar.esteban@gmail.com>
 - Guilhem Got <guilhem.got@gmail.com>

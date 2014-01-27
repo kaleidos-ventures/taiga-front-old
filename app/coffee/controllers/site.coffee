@@ -101,7 +101,7 @@ SiteAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model
     return
 
 
-module = angular.module("greenmine.controllers.site", [])
+module = angular.module("taiga.controllers.site", [])
 module.controller("SiteAdminController", ["$scope", "$rootScope",
                                           "$routeParams", "$data", "$gmFlash",
                                           "$model", "resource", "$confirm",

@@ -257,7 +257,7 @@ TaskboardTaskController = ($scope, $rootScope, $q, $location) ->
     return
 
 
-module = angular.module("greenmine.controllers.taskboard", [])
+module = angular.module("taiga.controllers.taskboard", [])
 module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', "$location", TaskboardTaskController])
 module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', '$modal', "$model", "$i18next", TaskboardController])
 module.controller("TaskboardTaskModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', "$i18next", TaskboardTaskModalController])

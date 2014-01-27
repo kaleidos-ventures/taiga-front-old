@@ -227,5 +227,5 @@ ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
 
     return service
 
-module = angular.module('greenmine.services.model', [])
+module = angular.module('taiga.services.model', [])
 module.factory('$model', ['$q', '$http', '$gmUrls', '$gmStorage', ModelProvider])

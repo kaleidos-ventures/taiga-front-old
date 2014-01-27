@@ -126,6 +126,6 @@ GmSortableDirective = ($log, $rootScope) ->
         element.sortable(opts)
 
 
-module = angular.module("greenmine.directives.backlog", [])
+module = angular.module("taiga.directives.backlog", [])
 module.directive('gmDoomline', GmDoomlineDirective)
 module.directive('gmSortable', ["$log", "$rootScope", GmSortableDirective])

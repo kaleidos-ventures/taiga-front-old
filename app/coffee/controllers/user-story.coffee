@@ -137,6 +137,6 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
 
     return
 
-module = angular.module("greenmine.controllers.user-story", [])
+module = angular.module("taiga.controllers.user-story", [])
 module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", "$i18next", UserStoryViewController])
 

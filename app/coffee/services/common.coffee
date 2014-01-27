@@ -30,5 +30,5 @@ AuthProvider = ($rootScope, $gmStorage, $model) ->
     return service
 
 
-module = angular.module('greenmine.services.common', [])
+module = angular.module('taiga.services.common', [])
 module.factory("$gmAuth", ["$rootScope", "$gmStorage", "$model", AuthProvider])

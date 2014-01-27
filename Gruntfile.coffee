@@ -37,7 +37,7 @@ module.exports = (grunt) ->
                     paths: ['app/less']
                 },
                 files: {
-                    "app/less/style.css": "app/less/greenmine-main.less"
+                    "app/less/style.css": "app/less/taiga-main.less"
                 }
             }
         },

@@ -166,6 +166,6 @@ GmRenderMarkdownDirective = ($rootScope, $parse, $sanitize) ->
                 element.html($sanitize(markdown.toHTML(tree)))
 
 
-module = angular.module('greenmine.directives.wiki', [])
+module = angular.module('taiga.directives.wiki', [])
 module.directive('gmMarkitup', ["$parse", "$i18next", "$sanitize", gmMarkitupConstructor])
 module.directive("gmRenderMarkdown", ["$rootScope", "$parse", "$sanitize", GmRenderMarkdownDirective])

@@ -26,6 +26,6 @@ GmFilesDirective = ($parse) ->
                         scope[attrs["gmFiles"]] = scope[attrs["gmFiles"]].concat(files)
 
 
-module = angular.module('greenmine.directives.generic', [])
+module = angular.module('taiga.directives.generic', [])
 module.directive('gmFile', ["$parse", GmFileDirective])
 module.directive('gmFiles', ["$parse", GmFilesDirective])

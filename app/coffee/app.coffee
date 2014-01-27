@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-@greenmine = {}
-@gm = @greenmine
+@taiga = {}
+@gm = @taiga
 
 gm = @gm
 gm.format = (fmt, obj, named) ->
@@ -174,29 +174,29 @@ modules = [
     "ngAnimate",
     "ngSanitize",
 
-    "greenmine.controllers.common",
-    "greenmine.controllers.auth",
-    "greenmine.controllers.backlog",
-    "greenmine.controllers.user-story",
-    "greenmine.controllers.search",
-    "greenmine.controllers.taskboard",
-    "greenmine.controllers.issues",
-    "greenmine.controllers.project",
-    "greenmine.controllers.tasks",
-    "greenmine.controllers.wiki",
-    "greenmine.controllers.site",
-    "greenmine.filters",
-    "greenmine.services.common",
-    "greenmine.services.model",
-    "greenmine.services.resource",
-    "greenmine.directives.generic",
-    "greenmine.directives.common",
-    "greenmine.directives.graphs",
-    "greenmine.directives.tasks",
-    "greenmine.directives.issues",
-    "greenmine.directives.history",
-    "greenmine.directives.wiki",
-    "greenmine.directives.backlog",
+    "taiga.controllers.common",
+    "taiga.controllers.auth",
+    "taiga.controllers.backlog",
+    "taiga.controllers.user-story",
+    "taiga.controllers.search",
+    "taiga.controllers.taskboard",
+    "taiga.controllers.issues",
+    "taiga.controllers.project",
+    "taiga.controllers.tasks",
+    "taiga.controllers.wiki",
+    "taiga.controllers.site",
+    "taiga.filters",
+    "taiga.services.common",
+    "taiga.services.model",
+    "taiga.services.resource",
+    "taiga.directives.generic",
+    "taiga.directives.common",
+    "taiga.directives.graphs",
+    "taiga.directives.tasks",
+    "taiga.directives.issues",
+    "taiga.directives.history",
+    "taiga.directives.wiki",
+    "taiga.directives.backlog",
 
     "coffeeColorPicker",
 
@@ -367,11 +367,11 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
         }
         checksley.updateMessages('default', messages)
 
-angular.module('greenmine', modules)
+angular.module('taiga', modules)
        .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', '$gmUrlsProvider', configCallback])
        .run(['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls', '$i18next', 'config', '$data', '$log', init])
 
-angular.module('greenmine.config', []).value('config', {
+angular.module('taiga.config', []).value('config', {
     host: "localhost:8000"
     scheme: "http"
     defaultLanguage: "en"

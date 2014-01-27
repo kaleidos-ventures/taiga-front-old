@@ -450,7 +450,7 @@ GmSelectFix = ->
                 value = ''
             return value
 
-module = angular.module('greenmine.directives.common', [])
+module = angular.module('taiga.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
 module.directive('gmHeaderMenu', ["$rootScope", GmHeaderMenuDirective])
 module.directive('gmNinjaGraph', GmNinjaGraphDirective)

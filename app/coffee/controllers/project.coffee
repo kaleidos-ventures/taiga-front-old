@@ -736,7 +736,7 @@ SeverityController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
             $gmFlash.error($i18next.t("common.error-on-delete"))
 
 
-module = angular.module("greenmine.controllers.project", [])
+module = angular.module("taiga.controllers.project", [])
 module.controller("ProjectListController", ['$scope', '$rootScope', 'resource', '$i18next',
                                             ProjectListController])
 module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routeParams", "$data",

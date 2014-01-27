@@ -29,5 +29,5 @@ GmIssuesSortDirective = ($parse) ->
 
             event.preventDefault()
 
-module = angular.module('greenmine.directives.issues', [])
+module = angular.module('taiga.directives.issues', [])
 module.directive('gmIssuesSort', ["$parse", GmIssuesSortDirective])

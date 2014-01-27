@@ -79,7 +79,7 @@ DiffFilter = ($sce) ->
 
         return $sce.trustAsHtml(html_diff)
 
-module = angular.module('greenmine.filters', [])
+module = angular.module('taiga.filters', [])
 module.filter("lowercase", LowercaseFilter)
 module.filter("capitalize", CapitalizeFilter)
 module.filter("momentFormat", MomentFormatFilter)

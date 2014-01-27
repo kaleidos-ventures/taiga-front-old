@@ -528,7 +528,7 @@ BacklogMilestoneController = ($scope, $q, rs, $gmFlash, $i18next) ->
     return
 
 
-module = angular.module("greenmine.controllers.backlog", [])
+module = angular.module("taiga.controllers.backlog", [])
 module.controller('BacklogMilestoneController', ['$scope', '$q', 'resource', '$gmFlash', '$i18next', BacklogMilestoneController])
 module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', '$i18next', '$location', BacklogMilestonesController])
 module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', '$location', BacklogUserStoriesController])

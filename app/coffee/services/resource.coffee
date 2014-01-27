@@ -787,5 +787,5 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
     return service
 
-module = angular.module('greenmine.services.resource', ['greenmine.config'])
+module = angular.module('taiga.services.resource', ['taiga.config'])
 module.factory('resource', ['$http', '$q', '$gmStorage', '$gmUrls', '$model', 'config', ResourceProvider])

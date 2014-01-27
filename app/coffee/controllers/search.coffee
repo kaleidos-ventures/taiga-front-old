@@ -83,5 +83,5 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs, $i18next) ->
     return
 
 
-module = angular.module("greenmine.controllers.search", [])
+module = angular.module("taiga.controllers.search", [])
 module.controller("SearchController", ["$scope", "$rootScope", "$routeParams", "$data", "resource", "$i18next", SearchController])

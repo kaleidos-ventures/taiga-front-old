@@ -346,7 +346,7 @@ GmIssuesOpenClosedGraphDirective = () -> (scope, elm, attrs) ->
                 redrawChart(value)
             , 200)
 
-module = angular.module("greenmine.directives.graphs", [])
+module = angular.module("taiga.directives.graphs", [])
 module.directive("gmBacklogGraph", GmBacklogGraphDirective)
 module.directive("gmTaskboardGraph", GmTaskboardGraphDirective)
 module.directive("gmIssuesPieGraph", GmIssuesPieGraphDirective)

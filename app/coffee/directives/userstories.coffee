@@ -69,5 +69,5 @@ GmUserstoryHistoryDirective = ($compile, $rootScope) ->
         ngModel.$render = () ->
             render(ngModel.$viewValue or [])
 
-module = angular.module('greenmine.directives.userstories', [])
+module = angular.module('taiga.directives.userstories', [])
 module.directive("gmUserstoryHistory", GmUserstoryHistoryDirective)

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-angular.module('greenmine.config', []).value('config', {
+angular.module('taiga.config', []).value('config', {
     host: "localhost:8000"
     scheme: "http"
     defaultLanguage: "en"
