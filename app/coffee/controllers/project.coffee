@@ -125,7 +125,7 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
 
         promise.then null, (data) ->
             if data._error_message
-                $gmFlash.error(data._error_message, false)
+                $gmFlash.error(data._error_message)
             $scope.checksleyErrors = data
 
     return
@@ -180,7 +180,7 @@ UserStoryStatusesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
 
         promise.then null, (data) ->
             if data._error_message
-                $gmFlash.error(data._error_message, false)
+                $gmFlash.error(data._error_message)
             $scope.checksleyErrors = data
 
     loadUserStoryStatuses = ->
@@ -237,7 +237,7 @@ UserStoryStatusController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
                 $scope.$emit("userstory-statuses:refresh")
 
         promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"), false)
+            $gmFlash.error($i18next.t("common.error-on-delete"))
 
 
 PointsAdminController = ($scope, $rootScope, $gmFlash, rs) ->
@@ -261,7 +261,7 @@ PointsAdminController = ($scope, $rootScope, $gmFlash, rs) ->
 
         promise.then null, (data) ->
             if data._error_message
-                $gmFlash.error(data._error_message, false)
+                $gmFlash.error(data._error_message)
             $scope.checksleyErrors = data
 
     $scope.delete = (object) ->
@@ -272,7 +272,7 @@ PointsAdminController = ($scope, $rootScope, $gmFlash, rs) ->
                 loadPoints()
 
         promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"), false)
+            $gmFlash.error($i18next.t("common.error-on-delete"))
 
     loadPoints = ->
         rs.getPoints($rootScope.projectId).then (data) ->
@@ -328,7 +328,7 @@ PointsController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
                 $scope.$emit("points:refresh")
 
         promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"), false)
+            $gmFlash.error($i18next.t("common.error-on-delete"))
 
 
 TaskStatusesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
@@ -352,7 +352,7 @@ TaskStatusesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
 
         promise.then null, (data) ->
             if data._error_message
-                $gmFlash.error(data._error_message, false)
+                $gmFlash.error(data._error_message)
             $scope.checksleyErrors = data
 
     loadTaskStatuses = ->
@@ -409,7 +409,7 @@ TaskStatusController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
                 $scope.$emit("task-statuses:refresh")
 
         promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"), false)
+            $gmFlash.error($i18next.t("common.error-on-delete"))
 
 
 IssueStatusesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
@@ -433,7 +433,7 @@ IssueStatusesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
 
         promise.then null, (data) ->
             if data._error_message
-                $gmFlash.error(data._error_message, false)
+                $gmFlash.error(data._error_message)
             $scope.checksleyErrors = data
 
     loadIssueStatuses = ->
@@ -490,7 +490,7 @@ IssueStatusController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
                 $scope.$emit("issue-statuses:refresh")
 
         promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"), false)
+            $gmFlash.error($i18next.t("common.error-on-delete"))
 
 
 IssueTypesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
@@ -514,7 +514,7 @@ IssueTypesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
 
         promise.then null, (data) ->
             if data._error_message
-                $gmFlash.error(data._error_message, false)
+                $gmFlash.error(data._error_message)
             $scope.checksleyErrors = data
 
     loadIssueTypes = ->
@@ -571,7 +571,7 @@ IssueTypeController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
                 $scope.$emit("issue-types:refresh")
 
         promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"), false)
+            $gmFlash.error($i18next.t("common.error-on-delete"))
 
 
 PrioritiesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
@@ -595,7 +595,7 @@ PrioritiesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
 
         promise.then null, (data) ->
             if data._error_message
-                $gmFlash.error(data._error_message, false)
+                $gmFlash.error(data._error_message)
             $scope.checksleyErrors = data
 
     loadPriorities = ->
@@ -652,7 +652,7 @@ PriorityController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
                 $scope.$emit("priorities:refresh")
 
         promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"), false)
+            $gmFlash.error($i18next.t("common.error-on-delete"))
 
 
 SeveritiesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
@@ -676,7 +676,7 @@ SeveritiesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
 
         promise.then null, (data) ->
             if data._error_message
-                $gmFlash.error(data._error_message, false)
+                $gmFlash.error(data._error_message)
             $scope.checksleyErrors = data
 
     loadSeverities = ->
@@ -733,7 +733,7 @@ SeverityController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
                 $scope.$emit("severities:refresh")
 
         promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"), false)
+            $gmFlash.error($i18next.t("common.error-on-delete"))
 
 
 module = angular.module("greenmine.controllers.project", [])

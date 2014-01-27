@@ -14,11 +14,11 @@
 
 FlashMessagesProvider = ($rootScope, $q, $window) ->
     service = {}
-    service.info = (message, scrollUp) ->
-        $rootScope.$broadcast("flash:new", true, message, scrollUp)
+    service.info = (message) ->
+        $rootScope.$broadcast("flash:new", true, message)
 
-    service.error = (message, scrollUp) ->
-        $rootScope.$broadcast("flash:new", false, message, scrollUp)
+    service.error = (message) ->
+        $rootScope.$broadcast("flash:new", false, message)
 
     return service
 
@@ -34,19 +34,13 @@ FlashMessagesDirective = ->
 
     link: (scope, elm, attrs) ->
         element = angular.element(elm)
-        scope.$on "flash:new", (ctx, success, message, scrollUp) ->
+        scope.$on "flash:new", (ctx, success, message) ->
             if success
                 element.find(".flash-message-success p").text(message)
                 element.find(".flash-message-success").fadeIn().delay(2000).fadeOut()
             else
                 element.find(".flash-message-fail p").text(message)
                 element.find(".flash-message-fail").fadeIn().delay(2000).fadeOut()
-
-            if not scrollUp?
-                scrollUp = true
-
-            if scrollUp
-                angular.element("html, body").animate({ scrollTop: 0 }, "slow")
 
 
 module = angular.module('gmFlash', [])
