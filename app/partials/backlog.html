@@ -282,7 +282,7 @@
                 <div class="body">
                     <div class="us-list" ng-hide="editFormOpened || !viewUSs">
                         <div class="us-table-list">
-                            <div class="flex-body" gm-sortable=".us-container .flex-body"
+                            <div class="flex-body" gm-sortable=".us-container .flex-body, .sprints-box .flex-body"
                                  ng-model="milestones[$index].user_stories" >
                                 <div class="us-item" ng-repeat="us in ml.user_stories|orderBy:'order'"
                                      ng-dblclick="openUserStory(projectSlug, us.ref)">
