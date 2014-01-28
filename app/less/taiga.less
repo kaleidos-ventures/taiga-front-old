@@ -2015,6 +2015,41 @@ body.login {
                     color: @red;
                 }
             }
+            &.in-progress {
+                .status {
+                    &.error { color: @red; }
+                    &.in-progress { color: @gray; }
+                    &.done { color: @green; }
+                }
+                .progress-bar {
+                    display: inline-block;
+                    width: 250px;
+                    height: 20px;
+                    background-color: whiteSmoke;
+                    border-radius: 3px;
+                    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25) inset;
+                    span {
+                        display: block;
+                        width: 0%;
+                        height: 20px;
+                        background-color: @green;
+                        color: @white;
+                        border-radius: 2px;
+                        font-family: 'ColabReg';
+                        text-align: end;
+                        line-height: 21px;
+                    }
+                }
+                .progress-data{
+                    font-family: 'ColabThi';
+                    font-size: small;
+                    font-style: italic;
+                    color: @gray;
+                }
+                .name {
+                    padding-left: 10px;
+                }
+            }
         }
     }
     .update-form {
@@ -2230,6 +2265,41 @@ body.login {
                 margin-bottom: 10px;
                 .delete {
                     color: @red;
+                }
+            }
+            &.in-progress {
+                .status {
+                    &.error { color: @red; }
+                    &.in-progress { color: @gray; }
+                    &.done { color: @green; }
+                }
+                .progress-bar {
+                    display: inline-block;
+                    width: 250px;
+                    height: 20px;
+                    background-color: whiteSmoke;
+                    border-radius: 3px;
+                    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25) inset;
+                    span {
+                        display: block;
+                        width: 0%;
+                        height: 20px;
+                        background-color: @green;
+                        color: @white;
+                        border-radius: 2px;
+                        font-family: 'ColabReg';
+                        text-align: end;
+                        line-height: 21px;
+                    }
+                }
+                .progress-data{
+                    font-family: 'ColabThi';
+                    font-size: small;
+                    font-style: italic;
+                    color: @gray;
+                }
+                .name {
+                    padding-left: 10px;
                 }
             }
         }
@@ -2835,6 +2905,41 @@ body.login {
                 margin-bottom: 10px;
                 .delete {
                     color: @red;
+                }
+            }
+            &.in-progress {
+                .status {
+                    &.error { color: @red; }
+                    &.in-progress { color: @gray; }
+                    &.done { color: @green; }
+                }
+                .progress-bar {
+                    display: inline-block;
+                    width: 250px;
+                    height: 20px;
+                    background-color: whiteSmoke;
+                    border-radius: 3px;
+                    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25) inset;
+                    span {
+                        display: block;
+                        width: 0%;
+                        height: 20px;
+                        background-color: @green;
+                        color: @white;
+                        border-radius: 2px;
+                        font-family: 'ColabReg';
+                        text-align: end;
+                        line-height: 21px;
+                    }
+                }
+                .progress-data{
+                    font-family: 'ColabThi';
+                    font-size: small;
+                    font-style: italic;
+                    color: @gray;
+                }
+                .name {
+                    padding-left: 10px;
                 }
             }
         }

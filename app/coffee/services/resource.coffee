@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
+ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope, $i18next, $filter, $log) ->
     service = {}
     cache = new Cache(250)
 
@@ -546,19 +546,34 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     service.getWikiPageAttachments = (projectId, wikiPageId) ->
         return queryMany("wiki/attachments", {project: projectId, object_id: wikiPageId})
 
-    service.uploadIssueAttachment = (projectId, issueId, file, progress) ->
+    service.uploadIssueAttachment = (projectId, issueId, file, progress=true) ->
         defered = $q.defer()
 
         if file is undefined
             defered.resolve(null)
             return defered.promise
 
+        uploadProgress = (evt) ->
+            $rootScope.$apply ->
+                file.status = "in-progress"
+                file.totalSize = evt.total
+                file.uploadSize = evt.loaded
+                file.progressSizeData = $i18next.t("issue.file-upload-data", {
+                    upload: $filter("sizeFormat")(evt.loaded),
+                    total: $filter("sizeFormat")(evt.total)
+                })
+                file.uploadPercent = Math.round((evt.loaded / evt.total) * 100)
+
         uploadComplete = (evt) ->
-            data = JSON.parse(evt.target.responseText)
-            defered.resolve(data)
+            $rootScope.$apply ->
+                file.status = "done"
+                data = JSON.parse(evt.target.responseText)
+                defered.resolve(data)
 
         uploadFailed = (evt) ->
-            defered.reject("fail")
+            $rootScope.$apply ->
+                file.status = "error"
+                defered.reject("fail")
 
         formData = new FormData()
         formData.append("project", projectId)
@@ -567,7 +582,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         xhr = new XMLHttpRequest()
 
-        if progress != undefined
+        if progress?
             xhr.upload.addEventListener("progress", uploadProgress, false)
 
         xhr.addEventListener("load", uploadComplete, false)
@@ -577,19 +592,34 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         xhr.send(formData)
         return defered.promise
 
-    service.uploadTaskAttachment = (projectId, taskId, file, progress) ->
+    service.uploadTaskAttachment = (projectId, taskId, file, progress=true) ->
         defered = $q.defer()
 
         if file is undefined
             defered.resolve(null)
             return defered.promise
 
+        uploadProgress = (evt) ->
+            $rootScope.$apply ->
+                file.status = "in-progress"
+                file.totalSize = evt.total
+                file.uploadSize = evt.loaded
+                file.progressSizeData = $i18next.t("task.file-upload-data", {
+                    upload: $filter("sizeFormat")(evt.loaded),
+                    total: $filter("sizeFormat")(evt.total)
+                })
+                file.uploadPercent = Math.round((evt.loaded / evt.total) * 100)
+
         uploadComplete = (evt) ->
-            data = JSON.parse(evt.target.responseText)
-            defered.resolve(data)
+            $rootScope.$apply ->
+                file.status = "done"
+                data = JSON.parse(evt.target.responseText)
+                defered.resolve(data)
 
         uploadFailed = (evt) ->
-            defered.reject("fail")
+            $rootScope.$apply ->
+                file.status = "error"
+                defered.reject("fail")
 
         formData = new FormData()
         formData.append("project", projectId)
@@ -598,7 +628,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         xhr = new XMLHttpRequest()
 
-        if progress != undefined
+        if progress?
             xhr.upload.addEventListener("progress", uploadProgress, false)
 
         xhr.addEventListener("load", uploadComplete, false)
@@ -608,19 +638,34 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         xhr.send(formData)
         return defered.promise
 
-    service.uploadUserStoryAttachment = (projectId, userStoryId, file, progress) ->
+    service.uploadUserStoryAttachment = (projectId, userStoryId, file, progress=true) ->
         defered = $q.defer()
 
         if file is undefined
             defered.resolve(null)
             return defered.promise
 
+        uploadProgress = (evt) ->
+            $rootScope.$apply ->
+                file.status = "in-progress"
+                file.totalSize = evt.total
+                file.uploadSize = evt.loaded
+                file.progressSizeData = $i18next.t("user-story.file-upload-data", {
+                    upload: $filter("sizeFormat")(evt.loaded),
+                    total: $filter("sizeFormat")(evt.total)
+                })
+                file.uploadPercent = Math.round((evt.loaded / evt.total) * 100)
+
         uploadComplete = (evt) ->
-            data = JSON.parse(evt.target.responseText)
-            defered.resolve(data)
+            $rootScope.$apply ->
+                file.status = "done"
+                data = JSON.parse(evt.target.responseText)
+                defered.resolve(data)
 
         uploadFailed = (evt) ->
-            defered.reject("fail")
+            $rootScope.$apply ->
+                file.status = "error"
+                defered.reject("fail")
 
         formData = new FormData()
         formData.append("project", projectId)
@@ -629,7 +674,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         xhr = new XMLHttpRequest()
 
-        if progress != undefined
+        if progress?
             xhr.upload.addEventListener("progress", uploadProgress, false)
 
         xhr.addEventListener("load", uploadComplete, false)
@@ -639,19 +684,35 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
         xhr.send(formData)
         return defered.promise
 
-    service.uploadWikiPageAttachment = (projectId, wikiPageId, file, progress) ->
+    service.uploadWikiPageAttachment = (projectId, wikiPageId, file, progress=true) ->
         defered = $q.defer()
 
         if file is undefined
             defered.resolve(null)
             return defered.promise
 
+        uploadProgress = (evt) ->
+            $rootScope.$apply ->
+                file.status = "in-progress"
+                file.totalSize = evt.total
+                file.uploadSize = evt.loaded
+                file.progressSizeData = $i18next.t("wiki.file-upload-data", {
+                    upload: $filter("sizeFormat")(evt.loaded),
+                    total: $filter("sizeFormat")(evt.total)
+                })
+                console.log file.progressSizeData
+                file.uploadPercent = Math.round((evt.loaded / evt.total) * 100)
+
         uploadComplete = (evt) ->
-            data = JSON.parse(evt.target.responseText)
-            defered.resolve(data)
+            $rootScope.$apply ->
+                file.status = "done"
+                data = JSON.parse(evt.target.responseText)
+                defered.resolve(data)
 
         uploadFailed = (evt) ->
-            defered.reject("fail")
+            $rootScope.$apply ->
+                file.status = "error"
+                defered.reject("fail")
 
         formData = new FormData()
         formData.append("project", projectId)
@@ -660,7 +721,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
 
         xhr = new XMLHttpRequest()
 
-        if progress != undefined
+        if progress?
             xhr.upload.addEventListener("progress", uploadProgress, false)
 
         xhr.addEventListener("load", uploadComplete, false)
@@ -788,4 +849,5 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config) ->
     return service
 
 module = angular.module('taiga.services.resource', ['taiga.config'])
-module.factory('resource', ['$http', '$q', '$gmStorage', '$gmUrls', '$model', 'config', ResourceProvider])
+module.factory('resource', ['$http', '$q', '$gmStorage', '$gmUrls', '$model', 'config', '$rootScope',
+                            '$i18next', '$filter', '$log', ResourceProvider])

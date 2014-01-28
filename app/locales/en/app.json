@@ -234,7 +234,8 @@
         "created-by-history": "Created by",
         "updated-by-history": "Updated by",
         "comment-history": "Comment:",
-        "issue-saved": "The issue has been saved"
+        "issue-saved": "The issue has been saved",
+        "file-upload-data": "__upload__ of __total__"
     },
     "profile": {
         "profile": "Profile",
@@ -403,7 +404,8 @@
         "see-more": "See more",
         "created-by-history": "Created by",
         "updated-by-history": "Updated by",
-        "comment-history": "Comment:"
+        "comment-history": "Comment:",
+        "file-upload-data": "__upload__ of __total__"
     },
     "wiki-historical": {
         "on-date": "on __date__",
@@ -432,7 +434,8 @@
         "delete-new-attachment": "Delete the new attachment",
         "delete-attachment": "Delete the attachment",
         "save-button": "Save",
-        "cancel-button": "Cancel"
+        "cancel-button": "Cancel",
+        "file-upload-data": "__upload__ of __total__"
     },
     "user-story": {
         "user-story-ref": "User Story #__ref__",
@@ -471,7 +474,8 @@
         "see-more": "See more",
         "created-by-history": "Created by",
         "updated-by-history": "Updated by",
-        "comment": "Comment:"
+        "comment": "Comment:",
+        "file-upload-data": "__upload__ of __total__"
     },
     "wiki-editor": {
         "heading-1": "First Level Heading",

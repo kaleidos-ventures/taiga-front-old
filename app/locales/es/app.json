@@ -234,7 +234,8 @@
         "created-by-history": "Creado por",
         "updated-by-history": "Actualizada por",
         "comment-history": "Comentario:",
-        "issue-saved": "La petición ha sido guardada"
+        "issue-saved": "La petición ha sido guardada",
+        "file-upload-data": "__upload__ de __total__"
     },
     "profile": {
         "profile": "Perfil",
@@ -403,7 +404,8 @@
         "see-more": "Ver más",
         "created-by-history": "Creada por",
         "updated-by-history": "Actualizada por",
-        "comment-history": "Comentario:"
+        "comment-history": "Comentario:",
+        "file-upload-data": "__upload__ de __total__"
     },
     "wiki-historical": {
         "on-date": "el __date__",
@@ -432,7 +434,8 @@
         "delete-new-attachment": "Borrar el nuevo adjunto",
         "delete-attachment": "Borrar el adjunto",
         "save-button": "Guardar",
-        "cancel-button": "Cancelar"
+        "cancel-button": "Cancelar",
+        "file-upload-data": "__upload__ de __total__"
     },
     "user-story": {
         "user-story-ref": "Historia de usuario #__ref__",
@@ -471,7 +474,8 @@
         "see-more": "Ver más",
         "created-by-history": "Creada por",
         "updated-by-history": "Actualizada por",
-        "comment": "Comentario:"
+        "comment": "Comentario:",
+        "file-upload-data": "__upload__ de __total__"
     },
     "wiki-editor": {
         "heading-1": "Encabezado de primer nivel",
