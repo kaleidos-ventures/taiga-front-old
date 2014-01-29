@@ -16,6 +16,8 @@ Install requirements:
 
     sudo npm install -g grunt-cli
     npm install
+    sudo npm install -g bower
+    bower install
     grunt
 
 And go in your browser to: http://localhost:9001/

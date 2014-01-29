@@ -144,7 +144,7 @@
                                 </a>
                             </div>
                             <div class="tags" ng-hide="!showTags">
-                                <span ng-repeat="tag in us.tags" class="label" gm-colorize-tag>{{ tag }}</span>
+                                <span ng-repeat="tag in us.tags track by $index" class="label" gm-colorize-tag>{{ tag }}</span>
                             </div>
                         </div>
                         <div class="us-status">

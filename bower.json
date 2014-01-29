@@ -1,0 +1,40 @@
+{
+  "name": "taiga-front",
+  "version": "0.1.0",
+  "homepage": "https://github.com/kaleidos/taiga-front",
+  "authors": [
+    "Jesús Espino <jesus.espino@kaleidos.net>"
+  ],
+  "description": "Taiga project management system (frontend)",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "highlight.js": "~7.3.0",
+    "marked": "~0.3.0",
+    "lodash": "~2.4.1",
+    "lazy.js": "~0.3.2",
+    "emoticons": "~0.1.7",
+    "jquery-flot": "~0.8.2",
+    "angular": "~1.2.10",
+    "angular-route": "~1.2.10",
+    "angular-animate": "~1.2.10",
+    "angular-sanitize": "~1.2.10",
+    "kalendae": "~0.4.1",
+    "checksley": "~0.5.0",
+    "jquery-ui": "~1.10.3",
+    "i18next": "~1.7.1",
+    "jquery": "~2.1.0",
+    "select2": "~3.4.5",
+    "google-diff-match-patch-js": "~1.0.0",
+    "underscore.string": "~2.3.3",
+    "markitup": "~1.1.14"
+  }
+}

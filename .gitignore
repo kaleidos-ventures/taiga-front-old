@@ -4,6 +4,7 @@ app/index.html
 app/js/extern.min.js
 app/js/taiga.min.js
 app/less/style.css
+app/components
 node_modules
 
 app/dist/*
