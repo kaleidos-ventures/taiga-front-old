@@ -16,7 +16,7 @@
     <div class="row-fluid task-data">
         <div class="span8 task-data-description">
             <h2>{{ userStory.subject }}</h2>
-            <p>{{ userStory.description }}</p>
+            <div gm-render-markdown="userStory.description"></div>
             <div class="attachments" ng-show="attachments.length > 0 || newAttachments[0].status != undefined">
                 <h3 i18next="user-story.attachments">Attachments</h3>
                 <ul class="attachments-items">
@@ -136,12 +136,12 @@
 
                     <fieldset class="task-description" ng-show="_showHiddenGroups">
                         <label for="inputEmail" i18next="user-story.description-label">Description</label>
-                        <textarea name="description" ng-model="form.description"></textarea>
+                        <textarea name="description" ng-model="form.description" gm-markitup></textarea>
                     </fieldset>
 
                     <fieldset class="task-comment">
                         <label for="inputEmail" i18next="user-story.comment-label">Comment</label>
-                        <textarea name="comment" ng-model="form.comment"></textarea>
+                        <textarea name="comment" ng-model="form.comment" gm-markitup></textarea>
                     </fieldset>
 
                     <fieldset class="meta-requirement">
@@ -224,7 +224,8 @@
                     </div>
                 </div>
                 <div class="comment" ng-show="hitem.comment">
-                    <strong i18next="user-story.comment">Comment:</strong><br />{{ hitem.comment }}
+                    <strong i18next="user-story.comment">Comment:</strong>
+                    <div gm-render-markdown="hitem.comment"></div>
                 </div>
             </li>
         </ul>

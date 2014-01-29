@@ -107,8 +107,8 @@
                                                 {{ constants.usStatuses[us.status].name }}</div>
                                         </div>
 
-                                        <div class="description">
-                                            <p>{{ us.description|truncate:140 }}</p>
+                                        <div class="description"
+                                             gm-render-markdown="us.description|truncate:140">
                                         </div>
                                     </div>
                                     <a href="" data-icon="A" class="add-new-task"
@@ -216,7 +216,7 @@
                 <div class="fieldset-row">
                     <fieldset>
                         <label i18next="taskboard.description">Description</label>
-                        <textarea class="description" name="description" ng-model="form.description"></textarea>
+                        <textarea class="description" name="description" ng-model="form.description" gm-markitup></textarea>
                     </fieldset>
                 </div>
             </div>

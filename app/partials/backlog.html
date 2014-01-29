@@ -386,7 +386,7 @@
                     <textarea class="description" name="description"
                               placeholder="A good description..."
                               i18next="placeholder:backlog.description-placeholder"
-                              ng-model="form.description"></textarea>
+                              ng-model="form.description" gm-markitup></textarea>
                 </fieldset>
                 <div class="fieldset-row">
                     <input type="checkbox" id="client-requirement"
@@ -465,7 +465,7 @@
         </section>
         <section>
             <strong i18next="backlog.description-popover">Description:</strong>
-            <p>{{ us.description }}</p>
+            <div gm-render-markdown="us.description"></div>
         </section>
     </div>
 </script>

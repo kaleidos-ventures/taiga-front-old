@@ -12,7 +12,7 @@
     <div class="row-fluid issue-data">
         <div class="span8 issue-data-description">
             <h2>{{ issue.subject }}</h2>
-            <p>{{ issue.description }}</p>
+            <div gm-render-markdown="issue.description"></div>
             <div class="attachments" ng-show="attachments.length > 0 || newAttachments[0].status != undefined">
                 <h3 data-icon="E" i18next="issue.attachments">Attachments</h3>
                 <ul class="attachments-items">
@@ -167,12 +167,12 @@
 
                     <fieldset class="issue-description" ng-show="_showHiddenGroups">
                         <label for="inputEmail" i18next="issue.description-label">Description</label>
-                        <textarea name="description" ng-model="form.description"></textarea>
+                        <textarea name="description" ng-model="form.description" gm-markitup></textarea>
                     </fieldset>
 
                     <fieldset class="issue-comment">
                         <label for="inputEmail" i18next="issue.comment-label">Comment</label>
-                        <textarea name="comment" ng-model="form.comment"></textarea>
+                        <textarea name="comment" ng-model="form.comment" gm-markitup></textarea>
                     </fieldset>
 
                     <fieldset class="issue-attachment">
@@ -251,7 +251,8 @@
                     </div>
                 </div>
                 <div class="comment" ng-show="hitem.comment">
-                    <strong i18next="issue.comment-history">Comment:</strong><br />{{ hitem.comment }}
+                    <strong i18next="issue.comment-history">Comment:</strong>
+                    <div gm-render-markdown="hitem.comment"></div>
                 </div>
             </li>
         </ul>

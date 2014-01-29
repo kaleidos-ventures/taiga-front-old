@@ -316,7 +316,7 @@
                 <div class="fieldset-row">
                     <fieldset>
                         <label i18next="issues.form-description">Description</label>
-                        <textarea name="description" class="description" ng-model="form.description"></textarea>
+                        <textarea name="description" class="description" ng-model="form.description" gm-markitup></textarea>
                     </fieldset>
                 </div>
                 <div class="fieldset-row">
@@ -377,7 +377,7 @@
         </section>
         <section>
             <strong i18next="issues.description-popover">Description:</strong>
-            <p>{{ issue.description }}</p>
+            <div gm-render-markdown="issue.description"></div>
         </section>
     </div>
 </script>
