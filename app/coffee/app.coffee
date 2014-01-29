@@ -75,6 +75,9 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when('/project/:pslug/taskboard/:sslug',
             {templateUrl: 'partials/taskboard.html', controller: "TaskboardController"})
 
+    $routeProvider.when('/project/:pslug/wiki-help',
+            {templateUrl: 'partials/wiki-help.html', controller: "WikiHelpController"})
+
     $routeProvider.when('/project/:pslug/wiki/:slug',
             {templateUrl: 'partials/wiki.html', controller: "WikiController"})
 
@@ -164,6 +167,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         "users-change-password-from-recovery": "/api/v1/users/change_password_from_recovery"
         "users-change-password": "/api/v1/users/change_password"
         "resolver": "/api/v1/resolver"
+        "wiki-attachment": "/media/attachment-files/%s/wikipage/%s"
     }
 
     $gmUrlsProvider.setUrls("api", apiUrls)
@@ -257,9 +261,11 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
         task: "/project/%s/tasks/%s"
         tasks: "/project/%s/tasks/%s"
         wiki: "/project/%s/wiki/%s"
+        wikiHelp: "/project/%s/wiki-help"
         wikiHistorical: "/project/%s/wiki/%s/historical"
         search: "/project/%s/search"
         admin: "/project/%s/admin"
+        attachment: "/media/attachment-files/%s/%s/%s"
 
     conditionalUrl = (url, raw) ->
         return url if raw
@@ -309,13 +315,22 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
         wikiUrl: (projectId, pageName, raw) ->
             url = gm.format($rootScope.baseUrls.wiki, [projectId, pageName])
             return conditionalUrl(url, raw)
+
         wikiHistoricalUrl: (projectId, pageName, raw) ->
             url = gm.format($rootScope.baseUrls.wikiHistorical, [projectId, pageName])
             return conditionalUrl(url, raw)
 
+        wikiHelpUrl: (projectId) ->
+            url = gm.format($rootScope.baseUrls.wikiHelp, [projectId])
+            return conditionalUrl(url, false)
+
         searchUrl: (projectId, raw) ->
             url = gm.format($rootScope.baseUrls.search, [projectId])
             return conditionalUrl(url, raw)
+
+        attachmentUrl: (projectId, section, name) ->
+            url = $gmUrls.api('wiki-attachment', projectId, name)
+            return url
 
     $rootScope.momentFormat = (input, format) ->
         return moment(input).format(format)

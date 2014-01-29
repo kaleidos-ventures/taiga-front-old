@@ -190,6 +190,7 @@ TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs, $i
         $scope.formOpened = true
 
         $scope.$broadcast("checksley:reset")
+        $scope.$broadcast("wiki:clean-previews")
 
         $scope.overlay = $gmOverlay()
         $scope.overlay.open().then ->

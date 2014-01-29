@@ -140,12 +140,14 @@
 
                     <fieldset class="task-description" ng-show="_showHiddenGroups">
                         <label for="inputEmail" i18next="task.description-label">Description</label>
-                        <textarea name="description" ng-model="form.description" gm-markitup></textarea>
+                        <textarea name="description" ng-model="form.description" gm-markitup preview-id="description-preview"></textarea>
+                        <div id="description-preview"></div>
                     </fieldset>
 
                     <fieldset class="task-comment">
                         <label for="inputEmail" i18next="task.comment-label">Comment</label>
-                        <textarea name="comment" ng-model="form.comment" gm-markitup></textarea>
+                        <textarea name="comment" ng-model="form.comment" gm-markitup preview-id="comment-preview"></textarea>
+                        <div id="comment-preview"></div>
                     </fieldset>
 
                     <fieldset class="task-attachment">

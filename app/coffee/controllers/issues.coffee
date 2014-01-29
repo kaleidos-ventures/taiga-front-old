@@ -409,6 +409,7 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next,
         $scope.formOpened = true
 
         $scope.$broadcast("checksley:reset")
+        $scope.$broadcast("wiki:clean-previews")
 
         $scope.overlay = $gmOverlay()
         $scope.overlay.open().then ->

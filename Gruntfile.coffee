@@ -24,11 +24,13 @@ module.exports = (grunt) ->
         'app/components/jquery-flot/jquery.flot.time.js',
         'app/js/jquery.flot.orderBars.js',
         'app/js/curvedLines.js',
+        'app/js/emoticons-define.js',
         'app/components/select2/select2.js',
         'app/components/i18next/release/i18next-1.7.1.js',
         'app/js/coffeeColorPicker.js',
         'app/js/coffeeColorPicker.angular.js',
-        'app/components/google-diff-match-patch-js/diff_match_patch_uncompressed.js'
+        'app/components/google-diff-match-patch-js/diff_match_patch_uncompressed.js',
+        'app/js/highlight.pack.js'
     ]
 
     grunt.initConfig({

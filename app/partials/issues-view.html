@@ -167,12 +167,14 @@
 
                     <fieldset class="issue-description" ng-show="_showHiddenGroups">
                         <label for="inputEmail" i18next="issue.description-label">Description</label>
-                        <textarea name="description" ng-model="form.description" gm-markitup></textarea>
+                        <textarea name="description" ng-model="form.description" gm-markitup preview-id="description-preview"></textarea>
+                        <div id="description-preview"></div>
                     </fieldset>
 
                     <fieldset class="issue-comment">
                         <label for="inputEmail" i18next="issue.comment-label">Comment</label>
-                        <textarea name="comment" ng-model="form.comment" gm-markitup></textarea>
+                        <textarea name="comment" ng-model="form.comment" gm-markitup preview-id="comment-preview"></textarea>
+                        <div id="comment-preview"></div>
                     </fieldset>
 
                     <fieldset class="issue-attachment">

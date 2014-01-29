@@ -425,6 +425,7 @@
         "gone-back-error": "Ha habído un error. Es posible que el condensador de flujo esté roto..."
     },
     "wiki": {
+        "help": "Ayuda",
         "on-date": "el __date__",
         "attachments": "Adjuntos",
         "edit-button": "Editar",

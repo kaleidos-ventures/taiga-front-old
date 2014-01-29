@@ -425,6 +425,7 @@
         "gone-back-error": "An error happened. Maybe the flux capacitor is broken..."
     },
     "wiki": {
+        "help": "Help",
         "on-date": "on __date__",
         "attachments": "Attachments",
         "edit-button": "Edit",

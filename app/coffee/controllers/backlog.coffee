@@ -289,6 +289,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash,
         $scope.formOpened = true
         $scope.form = $scope.context.us
         $scope.$broadcast("checksley:reset")
+        $scope.$broadcast("wiki:clean-previews")
 
         $scope.overlay = $gmOverlay()
         $scope.overlay.open().then ->

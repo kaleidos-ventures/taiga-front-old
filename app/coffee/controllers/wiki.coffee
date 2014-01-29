@@ -12,6 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+WikiHelpController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
+    $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug}"
+    $rootScope.pageSection = 'wiki'
+    $rootScope.pageBreadcrumb = [
+        ["", ""]
+        [$i18next.t("common.wiki"), $rootScope.urls.wikiUrl($routeParams.pslug, "home")]
+        [$i18next.t("wiki.help"), null]
+    ]
+
+    projectId = $rootScope.projectId
+
+    rs.resolve($routeParams.pslug).then (data) ->
+        $rootScope.projectSlug = $routeParams.pslug
+        $rootScope.projectId = data.project
+        $rootScope.slug = $routeParams.slug
+
+        $data.loadProject($scope).then ->
+            $data.loadUsersAndRoles($scope)
+
+    return
+
+
+
 WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
     $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug}"
     $rootScope.pageSection = 'wiki'
@@ -220,6 +243,8 @@ WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q, 
 module = angular.module("taiga.controllers.wiki", [])
 module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams',
                                      '$data', 'resource', "$confirm", "$q", "$i18next", WikiController])
+module.controller("WikiHelpController", ['$scope', '$rootScope', '$location', '$routeParams',
+                                     '$data', 'resource', "$confirm", "$q", "$i18next", WikiHelpController])
 module.controller("WikiHistoricalController", ['$scope', '$rootScope', '$location', '$routeParams',
                                                '$data', 'resource', "$confirm", "$q", "$i18next",
                                                WikiHistoricalController])

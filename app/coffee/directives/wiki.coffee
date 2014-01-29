@@ -1,16 +1,27 @@
 
-gmMarkitupConstructor = ($parse, $i18next, $sanitize) ->
+gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location) ->
     require: "?ngModel",
     link: (scope, elm, attrs, ngModel) ->
-        wikiHelpUrl = "https://github.com/fletcher/MultiMarkdown/blob/master/Documentation/Markdown%20Syntax.md"
         openHelp = () ->
-            window.open(wikiHelpUrl,'_blank')
+            window.open($rootScope.urls.wikiHelpUrl(scope.projectSlug), '_blank')
+
+        preview = () ->
+            $("##{attrs.previewId}").show()
+            $("##{attrs.previewId}").html($.emoticons.replaceExcludingPre(marked(elm.val())))
+
+        emoticonsMenu = []
+        for key, value of $.emoticons.list
+            emoticonsMenu.push { name: "", openWith:":#{key.substring(5)}:", className: key},
 
         markdownSettings =
             nameSpace: 'markdown'
             onShiftEnter: {keepDefault:false, openWith:'\n\n'}
-            previewParser: (content) -> $sanitize(markdown.toHTML(content))
             markupSet: [
+                {
+                    name: $i18next.t('wiki-editor.emoticons')
+                    className: "emoticons"
+                    dropMenu: emoticonsMenu
+                },
                 {
                     name: $i18next.t('wiki-editor.heading-1')
                     key: "1"
@@ -27,24 +38,6 @@ gmMarkitupConstructor = ($parse, $i18next, $sanitize) ->
                     name: $i18next.t('wiki-editor.heading-3')
                     key: "3"
                     openWith: '### '
-                    placeHolder: $i18next.t('wiki-editor.placeholder')
-                },
-                {
-                    name: $i18next.t('wiki-editor.heading-4')
-                    key: "4"
-                    openWith: '#### '
-                    placeHolder: $i18next.t('wiki-editor.placeholder')
-                },
-                {
-                    name: $i18next.t('wiki-editor.heading-5')
-                    key: "5"
-                    openWith: '##### '
-                    placeHolder: $i18next.t('wiki-editor.placeholder')
-                },
-                {
-                    name: $i18next.t('wiki-editor.heading-6')
-                    key: "6"
-                    openWith: '###### '
                     placeHolder: $i18next.t('wiki-editor.placeholder')
                 },
                 {
@@ -97,17 +90,17 @@ gmMarkitupConstructor = ($parse, $i18next, $sanitize) ->
                 },
                 {
                     name: $i18next.t('wiki-editor.code-block')
-                    openWith: '(!(\t|!|`)!)'
-                    closeWith: '(!(`)!)'
+                    openWith: '```\n'
+                    closeWith: '\n```'
                 },
                 {
                     separator: '---------------'
                 },
                 {
                     name: $i18next.t('wiki-editor.preview')
-                    call: 'preview'
+                    call: preview
                     className: "preview"
-                }
+                },
                 {
                     separator: '---------------'
                 },
@@ -136,36 +129,61 @@ gmMarkitupConstructor = ($parse, $i18next, $sanitize) ->
         element.on "keypress", (event) ->
             scope.$apply()
 
-
+        scope.$on "wiki:clean-previews", (event) ->
+            $("##{attrs.previewId}").hide()
+            $("##{attrs.previewId}").html("")
 
 GmRenderMarkdownDirective = ($rootScope, $parse, $sanitize) ->
-    parseMarkdownLinks = (scope, tree) ->
-        if tree.length == 0
-            return
-
-        if tree[0] == "link"
-            if tree[1].href == _.string.slugify(tree[1].href)
-                # It's an internal link to a wiki page
-                tree[1].href = scope.urls.wikiUrl(scope.projectSlug, tree[1].href)
-            return null
-
-        for t in tree
-            parseMarkdownLinks(scope, t) if _.isArray(t)
-
     return (scope, elm, attrs) ->
         element = angular.element(elm)
         projectId = scope.projectId
 
+        if not attrs.gmRenderMarkdown
+            result = $.emoticons.replaceExcludingPre(marked(element.text()))
+            element.html(result)
+
         scope.$watch attrs.gmRenderMarkdown, ->
             data = scope.$eval(attrs.gmRenderMarkdown)
             if data != undefined
-                tree = markdown.parse(data.replace("\r", ""), 'Maruku')
-                for item in tree[1..tree.length]
-                    parseMarkdownLinks(scope, item)
+                result = $.emoticons.replaceExcludingPre(marked(data))
+                element.html(result)
 
-                element.html($sanitize(markdown.toHTML(tree)))
+wikiInit = ($routeParams, $rootScope) ->
+    hljs.initHighlightingOnLoad()
+
+    renderer = new marked.Renderer()
+
+    renderer.link = (href, title, text) ->
+        if href == _.string.slugify(href)
+            # It's an internal link to a wiki page
+            marked.Renderer::link($rootScope.urls.wikiUrl($routeParams.pslug, href), title, text)
+        else if href.indexOf(':us:') == 0
+            marked.Renderer::link($rootScope.urls.userStoryUrl($routeParams.pslug, href.substring(4)), title, text)
+        else if href.indexOf(':task:') == 0
+            marked.Renderer::link($rootScope.urls.tasksUrl($routeParams.pslug, href.substring(6)), title, text)
+        else if href.indexOf(':issue:') == 0
+            marked.Renderer::link($rootScope.urls.issuesUrl($routeParams.pslug, href.substring(7)), title, text)
+        else if href.indexOf(':sprint:') == 0
+            marked.Renderer::link($rootScope.urls.taskboardUrl($routeParams.pslug, href.substring(11)), title, text)
+        else
+            marked.Renderer::link(href, title, text)
+
+    renderer.image = (href, title, text) ->
+        if href.indexOf(':att:') == 0
+            marked.Renderer::image($rootScope.urls.attachmentUrl($routeParams.pslug, 'wikipage', href.substring(5)), title, text)
+        else
+            marked.Renderer::image(href, title, text)
+
+    marked.setOptions {
+        highlight: (code, lang) ->
+            if lang
+                return hljs.highlight(lang, code).value
+            return hljs.highlightAuto(code).value
+        sanitize: true
+        renderer: renderer
+    }
 
 
-module = angular.module('taiga.directives.wiki', [])
-module.directive('gmMarkitup', ["$parse", "$i18next", "$sanitize", gmMarkitupConstructor])
+module = angular.module('taiga.directives.wiki', []).run ['$routeParams', '$rootScope', wikiInit ]
+module.directive('gmMarkitup', ["$rootScope", "$parse", "$i18next", "$sanitize", "$location", gmMarkitupConstructor])
 module.directive("gmRenderMarkdown", ["$rootScope", "$parse", "$sanitize", GmRenderMarkdownDirective])
