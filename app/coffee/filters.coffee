@@ -29,7 +29,10 @@ SlugifyFilter = ->
 
 MomentFormatFilter = ->
     return (input, format) ->
-        return moment(input).format(format)
+        if input
+            return moment(input).format(format)
+        else
+            return ""
 
 MomentFromNowFilter = ->
     return (input, without_suffix) ->
