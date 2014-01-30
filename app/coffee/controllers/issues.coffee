@@ -65,10 +65,10 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         for counter in list
             element = constants[counter[0]]
             tag = {
-                "id": element.id,
-                "name": element.name,
-                "count": counter[1],
-                "type": type,
+                id: element.id,
+                name: element.name,
+                count: counter[1],
+                type: type,
                 color: element.color
             }
             tags.push(selectTagIfNotSelected(tag))
@@ -77,13 +77,13 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
     generateTagsFromUsers = (list, type, scopeVar)->
         tags = []
-        for userCounter in $scope.filtersData.owners
+        for userCounter in list
             user = $scope.constants.users[userCounter[0]]
             tag = {
-                "id": user.id,
-                "name": gm.utils.truncate(user.full_name, 17),
-                "count": userCounter[1],
-                "type": type
+                id: user.id,
+                name: gm.utils.truncate(user.full_name, 17),
+                count: userCounter[1],
+                type: type
             }
 
             tags.push(selectTagIfNotSelected(tag))
