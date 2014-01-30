@@ -81,11 +81,10 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             if userCounter[0] is null
                 tag = {
                     id: "null",
-                    name: "Unassigned",
+                    name: $i18next.t("common.unassigned"),
                     count: userCounter[1],
                     type: type
                 }
-
             else
                 user = $scope.constants.users[userCounter[0]]
                 tag = {
