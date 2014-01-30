@@ -78,17 +78,31 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     generateTagsFromUsers = (list, type, scopeVar)->
         tags = []
         for userCounter in list
-            user = $scope.constants.users[userCounter[0]]
-            tag = {
-                id: user.id,
-                name: gm.utils.truncate(user.full_name, 17),
-                count: userCounter[1],
-                type: type
-            }
+            if userCounter[0] is null
+                tag = {
+                    id: "null",
+                    name: "Unassigned",
+                    count: userCounter[1],
+                    type: type
+                }
+
+            else
+                user = $scope.constants.users[userCounter[0]]
+                tag = {
+                    id: user.id,
+                    name: gm.utils.truncate(user.full_name, 17),
+                    count: userCounter[1],
+                    type: type
+                }
 
             tags.push(selectTagIfNotSelected(tag))
 
-        $scope[scopeVar] = tags
+        $scope[scopeVar] = _.sortBy tags, (item) ->
+            if item.id == "null"
+                # NOTE: This is a hack to order users by full name but set
+                #       "Unassigned" as the first element. \o/ \o/ \o/ \o/
+                return "0000000000000000"
+            return item.name
 
     generateTagList = ->
         tags = []
