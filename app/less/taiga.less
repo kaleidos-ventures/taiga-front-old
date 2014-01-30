@@ -2026,8 +2026,13 @@ body.login {
             &.in-progress {
                 .status {
                     &.error { color: @red; }
-                    &.in-progress { color: @gray; }
                     &.done { color: @green; }
+                    &.in-progress {
+                        display: inline-block;
+                        width: 10px;
+                        height: 10px;
+                        color: @gray;
+                    }
                 }
                 .progress-bar {
                     display: inline-block;
