@@ -3,6 +3,7 @@
 .dropdown-menu {
     border: 1px solid #ddd;
     background-color: white;
+    width: 200px;
 }
 
 .dropdown-menu li {

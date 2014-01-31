@@ -116,7 +116,7 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location) ->
 
         element = angular.element(elm)
 
-        textcompleteStrategies = [{
+        emojiStrategy = {
             match: /(^|\s):(\w*)$/,
             search: (term, callback) ->
                 console.log term
@@ -128,8 +128,9 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location) ->
                 return "<img src=\"/img/emoticons/#{value}.png\"></img> #{value}"
             replace: (value) ->
                 return "$1:#{value}: "
-        }]
-        element.textcomplete(textcompleteStrategies)
+            maxCount: 5
+        }
+        element.textcomplete([emojiStrategy])
 
         element.markItUp(markdownSettings)
 
