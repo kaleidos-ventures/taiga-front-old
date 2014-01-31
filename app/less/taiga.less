@@ -2109,21 +2109,35 @@ body.login {
                     float:left;
                 }
 
-                &.meta-requirement {
-                    label {
-                        display: inline-block;
-                        margin-right: 10px;
-                    }
-                    input {
-                        display: inline-block;
-                    }
-                }
                 input {
                     //width: 90%;
                 }
                 textarea {
                     //width: 90%;
                     min-height: 150px;
+                }
+            }
+            .role-points {
+                display: inline-block;
+            }
+            .requirements{
+                display: inline-block;
+                fieldset {
+                    display: inline-block;
+                }
+                .icon {
+                    color: @grayLighter;
+                    font-size: 26px;
+                    vertical-align: middle;
+                    transition: all 0.3s ease-in;
+                }
+                input[type="checkbox"]:checked+label{
+                    .icon {
+                        color: @green;
+                        font-size: 26px;
+                        vertical-align: middle;
+                        transition: all 0.3s ease-in;
+                    }
                 }
             }
         }
@@ -4481,6 +4495,25 @@ fieldset{
 
         select.points {
             width: 100px;
+        }
+        .requirements{
+            fieldset {
+                display: inline-block;
+            }
+            .icon {
+                color: @grayLighter;
+                font-size: 26px;
+                vertical-align: middle;
+                transition: all 0.3s ease-in;
+            }
+            input[type="checkbox"]:checked+label{
+                .icon {
+                    color: @green;
+                    font-size: 26px;
+                    vertical-align: middle;
+                    transition: all 0.3s ease-in;
+                }
+            }
         }
     }
 }

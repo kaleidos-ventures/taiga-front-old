@@ -381,6 +381,24 @@
                                i18next="placeholder:backlog.tags-placeholder"></input>
                     </fieldset>
                 </div>
+                <div class="fieldset-row requirements">
+                    <fieldset>
+                        <input type="checkbox" id="client-requirement" class="hidden"
+                               ng-model="form.client_requirement" name="client_requirement"/>
+                        <label for="client-requirement">
+                            <span data-icon="J" class="icon"></span>
+                            <span i18next="backlog.client-requirement">Client Requirement</span>
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <input type="checkbox"id="team-requirement" class="hidden"
+                               ng-model="form.team_requirement" name="team_requirement">
+                        <label for="team-requirement">
+                            <span data-icon="N" class="icon"></span>
+                            <span i18next="backlog.team-requirement">Team Requirement</span>
+                        </label>
+                    </fieldset>
+                </div>
                 <fieldset class="fieldset-row">
                     <label i18next="backlog.description">Description</label>
                     <textarea class="description" name="description"
@@ -389,14 +407,6 @@
                               ng-model="form.description" gm-markitup preview-id="preview"></textarea>
                     <div id="preview"></div>
                 </fieldset>
-                <div class="fieldset-row">
-                    <input type="checkbox" id="client-requirement"
-                           ng-model="form.client_requirement" name="client_requirement"/>
-                    <label for="client-requirement" i18next="backlog.client-requirement">Client Requirement</label>
-                    <input type="checkbox"id="team-requirement"
-                           ng-model="form.team_requirement" name="team_requirement">
-                    <label for="team-requirement" i18next="backlog.team-requirement">Team Requirement</label>
-                </div>
             </div>
             <div class="modal-footer">
                 <div gm-spinner class="spinner-container"></div>

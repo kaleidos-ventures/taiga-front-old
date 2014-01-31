@@ -121,7 +121,26 @@
                         </fieldset>
                     </div>
 
-                    <div gm-role-points-edition></div>
+                    <div class="role-points" gm-role-points-edition></div>
+
+                    <div class="requirements">
+                        <fieldset>
+                            <input type="checkbox" id="client-requirement" class="hidden"
+                                   ng-model="form.client_requirement" name="client_requirement"/>
+                            <label for="client-requirement">
+                                <span data-icon="J" class="icon"></span>
+                                <span i18next="user-story.client-requirement-label">Client Requirement</span>
+                            </label>
+                        </fieldset>
+                        <fieldset>
+                            <input type="checkbox"id="team-requirement" class="hidden"
+                                   ng-model="form.team_requirement" name="team_requirement">
+                            <label for="team-requirement">
+                                <span data-icon="N" class="icon"></span>
+                                <span i18next="user-story.team-requirement-label">Team Requirement</span>
+                            </label>
+                        </fieldset>
+                    </div>
 
                     <div ng-hide="_showHiddenGroups">
                         <p style="cursor: pointer" ng-click="_showHiddenGroups=true" i18next="user-story.edit-subject-description">
@@ -144,15 +163,6 @@
                         <label for="inputEmail" i18next="user-story.comment-label">Comment</label>
                         <textarea name="comment" ng-model="form.comment" gm-markitup preview-id="comment-preview"></textarea>
                         <div id="comment-preview"></div>
-                    </fieldset>
-
-                    <fieldset class="meta-requirement">
-                        <input type="checkbox" id="client-requirement"
-                               ng-model="form.client_requirement" name="client_requirement"/>
-                        <label for="client-requirement" i18next="user-story.client-requirement-label">Client Requirement</label>
-                        <input type="checkbox"id="team-requirement"
-                               ng-model="form.team_requirement" name="team_requirement">
-                        <label for="team-requirement" i18next="user-story.team-requirement-label">Team Requirement</label>
                     </fieldset>
 
                     <fieldset class="task-attachment">
