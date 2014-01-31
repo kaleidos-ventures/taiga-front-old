@@ -213,8 +213,7 @@
             <li class="history-item" ng-repeat="hitem in historyItems">
                 <div class="title">
                     <span class="updated">
-                        <span ng-show="hitem.action == 'add'" i18next="user-story.created-by-history">Created by</span>
-                        <span ng-show="hitem.action == 'update'" i18next="user-story.updated-by-history">Updated by</span>
+                        <span i18next="user-story.updated-by-history">Updated by</span>
                         <span gm-colorize-user="hitem.by">{{ hitem.by.full_name }}</span></span>
                     <span class="date">{{ hitem.modified_date|momentFromNow }}</span>
                 </div>

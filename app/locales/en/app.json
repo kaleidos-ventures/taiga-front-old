@@ -231,7 +231,6 @@
         "save": "Save",
         "history": "History",
         "see-more": "See more",
-        "created-by-history": "Created by",
         "updated-by-history": "Updated by",
         "comment-history": "Comment:",
         "issue-saved": "The issue has been saved",
@@ -402,7 +401,6 @@
         "save": "Save",
         "history": "History",
         "see-more": "See more",
-        "created-by-history": "Created by",
         "updated-by-history": "Updated by",
         "comment-history": "Comment:",
         "file-upload-data": "__upload__ of __total__"
@@ -413,7 +411,6 @@
         "historical": "Historical",
         "attachments": "Attachments",
         "no-historical-items": "This wiki page has no past yet",
-        "created-by-history": "Created by",
         "updated-by-history": "Updated by",
         "show-content": "Show content",
         "show-current-diff": "Show diff with current version",
@@ -473,7 +470,6 @@
         "save": "Save",
         "history": "History",
         "see-more": "See more",
-        "created-by-history": "Created by",
         "updated-by-history": "Updated by",
         "comment": "Comment:",
         "file-upload-data": "__upload__ of __total__"

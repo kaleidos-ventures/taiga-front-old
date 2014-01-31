@@ -33,10 +33,7 @@
                                     ng-click="toggleShowChanges()"></a>
 
                                 <span class="updated">
-                                    <span i18next="wiki-historical.created-by-history" ng-show="hitem.type == 0">
-                                        Created by
-                                    </span>
-                                    <span i18next="wiki-historical.updated-by-history" ng-hide="hitem.type == 0">
+                                    <span i18next="wiki-historical.updated-by-history">
                                         Updated by
                                     </span>
                                     <span gm-colorize-user="constants.users[hitem.user]">

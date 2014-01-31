@@ -92,15 +92,6 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
             return null
 
         makeHistoryItem = (item, type) ->
-            if item.type is 0
-                action = "add"
-            else if item.type is 1
-                action = "update"
-            else if item.type is 2
-                action = "delete"
-            else
-                action = ""
-
             changes = Lazy(fields[type])
                         .map((name) -> {name: name, field: item.changed_fields[name]})
                         .reject((x) -> _.isEmpty(x["field"]))
@@ -119,7 +110,6 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                 changed_by = {full_name: "The Observer"}
 
             historyItem = {
-                action: action
                 changes: changesArray
                 by: changed_by
                 modified_date: item.created_date

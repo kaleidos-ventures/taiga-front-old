@@ -231,7 +231,6 @@
         "save": "Guardar",
         "history": "Historial",
         "see-more": "Ver más",
-        "created-by-history": "Creado por",
         "updated-by-history": "Actualizada por",
         "comment-history": "Comentario:",
         "issue-saved": "La petición ha sido guardada",
@@ -402,7 +401,6 @@
         "save": "Guardar",
         "history": "Historial",
         "see-more": "Ver más",
-        "created-by-history": "Creada por",
         "updated-by-history": "Actualizada por",
         "comment-history": "Comentario:",
         "file-upload-data": "__upload__ de __total__"
@@ -413,7 +411,6 @@
         "historical": "Historial",
         "attachments": "Adjuntos",
         "no-historical-items": "Esta página del wiki todavía no ha forjado un pasado",
-        "created-by-history": "Creado por",
         "updated-by-history": "Actualizado por",
         "show-content": "Ver contenido",
         "show-current-diff": "Ver diff con la versión actual",
@@ -473,7 +470,6 @@
         "save": "Guardar",
         "history": "Historial",
         "see-more": "Ver más",
-        "created-by-history": "Creada por",
         "updated-by-history": "Actualizada por",
         "comment": "Comentario:",
         "file-upload-data": "__upload__ de __total__"
