@@ -2083,6 +2083,27 @@ body.login {
                     width: 33%;
                     float: left;
                 }
+
+                &.task-iocaine {
+                    width: 33%;
+                    float: left;
+                    padding-top: 25px;
+                    .icon {
+                        color: @grayLighter;
+                        font-size: 26px;
+                        vertical-align: middle;
+                        transition: all 0.3s ease-in;
+                    }
+                    input[type="checkbox"]:checked+label{
+                        .icon {
+                            color: @green;
+                            font-size: 26px;
+                            vertical-align: middle;
+                            transition: all 0.3s ease-in;
+                        }
+                    }
+                }
+
                 &.us-role-points {
                     width: 100px;
                     float:left;
@@ -4507,6 +4528,22 @@ fieldset{
         .description {
             width: 96%;
             height: 100px;
+        }
+        .iocaine {
+            .icon {
+                color: @grayLighter;
+                font-size: 26px;
+                vertical-align: middle;
+                transition: all 0.3s ease-in;
+            }
+            input[type="checkbox"]:checked+label{
+                .icon {
+                    color: @green;
+                    font-size: 26px;
+                    vertical-align: middle;
+                    transition: all 0.3s ease-in;
+                }
+            }
         }
     }
 

@@ -121,9 +121,13 @@
                             <input type="text" name="tags" ng-model="form.tags"
                                    gm-select2-tags="projectTags"></input>
                         </fieldset>
-                        <fieldset class="task-tags">
-                            <label i18next="task.is-iocaine">Is iocaine</label>
-                            <input type="checkbox" name="is_iocaine" ng-model="form.is_iocaine"></input>
+                        <fieldset class="task-iocaine">
+                            <input type="checkbox" name="is_iocaine" id="iocaine" class="hidden"
+                                   ng-model="form.is_iocaine"></input>
+                            <label for="iocaine">
+                                <span data-icon="r" class="icon"></span>
+                                <span i18next="task.is-iocaine">Is iocaine</span>
+                            </label>
                         </fieldset>
                     </div>
 

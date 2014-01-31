@@ -201,10 +201,14 @@
                         </select>
                     </fieldset>
                 </div>
-                <div class="fieldset-row">
+                <div class="fieldset-row iocaine">
                     <fieldset>
-                        <label i18next="taskboard.is-iocaine">Is iocaine</label>
-                        <input type="checkbox" class="iocaine" name="iocaine" value="" ng-model="form.is_iocaine"></input>
+                        <input type="checkbox" class="iocaine hidden" id="iocaine" name="iocaine"i
+                               ng-model="form.is_iocaine"></input>
+                        <label for="iocaine" >
+                            <span class="icon" data-icon="r"></span>
+                            <span i18next="taskboard.is-iocaine">Is iocaine</span>
+                        </label>
                     </fieldset>
                 </div>
                 <div class="fieldset-row">
