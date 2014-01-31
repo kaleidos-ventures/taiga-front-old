@@ -9,19 +9,10 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location) ->
             $("##{attrs.previewId}").show()
             $("##{attrs.previewId}").html($.emoticons.replaceExcludingPre(marked(elm.val())))
 
-        emoticonsMenu = []
-        for key, value of $.emoticons.list
-            emoticonsMenu.push { name: "", openWith:":#{key.substring(5)}:", className: key},
-
         markdownSettings =
             nameSpace: 'markdown'
             onShiftEnter: {keepDefault:false, openWith:'\n\n'}
             markupSet: [
-                {
-                    name: $i18next.t('wiki-editor.emoticons')
-                    className: "emoticons"
-                    dropMenu: emoticonsMenu
-                },
                 {
                     name: $i18next.t('wiki-editor.heading-1')
                     key: "1"
@@ -124,6 +115,22 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location) ->
             return '\n'+heading+'\n'
 
         element = angular.element(elm)
+
+        textcompleteStrategies = [{
+            match: /(^|\s):(\w*)$/,
+            search: (term, callback) ->
+                console.log term
+                regexp = new RegExp('^' + term)
+                callback(
+                    (key.substring(5) for key in _.keys($.emoticons.list) when regexp.test(key.substring(5)))
+                )
+            template: (value) ->
+                return "<img src=\"/img/emoticons/#{value}.png\"></img> #{value}"
+            replace: (value) ->
+                return "$1:#{value}: "
+        }]
+        element.textcomplete(textcompleteStrategies)
+
         element.markItUp(markdownSettings)
 
         element.on "keypress", (event) ->

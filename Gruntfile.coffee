@@ -30,7 +30,8 @@ module.exports = (grunt) ->
         'app/js/coffeeColorPicker.js',
         'app/js/coffeeColorPicker.angular.js',
         'app/components/google-diff-match-patch-js/diff_match_patch_uncompressed.js',
-        'app/js/highlight.pack.js'
+        'app/js/highlight.pack.js',
+        'app/js/jquery.textcomplete.js'
     ]
 
     grunt.initConfig({
