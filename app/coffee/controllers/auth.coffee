@@ -26,7 +26,7 @@ LoginController = ($scope, $rootScope, $location, $routeParams, rs, $gmAuth, $i1
         onSuccess = (user) ->
             $gmAuth.setUser(user)
             $rootScope.auth = user
-            if $routeParams['next']
+            if $routeParams['next'] and $routeParams['next'] != '/login'
                 $location.url($routeParams['next'])
             else
                 $location.url("/")
