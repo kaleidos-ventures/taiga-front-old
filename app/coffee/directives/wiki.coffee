@@ -119,7 +119,6 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location) ->
         emojiStrategy = {
             match: /(^|\s):(\w*)$/,
             search: (term, callback) ->
-                console.log term
                 regexp = new RegExp('^' + term)
                 callback(
                     (key.substring(5) for key in _.keys($.emoticons.list) when regexp.test(key.substring(5)))
@@ -130,7 +129,29 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location) ->
                 return "$1:#{value}: "
             maxCount: 5
         }
-        element.textcomplete([emojiStrategy])
+        usersStrategy = {
+            match: /(^|\s)@([\w-]*)$/,
+            search: (term, callback) ->
+                regexp = new RegExp('^' + term)
+                filterUser = (regexp, user) ->
+                    return _.any [
+                        regexp.test(user.full_name)
+                        regexp.test(user.first_name)
+                        regexp.test(user.last_name)
+                        regexp.test(user.username)
+                        regexp.test(user.email)
+                    ]
+                getUsersList = () ->
+                    users = $rootScope.constants.usersList
+                    return ({username: user.username, name: user.full_name} for user in users when filterUser(regexp, user))
+                callback(getUsersList())
+            template: (value) ->
+                return "#{value.name}"
+            replace: (value) ->
+                return "$1@#{value.username} "
+            maxCount: 5
+        }
+        element.textcomplete([emojiStrategy, usersStrategy])
 
         element.markItUp(markdownSettings)
 
@@ -193,5 +214,5 @@ wikiInit = ($routeParams, $rootScope) ->
 
 
 module = angular.module('taiga.directives.wiki', []).run ['$routeParams', '$rootScope', wikiInit ]
-module.directive('gmMarkitup', ["$rootScope", "$parse", "$i18next", "$sanitize", "$location", gmMarkitupConstructor])
+module.directive('gmMarkitup', ["$rootScope", "$parse", "$i18next", "$sanitize", "$location", "resource", gmMarkitupConstructor])
 module.directive("gmRenderMarkdown", ["$rootScope", "$parse", "$sanitize", GmRenderMarkdownDirective])
