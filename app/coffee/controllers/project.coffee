@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ProjectListController = ($scope, $rootScope, rs, $i18next) ->
+
+ProjectListController = ($scope, $rootScope, rs, $i18next, $favico) ->
+    $favico.reset()
     $rootScope.projectSlug = undefined
     $rootScope.pageTitle = $i18next.t('common.dashboard')
     $rootScope.pageSection = 'projects'
@@ -27,7 +29,8 @@ ProjectListController = ($scope, $rootScope, rs, $i18next) ->
 
 
 ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model,
-                          rs, $confirm, $location, $i18next, $q) ->
+                          rs, $confirm, $location, $i18next, $q, $favico) ->
+    $favico.reset()
     $rootScope.pageTitle = $i18next.t('common.admin-panel')
     $rootScope.pageSection = 'admin'
     $rootScope.pageBreadcrumb = [
@@ -812,11 +815,11 @@ SeverityController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
 
 
 module = angular.module("taiga.controllers.project", [])
-module.controller("ProjectListController", ['$scope', '$rootScope', 'resource', '$i18next',
+module.controller("ProjectListController", ['$scope', '$rootScope', 'resource', '$i18next', '$favico',
                                             ProjectListController])
 module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routeParams", "$data",
                                              "$gmFlash", "$model", "resource", "$confirm", "$location",
-                                             '$i18next', '$q', ProjectAdminController])
+                                             '$i18next', '$q', '$favico', ProjectAdminController])
 module.controller("MembershipsController", ["$scope", "$rootScope", "$model", "$confirm", "$i18next",
                                             MembershipsController])
 module.controller("ShowProjectsController", ["$scope", "$rootScope", "$model", 'resource',

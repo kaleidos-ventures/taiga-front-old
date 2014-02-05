@@ -13,7 +13,8 @@
 # limitations under the License.
 
 
-TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm, rs, $data, $gmFlash, $i18next) ->
+TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm, rs, $data, $gmFlash, $i18next, $favico) ->
+    $favico.reset()
     $rootScope.pageTitle = $i18next.t("common.tasks")
     $rootScope.pageSection = 'tasks'
     $rootScope.pageBreadcrumb = [
@@ -128,4 +129,6 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
 
 
 module = angular.module("taiga.controllers.tasks", [])
-module.controller("TasksViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', '$confirm', 'resource', "$data", "$gmFlash", "$i18next", TasksViewController])
+module.controller("TasksViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', '$confirm',
+                                          'resource', "$data", "$gmFlash", "$i18next", "$favico",
+                                          TasksViewController])

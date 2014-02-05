@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $modal, $i18next, $location, SelectedTags) ->
+IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $modal, $i18next, $location, $favico, SelectedTags) ->
+    $favico.reset()
     # Global Scope Variables
     $rootScope.pageTitle = $i18next.t('common.issues')
     $rootScope.pageSection = 'issues'
@@ -182,6 +183,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     loadStats = ->
         rs.getIssuesStats($scope.projectId).then (data) ->
             $scope.issuesStats = data
+            $favico.badge($scope.issuesStats.total_issues - $scope.issuesStats.closed_issues)
 
     # Load initial data
     rs.resolve(pslug: $routeParams.pslug).then (data) ->
@@ -262,7 +264,8 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
 
 IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data,
-                        $confirm, $gmFlash, $i18next, SelectedTags) ->
+                        $confirm, $gmFlash, $i18next, $favico, SelectedTags) ->
+    $favico.reset()
     $rootScope.pageTitle = $i18next.t('common.issues')
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = [
@@ -502,9 +505,9 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next,
 module = angular.module("taiga.controllers.issues", [])
 module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
                   '$q', 'resource', "$data", "$confirm", "$modal", '$i18next',
-                  '$location', 'SelectedTags', IssuesController])
+                  '$location', '$favico', 'SelectedTags',  IssuesController])
 module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
                   '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", '$i18next',
-                  'SelectedTags', IssuesViewController])
+                  '$favico', 'SelectedTags', IssuesViewController])
 module.controller("IssuesModalController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
                   "$gmFlash", "$i18next", "$confirm", "$q", IssuesModalController])

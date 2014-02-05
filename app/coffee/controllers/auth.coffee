@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-LoginController = ($scope, $rootScope, $location, $routeParams, rs, $gmAuth, $i18next) ->
+LoginController = ($scope, $rootScope, $location, $routeParams, rs, $gmAuth, $i18next, $favico) ->
+    $favico.reset()
     $rootScope.pageTitle = $i18next.t('login.login-title')
     $rootScope.pageSection = 'login'
 
@@ -102,7 +103,8 @@ ChangePasswordController = ($scope, $rootScope, $location, $routeParams, rs, $i1
     return
 
 
-ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next) ->
+ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next, $favico) ->
+    $favico.reset()
     $rootScope.pageTitle = $i18next.t('profile.profile')
     $rootScope.projectId = null
     $rootScope.pageSection = 'profile'
@@ -188,9 +190,16 @@ InvitationRegisterController = ($scope, $params, $rootScope, $location, rs, $dat
     return
 
 module = angular.module("taiga.controllers.auth", [])
-module.controller("LoginController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$gmAuth', '$i18next', LoginController])
-module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', '$i18next', RecoveryController])
-module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$i18next', ChangePasswordController])
-module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', 'config', '$i18next', ProfileController])
-module.controller("PublicRegisterController", ["$scope", "$rootScope", "$location", "resource", "$data", "$gmAuth", "$i18next", PublicRegisterController])
-module.controller("InvitationRegisterController", ["$scope", "$routeParams", "$rootScope", "$location", "resource", "$data", "$gmAuth", "$i18next", InvitationRegisterController])
+module.controller("LoginController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource',
+                                      '$gmAuth', '$i18next', '$favico',  LoginController])
+module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', '$i18next',
+                                         RecoveryController])
+module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource',
+                                               '$i18next', ChangePasswordController])
+module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', 'config',
+                                        '$i18next', "$favico", ProfileController])
+module.controller("PublicRegisterController", ["$scope", "$rootScope", "$location", "resource", "$data",
+                                               "$gmAuth", "$i18next", PublicRegisterController])
+module.controller("InvitationRegisterController", ["$scope", "$routeParams", "$rootScope", "$location",
+                                                   "resource", "$data", "$gmAuth", "$i18next",
+                                                   InvitationRegisterController])

@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-WikiHelpController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
+WikiHelpController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next, $favico) ->
+    $favico.reset()
     $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug}"
     $rootScope.pageSection = 'wiki'
     $rootScope.pageBreadcrumb = [
@@ -35,7 +36,8 @@ WikiHelpController = ($scope, $rootScope, $location, $routeParams, $data, rs, $c
 
 
 
-WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
+WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next, $favico) ->
+    $favico.reset()
     $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug}"
     $rootScope.pageSection = 'wiki'
     $rootScope.pageBreadcrumb = [
@@ -145,7 +147,8 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
     return
 
 
-WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next) ->
+WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next, $favico) ->
+    $favico.reset()
     $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug} - #{$i18next.t("wiki-historical.historical")}"
     $rootScope.pageSection = 'wiki'
     $rootScope.pageBreadcrumb = [
@@ -242,11 +245,13 @@ WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q, 
 
 module = angular.module("taiga.controllers.wiki", [])
 module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams',
-                                     '$data', 'resource', "$confirm", "$q", "$i18next", WikiController])
+                                     '$data', 'resource', "$confirm", "$q", "$i18next", "$favico",
+                                     WikiController])
 module.controller("WikiHelpController", ['$scope', '$rootScope', '$location', '$routeParams',
-                                     '$data', 'resource', "$confirm", "$q", "$i18next", WikiHelpController])
+                                     '$data', 'resource', "$confirm", "$q", "$i18next", "$favico",
+                                     WikiHelpController])
 module.controller("WikiHistoricalController", ['$scope', '$rootScope', '$location', '$routeParams',
-                                               '$data', 'resource', "$confirm", "$q", "$i18next",
+                                               '$data', 'resource', "$confirm", "$q", "$i18next", "$favico",
                                                WikiHistoricalController])
 module.controller("WikiHistoricalItemController", ['$scope', '$rootScope', 'resource', '$confirm',
                                                    '$gmFlash',  '$q', "$i18next", WikiHistoricalItemController])

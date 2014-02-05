@@ -210,10 +210,11 @@ modules = [
     "gmConfirm",
     "gmOverlay",
     "i18next",
+    "favico",
 ]
 
 
-init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $data, $log) ->
+init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $data, $log, $favico) ->
     if not config.debug
         $log.debug = ->
 
@@ -435,10 +436,11 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
     $rootScope.$on "$routeChangeSuccess", ->
         $('html, body').scrollTop(0)
 
+    $favico.newFavico()
 
 angular.module('taiga', modules)
        .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', '$gmUrlsProvider', configCallback])
-       .run(['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls', '$i18next', 'config', '$data', '$log', init])
+       .run(['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls', '$i18next', 'config', '$data', '$log', '$favico', init])
 
 angular.module('taiga.config', []).value('config', {
     host: "localhost:8000"

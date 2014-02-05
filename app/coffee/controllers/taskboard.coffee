@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $model, $i18next) ->
+TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $model, $i18next, $favico) ->
+    $favico.reset()
     # Global Scope Variables
     $rootScope.pageTitle = $i18next.t('common.taskboard')
     $rootScope.pageSection = 'dashboard'
@@ -324,7 +325,12 @@ TaskboardTaskController = ($scope, $rootScope, $q, $location) ->
 
 
 module = angular.module("taiga.controllers.taskboard", [])
-module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', "$location", TaskboardTaskController])
-module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', '$modal', "$model", "$i18next", TaskboardController])
-module.controller("TaskboardTaskModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', "$i18next", TaskboardTaskModalController])
-module.controller('TaskboardBulkTasksModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', TaskboardBulkTasksModalController])
+module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', "$location", "$favico",
+                                              TaskboardTaskController])
+module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data',
+                                          '$modal', "$model", "$i18next", TaskboardController])
+module.controller("TaskboardTaskModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource',
+                                                   "$i18next", TaskboardTaskModalController])
+module.controller('TaskboardBulkTasksModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource',
+                                                        '$gmFlash', '$i18next',
+                                                        TaskboardBulkTasksModalController])

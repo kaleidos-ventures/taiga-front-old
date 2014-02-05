@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-KanbanController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $model, $i18next) ->
+KanbanController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $model, $i18next, $favico) ->
+    $favico.reset()
     # Global Scope Variables
     $rootScope.pageTitle = $i18next.t('common.kanban')
     $rootScope.pageSection = 'kanban'
@@ -201,6 +202,8 @@ KanbanUsController = ($scope, $rootScope, $q, $location) ->
 
 
 module = angular.module("taiga.controllers.kanban", [])
+module.controller("KanbanController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data',
+                                       '$modal', "$model", "$i18next", "$favico",  KanbanController])
 module.controller("KanbanUsController", ['$scope', '$rootScope', '$q', "$location", KanbanUsController])
-module.controller("KanbanController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', '$modal', "$model", "$i18next", KanbanController])
-module.controller("KanbanUsModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', "$i18next", KanbanUsModalController])
+module.controller("KanbanUsModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource',
+                                              "$i18next", KanbanUsModalController])

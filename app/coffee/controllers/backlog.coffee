@@ -13,7 +13,8 @@
 # limitations under the License.
 
 
-BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next, SelectedTags) ->
+BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next, $favico, SelectedTags) ->
+    $favico.reset()
     # Global Scope Variables
     $rootScope.pageTitle = $i18next.t("common.backlog")
     $rootScope.pageSection = 'backlog'
@@ -540,9 +541,16 @@ BacklogMilestoneController = ($scope, $q, rs, $gmFlash, $i18next) ->
 
 
 module = angular.module("taiga.controllers.backlog", [])
-module.controller('BacklogMilestoneController', ['$scope', '$q', 'resource', '$gmFlash', '$i18next', BacklogMilestoneController])
-module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', '$i18next', '$location', BacklogMilestonesController])
-module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', '$location', 'SelectedTags', BacklogUserStoriesController])
-module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', '$i18next', 'SelectedTags', BacklogController])
-module.controller('BacklogUserStoryModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogUserStoryModalController])
-module.controller('BacklogBulkUserStoriesModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogBulkUserStoriesModalController])
+module.controller('BacklogMilestoneController', ['$scope', '$q', 'resource', '$gmFlash', '$i18next',
+                                                 BacklogMilestoneController])
+module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', '$i18next',
+                                                  '$location', BacklogMilestonesController])
+module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal',
+                                                   '$location', 'SelectedTags', BacklogUserStoriesController])
+module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', '$i18next',
+                                        '$favico', 'SelectedTags', BacklogController])
+module.controller('BacklogUserStoryModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource',
+                                                      '$gmFlash', '$i18next', BacklogUserStoryModalController])
+module.controller('BacklogBulkUserStoriesModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource',
+                                                            '$gmFlash', '$i18next',
+                                                            BacklogBulkUserStoriesModalController])

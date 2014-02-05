@@ -13,7 +13,8 @@
 # limitations under the License.
 
 SiteAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model,
-                          rs, $confirm, $location, $i18next, config, $gmUrls) ->
+                       rs, $confirm, $location, $i18next, config, $gmUrls, $favico) ->
+    $favico.reset()
     $rootScope.pageTitle = $i18next.t('common.admin-panel')
     $rootScope.pageSection = 'admin'
     $rootScope.pageBreadcrumb = [
@@ -111,4 +112,4 @@ module.controller("SiteAdminController", ["$scope", "$rootScope",
                                           "$routeParams", "$data", "$gmFlash",
                                           "$model", "resource", "$confirm",
                                           "$location", "$i18next", "config",
-                                          "$gmUrls", SiteAdminController])
+                                          "$gmUrls", "$favico", SiteAdminController])
