@@ -301,7 +301,7 @@
                         <select name="assigned_to"
                                 ng-model="form.assigned_to" data-type="number"
                                 data-error-message="Required"
-                                ng-options="c.user as c.full_name for c in project.memberships">
+                                ng-options="c.user as c.full_name for c in project.active_memberships">
                             <option value="" i18next="issues.form-unassigned">Unassigned</option>
                         </select>
                     </fieldset>
@@ -400,7 +400,7 @@
         <p class="title" i18next="issues.select-user-popover">Select a user:</p>
         <ul>
             <li><a class="btn-accept" href="" i18next="issues.unassigned-popover">Unassigned</a>
-            <li ng-repeat="obj in project.memberships">
+            <li ng-repeat="obj in project.active_memberships">
                 <a class="btn-accept" href="" data-id="{{ obj.user }}"
                    gm-colorize-user="constants.users[obj.user]">{{ obj.full_name }}</a>
             </li>

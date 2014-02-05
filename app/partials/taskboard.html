@@ -196,7 +196,7 @@
                     <fieldset>
                         <label i18next="taskboard.assigned-to">Assigned to</label>
                         <select class="status" name="assigned_to" ng-model="form.assigned_to"
-                                ng-options="c.user as c.full_name for c in project.memberships">
+                                ng-options="c.user as c.full_name for c in project.active_memberships">
                             <option value="" i18next="task.unassigned">Unassigned</option>
                         </select>
                     </fieldset>
@@ -239,7 +239,7 @@
         <h3 i18next="taskboard.select-user">Select a user:</h3>
         <ul>
             <li class="btn-accept"><a data-id="" href="" i18next="taskboard.unassigned">Unassigned</a>
-            <li ng-repeat="obj in project.memberships" class="btn-accept" data-id="{{ obj.user }}">
+            <li ng-repeat="obj in project.active_memberships" class="btn-accept" data-id="{{ obj.user }}">
                 <a href="" gm-colorize-user="constants.users[obj.user]">{{ obj.full_name }}</a>
             </li>
         </ul>
