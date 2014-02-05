@@ -314,7 +314,8 @@
         "severities": "Severidades",
         "add-severity": "Añadir nueva severidad",
         "severity-name": "Nombre",
-        "severity-color": "Color"
+        "severity-color": "Color",
+        "invitation-link": "Enlace de la invitación"
     },
     "projects": {
         "saved-success": "Proyecto guardado correctamente",

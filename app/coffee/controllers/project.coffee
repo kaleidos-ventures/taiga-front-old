@@ -43,6 +43,12 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
     $scope.setActive = (type) ->
         $scope.activeTab = type
 
+    $scope.getAbsoluteUrl = (url) ->
+        if $location.port()
+            return "#{$location.protocol()}://#{$location.host()}:#{$location.port()}#{url}"
+        else
+            return "#{$location.protocol()}://#{$location.host()}#{url}"
+
     # This attach "project" to $scope
     rs.resolve($routeParams.pslug).then (data) ->
         $rootScope.projectSlug = $routeParams.pslug

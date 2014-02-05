@@ -784,6 +784,12 @@
                             <td class="status"><span class="status">{{ memberStatus(mbr) }}</span></td>
                             <td class="options">
                                 <a href="" data-icon="h"  title="Delete Member" ng-click="deleteMember(mbr)" i18next="title:admin.delete-member"></a>
+                                <a ng-hide="mbr.user" data-icon="l"
+                                    gm-popover
+                                    data-auto-hide="true"
+                                    data-tmpl="#invitation-link-popover"
+                                    data-placement="left"
+                                    i18next="title:admin.invitation-link"></a>
                             </td>
                         </tr>
                     </tbody>
@@ -802,6 +808,12 @@
                 <a href="" data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
             </li>
         </ul>
+    </div>
+</script>
+
+<script type="text/template" id="invitation-link-popover">
+    <div class="invitation-link-popover">
+        <p class="link">{{ getAbsoluteUrl(urls.invitationUrl(mbr.token, false)) }}</p>
     </div>
 </script>
 

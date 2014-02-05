@@ -264,6 +264,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
         wikiHelp: "/project/%s/wiki-help"
         wikiHistorical: "/project/%s/wiki/%s/historical"
         search: "/project/%s/search"
+        invitation: "/invitation/%s"
         admin: "/project/%s/admin"
         attachment: "/media/attachment-files/%s/%s/%s"
 
@@ -326,6 +327,10 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
 
         searchUrl: (projectId, raw) ->
             url = gm.format($rootScope.baseUrls.search, [projectId])
+            return conditionalUrl(url, raw)
+
+        invitationUrl: (token, raw) ->
+            url = gm.format($rootScope.baseUrls.invitation, [token])
             return conditionalUrl(url, raw)
 
         attachmentUrl: (projectId, section, name) ->
