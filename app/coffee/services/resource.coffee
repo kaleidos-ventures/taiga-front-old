@@ -400,14 +400,14 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope, 
         parameters = _.extend({}, filters)
         return queryManyPaginated("tasks-historical", parameters, null , null, urlParams)
 
-    service.search = (projectId, term) ->
+    service.search = (projectId, term, getAll) ->
         defered = $q.defer()
 
         params =
             "method": "GET"
             "headers": headers()
             "url": $gmUrls.api("search")
-            "params": {"project": projectId, "text": term}
+            "params": {"project": projectId, "text": term, "get_all": getAll or false}
 
         promise = $http(params)
         promise.success (data, status) ->

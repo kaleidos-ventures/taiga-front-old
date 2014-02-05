@@ -1,5 +1,5 @@
 
-gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location) ->
+gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location, rs) ->
     require: "?ngModel",
     link: (scope, elm, attrs, ngModel) ->
         openHelp = () ->
@@ -151,7 +151,55 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location) ->
                 return "$1@#{value.username} "
             maxCount: 5
         }
-        element.textcomplete([emojiStrategy, usersStrategy])
+        objectsStrategy = {
+            match: /(^|\s)\$\$\$(.*)$/,
+            search: (term, callback) ->
+                promise = rs.search($rootScope.projectId, term, true)
+                promise.then (data) ->
+                    objects = []
+                    for us in data.userstories
+                        objects.push {
+                            type: 'us'
+                            ref: us.ref
+                            name: us.subject
+                        }
+
+                    for task in data.tasks
+                        objects.push {
+                            type: 'task'
+                            ref: task.ref
+                            name: task.subject
+                        }
+
+                    for issue in data.issues
+                        objects.push {
+                            type: 'issue'
+                            ref: issue.ref
+                            name: issue.subject
+                        }
+
+                    for wikipage in data.wikipages
+                        objects.push {
+                            type: 'wikipage'
+                            ref: wikipage.slug
+                            name: wikipage.slug
+                        }
+                    callback(objects, false)
+                promise.then null, ->
+                    callback([], false)
+            template: (value) ->
+                return "[#{value.type.toUpperCase()}] #{value.name}"
+
+            replace: (value) ->
+                switch value.type
+                    when 'us' then return "$1[US##{value.ref}](:us:#{value.ref} \"#{value.name}\")"
+                    when 'issue' then return "$1[Issue##{value.ref}](:issue:#{value.ref} \"#{value.name}\")"
+                    when 'task' then return "$1[Task##{value.ref}](:task:#{value.ref} \"#{value.name}\")"
+                    when 'wikipage' then return "$1[#{value.name}](#{value.ref} \"#{value.name}\")"
+                    else ""
+            maxCount: 10
+        }
+        element.textcomplete([emojiStrategy, usersStrategy, objectsStrategy])
 
         element.markItUp(markdownSettings)
 

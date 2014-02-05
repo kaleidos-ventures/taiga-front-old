@@ -54,7 +54,7 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs, $i18next) ->
             when "userstories" then item.description
             when "tasks" then item.description
             when "issues" then item.description
-            when "wikipages" then _.str.stripTags(markdown.toHTML(item.content))
+            when "wikipages" then item.content
 
     $scope.isTypeActive = (type) ->
         return type == $scope.activeType
@@ -68,7 +68,7 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs, $i18next) ->
         $rootScope.projectId = data.project
         $data.loadProject($scope)
 
-        rs.search($rootScope.projectId, $routeParams.term).then (results) ->
+        rs.search($rootScope.projectId, $routeParams.term, false).then (results) ->
             $scope.results = results
             $scope.resultTypes = _.reject(_.keys($scope.results), (x) -> x == "count")
 
