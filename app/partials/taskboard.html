@@ -99,6 +99,8 @@
                                         <div class="status">
                                             <div class="icon" data-icon="I" ng-show="us.is_closed"></div>
                                             <div class="icon" data-icon="q" ng-show="!us.is_closed"></div>
+                                            <div class="icon" data-icon="J" ng-show="us.client_requirement"></div>
+                                            <div class="icon" data-icon="N" ng-show="us.team_requirement"></div>
                                             <div class="label"
                                                     gm-popover="saveUsStatus(us, selectedId)"
                                                     data-tmpl="#usstatuses-popover"

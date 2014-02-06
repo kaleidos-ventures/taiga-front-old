@@ -142,6 +142,8 @@
                                 <a  href="{{ urls.userStoryUrl(projectSlug, us.ref) }}">
                                     #{{ us.ref }} {{ us.subject }}
                                 </a>
+                                <span data-icon="J" class="icon" ng-show="us.client_requirement"></span>
+                                <span data-icon="N" class="icon" ng-show="us.team_requirement"></span>
                             </div>
                             <div class="tags" ng-hide="!showTags">
                                 <span ng-repeat="tag in us.tags track by $index" class="label" gm-colorize-tag>{{ tag }}</span>
@@ -290,7 +292,11 @@
                                         <div data-icon="I" ng-show="us.is_closed"></div>
                                         <div data-icon="q" ng-show="!us.is_closed"></div>
                                     </div>
-                                    <div class="us-title">#{{ us.ref }} {{ us.subject }}</div>
+                                    <div class="us-title">
+                                        #{{ us.ref }} {{ us.subject }}
+                                        <span data-icon="J" class="icon" ng-show="us.client_requirement"></span>
+                                        <span data-icon="N" class="icon" ng-show="us.team_requirement"></span>
+                                    </div>
                                     <div class="us-points">{{ us.total_points }}</div>
                                     <div class="veil" ng-show="us._moving">
                                         <span ng-class="{spinner: us._moving}" data-icon="x"></span>
