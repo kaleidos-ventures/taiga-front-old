@@ -44,7 +44,9 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
         $scope.activeTab = type
 
     $scope.getAbsoluteUrl = (url) ->
-        if $location.port()
+        if $location.protocol() == "http" and $location.port() != 80
+            return "#{$location.protocol()}://#{$location.host()}:#{$location.port()}#{url}"
+        else if $location.protocol() == "https" and $location.port() != 443
             return "#{$location.protocol()}://#{$location.host()}:#{$location.port()}#{url}"
         else
             return "#{$location.protocol()}://#{$location.host()}#{url}"
