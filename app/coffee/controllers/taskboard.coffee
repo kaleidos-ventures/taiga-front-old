@@ -220,6 +220,8 @@ TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs, $i
             $scope.$emit("spinner:stop")
             closeModal()
             $scope.overlay.close()
+            $scope.form.id = data.id
+            $scope.form.ref = data.ref
             $scope.defered.resolve($scope.form)
             $gmFlash.info($i18next.t('taskboard.user-story-saved'))
 
