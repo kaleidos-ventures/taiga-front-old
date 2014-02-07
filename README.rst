@@ -14,10 +14,10 @@ Install requirements:
 
 .. code-block:: console
 
-    sudo npm install -g grunt-cli
+    sudo npm install -g gulp
     npm install
     sudo npm install -g bower
     bower install
-    grunt
+    gulp
 
 And go in your browser to: http://localhost:9001/
