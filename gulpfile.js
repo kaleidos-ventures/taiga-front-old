@@ -53,11 +53,14 @@ gulp.task('default', ['dev', 'watch', 'connect']);
 
 gulp.task('dev', ['coffee', 'less', 'libs']);
 
-gulp.task('pro', ['coffee', 'less', 'libs'], function() {
-    gulp.src('app/dist/app.js')
+gulp.task('pro', ['less'], function() {
+    gulp.src(coffeeSources)
+        .pipe(coffee())
+        .pipe(concat('app.js'))
         .pipe(uglify())
         .pipe(gulp.dest('app/dist/'));
-    gulp.src('app/dist/libs.js')
+    gulp.src(externalSources)
+        .pipe(concat('libs.js'))
         .pipe(uglify())
         .pipe(gulp.dest('app/dist/'));
 });
