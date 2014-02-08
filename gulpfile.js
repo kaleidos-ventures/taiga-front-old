@@ -13,7 +13,6 @@ var externalSources = [
     'app/components/jquery-ui/ui/jquery-ui.js',
     'app/components/markitup/markitup/jquery.markitup.js',
     'app/components/marked/lib/marked.js',
-    'app/js/markdown.js',
     'app/components/lodash/dist/lodash.js',
     'app/components/lazy.js/lazy.js',
     'app/components/emoticons/lib/emoticons.js',
@@ -27,11 +26,11 @@ var externalSources = [
     'app/components/kalendae/build/kalendae.js',
     'app/components/checksley/checksley.js',
     'app/js/sha1.js',
-    'app/js/cache.js',
+    'app/components/jscache/cache.js',
     'app/components/jquery-flot/jquery.flot.js',
     'app/components/jquery-flot/jquery.flot.pie.js',
     'app/components/jquery-flot/jquery.flot.time.js',
-    'app/js/jquery.flot.orderBars.js',
+    'app/components/flot-orderBars/js/jquery.flot.orderBars.js',
     'app/js/curvedLines.js',
     'app/js/emoticons-define.js',
     'app/components/select2/select2.js',
@@ -41,7 +40,7 @@ var externalSources = [
     'app/components/google-diff-match-patch-js/diff_match_patch_uncompressed.js',
     'app/components/jqueryui-touch-punch/jquery.ui.touch-punch.js',
     'app/js/highlight.pack.js',
-    'app/js/jquery.textcomplete.js'
+    'app/components/jquery-textcomplete/jquery.textcomplete.js'
 ];
 
 var coffeeSources = [
