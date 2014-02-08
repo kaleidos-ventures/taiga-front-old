@@ -10,6 +10,7 @@
     "gulp-less": "~1.2.1",
     "gulp-connect": "~0.3.0",
     "gulp-coffeelint": "~0.2.0",
-    "gulp-recess": "~0.2.0"
+    "gulp-recess": "~0.2.0",
+    "gulp-jshint": "~1.4.0"
   }
 }

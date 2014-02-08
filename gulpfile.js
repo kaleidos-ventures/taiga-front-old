@@ -6,6 +6,7 @@ var connect = require('gulp-connect');
 var less = require('gulp-less');
 var coffeelint = require('gulp-coffeelint');
 var recess = require('gulp-recess');
+var jshint = require('gulp-jshint');
 
 var externalSources = [
     'app/components/jquery/jquery.js',
@@ -70,6 +71,13 @@ gulp.task('coffee', function() {
         .pipe(coffee())
         .pipe(concat('app.js'))
         .pipe(gulp.dest('app/dist/'));
+});
+
+gulp.task('hint', function() {
+    gulp.src(coffeeSources)
+        .pipe(coffee())
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'))
 });
 
 gulp.task('less', function() {
