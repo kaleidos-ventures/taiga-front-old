@@ -485,6 +485,7 @@
         "placeholder": "Your title here...",
         "bold": "Bold",
         "italic": "Italic",
+        "strike": "Strike",
         "bulleted-list": "Bulleted List",
         "numeric-list": "Numeric List",
         "picture": "Picture",

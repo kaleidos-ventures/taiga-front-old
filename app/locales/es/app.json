@@ -485,6 +485,7 @@
         "placeholder": "Tu título aquí...",
         "bold": "Negrita",
         "italic": "Cursiva",
+        "strike": "Tachado",
         "bulleted-list": "Lista de puntos",
         "numeric-list": "Lista numerica",
         "picture": "Foto",

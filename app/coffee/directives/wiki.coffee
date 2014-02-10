@@ -47,6 +47,12 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location, rs)
                     closeWith: '_'
                 },
                 {
+                    name: $i18next.t('wiki-editor.strike')
+                    key: "S"
+                    openWith: '~~'
+                    closeWith: '~~'
+                },
+                {
                     separator: '---------------'
                 },
                 {
