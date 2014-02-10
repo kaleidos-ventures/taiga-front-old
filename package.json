@@ -23,6 +23,6 @@
     "karma-coffee-preprocessor": "~0.1.2",
     "karma-phantomjs-launcher": "~0.1.2",
     "karma": "~0.10.9",
-    "gulp-karma": "0.0.2",
+    "gulp-karma": "0.0.2"
   }
 }
