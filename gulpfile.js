@@ -7,6 +7,7 @@ var less = require('gulp-less');
 var coffeelint = require('gulp-coffeelint');
 var recess = require('gulp-recess');
 var jshint = require('gulp-jshint');
+var karma = require('gulp-karma');
 
 var externalSources = [
     'app/components/jquery/jquery.js',
@@ -98,6 +99,18 @@ gulp.task('lint', function() {
         .pipe(coffeelint.reporter())
     gulp.src('app/less/taiga-main.less')
         .pipe(recess({strictPropertyOrder: false}))
+});
+
+gulp.task('build-tests', function() {
+    gulp.src(['test/**/*.coffee'])
+        .pipe(coffee({'bare': true}))
+        .pipe(concat('tests.js'))
+        .pipe(gulp.dest('test'));
+});
+
+gulp.task('test', ['coffee', 'libs', 'build-tests'], function() {
+    gulp.src(['app/dist/libs.js', 'app/dist/app.js', 'test/tests.js'])
+        .pipe(karma({configFile: "karma.conf.coffee", action: 'run'}));
 });
 
 gulp.task('watch', function () {
