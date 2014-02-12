@@ -364,7 +364,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
     return
 
 
-IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next, $confirm) ->
+IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next, $confirm, $q) ->
     $scope.type = "create"
     $scope.formOpened = false
 
@@ -388,6 +388,7 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next,
         promise.then ->
             gm.safeApply $scope, ->
                 $scope.newAttachments = []
+        return promise
 
     $scope.removeAttachment = (attachment) ->
         promise = $confirm.confirm($i18next.t('common.are-you-sure'))
@@ -449,12 +450,12 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next,
         $scope.$emit("spinner:start")
 
         promise.then (data) ->
-            $scope.$emit("spinner:stop")
-            closeModal()
-            saveNewAttachments($scope.projectId, data.id)
-            $scope.overlay.close()
-            $scope.defered.resolve($scope.form)
-            $gmFlash.info($i18next.t('issue.issue-saved'))
+            saveNewAttachments($scope.projectId, data.id).then () ->
+                $scope.$emit("spinner:stop")
+                closeModal()
+                $scope.overlay.close()
+                $scope.defered.resolve($scope.form)
+                $gmFlash.info($i18next.t('issue.issue-saved'))
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
@@ -481,4 +482,4 @@ module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
                   '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", '$i18next',
                   IssuesViewController])
 module.controller("IssuesModalController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
-                  "$gmFlash", "$i18next", "$confirm", IssuesModalController])
+                  "$gmFlash", "$i18next", "$confirm", "$q", IssuesModalController])
