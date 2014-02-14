@@ -450,12 +450,18 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next,
         $scope.$emit("spinner:start")
 
         promise.then (data) ->
-            saveNewAttachments($scope.projectId, data.id).then () ->
+            finishSubmit = ->
                 $scope.$emit("spinner:stop")
                 closeModal()
                 $scope.overlay.close()
                 $scope.defered.resolve($scope.form)
                 $gmFlash.info($i18next.t('issue.issue-saved'))
+
+            if $scope.newAttachments.length > 0
+                saveNewAttachments($scope.projectId, data.id).then ->
+                    finishSubmit()
+            else
+                finishSubmit()
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
