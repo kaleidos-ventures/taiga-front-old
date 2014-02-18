@@ -287,7 +287,8 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope, 
         return $model.create("memberships", form)
 
     # Get roles
-    service.getRoles = -> queryMany('roles')
+    service.getRoles = (projectId) ->
+        return queryMany('roles', {project: projectId})
 
     # Get a milestone lines for a project.
     service.getMilestones = (projectId) ->
