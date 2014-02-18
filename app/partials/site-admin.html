@@ -130,7 +130,7 @@
             <ul class="project-list">
                 <li class="project" ng-repeat="pr in currentSite.projects">
                     <a href="" data-icon="h" title="Delete project" i18next="title:admin-site.delete-project" ng-click="deleteProject(pr)"></a>
-                    <a href="#/project/{{pr.id}}/admin">{{ pr.name }}</a>
+                    <a href="#/project/{{pr.slug}}/admin">{{ pr.name }}</a>
                 </li>
             </ul>
         </div>
