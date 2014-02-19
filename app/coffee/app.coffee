@@ -340,6 +340,8 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
         videoConferenceUrl: (conferenceSystem, slug) ->
             if conferenceSystem == "appear-in"
                 return "https://appear.in/#{$rootScope.site.headers['x-site-host']}-#{slug}"
+            else if conferenceSystem == "talky"
+                return "https://talky.io/#{$rootScope.site.headers['x-site-host']}-#{slug}"
             return ""
 
     $rootScope.momentFormat = (input, format) ->
