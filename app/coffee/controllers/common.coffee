@@ -1,4 +1,4 @@
-DataServiceProvider = ($rootScope, $q, rs) ->
+DataServiceProvider = ($rootScope, $q, rs, UnassignedUserStories) ->
     service = {}
 
     service.loadProjectStats = ($scope) ->
@@ -120,4 +120,4 @@ DataServiceProvider = ($rootScope, $q, rs) ->
     return service
 
 module = angular.module("taiga.controllers.common", [])
-module.factory("$data", ["$rootScope", "$q", "resource", DataServiceProvider])
+module.factory("$data", ["$rootScope", "$q", "resource", "UnassignedUserStories", DataServiceProvider])
