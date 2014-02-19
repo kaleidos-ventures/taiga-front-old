@@ -337,6 +337,11 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
             url = $gmUrls.api('wiki-attachment', projectId, name)
             return url
 
+        videoConferenceUrl: (conferenceSystem, slug) ->
+            if conferenceSystem == "appear-in"
+                return "https://appear.in/#{$rootScope.site.headers['x-site-host']}-#{slug}"
+            return ""
+
     $rootScope.momentFormat = (input, format) ->
         return moment(input).format(format)
 

@@ -47,6 +47,15 @@
         -->
         <li class="issues"><a data-icon="a" href="{{ urls.issuesUrl(projectSlug) }}" title="Issues" i18next="common.issues,title:common.issues">Issues</a></li>
         <li class="wiki"><a data-icon="g" href="{{ urls.wikiUrl(projectSlug, 'home') }}" title="Wiki" i18next="common.wiki,title:common.wiki">Wiki</a></li>
+        <li ng-show="project.videoconferences" class="videoconference">
+            <a data-icon="g"
+               href="{{ urls.videoConferenceUrl(project.videoconferences, project.slug) }}"
+               target="_blank"
+               title="Video conference"
+               i18next="common.videoconference,title:common.videoconference">
+                Video conference
+            </a>
+        </li>
         <!--
         <li class="questions"><a href="{{ urls.questionsUrl(projectSlug) }}" title="questions">Questions</a></li>
         -->

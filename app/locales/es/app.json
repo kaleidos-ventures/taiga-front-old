@@ -70,7 +70,8 @@
         "are-you-sure": "¿Estás seguro?",
         "error-on-delete": "El elemento no se ha borrado",
         "yes": "Si",
-        "no": "No"
+        "no": "No",
+        "videoconference": "Video conferencia"
     },
     "backlog": {
         "total": "Total",
