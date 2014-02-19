@@ -33,10 +33,7 @@ GmDoomlineDirective = ->
                 scope = element.scope()
                 current_sum += scope.us.total_points
 
-                if current_sum == total_points and not added
-                    addDoomlienDom(element)
-                    added = true
-                else if current_sum > total_points and not added
+                if current_sum > total_points and not added
                     addDoomlienDom(element.prev())
                     added = true
 
