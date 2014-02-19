@@ -193,6 +193,7 @@ modules = [
     "taiga.services.common",
     "taiga.services.model",
     "taiga.services.resource",
+    "taiga.services.userstories",
     "taiga.directives.generic",
     "taiga.directives.common",
     "taiga.directives.graphs",

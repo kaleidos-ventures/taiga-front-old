@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data, $confirm, $gmFlash, $i18next) ->
+UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data, $confirm, $gmFlash, $i18next, UnassignedUserStories) ->
     $rootScope.pageTitle = $i18next.t("user-story.user-story")
     $rootScope.pageSection = 'user-stories'
     $rootScope.pageBreadcrumb = [
@@ -132,11 +132,22 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             userStory.remove().then ->
                 $location.url("/project/#{$scope.projectSlug}/backlog")
 
+    $scope.nextUserStory = (userStory) ->
+        console.log(UnassignedUserStories)
+        UnassignedUserStories.conditionalFetch($scope.projectId, ->
+            us = UnassignedUserStories.getStoryFollowing(userStory)
+            $location.path("/project/#{$scope.projectSlug}/user-story/#{us.ref}"))
+
+    $scope.previousUserStory = (userStory) ->
+        UnassignedUserStories.conditionalFetch($scope.projectId, ->
+            us = UnassignedUserStories.getStoryPreceding(userStory)
+            $location.path("/project/#{$scope.projectSlug}/user-story/#{us.ref}"))
+
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
 
     return
 
 module = angular.module("taiga.controllers.user-story", [])
-module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", "$i18next", UserStoryViewController])
+module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", "$i18next", "UnassignedUserStories", UserStoryViewController])
 

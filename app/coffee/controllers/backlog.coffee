@@ -49,44 +49,16 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next) ->
     return
 
 
-BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $location) ->
+BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $location, UnassignedUserStories) ->
     calculateStats = ->
         $scope.$emit("stats:update")
 
     generateTagList = ->
-        tagsDict = {}
-        tags = []
-
-        for us in $scope.unassignedUs
-            for tag in us.tags
-                if tagsDict[tag] is undefined
-                    tagsDict[tag] = 1
-                else
-                    tagsDict[tag] += 1
-
-        for key, val of tagsDict
-            tags.push({name:key, count:val})
-
-        $scope.tags = tags
+        $scope.tags = UnassignedUserStories.tags
 
      filterUsBySelectedTags = ->
-        selectedTags = _($scope.tags)
-                             .filter("selected")
-                             .map("name")
-                             .value()
-
-        if selectedTags.length > 0
-            for item in $scope.unassignedUs
-                itemTags = item.tags
-                interSection = _.intersection(selectedTags, itemTags)
-
-                if interSection.length == 0
-                    item.__hidden = true
-                else
-                    item.__hidden = false
-
-        else
-            item.__hidden = false for item in $scope.unassignedUs
+        stories = UnassignedUserStories.filterBySelectedTags()
+        $scope.unassignedUs = if stories.length > 0 then stories else UnassignedUserStories.stories
 
     resortUserStories = ->
         # Save only us that have milestone assigned
@@ -532,7 +504,7 @@ BacklogMilestoneController = ($scope, $q, rs, $gmFlash, $i18next) ->
 module = angular.module("taiga.controllers.backlog", [])
 module.controller('BacklogMilestoneController', ['$scope', '$q', 'resource', '$gmFlash', '$i18next', BacklogMilestoneController])
 module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', '$i18next', '$location', BacklogMilestonesController])
-module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', '$location', BacklogUserStoriesController])
+module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', '$location', 'UnassignedUserStories', BacklogUserStoriesController])
 module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', '$i18next', BacklogController])
 module.controller('BacklogUserStoryModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogUserStoryModalController])
 module.controller('BacklogBulkUserStoriesModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogBulkUserStoriesModalController])

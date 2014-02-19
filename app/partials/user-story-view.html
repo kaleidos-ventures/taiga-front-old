@@ -3,6 +3,9 @@
     <div class="view-header">
         <p class="title">{{ 'user-story.user-story-ref'|i18next:{ref: userStory.ref} }}</p>
         <div class="buttons">
+            <a class="button" ng-click="previousUserStory(userStory)" i18next="user-story.previous-user-story">Anterior</a>
+            <a class="button" ng-click="nextUserStory(userStory)" i18next="user-story.next-user-story">Siguiente</a>
+
             <a class="button button-delete" ng-click="removeUserStory(userStory)" i18next="user-story.delete-user-story">
                 Delete user story
             </a>
