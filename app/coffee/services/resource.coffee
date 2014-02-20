@@ -360,6 +360,10 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope, 
     service.getUnassignedUserStories = (projectId) ->
         return queryMany("userstories", {"project":projectId, "milestone": "null"})
 
+    # Get all user stories list for a project.
+    service.getUserStories = (projectId) ->
+        return queryMany("userstories", {"project":projectId})
+
     # Get a user stories list by projectId and sprintId.
     service.getMilestoneUserStories = (projectId, sprintId) ->
         return queryMany("userstories", {"project":projectId, "milestone": sprintId})

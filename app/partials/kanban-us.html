@@ -1,0 +1,20 @@
+<div class="task-box-content clearfix" ng-controller="KanbanUsController" ng-dblclick="openUs(projectSlug, us.ref)">
+    <div class="veil" ng-show="us._moving">
+        <span ng-class="{spinner: us._moving}" data-icon="x"></span>
+    </div>
+
+    <div class="title">#{{ us.ref }} {{ us.subject }}</div>
+
+    <div class="assign-to">
+        <a href="" gm-popover="updateUsAssignation(us, selectedId)"
+            data-tmpl="#developers-popover" data-auto-hide="true"
+            gm-colorize-user="constants.users[us.assigned_to]">
+                {{ constants.users[us.assigned_to].full_name || t("kanban.unassigned") }}</a>
+    </div>
+    <div class="us-options clearfix">
+        <a data-icon="j" ng-click="openEditUsForm(us)" class="edit-task"></a>
+        <a data-icon="l" href="{{ urls.userStoryUrl(projectSlug, us.ref) }}" class="view-task"></a>
+        <a data-icon="r" class="iocaine" ng-show="task.is_iocaine"></a>
+        <a class="kanban-us-tag" ng-repeat="tag in us.tags" gm-colorize-tag title="{{ tag }}"></a>
+    </div>
+</div>

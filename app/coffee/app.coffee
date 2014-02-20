@@ -51,6 +51,9 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when('/project/:pslug/backlog',
             {templateUrl: 'partials/backlog.html', controller: "BacklogController"})
 
+    $routeProvider.when('/project/:pslug/kanban',
+            {templateUrl: 'partials/kanban.html', controller: "KanbanController"})
+
     $routeProvider.when('/project/:pslug/user-story/:ref',
             {templateUrl: 'partials/user-story-view.html', controller: "UserStoryViewController"})
 
@@ -181,6 +184,7 @@ modules = [
     "taiga.controllers.common",
     "taiga.controllers.auth",
     "taiga.controllers.backlog",
+    "taiga.controllers.kanban",
     "taiga.controllers.user-story",
     "taiga.controllers.search",
     "taiga.controllers.taskboard",

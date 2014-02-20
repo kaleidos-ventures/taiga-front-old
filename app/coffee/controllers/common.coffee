@@ -77,6 +77,14 @@ DataServiceProvider = ($rootScope, $q, rs) ->
             return $scope.unassignedUs
         return promise
 
+    service.loadUserStories = ($scope) ->
+        promise = rs.getUserStories($rootScope.projectId)
+        promise = promise.then (uss) ->
+            $scope.userstories = _.sortBy(uss, "order")
+            $rootScope.$broadcast("userstories:loaded")
+            return $scope.userstories
+        return promise
+
     # NOTE: This method depends on getProject
     service.loadUsersAndRoles = ($scope) ->
         promise = $q.all [
