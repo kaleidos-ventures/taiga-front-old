@@ -198,6 +198,7 @@ modules = [
     "taiga.services.common",
     "taiga.services.model",
     "taiga.services.resource",
+    "taiga.services.tags",
     "taiga.directives.generic",
     "taiga.directives.common",
     "taiga.directives.graphs",

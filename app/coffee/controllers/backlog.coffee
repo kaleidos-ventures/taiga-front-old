@@ -49,7 +49,7 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next) ->
     return
 
 
-BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $location) ->
+BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $location, SelectedTags) ->
     calculateStats = ->
         $scope.$emit("stats:update")
 
@@ -65,26 +65,20 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
                     tagsDict[tag] += 1
 
         for key, val of tagsDict
-            tags.push({name:key, count:val})
+            tag = {name:key, count:val}
+            tag.selected = true if SelectedTags.backlog.fetch(tag)
+            tags.push(tag)
 
         $scope.tags = tags
 
      filterUsBySelectedTags = ->
-        selectedTags = _($scope.tags)
-                             .filter("selected")
-                             .map("name")
-                             .value()
-
-        if selectedTags.length > 0
+        selectedTagNames = SelectedTags.backlog.names()
+        if selectedTagNames.length > 0
             for item in $scope.unassignedUs
-                itemTags = item.tags
-                interSection = _.intersection(selectedTags, itemTags)
-
-                if interSection.length == 0
+                if _.intersection(selectedTagNames, item.tags).length == 0
                     item.__hidden = true
                 else
                     item.__hidden = false
-
         else
             item.__hidden = false for item in $scope.unassignedUs
 
@@ -157,7 +151,7 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
     $scope.selectedUserStories = null
     $scope.selectedStoryPoints = 9
 
-    $scope.filtersOpened = false
+    $scope.filtersOpened = if SelectedTags.backlog.isEmpty() then false else true
     $scope.showTags = false
 
     $scope.moveSelectedUserStoriesToCurrentSprint = ->
@@ -256,11 +250,13 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
             data._moving = false
 
     # User Story Filters
-    $scope.selectTag = (tag) ->
+    $scope.toggleTag = (tag) ->
         if tag.selected
             tag.selected = false
+            SelectedTags.backlog.remove(tag)
         else
             tag.selected = true
+            SelectedTags.backlog.store(tag)
 
         filterUsBySelectedTags()
 
@@ -532,7 +528,7 @@ BacklogMilestoneController = ($scope, $q, rs, $gmFlash, $i18next) ->
 module = angular.module("taiga.controllers.backlog", [])
 module.controller('BacklogMilestoneController', ['$scope', '$q', 'resource', '$gmFlash', '$i18next', BacklogMilestoneController])
 module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', '$i18next', '$location', BacklogMilestonesController])
-module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', '$location', BacklogUserStoriesController])
+module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', '$location', 'SelectedTags', BacklogUserStoriesController])
 module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', '$i18next', BacklogController])
 module.controller('BacklogUserStoryModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogUserStoryModalController])
 module.controller('BacklogBulkUserStoriesModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogBulkUserStoriesModalController])

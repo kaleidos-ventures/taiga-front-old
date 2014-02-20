@@ -496,7 +496,7 @@
         "change-from": "from <span class='old'>__value__</span>",
         "change-to": "to <span class='old'>__value__</span>",
         "on-date": "on __date__",
-        "user-story": "User storie",
+        "user-story": "User story",
         "user-story-saved": "The user story has been saved",
         "delete-user-story": "Delete user story",
         "delete-attachment": "Delete attachment",

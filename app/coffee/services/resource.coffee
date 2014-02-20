@@ -369,8 +369,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope, 
         return queryMany("userstories", {"project":projectId, "milestone": sprintId})
 
     # Get a user stories by projectId and userstory id
-    service.getUserStory = (projectId, userStoryId) ->
-        return queryOne("userstories", userStoryId, {project:projectId})
+    service.getUserStory = (projectId, userStoryId, params) ->
+        params = _.defaults(params, {project: projectId})
+        return queryOne("userstories", userStoryId, params)
 
     service.getUserStoryHistorical = (userStoryId, filters={}) ->
         urlParams = [userStoryId]
@@ -389,8 +390,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope, 
         parameters = _.extend({}, filters, {project:projectId})
         return queryManyPaginated("issues", parameters)
 
-    service.getIssue = (projectId, issueId) ->
-        return queryOne("issues", issueId, {project:projectId})
+    service.getIssue = (projectId, issueId, params) ->
+        params = _.defaults(params, {project: projectId})
+        return queryOne("issues", issueId, params)
 
     service.getIssueHistorical = (issueId, filters={}) ->
         urlParams = [issueId]
