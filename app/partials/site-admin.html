@@ -62,17 +62,17 @@
                             </td>
                             <td class="options">
                                 <div ng-hide="mbr.user.id == auth.id">
-                                    <span class="action" data-icon="a"
+                                    <span class="action" data-icon="O"
                                         ng-class="{ active: mbr.is_owner }"
                                         title="Set as owner"
                                         i18next="title:admin-site.set-as-owner"
                                         ng-click="setMemberAs(mbr, 'owner')"></span>
-                                    <span class="action" data-icon="b"
+                                    <span class="action" data-icon="Q"
                                         ng-class="{ active: !mbr.is_owner && mbr.is_staff }"
                                         title="Set as staff"
                                         i18next="title:admin-site.set-as-staff"
                                         ng-click="setMemberAs(mbr, 'staff')"></span>
-                                    <span class="action" data-icon="D"
+                                    <span class="action" data-icon="P"
                                         ng-class="{ active: !mbr.is_owner && !mbr.is_staff }"
                                         title="Set as normal user"
                                         i18next="title:admin-site.set-as-normal-user"

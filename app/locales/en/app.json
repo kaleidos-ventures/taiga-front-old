@@ -529,6 +529,9 @@
         "sprints": "Sprints",
         "points": "Points",
         "project-created": "Project created.",
-        "saved-success": "Site saved successful."
+        "saved-success": "Site saved successful.",
+        "set-as-owner": "Set as owner",
+        "set-as-staff": "Set as staff",
+        "set-as-normal-user": "Set as normal user"
     }
 }
