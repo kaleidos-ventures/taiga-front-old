@@ -316,7 +316,8 @@
         "add-severity": "Add new severity",
         "severity-name": "Name",
         "severity-color": "Color",
-        "invitation-link": "Link of the invitation"
+        "invitation-link": "Link of the invitation",
+        "videoconference-system": "Videoconferences system"
     },
     "projects": {
         "saved-success": "Project saved successful",
