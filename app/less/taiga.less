@@ -3625,9 +3625,10 @@ body.login {
                 padding: 0;
             }
         }
-        .header {
-            table {
+        table {
+            thead {
                 td {
+                    min-width: 200px;
                     text-align: center;
                     border-right: 1px solid;
                     .badge {
@@ -3660,12 +3661,7 @@ body.login {
                     }
                 }
             }
-        }
-
-        .body {
-            background-color: #333;
-            color: white;
-            table {
+            tbody {
                 tr{
                     &:first-child{
                         border-top: 0;
@@ -3826,9 +3822,9 @@ body.login {
                             padding: 3px;
                             min-height: 200px;
                             .task-box {
-                                width: 145px;
+                                width: 97%;
                                 float: left;
-                                margin: 4px;
+                                margin: 1%;
                                 box-shadow: 0px 5px 12px -2px rgba(0,0,0,.2);
                                 .task-box-content {
                                     background-color: #FFF5D8;

@@ -5,29 +5,23 @@
             <div class="kanban">
                 <div class="header">
                     <table>
-                        <tbody>
+                        <thead>
                             <tr>
                                 <td class="" ng-repeat="status in constants.usStatusesList|orderBy:'order'"
-                                        style="width: {{ 100/(constants.usStatusesList.length+1) }}%; border-right-color: {{ status.color }}">
+                                        style="border-right-color: {{ status.color }}">
                                     <div class="badge" style="background-color: {{ status.color }};">
                                         {{ status.name }}
                                         <a class="plus" ng-click="openCreateUsForm(status.id)" data-icon="A"></a>
                                     </div>
                                 </td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="body">
-                    <table>
+                        </thead>
                         <tbody>
                             <tr>
                                 <td class="col-task-status col-task-{{ status.name|slugify }}"
-                                        ng-repeat="status in constants.usStatusesList|orderBy:'order'"
-                                        style="width: {{ 100/(constants.usStatusesList.length+1) }}%">
+                                        ng-repeat="status in constants.usStatusesList|orderBy:'order'">
 
-                                    <div class="tasks" gm-sortable=".kanban .body .tasks" ng-model="uss[status.id]">
+                                    <div class="tasks" gm-sortable=".kanban tbody .tasks" ng-model="uss[status.id]">
                                         <div class="task-box" ng-repeat="us in uss[status.id]">
                                             <div ng-include="'/partials/kanban-us.html'"></div>
                                         </div>
