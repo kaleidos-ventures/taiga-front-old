@@ -31,7 +31,8 @@ GmDoomlineDirective = ->
 
             for element in elements
                 scope = element.scope()
-                current_sum += scope.us.total_points
+                if scope.us
+                    current_sum += scope.us.total_points
 
                 if current_sum > total_points and not added
                     addDoomlienDom(element.prev())

@@ -27,7 +27,7 @@
                                         ng-repeat="status in constants.usStatusesList|orderBy:'order'"
                                         style="width: {{ 100/(constants.usStatusesList.length+1) }}%">
 
-                                    <div class="tasks" gm-sortable=".tasks-container .body .tasks" ng-model="uss[status.id]">
+                                    <div class="tasks" gm-sortable=".kanban .body .tasks" ng-model="uss[status.id]">
                                         <div class="task-box" ng-repeat="us in uss[status.id]">
                                             <div ng-include="'/partials/kanban-us.html'"></div>
                                         </div>
