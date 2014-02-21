@@ -55,6 +55,7 @@
         "dashboard": "Dashboard",
         "taskboard": "Taskboard",
         "tasks": "Tasks",
+        "kanban": "Kanban",
         "no-projects": "You have no projects",
         "logout": "Logout",
         "admin": "Admin",
@@ -339,6 +340,18 @@
         "error": "Your username or password are incorrects.",
         "are-new-user": "You are new user?",
         "are-existing-user": "You are existing user?"
+    },
+    "kanban": {
+        "subject": "Subject",
+        "status": "Status",
+        "assigned-to": "Assigned to",
+        "tags": "Tags",
+        "description": "Description",
+        "save": "Save",
+        "close": "Close",
+        "unassigned": "Unassigned",
+        "select-user": "Select a user:",
+        "user-story-saved": "The user story has been saved"
     },
     "taskboard": {
         "points": "Points",

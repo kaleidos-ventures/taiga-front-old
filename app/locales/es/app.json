@@ -55,6 +55,7 @@
         "dashboard": "Dashboard",
         "taskboard": "Panel de tareas",
         "tasks": "Tareas",
+        "kanban": "Kanban",
         "no-projects": "No tienes proyectos",
         "logout": "Salir",
         "admin": "Administrar",
@@ -339,6 +340,18 @@
         "error": "Tu nombre de usuario o contraseña son incorrectos",
         "are-new-user": "¿Eres un nuevo usuario?",
         "are-existing-user": "¿Ya eres usuario?"
+    },
+    "kanban": {
+        "subject": "Titulo",
+        "status": "Estado",
+        "assigned-to": "Asignado a",
+        "tags": "Etiquetas",
+        "description": "Descripción",
+        "save": "Guardar",
+        "close": "Cerrar",
+        "unassigned": "Sin asignar",
+        "select-user": "Selecciona un usuario",
+        "user-story-saved": "La historia de usuario ha sido guardada"
     },
     "taskboard": {
         "points": "Puntos",

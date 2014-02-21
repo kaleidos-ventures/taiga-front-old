@@ -48,13 +48,13 @@
     <div class="new-task-modal modal">
         <form class="inline-form task-form" gm-checksley-form="submit()">
             <div class="modal-header" ng-switch on="context.type">
-                <h3 ng-switch-when="create" i18next="taskboard.create-task">Create task</h3>
-                <h3 ng-switch-when="edit" i18next="taskboard.modify-task">Modify task</h3>
+                <h3 ng-switch-when="create" i18next="kanban.create-task">Create task</h3>
+                <h3 ng-switch-when="edit" i18next="kanban.modify-task">Modify task</h3>
             </div>
             <div class="modal-body">
                 <div class="fieldset-row">
                     <fieldset>
-                        <label i18next="taskboard.subject">Subject</label>
+                        <label i18next="kanban.subject">Subject</label>
                         <input class="subject" type="text" name="subject" data-required="true"
                             data-error-message="Required"
                             ng-model="form.subject"></input>
@@ -62,14 +62,14 @@
                 </div>
                 <div class="fieldset-row">
                     <fieldset>
-                        <label i18next="taskboard.status">Status</label>
+                        <label i18next="kanban.status">Status</label>
                         <select class="status" name="status" ng-model="form.status" data-required="true"
                             data-type="number" data-error-message="Required"
                             ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'"></select>
                         </select>
                     </fieldset>
                     <fieldset>
-                        <label i18next="taskboard.assigned-to">Assigned to</label>
+                        <label i18next="kanban.assigned-to">Assigned to</label>
                         <select class="status" name="assigned_to" ng-model="form.assigned_to"
                                 ng-options="c.user as c.full_name for c in project.active_memberships">
                             <option value="" i18next="task.unassigned">Unassigned</option>
@@ -78,13 +78,13 @@
                 </div>
                 <div class="fieldset-row">
                     <fieldset>
-                        <label i18next="taskboard.tags">Tags</label>
+                        <label i18next="kanban.tags">Tags</label>
                         <input type="text" class="tags" name="tags" value="" ng-model="form.tags" gm-select2-tags="projectTags"></input>
                     </fieldset>
                 </div>
                 <div class="fieldset-row">
                     <fieldset>
-                        <label i18next="taskboard.description">Description</label>
+                        <label i18next="kanban.description">Description</label>
                         <textarea class="description" name="description" ng-model="form.description" gm-markitup preview-id="preview"></textarea>
                         <div id="preview"></div>
                     </fieldset>
@@ -92,8 +92,8 @@
             </div>
             <div class="modal-footer">
                 <div gm-spinner class="spinner-container"></div>
-                <input type="submit" class="button button-success" gm-checksley-submit-button value="Save"  i18next="value:taskboard.save"/>
-                <a href="" class="button button-cancel" ng-click="close()" i18next="taskboard.close">Close</a>
+                <input type="submit" class="button button-success" gm-checksley-submit-button value="Save"  i18next="value:kanban.save"/>
+                <a href="" class="button button-cancel" ng-click="close()" i18next="kanban.close">Close</a>
             </div>
         </form>
     </div>
@@ -101,9 +101,9 @@
 
 <script type="text/template" id="developers-popover">
     <div class="developers-popover">
-        <h3 i18next="taskboard.select-user">Select a user:</h3>
+        <h3 i18next="kanban.select-user">Select a user:</h3>
         <ul>
-            <li class="btn-accept"><a data-id="" href="" i18next="taskboard.unassigned">Unassigned</a>
+            <li class="btn-accept"><a data-id="" href="" i18next="kanban.unassigned">Unassigned</a>
             <li ng-repeat="obj in project.active_memberships" class="btn-accept" data-id="{{ obj.user }}">
                 <a href="" gm-colorize-user="constants.users[obj.user]">{{ obj.full_name }}</a>
             </li>
