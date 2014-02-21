@@ -87,6 +87,7 @@ KanbanController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $mo
 
             us._moving = true
 
+            formatUserStories()
             promise = us.save()
             promise.then (us) ->
                 us._moving = false
