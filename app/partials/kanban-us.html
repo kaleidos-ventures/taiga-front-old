@@ -15,6 +15,6 @@
         <a data-icon="j" ng-click="openEditUsForm(us)" class="edit-task"></a>
         <a data-icon="l" href="{{ urls.userStoryUrl(projectSlug, us.ref) }}" class="view-task"></a>
         <a data-icon="r" class="iocaine" ng-show="task.is_iocaine"></a>
-        <a class="kanban-us-tag" ng-repeat="tag in us.tags" gm-colorize-tag title="{{ tag }}"></a>
+        <a class="us-tag" ng-repeat="tag in us.tags" gm-colorize-tag title="{{ tag }}"></a>
     </div>
 </div>

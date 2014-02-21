@@ -342,6 +342,8 @@
         "are-existing-user": "You are existing user?"
     },
     "kanban": {
+        "create-user-story": "Create user story",
+        "modify-user-story": "Modify user story",
         "subject": "Subject",
         "status": "Status",
         "assigned-to": "Assigned to",

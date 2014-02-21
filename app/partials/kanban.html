@@ -2,14 +2,17 @@
 <div class="middle-container dashboard-content">
     <div class="row-fluid">
         <div class="span12">
-            <div class="tasks-container">
+            <div class="kanban">
                 <div class="header">
                     <table>
                         <tbody>
                             <tr>
                                 <td class="" ng-repeat="status in constants.usStatusesList|orderBy:'order'"
                                         style="width: {{ 100/(constants.usStatusesList.length+1) }}%; border-right-color: {{ status.color }}">
-                                    <div class="badge" style="background-color: {{ status.color }};">{{ status.name }}</div>
+                                    <div class="badge" style="background-color: {{ status.color }};">
+                                        {{ status.name }}
+                                        <a class="plus" ng-click="openCreateUsForm(status.id)" data-icon="A"></a>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -48,8 +51,8 @@
     <div class="new-task-modal modal">
         <form class="inline-form task-form" gm-checksley-form="submit()">
             <div class="modal-header" ng-switch on="context.type">
-                <h3 ng-switch-when="create" i18next="kanban.create-task">Create task</h3>
-                <h3 ng-switch-when="edit" i18next="kanban.modify-task">Modify task</h3>
+                <h3 ng-switch-when="create" i18next="kanban.create-user-story">Create task</h3>
+                <h3 ng-switch-when="edit" i18next="kanban.modify-user-story">Modify task</h3>
             </div>
             <div class="modal-body">
                 <div class="fieldset-row">

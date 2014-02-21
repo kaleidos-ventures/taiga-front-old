@@ -3591,7 +3591,350 @@ body.login {
                                             transition: all .3s ease-in;
                                         }
                                     }
-                                    .kanban-us-tag {
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /* Dashboard popovers */
+        .developers-popover {
+            cursor: default;
+            width: 210px;
+
+            ul {
+                li {
+                    pointer: cursor;
+                    &:hover {
+                        background-color: #f2f2f2;
+                    }
+                }
+            }
+        }
+    }
+    .kanban {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+            padding: 0;
+            tr,td{
+                margin: 0;
+                padding: 0;
+            }
+        }
+        .header {
+            table {
+                td {
+                    text-align: center;
+                    border-right: 1px solid;
+                    .badge {
+                        position: relative;
+                        color: white;
+                        padding: 15px 0;
+                        border-radius: 0;
+                        display: block;
+                        text-shadow: none;
+                        font-family: @ColabReg;
+                        text-shadow: 0 0 0.2em rgba(0,0,0,.3), 0 0 0.2em rgba(0,0,0,.3),0 0 0.2em rgba(0,0,0,.3);
+                        /* Settings dependant - default colors */
+                        &.badge-inprogress {
+                            background-color: #ff9900;
+                        }
+                        &.badge-readytest {
+                            background-color: #ffcc00;
+                        }
+                        &.badge-finish {
+                            background-color: #669900;
+                        }
+                        .plus {
+                            float: right;
+                            font-size: 18px;
+                            color: white;
+                            position: absolute;
+                            top: 12px;
+                            right: 12px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .body {
+            background-color: #333;
+            color: white;
+            table {
+                tr{
+                    &:first-child{
+                        border-top: 0;
+                    }
+                    td{
+                        vertical-align: top;
+                        &.col-task-status {
+                            background-color: #dfdfdf;
+                            border-right: 1px solid #333;
+                            &:last-child{
+                                border-right: 0px;
+                            }
+                        }
+                        &.row-us-description {
+                            min-height: 200px;
+                            padding-bottom: 10px;
+                            border-bottom: 1px solid #111;
+                            position: relative;
+                            .info {
+                                .title {
+                                    padding: 10px 25px;
+                                    font-family: @ColabReg;
+                                    & > a {
+                                        color: @white;
+                                        font-weight: bold;
+                                        float: left;
+                                        font-size: 16px;
+                                        width: 65%;
+                                    }
+                                    & > ul{
+                                        float: right;
+                                        width: 30%;
+                                        text-align: right;
+                                        font-size: 13px;
+                                        list-style: none;
+                                        margin: 0;
+                                        padding: 0;
+                                    }
+                                    .us-point {
+                                        cursor: pointer;
+                                    }
+                                    .popover-content {
+                                        width: 225px;
+
+                                        .us-points-popover {
+                                            ul {
+                                                overflow: hidden;
+                                                list-style-type: none;
+                                                margin: 10px 0;
+                                                padding: 0;
+                                                li {
+                                                    float: left;
+                                                    width: 40px;
+                                                    padding: 7px;
+                                                    margin-right: 2px;
+                                                    margin-bottom: 2px;
+                                                    background-color: #f3f3f3;
+                                                    cursor: pointer;
+                                                    text-align: center;
+                                                    line-height: 36px;
+                                                    a {
+                                                        font-family: 'DroidSansRegular';
+                                                        font-size: 14px;
+                                                        color: #333333;
+                                                    }
+                                                    &:hover {
+                                                        background-color: #ddd;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                .status {
+                                    font-family: 'ColabReg';
+                                    padding-left: 25px;
+                                    div {
+                                        display: inline-block;
+                                    }
+                                    .icon {
+                                        position: relative;
+                                        top: 4px;
+                                    }
+
+                                    .label {
+                                        cursor: pointer;
+                                    }
+
+                                    .popover-content {
+                                        width: 225px;
+                                        .us-status-popover {
+                                            ul {
+                                                overflow: hidden;
+
+                                                li {
+                                                    font-family: 'ColabReg';
+                                                    font-size: 0.8em;
+
+                                                    float: left;
+                                                    width: 40px;
+                                                    height: 15px;
+                                                    padding: 7px;
+                                                    margin-right: 2px;
+                                                    margin-bottom: 2px;
+                                                    background-color: #f3f3f3;
+                                                    cursor: pointer;
+                                                    text-align: center;
+                                                    opacity: 0.5;
+                                                    &:hover {
+                                                        opacity: 1;
+                                                        transition: all 0.3s ease-out;
+                                                    }
+                                                    a {
+                                                        color: #ffffff;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                .description {
+                                    text-align: center;
+                                    padding: 10px 15px;
+                                    font-size: .9em;
+                                    line-height: 14px;
+                                    p{
+                                        margin: 0;
+                                    }
+                                }
+                            }
+                            .add-new-task{
+                                display: block;
+                                text-align: center;
+                                border: none;
+                                padding-top: 50px;
+                                margin: 10px;
+                                color: #ccc;
+                                transition: all.2s ease;
+                                bottom: 2px;
+                                width: 100%;
+                                &:before {
+                                    margin-right: 5px;
+                                    position: relative;
+                                    top: 1px;
+                                }
+                                &:hover {
+                                    color: #FFF;
+                                }
+                            }
+                            &.unassigned-task {
+                                .title {
+                                    display: block;
+                                    text-align:center;
+                                }
+                            }
+                        }
+                        .tasks {
+                            padding: 3px;
+                            min-height: 200px;
+                            .task-box {
+                                width: 145px;
+                                float: left;
+                                margin: 4px;
+                                box-shadow: 0px 5px 12px -2px rgba(0,0,0,.2);
+                                .task-box-content {
+                                    background-color: #FFF5D8;
+                                    color: black;
+                                    height: 90%;
+                                    cursor: move;
+                                    position: relative;
+                                    &:hover{
+                                        box-shadow: 0px 6px 15px -2px rgba(0,0,0,.3);
+                                        .edit-task{
+                                            opacity: 1;
+                                            transition: all 0.3s ease-in;
+                                        }
+                                        .view-task{
+                                            opacity: 1;
+                                            transition: all 0.3s ease-in;
+                                        }
+                                    }
+                                    .veil {
+                                        position: absolute;
+                                        top: 0px;
+                                        left: 0px;
+                                        margin: 0px;
+                                        width: 100%;
+                                        height: 100%;
+                                        background: white;
+                                        opacity: .7;
+                                        z-index: 100;
+                                        .spinner {
+                                            margin: auto;
+                                            margin-top: 30px;
+                                            opacity: .7;
+
+                                            -webkit-animation: spin .5s infinite linear;
+                                            -moz-animation: spin .5s infinite linear;
+                                            -o-animation: spin .5s infinite linear;
+                                            -ms-animation: spin .5s infinite linear;
+                                            @-webkit-keyframes spin {
+                                                0% { -webkit-transform: rotate(0deg);}
+                                                100% { -webkit-transform: rotate(360deg);}
+                                            }
+                                            @-moz-keyframes spin {
+                                                0% { -moz-transform: rotate(0deg);}
+                                                100% { -moz-transform: rotate(360deg);}
+                                            }
+                                            @-o-keyframes spin {
+                                                0% { -o-transform: rotate(0deg);}
+                                                100% { -o-transform: rotate(360deg);}
+                                            }
+                                            @-ms-keyframes spin {
+                                                0% { -ms-transform: rotate(0deg);}
+                                                100% { -ms-transform: rotate(360deg);}
+                                            }
+                                        }
+                                    }
+                                    .title {
+                                        font-family: 'DroidSerifBold';
+                                        font-size: .9em;
+                                        line-height: 15px;
+                                        overflow: hidden;
+                                        color: #333;
+                                        padding: 7px;
+                                    }
+                                    .assign-to{
+                                        margin: 5px 0;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                        padding: 0 7px;
+                                        a{
+                                            color: #666;
+                                            font-size: .9em;
+                                        }
+                                    }
+                                    .desc{
+                                        height: 65px;
+                                        overflow: hidden;
+                                        font-family: 'DroidSerif';
+                                        font-size: .8em;
+                                        line-height: 13px;
+                                        margin: 0;
+                                    }
+                                    .us-points{
+                                        margin: 0;
+                                        text-align: center;
+                                        padding: 3px 5px;
+                                        background-color: rgba(0,0,0,.2);
+                                        color: #000;
+                                        margin-top: 4px;
+                                    }
+                                    .us-options {
+                                        padding: 3px 7px;
+                                        background: #F2E8CB;
+                                    }
+                                    .view-task,
+                                    .edit-task,
+                                    .iocaine{
+                                        white-space: nowrap;
+                                        color: darken(#F2E8CB, 20%);
+                                        margin-right: 2px;
+                                        &:hover {
+                                            color: darken(#F2E8CB, 40%);
+                                            transition: all .3s ease-in;
+                                        }
+                                    }
+                                    .us-tag {
                                         width: 16px;
                                         height: 16px;
                                         margin-left: 5px;

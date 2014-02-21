@@ -342,6 +342,8 @@
         "are-existing-user": "¿Ya eres usuario?"
     },
     "kanban": {
+        "create-user-story": "Crear historia de usuario",
+        "modify-user-story": "Modificar historia de usuario",
         "subject": "Titulo",
         "status": "Estado",
         "assigned-to": "Asignado a",

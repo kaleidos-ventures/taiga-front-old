@@ -432,6 +432,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope, 
             params = {}
         return queryMany("users", params)
 
+    service.createUs = (form) ->
+        return $model.create("userstories", form)
+
     service.createTask = (form) ->
         return $model.create("tasks", form)
 

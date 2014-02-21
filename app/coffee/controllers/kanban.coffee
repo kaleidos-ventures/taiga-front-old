@@ -64,9 +64,9 @@ KanbanController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $mo
             data._moving = false
 
 
-    $scope.openCreateUsForm = () ->
+    $scope.openCreateUsForm = (statusId) ->
         options =
-            status: $scope.project.default_us_status
+            status: statusId
             project: $scope.projectId
 
         promise = $modal.open("us-form", {'us': options, 'type': 'create'})
