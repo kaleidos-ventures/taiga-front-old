@@ -62,10 +62,10 @@
 
     <div class="row-fluid">
         <div class="span12">
-            <div class="tasks-container">
+            <div class="kanban-container tasks-container">
                 <div class="header">
                     <table>
-                        <tbody>
+                        <thead>
                             <tr>
                                 <td class="row-us-description" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%"></td>
                                 <td class="" ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
@@ -73,14 +73,9 @@
                                     <div class="badge" style="background-color: {{ status.color }};">{{ status.name }}</div>
                                 </td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="body">
-                    <table ng-repeat="us in userstoriesList">
+                        </thead>
                         <tbody>
-                            <tr>
+                            <tr ng-repeat="us in userstoriesList">
                                 <td class="row-us-description" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
                                     <div class="info">
                                         <div class="title clearfix">
@@ -119,18 +114,13 @@
                                         ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
                                         style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
 
-                                    <div class="tasks" gm-sortable=".tasks-container .body .tasks" ng-model="usTasks[us.id][status.id]">
+                                    <div class="tasks" gm-sortable=".tasks-container tbody .tasks" ng-model="usTasks[us.id][status.id]">
                                         <div class="task-box" ng-repeat="task in usTasks[us.id][status.id]">
                                             <div ng-include="'/partials/taskboard-task.html'"></div>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-                        </tbody>
-                    </table>
-
-                    <table>
-                        <tbody>
                             <tr>
                                 <td class="row-us-description unassigned-task" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
                                     <div class="info">
@@ -147,7 +137,7 @@
                                         ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
                                         style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
 
-                                    <div class="tasks" gm-sortable=".tasks-container .body .tasks" ng-model="unassignedTasks[status.id]">
+                                    <div class="tasks" gm-sortable=".tasks-container tbody .tasks" ng-model="unassignedTasks[status.id]">
                                         <div class="task-box" ng-repeat="task in unassignedTasks[status.id]">
                                             <div ng-include="'/partials/taskboard-task.html'"></div>
                                         </div>
