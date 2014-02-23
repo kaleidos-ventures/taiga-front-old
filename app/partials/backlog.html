@@ -156,6 +156,8 @@
                                     data-auto-hide="true"
                                     style="background-color: {{ constants.usStatuses[us.status].color }}">
                                 {{ constants.usStatuses[us.status].name }}</div>
+                            <span data-icon="o" class="icon blocked" ng-show="us.is_blocked"
+                                  gm-popover data-tmpl="#us-blocked-popover" data-auto-hide="true"></span>
                         </div>
                         <div class="us-points">
                             <div ng-repeat="role in constants.computableRolesList" class="role-point"
@@ -293,6 +295,8 @@
                                         <div data-icon="q" ng-show="!us.is_closed"></div>
                                     </div>
                                     <div class="us-title">
+                                        <span data-icon="o" class="icon blocked" ng-show="us.is_blocked"
+                                              gm-popover data-tmpl="#us-blocked-popover" data-auto-hide="true"></span>
                                         <span data-icon="J" class="icon" ng-show="us.client_requirement"></span>
                                         <span data-icon="N" class="icon" ng-show="us.team_requirement"></span>
                                         #{{ us.ref }} {{ us.subject }}
@@ -392,7 +396,7 @@
                         <input type="checkbox" id="client-requirement" class="hidden"
                                ng-model="form.client_requirement" name="client_requirement"/>
                         <label for="client-requirement">
-                            <span data-icon="J" class="icon"></span>
+                            <span data-icon="J" class="icon client-requirement"></span>
                             <span i18next="backlog.client-requirement">Client Requirement</span>
                         </label>
                     </fieldset>
@@ -400,11 +404,27 @@
                         <input type="checkbox"id="team-requirement" class="hidden"
                                ng-model="form.team_requirement" name="team_requirement">
                         <label for="team-requirement">
-                            <span data-icon="N" class="icon"></span>
+                            <span data-icon="N" class="icon team-requirement"></span>
                             <span i18next="backlog.team-requirement">Team Requirement</span>
                         </label>
                     </fieldset>
+                    <fieldset>
+                        <input type="checkbox"id="is-blocked" class="hidden"
+                               ng-model="form.is_blocked" name="is_blocked">
+                        <label for="is-blocked">
+                            <span data-icon="o" class="icon blocked"></span>
+                            <span i18next="backlog.is-blocked">Is blocked</span>
+                        </label>
+                    </fieldset>
                 </div>
+                <fieldset class="fieldset-row" ng-show="form.is_blocked">
+                    <label i18next="backlog.blocking-reasons">Reasons for blocking</label>
+                    <textarea class="blocked-note" name="blocked_note"
+                              placeholder="Some reasons..."
+                              i18next="placeholder:backlog.blocking-reasons-placeholder"
+                              ng-model="form.blocked_note" gm-markitup preview-id="preview"></textarea>
+                    <div id="preview"></div>
+                </fieldset>
                 <fieldset class="fieldset-row">
                     <label i18next="backlog.description">Description</label>
                     <textarea class="description" name="description"
@@ -472,6 +492,15 @@
                 <a href="">{{ obj.name }}</a>
             </li>
         </ul>
+    </div>
+</script>
+
+<script type="text/template" id="us-blocked-popover">
+    <div class="us-blocked-popover">
+        <section>
+            <strong i18next="backlog.blocking-reasons-popover">Reasons of blocking:</strong>
+            <div gm-render-markdown="us.blocked_note"></div>
+        </section>
     </div>
 </script>
 

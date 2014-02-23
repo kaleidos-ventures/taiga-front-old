@@ -991,7 +991,8 @@ body.login {
                 font-size: 1em;
             }
         }
-        .us-preview-popover {
+        .us-preview-popover,
+        .us-blocked-popover {
             width: 370px;
             section {
                 padding: 5px;
@@ -1274,8 +1275,10 @@ body.login {
                 .label {
                     cursor: pointer;
                 }
-
-
+                .icon.blocked {
+                    cursor: pointer;
+                    color: @red;
+                }
                 .popover-content {
                     width: 225px;
                     .us-status-popover {
@@ -1643,6 +1646,12 @@ body.login {
                                         white-space: nowrap;
                                         overflow: hidden;
                                         text-overflow: ellipsis;
+                                        .icon{
+                                            &.blocked {
+                                                cursor: pointer;
+                                                color: @red;
+                                            }
+                                        }
                                     }
                                     .veil {
                                         position: absolute;
@@ -4538,10 +4547,14 @@ fieldset{
             }
             input[type="checkbox"]:checked+label{
                 .icon {
-                    color: @green;
+                    color: @black;
                     font-size: 26px;
                     vertical-align: middle;
                     transition: all 0.3s ease-in;
+                    &.blocked{
+                        cursor: pointer;
+                        color: @red;
+                    }
                 }
             }
         }
@@ -4568,7 +4581,7 @@ fieldset{
         }
 
         .modal-body {
-            max-height: 640px;
+            max-height: 680px;
             padding: 10px;
         }
     }
