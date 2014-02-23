@@ -182,6 +182,9 @@
         "form-status": "Status",
         "form-assigned-to": "Assigned to",
         "form-unassigned": "Unassigend",
+        "form-is-blocked": "Is blocked",
+        "form-blocking-reasons": "Reasons for blocking",
+        "form-blocking-reasons-placeholder": "Some reasons...",
         "form-tags": "tags",
         "form-tags-placeholder": "Pick tags",
         "form-description": "Description",
@@ -199,7 +202,8 @@
         "select-user-popover": "Select a user:",
         "select-status-popover": "Select a status:",
         "select-priority-popover": "Select a priority:",
-        "select-severity-popover": "Select a severity:"
+        "select-severity-popover": "Select a severity:",
+        "blocking-reasons-popover": "Reasons for blocking:"
     },
     "issue": {
         "issue-ref": "Issue #__ref__",

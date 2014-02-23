@@ -207,6 +207,9 @@
                     <div class="issue-state">
                         <a href="" gm-popover="updateIssueStatus(issue, selectedId)"
                             data-tmpl="#status-popover" data-auto-hide="true">{{ constants.issueStatuses[issue.status].name }}</a>
+
+                        <span data-icon="o" class="icon blocked" ng-show="issue.is_blocked"
+                              gm-popover data-tmpl="#issue-blocked-popover" data-auto-hide="true"></span>
                     </div>
                     <div class="issue-priority">
                         <a href="" gm-popover="updateIssuePriority(issue, selectedId)"
@@ -305,6 +308,26 @@
                             <option value="" i18next="issues.form-unassigned">Unassigned</option>
                         </select>
                     </fieldset>
+                    <fieldset class="is-blocked icons">
+                        <input type="checkbox"id="is-blocked" class="hidden"
+                               ng-model="form.is_blocked" name="is_blocked">
+                        <label for="is-blocked">
+                            <span data-icon="o" class="icon blocked"></span>
+                            <span i18next="issues.form-is-blocked">Is blocked</span>
+                        </label>
+                    </fieldset>
+                </div>
+                <div class="fieldset-row">
+                    <fieldset ng-show="form.is_blocked">
+                        <label i18next="issues.form-blocking-reasons">Reasons for blocking</label>
+                        <textarea class="blocked-note" name="blocked_note"
+                                  placeholder="Some reasons..."
+                                  i18next="placeholder:issues.form-blocking-reasons-placeholder"
+                                  ng-model="form.blocked_note" gm-markitup preview-id="preview"></textarea>
+                        <div id="preview"></div>
+                    </fieldset>
+                </div>
+                <div class="fieldset-row">
                     <fieldset>
                         <label i18next="issues.form-tags">Tags</label>
                         <input gm-select2-tags="projectTags" ng-model="form.tags"
@@ -438,5 +461,14 @@
                 <a href="" data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
             </li>
         </ul>
+    </div>
+</script>
+
+<script type="text/template" id="issue-blocked-popover">
+    <div class="issue-blocked-popover">
+        <section>
+            <strong i18next="issues.blocking-reasons-popover">Reasons of blocking:</strong>
+            <div gm-render-markdown="issue.blocked_note"></div>
+        </section>
     </div>
 </script>

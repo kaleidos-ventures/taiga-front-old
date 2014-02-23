@@ -2819,6 +2819,17 @@ body.login {
             padding: 10px;
             width: 90px;
         }
+        .icon.blocked {
+            cursor: pointer;
+            color: @red;
+        }
+        .issue-blocked-popover {
+            overflow: hidden;
+            a {
+                word-wrap: break-word;
+                color: @blue;
+            }
+        }
 
         .issue-created-date,
         .issue-modified-date {
@@ -4672,7 +4683,8 @@ fieldset{
         .priority,
         .severity,
         .status,
-        .assigned-to {
+        .assigned-to,
+        .is-blocked {
             width: 162px;
             display: inline;
         }

@@ -182,6 +182,9 @@
         "form-status": "Estado",
         "form-assigned-to": "Asignada a",
         "form-unassigned": "Sin asignar",
+        "form-is-blocked": "Está bloqueada",
+        "form-blocking-reasons": "Motivos del bloqueo",
+        "form-blocking-reasons-placeholder": "Algunas razones...",
         "form-tags": "Etiquetas",
         "form-tags-placeholder": "Escoja etiquetas",
         "form-description": "Descripción",
@@ -199,7 +202,8 @@
         "select-user-popover": "Selecciona un usuario:",
         "select-status-popover": "Selecciona un estado:",
         "select-priority-popover": "Selecciona una prioridad:",
-        "select-severity-popover": "Selecciona una severidad:"
+        "select-severity-popover": "Selecciona una severidad:",
+        "blocking-reasons-popover": "Motivos del bloqueo:"
     },
     "issue": {
         "issue-ref": "Petición #__ref__",
