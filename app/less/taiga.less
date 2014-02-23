@@ -3422,6 +3422,11 @@ body.login {
                                         position: relative;
                                         top: 4px;
                                         color: @white;
+                                        &.blocked {
+                                            color: @red;
+                                            text-shadow: 1px 1px 1px #999;
+                                            cursor: pointer;
+                                        }
                                     }
 
                                     .label {
@@ -3607,6 +3612,15 @@ body.login {
                                             transition: all .3s ease-in;
                                         }
                                     }
+                                    .blocked {
+                                        white-space: nowrap;
+                                        color: darken(@red, -30%);
+                                        margin-right: 2px;
+                                        &:hover {
+                                            color: @red;
+                                            transition: all .3s ease-in;
+                                        }
+                                    }
                                     .iocaine{
                                         white-space: nowrap;
                                         color: @green;
@@ -3619,6 +3633,9 @@ body.login {
                                         border-radius: 50%;
                                         display: inline-block;
                                         float: right;
+                                    }
+                                    .popover-content {
+                                        width: 225px;
                                     }
                                 }
                             }
@@ -4582,7 +4599,7 @@ fieldset{
         }
 
         .modal-body {
-            max-height: 680px;
+            max-height: 750px;
             padding: 10px;
         }
     }
@@ -4621,6 +4638,32 @@ fieldset{
                     transition: all 0.3s ease-in;
                 }
             }
+        }
+        .icons {
+            fieldset{
+                display: inline-block;
+            }
+            .icon {
+                color: @grayLighter;
+                font-size: 26px;
+                vertical-align: middle;
+                transition: all 0.3s ease-in;
+            }
+            input[type="checkbox"]:checked+label{
+                .icon {
+                    color: @green;
+                    font-size: 26px;
+                    vertical-align: middle;
+                    transition: all 0.3s ease-in;
+                    &.blocked {
+                        color: @red;
+                    }
+                }
+            }
+        }
+        .blocked-note {
+            width: 96%;
+            height: 100px;
         }
     }
 

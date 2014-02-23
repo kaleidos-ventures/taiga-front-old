@@ -106,6 +106,9 @@
                                                  data-auto-hide="true"
                                                  style="background-color: {{ constants.usStatuses[us.status].color }}">
                                                 {{ constants.usStatuses[us.status].name }}</div>
+                                            <div data-icon="o" class="icon blocked" ng-show="us.is_blocked"
+                                                 gm-popover data-tmpl="#us-blocked-popover"
+                                                 data-auto-hide="true"></div>
                                         </div>
                                     </div>
                                     <a href="" data-icon="A" class="add-new-task"
@@ -193,7 +196,7 @@
                         </select>
                     </fieldset>
                 </div>
-                <div class="fieldset-row iocaine">
+                <div class="fieldset-row icons">
                     <fieldset>
                         <input type="checkbox" class="iocaine hidden" id="iocaine" name="iocaine"i
                                ng-model="form.is_iocaine"></input>
@@ -202,6 +205,24 @@
                             <span i18next="taskboard.is-iocaine">Is iocaine</span>
                         </label>
                     </fieldset>
+                    <fieldset>
+                        <input type="checkbox"id="is-blocked" class="is-blocked hidden"
+                               ng-model="form.is_blocked" name="is_blocked">
+                        <label for="is-blocked">
+                            <span data-icon="o" class="icon blocked"></span>
+                            <span i18next="taskboard.is-blocked">Is blocked</span>
+                        </label>
+                    </fieldset>
+                </div>
+                <div class="fieldset-row" ng-show="form.is_blocked">
+                    <fieldset>
+                        <label i18next="taskboard.blocking-reasons">Reasons for blocking</label>
+                        <textarea class="blocked-note" name="blocked_note"
+                                  placeholder="Some reasons..."
+                                  i18next="placeholder:taskboard.blocking-reasons-placeholder"
+                                  ng-model="form.blocked_note" gm-markitup preview-id="preview"></textarea>
+                        <div id="preview"></div>
+                    <fieldset>
                 </div>
                 <div class="fieldset-row">
                     <fieldset>
@@ -254,5 +275,22 @@
                 <a href="">{{ obj.name }}</a>
             </li>
         </ul>
+    </div>
+</script>
+
+<script type="text/template" id="us-blocked-popover">
+    <div class="us-blocked-popover">
+        <section>
+            <strong i18next="taskboard.blocking-reasons-popover">reasons of blocking:</strong>
+            <div gm-render-markdown="us.blocked_note"></div>
+        </section>
+    </div>
+</script>
+<script type="text/template" id="task-blocked-popover">
+    <div class="task-blocked-popover">
+        <section>
+            <strong i18next="taskboard.blocking-reasons-popover">reasons of blocking:</strong>
+            <div gm-render-markdown="task.blocked_note"></div>
+        </section>
     </div>
 </script>
