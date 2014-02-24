@@ -12,6 +12,10 @@
     <div class="row-fluid issue-data">
         <div class="span8 issue-data-description">
             <h2>{{ issue.subject }}</h2>
+            <div class="blocked-alert" ng-show="issue.is_blocked">
+                <div class="icon blocked"data-icon="o"></div>
+                <div class="reasons" gm-render-markdown="issue.blocked_note"></div>
+            </div>
             <div gm-render-markdown="issue.description"></div>
             <div class="attachments" ng-show="attachments.length > 0 || newAttachments[0].status != undefined">
                 <h3 data-icon="E" i18next="issue.attachments">Attachments</h3>
@@ -152,6 +156,26 @@
                         <fieldset class="issue-tags">
                             <label i18next="issue.tags-label">Tags</label>
                             <input type="text" name="tags" ng-model="form.tags" gm-select2-tags="projectTags"></input>
+                        </fieldset>
+                    </div>
+                    <div>
+                        <fieldset class="issue-blocked">
+                            <input type="checkbox"id="is-blocked" class="hidden"
+                                   ng-model="form.is_blocked" name="is_blocked">
+                            <label for="is-blocked">
+                                <span data-icon="o" class="icon blocked"></span>
+                                <span i18next="issue.is-blocked">Is blocked</span>
+                            </label>
+                        </fieldset>
+                    </div>
+                    <div ng-show="form.is_blocked">
+                        <fieldset class="issue-blocked-reasons">
+                            <label i18next="issue.blocking-reasons">Reasons for blocking</label>
+                            <textarea class="blocked-note" name="blocked_note"
+                                      placeholder="Some reasons..."
+                                      i18next="placeholder:issue.blocking-reasons-placeholder"
+                                      ng-model="form.blocked_note" gm-markitup preview-id="preview"></textarea>
+                            <div id="preview"></div>
                         </fieldset>
                     </div>
                     <div ng-hide="_showHiddenGroups">

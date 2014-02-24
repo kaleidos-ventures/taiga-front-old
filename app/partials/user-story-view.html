@@ -16,6 +16,10 @@
     <div class="row-fluid task-data">
         <div class="span8 task-data-description">
             <h2>{{ userStory.subject }}</h2>
+            <div class="blocked-alert" ng-show="userStory.is_blocked">
+                <div class="icon blocked"data-icon="o"></div>
+                <div class="reasons" gm-render-markdown="userStory.blocked_note"></div>
+            </div>
             <div gm-render-markdown="userStory.description"></div>
             <div class="attachments" ng-show="attachments.length > 0 || newAttachments[0].status != undefined">
                 <h3 i18next="user-story.attachments">Attachments</h3>
@@ -140,8 +144,25 @@
                                 <span i18next="user-story.team-requirement-label">Team Requirement</span>
                             </label>
                         </fieldset>
+                        <fieldset>
+                            <input type="checkbox"id="is-blocked" class="hidden"
+                                   ng-model="form.is_blocked" name="is_blocked">
+                            <label for="is-blocked">
+                                <span data-icon="o" class="icon blocked"></span>
+                                <span i18next="user-story.is-blocked">Is blocked</span>
+                            </label>
+                        </fieldset>
                     </div>
-
+                    <div>
+                        <fieldset class="fieldset-row" ng-show="form.is_blocked">
+                            <label i18next="user-story.blocking-reasons">Reasons for blocking</label>
+                            <textarea class="blocked-note" name="blocked_note"
+                                      placeholder="Some reasons..."
+                                      i18next="placeholder:user-story.blocking-reasons-placeholder"
+                                      ng-model="form.blocked_note" gm-markitup preview-id="preview"></textarea>
+                            <div id="preview"></div>
+                        </fieldset>
+                    </div>
                     <div ng-hide="_showHiddenGroups">
                         <p style="cursor: pointer" ng-click="_showHiddenGroups=true" i18next="user-story.edit-subject-description">
                             Edit <b>Subject</b> and <b>Description</b>...

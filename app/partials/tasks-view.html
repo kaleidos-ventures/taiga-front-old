@@ -14,6 +14,10 @@
     <div class="row-fluid task-data">
         <div class="span8 task-data-description">
             <h2>{{ task.subject }}</h2>
+            <div class="blocked-alert" ng-show="task.is_blocked">
+                <div class="icon blocked"data-icon="o"></div>
+                <div class="reasons" gm-render-markdown="task.blocked_note"></div>
+            </div>
             <div gm-render-markdown="task.description"></div>
             <div class="attachments" ng-show="attachments.length > 0 || newAttachments[0].status != undefined">
                 <h3 i18next="task.attachments">Attachments</h3>
@@ -128,6 +132,24 @@
                                 <span data-icon="r" class="icon"></span>
                                 <span i18next="task.is-iocaine">Is iocaine</span>
                             </label>
+                        </fieldset>
+                        <fieldset class="task-blocked">
+                            <input type="checkbox"id="is-blocked" class="hidden"
+                                   ng-model="form.is_blocked" name="is_blocked">
+                            <label for="is-blocked">
+                                <span data-icon="o" class="icon blocked"></span>
+                                <span i18next="task.is-blocked">Is blocked</span>
+                            </label>
+                        </fieldset>
+                    </div>
+                    <div ng-show="form.is_blocked">
+                        <fieldset>
+                            <label i18next="task.blocking-reasons">Reasons for blocking</label>
+                            <textarea class="blocked-note" name="blocked_note"
+                                      placeholder="Some reasons..."
+                                      i18next="placeholder:task.blocking-reasons-placeholder"
+                                      ng-model="form.blocked_note" gm-markitup preview-id="preview"></textarea>
+                            <div id="preview"></div>
                         </fieldset>
                     </div>
 
