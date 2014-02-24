@@ -42,54 +42,88 @@
         ng-show="formOpened"
         ng-controller="KanbanUsModalController">
 
-    <div class="new-task-modal modal">
-        <form class="inline-form task-form" gm-checksley-form="submit()">
+    <div class="new-us-modal modal">
+        <form class="inline-form us-form" gm-checksley-form="submit()">
             <div class="modal-header" ng-switch on="context.type">
-                <h3 ng-switch-when="create" i18next="kanban.create-user-story">Create task</h3>
-                <h3 ng-switch-when="edit" i18next="kanban.modify-user-story">Modify task</h3>
+                <h3 ng-switch-when="create" i18next="kanban.create-user-story">Create user story</h3>
+                <h3 ng-switch-when="edit" i18next="kanban.modify-user-story">Modify user story</h3>
             </div>
             <div class="modal-body">
-                <div class="fieldset-row">
+                <fieldset class="fieldset-row">
                     <fieldset>
                         <label i18next="kanban.subject">Subject</label>
-                        <input class="subject" type="text" name="subject" data-required="true"
-                            data-error-message="Required"
-                            ng-model="form.subject"></input>
+                        <input class="subject" type="text" ng-model="form.subject" data-required="true"
+                               name="subject" placeholder="A descriptive name..." data-maxlength="500"
+                               i18next="placeholder:kanban.subject-placeholder"></input>
                     </fieldset>
-                </div>
-                <div class="fieldset-row">
+                </fieldset>
+                <div class="fieldset-row" gm-role-points-edition></div>
+                <div class="fieldset-row clearfix status-tags">
                     <fieldset>
                         <label i18next="kanban.status">Status</label>
-                        <select class="status" name="status" ng-model="form.status" data-required="true"
-                            data-type="number" data-error-message="Required"
-                            ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'"></select>
+                        <select class="status" name="status" ng-model="form.status"
+                            data-type="number" data-required="true"
+                            data-error-message="This field is required."
+                            ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'"
+                            i18next="data-error-message:field-required"
+                            ></select>
                         </select>
                     </fieldset>
-                    <fieldset>
-                        <label i18next="kanban.assigned-to">Assigned to</label>
-                        <select class="status" name="assigned_to" ng-model="form.assigned_to"
-                                ng-options="c.user as c.full_name for c in project.active_memberships">
-                            <option value="" i18next="task.unassigned">Unassigned</option>
-                        </select>
-                    </fieldset>
-                </div>
-                <div class="fieldset-row">
                     <fieldset>
                         <label i18next="kanban.tags">Tags</label>
-                        <input type="text" class="tags" name="tags" value="" ng-model="form.tags" gm-select2-tags="projectTags"></input>
+                        <input type="text" class="tags" name="tags" value=""
+                               gm-select2-tags="projectTags" ng-model="form.tags"
+                               placeholder="Ex: backend, backoffice, ecommerce..."
+                               i18next="placeholder:kanban.tags-placeholder"></input>
                     </fieldset>
                 </div>
-                <div class="fieldset-row">
+                <div class="fieldset-row requirements">
                     <fieldset>
-                        <label i18next="kanban.description">Description</label>
-                        <textarea class="description" name="description" ng-model="form.description" gm-markitup preview-id="preview"></textarea>
-                        <div id="preview"></div>
+                        <input type="checkbox" id="client-requirement" class="hidden"
+                               ng-model="form.client_requirement" name="client_requirement"/>
+                        <label for="client-requirement">
+                            <span data-icon="J" class="icon client-requirement"></span>
+                            <span i18next="kanban.client-requirement">Client Requirement</span>
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <input type="checkbox"id="team-requirement" class="hidden"
+                               ng-model="form.team_requirement" name="team_requirement">
+                        <label for="team-requirement">
+                            <span data-icon="N" class="icon team-requirement"></span>
+                            <span i18next="kanban.team-requirement">Team Requirement</span>
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <input type="checkbox"id="is-blocked" class="hidden"
+                               ng-model="form.is_blocked" name="is_blocked">
+                        <label for="is-blocked">
+                            <span data-icon="o" class="icon blocked"></span>
+                            <span i18next="kanban.is-blocked">Is blocked</span>
+                        </label>
                     </fieldset>
                 </div>
+                <fieldset class="fieldset-row" ng-show="form.is_blocked">
+                    <label i18next="kanban.blocking-reasons">Reasons for blocking</label>
+                    <textarea class="blocked-note" name="blocked_note"
+                              placeholder="Some reasons..."
+                              i18next="placeholder:kanban.blocking-reasons-placeholder"
+                              ng-model="form.blocked_note" gm-markitup preview-id="preview"></textarea>
+                    <div id="preview"></div>
+                </fieldset>
+                <fieldset class="fieldset-row">
+                    <label i18next="kanban.description">Description</label>
+                    <textarea class="description" name="description"
+                              placeholder="A good description..."
+                              i18next="placeholder:kanban.description-placeholder"
+                              ng-model="form.description" gm-markitup preview-id="preview"></textarea>
+                    <div id="preview"></div>
+                </fieldset>
             </div>
             <div class="modal-footer">
                 <div gm-spinner class="spinner-container"></div>
-                <input type="submit" class="button button-success" gm-checksley-submit-button value="Save"  i18next="value:kanban.save"/>
+                <input type="submit" class="button button-success"
+                       gm-checksley-submit-button value="Save" i18next="value:kanban.save" />
                 <a href="" class="button button-cancel" ng-click="close()" i18next="kanban.close">Close</a>
             </div>
         </form>
@@ -114,5 +148,14 @@
                 <a href="">{{ obj.name }}</a>
             </li>
         </ul>
+    </div>
+</script>
+
+<script type="text/template" id="us-blocked-popover">
+    <div class="us-blocked-popover">
+        <section>
+            <strong i18next="kanban.blocking-reasons-popover">reasons of blocking:</strong>
+            <div gm-render-markdown="us.blocked_note"></div>
+        </section>
     </div>
 </script>

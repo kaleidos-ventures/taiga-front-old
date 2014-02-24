@@ -63,13 +63,21 @@ KanbanController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $mo
         us.save().then (data) ->
             data._moving = false
 
+    initializeUsForm = (us, status) ->
+        if us?
+            return us
+
+        result = {}
+        result['project'] = $scope.projectId
+        result['status'] = status or $scope.project.default_us_status
+        points = {}
+        for role in $scope.constants.computableRolesList
+            points[role.id] = $scope.project.default_points
+        result['points'] = points
+        return result
 
     $scope.openCreateUsForm = (statusId) ->
-        options =
-            status: statusId
-            project: $scope.projectId
-
-        promise = $modal.open("us-form", {'us': options, 'type': 'create'})
+        promise = $modal.open("us-form", {'us': initializeUsForm(null, statusId), 'type': 'create'})
         promise.then (us) ->
             newUs = $model.make_model("userstories", us)
             $scope.userstories.push(newUs)
