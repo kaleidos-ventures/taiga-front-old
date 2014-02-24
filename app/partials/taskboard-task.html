@@ -1,4 +1,4 @@
-<div class="task-box-content clearfix" ng-controller="TaskboardTaskController" ng-dblclick="openTask(projectSlug, task.ref)">
+<div class="task-box-content clearfix" ng-controller="TaskboardTaskController" ng-dblclick="openTask(projectSlug, task.ref)" ng-class="{blocked: task.is_blocked}">
     <div class="veil" ng-show="task._moving">
         <span ng-class="{spinner: task._moving}" data-icon="x"></span>
     </div>
