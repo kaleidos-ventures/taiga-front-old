@@ -13,7 +13,7 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                         if value
                             return value.join(", ")
                         else null
-                    when "team_requirement", "client_requirement"
+                    when "team_requirement", "client_requirement", "is_blocked"
                         if value is true
                             return $i18next.t("common.yes")
                         else if value is false
@@ -46,6 +46,12 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                         if value
                             return scope.constants.users[value].full_name
                         return $i18next.t("common.unassigned")
+                    when "is_blocked"
+                        if value is true
+                            return $i18next.t("common.yes")
+                        else if value is false
+                            return $i18next.t("common.no")
+                        else null
                     else value
             task: (name, value) ->
                 return switch name
@@ -61,7 +67,7 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                         if value
                             return scope.constants.users[value].full_name
                         return $i18next.t("common.unassigned")
-                    when "is_iocaine"
+                    when "is_iocaine", "is_blocked"
                         if value is true
                             return $i18next.t("common.yes")
                         else if value is false
@@ -72,10 +78,11 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
 
         fields = {
             userstory: ["status", "tags", "subject", "description", "client_requirement",
-                        "team_requirement"]
+                        "team_requirement", "is_blocked", "blocked_note"]
             issue: ["type", "status", "priority",  "severity", "assigned_to", "tags"
-                    "subject", "description"]
-            task: ["status", "assigned_to", "tags", "subject", "description", "is_iocaine"]
+                    "subject", "description", "is_blocked", "blocked_note"]
+            task: ["status", "assigned_to", "tags", "subject", "description", "is_iocaine",
+                   "is_blocked", "blocked_note"]
         }
 
         makeChangeItem = (name, field, type) ->
