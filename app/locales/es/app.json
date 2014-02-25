@@ -409,7 +409,12 @@
         "unassigned": "Sin asignar",
         "unassigned-tasks": "Tareas sin asignar",
         "select-user": "Selecciona un usuario",
-        "user-story-saved": "La historia de usuario ha sido guardada"
+        "user-story-saved": "La historia de usuario ha sido guardada",
+        "add-bulk-of-tasks": "Añadir un bloque de tareas",
+        "bulk-tasks": "Crear tareas en bloque",
+        "task-per-line": "Unta tarea por linea...",
+        "bulk-tasks-created": "Se ha creado __count__ tarea.",
+        "bulk-tasks-created_plural": "Se han creado __count__ tareas."
     },
     "task": {
         "task-ref": "Tarea #__ref__",

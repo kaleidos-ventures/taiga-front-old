@@ -136,6 +136,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         "userstories-restore": "/api/v1/userstories/%s/restore"
         "userstories/attachments": "/api/v1/userstory-attachments"
         "tasks": "/api/v1/tasks"
+        "bulk-create-tasks": "/api/v1/tasks/bulk_create"
         "tasks-historical": "/api/v1/tasks/%s/historical"
         "tasks-restore": "/api/v1/tasks/%s/restore"
         "tasks/attachments": "/api/v1/task-attachments"

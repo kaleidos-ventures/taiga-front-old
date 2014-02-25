@@ -114,7 +114,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
             data._moving = false
 
     $scope.openBulkTasksForm = (us) ->
-        promise = $modal.open("bulk-tasks-form", {us: us)})
+        promise = $modal.open("bulk-tasks-form", {us: us})
         promise.then (tasks) ->
             _.each tasks, (task) ->
                 newTask = $model.make_model("tasks", task)
@@ -281,14 +281,14 @@ TaskboardBulkTasksModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlas
         $scope.bulkTasksFormOpened = true
 
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->
-        promise = rs.createBulkTasks($scope.projectId, $scope.context.us.id, $scope.$scope.form)
+        promise = rs.createBulkTasks($scope.projectId, $scope.context.us.id, $scope.form)
         $scope.$emit("spinner:start")
 
         promise.then (data) ->
             $scope.$emit("spinner:stop")
             closeModal()
             $scope.overlay.close()
-            $scope.defered.resolve()
+            $scope.defered.resolve(data.data)
             $gmFlash.info($i18next.t('taskboard.bulk-tasks-created', { count: data.data.length }))
             $scope.form = {}
 

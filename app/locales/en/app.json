@@ -409,7 +409,12 @@
         "unassigned": "Unassigned",
         "unassigned-tasks": "Unassigned tasks",
         "select-user": "Select a user:",
-        "user-story-saved": "The user story has been saved"
+        "user-story-saved": "The user story has been saved",
+        "add-bulk-of-tasks": "Add a bulk of tasks",
+        "bulk-tasks": "Create a bulk of Tasks",
+        "task-per-line": "One task per line...",
+        "bulk-tasks-created": "__count__ task has been created.",
+        "bulk-tasks-created_plural": "__count__ tasks has been created."
     },
     "task": {
         "task-ref": "Task #__ref__",
