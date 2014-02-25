@@ -63,6 +63,10 @@
                     <strong i18next="user-story.added-by">Added by:</strong>
                     <span gm-colorize-user="constants.users[userStory.owner]">{{ constants.users[userStory.owner].full_name }}</span>
                 </li>
+                <li data-icon="u" ng-hide="project.is_backlog_activated">
+                    <strong i18next="user-story.assigned-to">Assigned to:</strong>
+                    <span gm-colorize-user="constants.users[userStory.assigned_to]">{{ constants.users[userStory.assigned_to].full_name || "Unassigned" }}</span>
+                </li>
                 <li data-icon="w">
                     <strong i18next="user-story.created">Created:</strong>
                     <span>{{ userStory.created_date|momentFormat:"LLLL" }}</span>
@@ -116,6 +120,17 @@
                                     data-required="true"
                                     data-type="number" data-error-message="Required"
                                     ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'"></select>
+                        </fieldset>
+
+                        <fieldset class="task-assigned" ng-hide="project.is_backlog_activated">
+                            <label i18next="user-story.assigned-to-label">Assigned to</label>
+
+                            <select class="assigned-to" name="assigned_to"
+                                    ng-model="form.assigned_to" data-type="number"
+                                    data-error-message="Required"
+                                    ng-options="c.user as c.full_name for c in project.active_memberships">
+                                <option value="" i18next="user-story.unassigned">Unassigned</option>
+                            </select>
                         </fieldset>
 
                         <fieldset class="task-tags">
