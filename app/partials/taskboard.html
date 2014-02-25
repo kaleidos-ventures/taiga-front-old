@@ -116,6 +116,11 @@
                                        i18next="taskboard.add-new-task">
                                         Add new task
                                     </a>
+                                    <a href="" data-icon="A" class="add-bulk-of-tasks"
+                                       ng-click="openBulkTasksForm(us)"
+                                       i18next="taskboard.add-bulk-of-tasks">
+                                        Add a bulk of tasks
+                                    </a>
                                 </td>
                                 <td class="col-task-status col-task-{{ status.name|slugify }}"
                                         ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
@@ -241,6 +246,34 @@
             <div class="modal-footer">
                 <div gm-spinner class="spinner-container"></div>
                 <input type="submit" class="button button-success" gm-checksley-submit-button value="Save"  i18next="value:taskboard.save"/>
+                <a href="" class="button button-cancel" ng-click="close()" i18next="taskboard.close">Close</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="bulk-tasks-modalform"
+    gm-modal="bulk-tasks-form"
+    ng-show="bulkTasksFormOpened"
+    ng-controller="TaskboardBulkTasksModalController">
+
+    <div class="bulk-tasks-modal modal">
+        <form class="inline-form task-form" gm-checksley-form="submit()">
+            <div class="modal-header" ng-switch on="context.type">
+                <h3 i18next="taskboard.bulk-tasks">Create a bulk of tasks</h3>
+            </div>
+            <div class="modal-body">
+                <fieldset class="fieldset-row">
+                    <fieldset>
+                        <textarea ng-model="form.bulkTasks" data-required="true"
+                            placeholder="One task per line..." rows="20"
+                            i18next="placeholder:taskboard.task-per-line"></textarea>
+                    </fieldset>
+                </fieldset>
+            <div class="modal-footer">
+                <div gm-spinner class="spinner-container"></div>
+                <input type="submit" class="button button-success"
+                       gm-checksley-submit-button value="Save" i18next="value:taskboard.save" />
                 <a href="" class="button button-cancel" ng-click="close()" i18next="taskboard.close">Close</a>
             </div>
         </form>

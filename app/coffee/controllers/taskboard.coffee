@@ -113,6 +113,15 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
         us.save().then (data) ->
             data._moving = false
 
+    $scope.openBulkTasksForm = (us) ->
+        promise = $modal.open("bulk-tasks-form", {us: us)})
+        promise.then (tasks) ->
+            _.each tasks, (task) ->
+                newTask = $model.make_model("tasks", task)
+                $scope.tasks.push(newTask)
+
+            formatUserStoryTasks()
+            calculateStats()
 
     $scope.openCreateTaskForm = (us) ->
         options =
@@ -175,6 +184,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
 TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs, $i18next) ->
     $scope.type = "create"
     $scope.formOpened = false
+    $scope.bulkTasksFormOpened = false
 
     # Load data
     $scope.defered = null
@@ -242,6 +252,59 @@ TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs, $i
 
     return
 
+TaskboardBulkTasksModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next) ->
+    $scope.bulkTasksFormOpened = false
+
+    # Load data
+    $scope.defered = null
+    $scope.context = null
+
+    openModal = ->
+        $scope.bulkTasksFormOpened = true
+        $scope.$broadcast("checksley:reset")
+
+        $scope.overlay = $gmOverlay()
+        $scope.overlay.open().then ->
+            $scope.bulkTasksFormOpened = false
+
+    closeModal = ->
+        $scope.bulkTasksFormOpened = false
+
+    @.initialize = (dfr, ctx) ->
+        $scope.defered = dfr
+        $scope.context = ctx
+        openModal()
+
+    @.delete = ->
+        closeModal()
+        $scope.form = form
+        $scope.bulkTasksFormOpened = true
+
+    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
+        promise = rs.createBulkTasks($scope.projectId, $scope.context.us.id, $scope.$scope.form)
+        $scope.$emit("spinner:start")
+
+        promise.then (data) ->
+            $scope.$emit("spinner:stop")
+            closeModal()
+            $scope.overlay.close()
+            $scope.defered.resolve()
+            $gmFlash.info($i18next.t('taskboard.bulk-tasks-created', { count: data.data.length }))
+            $scope.form = {}
+
+        promise.then null, (data) ->
+            $scope.checksleyErrors = data
+
+    $scope.close = ->
+        $scope.bulkTasksFormOpened = false
+        $scope.overlay.close()
+        $scope.form = {}
+
+    $scope.$on "select2:changed", (ctx, value) ->
+        $scope.form.tags = value
+
+    return
+
 
 TaskboardTaskController = ($scope, $rootScope, $q, $location) ->
     $scope.updateTaskAssignation = (task, id) ->
@@ -264,3 +327,4 @@ module = angular.module("taiga.controllers.taskboard", [])
 module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', "$location", TaskboardTaskController])
 module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data', '$modal', "$model", "$i18next", TaskboardController])
 module.controller("TaskboardTaskModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', "$i18next", TaskboardTaskModalController])
+module.controller('TaskboardBulkTasksModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', TaskboardBulkTasksModalController])
