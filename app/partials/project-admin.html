@@ -26,6 +26,8 @@
         <div class="update-form">
             <form class="form-horizontal" gm-checksley-form="submit()">
 
+                <h3 i18next="admin.project-details">Project details</h3>
+
                 <fieldset class="project-name">
                     <label class="control-label" for="name" i18next="admin.name">Name:</label>
                     <input type="text" id="name" name="name" ng-model="project.name" data-error-message="Required" />
@@ -53,13 +55,7 @@
                     <textarea id="description" name="description" ng-model="project.description"></textarea>
                 </fieldset>
 
-                <fieldset class="project-videoconferences">
-                    <label for="videoconferences" i18next="admin.videoconference-system">Videoconference system:</label>
-                    <select id="videoconferences" name="videoconferences"
-                            ng-model="project.videoconferences"
-                            ng-options="c.id as c.name for c in [{id: 'appear-in', name: 'AppearIn'}, {id: 'talky', name: 'Talky'}]">
-                        <option value="">--------</option>
-                </fieldset>
+                <h3 i18next="admin.default-values">Default values:</h3>
 
                 <fieldset class="project-default-points">
                     <label for="default_points" i18next="admin.default-points">Default value for points selectors:</label>
@@ -120,6 +116,29 @@
                     <select id="default_issue_status" name="default_issue_status"
                             ng-model="project.default_issue_status"
                             ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <h3 i18next="admin.functionalities">Functionalities:</h3>
+
+                <fieldset class="project-is-backlog-activated">
+                    <input type="checkbox" id="is_backlog_activated" name="is_backlog_activated"
+                           ng-model="project.is_backlog_activated" />
+                    <label for="is_backlog_activated" i18next="admin.activate-backlog">Activate Backlog</label>
+                </fieldset>
+
+                <fieldset class="project-is-kanban-activated">
+                    <input type="checkbox" id="is_kanban_activated" name="is_kanban_activated"
+                           ng-model="project.is_kanban_activated" />
+                    <label for="is_kanban_activated" i18next="admin.activate-kanban">Activate Kanban</label>
+                </fieldset>
+
+                <fieldset class="project-videoconferences">
+                    <label for="videoconferences" i18next="admin.videoconference-system">Videoconference system:</label>
+                    <select id="videoconferences" name="videoconferences"
+                            ng-model="project.videoconferences"
+                            ng-options="c.id as c.name for c in [{id: 'appear-in', name: 'AppearIn'}, {id: 'talky', name: 'Talky'}]">
                         <option value="">--------</option>
                     </select>
                 </fieldset>

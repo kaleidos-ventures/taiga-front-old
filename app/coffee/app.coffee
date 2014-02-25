@@ -259,6 +259,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
     $rootScope.baseUrls =
         projects: "/"
         backlog: "/project/%s/backlog"
+        kanban: "/project/%s/kanban"
         taskboard: "/project/%s/taskboard/%s"
         userstory: "/project/%s/user-story/%s"
         issue: "/project/%s/issues/%s"
@@ -282,8 +283,20 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
         projectsUrl: ->
             return '/#/'
 
+        projectHomeUrl: (project) ->
+            if project.is_backlog_activated
+                return $rootScope.urls.backlogUrl(project.slug)
+            else if project.is_kanban_activated
+                return $rootScope.urls.kanbanUrl(project.slug)
+
+            return $rootScope.urls.issuesUrl(project.slug)
+
         backlogUrl: (projectId, raw) ->
             url = gm.format($rootScope.baseUrls.backlog, [projectId])
+            return conditionalUrl(url, raw)
+
+        kanbanUrl: (projectId, raw) ->
+            url = gm.format($rootScope.baseUrls.kanban, [projectId])
             return conditionalUrl(url, raw)
 
         taskboardUrl: (projectId, sprintId, raw) ->

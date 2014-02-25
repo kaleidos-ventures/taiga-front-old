@@ -15,7 +15,7 @@
 KanbanController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $model, $i18next) ->
     # Global Scope Variables
     $rootScope.pageTitle = $i18next.t('common.kanban')
-    $rootScope.pageSection = 'dashboard'
+    $rootScope.pageSection = 'kanban'
     $rootScope.pageBreadcrumb = [
         ["", ""],
         [$i18next.t('common.kanban'), null]

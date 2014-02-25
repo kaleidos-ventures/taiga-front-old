@@ -5,11 +5,14 @@
         <div class="sidebar all-projects">
             <p class="projects-title" i18next="projects.all-projects">All projects</p>
             <ul>
-                <li ng-show="projects.length == 0" class="empty" i18next="projects.no-projects">
+                <li class="empty" ng-show="projects.length == 0"
+                    i18next="projects.no-projects">
                     You have not projects jet.
                 </li>
                 <li ng-repeat="project in projects">
-                    <a href="{{ urls.backlogUrl(project.slug) }}">{{ project.name }}</a>
+                    <a href="" ng-href="{{ urls.projectHomeUrl(project) }}">
+                        {{ project.name }}
+                    </a>
                 </li>
             </ul>
         </div>
@@ -17,11 +20,14 @@
         <div class="main projects-dashboard">
             <p class="projects-title" i18next="projects.recent-projects">Recent projects</p>
             <ul class="latest-projects">
-                <li ng-show="(projects|limitTo:6).length == 0" class="empty" i18next="projects.no-recent-projects">
+                <li class="empty" ng-show="(projects|limitTo:6).length == 0"
+                    i18next="projects.no-recent-projects">
                     You have not recent projects jet.
                 </li>
                 <li class="list-item" ng-repeat="project in projects|limitTo:6">
-                    <a class="project-{{ $index }}" href="{{ urls.backlogUrl(project.slug) }}">{{ project.name }}</a>
+                    <a href="" ng-href="{{ urls.projectHomeUrl(project) }}" class="project-{{ $index }}">
+                        {{ project.name }}
+                    </a>
                 </li>
             </ul>
 

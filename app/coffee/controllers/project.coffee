@@ -24,8 +24,6 @@ ProjectListController = ($scope, $rootScope, rs, $i18next) ->
     rs.getProjects().then (projects) ->
         $scope.projects = projects
 
-    return
-
 
 ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model,
                           rs, $confirm, $location, $i18next) ->

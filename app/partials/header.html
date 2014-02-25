@@ -19,7 +19,7 @@
                 </a>
                 <ul class="project-list" ng-show="showingProjects" ng-mouseleave="showingProjects=false">
                     <li ng-repeat="proj in myProjects" ng-show="myProjects.length && !loading">
-                        <a title="{{ proj.name }}" href="{{ urls.backlogUrl(proj.slug) }}">{{ proj.name }}</a>
+                        <a title="{{ proj.name }}" href="" ng-href="{{ urls.projectHomeUrl(proj) }}">{{ proj.name }}</a>
                     </li>
                     <li ng-show="!myProjects.length && !loading">
                         <a title="You have no projects" i18next="common.no-projects,title:common.no-projects">
@@ -41,13 +41,37 @@
 </div>
 <div class="nav" gm-header-menu ng-show="projectSlug">
     <ul>
-        <li class="backlog"><a data-icon="f" href="{{ urls.backlogUrl(projectSlug) }}" title="Backlog" i18next="common.backlog,title:common.backlog">Backlog</a></li>
-        <!--
-        <li class="dashboard" ng-show="sprintId"><a data-icon="n" href="{{ urls.taskboardUrl(projectSlug, sprintId) }}" title="Taskboard">Taskboard</a></li>
-        -->
-        <li class="issues"><a data-icon="a" href="{{ urls.issuesUrl(projectSlug) }}" title="Issues" i18next="common.issues,title:common.issues">Issues</a></li>
-        <li class="wiki"><a data-icon="S" href="{{ urls.wikiUrl(projectSlug, 'home') }}" title="Wiki" i18next="common.wiki,title:common.wiki">Wiki</a></li>
-        <li ng-show="project.videoconferences" class="videoconference">
+        <li class="backlog" ng-show="project.is_backlog_activated">
+            <a data-icon="f"
+               href="{{ urls.backlogUrl(projectSlug) }}"
+               title="Backlog"
+               i18next="common.backlog,title:common.backlog">
+                Backlog</a>
+        </li>
+        <li class="kanban" ng-show="project.is_kanban_activated">
+            <a data-icon="n"
+               href="{{ urls.kanbanUrl(projectSlug) }}"
+               title="Kanban"
+               i18next="common.kanban,title:common.kanban">
+                Kanban</a>
+        </li>
+        <li class="issues">
+            <a data-icon="a"
+               href="{{ urls.issuesUrl(projectSlug) }}"
+               title="Issues"
+               i18next="common.issues,title:common.issues">
+                Issues
+            </a>
+        </li>
+        <li class="wiki">
+            <a data-icon="S"
+               href="{{ urls.wikiUrl(projectSlug, 'home') }}"
+               title="Wiki"
+               i18next="common.wiki,title:common.wiki">
+                Wiki
+            </a>
+        </li>
+        <li class="videoconference" ng-show="project.videoconferences">
             <a data-icon="R"
                href="{{ urls.videoConferenceUrl(project.videoconferences, project.slug) }}"
                target="_blank"
@@ -80,7 +104,9 @@
         </form>
     </div>
 </div>
+
 <div class="breadcrumb">
     <ul class="header-path clearfix" gm-breadcrumb></ul>
 </div>
+
 <div class="flash-message" gm-flash-messages></div>

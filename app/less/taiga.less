@@ -4250,15 +4250,16 @@ fieldset{
         .sprint-list-container {
             width: 60%;
             border: 1px solid #eee;
-            margin-bottom: 20px;
+            margin: 10px;
+            padding: 10px;
+
             h3 {
                 padding: 8px;
-                background: #669900;
+                background: @green;
                 color: #FFF;
-                margin: 0;
+                margin: 20px 0 10px 0;
                 &:before {
                     font-size: 15px;
-                    margin-right: 5px;
                 }
             }
 
@@ -4316,16 +4317,14 @@ fieldset{
         .update-form {
             width: 60%;
             border: 1px solid #eee;
-            margin-bottom: 20px;
-            margin-top: 20px;
+            margin: 10px;
             h3 {
                 padding: 8px;
                 background: @green;
                 color: #FFF;
-                margin: 0;
+                margin: 20px 0 10px 0;
                 &:before {
                     font-size: 15px;
-                    margin-right: 5px;
                 }
             }
             form{
@@ -4345,6 +4344,12 @@ fieldset{
                     min-width: 96%;
                     max-width: 96%;
                     width: 96%;
+                }
+            }
+            .project-is-backlog-activated,
+            .project-is-kanban-activated {
+                label {
+                    display: inline-block;
                 }
             }
         }

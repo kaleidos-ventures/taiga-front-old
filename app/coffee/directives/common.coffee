@@ -6,10 +6,8 @@ GmHeaderMenuDirective = ($rootScope) ->
         element.find(".selected").removeClass("selected")
         if menuSection is "backlog"
             element.find("li.backlog").addClass("selected")
-            element.find("li.dashboard").show()
-        else if menuSection is "dashboard"
-            element.find("li.dashboard").addClass("selected")
-            element.find("li.dashboard").show()
+        else if menuSection is "kanban"
+            element.find("li.kanban").addClass("selected")
         else if menuSection is "issues"
             element.find("li.issues").addClass("selected")
         else if menuSection is "questions"
@@ -18,8 +16,6 @@ GmHeaderMenuDirective = ($rootScope) ->
             element.find("li.wiki").addClass("selected")
         else if menuSection is "admin"
             element.find("li.admin").addClass("selected")
-        else if menuSection is "search"
-        else
 
 
 GmBreadcrumbDirective = ($rootScope) ->
