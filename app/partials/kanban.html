@@ -70,11 +70,11 @@
                         </select>
                     </fieldset>
                     <fieldset>
-                        <label i18next="kanban.tags">Tags</label>
-                        <input type="text" class="tags" name="tags" value=""
-                               gm-select2-tags="projectTags" ng-model="form.tags"
-                               placeholder="Ex: backend, backoffice, ecommerce..."
-                               i18next="placeholder:kanban.tags-placeholder"></input>
+                        <label i18next="kanban.assigned-to">Assigned to</label>
+                        <select class="status" name="assigned_to" ng-model="form.assigned_to"
+                                ng-options="c.user as c.full_name for c in project.active_memberships">
+                            <option value="" i18next="task.unassigned">Unassigned</option>
+                        </select>
                     </fieldset>
                 </div>
                 <div class="fieldset-row requirements">
@@ -110,6 +110,13 @@
                               i18next="placeholder:kanban.blocking-reasons-placeholder"
                               ng-model="form.blocked_note" gm-markitup preview-id="preview"></textarea>
                     <div id="preview"></div>
+                </fieldset>
+                <fieldset class="fieldset-row">
+                    <label i18next="kanban.tags">Tags</label>
+                    <input type="text" class="tags" name="tags" value=""
+                           gm-select2-tags="projectTags" ng-model="form.tags"
+                           placeholder="Ex: backend, backoffice, ecommerce..."
+                           i18next="placeholder:kanban.tags-placeholder"></input>
                 </fieldset>
                 <fieldset class="fieldset-row">
                     <label i18next="kanban.description">Description</label>
