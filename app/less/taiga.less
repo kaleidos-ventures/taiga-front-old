@@ -993,7 +993,8 @@ body.login {
         }
         .us-preview-popover,
         .us-blocked-popover {
-            max-width: 480px;
+            max-width: 640px;
+            min-width: 300px;
             word-wrap: break-word;
             section {
                 padding: 5px;
@@ -1280,11 +1281,21 @@ body.login {
                     color: @red;
                 }
                 .popover-content {
-                    width: 225px;
+                    max-width: 640px;
+                    min-width: 300px;
+                    word-wrap: break-word;
+                    section {
+                        padding: 5px;
+                    }
+                    a {
+                        background-color: transparent;
+                        color: #0088cc;
+                    }
                     .us-status-popover {
                         ul {
+                            min-width: 300px;
+                            max-width: 480px;
                             overflow: hidden;
-
                             li {
                                 float: left;
                                 height: 15px;
