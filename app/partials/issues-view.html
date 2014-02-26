@@ -3,6 +3,14 @@
     <div class="view-header">
         <p class="title">{{ 'issue.issue-ref'|i18next:{ref: issue.ref} }}</p>
         <div class="buttons">
+            <a class="button"
+               i18next="pagination.prev"
+               ng-show="issue.neighbors.previous.ref"
+               ng-href="{{urls.issuesUrl(projectSlug, issue.neighbors.previous.ref)}}">Previous</a>
+            <a class="button"
+               i18next="pagination.next"
+               ng-show="issue.neighbors.next.ref"
+               ng-href="{{urls.issuesUrl(projectSlug, issue.neighbors.next.ref)}}">Next</a>
             <a class="button button-delete" ng-click="removeIssue(issue)" i18next="issue.delete-issue">Delete issue</a>
         </div>
     </div>
@@ -250,6 +258,14 @@
             <div class="view-footer">
                 <p class="title">{{ 'issue.issue-ref'|i18next:{ref: issue.ref} }}</p>
                 <div class="buttons">
+                    <a class="button"
+                       i18next="pagination.prev"
+                       ng-show="issue.neighbors.previous.ref"
+                       ng-href="{{urls.issuesUrl(projectSlug, issue.neighbors.previous.ref)}}">Previous</a>
+                    <a class="button"
+                       i18next="pagination.next"
+                       ng-show="issue.neighbors.next.ref"
+                       ng-href="{{urls.issuesUrl(projectSlug, issue.neighbors.next.ref)}}">Next</a>
                     <a class="button button-delete" ng-click="removeIssue(issue)" i18next="issue.delete-issue">Delete issue</a>
                 </div>
             </div>

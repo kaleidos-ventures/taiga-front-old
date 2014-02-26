@@ -1,3 +1,9 @@
+setStyle = (element, reverse=false) ->
+    if reverse
+        element.addClass("icon-chevron-up")
+    else
+        element.addClass("icon-chevron-down")
+
 GmIssuesSortDirective = ($parse) ->
     link: (scope, elm, attrs) ->
         element = angular.element(elm)
@@ -22,12 +28,15 @@ GmIssuesSortDirective = ($parse) ->
             target.parent().children().removeClass("icon-chevron-down")
             target.parent().children().removeClass("icon-chevron-up")
 
-            if scope.sortingReverse
-                target.addClass("icon-chevron-up")
-            else
-                target.addClass("icon-chevron-down")
+            setStyle target, scope.sortingReverse
 
             event.preventDefault()
 
+GmIssuesSortedByDirective = (SelectedTags) ->
+    link: (scope, element, attrs) ->
+        if SelectedTags.issues_order.getField() == attrs.field
+            setStyle element, SelectedTags.issues_order.isReverse()
+
 module = angular.module('taiga.directives.issues', [])
 module.directive('gmIssuesSort', ["$parse", GmIssuesSortDirective])
+module.directive('gmIssuesSortedBy', ["SelectedTags", GmIssuesSortedByDirective])

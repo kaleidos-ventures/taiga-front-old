@@ -3,6 +3,14 @@
     <div class="view-header">
         <p class="title">{{ 'user-story.user-story-ref'|i18next:{ref: userStory.ref} }}</p>
         <div class="buttons">
+            <a class="button"
+               i18next="pagination.prev"
+               ng-show="userStory.neighbors.previous.ref"
+               ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.previous.ref)}}">Previous</a>
+            <a class="button"
+               i18next="pagination.next"
+               ng-show="userStory.neighbors.next.ref"
+               ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.next.ref)}}">Next</a>
             <a class="button button-delete" ng-click="removeUserStory(userStory)" i18next="user-story.delete-user-story">
                 Delete user story
             </a>
@@ -249,6 +257,14 @@
             <div class="view-footer">
                 <p class="title">{{ 'user-story.user-story-ref'|i18next:{ref: userStory.ref} }}</p>
                 <div class="buttons">
+                    <a class="button"
+                       i18next="pagination.prev"
+                       ng-show="userStory.neighbors.previous.ref"
+                       ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.previous.ref)}}">Previous</a>
+                    <a class="button"
+                       i18next="pagination.next"
+                       ng-show="userStory.neighbors.next.ref"
+                       ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.next.ref)}}">Next</a>
                     <a class="button button-delete" ng-click="removeUserStory(userStory)" i18next="user-story.delete-user-story">Delete user story</a>
                 </div>
             </div>

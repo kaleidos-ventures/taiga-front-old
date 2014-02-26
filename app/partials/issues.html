@@ -60,15 +60,11 @@
                 </div>
 
                 <div class="tags-list-sbox">
-                    <div class="tag selected" style="background: {{ tag.color }}" ng-repeat="tag in selectedTags"
-                         ng-click="selectTag(tag)">
-                        <div class="name"
-                            ng-hide="tag.type == 'assigned_to' || tag.type == 'owner'">
+                    <div class="tag selected" style="background: {{ tag.color }}" ng-repeat="tag in selectedTags()" ng-click="toggleTag(tag)">
+                        <div class="name" ng-hide="tag.type == 'assigned_to' || tag.type == 'owner'">
                             {{ tag.name }}
                         </div>
-                        <div class="name"
-                            ng-show="tag.type == 'assigned_to' || tag.type == 'owner'"
-                            gm-colorize-user="constants.users[tag.id]">
+                        <div class="name" ng-show="tag.type == 'assigned_to' || tag.type == 'owner'" gm-colorize-user="constants.users[tag.id]">
                             {{ tag.name }}
                         </div>
                         <div class="count">{{ tag.count }}</div>
@@ -76,50 +72,50 @@
                 </div>
             </div>
             <ul class="filters-visual-box" ng-show="filtersOpened">
-                <li ng-show='statusTags.length>1'>
+                <li ng-show="statusTags.length>1">
                     <h3 i18next="issues.status">Status:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in statusTags"
-                             ng-click="selectTag(tag)" ng-class="{selected: isTagSelected(tag)}">
+                             ng-click="toggleTag(tag)" ng-class="{selected: isTagSelected(tag)}">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
                 </li>
-                <li ng-show='typeTags.length>1'>
+                <li ng-show="typeTags.length>1">
                     <h3 i18next="issues.type">Type:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in typeTags"
-                             ng-click="selectTag(tag)" ng-class="{selected: isTagSelected(tag)}" >
+                             ng-click="toggleTag(tag)" ng-class="{selected: isTagSelected(tag)}" >
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
                 </li>
-                <li ng-show='severityTags.length>1'>
+                <li ng-show="severityTags.length>1">
                     <h3 i18next="issues.severity">Severity:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in severityTags"
-                             ng-click="selectTag(tag)" ng-class="{selected: isTagSelected(tag)}" >
+                             ng-click="toggleTag(tag)" ng-class="{selected: isTagSelected(tag)}" >
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
                 </li>
-                <li ng-show='priorityTags.length>1'>
+                <li ng-show="priorityTags.length>1">
                     <h3 i18next="issues.priority">Priority:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in priorityTags"
-                             ng-click="selectTag(tag)" ng-class="{selected: isTagSelected(tag)}">
+                             ng-click="toggleTag(tag)" ng-class="{selected: isTagSelected(tag)}">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
                 </li>
-                <li ng-show='addedByTags.length>1'>
+                <li ng-show="addedByTags.length>1">
                     <h3 i18next="issues.added-by">Added by:</h3>
                     <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in addedByTags" ng-click="selectTag(tag)"
+                        <div class="tag" ng-repeat="tag in addedByTags" ng-click="toggleTag(tag)"
                                 ng-class="{selected: isTagSelected(tag)}">
                             <div class="name" gm-colorize-user="constants.users[tag.id]">
                                 {{ tag.name }}
@@ -131,7 +127,7 @@
                 <li>
                     <h3 i18next="issues.assigned-to">Assigned to:</h3>
                     <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in assignedToTags" ng-click="selectTag(tag)"
+                        <div class="tag" ng-repeat="tag in assignedToTags" ng-click="toggleTag(tag)"
                                 ng-class="{selected: isTagSelected(tag)}">
                             <div class="name" gm-colorize-user="constants.users[tag.id]">
                                 {{ tag.name }}
@@ -143,7 +139,7 @@
                 <li>
                     <h3 i18next="issues.tags">Tags:</h3>
                     <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
+                        <div class="tag" ng-repeat="tag in tags" ng-click="toggleTag(tag)"
                                 ng-class="{selected: isTagSelected(tag)}" gm-colorize-tag>
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
@@ -158,14 +154,54 @@
     <div class="issues-container">
         <div class="issues-table-list">
             <div class="flex-header" gm-issues-sort="changeSort(field, reverse)">
-                <div i18next="issues.severity-header" data-field="severity" class="issue-sortable-field issue-severity">Severity</div>
-                <div i18next="issues.subject-header" data-field="subject" class="issue-sortable-field issue-title">Subject</div>
-                <div i18next="issues.added-by-header" data-field="owner" class="issue-sortable-field issue-added-by">Added by</div>
-                <div i18next="issues.created-date-header" data-field="created_date" class="issue-sortable-field issue-created-date">Created</div>
-                <div i18next="issues.modified-date-header" data-field="modified_date" class="issue-sortable-field issue-modified-date">Modificated</div>
-                <div i18next="issues.status-header" data-field="status" class="issue-sortable-field issue-state">Status</div>
-                <div i18next="issues.priority-header" data-field="priority" class="issue-sortable-field issue-priority">Priority</div>
-                <div i18next="issues.assigned-to-header" data-field="assigned_to" class="issue-sortable-field issue-assigned-to">Assigned to</div>
+                <div i18next="issues.severity-header"
+                     data-field="severity"
+                     class="issue-sortable-field issue-severity"
+                     gm-issues-sorted-by>
+                    Severity
+                </div>
+                <div i18next="issues.subject-header"
+                     data-field="subject"
+                     class="issue-sortable-field issue-title"
+                     gm-issues-sorted-by>
+                    Subject
+                </div>
+                <div i18next="issues.added-by-header"
+                     data-field="owner"
+                     class="issue-sortable-field issue-added-by"
+                     gm-issues-sorted-by>
+                    Added by
+                </div>
+                <div i18next="issues.created-date-header"
+                     data-field="created_date"
+                     class="issue-sortable-field issue-created-date"
+                     gm-issues-sorted-by>
+                    Created
+                </div>
+                <div i18next="issues.modified-date-header"
+                     data-field="modified_date"
+                     class="issue-sortable-field issue-modified-date"
+                     gm-issues-sorted-by>
+                    Modificated
+                </div>
+                <div i18next="issues.status-header"
+                     data-field="status"
+                     class="issue-sortable-field issue-state"
+                     gm-issues-sorted-by>
+                    Status
+                </div>
+                <div i18next="issues.priority-header"
+                     data-field="priority"
+                     class="issue-sortable-field issue-priority"
+                     gm-issues-sorted-by>
+                    Priority
+                </div>
+                <div i18next="issues.assigned-to-header"
+                     data-field="assigned_to"
+                     class="issue-sortable-field issue-assigned-to"
+                     gm-issues-sorted-by>
+                    Assigned to
+                </div>
 
                 <div i18next="issues.options" class="issue-options">Options</div>
             </div>

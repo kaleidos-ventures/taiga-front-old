@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data, $confirm, $gmFlash, $i18next) ->
+UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data, $confirm, $gmFlash, $i18next, SelectedTags) ->
     $rootScope.pageTitle = $i18next.t("user-story.user-story")
     $rootScope.pageSection = 'user-stories'
     $rootScope.pageBreadcrumb = [
@@ -39,7 +39,8 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             $scope.attachments = attachments
 
     loadUserStory = ->
-        rs.getUserStory($scope.projectId, $scope.userStoryId).then (userStory) ->
+        params = {milestone: "null", tags: SelectedTags.backlog.join()}
+        rs.getUserStory($scope.projectId, $scope.userStoryId, params).then (userStory) ->
             $scope.userStory = userStory
             $scope.form = _.clone($scope.userStory.getAttrs(), true)
 
@@ -138,5 +139,4 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
     return
 
 module = angular.module("taiga.controllers.user-story", [])
-module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", "$i18next", UserStoryViewController])
-
+module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", "$i18next", "SelectedTags", UserStoryViewController])

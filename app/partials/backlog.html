@@ -78,7 +78,7 @@
                 </div>
                 <div class="filters-visual-box" ng-show="filtersOpened">
                     <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in tags" ng-click="selectTag(tag)"
+                        <div class="tag" ng-repeat="tag in tags" ng-click="toggleTag(tag)"
                                 ng-class="{selected: tag.selected}" gm-colorize-tag>
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>

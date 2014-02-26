@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $gmStorage, $modal, $i18next, $location) ->
+IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $modal, $i18next, $location, SelectedTags) ->
     # Global Scope Variables
     $rootScope.pageTitle = $i18next.t('common.issues')
     $rootScope.pageSection = 'issues'
@@ -21,10 +21,11 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         [$i18next.t('common.issues'), null]
     ]
 
+    SelectedTags.issues_order.setDefault({field: 'created_date', reverse: true})
     $scope.filtersOpened = false
     $scope.filtersData = {}
-    $scope.sortingOrder = 'created_date'
-    $scope.sortingReverse = true
+    $scope.sortingOrder = SelectedTags.issues_order.getField()
+    $scope.sortingReverse = SelectedTags.issues_order.isReverse()
     $scope.page = 1
     $scope.showGraphs = false
 
@@ -32,46 +33,37 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     ## Tags generation functions
     #####
 
-    $scope.selectedTags = []
-    $scope.selectedMeta = {}
+    $scope.selectedTags = -> _.flatten((tags.values() for tags in _.values(SelectedTags.issues)), true)
 
     generateTagId = (tag) ->
         return "#{tag.type}-#{tag.id or tag.name}"
 
     isTagSelected = (tag) ->
-        return $scope.selectedMeta[generateTagId(tag)] == true
+        return SelectedTags.issues[tag.type].fetch(tag)?
 
-    selectTag = (tag) ->
-        if $scope.selectedMeta[generateTagId(tag)] == undefined
-            $scope.selectedMeta[generateTagId(tag)] = true
-            $scope.selectedTags.push(tag)
+    toggleTag = (tag) ->
+        tags = SelectedTags.issues[tag.type]
+        if tags.fetch(tag)?
+            tags.remove(tag)
         else
-            delete $scope.selectedMeta[generateTagId(tag)]
-            $scope.selectedTags = _.reject($scope.selectedTags,
-                                        (x) -> generateTagId(tag) == generateTagId(x))
-
-        $gmStorage.set("issues-selected-tags", $scope.selectedMeta)
+            tags.store(tag)
 
         $scope.currentPage = 0
         filterIssues()
 
-    selectTagIfNotSelected = (tag) ->
-        if isTagSelected(tag)
-            $scope.selectedTags.push(tag)
-        return tag
-
-    generateTagsFromList = (list, constants, type, scopeVar)->
+    generateTagsFromList = (list, constants, type, scopeVar) ->
         tags = []
-        for counter in list
-            element = constants[counter[0]]
+        for value in list
+            [id, count] = value
+            element = constants[id]
             tag = {
                 id: element.id,
                 name: element.name,
-                count: counter[1],
+                count: count,
                 type: type,
                 color: element.color
             }
-            tags.push(selectTagIfNotSelected(tag))
+            tags.push(tag)
 
         $scope[scopeVar] = tags
 
@@ -94,7 +86,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
                     type: type
                 }
 
-            tags.push(selectTagIfNotSelected(tag))
+            tags.push(tag)
 
         $scope[scopeVar] = _.sortBy tags, (item) ->
             if item.id == "null"
@@ -108,15 +100,13 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
         for tagCounter in $scope.filtersData.tags
             tag = {id: tagCounter[0], name: tagCounter[0], count: tagCounter[1], type: "tags"}
-            tags.push(selectTagIfNotSelected(tag))
+            tags.push(tag)
 
         $scope.tags = tags
 
     regenerateTags = ->
-        $scope.selectedTags = []
-
         generateTagsFromList($scope.filtersData.statuses, $scope.constants.issueStatuses, "status", "statusTags")
-        generateTagsFromList($scope.filtersData.types, $scope.constants.types, "type", "typeTags")
+        generateTagsFromList($scope.filtersData.types, $scope.constants.types, "type", "$scope.selectedTagstypeTags")
         generateTagsFromList($scope.filtersData.severities, $scope.constants.severities, "severity", "severityTags")
         generateTagsFromList($scope.filtersData.priorities, $scope.constants.priorities, "priority", "priorityTags")
         generateTagsFromUsers($scope.filtersData.owners, "owner", "addedByTags")
@@ -127,7 +117,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
         params = {"page": $scope.page}
 
-        for key, value of _.groupBy($scope.selectedTags, "type")
+        for key, value of _.groupBy($scope.selectedTags(), "type")
             params[key] = _.map(value, "id").join(",")
 
         params["order_by"] = $scope.sortingOrder
@@ -148,8 +138,6 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             $scope.$emit("spinner:stop")
 
     loadIssuesData = ->
-        $scope.selectedMeta = $gmStorage.get("issues-selected-tags") or {}
-
         promise = rs.getIssuesFiltersData($scope.projectId).then (data) ->
             $scope.filtersData = data
             regenerateTags()
@@ -181,7 +169,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             filterIssues().then ->
                 $scope.refreshing = false
 
-    $scope.selectTag = selectTag
+    $scope.toggleTag = toggleTag
     $scope.isTagSelected = isTagSelected
 
     $scope.openCreateIssueForm = ->
@@ -228,9 +216,13 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             loadStats()
 
     $scope.changeSort = (field, reverse) ->
+        SelectedTags.issues_order.set field: field, reverse: reverse
         $scope.sortingOrder = field
         $scope.sortingReverse = reverse
         filterIssues()
+
+    $scope.isSortingBy = (field) -> $scope.sortingOrder == field
+    $scope.isSortingReverse = (field) -> $scope.sortingOrder == field and $scope.sortingReverse
 
     $scope.removeIssue = (issue) ->
         issue.remove().then ->
@@ -248,7 +240,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
 
 IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data,
-                        $confirm, $gmFlash, $i18next) ->
+                        $confirm, $gmFlash, $i18next, SelectedTags) ->
     $rootScope.pageTitle = $i18next.t('common.issues')
     $rootScope.pageSection = 'issues'
     $rootScope.pageBreadcrumb = [
@@ -263,7 +255,28 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
     $scope.attachments = []
 
     loadIssue = ->
-        rs.getIssue($scope.projectId, $scope.issueId).then (issue) ->
+        params = {}
+        tags = SelectedTags.issues.tags.join()
+        status = SelectedTags.issues.status.join()
+        type = SelectedTags.issues.type.join()
+        severity = SelectedTags.issues.severity.join()
+        priority = SelectedTags.issues.priority.join()
+        owner = SelectedTags.issues.owner.join()
+        assigned_to = SelectedTags.issues.assigned_to.join()
+        order_by = SelectedTags.issues_order.getField()
+        if SelectedTags.issues_order.isReverse()
+            order_by = "-#{order_by}"
+
+        params.tags = tags if tags != ""
+        params.status = status if status != ""
+        params.type = type if type != ""
+        params.severity = severity if severity != ""
+        params.priority = priority if priority != ""
+        params.owner = owner if owner != ""
+        params.assigned_to = assigned_to if assigned_to != ""
+        params.order_by = order_by
+
+        rs.getIssue($scope.projectId, $scope.issueId, params).then (issue) ->
             $scope.issue = issue
             $scope.form = _.extend({}, $scope.issue._attrs)
 
@@ -483,9 +496,10 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next,
 
 module = angular.module("taiga.controllers.issues", [])
 module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
-                  '$q', 'resource', "$data", "$confirm", "$gmStorage", "$modal", '$i18next', '$location', IssuesController])
+                  '$q', 'resource', "$data", "$confirm", "$modal", '$i18next',
+                  '$location', 'SelectedTags', IssuesController])
 module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
                   '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", '$i18next',
-                  IssuesViewController])
+                  'SelectedTags', IssuesViewController])
 module.controller("IssuesModalController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
                   "$gmFlash", "$i18next", "$confirm", "$q", IssuesModalController])
