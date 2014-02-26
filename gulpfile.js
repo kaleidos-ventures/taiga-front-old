@@ -8,6 +8,7 @@ var coffeelint = require('gulp-coffeelint');
 var recess = require('gulp-recess');
 var jshint = require('gulp-jshint');
 var karma = require('gulp-karma');
+var gutil = require('gulp-util');
 
 var externalSources = [
     'app/components/jquery/jquery.js',
@@ -56,7 +57,7 @@ gulp.task('dev', ['coffee', 'less', 'libs']);
 
 gulp.task('pro', ['less'], function() {
     gulp.src(coffeeSources)
-        .pipe(coffee())
+        .pipe(coffee().on('error', gutil.log))
         .pipe(concat('app.js'))
         .pipe(uglify())
         .pipe(gulp.dest('app/dist/'));
@@ -68,21 +69,21 @@ gulp.task('pro', ['less'], function() {
 
 gulp.task('coffee', function() {
     gulp.src(coffeeSources)
-        .pipe(coffee())
+        .pipe(coffee().on('error', gutil.log))
         .pipe(concat('app.js'))
         .pipe(gulp.dest('app/dist/'));
 });
 
 gulp.task('hint', function() {
     gulp.src(coffeeSources)
-        .pipe(coffee())
+        .pipe(coffee().on('error', gutil.log))
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
 });
 
 gulp.task('less', function() {
     gulp.src('app/less/taiga-main.less')
-        .pipe(less())
+        .pipe(less().on('error', gutil.log))
         .pipe(concat('style.css'))
         .pipe(gulp.dest('app/less'));
 });
@@ -103,7 +104,7 @@ gulp.task('lint', function() {
 
 gulp.task('build-tests', function() {
     gulp.src(['test/**/*.coffee'])
-        .pipe(coffee({'bare': true}))
+        .pipe(coffee({'bare': true}).on('error', gutil.log))
         .pipe(concat('tests.js'))
         .pipe(gulp.dest('test'));
 });
