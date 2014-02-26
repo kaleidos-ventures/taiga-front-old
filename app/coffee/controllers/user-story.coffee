@@ -41,8 +41,16 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
     loadUserStory = ->
         params = {milestone: "null", tags: SelectedTags.backlog.join()}
         rs.getUserStory($scope.projectId, $scope.userStoryId, params).then (userStory) ->
-            $scope.userStory = userStory
-            $scope.form = _.clone($scope.userStory.getAttrs(), true)
+            $scope.userStory = _.cloneDeep(userStory)
+            $scope.form = userStory
+
+            # TODO: More general solution must be found.
+            # This hack is used to take care on save user story as PATCH requests
+            # and save correctly the multiple deep levels attributes
+            $scope.$watch('form.points', ->
+                if JSON.stringify($scope.form.points) != JSON.stringify($scope.userStory.points)
+                    $scope.form.points = _.clone($scope.form.points)
+            , true)
 
             breadcrumb = _.clone($rootScope.pageBreadcrumb)
             if $scope.userStory.milestone == null
@@ -103,10 +111,8 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
 
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         $scope.$emit("spinner:start")
-        for key, value of $scope.form
-            $scope.userStory[key] = value
 
-        promise = $scope.userStory.save()
+        promise = $scope.form.save()
 
         promise.then (userStory)->
             $scope.$emit("spinner:stop")

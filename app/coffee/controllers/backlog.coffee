@@ -284,6 +284,15 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash,
         loadProjectTags()
         $scope.formOpened = true
         $scope.form = $scope.context.us
+
+        # TODO: More general solution must be found.
+        # This hack is used to take care on save user story as PATCH requests
+        # and save correctly the multiple deep levels attributes
+        usCopy = _.cloneDeep($scope.context.us)
+        $scope.$watch('form.points', ->
+            if JSON.stringify($scope.form.points) != JSON.stringify(usCopy.points)
+                $scope.form.points = _.clone($scope.form.points)
+        , true)
         $scope.$broadcast("checksley:reset")
         $scope.$broadcast("wiki:clean-previews")
 
@@ -306,7 +315,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash,
 
     $scope.submit = gm.utils.safeDebounced $scope, 400, ->
         if $scope.form.id?
-            promise = $scope.form.save(false)
+            promise = $scope.form.save()
         else
             promise = rs.createUserStory($scope.form)
         $scope.$emit("spinner:start")
