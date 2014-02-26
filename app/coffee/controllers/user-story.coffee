@@ -39,7 +39,8 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
             $scope.attachments = attachments
 
     loadUserStory = ->
-        params = {milestone: "null", tags: SelectedTags.backlog.join()}
+        params = {tags: SelectedTags.backlog.join()}
+
         rs.getUserStory($scope.projectId, $scope.userStoryId, params).then (userStory) ->
             $scope.userStory = _.cloneDeep(userStory)
             $scope.form = userStory
@@ -145,4 +146,6 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
     return
 
 module = angular.module("taiga.controllers.user-story", [])
-module.controller("UserStoryViewController", ['$scope', '$location', '$rootScope', '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", "$i18next", "SelectedTags", UserStoryViewController])
+module.controller("UserStoryViewController", ["$scope", "$location", "$rootScope", "$routeParams", "$q",
+                                              "resource", "$data", "$confirm", "$gmFlash", "$i18next",
+                                              "SelectedTags", UserStoryViewController])
