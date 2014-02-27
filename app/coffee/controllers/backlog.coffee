@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next) ->
+BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next, SelectedTags) ->
     # Global Scope Variables
     $rootScope.pageTitle = $i18next.t("common.backlog")
     $rootScope.pageSection = 'backlog'
@@ -179,8 +179,10 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
         loadUserStories().then ->
             $scope.refreshing = false
 
-    $scope.openUserStory = (projectSlug, usRef)->
+    $scope.openUserStory = (projectSlug, usRef) ->
         $location.url("/project/#{projectSlug}/user-story/#{usRef}")
+
+    $scope.getUserStoryQueryParams = -> {milestone: 'null', tags: SelectedTags.backlog.join()}
 
     $scope.$on("points:loaded", loadUserStories)
     $scope.$on("userstory-form:create", loadUserStories)
@@ -538,6 +540,6 @@ module = angular.module("taiga.controllers.backlog", [])
 module.controller('BacklogMilestoneController', ['$scope', '$q', 'resource', '$gmFlash', '$i18next', BacklogMilestoneController])
 module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', '$i18next', '$location', BacklogMilestonesController])
 module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal', '$location', 'SelectedTags', BacklogUserStoriesController])
-module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', '$i18next', BacklogController])
+module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', '$i18next', 'SelectedTags', BacklogController])
 module.controller('BacklogUserStoryModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogUserStoryModalController])
 module.controller('BacklogBulkUserStoriesModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash', '$i18next', BacklogBulkUserStoriesModalController])

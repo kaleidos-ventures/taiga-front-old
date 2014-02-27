@@ -304,9 +304,12 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
             url = gm.format($rootScope.baseUrls.taskboard, [projectId, sprintId])
             return conditionalUrl(url, raw)
 
-        userStoryUrl: (projectId, userStoryId, raw) ->
+        userStoryUrl: (projectId, userStoryId, raw, params={}) ->
             url = gm.format($rootScope.baseUrls.userstory, [projectId, userStoryId])
-            return conditionalUrl(url, raw)
+            url = conditionalUrl(url, raw)
+            if params isnt {}
+                url = "#{url}?#{jQuery.param(params)}"
+            return url
 
         adminUrl: (projectId,  raw) ->
             url = gm.format($rootScope.baseUrls.admin, [projectId])

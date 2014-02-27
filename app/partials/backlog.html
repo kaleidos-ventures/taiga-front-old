@@ -138,10 +138,10 @@
                             <input type="checkbox" ng-model="us.selected" ng-change="changeUserStoriesSelection()"></input>
                         </div>
                         <div class="us-title">
-                            <div class="title" ng-click="goToUs(us)">
+                            <div class="title">
                                 <span data-icon="J" class="icon" ng-show="us.client_requirement"></span>
                                 <span data-icon="N" class="icon" ng-show="us.team_requirement"></span>
-                                <a  href="{{ urls.userStoryUrl(projectSlug, us.ref) }}">
+                                <a href="{{ urls.userStoryUrl(projectSlug, us.ref, false, getUserStoryQueryParams()) }}">
                                     #{{ us.ref }} {{ us.subject }}
                                 </a>
                             </div>

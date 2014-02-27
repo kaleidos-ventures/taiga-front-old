@@ -6,11 +6,11 @@
             <a class="button"
                i18next="pagination.prev"
                ng-show="userStory.neighbors.previous.ref"
-               ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.previous.ref)}}">Previous</a>
+               ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.previous.ref, false, getQueryParams())}}">Previous</a>
             <a class="button"
                i18next="pagination.next"
                ng-show="userStory.neighbors.next.ref"
-               ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.next.ref)}}">Next</a>
+               ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.next.ref, false, getQueryParams())}}">Next</a>
             <a class="button button-delete" ng-click="removeUserStory(userStory)" i18next="user-story.delete-user-story">
                 Delete user story
             </a>
