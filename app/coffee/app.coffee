@@ -359,12 +359,23 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
             url = $gmUrls.api('wiki-attachment', projectId, name)
             return url
 
-        videoConferenceUrl: (conferenceSystem, slug) ->
-            if conferenceSystem == "appear-in"
-                return "https://appear.in/#{$rootScope.site.headers['x-site-host']}-#{slug}"
-            else if conferenceSystem == "talky"
-                return "https://talky.io/#{$rootScope.site.headers['x-site-host']}-#{slug}"
-            return ""
+        videoConferenceUrl: (project) ->
+            if not project?
+                return ""
+
+            if project.videoconferences == "appear-in"
+                baseUrl = "https://appear.in/"
+            else if project.videoconferences == "talky"
+                baseUrl = "https://talky.io/"
+            else
+                return ""
+
+            if project.videoconferences_salt
+                url = "#{$rootScope.site.headers['x-site-host']}-#{project.slug}-#{project.videoconferences_salt}"
+            else
+                url = "#{$rootScope.site.headers['x-site-host']}-#{project.slug}"
+
+            return baseUrl + url
 
     $rootScope.momentFormat = (input, format) ->
         return moment(input).format(format)

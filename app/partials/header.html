@@ -71,9 +71,9 @@
                 Wiki
             </a>
         </li>
-        <li class="videoconference" ng-show="project.videoconferences">
+        <li class="videoconference" ng-show="project && project.videoconferences">
             <a data-icon="R"
-               href="{{ urls.videoConferenceUrl(project.videoconferences, project.slug) }}"
+               href="{{ urls.videoConferenceUrl(project) }}"
                target="_blank"
                title="Video conference"
                i18next="common.videoconference,title:common.videoconference">

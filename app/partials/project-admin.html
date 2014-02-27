@@ -143,6 +143,11 @@
                     </select>
                 </fieldset>
 
+                <fieldset class="project-videoconferences-salt" ng-show="project.videoconferences">
+                    <label for="videoconference-salt" i18next="admin.videoconference-salt">Videoconference salt:</label>
+                    <input type="text" id="videoconference-salt" name="videoconferences_salt" ng-model="project.videoconferences_salt" />
+                </fieldset>
+
                 <fieldset class="project-submit">
                     <button type="submit" class="button button-edit" gm-checksley-submit-button i18next="admin.save">Save</button>
                 </fieldset>

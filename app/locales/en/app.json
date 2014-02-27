@@ -334,7 +334,8 @@
         "severity-name": "Name",
         "severity-color": "Color",
         "invitation-link": "Link of the invitation",
-        "videoconference-system": "Videoconferences system"
+        "videoconference-system": "Videoconferences system",
+        "videoconference-salt": "Videoconferences salt"
     },
     "projects": {
         "saved-success": "Project saved successful",
