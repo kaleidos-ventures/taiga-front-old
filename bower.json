@@ -41,6 +41,6 @@
     "flot-orderBars": "emmerich/flot-orderBars",
     "jscache": "monsur/jscache",
     "moment": "~2.5.1",
-    "browserdetection": "~0.3.0"
+    "isMobile": "~0.3.1"
   }
 }

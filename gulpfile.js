@@ -43,7 +43,7 @@ var externalSources = [
     'app/components/jqueryui-touch-punch/jquery.ui.touch-punch.js',
     'app/js/highlight.pack.js',
     'app/components/jquery-textcomplete/jquery.textcomplete.js',
-    'app/components/browserdetection/src/browser-detection.js'
+    'app/components/isMobile/isMobile.js'
 ];
 
 var coffeeSources = [
