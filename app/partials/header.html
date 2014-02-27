@@ -55,7 +55,7 @@
                i18next="common.kanban,title:common.kanban">
                 Kanban</a>
         </li>
-        <li class="issues">
+        <li class="issues" ng-show="project.is_issues_activated">
             <a data-icon="a"
                href="{{ urls.issuesUrl(projectSlug) }}"
                title="Issues"
@@ -63,7 +63,7 @@
                 Issues
             </a>
         </li>
-        <li class="wiki">
+        <li class="wiki" ng-show="project.is_wiki_activated">
             <a data-icon="S"
                href="{{ urls.wikiUrl(projectSlug, 'home') }}"
                title="Wiki"

@@ -301,6 +301,8 @@
         "default-issue-status": "Default value for issue status selectors:",
         "activate-backlog": "Activate Backlog",
         "activate-kanban": "Activate Kanban",
+        "activate-issues": "Activate Issues",
+        "activate-wiki": "Activate Wiki",
         "save": "Save",
         "us-statuses": "US Statuses",
         "add-us-status": "Add new US status",

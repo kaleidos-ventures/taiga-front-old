@@ -301,6 +301,8 @@
         "default-issue-status": "Valor por defecto del selector de estados de peticion:",
         "activate-backlog": "Activar Backlog",
         "activate-kanban": "Activar Kanban",
+        "activate-issues": "Activar Peticiones",
+        "activate-wiki": "Activar Wiki",
         "save": "Guardar",
         "us-statuses": "Estados de US",
         "add-us-status": "Añadir nuevo estado de US",

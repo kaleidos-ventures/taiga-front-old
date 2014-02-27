@@ -134,6 +134,18 @@
                     <label for="is_kanban_activated" i18next="admin.activate-kanban">Activate Kanban</label>
                 </fieldset>
 
+                <fieldset class="project-is-issues-activated">
+                    <input type="checkbox" id="is_issues_activated" name="is_issues_activated"
+                           ng-model="project.is_issues_activated" />
+                    <label for="is_issues_activated" i18next="admin.activate-issues">Activate Issues</label>
+                </fieldset>
+
+                <fieldset class="project-is-wiki-activated">
+                    <input type="checkbox" id="is_wiki_activated" name="is_wiki_activated"
+                           ng-model="project.is_wiki_activated" />
+                    <label for="is_wiki_activated" i18next="admin.activate-wiki">Activate Wiki</label>
+                </fieldset>
+
                 <fieldset class="project-videoconferences">
                     <label for="videoconferences" i18next="admin.videoconference-system">Videoconference system:</label>
                     <select id="videoconferences" name="videoconferences"
