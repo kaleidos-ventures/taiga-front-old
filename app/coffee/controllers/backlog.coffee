@@ -71,16 +71,19 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
 
         $scope.tags = tags
 
-     filterUsBySelectedTags = ->
-        selectedTagNames = SelectedTags.backlog.names()
-        if selectedTagNames.length > 0
-            for item in $scope.unassignedUs
-                if _.intersection(selectedTagNames, item.tags).length == 0
-                    item.__hidden = true
-                else
-                    item.__hidden = false
-        else
-            item.__hidden = false for item in $scope.unassignedUs
+    $scope.selectedTags = ->
+        return SelectedTags.backlog.values()
+
+    filterUsBySelectedTags = ->
+       selectedTagNames = SelectedTags.backlog.names()
+       if selectedTagNames.length > 0
+           for item in $scope.unassignedUs
+               if _.intersection(selectedTagNames, item.tags).length == 0
+                   item.__hidden = true
+               else
+                   item.__hidden = false
+       else
+           item.__hidden = false for item in $scope.unassignedUs
 
     resortUserStories = ->
         # Save only us that have milestone assigned
