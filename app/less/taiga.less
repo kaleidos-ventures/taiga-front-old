@@ -4324,6 +4324,114 @@ fieldset{
             }
         }
 
+        .roles-list-container {
+            width: 60%;
+            border: 1px solid #eee;
+            margin: 10px;
+            padding: 10px;
+
+            .header {
+                padding: 10px;
+                background: #666;
+                color: #FFF;
+                overflow: hidden;
+
+                .title {
+                    font-size: 20px;
+                    font-weight: bold;
+                    float: left;
+                    margin: 5px;
+
+                    &:before {
+                        font-size: 17px;
+                        margin-right: 5px;
+                    }
+                }
+                .buttons {
+                    float: right;
+                    display: block;
+
+                    .btn-value{
+                        align: right;
+                        display: inline-block;
+                        position: relative;
+                        padding: 5px 5px 5px 30px;
+                        background: @green;
+                        font-size: 18px;
+
+                        &:hover{
+                            background: #333333;
+                            transition: all .3s linear;
+                            &:before {
+                                -webkit-animation: spin .5s infinite linear;
+                                -moz-animation: spin .5s infinite linear;
+                                -o-animation: spin .5s infinite linear;
+                                -ms-animation: spin .5s infinite linear;
+                                @-webkit-keyframes spin {
+                                    0% { -webkit-transform: rotate(0deg);}
+                                    100% { -webkit-transform: rotate(360deg);}
+                                }
+                                @-moz-keyframes spin {
+                                    0% { -moz-transform: rotate(0deg);}
+                                    100% { -moz-transform: rotate(360deg);}
+                                }
+                                @-o-keyframes spin {
+                                    0% { -o-transform: rotate(0deg);}
+                                    100% { -o-transform: rotate(360deg);}
+                                }
+                                @-ms-keyframes spin {
+                                    0% { -ms-transform: rotate(0deg);}
+                                    100% { -ms-transform: rotate(360deg);}
+                                }
+                            }
+                        }
+                        &:before {
+                            position: absolute;
+                            top: 7px;
+                            left: 7px;
+                            transition: all .3s ease-in;
+                        }
+                        &.active {
+                            -webkit-animation: spin .5s infinite linear;
+                            -moz-animation: spin .5s infinite linear;
+                            -o-animation: spin .5s infinite linear;
+                            -ms-animation: spin .5s infinite linear;
+                            @-webkit-keyframes spin {
+                                0% { -webkit-transform: rotate(0deg);}
+                                100% { -webkit-transform: rotate(360deg);}
+                            }
+                            @-moz-keyframes spin {
+                                0% { -moz-transform: rotate(0deg);}
+                                100% { -moz-transform: rotate(360deg);}
+                            }
+                            @-o-keyframes spin {
+                                0% { -o-transform: rotate(0deg);}
+                                100% { -o-transform: rotate(360deg);}
+                            }
+                            @-ms-keyframes spin {
+                                0% { -ms-transform: rotate(0deg);}
+                                100% { -ms-transform: rotate(360deg);}
+                            }
+                        }
+                    }
+                    .btn-add {
+                        background: @green;
+                    }
+                }
+            }
+
+            .roles-list {
+                margin: 0;
+                padding: 8px;
+            }
+            .permissions {
+                p {
+                    display: inline-block;
+                    width: 200px;
+                }
+            }
+        }
+
         .update-form {
             width: 60%;
             border: 1px solid #eee;

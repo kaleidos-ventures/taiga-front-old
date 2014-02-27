@@ -1,6 +1,23 @@
 DataServiceProvider = ($rootScope, $q, rs) ->
     service = {}
 
+    service.loadPermissions = ($scope) ->
+        promise = rs.getPermissions().then (permissions) ->
+            $rootScope.constants.permissionsList = permissions
+            $rootScope.constants.permissionsGroups = permissions
+
+            groups = {}
+            for permission in permissions
+                resource = permission.codename.replace(/^.*_/,"")
+                if groups[resource]?
+                    groups[resource].push(permission)
+                else
+                    groups[resource] = [permission]
+
+            $rootScope.constants.permissionsGroups = groups
+
+        return promise
+
     service.loadProjectStats = ($scope) ->
         promise = rs.getProjectStats($scope.projectId).then (projectStats) ->
             $scope.projectStats = projectStats

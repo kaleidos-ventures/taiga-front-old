@@ -26,7 +26,7 @@ ProjectListController = ($scope, $rootScope, rs, $i18next) ->
 
 
 ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model,
-                          rs, $confirm, $location, $i18next) ->
+                          rs, $confirm, $location, $i18next, $q) ->
     $rootScope.pageTitle = $i18next.t('common.admin-panel')
     $rootScope.pageSection = 'admin'
     $rootScope.pageBreadcrumb = [
@@ -34,6 +34,10 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
         [$i18next.t('common.admin-panel'), null]
     ]
     $scope.activeTab = "data"
+    $scope.showPermissions = []
+    $scope.rolePermissions = {}
+    $scope.newRole = {}
+    $scope.newRolePermissions = {}
 
     $scope.isActive = (type) ->
         return type == $scope.activeTab
@@ -54,7 +58,16 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
         $rootScope.projectSlug = $routeParams.pslug
         $rootScope.projectId = data.project
         $data.loadProject($scope).then ->
-            $data.loadUsersAndRoles($scope)
+            loadRoles()
+
+    loadRoles = ->
+        $data.loadUsersAndRoles($scope).then ->
+            for role in $rootScope.constants.rolesList
+                $scope.rolePermissions[role.id] = {}
+                for permission in $rootScope.constants.permissionsList
+                    $scope.rolePermissions[role.id][permission.id] = permission.id in role.permissions
+            for permission in $rootScope.constants.permissionsList
+                $scope.newRolePermissions[permission.id] = false
 
     $scope.submit = ->
         promise = $scope.project.save()
@@ -64,11 +77,63 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
         promise.then null, (data) ->
             $scope.checksleyErrors = data
 
+    $scope.submitRoles = ->
+        promises = []
+
+        if $scope.newRole.name
+            permissions = _.pairs($scope.newRolePermissions)
+            permissions = _.filter(permissions, (permission) -> permission[1])
+            permissions = _.map(permissions, (permission) -> permission[0].toString())
+            $scope.newRole.permissions = permissions
+
+            creationPromise = rs.createRole($rootScope.projectId, $scope.newRole).then (data) ->
+                loadRoles().then ->
+                    $scope.newRole = {}
+                    $scope.showNewRole = false
+                    $scope.newRolePermissions = []
+
+            promises.push creationPromise
+
+        for role, index in $scope.constants.rolesList
+            permissions = _.pairs($scope.rolePermissions[role.id])
+            permissions = _.filter(permissions, (permission) -> permission[1])
+            permissions = _.map(permissions, (permission) -> permission[0].toString())
+            permissions.sort()
+            currentPermissions = _.map(role.permissions, (permission) -> permission.toString())
+            currentPermissions.sort()
+
+            if role.order != index
+                role.order = index
+
+            if not _.isEqual(currentPermissions, permissions)
+                role.permissions = permissions
+            promises.push(role.save())
+
+        allPromises = $q.all(promises)
+        allPromises.then ->
+            $gmFlash.info($i18next.t("admin.roles-saved-success"))
+
+        allPromises.then null, (data) ->
+            $scope.checksleyErrors = data
+
+    $scope.togglePermission = (role, permission)->
+        if permission.id in role.permissions
+            role.permissions = _.without(role.permissions, permission.id)
+        else
+            role.permissions = role.permissions.push(permission.id)
+
     $scope.deleteProject = ->
         promise = $confirm.confirm($i18next.t('common.are-you-sure'))
         promise.then () ->
             $scope.project.remove().then ->
                 $location.url("/")
+
+    $scope.deleteRole = (role) ->
+        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
+        promise.then () ->
+            role.remove().then () ->
+                loadRoles().then ->
+                    $gmFlash.info($i18next.t("admin.role-deleted"))
 
     $scope.deleteMilestone = (milestone) ->
         promise = $confirm.confirm($i18next.t('common.are-you-sure'))
@@ -747,7 +812,7 @@ module.controller("ProjectListController", ['$scope', '$rootScope', 'resource', 
                                             ProjectListController])
 module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routeParams", "$data",
                                              "$gmFlash", "$model", "resource", "$confirm", "$location",
-                                             '$i18next', ProjectAdminController])
+                                             '$i18next', '$q', ProjectAdminController])
 module.controller("MembershipsController", ["$scope", "$rootScope", "$model", "$confirm", "$i18next",
                                             MembershipsController])
 module.controller("ShowProjectsController", ["$scope", "$rootScope", "$model", 'resource',

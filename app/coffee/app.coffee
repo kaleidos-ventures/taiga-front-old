@@ -125,6 +125,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     apiUrls = {
         "auth": "/api/v1/auth"
         "auth-register": "/api/v1/auth/register"
+        "permissions": "/api/v1/permissions"
         "roles": "/api/v1/roles"
         "projects": "/api/v1/projects"
         "memberships": "/api/v1/memberships"
@@ -249,6 +250,9 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
     $rootScope.constants.issueTypes = {}
     $rootScope.constants.issueTypesList = []
 
+    $rootScope.constants.permissionsList = []
+    $rootScope.constants.permissionsGroups = {}
+
     $rootScope.constants.users = {}
 
     # Configure on init a default host and scheme for api urls.
@@ -256,6 +260,8 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
 
     $data.loadSiteInfo($rootScope).then (sitedata) ->
         $log.debug "Site data:", sitedata
+
+    $data.loadPermissions()
 
     $rootScope.baseUrls =
         projects: "/"

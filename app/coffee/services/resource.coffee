@@ -262,6 +262,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope, 
     # Get a project list
     service.getProjects = -> queryMany('projects')
 
+    # Get a project list
+    service.getPermissions = -> queryMany('permissions')
+
     # Get a project
     service.getProject = (projectId) ->
         return queryOne("projects", projectId)
@@ -289,6 +292,11 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope, 
     # Get roles
     service.getRoles = (projectId) ->
         return queryMany('roles', {project: projectId})
+
+    # Get roles
+    service.createRole = (projectId, role) ->
+        role.project = projectId
+        return $model.create("roles", role)
 
     # Get a milestone lines for a project.
     service.getMilestones = (projectId) ->

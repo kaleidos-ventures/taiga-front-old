@@ -337,7 +337,13 @@
         "severity-color": "Color",
         "invitation-link": "Link of the invitation",
         "videoconference-system": "Videoconferences system",
-        "videoconference-salt": "Videoconferences salt"
+        "videoconference-salt": "Videoconferences salt",
+        "roles": "Roles",
+        "do-estimations": "Do estimations",
+        "show-permissions": "Show permissions",
+        "hide-permissions": "Hide permissions",
+        "add-new-role": "Add new role",
+        "roles-saved-success": "Roles saved successful"
     },
     "projects": {
         "saved-success": "Project saved successful",
