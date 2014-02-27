@@ -42,7 +42,8 @@ var externalSources = [
     'app/components/google-diff-match-patch-js/diff_match_patch_uncompressed.js',
     'app/components/jqueryui-touch-punch/jquery.ui.touch-punch.js',
     'app/js/highlight.pack.js',
-    'app/components/jquery-textcomplete/jquery.textcomplete.js'
+    'app/components/jquery-textcomplete/jquery.textcomplete.js',
+    'app/components/browserdetection/src/browser-detection.js'
 ];
 
 var coffeeSources = [

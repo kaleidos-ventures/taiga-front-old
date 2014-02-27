@@ -225,6 +225,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
     if not config.debug
         $log.debug = ->
 
+    $rootScope.browserInfo = browserDetection()
     $rootScope.pageTitle = ""
     $rootScope.auth = $gmAuth.getUser()
     $rootScope.constants = {}

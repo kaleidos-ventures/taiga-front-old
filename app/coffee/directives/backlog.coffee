@@ -120,6 +120,11 @@ GmSortableDirective = ($log, $rootScope) ->
             opts.remove = onRemove
             opts.update = onUpdate
 
+            if $rootScope.browserInfo.os in ["mobile", "iphone", "ipod", "ipad", "android", "blackberry", "j2me"]
+                opts.delay = 1000
+            else
+                opts.delay = 250
+
         # Create sortable
         element.sortable(opts)
 
