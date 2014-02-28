@@ -295,8 +295,11 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
                 return $rootScope.urls.backlogUrl(project.slug)
             else if project.is_kanban_activated
                 return $rootScope.urls.kanbanUrl(project.slug)
-
-            return $rootScope.urls.issuesUrl(project.slug)
+            else if project.is_issues_activated
+                return $rootScope.urls.issuesUrl(project.slug)
+            else if project.is_wiki_activated
+                return $rootScope.urls.wikiUrl(project.slug, "home")
+            return $rootScope.urls.adminUrl(project.slug)
 
         backlogUrl: (projectId, raw) ->
             url = gm.format($rootScope.baseUrls.backlog, [projectId])
