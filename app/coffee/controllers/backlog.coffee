@@ -66,16 +66,16 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
 
         for key, val of tagsDict
             tag = {name:key, count:val}
-            tag.selected = true if SelectedTags.backlog.fetch(tag)
+            tag.selected = true if SelectedTags($rootScope.projectId).backlog.fetch(tag)
             tags.push(tag)
 
         $scope.tags = tags
 
     $scope.selectedTags = ->
-        return SelectedTags.backlog.values()
+        return SelectedTags($rootScope.projectId).backlog.values()
 
     filterUsBySelectedTags = ->
-       selectedTagNames = SelectedTags.backlog.names()
+       selectedTagNames = SelectedTags($rootScope.projectId).backlog.names()
        if selectedTagNames.length > 0
            for item in $scope.unassignedUs
                if _.intersection(selectedTagNames, item.tags).length == 0
@@ -154,7 +154,7 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
     $scope.selectedUserStories = null
     $scope.selectedStoryPoints = 9
 
-    $scope.filtersOpened = if SelectedTags.backlog.isEmpty() then false else true
+    $scope.filtersOpened = if SelectedTags($rootScope.projectId).backlog.isEmpty() then false else true
     $scope.showTags = false
 
     $scope.moveSelectedUserStoriesToCurrentSprint = ->
@@ -185,7 +185,7 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
     $scope.openUserStory = (projectSlug, usRef) ->
         $location.url("/project/#{projectSlug}/user-story/#{usRef}")
 
-    $scope.getUserStoryQueryParams = -> {milestone: 'null', tags: SelectedTags.backlog.join()}
+    $scope.getUserStoryQueryParams = -> {milestone: 'null', tags: SelectedTags($rootScope.projectId).backlog.join()}
 
     $scope.$on("points:loaded", loadUserStories)
     $scope.$on("userstory-form:create", loadUserStories)
@@ -258,10 +258,10 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
     $scope.toggleTag = (tag) ->
         if tag.selected
             tag.selected = false
-            SelectedTags.backlog.remove(tag)
+            SelectedTags($rootScope.projectId).backlog.remove(tag)
         else
             tag.selected = true
-            SelectedTags.backlog.store(tag)
+            SelectedTags($rootScope.projectId).backlog.store(tag)
 
         filterUsBySelectedTags()
 

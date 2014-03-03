@@ -21,11 +21,11 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         [$i18next.t('common.issues'), null]
     ]
 
-    SelectedTags.issues_order.setDefault({field: 'created_date', reverse: true})
+    SelectedTags($rootScope.projectId).issues_order.setDefault({field: 'created_date', reverse: true})
     $scope.filtersOpened = false
     $scope.filtersData = {}
-    $scope.sortingOrder = SelectedTags.issues_order.getField()
-    $scope.sortingReverse = SelectedTags.issues_order.isReverse()
+    $scope.sortingOrder = SelectedTags($rootScope.projectId).issues_order.getField()
+    $scope.sortingReverse = SelectedTags($rootScope.projectId).issues_order.isReverse()
     $scope.page = 1
     $scope.showGraphs = false
 
@@ -33,16 +33,16 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     ## Tags generation functions
     #####
 
-    $scope.selectedTags = -> _.flatten((tags.values() for tags in _.values(SelectedTags.issues)), true)
+    $scope.selectedTags = -> _.flatten((tags.values() for tags in _.values(SelectedTags($rootScope.projectId).issues)), true)
 
     generateTagId = (tag) ->
         return "#{tag.type}-#{tag.id or tag.name}"
 
     isTagSelected = (tag) ->
-        return SelectedTags.issues[tag.type].fetch(tag)?
+        return SelectedTags($rootScope.projectId).issues[tag.type].fetch(tag)?
 
     toggleTag = (tag) ->
-        tags = SelectedTags.issues[tag.type]
+        tags = SelectedTags($rootScope.projectId).issues[tag.type]
         if tags.fetch(tag)?
             tags.remove(tag)
         else
@@ -216,7 +216,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             loadStats()
 
     $scope.changeSort = (field, reverse) ->
-        SelectedTags.issues_order.set field: field, reverse: reverse
+        SelectedTags($rootScope.projectId).issues_order.set field: field, reverse: reverse
         $scope.sortingOrder = field
         $scope.sortingReverse = reverse
         filterIssues()
@@ -256,15 +256,15 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
 
     loadIssue = ->
         params = {}
-        tags = SelectedTags.issues.tags.join()
-        status = SelectedTags.issues.status.join()
-        type = SelectedTags.issues.type.join()
-        severity = SelectedTags.issues.severity.join()
-        priority = SelectedTags.issues.priority.join()
-        owner = SelectedTags.issues.owner.join()
-        assigned_to = SelectedTags.issues.assigned_to.join()
-        order_by = SelectedTags.issues_order.getField()
-        if SelectedTags.issues_order.isReverse()
+        tags = SelectedTags($rootScope.projectId).issues.tags.join()
+        status = SelectedTags($rootScope.projectId).issues.status.join()
+        type = SelectedTags($rootScope.projectId).issues.type.join()
+        severity = SelectedTags($rootScope.projectId).issues.severity.join()
+        priority = SelectedTags($rootScope.projectId).issues.priority.join()
+        owner = SelectedTags($rootScope.projectId).issues.owner.join()
+        assigned_to = SelectedTags($rootScope.projectId).issues.assigned_to.join()
+        order_by = SelectedTags($rootScope.projectId).issues_order.getField()
+        if SelectedTags($rootScope.projectId).issues_order.isReverse()
             order_by = "-#{order_by}"
 
         params.tags = tags if tags != ""

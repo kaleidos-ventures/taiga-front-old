@@ -34,8 +34,9 @@ GmIssuesSortDirective = ($parse) ->
 
 GmIssuesSortedByDirective = (SelectedTags) ->
     link: (scope, element, attrs) ->
-        if SelectedTags.issues_order.getField() == attrs.field
-            setStyle element, SelectedTags.issues_order.isReverse()
+        # if SelectedTags(scope.projectId).issues_order.getField() == attrs.field
+        #     setStyle element, SelectedTags(scope.projectId).issues_order.isReverse()
+        return
 
 module = angular.module('taiga.directives.issues', [])
 module.directive('gmIssuesSort', ["$parse", GmIssuesSortDirective])

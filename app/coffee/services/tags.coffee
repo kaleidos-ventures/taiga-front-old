@@ -13,15 +13,17 @@
 # limitations under the License.
 
 class Persist
-    constructor: (@storage) -> @items = @read()
-    read: -> @storage.get(@constructor.storageKey) or {}
-    save: -> @storage.set(@constructor.storageKey, @items)
+    constructor: (@storage, @projectId) -> @items = @read()
+    getStorageKey: -> "#{@constructor.storageKey}-project-#{@projectId}"
+    read: -> @storage.get(@getStorageKey()) or {}
+    save: -> @storage.set(@getStorageKey(), @items)
 
 class Tags extends Persist
-    constructor: (storage) ->
-        super storage
+    constructor: (storage, projectId) ->
+        super storage, projectId
         @tags = @items
     key: (tag) -> tag.name
+    setProject: (@projectId) ->
     fetch: (tag) -> @tags[@key(tag)]
     isEmpty: -> _.isEmpty(@tags)
     names: -> _(@tags).map("name").value()
@@ -75,19 +77,23 @@ class IssuesOrderBy extends Persist
     isReverse: -> @items.reverse
 
 SelectedTagsProvider = ($gmStorage) ->
-    return {
-        backlog: new BacklogTags($gmStorage),
-        issues: {
-            tags: new IssuesTags($gmStorage),
-            type: new IssuesTypeTags($gmStorage),
-            status: new IssuesStatusTags($gmStorage),
-            severity: new IssuesSeverityTags($gmStorage),
-            priority: new IssuesPriorityTags($gmStorage),
-            owner: new IssuesOwnerTags($gmStorage),
-            assigned_to: new IssuesAssigedToTags($gmStorage)
-        },
-        issues_order: new IssuesOrderBy($gmStorage)
-    }
+    tags = {}
+    return (projectId) ->
+        unless tags[projectId]?
+            tags[projectId] = {
+                backlog: new BacklogTags($gmStorage, projectId),
+                issues: {
+                    tags: new IssuesTags($gmStorage, projectId),
+                    type: new IssuesTypeTags($gmStorage, projectId),
+                    status: new IssuesStatusTags($gmStorage, projectId),
+                    severity: new IssuesSeverityTags($gmStorage, projectId),
+                    priority: new IssuesPriorityTags($gmStorage, projectId),
+                    owner: new IssuesOwnerTags($gmStorage, projectId),
+                    assigned_to: new IssuesAssigedToTags($gmStorage, projectId)
+                },
+                issues_order: new IssuesOrderBy($gmStorage, projectId)
+            }
+        return tags[projectId]
 
 module = angular.module('taiga.services.tags', [])
 module.factory('SelectedTags', ["$gmStorage", SelectedTagsProvider])
