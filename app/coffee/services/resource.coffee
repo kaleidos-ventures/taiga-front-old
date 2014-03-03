@@ -256,8 +256,8 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope, 
     service.getSiteMembers = -> queryMany('site-members')
 
     # Create a project
-    service.createProject = (data) ->
-        return $model.create("site-projects", data)
+    service.createProject = (data, templateName) ->
+        return $model.create("site-projects", data, $model.Model, {}, {template: templateName})
 
     # Get a project list
     service.getProjects = -> queryMany('projects')

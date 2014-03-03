@@ -199,7 +199,7 @@ ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
     service.make_model = (name, data, cls=Model, dataTypes={}) ->
         return new cls(name, data, dataTypes)
 
-    service.create = (name, data, cls=Model, dataTypes={}) ->
+    service.create = (name, data, cls=Model, dataTypes={}, extraParams={}) ->
         defered = $q.defer()
 
         params =
@@ -207,6 +207,7 @@ ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
             url: $gmUrls.api(name)
             headers: headers()
             data: JSON.stringify(data)
+            params: extraParams
 
         promise = $http(params)
         promise.success (_data, _status) ->

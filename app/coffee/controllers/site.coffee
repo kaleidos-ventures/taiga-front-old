@@ -82,7 +82,7 @@ SiteAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model
             total_story_points: $scope.newProjectPoints
             total_milestones: $scope.newProjectSprints
         }
-        rs.createProject(projectData).then ->
+        rs.createProject(projectData, $scope.newProjectTemplate).then ->
             $gmFlash.info($i18next.t("admin-site.project-created"))
             $scope.addProjectFormOpened = false
             loadSite()

@@ -104,13 +104,20 @@
                             <label class="control-label" for="description" i18next="admin-site.description">Description</label>
                             <textarea id="description" ng-model="newProjectDescription" data-required="true"></textarea>
                         </fieldset>
-                        <fieldset class="project-description">
+                        <fieldset class="project-sprints">
                             <label class="control-label" for="sprints" i18next="admin-site.sprints">Sprints</label>
                             <input type="text" id="sprints" ng-model="newProjectSprints" data-required="true" data-type="digits"></input>
                         </fieldset>
-                        <fieldset class="project-description">
+                        <fieldset class="project-points">
                             <label class="control-label" for="points" i18next="admin-site.points">Points</label>
                             <input type="text" id="points" ng-model="newProjectPoints" data-required="true" data-type="digits"></input>
+                        </fieldset>
+                        <fieldset class="project-template">
+                            <label class="control-label" for="template" i18next="admin-site.template">Template</label>
+                            <select ng-model="newProjectTemplate">
+                                <option value="" i18next="admin-site.default">Default</option>
+                                <option value="pure_kanban" i18next="admin-site.pure-kanban">Pure kanban</option>
+                            </select>
                         </fieldset>
                         <fieldset>
                             <button type="submit" class="button button-edit"
