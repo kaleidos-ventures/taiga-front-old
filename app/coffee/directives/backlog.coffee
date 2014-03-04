@@ -122,8 +122,6 @@ GmSortableDirective = ($log, $rootScope) ->
 
             if isMobile.any
                 opts.delay = 1000
-            else
-                opts.delay = 250
 
         # Create sortable
         element.sortable(opts)
