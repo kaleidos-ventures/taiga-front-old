@@ -176,16 +176,12 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         promise = $modal.open("issue-form", {'type': 'create'})
         promise.then (issue) ->
             $scope.issues.push(issue)
-            regenerateTags()
-            loadStats()
-            filterIssues()
+            $scope.refreshIssues()
 
     $scope.openEditIssueForm = (issue) ->
         promise = $modal.open("issue-form", {'issue': issue, 'type': 'edit'})
         promise.then ->
-            regenerateTags()
-            loadStats()
-            filterIssues()
+            $scope.refreshIssues()
 
     $scope.toggleShowGraphs = gm.utils.safeDebounced $scope, 500, ->
         $scope.showGraphs = not $scope.showGraphs
@@ -193,27 +189,23 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $scope.updateIssueAssignation = (issue, id) ->
         issue.assigned_to = id || null
         issue.save().then ->
-            regenerateTags()
-            loadStats()
+            $scope.refreshIssues()
 
     $scope.updateIssueStatus = (issue, id) ->
         issue.status = id
         issue.save().then ->
-            regenerateTags()
-            loadStats()
+            $scope.refreshIssues()
 
     $scope.updateIssueSeverity = (issue, id) ->
         issue.severity = id
 
         issue.save().then ->
-            regenerateTags()
-            loadStats()
+            $scope.refreshIssues()
 
     $scope.updateIssuePriority = (issue, id) ->
         issue.priority = id
         issue.save().then ->
-            regenerateTags()
-            loadStats()
+            $scope.refreshIssues()
 
     $scope.changeSort = (field, reverse) ->
         SelectedTags($rootScope.projectId).issues_order.set field: field, reverse: reverse
@@ -228,10 +220,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         issue.remove().then ->
             index = $scope.issues.indexOf(issue)
             $scope.issues.splice(index, 1)
-
-            regenerateTags()
-            loadStats()
-            filterIssues()
+            $scope.refreshIssues()
 
     $scope.openIssue = (projectSlug, issueRef)->
         $location.url("/project/#{projectSlug}/issues/#{issueRef}")
