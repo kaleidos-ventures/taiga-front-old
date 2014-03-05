@@ -240,7 +240,7 @@
                 <div class="changes">
                     <div class="change" ng-repeat="change in hitem.changes">
                         <strong>{{ change.name|capitalize }}</strong>:
-                        <span ng-show="change.old" ng-bind-html="'task.change-from'|i18next:{value: change.old}"></span>
+                        <span ng-show="change.old != ''" ng-bind-html="'task.change-from'|i18next:{value: change.old}"></span>
                         <span ng-bind-html="'task.change-to'|i18next:{value: change.new||''}"></span></span>
                     </div>
                 </div>
