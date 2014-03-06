@@ -429,6 +429,10 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
         }
         checksley.updateMessages('default', messages)
 
+    $rootScope.$on "$routeChangeSuccess", ->
+        $('html, body').scrollTop(0)
+
+
 angular.module('taiga', modules)
        .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', '$gmUrlsProvider', configCallback])
        .run(['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls', '$i18next', 'config', '$data', '$log', init])
