@@ -7,7 +7,7 @@
 
     <div class="assign-to">
         <a href="" gm-popover="updateTaskAssignation(task, selectedId)"
-            data-tmpl="#developers-popover" data-auto-hide="true"
+            data-tmpl="#developers-popover"
             gm-colorize-user="constants.users[task.assigned_to]">
                 {{ constants.users[task.assigned_to].full_name || t("taskboard.unassigned") }}</a>
     </div>
@@ -15,7 +15,7 @@
         <a data-icon="j" ng-click="openEditTaskForm(task.us, task)" class="edit-task"></a>
         <a data-icon="l" href="{{ urls.tasksUrl(projectSlug, task.ref) }}" class="view-task"></a>
         <a data-icon="o" class="icon blocked" ng-show="task.is_blocked"
-              gm-popover data-tmpl="#task-blocked-popover" data-auto-hide="true"></a>
+              gm-popover data-tmpl="#task-blocked-popover"></a>
         <span data-icon="r" class="icon iocaine" ng-show="task.is_iocaine"></span>
         <a class="us-tag" ng-repeat="tag in task.tags" gm-colorize-tag title="{{ tag }}"></a>
     </div>

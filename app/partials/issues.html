@@ -213,7 +213,7 @@
                 <div class="issue-item" ng-repeat="issue in issues" ng-dblclick="openIssue(projectSlug, issue.ref)">
                     <div class="issue-severity">
                         <a href="" gm-popover="updateIssueSeverity(issue, selectedId)"
-                            data-tmpl="#severity-popover" data-auto-hide="true"
+                            data-tmpl="#severity-popover"
                                 class="severity-{{ constants.severities[issue.severity].name|lowercase }}">
                             {{ constants.severities[issue.severity].name|lowercase }}
                         </a>
@@ -242,20 +242,20 @@
                     </div>
                     <div class="issue-state">
                         <a href="" gm-popover="updateIssueStatus(issue, selectedId)"
-                            data-tmpl="#status-popover" data-auto-hide="true">{{ constants.issueStatuses[issue.status].name }}</a>
+                            data-tmpl="#status-popover">{{ constants.issueStatuses[issue.status].name }}</a>
 
                         <span data-icon="o" class="icon blocked" ng-show="issue.is_blocked"
-                              gm-popover data-tmpl="#issue-blocked-popover" data-auto-hide="true"></span>
+                              gm-popover data-tmpl="#issue-blocked-popover"></span>
                     </div>
                     <div class="issue-priority">
                         <a href="" gm-popover="updateIssuePriority(issue, selectedId)"
                             class="priority-{{ constants.priorities[issue.priority].name|lowercase }}"
-                                    data-tmpl="#priority-popover" data-auto-hide="true">{{ constants.priorities[issue.priority].name }}</a>
+                                    data-tmpl="#priority-popover">{{ constants.priorities[issue.priority].name }}</a>
                     </div>
                     <div class="issue-assigned-to">
                         <div class="button-item" ng-show="issue.assigned_to" >
                             <i class="icon-user"></i>
-                            <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-auto-hide="true">
+                            <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover">
                                <span gm-colorize-user="constants.users[issue.assigned_to]">
                                    {{ constants.users[issue.assigned_to].full_name }}
                                </span>
@@ -263,7 +263,7 @@
                         </div>
                         <div class="button-item" ng-show="!issue.assigned_to">
                             <i class="icon-question-sign"></i>
-                            <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-auto-hide="true">
+                            <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover">
                                 <span i18next="issues.unassigned">Unassigned</span>
                             </a>
                         </div>
@@ -271,7 +271,6 @@
                     <div class="issue-options extra-options">
                         <a data-icon="l" class="btn-small-preview option" gm-popover
                                 data-tmpl="#issue-preview-popover"
-                                data-auto-hide="true"
                                 data-placement="left">
                             <span class="help-box" i18next="issues.preview">Preview</span>
                         </a>
@@ -280,7 +279,6 @@
                         </a>
                         <a data-icon="h" class="btn-small-remove option" gm-popover="removeIssue(issue)"
                                 data-tmpl="#issue-remove-popover"
-                                data-auto-hide="true"
                                 data-placement="left">
                             <span class="help-box" i18next="issues.remove">Remove</span>
                         </a>

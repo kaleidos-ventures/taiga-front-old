@@ -84,8 +84,7 @@
                                                 <li ng-repeat="role in constants.computableRolesList"
                                                     class="us-point"
                                                     gm-popover="saveUsPoints(us, role, selectedId)"
-                                                    data-tmpl="#points-popover"
-                                                    data-auto-hide="true">
+                                                    data-tmpl="#points-popover">
                                                     {{ role.name }}: {{ constants.points[us.points[role.id]].name }}
                                                 </li>
                                             </ul>
@@ -103,12 +102,10 @@
                                             <div class="label"
                                                  gm-popover="saveUsStatus(us, selectedId)"
                                                  data-tmpl="#usstatuses-popover"
-                                                 data-auto-hide="true"
                                                  style="background-color: {{ constants.usStatuses[us.status].color }}">
                                                 {{ constants.usStatuses[us.status].name }}</div>
                                             <div data-icon="o" class="icon blocked" ng-show="us.is_blocked"
-                                                 gm-popover data-tmpl="#us-blocked-popover"
-                                                 data-auto-hide="true"></div>
+                                                 gm-popover data-tmpl="#us-blocked-popover"></div>
                                         </div>
                                     </div>
                                     <a href="" data-icon="A" class="add-new-task"

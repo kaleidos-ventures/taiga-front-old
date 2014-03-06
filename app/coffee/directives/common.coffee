@@ -179,6 +179,11 @@ GmPopoverDirective = ($parse, $compile) ->
                 element.popover('destroy')
                 next.off()
 
+            $('body').on "click", (event)->
+                if not (element.has(event.target).length > 0 or element.is(event.target))
+                    element.data('state', 'closing')
+                    closeHandler()
+
             if autoHide
                 element.data('state', 'closing')
                 _.delay(closeHandler, 2000)

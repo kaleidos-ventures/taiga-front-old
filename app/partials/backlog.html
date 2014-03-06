@@ -18,24 +18,21 @@
 
                     <div class="item with-popover"
                             gm-popover
-                            data-tmpl="#project-defined-points-popover"
-                            data-auto-hide="true">
+                            data-tmpl="#project-defined-points-popover">
                         <div class="indicator">{{ projectStats.defined_points }}</div>
                         <div class="help" i18next="backlog.defined-points">defined points</div>
                     </div>
 
                     <div class="item with-popover"
                             gm-popover
-                            data-tmpl="#project-assigned-points-popover"
-                            data-auto-hide="true">
+                            data-tmpl="#project-assigned-points-popover">
                         <div class="indicator">{{ projectStats.assigned_points }}</div>
                         <div class="help" i18next="backlog.assigned-points">assigned points</div>
                     </div>
 
                     <div class="item with-popover"
                             gm-popover
-                            data-tmpl="#project-closed-points-popover"
-                            data-auto-hide="true">
+                            data-tmpl="#project-closed-points-popover">
                         <div class="indicator">{{ projectStats.closed_points }}</div>
                         <div class="help" i18next="backlog.closed-points">closed points</div>
                     </div>
@@ -160,17 +157,15 @@
                             <div class="label"
                                     gm-popover="saveUsStatus(us, selectedId)"
                                     data-tmpl="#usstatuses-popover"
-                                    data-auto-hide="true"
                                     style="background-color: {{ constants.usStatuses[us.status].color }}">
                                 {{ constants.usStatuses[us.status].name }}</div>
                             <span data-icon="o" class="icon blocked" ng-show="us.is_blocked"
-                                  gm-popover data-tmpl="#us-blocked-popover" data-auto-hide="true"></span>
+                                  gm-popover data-tmpl="#us-blocked-popover"></span>
                         </div>
                         <div class="us-points">
                             <div ng-repeat="role in constants.computableRolesList" class="role-point"
                                     gm-popover="saveUsPoints(us, role, selectedId)"
-                                    data-tmpl="#points-popover"
-                                    data-auto-hide="true">
+                                    data-tmpl="#points-popover">
                                 {{ constants.points[us.points[role.id]].name }}
                             </div>
                             <div class="role-point total">
@@ -178,7 +173,7 @@
                             </div>
                         </div>
                         <div class="us-options extra-options">
-                            <a class="btn-small-preview option" data-icon="l" gm-popover data-tmpl="#us-preview-popover" data-auto-hide="true">
+                            <a class="btn-small-preview option" data-icon="l" gm-popover data-tmpl="#us-preview-popover">
                                 <!-- TODO: Review this spanish translation, used Resumen because the Previsualizar was too long -->
                                 <span class="help-box" i18next="backlog.preview">Preview</span>
                             </a>
@@ -303,7 +298,7 @@
                                     </div>
                                     <div class="us-title">
                                         <span data-icon="o" class="icon blocked" ng-show="us.is_blocked"
-                                              gm-popover data-tmpl="#us-blocked-popover" data-auto-hide="true"></span>
+                                              gm-popover data-tmpl="#us-blocked-popover"></span>
                                         <span data-icon="J" class="icon" ng-show="us.client_requirement"></span>
                                         <span data-icon="N" class="icon" ng-show="us.team_requirement"></span>
                                         #{{ us.ref }} {{ us.subject }}
