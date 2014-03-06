@@ -33,11 +33,14 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
         ["", ""],
         [$i18next.t('common.admin-panel'), null]
     ]
+
     $scope.activeTab = "data"
     $scope.showPermissions = []
     $scope.rolePermissions = {}
     $scope.newRole = {}
     $scope.newRolePermissions = {}
+
+    $data.loadPermissions()
 
     $scope.isActive = (type) ->
         return type == $scope.activeTab

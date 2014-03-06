@@ -253,8 +253,6 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
     $data.loadSiteInfo($rootScope).then (sitedata) ->
         $log.debug "Site data:", sitedata
 
-    $data.loadPermissions()
-
     $rootScope.baseUrls =
         projects: "/"
         backlog: "/project/%s/backlog"
