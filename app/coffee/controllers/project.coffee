@@ -56,13 +56,6 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
         else
             return "#{$location.protocol()}://#{$location.host()}#{url}"
 
-    # This attach "project" to $scope
-    rs.resolve($routeParams.pslug).then (data) ->
-        $rootScope.projectSlug = $routeParams.pslug
-        $rootScope.projectId = data.project
-        $data.loadProject($scope).then ->
-            loadRoles()
-
     loadRoles = ->
         $data.loadUsersAndRoles($scope).then ->
             for role in $rootScope.constants.rolesList
@@ -201,6 +194,13 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
             if data._error_message
                 $gmFlash.error(data._error_message)
             $scope.checksleyErrors = data
+
+    # This attach "project" to $scope
+    rs.resolve($routeParams.pslug).then (data) ->
+        $rootScope.projectSlug = $routeParams.pslug
+        $rootScope.projectId = data.project
+        $data.loadProject($scope).then ->
+            loadRoles()
 
     return
 
