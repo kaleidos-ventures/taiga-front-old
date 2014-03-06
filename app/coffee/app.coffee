@@ -386,18 +386,19 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
         $location.url("/login")
 
     $i18next.initialize(false, config.defaultLanguage)
+
     $rootScope.$on "i18n:change", (event, lang) ->
         if lang
-            new_lang = lang
+            newLang = lang
         else if $rootScope.auth.default_language
-            new_lang = $rootScope.auth.default_language
+            newLang = $rootScope.auth.default_language
         else if $rootScope.site.data.default_language
-            new_lang = $rootScope.site.data.default_language
+            newLang = $rootScope.site.data.default_language
         else
-            new_lang = config.defaultLanguage
+            newLang = config.defaultLanguage
 
-        $i18next.setLang(new_lang)
-        moment.lang(new_lang)
+        $i18next.setLang(newLang)
+        moment.lang(newLang)
 
     $rootScope.$on "i18next:changeLang", ->
         messages = {
