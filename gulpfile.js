@@ -29,7 +29,6 @@ var externalSources = [
     'app/components/kalendae/build/kalendae.js',
     'app/components/checksley/checksley.js',
     'app/js/sha1.js',
-    'app/components/jscache/cache.js',
     'app/components/jquery-flot/jquery.flot.js',
     'app/components/jquery-flot/jquery.flot.pie.js',
     'app/components/jquery-flot/jquery.flot.time.js',

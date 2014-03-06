@@ -63,7 +63,7 @@ SearchController = ($scope, $rootScope, $routeParams, $data, rs, $i18next) ->
         $scope.activeType = type
 
 
-    rs.resolve($routeParams.pslug).then (data) ->
+    rs.resolve(pslug: $routeParams.pslug).then (data) ->
         $rootScope.projectSlug = $routeParams.pslug
         $rootScope.projectId = data.project
         $data.loadProject($scope)

@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope, $i18next, $filter, $log) ->
+ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope,
+                    $i18next, $filter, $log) ->
     service = {}
-    cache = new Cache(250)
-
     headers = (diablePagination=true) ->
         data = {}
         token = $gmStorage.get('token')
@@ -31,6 +30,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope, 
             headers:  headers(),
             url: $gmUrls.api(name, urlParams)
         }
+
         if not _.isEmpty(params)
             defaultHttpParams.params = params
 
@@ -215,39 +215,24 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope, 
 
         return defered.promise
 
-    service.resolve = (projectSlug, usRef, taskRef, issueRef, milestoneSlug) ->
-        key = ""
+    service.resolve = (options) ->
         params = {}
-        if projectSlug?
-            params.project = projectSlug
-            key += projectSlug
-        key += ":"
-        if usRef?
-            params.us = usRef
-            key += usRef
-        key += ":"
-        if taskRef?
-            params.task = taskRef
-            key += taskRef
-        key += ":"
-        if issueRef?
-            params.issue = issueRef
-            key += issueRef
-        key += ":"
-        if milestoneSlug?
-            params.milestone = milestoneSlug
-            key += milestoneSlug
+        params.project = options.pslug if options.pslug?
+        params.us = options.usref if options.usref?
+        params.task = options.taskref if options.taskref?
+        params.issue = options.issueref if options.issueref?
+        params.milestone = options.mlref if options.mlref?
 
-        value = cache.getItem(key)
-        if value?
-            return value
-        else
-            value = queryRaw('resolver', undefined, params)
-            if key[-4:-1] = "::::"
-                cache.setItem(key, value, { priority: Cache.Priority.HIGH })
-            else
-                cache.setItem(key, value)
-            return value
+        args = [
+            options.pslug
+            options.usref
+            options.taskref
+            options.issueref
+            options.mlref
+        ]
+
+        key = _.map(args, (it) -> if it == undefined then "" else it).join(":")
+        return queryRaw("resolver", null, params, {cache:true})
 
     # Get a site
     service.getSite = -> queryOne('sites')

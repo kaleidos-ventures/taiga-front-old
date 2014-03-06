@@ -79,7 +79,7 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
             formatUserStoryTasks()
             calculateStats()
 
-    rs.resolve($routeParams.pslug, undefined, undefined, undefined, $routeParams.sslug).then (data) ->
+    rs.resolve(pslug: $routeParams.pslug, mlref: $routeParams.sslug).then (data) ->
         $rootScope.projectSlug = $routeParams.pslug
         $rootScope.projectId = data.project
         $rootScope.sprintSlug = $routeParams.sid

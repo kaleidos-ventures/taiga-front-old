@@ -31,7 +31,7 @@ KanbanController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $mo
 
         return
 
-    rs.resolve($routeParams.pslug,).then (data) ->
+    rs.resolve(pslug: $routeParams.pslug).then (data) ->
         $rootScope.projectSlug = $routeParams.pslug
         $rootScope.projectId = data.project
 

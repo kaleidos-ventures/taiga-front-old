@@ -23,7 +23,7 @@ WikiHelpController = ($scope, $rootScope, $location, $routeParams, $data, rs, $c
 
     projectId = $rootScope.projectId
 
-    rs.resolve($routeParams.pslug).then (data) ->
+    rs.resolve(pslug: $routeParams.pslug).then (data) ->
         $rootScope.projectSlug = $routeParams.pslug
         $rootScope.projectId = data.project
         $rootScope.slug = $routeParams.slug
@@ -70,7 +70,7 @@ WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confi
             loadAttachments($scope.page)
 
 
-    rs.resolve($routeParams.pslug).then (data) ->
+    rs.resolve(pslug: $routeParams.pslug).then (data) ->
         $rootScope.projectSlug = $routeParams.pslug
         $rootScope.projectId = data.project
         $rootScope.slug = $routeParams.slug
@@ -157,7 +157,7 @@ WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, 
 
     $scope.attachments = []
 
-    rs.resolve($routeParams.pslug).then (data) ->
+    rs.resolve(pslug: $routeParams.pslug).then (data) ->
         $rootScope.projectSlug = $routeParams.pslug
         $rootScope.projectId = data.project
         $rootScope.slug = $routeParams.slug

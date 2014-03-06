@@ -22,6 +22,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     ]
 
     SelectedTags($rootScope.projectId).issues_order.setDefault({field: 'created_date', reverse: true})
+
     $scope.filtersOpened = false
     $scope.filtersData = {}
     $scope.sortingOrder = SelectedTags($rootScope.projectId).issues_order.getField()
@@ -183,7 +184,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             $scope.issuesStats = data
 
     # Load initial data
-    rs.resolve($routeParams.pslug).then (data) ->
+    rs.resolve(pslug: $routeParams.pslug).then (data) ->
         $rootScope.projectSlug = $routeParams.pslug
         $rootScope.projectId = data.project
         $data.loadProject($scope).then ->
@@ -327,7 +328,7 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
                 $scope.newAttachments = []
                 loadAttachments()
 
-    rs.resolve($routeParams.pslug, undefined, undefined, $routeParams.ref).then (data) ->
+    rs.resolve(pslug: $routeParams.pslug, issueref: $routeParams.ref).then (data) ->
         $rootScope.projectSlug = $routeParams.pslug
         $rootScope.projectId = data.project
         $rootScope.issueId = data.issue

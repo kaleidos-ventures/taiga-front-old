@@ -197,7 +197,7 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
             $scope.checksleyErrors = data
 
     # This attach "project" to $scope
-    rs.resolve($routeParams.pslug).then (data) ->
+    rs.resolve(pslug: $routeParams.pslug).then (data) ->
         $rootScope.projectSlug = $routeParams.pslug
         $rootScope.projectId = data.project
         $data.loadProject($scope).then ->

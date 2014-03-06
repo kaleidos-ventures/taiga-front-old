@@ -74,7 +74,7 @@ TasksViewController = ($scope, $location, $rootScope, $routeParams, $q, $confirm
                 loadAttachments()
 
     # Load initial data
-    rs.resolve($routeParams.pslug, undefined, $routeParams.ref).then (data) ->
+    rs.resolve(pslug: $routeParams.pslug, taskref: $routeParams.ref).then (data) ->
         $rootScope.projectSlug = $routeParams.pslug
         $rootScope.projectId = data.project
         $rootScope.taskId = data.task

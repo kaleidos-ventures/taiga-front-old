@@ -40,7 +40,7 @@ BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next, Sele
         if data.length > 0
             $rootScope.sprintId = data[0].id
 
-    rs.resolve($routeParams.pslug).then (data) ->
+    rs.resolve(pslug: $routeParams.pslug).then (data) ->
         $rootScope.projectSlug = $routeParams.pslug
         $rootScope.projectId = data.project
         $data.loadProject($scope).then ->

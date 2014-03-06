@@ -97,7 +97,7 @@ UserStoryViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, 
                 loadAttachments()
 
     # Load initial data
-    rs.resolve($routeParams.pslug, $routeParams.ref).then (data) ->
+    rs.resolve(pslug: $routeParams.pslug, usref: $routeParams.ref).then (data) ->
         $rootScope.projectSlug = $routeParams.pslug
         $rootScope.projectId = data.project
         $rootScope.userStoryId = data.us
