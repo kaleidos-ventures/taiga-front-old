@@ -12,7 +12,7 @@ var gutil = require('gulp-util');
 var template = require('gulp-template');
 
 var externalSources = [
-    'app/components/jquery/jquery.js',
+    'app/components/jquery/dist/jquery.js',
     'app/components/jquery-ui/ui/jquery-ui.js',
     'app/components/markitup/markitup/jquery.markitup.js',
     'app/components/marked/lib/marked.js',
@@ -37,7 +37,7 @@ var externalSources = [
     'app/js/curvedLines.js',
     'app/js/emoticons-define.js',
     'app/components/select2/select2.js',
-    'app/components/i18next/release/i18next-1.7.1.js',
+    'app/components/i18next/i18next.js',
     'app/js/coffeeColorPicker.js',
     'app/js/coffeeColorPicker.angular.js',
     'app/components/google-diff-match-patch-js/diff_match_patch_uncompressed.js',
