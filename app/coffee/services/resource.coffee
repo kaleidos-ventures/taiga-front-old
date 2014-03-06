@@ -252,7 +252,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope,
 
     # Get a project
     service.getProject = (projectId) ->
-        return queryOne("projects", projectId)
+        return queryOne("projects", projectId, {cache:true})
 
     # Get a project stats
     service.getProjectStats = (projectId) ->
@@ -276,9 +276,9 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope,
 
     # Get roles
     service.getRoles = (projectId) ->
-        return queryMany('roles', {project: projectId})
+        return queryMany('roles', {project: projectId}, {cache:true})
 
-    # Get roles
+    # Create role
     service.createRole = (projectId, role) ->
         role.project = projectId
         return $model.create("roles", role)
@@ -403,11 +403,13 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope,
     service.search = (projectId, term, getAll) ->
         defered = $q.defer()
 
-        params =
+        params = {
             "method": "GET"
             "headers": headers()
             "url": $gmUrls.api("search")
             "params": {"project": projectId, "text": term, "get_all": getAll or false}
+            "cache": true
+        }
 
         promise = $http(params)
         promise.success (data, status) ->
@@ -813,7 +815,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope,
 
     service.getIssueTypes = (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
-        return queryMany("choices/issue-types", parameters)
+        return queryMany("choices/issue-types", parameters, {cache:true})
 
     service.createIssueType = (form) ->
         return $model.create("choices/issue-types", form)
@@ -827,7 +829,7 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope,
 
     service.getPriorities = (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
-        return queryMany("choices/priorities", parameters)
+        return queryMany("choices/priorities", parameters, {cache:true})
 
     service.createPriority = (form) ->
         return $model.create("choices/priorities", form)
@@ -855,6 +857,11 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope,
 
     return service
 
+
+init = ($cacheFactory, $http) ->
+    $http.defaults.cache = $cacheFactory("httpCache", 512);
+
 module = angular.module('taiga.services.resource', ['taiga.config'])
+module.run(["$cacheFactory", "$http", init])
 module.factory('resource', ['$http', '$q', '$gmStorage', '$gmUrls', '$model', 'config', '$rootScope',
                             '$i18next', '$filter', '$log', ResourceProvider])
