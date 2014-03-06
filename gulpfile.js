@@ -116,7 +116,7 @@ gulp.task('test', ['coffee', 'libs', 'build-tests'], function() {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(['app/less/*.less', 'app/less/**/*.less', 'app/less/**/*.css'], ['less']);
+    gulp.watch(['app/less/*.less', 'app/less/**/*.less'], ['less']);
     gulp.watch(externalSources, ['libs']);
     gulp.watch(['app/coffee/*.coffee', 'app/coffee/**/*.coffee'], ['coffee']);
 });
