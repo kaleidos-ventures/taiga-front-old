@@ -359,8 +359,8 @@
                         <textarea class="blocked-note" name="blocked_note"
                                   placeholder="Some reasons..."
                                   i18next="placeholder:issues.form-blocking-reasons-placeholder"
-                                  ng-model="form.blocked_note" gm-markitup preview-id="preview"></textarea>
-                        <div id="preview"></div>
+                                  ng-model="form.blocked_note" gm-markitup preview-id="blocked-preview"></textarea>
+                        <div id="blocked-preview" class="preview"></div>
                     </fieldset>
                 </div>
                 <div class="fieldset-row">
@@ -376,7 +376,7 @@
                     <fieldset>
                         <label i18next="issues.form-description">Description</label>
                         <textarea name="description" class="description" ng-model="form.description" gm-markitup preview-id="preview"></textarea>
-                        <div id="preview"></div>
+                        <div id="preview" class="preview"></div>
                     </fieldset>
                 </div>
                 <div class="fieldset-row">

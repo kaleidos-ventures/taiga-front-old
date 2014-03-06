@@ -182,8 +182,8 @@
                             <textarea class="blocked-note" name="blocked_note"
                                       placeholder="Some reasons..."
                                       i18next="placeholder:user-story.blocking-reasons-placeholder"
-                                      ng-model="form.blocked_note" gm-markitup preview-id="preview"></textarea>
-                            <div id="preview"></div>
+                                      ng-model="form.blocked_note" gm-markitup preview-id="blocked-preview"></textarea>
+                            <div id="blocked-preview" class="preview"></div>
                         </fieldset>
                     </div>
                     <div ng-hide="_showHiddenGroups">
@@ -200,7 +200,7 @@
                     <fieldset class="task-description" ng-show="_showHiddenGroups">
                         <label for="inputEmail" i18next="user-story.description-label">Description</label>
                         <textarea name="description" ng-model="form.description" gm-markitup preview-id="description-preview"></textarea>
-                        <div id="description-preview"></div>
+                        <div id="description-preview" class="preview"></div>
                     </fieldset>
 
                     <fieldset class="task-comment">

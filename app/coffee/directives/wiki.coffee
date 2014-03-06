@@ -96,7 +96,7 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location, rs)
                 {
                     name: $i18next.t('wiki-editor.preview')
                     call: preview
-                    className: "preview"
+                    className: "preview-icon"
                 },
                 {
                     separator: '---------------'
