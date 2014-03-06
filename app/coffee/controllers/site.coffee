@@ -1,4 +1,4 @@
-# Copyright 2013 Andrey Antukh <niwi@niwi.be>
+# Copyright 2013-2014 Andrey Antukh <niwi@niwi.be>
 #
 # Licensed under the Apache License, Version 2.0 (the "License")
 # you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ SiteAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model
     $rootScope.pageBreadcrumb = [
         [$i18next.t('common.administer-site'), null],
     ]
+
     $scope.activeTab = "data"
 
     $scope.languageOptions = config.languageOptions
@@ -39,9 +40,12 @@ SiteAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model
         else if role == 'normal'
             mbr.is_owner = false
             mbr.is_staff = false
-        mbr.save().then ->
+
+        promise = mbr.save()
+        promise.then ->
             $gmFlash.info($i18next.t("admin-site.role-changed"))
-        mbr.save().then null, ->
+
+        promise.then null, ->
             mbr.revert()
             $gmFlash.warn($i18next.t("admin-site.error-changing-the-role"))
 
