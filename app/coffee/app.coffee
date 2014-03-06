@@ -45,56 +45,47 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when("/register",
         {controller: "PublicRegisterController", templateUrl: "partials/register.html"})
 
-    $routeProvider.when("/invitation/:token", {
-        controller: "InvitationRegisterController", templateUrl: "partials/invitation-register.html"})
+    $routeProvider.when("/invitation/:token",
+        {controller: "InvitationRegisterController", templateUrl: "partials/invitation-register.html"})
 
     $routeProvider.when('/project/:pslug/backlog',
-            {templateUrl: 'partials/backlog.html', controller: "BacklogController"})
+        {templateUrl: 'partials/backlog.html', controller: "BacklogController"})
 
     $routeProvider.when('/project/:pslug/kanban',
-            {templateUrl: 'partials/kanban.html', controller: "KanbanController"})
+        {templateUrl: 'partials/kanban.html', controller: "KanbanController"})
 
     $routeProvider.when('/project/:pslug/user-story/:ref',
-            {templateUrl: 'partials/user-story-view.html', controller: "UserStoryViewController"})
+        {templateUrl: 'partials/user-story-view.html', controller: "UserStoryViewController"})
 
     $routeProvider.when('/project/:pslug/issues',
-            {templateUrl: 'partials/issues.html', controller: "IssuesController"})
+        {templateUrl: 'partials/issues.html', controller: "IssuesController"})
 
     $routeProvider.when('/project/:pslug/issues/:ref',
-            {templateUrl: 'partials/issues-view.html', controller: "IssuesViewController"})
+        {templateUrl: 'partials/issues-view.html', controller: "IssuesViewController"})
 
     $routeProvider.when('/project/:pslug/tasks/:ref',
-            {templateUrl: 'partials/tasks-view.html', controller: "TasksViewController"})
-
-    # $routeProvider.when('/project/:pid/questions',
-    #         {templateUrl: 'partials/questions.html', controller: QuestionsController})
-
-    # $routeProvider.when('/project/:pid/questions/:issueid',
-    #         {templateUrl: 'partials/questions-view.html', controller: QuestionsViewController})
-
-    # $routeProvider.when('/project/:pid/tasks',
-    #         {templateUrl: 'partials/tasks.html', controller: TasksController})
+        {templateUrl: 'partials/tasks-view.html', controller: "TasksViewController"})
 
     $routeProvider.when('/project/:pslug/taskboard/:sslug',
-            {templateUrl: 'partials/taskboard.html', controller: "TaskboardController"})
+        {templateUrl: 'partials/taskboard.html', controller: "TaskboardController"})
 
     $routeProvider.when('/project/:pslug/wiki-help',
-            {templateUrl: 'partials/wiki-help.html', controller: "WikiHelpController"})
+        {templateUrl: 'partials/wiki-help.html', controller: "WikiHelpController"})
 
     $routeProvider.when('/project/:pslug/wiki/:slug',
-            {templateUrl: 'partials/wiki.html', controller: "WikiController"})
+        {templateUrl: 'partials/wiki.html', controller: "WikiController"})
 
     $routeProvider.when('/project/:pslug/wiki/:slug/historical',
-            {templateUrl: 'partials/wiki-historical.html', controller: "WikiHistoricalController"})
+        {templateUrl: 'partials/wiki-historical.html', controller: "WikiHistoricalController"})
 
-    $routeProvider.when('/project/:pslug/search', {
-        controller: "SearchController", templateUrl: "partials/search.html"})
+    $routeProvider.when('/project/:pslug/search',
+        {controller: "SearchController", templateUrl: "partials/search.html"})
 
-    $routeProvider.when('/project/:pslug/admin', {
-        controller: "ProjectAdminController", templateUrl: "partials/project-admin.html"})
+    $routeProvider.when('/project/:pslug/admin',
+        {controller: "ProjectAdminController", templateUrl: "partials/project-admin.html"})
 
-    $routeProvider.when('/admin', {
-        controller: "SiteAdminController", templateUrl: "partials/site-admin.html"})
+    $routeProvider.when('/admin',
+        {controller: "SiteAdminController", templateUrl: "partials/site-admin.html"})
 
     $routeProvider.otherwise({redirectTo: '/login'})
 

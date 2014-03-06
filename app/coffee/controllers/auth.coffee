@@ -188,7 +188,6 @@ InvitationRegisterController = ($scope, $params, $rootScope, $location, rs, $dat
 
     return
 
-
 module = angular.module("taiga.controllers.auth", [])
 module.controller("LoginController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource', '$gmAuth', '$i18next', LoginController])
 module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', '$i18next', RecoveryController])
