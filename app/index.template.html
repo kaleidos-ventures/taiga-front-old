@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <title ng-bind="pageTitle">Taiga</title>
-        <link href="/less/style.css" rel="stylesheet" type="text/css" />
+        <link href="/less/style.css?v=<%= stamp %>" rel="stylesheet" type="text/css" />
     </head>
     <body class="{{ pageSection }}">
         <div class="main" id="main">
@@ -11,7 +11,7 @@
         </div>
 
         <!-- Main libraries -->
-        <script src="/dist/libs.js"></script>
-        <script src="/dist/app.js"></script>
+        <script src="/dist/libs.js?v=<%= stamp %>"></script>
+        <script src="/dist/app.js?v=<%= stamp %>"></script>
     </body>
 </html>

@@ -9,6 +9,7 @@ var recess = require('gulp-recess');
 var jshint = require('gulp-jshint');
 var karma = require('gulp-karma');
 var gutil = require('gulp-util');
+var template = require('gulp-template');
 
 var externalSources = [
     'app/components/jquery/jquery.js',
@@ -54,9 +55,9 @@ var coffeeSources = [
 // define tasks here
 gulp.task('default', ['dev', 'watch', 'connect']);
 
-gulp.task('dev', ['coffee', 'less', 'libs']);
+gulp.task('dev', ['coffee', 'less', 'libs', "template"]);
 
-gulp.task('pro', ['less'], function() {
+gulp.task('pro', ['less', "template"], function() {
     gulp.src(coffeeSources)
         .pipe(coffee().on('error', gutil.log))
         .pipe(concat('app.js'))
@@ -101,6 +102,13 @@ gulp.task('lint', function() {
         .pipe(coffeelint.reporter())
     gulp.src('app/less/taiga-main.less')
         .pipe(recess({strictPropertyOrder: false}))
+});
+
+gulp.task("template", function() {
+    gulp.src('app/index.template.html')
+        .pipe(template({stamp: (new Date()).getTime()}))
+        .pipe(concat("index.html"))
+        .pipe(gulp.dest("app"));
 });
 
 gulp.task('build-tests', function() {
