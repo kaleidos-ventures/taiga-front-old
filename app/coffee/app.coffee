@@ -314,7 +314,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
             url = gm.format($rootScope.baseUrls.admin, [projectId])
             return conditionalUrl(url, raw)
 
-        issuesUrl: (projectId, issueId, raw) ->
+        issuesUrl: (projectId, issueId, raw, params={}) ->
             url = null
 
             if issueId != undefined
@@ -322,7 +322,12 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
             else
                 url = gm.format($rootScope.baseUrls.issues, [projectId])
 
-            return conditionalUrl(url, raw)
+            url =  conditionalUrl(url, raw)
+
+            if params isnt {}
+                url = "#{url}?#{jQuery.param(params)}"
+
+            return url
 
         tasksUrl: (projectId, taskId, raw) ->
             url = null

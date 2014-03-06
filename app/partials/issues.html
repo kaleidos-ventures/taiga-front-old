@@ -219,7 +219,7 @@
                         </a>
                     </div>
                     <div class="issue-title">
-                        <a class="title" href="{{ urls.issuesUrl(projectSlug, issue.ref) }}">
+                        <a class="title" href="{{ urls.issuesUrl(projectSlug, issue.ref, false, issuesQueryParams()) }}">
                             #{{ issue.ref }} {{ issue.subject }}
                         </a>
                         <div class="tags" ng-show="showTags">

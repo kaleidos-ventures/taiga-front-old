@@ -29,6 +29,30 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     $scope.page = 1
     $scope.showGraphs = false
 
+    $scope.issuesQueryParams = ->
+        tags = SelectedTags($rootScope.projectId).issues.tags.join()
+        status = SelectedTags($rootScope.projectId).issues.status.join()
+        type = SelectedTags($rootScope.projectId).issues.type.join()
+        severity = SelectedTags($rootScope.projectId).issues.severity.join()
+        priority = SelectedTags($rootScope.projectId).issues.priority.join()
+        owner = SelectedTags($rootScope.projectId).issues.owner.join()
+        assigned_to = SelectedTags($rootScope.projectId).issues.assigned_to.join()
+        order_by = SelectedTags($rootScope.projectId).issues_order.getField()
+        if SelectedTags($rootScope.projectId).issues_order.isReverse()
+            order_by = "-#{order_by}"
+
+        params = {}
+        params.tags = tags if tags != ""
+        params.status = status if status != ""
+        params.type = type if type != ""
+        params.severity = severity if severity != ""
+        params.priority = priority if priority != ""
+        params.owner = owner if owner != ""
+        params.assigned_to = assigned_to if assigned_to != ""
+        params.order_by = order_by
+
+        return params
+
     #####
     ## Tags generation functions
     #####
@@ -251,28 +275,11 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
     $scope.newAttachments = []
     $scope.attachments = []
 
+    $scope.issuesQueryParams = ->
+        return $location.search()
+
     loadIssue = ->
-        params = {}
-        tags = SelectedTags($rootScope.projectId).issues.tags.join()
-        status = SelectedTags($rootScope.projectId).issues.status.join()
-        type = SelectedTags($rootScope.projectId).issues.type.join()
-        severity = SelectedTags($rootScope.projectId).issues.severity.join()
-        priority = SelectedTags($rootScope.projectId).issues.priority.join()
-        owner = SelectedTags($rootScope.projectId).issues.owner.join()
-        assigned_to = SelectedTags($rootScope.projectId).issues.assigned_to.join()
-        order_by = SelectedTags($rootScope.projectId).issues_order.getField()
-        if SelectedTags($rootScope.projectId).issues_order.isReverse()
-            order_by = "-#{order_by}"
-
-        params.tags = tags if tags != ""
-        params.status = status if status != ""
-        params.type = type if type != ""
-        params.severity = severity if severity != ""
-        params.priority = priority if priority != ""
-        params.owner = owner if owner != ""
-        params.assigned_to = assigned_to if assigned_to != ""
-        params.order_by = order_by
-
+        params = $scope.issuesQueryParams()
         rs.getIssue($scope.projectId, $scope.issueId, params).then (issue) ->
             $scope.issue = issue
             $scope.form = _.extend({}, $scope.issue._attrs)
