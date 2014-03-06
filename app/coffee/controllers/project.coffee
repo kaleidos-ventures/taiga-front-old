@@ -13,6 +13,7 @@
 # limitations under the License.
 
 ProjectListController = ($scope, $rootScope, rs, $i18next) ->
+    $rootScope.projectSlug = undefined
     $rootScope.pageTitle = $i18next.t('common.dashboard')
     $rootScope.pageSection = 'projects'
     $rootScope.pageBreadcrumb = [
