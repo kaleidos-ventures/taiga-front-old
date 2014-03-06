@@ -54,6 +54,7 @@ SiteAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model
             url: "#{$gmUrls.api('sites')}",
             method: "POST"
         }
+
         promise = $scope.currentSite.save(false, extraParams)
         promise.then (data) ->
             $gmFlash.info($i18next.t("admin-site.saved-success"))

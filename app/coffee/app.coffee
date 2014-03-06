@@ -219,6 +219,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
 
     $rootScope.pageTitle = ""
     $rootScope.auth = $gmAuth.getUser()
+
     $rootScope.constants = {}
 
     $rootScope.constants.usStatuses = {}

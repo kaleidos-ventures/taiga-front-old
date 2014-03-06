@@ -19,11 +19,11 @@ AuthProvider = ($rootScope, $gmStorage, $model) ->
     service.getUser = ->
         userData = $gmStorage.get('userInfo')
         if userData
-            $rootScope.$broadcast('i18n:change', userData.default_language)
             return $model.make_model("users", userData)
         return null
 
     service.setUser = (user) ->
+        $rootScope.auth = user
         $rootScope.$broadcast('i18n:change', user.default_language)
         $gmStorage.set("userInfo", user.getAttrs())
 

@@ -25,7 +25,7 @@ LoginController = ($scope, $rootScope, $location, $routeParams, rs, $gmAuth, $i1
 
         onSuccess = (user) ->
             $gmAuth.setUser(user)
-            $rootScope.auth = user
+
             if $routeParams['next'] and $routeParams['next'] != '/login'
                 $location.url($routeParams['next'])
             else
@@ -36,8 +36,7 @@ LoginController = ($scope, $rootScope, $location, $routeParams, rs, $gmAuth, $i1
             $scope.errorMessage = data.detail
 
         promise = rs.login(username, password)
-        promise = promise.then(onSuccess, onError)
-        promise.then ->
+        promise.then(onSuccess, onError).then ->
             $scope.loading = false
 
     return
