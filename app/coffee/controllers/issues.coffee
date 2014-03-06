@@ -51,6 +51,13 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         $scope.currentPage = 0
         filterIssues()
 
+    refreshSelectedTags =  ->
+        _.forEach SelectedTags($rootScope.projectId).issues, (tagGroup) ->
+            _.forEach tagGroup.values(), (storedTag) =>
+                newTag = _.find($scope[tagGroup.constructor.scopeVar], {id: storedTag.id})
+                if newTag
+                    tagGroup.update(storedTag, newTag)
+
     generateTagsFromList = (list, constants, type, scopeVar) ->
         tags = []
         for value in list
@@ -141,6 +148,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
         promise = rs.getIssuesFiltersData($scope.projectId).then (data) ->
             $scope.filtersData = data
             regenerateTags()
+            refreshSelectedTags()
             loadStats()
             return data
 

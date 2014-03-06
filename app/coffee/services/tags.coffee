@@ -34,6 +34,10 @@ class Tags extends Persist
          @tags[@key(tag)] = tag
          @save()
 
+    update: (tag, newValues) ->
+        @tags[@key(tag)] = _.defaults(newValues, @tags[@key(tag)])
+        @save()
+
     remove: (tag) ->
         delete @tags[@key(tag)]
         @save()
@@ -43,27 +47,34 @@ class BacklogTags extends Tags
 
 class IssuesTags extends Tags
     @storageKey: "issues-selected-tags"
+    @scopeVar: "tags"
 
 class NumericIssuesTags extends IssuesTags
     join: (sep=",") -> _(@tags).values().map("id").join(sep)
 
 class IssuesStatusTags extends NumericIssuesTags
     @storageKey: "issues-status-selected-tags"
+    @scopeVar: "statusTags"
 
 class IssuesTypeTags extends NumericIssuesTags
     @storageKey: "issues-type-selected-tags"
+    @scopeVar: "typeTags"
 
 class IssuesSeverityTags extends NumericIssuesTags
     @storageKey: "issues-severity-selected-tags"
+    @scopeVar: "severityTags"
 
 class IssuesPriorityTags extends NumericIssuesTags
     @storageKey: "issues-priority-selected-tags"
+    @scopeVar: "priorityTags"
 
 class IssuesOwnerTags extends NumericIssuesTags
     @storageKey: "issues-added-by-selected-tags"
+    @scopeVar: "addedByTags"
 
 class IssuesAssigedToTags extends NumericIssuesTags
     @storageKey: "issues-assigned-to-selected-tags"
+    @scopeVar: "assignedToTags"
 
 class IssuesOrderBy extends Persist
     @storageKey: "issues-order-by"
