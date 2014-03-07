@@ -139,7 +139,7 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
     regenerateTags = ->
         generateTagsFromList($scope.filtersData.statuses, $scope.constants.issueStatuses, "status", "statusTags")
-        generateTagsFromList($scope.filtersData.types, $scope.constants.types, "type", "$scope.selectedTagstypeTags")
+        generateTagsFromList($scope.filtersData.types, $scope.constants.types, "type", "typeTags")
         generateTagsFromList($scope.filtersData.severities, $scope.constants.severities, "severity", "severityTags")
         generateTagsFromList($scope.filtersData.priorities, $scope.constants.priorities, "priority", "priorityTags")
         generateTagsFromUsers($scope.filtersData.owners, "owner", "addedByTags")
