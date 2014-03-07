@@ -325,10 +325,10 @@ TaskboardTaskController = ($scope, $rootScope, $q, $location) ->
 
 
 module = angular.module("taiga.controllers.taskboard", [])
-module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', "$location", "$favico",
+module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', "$location",
                                               TaskboardTaskController])
 module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data',
-                                          '$modal', "$model", "$i18next", TaskboardController])
+                                          '$modal', "$model", "$i18next", "$favico", TaskboardController])
 module.controller("TaskboardTaskModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource',
                                                    "$i18next", TaskboardTaskModalController])
 module.controller('TaskboardBulkTasksModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource',
