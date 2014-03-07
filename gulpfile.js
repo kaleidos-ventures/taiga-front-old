@@ -48,8 +48,8 @@ var externalSources = [
 ];
 
 var coffeeSources = [
-    "app/coffee/**/*.coffee",
-    "app/coffee/*.coffee"
+    "app/coffee/*.coffee",
+    "app/coffee/**/*.coffee"
 ];
 
 // define tasks here

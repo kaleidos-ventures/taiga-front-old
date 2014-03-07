@@ -28,7 +28,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         {templateUrl: 'partials/project-list.html', controller: "ProjectListController"})
 
     $routeProvider.when('/login',
-        {templateUrl: 'partials/login.html', controller: "LoginController"})
+        {templateUrl: 'partials/login.html', controller: "LoginController as ctrl"})
 
     $routeProvider.when('/recovery',
         {templateUrl: 'partials/recovery.html', controller: "RecoveryController"})

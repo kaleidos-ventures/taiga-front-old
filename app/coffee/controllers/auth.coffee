@@ -12,35 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-LoginController = ($scope, $rootScope, $location, $routeParams, rs, $gmAuth, $i18next, $favico) ->
-    $favico.reset()
-    $rootScope.pageTitle = $i18next.t('login.login-title')
-    $rootScope.pageSection = 'login'
+class LoginController extends TaigaBaseController
+    constructor: (@$scope, @$rootScope, @$location, @$routeParams, @rs, @$gmAuth, @$i18next, @$favico) ->
+        $favico.reset()
+        $rootScope.pageTitle = $i18next.t('login.login-title')
+        $rootScope.pageSection = 'login'
+        @.form = {}
 
-    $scope.form = {}
-    $scope.submit = ->
-        username = $scope.form.username
-        password = $scope.form.password
+    submit: ->
+        username = @.form.username
+        password = @.form.password
 
-        $scope.loading = true
+        @.loading = true
 
-        onSuccess = (user) ->
-            $gmAuth.setUser(user)
+        onSuccess = (user) =>
+            @.$gmAuth.setUser(user)
 
-            if $routeParams['next'] and $routeParams['next'] != '/login'
-                $location.url($routeParams['next'])
+            if @.$routeParams['next'] and @.$routeParams['next'] != '/login'
+                @.$location.url($routeParams['next'])
             else
-                $location.url("/")
+                @.$location.url("/")
 
-        onError = (data) ->
-            $scope.error = true
-            $scope.errorMessage = data.detail
+        onError = (data) =>
+            @.error = true
+            @.errorMessage = data.detail
 
-        promise = rs.login(username, password)
-        promise.then(onSuccess, onError).then ->
-            $scope.loading = false
-
-    return
+        promise = @.rs.login(username, password)
+        promise.then(onSuccess, onError).then =>
+            @.loading = false
 
 
 RecoveryController = ($scope, $rootScope, $location, rs, $i18next) ->
