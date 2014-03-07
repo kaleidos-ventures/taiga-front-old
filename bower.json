@@ -41,5 +41,10 @@
     "flot-orderBars": "emmerich/flot-orderBars",
     "moment": "~2.5.1",
     "isMobile": "~0.3.1"
+  },
+  "resolutions": {
+    "lodash": "~2.4.1",
+    "moment": "~2.5.1",
+    "jquery": "~2.1.0"
   }
 }
