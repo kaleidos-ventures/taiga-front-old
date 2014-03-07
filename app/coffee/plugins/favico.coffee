@@ -33,7 +33,9 @@ FavicoProvider = () ->
         service._favico.badge(num)
 
     service.reset = () ->
-        service._favico.reset()
+        try
+            service._favico.reset()
+        catch err
 
     service.destroy = () ->
         service._favico = null
