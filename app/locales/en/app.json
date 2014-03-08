@@ -196,6 +196,7 @@
         "created-by-popover": "Created by:",
         "subject-popover": "Subject:",
         "description-popover": "Description:",
+        "attachments-popover": "Attachments:",
         "delete-popover": "Delete",
         "cancel-popover": "Cancel",
         "unassigned-popover": "Unassigned",

@@ -160,6 +160,7 @@
                      gm-issues-sorted-by>
                     Severity
                 </div>
+                <div class="issue-info-icons"></div>
                 <div i18next="issues.subject-header"
                      data-field="subject"
                      class="issue-sortable-field issue-title"
@@ -217,6 +218,9 @@
                                 class="severity-{{ constants.severities[issue.severity].name|lowercase }}">
                             {{ constants.severities[issue.severity].name|lowercase }}
                         </a>
+                    </div>
+                    <div class="issue-info-icons">
+                        <span ng-show="issue.attachments" data-icon="E"></span>
                     </div>
                     <div class="issue-title">
                         <a class="title" href="{{ urls.issuesUrl(projectSlug, issue.ref, false, issuesQueryParams()) }}">
@@ -436,6 +440,15 @@
         <section>
             <strong i18next="issues.description-popover">Description:</strong>
             <div gm-render-markdown="issue.description"></div>
+        </section>
+        <section ng-show="issue.attachments">
+            <strong i18next="issues.attachments-popover">Attachments:</strong>
+            <ul class="attachments-items">
+                <li class="attachments-item" ng-repeat="attachment in issue.attachments">
+                    <a href={{ attachment.url }} target="_blank">{{ attachment.name }}</a>
+                    <span>[{{ attachment.size|sizeFormat }}]</span>
+                </li>
+            </ul>
         </section>
     </div>
 </script>
