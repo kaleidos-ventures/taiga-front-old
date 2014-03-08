@@ -445,7 +445,7 @@
             <strong i18next="issues.attachments-popover">Attachments:</strong>
             <ul class="attachments-items">
                 <li class="attachments-item" ng-repeat="attachment in issue.attachments">
-                    <a href={{ attachment.url }} target="_blank">{{ attachment.name }}</a>
+                    <a href="{{ attachment.url }}" target="_blank">{{ attachment.name }}</a>
                     <span>[{{ attachment.size|sizeFormat }}]</span>
                 </li>
             </ul>
