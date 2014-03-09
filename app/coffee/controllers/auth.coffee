@@ -22,6 +22,14 @@ class LoginController extends TaigaBaseController
         rootScope.pageTitle = i18next.t('login.login-title')
         rootScope.pageSection = 'login'
         @.form = {}
+        super(scope)
+
+    initialize: ->
+        console.log("INITIALIZE", arguments)
+
+    destroy: ->
+        super()
+        console.log("DESTROY")
 
     submit: ->
         username = @.form.username
@@ -29,7 +37,7 @@ class LoginController extends TaigaBaseController
 
         @.loading = true
         @.rs.login(username, password)
-            .then(_.bind(@.onSuccess, @), _.bind(@.onError, @))
+            .then(@.onSuccess, @.onError)
             .then(=> @.loading = false)
 
     onError: (data) ->
