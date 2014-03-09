@@ -13,10 +13,14 @@
 # limitations under the License.
 
 class LoginController extends TaigaBaseController
-    constructor: (@$scope, @$rootScope, @$location, @$routeParams, @rs, @$gmAuth, @$i18next, @$favico) ->
-        $favico.reset()
-        $rootScope.pageTitle = $i18next.t('login.login-title')
-        $rootScope.pageSection = 'login'
+    @.$inject = ['$scope', '$rootScope', '$location',
+                 '$routeParams', 'resource', '$gmAuth',
+                 '$i18next', '$favico']
+
+    constructor: (@scope, @rootScope, @location, @routeParams, @rs, @gmAuth, @i18next, @favico) ->
+        favico.reset()
+        rootScope.pageTitle = i18next.t('login.login-title')
+        rootScope.pageSection = 'login'
         @.form = {}
 
     submit: ->
@@ -24,23 +28,20 @@ class LoginController extends TaigaBaseController
         password = @.form.password
 
         @.loading = true
+        @.rs.login(username, password)
+            .then(_.bind(@.onSuccess, @), _.bind(@.onError, @))
+            .then(=> @.loading = false)
 
-        onSuccess = (user) =>
-            @.$gmAuth.setUser(user)
+    onError: (data) ->
+        @.error = true
+        @.errorMessage = data.detail
 
-            if @.$routeParams['next'] and @.$routeParams['next'] != '/login'
-                @.$location.url($routeParams['next'])
-            else
-                @.$location.url("/")
-
-        onError = (data) =>
-            @.error = true
-            @.errorMessage = data.detail
-
-        promise = @.rs.login(username, password)
-        promise.then(onSuccess, onError).then =>
-            @.loading = false
-
+    onSuccess: (user) ->
+        @.gmAuth.setUser(user)
+        if @.routeParams['next'] and @.routeParams['next'] != '/login'
+            @.location.url(@.routeParams['next'])
+        else
+            @.location.url("/")
 
 RecoveryController = ($scope, $rootScope, $location, rs, $i18next) ->
     $rootScope.pageTitle = $i18next.t('login.password-recovery-title')
@@ -189,8 +190,7 @@ InvitationRegisterController = ($scope, $params, $rootScope, $location, rs, $dat
     return
 
 module = angular.module("taiga.controllers.auth", [])
-module.controller("LoginController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource',
-                                      '$gmAuth', '$i18next', '$favico',  LoginController])
+module.controller("LoginController", LoginController)
 module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', '$i18next',
                                          RecoveryController])
 module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource',
