@@ -23,6 +23,30 @@ class LoginController extends TaigaBaseController
         rootScope.pageSection = 'login'
         @.form = {}
 
+        # WARNING: _.bindAll() should not be used if we want initialize
+        # hooks working with injector. :(
+        # Without _.bindAll, we should be careful with passing
+        # instance method as callbacks.
+        super(scope)
+
+    initialize: ->
+        # The unique way that I found for call super respecting
+        # its $inject property
+        @.injector.invoke(LoginController.__super__.initialize)
+
+        # Only for debug and demostration that injection works properly
+        console.log("INITIALIZE", arguments)
+
+    # This is a way for define the $inject property for some method
+    # It should be afer method definition always
+    # It only works for services, I don't know why
+    # injecting "$scope" does not works properly.
+    @.prototype.initialize.$inject = ["$gmAuth"]
+
+    destroy: ->
+        super()
+        console.log("DESTROY")
+
     submit: ->
         username = @.form.username
         password = @.form.password
