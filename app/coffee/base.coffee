@@ -10,7 +10,7 @@ class TaigaBaseController extends TaigaBase
         # application injector.
         @.injector.invoke(@.initialize, @)
 
-        scope.$on("$destroy", _.bind(@.destroy))
+        scope.$on("$destroy", _.bind(@.destroy, @))
 
     destroy: ->
         # Do nothing explicitly
