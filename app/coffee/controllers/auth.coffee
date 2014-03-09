@@ -53,9 +53,11 @@ class LoginController extends TaigaBaseController
 
         @.loading = true
         @.rs.login(username, password)
-            .then(_.bind(@.onSuccess, @), _.bind(@.onError, @))
-            .then(=> @.loading = false)
-
+            .then(_.bind(@.onSuccess, @), _.bind(@.onError, @)) # This is a awfull consequence of
+            .then(=> @.loading = false)                         # not using _.bindAll(@). Without it,
+                                                                # we should use _.bind(func, @) for
+                                                                # each method that we want pass as
+                                                                # callback
     onError: (data) ->
         @.error = true
         @.errorMessage = data.detail
