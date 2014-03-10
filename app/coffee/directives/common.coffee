@@ -19,8 +19,7 @@ GmHeaderMenuDirective = ($rootScope) ->
 
 
 GmBreadcrumbDirective = ($rootScope) ->
-    return (scope, element, attrs) ->
-
+    link: (scope, element, attrs) ->
         scope.$watch "pageBreadcrumb", (breadcrumb) ->
             if breadcrumb is undefined
                 return
@@ -29,7 +28,6 @@ GmBreadcrumbDirective = ($rootScope) ->
             element.empty()
 
             items = []
-
             for item, index in breadcrumb
                 if item[1] == null
                     li = angular.element('<li data-icon="G" class="title-item"></li>').text(item[0])
@@ -431,7 +429,8 @@ GmSelect2Tags = ->
                     .replace('e','6')
                     .replace('f','7')
 
-                $(search_choice).css('background', "##{color}")
+                angular.element(search_choice)
+                       .css('background', "##{color}")
 
         element.on "change", (e) ->
             colorizeTags()
