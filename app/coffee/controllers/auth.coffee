@@ -51,32 +51,36 @@ class LoginController extends TaigaBaseController
         else
             @.location.url("/")
 
-RecoveryController = ($scope, $rootScope, $location, rs, $i18next) ->
-    $rootScope.pageTitle = $i18next.t('login.password-recovery-title')
-    $rootScope.pageSection = 'login'
 
-    $scope.formData = {}
-    $scope.success = false
-    $scope.error = false
+class RecoveryController extends TaigaBaseController
+    @.$inject = ["$scope", "$rootScope", "$location", "resource", "$i18next"]
 
-    $scope.submit = ->
-        promise = rs.recovery($scope.formData.email)
-        promise.then ->
-            $scope.success = true
-            $scope.error = false
+    constructor: (@scope, @rootScope, @location, @rs, @i18n) ->
+        rootScope.pageTitle = i18n.t('login.password-recovery-title')
+        rootScope.pageSection = 'login'
 
-            gm.utils.delay 1000, ->
-                $location.url("/login")
-                $scope.$apply()
+        @.formData = {}
+        @.success = false
+        @.error = false
+        super(scope)
 
-        promise.then null, (data) ->
-            $scope.error = true
-            $scope.success = false
-            $scope.formData = {}
-            $scope.errorMessage = data.detail
+    submit: ->
+        @.rs.recovery(@.formData.email)
+            .then(@.onSuccess, @.onError)
 
-    return
+    onError: (data) ->
+        @.error = true
+        @.success = false
+        @.formData = {}
+        @.errorMessage = data.detail
 
+    onSuccess: ->
+        @.success = true
+        @.error = false
+
+        gm.utils.delay 1000, =>
+            @.location.url("/login")
+            @.scope.$apply()
 
 ChangePasswordController = ($scope, $rootScope, $location, $routeParams, rs, $i18next) ->
     $rootScope.pageTitle = $i18next.t('login.password-change-title')
@@ -199,8 +203,8 @@ InvitationRegisterController = ($scope, $params, $rootScope, $location, rs, $dat
 
 module = angular.module("taiga.controllers.auth", [])
 module.controller("LoginController", LoginController)
-module.controller("RecoveryController", ['$scope', '$rootScope', '$location', 'resource', '$i18next',
-                                         RecoveryController])
+module.controller("RecoveryController", RecoveryController)
+
 module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource',
                                                '$i18next', ChangePasswordController])
 module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', 'config',

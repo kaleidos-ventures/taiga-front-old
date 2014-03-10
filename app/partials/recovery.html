@@ -6,11 +6,11 @@
             </a>
         </div>
         <div class="form-container recovery-forms-box">
-            <form method="post" action="" gm-checksley-form="submit()">
+            <form method="post" action="" gm-checksley-form="ctrl.submit()">
                 <fieldset>
                     <div class="form-field">
                         <label i18next="login.your-email">Your email</label>
-                        <input type="text" ng-model="formData.email" name="email"  data-type="email" />
+                        <input type="text" ng-model="ctrl.formData.email" name="email"  data-type="email" />
                     </div>
                 </fieldset>
 
@@ -25,7 +25,7 @@
                             Email message sent successful.
                         </span>
                     </p>
-                    <p class="error" ng-show="error">{{ errorMessage }}</p>
+                    <p class="error" ng-show="error">{{ ctrl.errorMessage }}</p>
                 </div>
             </form>
         </div>
