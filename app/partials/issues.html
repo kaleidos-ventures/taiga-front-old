@@ -220,7 +220,10 @@
                         </a>
                     </div>
                     <div class="issue-info-icons">
-                        <span ng-show="issue.attachments" data-icon="E"></span>
+                        <a href="" ng-show="issue.attachments"
+                           gm-popover data-tmpl="#attachments-popover">
+                            <span data-icon="E"></span>
+                        </a>
                     </div>
                     <div class="issue-title">
                         <a class="title" href="{{ urls.issuesUrl(projectSlug, issue.ref, false, issuesQueryParams()) }}">
@@ -424,6 +427,20 @@
         </form>
     </div>
 </div>
+
+<script type="text/template" id="attachments-popover">
+    <div class="issue-attachments-popover">
+        <section ng-show="issue.attachments">
+            <strong i18next="issues.attachments-popover">Attachments:</strong>
+            <ul class="attachments-items">
+                <li class="attachments-item" ng-repeat="attachment in issue.attachments">
+                    <a href="{{ attachment.url }}" target="_blank">{{ attachment.name }}</a>
+                    <span>[{{ attachment.size|sizeFormat }}]</span>
+                </li>
+            </ul>
+        </section>
+    </div>
+</script>
 
 <script type="text/template" id="issue-preview-popover">
     <div class="issue-preview-popover">
