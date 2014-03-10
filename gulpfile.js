@@ -13,7 +13,8 @@ var template = require("gulp-template");
 
 var externalSources = [
     "app/components/jquery/dist/jquery.js",
-    "app/components/jquery-ui/ui/jquery-ui.js",
+    //"app/components/jquery-ui/ui/jquery-ui.js",
+    "app/components/Sortable/Sortable.js",
     "app/components/markitup/markitup/jquery.markitup.js",
     "app/components/marked/lib/marked.js",
     "app/components/lodash/dist/lodash.js",

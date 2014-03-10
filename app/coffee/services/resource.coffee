@@ -467,6 +467,21 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope,
         }
         return $http.post($gmUrls.api("bulk-update-us-order"), obj, {headers:headers()})
 
+    service.setUsMilestone = (usId, milestoneId) ->
+        defered = $q.defer()
+
+        obj = { milestone: milestoneId }
+
+        promise = $http({method: "PATCH", url: "#{$gmUrls.api("userstories")}/#{usId}", data: obj, headers:headers()})
+
+        promise.success (data, status) ->
+            defered.resolve($model.make_model('userstories', data))
+
+        promise.error (data, status) ->
+            defered.reject(data)
+
+        return defered.promise
+
     service.createMilestone = (projectId, form) ->
         #return $model.create('milestones', data)
         obj = _.extend({}, form, {project: projectId})

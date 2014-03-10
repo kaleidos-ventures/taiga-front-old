@@ -89,27 +89,46 @@ KanbanController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $mo
         promise.then ->
             formatUserStories()
 
-    $scope.$on "sortable:changed", gm.utils.safeDebounced $scope, 100, ->
-        saveUs = (us) ->
-            if not us.isModified()
-                return
+    resortUserStories = (statusId)->
+        for item, index in $scope.uss[statusId]
+            item.order = index
 
-            us._moving = true
+        modifiedUs = _.filter($scope.uss[statusId], (x) -> x.isModified())
+        bulkData = _.map($scope.uss[statusId], (value, index) -> [value.id, index])
 
-            formatUserStories()
-            promise = us.save()
-            promise.then (us) ->
+        for item in modifiedUs
+            item._moving = true
+
+        promise = rs.updateBulkUserStoriesOrder($scope.projectId, bulkData)
+        promise = promise.then ->
+            for us in modifiedUs
+                us.markSaved()
                 us._moving = false
 
-            promise.then null, (error) ->
-                us.revert()
-                us._moving = false
-                $data.loadUserStories($scope)
+        return promise
 
-        for statusId, uss of $scope.uss
-            for us in uss
-                us.status = parseInt(statusId, 10)
-                saveUs(us)
+    $scope.sortableOnAdd = (us, index, sortableScope) ->
+        us.status = sortableScope.status.id
+
+        us._moving = true
+        us.save().then ->
+            if $scope.project.is_backlog_activated
+                $scope.uss[sortableScope.status.id].splice(us.order, 0, us)
+            else
+                $scope.uss[sortableScope.status.id].splice(index, 0, us)
+                resortUserStories(sortableScope.status.id)
+            us._moving = false
+
+    $scope.sortableOnUpdate = (uss, sortableScope, us) ->
+        if $scope.project.is_backlog_activated
+            $data.loadUserStories($scope).then ->
+                formatUserStories()
+        else
+            $scope.uss[sortableScope.status.id] = uss
+            resortUserStories(sortableScope.status.id)
+
+    $scope.sortableOnRemove = (us, sortableScope) ->
+        _.remove($scope.uss[sortableScope.status.id], us)
     return
 
 

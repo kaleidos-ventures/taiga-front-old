@@ -21,7 +21,9 @@
                                 <td class="col-task-status col-task-{{ status.name|slugify }}"
                                         ng-repeat="status in constants.usStatusesList|orderBy:'order'">
 
-                                    <div class="tasks" gm-sortable=".kanban tbody .tasks" ng-model="uss[status.id]">
+                                    <div class="tasks" gm-sortable="userstories" gm-sortable-selector=".task-box"
+                                        gm-sortable-item-name="us" gm-sortable-on-add="sortableOnAdd"
+                                        gm-sortable-on-update="sortableOnUpdate" gm-sortable-on-remove="sortableOnRemove">
                                         <div class="task-box" ng-repeat="us in uss[status.id]">
                                             <div ng-include="'/partials/kanban-us.html'"></div>
                                         </div>

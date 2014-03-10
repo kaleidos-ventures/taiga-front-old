@@ -1,0 +1,70 @@
+<header class="header-container" ng-include="'/partials/header.html'"></header>
+
+<main class="project-admin-view">
+    <ul class="tabs clearfix" ng-include="'/partials/includes/project-admin-header.html'"></ul>
+    <div class="tab-container">
+        <form class="form-horizontal" gm-checksley-form="ctrl.submitRoles()">
+            <div class="roles-list-container">
+                <div class="header">
+                    <p data-icon="O" class="title" i18next="admin.roles">Roles</p>
+                    <div class="buttons">
+                        <a class="button btn-value btn-add" data-icon="A"
+                                ng-click="showNewRole = true" ng-hide="showNewRole"
+                                i18next="admin.add-new-role">Add new role</a>
+                    </div>
+                </div>
+                <div class="new-role" ng-show="showNewRole">
+                    <label for="new_role_name" i18next="admin.name">Name</label>
+                    <input type="text" id="new_role_name" name="newRole.name"
+                           ng-model="newRole.name" />
+                    <input type="checkbox" id="new_role_is_computable" name="new_role_is_computable"
+                           ng-model="newRole.computable" />
+                    <label for="new_role_is_computable" i18next="admin.do-estimations">Do estimations</label>
+                    <div class="permissions">
+                        <div ng-repeat="(key, permissionGroup) in constants.permissionsGroups">
+                            <p ng-repeat="permission in permissionGroup">
+                                <input type="checkbox"
+                                    ng-model="newRolePermissions[permission.id]"
+                                    id="new_role_{{permission.id}}_permission">
+                                <label for="new_role_{{permission.id}}_permission">{{ permission.name }}</label>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="roles-list" gm-sortable="roles"
+                     gm-sortable-selector=".roles-list"
+                     gm-sortable-item-name="role"
+                     gm-sortable-on-update="ctrl.sortableOnUpdate">
+                    <div ng-repeat="role in constants.rolesList|orderBy:'order'" class="roles-list">
+                        <a href="" data-icon="h" title="Delete role" i18next="title:admin.delete-role" ng-click="ctrl.deleteRole(role)"></a>
+                        {{ role.name }}
+                        <input type="checkbox" id="{{role.id}}_is_computable" name="role_computable"
+                               ng-model="role.computable" />
+                        <label for="{{role.id}}_is_computable" i18next="admin.do-estimations">Do estimations</label>
+                        <a ng-hide="showPermissions[role.id]" ng-click="showPermissions[role.id] = true" i18next="admin.show-permissions">
+                            Show permissions
+                        </a>
+                        <a ng-show="showPermissions[role.id]" ng-click="showPermissions[role.id] = false" i18next="admin.hide-permissions">
+                            Hide permissions
+                        </a>
+                        <div class="permissions" ng-show="showPermissions[role.id]">
+                            <div ng-repeat="(key, permissionGroup) in constants.permissionsGroups">
+                                <p ng-repeat="permission in permissionGroup">
+                                    <input type="checkbox"
+                                        ng-model="rolePermissions[role.id][permission.id]"
+                                        id="{{role.id}}_{{permission.id}}_permission">
+                                    <label for="{{role.id}}_{{permission.id}}_permission">{{ permission.name }}</label>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <fieldset class="project-submit">
+                <button type="submit" class="button button-edit" gm-checksley-submit-button i18next="admin.save">Save</button>
+            </fieldset>
+        </form>
+    </div>
+</main>

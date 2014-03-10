@@ -13,89 +13,250 @@
 # limitations under the License.
 
 
-ProjectListController = ($scope, $rootScope, rs, $i18next, $favico) ->
-    $favico.reset()
-    $rootScope.projectSlug = undefined
-    $rootScope.pageTitle = $i18next.t('common.dashboard')
-    $rootScope.pageSection = 'projects'
-    $rootScope.pageBreadcrumb = [
-        ["Taiga", $rootScope.urls.projectsUrl()],
-        [$i18next.t('common.dashboard'), null]
-    ]
-    $rootScope.projectId = null
+class ProjectListController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', 'resource', '$i18next', '$favico']
 
-    rs.getProjects().then (projects) ->
-        $scope.projects = projects
+    constructor: (@scope, @rootScope, @rs, @i18next, @favico) ->
+        super(scope)
+
+    initialize: ->
+        @favico.reset()
+        @rootScope.projectSlug = undefined
+        @rootScope.pageTitle = @i18next.t('common.dashboard')
+        @rootScope.pageSection = 'projects'
+        @rootScope.pageBreadcrumb = [
+            ["Taiga", @rootScope.urls.projectsUrl()],
+            [@i18next.t('common.dashboard'), null]
+        ]
+        @rootScope.projectId = null
+
+        @rs.getProjects().then (projects) =>
+            @scope.projects = projects
 
 
-ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model,
-                          rs, $confirm, $location, $i18next, $q, $favico) ->
-    $favico.reset()
-    $rootScope.pageTitle = $i18next.t('common.admin-panel')
-    $rootScope.pageSection = 'admin'
-    $rootScope.pageBreadcrumb = [
-        ["", ""],
-        [$i18next.t('common.admin-panel'), null]
-    ]
+class ShowProjectsController extends TaigaBaseController
+    @.$inject = ["$scope", "$rootScope", "$model", 'resource']
+    constructor: (@scope, @rootScope, @model, @rs) ->
+        super(scope)
 
-    $scope.activeTab = "data"
-    $scope.showPermissions = []
-    $scope.rolePermissions = {}
-    $scope.newRole = {}
-    $scope.newRolePermissions = {}
+    initialize: ->
+        @scope.loading = false
+        @scope.showingProjects = false
+        @scope.myProjects = []
+        @scope.showProjects = =>
+            @scope.loading = true
+            @scope.showingProjects = true
 
-    $data.loadPermissions()
+            @rs.getProjects().then (projects) =>
+                @scope.myProjects = projects
+                @scope.loading = false
 
-    $scope.isActive = (type) ->
-        return type == $scope.activeTab
+            @rs.getProjects().then null, =>
+                @scope.myProjects = []
+                @scope.loading = false
 
-    $scope.setActive = (type) ->
-        $scope.activeTab = type
 
-    $scope.getAbsoluteUrl = (url) ->
-        if $location.protocol() == "http" and $location.port() != 80
-            return "#{$location.protocol()}://#{$location.host()}:#{$location.port()}#{url}"
-        else if $location.protocol() == "https" and $location.port() != 443
-            return "#{$location.protocol()}://#{$location.host()}:#{$location.port()}#{url}"
+class ProjectAdminController extends TaigaBaseController
+    constructor: (@scope, @rootScope, @routeParams, @data, @rs, @i18next, @favico, @location) ->
+        super(scope)
+
+    initialize: ->
+        @favico.reset()
+        @rootScope.pageTitle = @i18next.t('common.admin-panel')
+        @rootScope.pageSection = 'admin'
+        @rootScope.pageBreadcrumb = [
+            ["", ""],
+            [@i18next.t('common.admin-panel'), null]
+        ]
+        @rs.resolve({pslug: @routeParams.pslug}).then (data) =>
+            @rootScope.projectSlug = @routeParams.pslug
+            @rootScope.projectId = data.project
+            @data.loadProject(@scope)
+
+    isActive: (type) ->
+        return type == @activeTab
+
+    goTo: (section) ->
+        @location.url(@rootScope.urls.adminUrl(@routeParams.pslug, section, true))
+
+class ProjectAdminMainController extends ProjectAdminController
+    @.$inject = ["$scope", "$rootScope", "$routeParams", "$data", "$gmFlash",
+                "$model", "resource", "$confirm", "$location", '$i18next',
+                '$q', '$favico']
+
+    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model, @rs, @confirm, @location, @i18next, @q, @favico) ->
+        super(scope, rootScope, routeParams, data, rs, i18next, favico, location)
+
+    activeTab: 'main'
+
+    submit: ->
+        promise = @scope.project.save()
+        promise.then (data) =>
+            @gmFlash.info(@i18next.t("projects.saved-success"))
+
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
+
+
+class ProjectAdminValuesController extends ProjectAdminController
+    @.$inject = ["$scope", "$rootScope", "$routeParams", "$data", "$gmFlash",
+                "$model", "resource", "$confirm", "$location", '$i18next',
+                '$q', '$favico']
+
+    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model, @rs, @confirm, @location, @i18next, @q, @favico) ->
+        super(scope, rootScope, routeParams, data, rs, i18next, favico, location)
+
+    activeTab: "values"
+
+    initialize: ->
+        super().then =>
+            @scope.$broadcast('project:loaded')
+
+
+class ProjectAdminMilestonesController extends ProjectAdminController
+    @.$inject = ["$scope", "$rootScope", "$routeParams", "$data", "$gmFlash",
+                "$model", "resource", "$confirm", "$location", '$i18next',
+                '$q', '$favico']
+
+    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model, @rs, @confirm, @location, @i18next, @q, @favico) ->
+        super(scope, rootScope, routeParams, data, rs, i18next, favico, location)
+
+    activeTab: "milestones"
+
+    deleteMilestone: (milestone) ->
+        promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
+        promise.then () =>
+            @model.make_model('milestones', milestone).remove().then () =>
+                @data.loadProject(@scope)
+
+class ProjectAdminMembershipsController extends ProjectAdminController
+    @.$inject = ["$scope", "$rootScope", "$routeParams", "$data", "$gmFlash",
+                "$model", "resource", "$confirm", "$location", '$i18next',
+                '$q', '$favico']
+
+    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model, @rs, @confirm, @location, @i18next, @q, @favico) ->
+        super(scope, rootScope, routeParams, data, rs, i18next, favico, location)
+
+    activeTab: "memberships"
+
+    initialize: ->
+        super().then =>
+            @data.loadUsersAndRoles(@scope)
+        @scope.formOpened = false
+
+    toggleForm: ->
+        if @scope.formOpened
+            @closeForm()
         else
-            return "#{$location.protocol()}://#{$location.host()}#{url}"
+            @openForm()
 
-    loadRoles = ->
-        $data.loadUsersAndRoles($scope).then ->
-            for role in $rootScope.constants.rolesList
-                $scope.rolePermissions[role.id] = {}
-                for permission in $rootScope.constants.permissionsList
-                    $scope.rolePermissions[role.id][permission.id] = permission.id in role.permissions
-            for permission in $rootScope.constants.permissionsList
-                $scope.newRolePermissions[permission.id] = false
+    openForm: ->
+        @scope.membership = {project: @rootScope.projectId}
+        @scope.$broadcast("checksley:reset")
+        @scope.formOpened = true
 
-    $scope.submit = ->
-        promise = $scope.project.save()
-        promise.then (data) ->
-            $gmFlash.info($i18next.t("projects.saved-success"))
+    closeForm: ->
+        @scope.formOpened = false
 
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
+    submitMembership: ->
+        promise = @rs.createMembership(@scope.membership)
 
-    $scope.submitRoles = ->
+        promise.then (data) =>
+            @data.loadProject(@scope)
+            @data.loadUsersAndRoles(@scope)
+            @closeForm()
+
+        promise.then null, (data) =>
+            if data._error_message
+                @gmFlash.error(data._error_message)
+            @scope.checksleyErrors = data
+
+    memberStatus: (member) ->
+        if member.user != null
+            return "Active"
+        else
+            return "Inactive"
+
+    memberName: (member) ->
+        if member.full_name
+            return member.full_name
+        return ""
+
+    memberEmail: (member) ->
+        if member.user and @scope.constants.users[member.user]
+            return @scope.constants.users[member.user].email
+        return member.email
+
+    deleteMember: (member) ->
+        promise = @confirm.confirm(@i18next.t("common.are-you-sure"))
+        promise.then () =>
+            memberModel = @model.make_model("memberships", member)
+            memberModel.remove().then =>
+                @data.loadProject(@scope)
+
+    updateMemberRole: (member, roleId) ->
+        memberModel = @model.make_model('memberships',member)
+        memberModel.role = roleId
+        memberModel.save().then (data) =>
+            @data.loadProject(@scope)
+
+    getAbsoluteUrl: (url) ->
+        if @location.protocol() == "http" and @location.port() != 80
+            return "#{@location.protocol()}://#{@location.host()}:#{@location.port()}#{url}"
+        else if @location.protocol() == "https" and @location.port() != 443
+            return "#{@location.protocol()}://#{@location.host()}:#{@location.port()}#{url}"
+        else
+            return "#{@location.protocol()}://#{@location.host()}#{url}"
+
+
+class ProjectAdminRolesController extends ProjectAdminController
+    @.$inject = ["$scope", "$rootScope", "$routeParams", "$data", "$gmFlash",
+                "$model", "resource", "$confirm", "$location", '$i18next',
+                '$q', '$favico']
+
+    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model, @rs, @confirm, @location, @i18next, @q, @favico) ->
+        super(scope, rootScope, routeParams, data, rs, i18next, favico, location)
+
+    activeTab: "roles"
+
+    initialize: ->
+        @scope.showPermissions = []
+        @scope.rolePermissions = {}
+        @scope.newRole = {}
+        @scope.newRolePermissions = {}
+        @data.loadPermissions()
+        super().then =>
+            @loadRoles()
+
+    loadRoles: =>
+        if @scope.project?
+            @data.loadUsersAndRoles(@scope).then =>
+                for role in @rootScope.constants.rolesList
+                    @scope.rolePermissions[role.id] = {}
+                    for permission in @rootScope.constants.permissionsList
+                        @scope.rolePermissions[role.id][permission.id] = permission.id in role.permissions
+                for permission in @rootScope.constants.permissionsList
+                    @scope.newRolePermissions[permission.id] = false
+
+    submitRoles: ->
         promises = []
 
-        if $scope.newRole.name
-            permissions = _.pairs($scope.newRolePermissions)
+        if @scope.newRole.name
+            permissions = _.pairs(@scope.newRolePermissions)
             permissions = _.filter(permissions, (permission) -> permission[1])
             permissions = _.map(permissions, (permission) -> permission[0].toString())
-            $scope.newRole.permissions = permissions
+            @scope.newRole.permissions = permissions
 
-            creationPromise = rs.createRole($rootScope.projectId, $scope.newRole).then (data) ->
-                loadRoles().then ->
-                    $scope.newRole = {}
-                    $scope.showNewRole = false
-                    $scope.newRolePermissions = []
+            creationPromise = @rs.createRole(@rootScope.projectId, @scope.newRole).then (data) =>
+                loadRoles().then =>
+                    @scope.newRole = {}
+                    @scope.showNewRole = false
+                    @scope.newRolePermissions = []
 
             promises.push creationPromise
 
-        for role, index in $scope.constants.rolesList
-            permissions = _.pairs($scope.rolePermissions[role.id])
+        for role, index in @scope.constants.rolesList
+            permissions = _.pairs(@scope.rolePermissions[role.id])
             permissions = _.filter(permissions, (permission) -> permission[1])
             permissions = _.map(permissions, (permission) -> permission[0].toString())
             permissions.sort()
@@ -109,746 +270,228 @@ ProjectAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $mo
                 role.permissions = permissions
             promises.push(role.save())
 
-        allPromises = $q.all(promises)
-        allPromises.then ->
-            $gmFlash.info($i18next.t("admin.roles-saved-success"))
+        allPromises = @q.all(promises)
+        allPromises.then =>
+            @gmFlash.info(@i18next.t("admin.roles-saved-success"))
 
-        allPromises.then null, (data) ->
-            $scope.checksleyErrors = data
+        allPromises.then null, (data) =>
+            @scope.checksleyErrors = data
 
-    $scope.togglePermission = (role, permission)->
-        if permission.id in role.permissions
-            role.permissions = _.without(role.permissions, permission.id)
-        else
-            role.permissions = role.permissions.push(permission.id)
+    deleteRole: (role) ->
+        promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
+        promise.then () =>
+            role.remove().then () =>
+                @loadRoles().then =>
+                    @gmFlash.info(@i18next.t("admin.role-deleted"))
 
-    $scope.deleteProject = ->
-        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
-        promise.then () ->
-            $scope.project.remove().then ->
-                $location.url("/")
+    sortableOnUpdate: (roles) ->
+        @scope.constants.rolesList = roles
 
-    $scope.deleteRole = (role) ->
-        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
-        promise.then () ->
-            role.remove().then () ->
-                loadRoles().then ->
-                    $gmFlash.info($i18next.t("admin.role-deleted"))
 
-    $scope.deleteMilestone = (milestone) ->
-        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
-        promise.then () ->
-            $model.make_model('milestones', milestone).remove().then () ->
-                $data.loadProject($scope)
+class ChoicesAdminController extends TaigaBaseController
+    @.$inject = ["$scope", "$rootScope", "$gmFlash", "resource"]
 
-    $scope.deleteMember = (member) ->
-        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
-        promise.then () ->
-            memberModel = $model.make_model("memberships", member)
-            memberModel.remove().then ->
-                $data.loadProject($scope)
+    constructor: (@scope, @rootScope, @gmFlash, @rs) ->
+        super(scope)
 
-    $scope.updateMemberRole = (member, roleId) ->
-        memberModel = $model.make_model('memberships',member)
-        memberModel.role = roleId
-        memberModel.save().then (data) ->
-            $data.loadProject($scope)
+    initialize: ->
+        @scope[@instanceModel] = {}
+        @scope.formOpened = false
+        @scope.$on(@refreshEvent, @loadData)
+        @scope.$on('project:loaded', @loadData)
 
-    $scope.memberStatus = (member) ->
-        if member.user != null
-            return "Active"
-        else
-            return "Inactive"
+    openForm: ->
+        @scope[@instanceModel] = {project: @rootScope.projectId}
+        @scope.$broadcast("checksley:reset")
+        @scope.formOpened = true
 
-    $scope.memberName = (member) ->
-        if member.full_name
-            return member.full_name
-        return ""
+    closeForm: ->
+        @scope.formOpened = false
 
-    $scope.memberEmail = (member) ->
-        if member.user and $scope.constants.users[member.user]
-            return $scope.constants.users[member.user].email
-        return member.email
+    create: ->
+        promise = @createInstance()
 
-    $scope.formOpened = false
+        promise.then (data) =>
+            @loadData()
+            @closeForm()
 
-    $scope.toggleForm = ->
-        if $scope.formOpened
-            $scope.closeForm()
-        else
-            $scope.openForm()
-
-    $scope.openForm = ->
-        $scope.membership = {project: $rootScope.projectId}
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
-
-    $scope.closeForm = ->
-        $scope.formOpened = false
-
-    $scope.submitMembership = ->
-        promise = rs.createMembership($scope.membership)
-
-        promise.then (data) ->
-            $data.loadProject($scope)
-            $data.loadUsersAndRoles($scope)
-            $scope.closeForm()
-
-        promise.then null, (data) ->
+        promise.then null, (data) =>
             if data._error_message
-                $gmFlash.error(data._error_message)
-            $scope.checksleyErrors = data
+                @gmFlash.error(data._error_message)
+            @scope.checksleyErrors = data
 
-    # This attach "project" to $scope
-    rs.resolve(pslug: $routeParams.pslug).then (data) ->
-        $rootScope.projectSlug = $routeParams.pslug
-        $rootScope.projectId = data.project
-        $data.loadProject($scope).then ->
-            loadRoles()
+    resort: (model) ->
+        for item, index in @scope[model]
+            item.order = index
 
-    return
+        modifiedObjs = _.filter(@scope[model], (x) -> x.isModified())
+        bulkData = _.map(@scope[model], (value, index) -> [value.id, index])
 
+        for item in modifiedObjs
+            item._moving = true
 
-MembershipsController = ($scope, $rootScope, $model, $confirm, $i18next) ->
-    $scope.deleteMember = (member) ->
-        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
-        promise.then () ->
-            $model.make_model('memberships',member).remove().then () ->
-                $rootScope.$broadcast("membership:load-project")
+        promise = @bulkUpdate(bulkData)
+        promise = promise.then ->
+            for obj in modifiedObjs
+                obj.markSaved()
+                obj._moving = false
 
-    return
+        return promise
 
-ShowProjectsController = ($scope, $rootScope, $model, rs) ->
-    $scope.loading = false
-    $scope.showingProjects = false
-    $scope.myProjects = []
-    $scope.showProjects = ->
-        $scope.loading = true
-        $scope.showingProjects = true
+    sortableOnUpdate: (items) ->
+        @scope[@model] = items
+        @resort(@model)
 
-        rs.getProjects().then (projects) ->
-            $scope.myProjects = projects
-            $scope.loading = false
+class ChoiceController extends TaigaBaseController
+    @.$inject = ["$scope", "$gmFlash", "resource", "$confirm", "$i18next"]
+    refreshEvent: "choices:refresh"
 
-        rs.getProjects().then null, ->
-            $scope.myProjects = []
-            $scope.loading = false
+    constructor: (@scope, @gmFlash, @rs, @confirm, @i18next) ->
+        scope.formOpened = false
 
-    return
+    initialize: ->
+        scope.formOpened = false
 
+    openForm: ->
+        @scope.$broadcast("checksley:reset")
+        @scope.formOpened = true
 
-UserStoryStatusesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
-    $scope.status = {}
-    $scope.formOpened = false
-
-    $scope.openForm = ->
-        $scope.status = {project: $rootScope.projectId}
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
-
-    $scope.closeForm = ->
-        $scope.formOpened = false
-
-    $scope.create = ->
-        promise = rs.createUserStoryStatus($scope.status)
-
-        promise.then (data) ->
-            loadUserStoryStatuses()
-            $scope.closeForm()
-
-        promise.then null, (data) ->
-            if data._error_message
-                $gmFlash.error(data._error_message)
-            $scope.checksleyErrors = data
-
-    loadUserStoryStatuses = ->
-        rs.getUserStoryStatuses($rootScope.projectId).then (data) ->
-            $scope.userStoryStatuses = data
-
-    resortUserStoryStatuses = ->
-        saveChangedOrder = ->
-            for item, index in $scope.userStoryStatuses
-                item.order = index
-
-            modifiedObjs = _.filter($scope.userStoryStatuses, (x) -> x.isModified())
-            bulkData = _.map($scope.userStoryStatuses, (value, index) -> [value.id, index])
-
-            for item in modifiedObjs
-                item._moving = true
-
-            promise = rs.updateBulkUserStoryStatusesOrder($scope.projectId, bulkData)
-            promise = promise.then ->
-                for obj in modifiedObjs
-                    obj.markSaved()
-                    obj._moving = false
-
-            return promise
-
-        saveChangedOrder()
-
-    $scope.$on("userstory-statuses:refresh", loadUserStoryStatuses)
-    $scope.$on("sortable:changed", resortUserStoryStatuses)
-
-    loadUserStoryStatuses()
-
-
-UserStoryStatusController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
-    $scope.formOpened = false
-
-    $scope.openForm = ->
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
-
-    $scope.closeForm = (object) ->
+    closeForm: (object) ->
         object.refresh()
-        $scope.formOpened = false
+        @scope.formOpened = false
 
-    $scope.update = (object) ->
-        object.save().then ->
-            $scope.closeForm(object)
+    update: (object) ->
+        object.save().then =>
+            @closeForm(object)
 
-    $scope.delete = (object) ->
-        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
+    delete: (object) ->
+        promise = @confirm.confirm(@i18next.t("common.are-you-sure"))
 
-        promise.then () ->
-            object.remove().then () ->
-                $scope.$emit("userstory-statuses:refresh")
+        promise.then () =>
+            object.remove().then () =>
+                @scope.$emit(@refreshEvent)
 
-        promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"))
+        promise.then null, (data) =>
+            @gmFlash.error(@i18next.t("common.error-on-delete"))
 
+class UserStoryStatusesAdminController extends ChoicesAdminController
+    refreshEvent: "choices:refresh"
+    model: "userStoryStatuses"
+    instanceModel: "status"
+    createInstance: ->
+        @rs.createUserStoryStatus(@scope[@instanceModel])
 
-PointsAdminController = ($scope, $rootScope, $gmFlash, rs) ->
-    $scope.point = {}
-    $scope.formOpened = false
+    loadData: =>
+        @rs.getUserStoryStatuses(@rootScope.projectId).then (data) =>
+            @scope[@model] = data
 
-    $scope.openForm = ->
-        $scope.point = {project: $rootScope.projectId}
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
+    bulkUpdate: (bulkData) =>
+        @rs.updateBulkUserStoryStatusesOrder(@scope.projectId, bulkData)
 
-    $scope.closeForm = ->
-        $scope.formOpened = false
 
-    $scope.create = ->
-        promise = rs.createPoints($scope.point)
+class PointsAdminController extends ChoicesAdminController
+    refreshEvent: "choices:refresh"
+    model: "points"
+    instanceModel: "point"
+    createInstance: ->
+        @rs.createPoints(@scope[@instanceModel])
 
-        promise.then (data) ->
-            loadPoints()
-            $scope.closeForm()
+    loadData: =>
+        @rs.getPoints(@rootScope.projectId).then (data) =>
+            @scope[@model] = data
 
-        promise.then null, (data) ->
-            if data._error_message
-                $gmFlash.error(data._error_message)
-            $scope.checksleyErrors = data
+    bulkUpdate: (bulkData) =>
+        @rs.updateBulkPointsOrder(@scope.projectId, bulkData)
 
-    $scope.delete = (object) ->
-        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
 
-        promise.then () ->
-            object.remove().then () ->
-                loadPoints()
+class TaskStatusesAdminController extends ChoicesAdminController
+    refreshEvent: "choices:refresh"
+    model: "taskStatuses"
+    instanceModel: "status"
+    createInstance: ->
+        @rs.createTaskStatus(@scope[@instanceModel])
 
-        promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"))
+    loadData: =>
+        @rs.getTaskStatuses(@rootScope.projectId).then (data) =>
+            @scope[@model] = data
 
-    loadPoints = ->
-        rs.getPoints($rootScope.projectId).then (data) ->
-            $scope.points = data
+    bulkUpdate: (bulkData) =>
+        @rs.updateBulkTaskStatusesOrder(@scope.projectId, bulkData)
 
-    resortPoints = ->
-        saveChangedOrder = ->
-            for item, index in $scope.points
-                item.order = index
 
-            modifiedObjs = _.filter($scope.points, (x) -> x.isModified())
-            bulkData = _.map($scope.points, (value, index) -> [value.id, index])
+class IssueStatusesAdminController extends ChoicesAdminController
+    refreshEvent: "choices:refresh"
+    model: "issueStatuses"
+    instanceModel: "status"
+    createInstance: ->
+        @rs.createIssueStatus(@scope[@instanceModel])
 
-            for item in modifiedObjs
-                item._moving = true
+    loadData: =>
+        @rs.getIssueStatuses(@rootScope.projectId).then (data) =>
+            @scope[@model] = data
 
-            promise = rs.updateBulkPointsOrder($scope.projectId, bulkData)
-            promise = promise.then ->
-                for obj in modifiedObjs
-                    obj.markSaved()
-                    obj._moving = false
+    bulkUpdate: (bulkData) =>
+        @rs.updateBulkIssueStatusesOrder(@scope.projectId, bulkData)
 
-            return promise
 
-        saveChangedOrder()
+class IssueTypesAdminController extends ChoicesAdminController
+    refreshEvent: "choices:refresh"
+    model: "issueTypes"
+    instanceModel: "type"
+    createInstance: ->
+        @rs.createIssueType(@scope[@instanceModel])
 
-    $scope.$on("points:refresh", loadPoints)
-    $scope.$on("sortable:changed", resortPoints)
+    loadData: =>
+        @rs.getIssueTypes(@rootScope.projectId).then (data) =>
+            @scope[@model] = data
 
-    loadPoints()
+    bulkUpdate: (bulkData) =>
+        @rs.updateBulkIssueTypesOrder(@scope.projectId, bulkData)
 
 
-PointsController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
-    $scope.formOpened = false
+class PrioritiesAdminController extends ChoicesAdminController
+    refreshEvent: "choices:refresh"
+    model: "priorities"
+    instanceModel: "priority"
+    createInstance: ->
+        @rs.createPriority(@scope[@instanceModel])
 
-    $scope.openForm = ->
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
+    loadData: =>
+        @rs.getPriorities(@rootScope.projectId).then (data) =>
+            @scope.priorities = data
 
-    $scope.closeForm = (object) ->
-        object.refresh()
-        $scope.formOpened = false
+    bulkUpdate: (bulkData) =>
+        @rs.updateBulkPrioritiesOrder(@scope.projectId, bulkData)
 
-    $scope.update = (object) ->
-        object.save().then ->
-            $scope.closeForm(object)
 
-    $scope.delete = (object) ->
-        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
+class SeveritiesAdminController extends ChoicesAdminController
+    refreshEvent: "choices:refresh"
+    model: "severities"
+    instanceModel: "severity"
+    createInstance: ->
+        @rs.createSeverity(@scope[@instanceModel])
 
-        promise.then () ->
-            object.remove().then () ->
-                $scope.$emit("points:refresh")
+    loadData: =>
+        @rs.getSeverities(@rootScope.projectId).then (data) =>
+            @scope[@model] = data
 
-        promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"))
-
-
-TaskStatusesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
-    $scope.status = {}
-    $scope.formOpened = false
-
-    $scope.openForm = ->
-        $scope.status = {project: $rootScope.projectId}
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
-
-    $scope.closeForm = ->
-        $scope.formOpened = false
-
-    $scope.create = ->
-        promise = rs.createTaskStatus($scope.status)
-
-        promise.then (data) ->
-            loadTaskStatuses()
-            $scope.closeForm()
-
-        promise.then null, (data) ->
-            if data._error_message
-                $gmFlash.error(data._error_message)
-            $scope.checksleyErrors = data
-
-    loadTaskStatuses = ->
-        rs.getTaskStatuses($rootScope.projectId).then (data) ->
-            $scope.taskStatuses = data
-
-    resortTaskStatuses = ->
-        saveChangedOrder = ->
-            for item, index in $scope.taskStatuses
-                item.order = index
-
-            modifiedObjs = _.filter($scope.taskStatuses, (x) -> x.isModified())
-            bulkData = _.map($scope.taskStatuses, (value, index) -> [value.id, index])
-
-            for item in modifiedObjs
-                item._moving = true
-
-            promise = rs.updateBulkTaskStatusesOrder($scope.projectId, bulkData)
-            promise = promise.then ->
-                for obj in modifiedObjs
-                    obj.markSaved()
-                    obj._moving = false
-
-            return promise
-
-        saveChangedOrder()
-
-    $scope.$on("task-statuses:refresh", loadTaskStatuses)
-    $scope.$on("sortable:changed", resortTaskStatuses)
-
-    loadTaskStatuses()
-
-
-TaskStatusController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
-    $scope.formOpened = false
-
-    $scope.openForm = ->
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
-
-    $scope.closeForm = (object) ->
-        object.refresh()
-        $scope.formOpened = false
-
-    $scope.update = (object) ->
-        object.save().then ->
-            $scope.closeForm(object)
-
-    $scope.delete = (object) ->
-        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
-
-        promise.then () ->
-            object.remove().then () ->
-                $scope.$emit("task-statuses:refresh")
-
-        promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"))
-
-
-IssueStatusesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
-    $scope.status = {}
-    $scope.formOpened = false
-
-    $scope.openForm = ->
-        $scope.status = {project: $rootScope.projectId}
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
-
-    $scope.closeForm = ->
-        $scope.formOpened = false
-
-    $scope.create = ->
-        promise = rs.createIssueStatus($scope.status)
-
-        promise.then (data) ->
-            loadIssueStatuses()
-            $scope.closeForm()
-
-        promise.then null, (data) ->
-            if data._error_message
-                $gmFlash.error(data._error_message)
-            $scope.checksleyErrors = data
-
-    loadIssueStatuses = ->
-        rs.getIssueStatuses($rootScope.projectId).then (data) ->
-            $scope.issueStatuses = data
-
-    resortIssueStatuses = ->
-        saveChangedOrder = ->
-            for item, index in $scope.issueStatuses
-                item.order = index
-
-            modifiedObjs = _.filter($scope.issueStatuses, (x) -> x.isModified())
-            bulkData = _.map($scope.issueStatuses, (value, index) -> [value.id, index])
-
-            for item in modifiedObjs
-                item._moving = true
-
-            promise = rs.updateBulkIssueStatusesOrder($scope.projectId, bulkData)
-            promise = promise.then ->
-                for obj in modifiedObjs
-                    obj.markSaved()
-                    obj._moving = false
-
-            return promise
-
-        saveChangedOrder()
-
-    $scope.$on("issue-statuses:refresh", loadIssueStatuses)
-    $scope.$on("sortable:changed", resortIssueStatuses)
-
-    loadIssueStatuses()
-
-
-IssueStatusController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
-    $scope.formOpened = false
-
-    $scope.openForm = ->
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
-
-    $scope.closeForm = (object) ->
-        object.refresh()
-        $scope.formOpened = false
-
-    $scope.update = (object) ->
-        object.save().then ->
-            $scope.closeForm(object)
-
-    $scope.delete = (object) ->
-        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
-
-        promise.then () ->
-            object.remove().then () ->
-                $scope.$emit("issue-statuses:refresh")
-
-        promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"))
-
-
-IssueTypesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
-    $scope.type = {}
-    $scope.formOpened = false
-
-    $scope.openForm = ->
-        $scope.type = {project: $rootScope.projectId}
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
-
-    $scope.closeForm = ->
-        $scope.formOpened = false
-
-    $scope.create = ->
-        promise = rs.createIssueType($scope.type)
-
-        promise.then (data) ->
-            loadIssueTypes()
-            $scope.closeForm()
-
-        promise.then null, (data) ->
-            if data._error_message
-                $gmFlash.error(data._error_message)
-            $scope.checksleyErrors = data
-
-    loadIssueTypes = ->
-        rs.getIssueTypes($rootScope.projectId).then (data) ->
-            $scope.issueTypes = data
-
-    resortIssueTypes = ->
-        saveChangedOrder = ->
-            for item, index in $scope.issueTypes
-                item.order = index
-
-            modifiedObjs = _.filter($scope.issueTypes, (x) -> x.isModified())
-            bulkData = _.map($scope.issueTypes, (value, index) -> [value.id, index])
-
-            for item in modifiedObjs
-                item._moving = true
-
-            promise = rs.updateBulkIssueTypesOrder($scope.projectId, bulkData)
-            promise = promise.then ->
-                for obj in modifiedObjs
-                    obj.markSaved()
-                    obj._moving = false
-
-            return promise
-
-        saveChangedOrder()
-
-    $scope.$on("issue-types:refresh", loadIssueTypes)
-    $scope.$on("sortable:changed", resortIssueTypes)
-
-    loadIssueTypes()
-
-
-IssueTypeController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
-    $scope.formOpened = false
-
-    $scope.openForm = ->
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
-
-    $scope.closeForm = (object) ->
-        object.refresh()
-        $scope.formOpened = false
-
-    $scope.update = (object) ->
-        object.save().then ->
-            $scope.closeForm(object)
-
-    $scope.delete = (object) ->
-        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
-
-        promise.then () ->
-            object.remove().then () ->
-                $scope.$emit("issue-types:refresh")
-
-        promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"))
-
-
-PrioritiesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
-    $scope.priority = {}
-    $scope.formOpened = false
-
-    $scope.openForm = ->
-        $scope.priority = {project: $rootScope.projectId}
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
-
-    $scope.closeForm = ->
-        $scope.formOpened = false
-
-    $scope.create = ->
-        promise = rs.createPriority($scope.priority)
-
-        promise.then (data) ->
-            loadPriorities()
-            $scope.closeForm()
-
-        promise.then null, (data) ->
-            if data._error_message
-                $gmFlash.error(data._error_message)
-            $scope.checksleyErrors = data
-
-    loadPriorities = ->
-        rs.getPriorities($rootScope.projectId).then (data) ->
-            $scope.priorities = data
-
-    resortPriorities = ->
-        saveChangedOrder = ->
-            for item, index in $scope.priorities
-                item.order = index
-
-            modifiedObjs = _.filter($scope.priorities, (x) -> x.isModified())
-            bulkData = _.map($scope.priorities, (value, index) -> [value.id, index])
-
-            for item in modifiedObjs
-                item._moving = true
-
-            promise = rs.updateBulkPrioritiesOrder($scope.projectId, bulkData)
-            promise = promise.then ->
-                for obj in modifiedObjs
-                    obj.markSaved()
-                    obj._moving = false
-
-            return promise
-
-        saveChangedOrder()
-
-    $scope.$on("priorities:refresh", loadPriorities)
-    $scope.$on("sortable:changed", resortPriorities)
-
-    loadPriorities()
-
-
-PriorityController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
-    $scope.formOpened = false
-
-    $scope.openForm = ->
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
-
-    $scope.closeForm = (object) ->
-        object.refresh()
-        $scope.formOpened = false
-
-    $scope.update = (object) ->
-        object.save().then ->
-            $scope.closeForm(object)
-
-    $scope.delete = (object) ->
-        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
-
-        promise.then () ->
-            object.remove().then () ->
-                $scope.$emit("priorities:refresh")
-
-        promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"))
-
-
-SeveritiesAdminController = ($scope, $rootScope, $gmFlash, rs) ->
-    $scope.severity = {}
-    $scope.formOpened = false
-
-    $scope.openForm = ->
-        $scope.severity = {project: $rootScope.projectId}
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
-
-    $scope.closeForm = ->
-        $scope.formOpened = false
-
-    $scope.create = ->
-        promise = rs.createSeverity($scope.severity)
-
-        promise.then (data) ->
-            loadSeverities()
-            $scope.closeForm()
-
-        promise.then null, (data) ->
-            if data._error_message
-                $gmFlash.error(data._error_message)
-            $scope.checksleyErrors = data
-
-    loadSeverities = ->
-        rs.getSeverities($rootScope.projectId).then (data) ->
-            $scope.severities = data
-
-    resortSeverities = ->
-        saveChangedOrder = ->
-            for item, index in $scope.severities
-                item.order = index
-
-            modifiedObjs = _.filter($scope.severities, (x) -> x.isModified())
-            bulkData = _.map($scope.severities, (value, index) -> [value.id, index])
-
-            for item in modifiedObjs
-                item._moving = true
-
-            promise = rs.updateBulkSeveritiesOrder($scope.projectId, bulkData)
-            promise = promise.then ->
-                for obj in modifiedObjs
-                    obj.markSaved()
-                    obj._moving = false
-
-            return promise
-
-        saveChangedOrder()
-
-    $scope.$on("severities:refresh", loadSeverities)
-    $scope.$on("sortable:changed", resortSeverities)
-
-    loadSeverities()
-
-
-SeverityController = ($scope, $gmFlash, rs, $confirm, $i18next) ->
-    $scope.formOpened = false
-
-    $scope.openForm = ->
-        $scope.$broadcast("checksley:reset")
-        $scope.formOpened = true
-
-    $scope.closeForm = (object) ->
-        object.refresh()
-        $scope.formOpened = false
-
-    $scope.update = (object) ->
-        object.save().then ->
-            $scope.closeForm(object)
-
-    $scope.delete = (object) ->
-        promise = $confirm.confirm($i18next.t("common.are-you-sure"))
-
-        promise.then () ->
-            object.remove().then () ->
-                $scope.$emit("severities:refresh")
-
-        promise.then null, (data) ->
-            $gmFlash.error($i18next.t("common.error-on-delete"))
+    bulkUpdate: (bulkData) =>
+        @rs.updateBulkSeveritiesOrder(@scope.projectId, bulkData)
 
 
 module = angular.module("taiga.controllers.project", [])
-module.controller("ProjectListController", ['$scope', '$rootScope', 'resource', '$i18next', '$favico',
-                                            ProjectListController])
-module.controller("ProjectAdminController", ["$scope", "$rootScope", "$routeParams", "$data",
-                                             "$gmFlash", "$model", "resource", "$confirm", "$location",
-                                             '$i18next', '$q', '$favico', ProjectAdminController])
-module.controller("MembershipsController", ["$scope", "$rootScope", "$model", "$confirm", "$i18next",
-                                            MembershipsController])
-module.controller("ShowProjectsController", ["$scope", "$rootScope", "$model", 'resource',
-                                             ShowProjectsController])
-module.controller("UserStoryStatusesAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
-                                                       UserStoryStatusesAdminController])
-module.controller("UserStoryStatusController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
-                                                UserStoryStatusController])
-module.controller("PointsAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
-                                            PointsAdminController])
-module.controller("PointsController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
-                                       PointsController])
-module.controller("TaskStatusesAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
-                                                  TaskStatusesAdminController])
-module.controller("TaskStatusController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
-                                           TaskStatusController])
-module.controller("IssueStatusesAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
-                                                   IssueStatusesAdminController])
-module.controller("IssueStatusController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
-                                            IssueStatusController])
-module.controller("IssueTypesAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
-                                                IssueTypesAdminController])
-module.controller("IssueTypeController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
-                                          IssueTypeController])
-module.controller("PrioritiesAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
-                                                PrioritiesAdminController])
-module.controller("PriorityController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
-                                         PriorityController])
-module.controller("SeveritiesAdminController", ["$scope", "$rootScope", "$gmFlash", "resource",
-                                                SeveritiesAdminController])
-module.controller("SeverityController", ["$scope", "$gmFlash", "resource", "$confirm", '$i18next',
-                                         SeverityController])
+module.controller("ProjectListController", ProjectListController)
+module.controller("ProjectAdminMainController",  ProjectAdminMainController)
+module.controller("ProjectAdminValuesController", ProjectAdminValuesController)
+module.controller("ProjectAdminMilestonesController", ProjectAdminMilestonesController)
+module.controller("ProjectAdminRolesController", ProjectAdminRolesController)
+module.controller("ProjectAdminMembershipsController", ProjectAdminMembershipsController)
+module.controller("ShowProjectsController", ShowProjectsController)
+module.controller("UserStoryStatusesAdminController", UserStoryStatusesAdminController)
+module.controller("PointsAdminController", PointsAdminController)
+module.controller("TaskStatusesAdminController", TaskStatusesAdminController)
+module.controller("IssueStatusesAdminController", IssueStatusesAdminController)
+module.controller("IssueTypesAdminController", IssueTypesAdminController)
+module.controller("PrioritiesAdminController", PrioritiesAdminController)
+module.controller("SeveritiesAdminController", SeveritiesAdminController)
+module.controller("ChoiceController", ChoiceController)

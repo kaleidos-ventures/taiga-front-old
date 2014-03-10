@@ -81,8 +81,20 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $routeProvider.when('/project/:pslug/search',
         {controller: "SearchController", templateUrl: "partials/search.html"})
 
-    $routeProvider.when('/project/:pslug/admin',
-        {controller: "ProjectAdminController", templateUrl: "partials/project-admin.html"})
+    $routeProvider.when('/project/:pslug/admin/main',
+        {controller: "ProjectAdminMainController as ctrl", templateUrl: "partials/project-admin-main.html"})
+
+    $routeProvider.when('/project/:pslug/admin/values',
+        {controller: "ProjectAdminValuesController as ctrl", templateUrl: "partials/project-admin-values.html"})
+
+    $routeProvider.when('/project/:pslug/admin/milestones',
+        {controller: "ProjectAdminMilestonesController as ctrl", templateUrl: "partials/project-admin-milestones.html"})
+
+    $routeProvider.when('/project/:pslug/admin/roles',
+        {controller: "ProjectAdminRolesController as ctrl", templateUrl: "partials/project-admin-roles.html"})
+
+    $routeProvider.when('/project/:pslug/admin/memberships',
+        {controller: "ProjectAdminMembershipsController as ctrl", templateUrl: "partials/project-admin-memberships.html"})
 
     $routeProvider.when('/admin',
         {controller: "SiteAdminController", templateUrl: "partials/site-admin.html"})
@@ -270,7 +282,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
         wikiHistorical: "/project/%s/wiki/%s/historical"
         search: "/project/%s/search"
         invitation: "/invitation/%s"
-        admin: "/project/%s/admin"
+        admin: "/project/%s/admin/%s"
         attachment: "/media/attachment-files/%s/%s/%s"
 
     conditionalUrl = (url, raw) ->
@@ -312,8 +324,8 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
                 url = "#{url}?#{jQuery.param(params)}"
             return url
 
-        adminUrl: (projectId,  raw) ->
-            url = gm.format($rootScope.baseUrls.admin, [projectId])
+        adminUrl: (projectId, section, raw) ->
+            url = gm.format($rootScope.baseUrls.admin, [projectId, section])
             return conditionalUrl(url, raw)
 
         issuesUrl: (projectId, issueId, raw, params={}) ->

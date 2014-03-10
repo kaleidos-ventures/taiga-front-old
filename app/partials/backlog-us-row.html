@@ -1,0 +1,58 @@
+<div class="us-check backlog-us">
+    <input type="checkbox" ng-model="us.selected" ng-change="changeUserStoriesSelection()"></input>
+</div>
+<div class="us-icon sprint-us">
+    <div data-icon="I" ng-show="us.is_closed"></div>
+    <div data-icon="q" ng-show="!us.is_closed"></div>
+</div>
+<div class="us-title">
+    <div class="title">
+        <span data-icon="J" class="icon" ng-show="us.client_requirement"></span>
+        <span data-icon="N" class="icon" ng-show="us.team_requirement"></span>
+        <span data-icon="o" class="icon blocked sprint-us" ng-show="us.is_blocked" gm-popover data-tmpl="#us-blocked-popover"></span>
+
+        <a href="{{ urls.userStoryUrl(projectSlug, us.ref, false, getUserStoryQueryParams()) }}" class="backlog-us">
+            #{{ us.ref }} {{ us.subject }}
+        </a>
+        <span class="sprint-us">#{{ us.ref }} {{ us.subject }}</span>
+    </div>
+    <div class="tags" ng-hide="!showTags">
+        <span ng-repeat="tag in us.tags track by $index" class="label" gm-colorize-tag>{{ tag }}</span>
+    </div>
+</div>
+<div class="us-points sprint-us">{{ us.total_points }}</div>
+<div class="us-status backlog-us">
+    <div class="label"
+            gm-popover="saveUsStatus(us, selectedId)"
+            data-tmpl="#usstatuses-popover"
+            style="background-color: {{ constants.usStatuses[us.status].color }}">
+        {{ constants.usStatuses[us.status].name }}</div>
+    <span data-icon="o" class="icon blocked" ng-show="us.is_blocked"
+          gm-popover data-tmpl="#us-blocked-popover"></span>
+</div>
+<div class="us-points backlog-us">
+    <div ng-repeat="role in constants.computableRolesList" class="role-point"
+            gm-popover="saveUsPoints(us, role, selectedId)"
+            data-tmpl="#points-popover">
+        {{ constants.points[us.points[role.id]].name }}
+    </div>
+    <div class="role-point total">
+        {{ us.total_points }}
+    </div>
+</div>
+<div class="us-options extra-options backlog-us">
+    <a class="btn-small-preview option" data-icon="l" gm-popover data-tmpl="#us-preview-popover">
+        <!-- TODO: Review this spanish translation, used Resumen because the Previsualizar was too long -->
+        <span class="help-box" i18next="backlog.preview">Preview</span>
+    </a>
+    <a class="btn-small-edit option" data-icon="j" ng-click="openEditUserStoryForm(us)">
+        <span class="help-box" i18next="backlog.edit">Edit</span>
+    </a>
+    <a class="btn-small-remove option" data-icon="h" gm-popover="removeUs(us)"
+        data-tmpl="#us-remove-popover">
+        <span class="help-box" i18next="backlog.remove">Remove</span>
+    </a>
+</div>
+<div class="veil" ng-show="us._moving">
+    <span ng-class="{spinner: us._moving}" data-icon="x"></span>
+</div>

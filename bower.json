@@ -29,7 +29,6 @@
     "angular-sanitize": "1.2.14",
     "kalendae": "~0.4.1",
     "checksley": "~0.5.0",
-    "jquery-ui": "~1.10.3",
     "i18next": "~1.7.1",
     "jquery": "~2.1.0",
     "select2": "~3.4.5",
@@ -37,12 +36,12 @@
     "google-diff-match-patch-js": "~1.0.0",
     "underscore.string": "~2.3.3",
     "markitup": "~1.1.14",
-    "jqueryui-touch-punch": "*",
     "jquery-textcomplete": "yuku-t/jquery-textcomplete#~0.1.1",
     "flot-orderBars": "emmerich/flot-orderBars",
     "moment": "~2.5.1",
     "isMobile": "~0.3.1",
-    "favico.js": "0.3.4"
+    "favico.js": "0.3.4",
+    "Sortable": "~0.1.5"
   },
   "resolutions": {
     "lodash": "~2.4.1",

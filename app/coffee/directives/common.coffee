@@ -452,6 +452,38 @@ GmSelectFix = ->
             return value
 
 
+GmSortableDirective = ($log, $rootScope) ->
+    scope: true
+    link: (scope, element, attrs) ->
+        onAdd = scope.$eval(attrs.gmSortableOnAdd) or angular.noop
+        onRemove = scope.$eval(attrs.gmSortableOnRemove) or angular.noop
+        onUpdate = scope.$eval(attrs.gmSortableOnUpdate) or angular.noop
+        itemName = attrs.gmSortableItemName or "item"
+        selector = attrs.gmSortableSelector
+
+        new Sortable element[0], {
+            group: attrs.gmSortable
+            draggable: selector
+
+            onUpdate: (event) ->
+                $log.debug "GmSortableDirective.onUpdate"
+                orderedItems = _.sortBy element.find(selector), (item) -> angular.element(item).index()
+                items = _.map orderedItems, (item) -> angular.element(item).scope()[itemName]
+                onUpdate(items, scope)
+
+            onAdd: (event) ->
+                $log.debug "GmSortableDirective.onAdd"
+                item = angular.element(event.item)
+                onAdd(item.scope()[itemName], item.index(), scope)
+                item.remove()
+
+            onRemove: (event) ->
+                $log.debug "GmSortableDirective.onRemove"
+                item = angular.element(event.item)
+                onRemove(item.scope()[itemName], scope)
+        }
+
+
 module = angular.module('taiga.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
 module.directive('gmHeaderMenu', ["$rootScope", GmHeaderMenuDirective])
@@ -470,3 +502,4 @@ module.directive('gmPaginator', ['$parse', GmPaginator])
 module.directive('gmSpinner', ['$parse', '$rootScope', GmSpinner])
 module.directive('gmSelect2Tags', GmSelect2Tags)
 module.directive('gmSelectFix', GmSelectFix)
+module.directive('gmSortable', ["$log", "$rootScope", GmSortableDirective])

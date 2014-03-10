@@ -149,35 +149,29 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
     $scope.$on "stats:reload", ->
         calculateStats()
 
-    $scope.$on "sortable:changed", gm.utils.safeDebounced $scope, 100, ->
-        saveTask = (task) ->
-            if not task.isModified()
-                return
+    $scope.sortableOnAdd = (task, index, sortableScope) ->
+        if sortableScope.us?
+            task.user_story = sortableScope.us.id
+        else
+            task.user_story = null
+        task.status = sortableScope.status.id
 
-            task._moving = true
+        task._moving = true
+        task.save().then ->
+            if sortableScope.us?
+                $scope.usTasks[sortableScope.us.id][sortableScope.status.id].splice(index, 0, task)
+                sortableScope.us.refresh()
+            else
+                $scope.unassignedTasks[sortableScope.status.id].splice(index, 0, task)
+            task._moving = false
 
-            promise = task.save()
-            promise.then (task) ->
-                task._moving = false
-                calculateStats()
+    $scope.sortableOnUpdate = (tasks, sortableScope) ->
 
-            promise.then null, (error) ->
-                task.revert()
-                task._moving = false
-                loadTasks()
-
-        for usId, statuses of $scope.usTasks
-            for statusId, tasks of statuses
-                for task in tasks
-                    task.user_story = parseInt(usId, 10)
-                    task.status = parseInt(statusId, 10)
-                    saveTask(task)
-
-        for statusId, tasks of $scope.unassignedTasks
-            for task in tasks
-                task.user_story = null
-                task.status = parseInt(statusId, 10)
-                saveTask(task)
+    $scope.sortableOnRemove = (task, sortableScope) ->
+        if sortableScope.us?
+            _.remove($scope.usTasks[sortableScope.us.id][sortableScope.status.id], task)
+        else
+            _.remove($scope.unassignedTasks[sortableScope.status.id], task)
 
     return
 

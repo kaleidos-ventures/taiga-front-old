@@ -1,0 +1,150 @@
+<header class="header-container" ng-include="'/partials/header.html'"></header>
+
+<main class="project-admin-view">
+    <ul class="tabs clearfix" ng-include="'/partials/includes/project-admin-header.html'"></ul>
+    <div class="tab-container">
+        <div class="update-form">
+            <form class="form-horizontal" gm-checksley-form="ctrl.submit()">
+
+                <h3 i18next="admin.project-details">Project details</h3>
+
+                <fieldset class="project-name">
+                    <label class="control-label" for="name" i18next="admin.name">Name:</label>
+                    <input type="text" id="name" name="name" ng-model="project.name" data-error-message="Required" />
+                </fieldset>
+
+                <fieldset class="project-slug">
+                    <label for="slug" i18next="admin.slug">Slug:</label>
+                    <input type="text" id="slug" name="slug" ng-model="project.slug" data-error-message="Required" />
+                </fieldset>
+
+                <fieldset class="project-total-milestones">
+                    <label class="control-label" for="total_milestones" i18next="admin.num-of-sprints">Num. Sprints:</label>
+                    <input type="text" id="total_milestones" name="total_milestones"
+                        ng-model="project.total_milestones" data-error-message="Required" />
+                </fieldset>
+
+                <fieldset class="project-total-story-points">
+                    <label for="slug" i18next="admin.total-story-points">Total story-points:</label>
+                    <input type="text" id="total_story_points" name="total_story_points"
+                        ng-model="project.total_story_points" data-error-message="Required" />
+                </fieldset>
+
+                <fieldset class="project-description">
+                    <label for="description" i18next="admin.description">Description:</label>
+                    <textarea id="description" name="description" ng-model="project.description"></textarea>
+                </fieldset>
+
+                <h3 i18next="admin.default-values">Default values:</h3>
+
+                <fieldset class="project-default-points">
+                    <label for="default_points" i18next="admin.default-points">Default value for points selectors:</label>
+                    <select id="default_points" name="default_points"
+                            ng-model="project.default_points"
+                            ng-options="c.id as c.name for c in constants.pointsList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="project-default-us-status">
+                    <label for="default_us_status" i18next="admin.default-us-status">Default value for US status selectors:</label>
+                    <select id="default_us_status" name="default_us_status"
+                            ng-model="project.default_us_status"
+                            ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="project-default-task-status">
+                    <label for="default_task_status" i18next="admin.default-task-status">Default value for task status selectors:</label>
+                    <select id="default_task_status" name="default_task_status"
+                            ng-model="project.default_task_status"
+                            ng-options="c.id as c.name for c in constants.taskStatusesList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="project-default-priority">
+                    <label for="default_priority" i18next="admin.default-priority">Default value for priority selectors:</label>
+                    <select id="default_priority" name="default_priority"
+                            ng-model="project.default_priority"
+                            ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="project-default-severity">
+                    <label for="default_severity" i18next="admin.default-severity">Default value for severity selectors:</label>
+                    <select id="default_severity" name="default_severity"
+                            ng-model="project.default_severity"
+                            ng-options="c.id as c.name for c in constants.severitiesList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="project-default-issue-type">
+                    <label for="default_issue_type" i18next="admin.default-issue-type">Default value for issue type selectors:</label>
+                    <select id="default_issue_type" name="default_issue_type"
+                            ng-model="project.default_issue_type"
+                            ng-options="c.id as c.name for c in constants.issueTypesList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="project-default-issue-status">
+                    <label for="default_issue_status" i18next="admin.default-issue-status">Default value for issue status selectors:</label>
+                    <select id="default_issue_status" name="default_issue_status"
+                            ng-model="project.default_issue_status"
+                            ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <h3 i18next="admin.functionalities">Functionalities:</h3>
+
+                <fieldset class="project-is-backlog-activated">
+                    <input type="checkbox" id="is_backlog_activated" name="is_backlog_activated"
+                           ng-model="project.is_backlog_activated" />
+                    <label for="is_backlog_activated" i18next="admin.activate-backlog">Activate Backlog</label>
+                </fieldset>
+
+                <fieldset class="project-is-kanban-activated">
+                    <input type="checkbox" id="is_kanban_activated" name="is_kanban_activated"
+                           ng-model="project.is_kanban_activated" />
+                    <label for="is_kanban_activated" i18next="admin.activate-kanban">Activate Kanban</label>
+                </fieldset>
+
+                <fieldset class="project-is-issues-activated">
+                    <input type="checkbox" id="is_issues_activated" name="is_issues_activated"
+                           ng-model="project.is_issues_activated" />
+                    <label for="is_issues_activated" i18next="admin.activate-issues">Activate Issues</label>
+                </fieldset>
+
+                <fieldset class="project-is-wiki-activated">
+                    <input type="checkbox" id="is_wiki_activated" name="is_wiki_activated"
+                           ng-model="project.is_wiki_activated" />
+                    <label for="is_wiki_activated" i18next="admin.activate-wiki">Activate Wiki</label>
+                </fieldset>
+
+                <fieldset class="project-videoconferences">
+                    <label for="videoconferences" i18next="admin.videoconference-system">Videoconference system:</label>
+                    <select id="videoconferences" name="videoconferences"
+                            ng-model="project.videoconferences"
+                            ng-options="c.id as c.name for c in [{id: 'appear-in', name: 'AppearIn'}, {id: 'talky', name: 'Talky'}]">
+                        <option value="">--------</option>
+                    </select>
+                </fieldset>
+
+                <fieldset class="project-videoconferences-salt" ng-show="project.videoconferences">
+                    <label for="videoconference-salt" i18next="admin.videoconference-salt">Videoconference salt:</label>
+                    <input type="text" id="videoconference-salt" name="videoconferences_salt" ng-model="project.videoconferences_salt" />
+                </fieldset>
+
+                <fieldset class="project-submit">
+                    <button type="submit" class="button button-edit" gm-checksley-submit-button i18next="admin.save">Save</button>
+                </fieldset>
+
+            </form>
+        </div>
+    </div>
+</main>

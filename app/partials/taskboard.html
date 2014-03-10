@@ -123,7 +123,9 @@
                                         ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
                                         style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
 
-                                    <div class="tasks" gm-sortable=".tasks-container tbody .tasks" ng-model="usTasks[us.id][status.id]">
+                                    <div class="tasks" gm-sortable="tasks" gm-sortable-selector=".task-box"
+                                        gm-sortable-item-name="task" gm-sortable-on-add="sortableOnAdd"
+                                        gm-sortable-on-update="sortableOnUpdate" gm-sortable-on-remove="sortableOnRemove">
                                         <div class="task-box" ng-repeat="task in usTasks[us.id][status.id]">
                                             <div ng-include="'/partials/taskboard-task.html'"></div>
                                         </div>
@@ -146,7 +148,9 @@
                                         ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
                                         style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
 
-                                    <div class="tasks" gm-sortable=".tasks-container tbody .tasks" ng-model="unassignedTasks[status.id]">
+                                    <div class="tasks" gm-sortable="tasks" gm-sortable-selector=".task-box"
+                                        gm-sortable-item-name="task" gm-sortable-on-add="sortableOnAdd"
+                                        gm-sortable-on-update="sortableOnUpdate" gm-sortable-on-remove="sortableOnRemove">
                                         <div class="task-box" ng-repeat="task in unassignedTasks[status.id]">
                                             <div ng-include="'/partials/taskboard-task.html'"></div>
                                         </div>

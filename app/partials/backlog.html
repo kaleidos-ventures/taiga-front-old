@@ -135,59 +135,14 @@
                     </div>
                     <div class="us-options" i18next="backlog.options">Options</div>
                 </div>
-                <div class="flex-body" gm-sortable=".sprints-box .flex-body" ng-model="unassignedUs" gm-doomline>
+                <div class="flex-body" gm-sortable="userstories"
+                    gm-sortable-selector=".us-item" gm-sortable-on-add="sortableOnAdd"
+                    gm-sortable-on-update="sortableOnUpdate" gm-sortable-item-name="us"
+                    gm-sortable-on-remove="sortableOnRemove" gm-doomline>
                     <div class="us-item nga-us-item" ng-repeat="us in unassignedUs|onlyVisible"
-                            gm-sortable-index="{{$index}}" ng-class="{selected:us.selected}" ng-dblclick="openUserStory(projectSlug, us.ref)">
-                        <div class="us-check">
-                            <input type="checkbox" ng-model="us.selected" ng-change="changeUserStoriesSelection()"></input>
-                        </div>
-                        <div class="us-title">
-                            <div class="title">
-                                <span data-icon="J" class="icon" ng-show="us.client_requirement"></span>
-                                <span data-icon="N" class="icon" ng-show="us.team_requirement"></span>
-                                <a href="{{ urls.userStoryUrl(projectSlug, us.ref, false, getUserStoryQueryParams()) }}">
-                                    #{{ us.ref }} {{ us.subject }}
-                                </a>
-                            </div>
-                            <div class="tags" ng-hide="!showTags">
-                                <span ng-repeat="tag in us.tags track by $index" class="label" gm-colorize-tag>{{ tag }}</span>
-                            </div>
-                        </div>
-                        <div class="us-status">
-                            <div class="label"
-                                    gm-popover="saveUsStatus(us, selectedId)"
-                                    data-tmpl="#usstatuses-popover"
-                                    style="background-color: {{ constants.usStatuses[us.status].color }}">
-                                {{ constants.usStatuses[us.status].name }}</div>
-                            <span data-icon="o" class="icon blocked" ng-show="us.is_blocked"
-                                  gm-popover data-tmpl="#us-blocked-popover"></span>
-                        </div>
-                        <div class="us-points">
-                            <div ng-repeat="role in constants.computableRolesList" class="role-point"
-                                    gm-popover="saveUsPoints(us, role, selectedId)"
-                                    data-tmpl="#points-popover">
-                                {{ constants.points[us.points[role.id]].name }}
-                            </div>
-                            <div class="role-point total">
-                                {{ us.total_points }}
-                            </div>
-                        </div>
-                        <div class="us-options extra-options">
-                            <a class="btn-small-preview option" data-icon="l" gm-popover data-tmpl="#us-preview-popover">
-                                <!-- TODO: Review this spanish translation, used Resumen because the Previsualizar was too long -->
-                                <span class="help-box" i18next="backlog.preview">Preview</span>
-                            </a>
-                            <a class="btn-small-edit option" data-icon="j" ng-click="openEditUserStoryForm(us)">
-                                <span class="help-box" i18next="backlog.edit">Edit</span>
-                            </a>
-                            <a class="btn-small-remove option" data-icon="h" gm-popover="removeUs(us)"
-                                data-tmpl="#us-remove-popover">
-                                <span class="help-box" i18next="backlog.remove">Remove</span>
-                            </a>
-                        </div>
-                        <div class="veil" ng-show="us._moving">
-                            <span ng-class="{spinner: us._moving}" data-icon="x"></span>
-                        </div>
+                        ng-class="{selected:us.selected}"
+                        ng-dblclick="openUserStory(projectSlug, us.ref)"
+                        ng-include="'/partials/backlog-us-row.html'">
                     </div>
                 </div>
             </div>
@@ -288,25 +243,12 @@
                 <div class="body">
                     <div class="us-list" ng-hide="editFormOpened || !viewUSs">
                         <div class="us-table-list">
-                            <div class="flex-body" gm-sortable=".us-container .flex-body, .sprints-box .flex-body"
-                                 ng-model="milestones[$index].user_stories" >
+                            <div class="flex-body" gm-sortable="userstories" gm-sortable-selector=".us-item"
+                                 ng-model="milestones[$index].user_stories" gm-sortable-item-name="us"
+                                 gm-sortable-on-add="sortableOnAdd" gm-sortable-on-update="sortableOnUpdate"
+                                 gm-sortable-on-remove="sortableOnRemove">
                                 <div class="us-item" ng-repeat="us in ml.user_stories|orderBy:'order'"
-                                     ng-dblclick="openUserStory(projectSlug, us.ref)">
-                                    <div class="us-icon">
-                                        <div data-icon="I" ng-show="us.is_closed"></div>
-                                        <div data-icon="q" ng-show="!us.is_closed"></div>
-                                    </div>
-                                    <div class="us-title">
-                                        <span data-icon="o" class="icon blocked" ng-show="us.is_blocked"
-                                              gm-popover data-tmpl="#us-blocked-popover"></span>
-                                        <span data-icon="J" class="icon" ng-show="us.client_requirement"></span>
-                                        <span data-icon="N" class="icon" ng-show="us.team_requirement"></span>
-                                        #{{ us.ref }} {{ us.subject }}
-                                    </div>
-                                    <div class="us-points">{{ us.total_points }}</div>
-                                    <div class="veil" ng-show="us._moving">
-                                        <span ng-class="{spinner: us._moving}" data-icon="x"></span>
-                                    </div>
+                                     ng-dblclick="openUserStory(projectSlug, us.ref)" ng-include="'/partials/backlog-us-row.html'">
                                 </div>
                             </div>
                         </div>

@@ -1,185 +1,15 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 
 <main class="project-admin-view">
-
-    <ul class="tabs clearfix">
-        <li class="userstory-tab" ng-class="{active: isActive('data')}"
-            ng-click="setActive('data')" i18next="admin.project-profile">
-            Project profile
-        </li>
-        <li class="userstory-tab" ng-class="{active: isActive('values')}"
-            ng-click="setActive('values')" i18next="admin.project-values">
-            Project values
-        </li>
-
-        <li class="userstory-tab" ng-class="{active: isActive('sprints')}"
-            ng-click="setActive('sprints')" i18next="admin.sprints">
-            Sprints
-        </li>
-        <li class="userstory-tab" ng-class="{active: isActive('roles')}"
-            ng-click="setActive('roles')" i18next="admin.roles">
-            Roles
-        </li>
-        <li class="userstory-tab" ng-class="{active: isActive('memberships')}"
-            ng-click="setActive('memberships')" i18next="admin.memberships">
-            Memberships
-        </li>
-    </ul>
-
-    <div class="tab-container" ng-show="isActive('data')">
-        <div class="update-form">
-            <form class="form-horizontal" gm-checksley-form="submit()">
-
-                <h3 i18next="admin.project-details">Project details</h3>
-
-                <fieldset class="project-name">
-                    <label class="control-label" for="name" i18next="admin.name">Name:</label>
-                    <input type="text" id="name" name="name" ng-model="project.name" data-error-message="Required" />
-                </fieldset>
-
-                <fieldset class="project-slug">
-                    <label for="slug" i18next="admin.slug">Slug:</label>
-                    <input type="text" id="slug" name="slug" ng-model="project.slug" data-error-message="Required" />
-                </fieldset>
-
-                <fieldset class="project-total-milestones">
-                    <label class="control-label" for="total_milestones" i18next="admin.num-of-sprints">Num. Sprints:</label>
-                    <input type="text" id="total_milestones" name="total_milestones"
-                        ng-model="project.total_milestones" data-error-message="Required" />
-                </fieldset>
-
-                <fieldset class="project-total-story-points">
-                    <label for="slug" i18next="admin.total-story-points">Total story-points:</label>
-                    <input type="text" id="total_story_points" name="total_story_points"
-                        ng-model="project.total_story_points" data-error-message="Required" />
-                </fieldset>
-
-                <fieldset class="project-description">
-                    <label for="description" i18next="admin.description">Description:</label>
-                    <textarea id="description" name="description" ng-model="project.description"></textarea>
-                </fieldset>
-
-                <h3 i18next="admin.default-values">Default values:</h3>
-
-                <fieldset class="project-default-points">
-                    <label for="default_points" i18next="admin.default-points">Default value for points selectors:</label>
-                    <select id="default_points" name="default_points"
-                            ng-model="project.default_points"
-                            ng-options="c.id as c.name for c in constants.pointsList|orderBy:'order'">
-                        <option value="">--------</option>
-                    </select>
-                </fieldset>
-
-                <fieldset class="project-default-us-status">
-                    <label for="default_us_status" i18next="admin.default-us-status">Default value for US status selectors:</label>
-                    <select id="default_us_status" name="default_us_status"
-                            ng-model="project.default_us_status"
-                            ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'">
-                        <option value="">--------</option>
-                    </select>
-                </fieldset>
-
-                <fieldset class="project-default-task-status">
-                    <label for="default_task_status" i18next="admin.default-task-status">Default value for task status selectors:</label>
-                    <select id="default_task_status" name="default_task_status"
-                            ng-model="project.default_task_status"
-                            ng-options="c.id as c.name for c in constants.taskStatusesList|orderBy:'order'">
-                        <option value="">--------</option>
-                    </select>
-                </fieldset>
-
-                <fieldset class="project-default-priority">
-                    <label for="default_priority" i18next="admin.default-priority">Default value for priority selectors:</label>
-                    <select id="default_priority" name="default_priority"
-                            ng-model="project.default_priority"
-                            ng-options="c.id as c.name for c in constants.prioritiesList|orderBy:'order'">
-                        <option value="">--------</option>
-                    </select>
-                </fieldset>
-
-                <fieldset class="project-default-severity">
-                    <label for="default_severity" i18next="admin.default-severity">Default value for severity selectors:</label>
-                    <select id="default_severity" name="default_severity"
-                            ng-model="project.default_severity"
-                            ng-options="c.id as c.name for c in constants.severitiesList|orderBy:'order'">
-                        <option value="">--------</option>
-                    </select>
-                </fieldset>
-
-                <fieldset class="project-default-issue-type">
-                    <label for="default_issue_type" i18next="admin.default-issue-type">Default value for issue type selectors:</label>
-                    <select id="default_issue_type" name="default_issue_type"
-                            ng-model="project.default_issue_type"
-                            ng-options="c.id as c.name for c in constants.issueTypesList|orderBy:'order'">
-                        <option value="">--------</option>
-                    </select>
-                </fieldset>
-
-                <fieldset class="project-default-issue-status">
-                    <label for="default_issue_status" i18next="admin.default-issue-status">Default value for issue status selectors:</label>
-                    <select id="default_issue_status" name="default_issue_status"
-                            ng-model="project.default_issue_status"
-                            ng-options="c.id as c.name for c in constants.issueStatusesList|orderBy:'order'">
-                        <option value="">--------</option>
-                    </select>
-                </fieldset>
-
-                <h3 i18next="admin.functionalities">Functionalities:</h3>
-
-                <fieldset class="project-is-backlog-activated">
-                    <input type="checkbox" id="is_backlog_activated" name="is_backlog_activated"
-                           ng-model="project.is_backlog_activated" />
-                    <label for="is_backlog_activated" i18next="admin.activate-backlog">Activate Backlog</label>
-                </fieldset>
-
-                <fieldset class="project-is-kanban-activated">
-                    <input type="checkbox" id="is_kanban_activated" name="is_kanban_activated"
-                           ng-model="project.is_kanban_activated" />
-                    <label for="is_kanban_activated" i18next="admin.activate-kanban">Activate Kanban</label>
-                </fieldset>
-
-                <fieldset class="project-is-issues-activated">
-                    <input type="checkbox" id="is_issues_activated" name="is_issues_activated"
-                           ng-model="project.is_issues_activated" />
-                    <label for="is_issues_activated" i18next="admin.activate-issues">Activate Issues</label>
-                </fieldset>
-
-                <fieldset class="project-is-wiki-activated">
-                    <input type="checkbox" id="is_wiki_activated" name="is_wiki_activated"
-                           ng-model="project.is_wiki_activated" />
-                    <label for="is_wiki_activated" i18next="admin.activate-wiki">Activate Wiki</label>
-                </fieldset>
-
-                <fieldset class="project-videoconferences">
-                    <label for="videoconferences" i18next="admin.videoconference-system">Videoconference system:</label>
-                    <select id="videoconferences" name="videoconferences"
-                            ng-model="project.videoconferences"
-                            ng-options="c.id as c.name for c in [{id: 'appear-in', name: 'AppearIn'}, {id: 'talky', name: 'Talky'}]">
-                        <option value="">--------</option>
-                    </select>
-                </fieldset>
-
-                <fieldset class="project-videoconferences-salt" ng-show="project.videoconferences">
-                    <label for="videoconference-salt" i18next="admin.videoconference-salt">Videoconference salt:</label>
-                    <input type="text" id="videoconference-salt" name="videoconferences_salt" ng-model="project.videoconferences_salt" />
-                </fieldset>
-
-                <fieldset class="project-submit">
-                    <button type="submit" class="button button-edit" gm-checksley-submit-button i18next="admin.save">Save</button>
-                </fieldset>
-
-            </form>
-        </div>
-    </div>
-
-    <div class="tab-container" ng-show="isActive('values')">
+    <ul class="tabs clearfix" ng-include="'/partials/includes/project-admin-header.html'"></ul>
+    <div class="tab-container">
         <div class="project-values-container">
-            <div class="value-container" ng-controller="UserStoryStatusesAdminController">
+            <div class="value-container" ng-controller="UserStoryStatusesAdminController as ctrl">
                 <div class="header">
                     <p data-icon="y" class="title" i18next="admin.us-statuses">US statuses</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened"
+                                ng-click="ctrl.openForm()" ng-hide="formOpened"
                                 i18next="admin.add-us-status">
                             Add new US status</a>
                     </div>
@@ -193,7 +23,7 @@
                     </div>
                     <div class="flex-body">
                         <form class="flex-row new-form" ng-show="formOpened"
-                                gm-checksley-form="create()">
+                                gm-checksley-form="ctrl.create()">
                             <fieldset class="item name">
                                 <input type="text" name="name" ng-model="status.name"
                                        data-required="true" data-error-message="Required" />
@@ -212,14 +42,16 @@
                                 <button class="btn-small btn-save" data-icon="z"
                                         gm-checksley-submit-button></button>
                                 <button class="btn-small btn-cancel" data-icon="p"
-                                        ng-click="closeForm()"></button>
+                                        ng-click="ctrl.closeForm()"></button>
                             </fieldset>
                         </form>
                         <div class="us-statuses-sortables"
-                                gm-sortable=".us-statuses-sortables" ng-model="userStoryStatuses">
-                            <div class="flex-row"  ng-repeat="status in userStoryStatuses"
-                                    gm-sortable-index="{{$index}}">
-                                <div class="row-value" ng-controller="UserStoryStatusController">
+                             gm-sortable="us-statuses"
+                             gm-sortable-selector=".flex-row"
+                             gm-sortable-item-name="status"
+                             gm-sortable-on-update="ctrl.sortableOnUpdate">
+                            <div class="flex-row"  ng-repeat="status in userStoryStatuses">
+                                <div class="row-value" ng-controller="ChoiceController as editCtrl">
                                     <div class="data" ng-hide="formOpened">
                                         <div class="item name">{{ status.name }}</div>
                                         <div class="item is-closed">{{ status.is_closed }}</div>
@@ -229,13 +61,13 @@
                                         </div>
                                         <div class="options">
                                             <a class="btn-small btn-edit" data-icon="j"
-                                                    ng-click="openForm()"></a>
+                                                    ng-click="editCtrl.openForm()"></a>
                                             <a class="btn-small btn-remove" data-icon="h"
-                                                    ng-click="delete(status)"></a>
+                                                    ng-click="editCtrl.delete(status)"></a>
                                         </div>
                                     </div>
                                     <form class="modify-form" ng-show="formOpened"
-                                            gm-checksley-form="update(status)">
+                                            gm-checksley-form="editCtrl.update(status)">
                                         <fieldset class="item name">
                                             <input type="text" name="name" ng-model="status.name"
                                                    data-required="true" data-error-message="Required" />
@@ -254,7 +86,7 @@
                                             <button class="btn-small btn-save" data-icon="z"
                                                     gm-checksley-submit-button></button>
                                             <button class="btn-small btn-cancel" data-icon="p"
-                                                    ng-click="closeForm(status)"></button>
+                                                    ng-click="editCtrl.closeForm(status)"></button>
                                         </fieldset>
                                     </form>
                                 </div>
@@ -263,12 +95,12 @@
                     </div>
                 </div>
             </div>
-            <div class="value-container" ng-controller="PointsAdminController">
+            <div class="value-container" ng-controller="PointsAdminController as ctrl">
                 <div class="header">
                     <p data-icon="L" class="title" i18next="admin.points">US Points</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened"
+                                ng-click="ctrl.openForm()" ng-hide="formOpened"
                                 i18next="admin.add-points">
                             Add new US points</a>
                     </div>
@@ -281,7 +113,7 @@
                     </div>
                     <div class="flex-body">
                         <form class="flex-row new-form" ng-show="formOpened"
-                                gm-checksley-form="create()">
+                                gm-checksley-form="ctrl.create()">
                             <fieldset class="item name">
                                 <input type="text" name="name" ng-model="point.name"
                                         data-required="true" data-error-message="Required" />
@@ -293,26 +125,28 @@
                                 <button class="btn-small btn-save" data-icon="z"
                                         gm-checksley-submit-button></button>
                                 <button class="btn-small btn-cancel" data-icon="p"
-                                        ng-click="closeForm()"></button>
+                                        ng-click="ctrl.closeForm()"></button>
                             </fieldset>
                         </form>
                         <div class="project-points-sortables"
-                                gm-sortable=".project-points-sortables" ng-model="points">
-                            <div class="flex-row" ng-repeat="point in points"
-                                    gm-sortable-index="{{$index}}">
-                                <div class="row-value" ng-controller="PointsController">
+                            gm-sortable="points"
+                            gm-sortable-selector=".flex-row"
+                            gm-sortable-item-name="point"
+                            gm-sortable-on-update="ctrl.sortableOnUpdate">
+                            <div class="flex-row" ng-repeat="point in points">
+                                <div class="row-value" ng-controller="ChoiceController as editCtrl">
                                     <div class="data" ng-hide="formOpened">
                                         <div class="item name">{{ point.name }}</div>
                                         <div class="item value">{{ point.value }}</div>
                                         <div class="options">
                                             <a class="btn-small btn-edit" data-icon="j"
-                                                    ng-click="openForm()"></a>
+                                                    ng-click="editCtrl.openForm()"></a>
                                             <a class="btn-small btn-remove" data-icon="h"
-                                                    ng-click="delete(point)"></a>
+                                                    ng-click="editCtrl.delete(point)"></a>
                                         </div>
                                     </div>
                                     <form class="modify-form" ng-show="formOpened"
-                                            gm-checksley-form="update(point)">
+                                            gm-checksley-form="editCtrl.update(point)">
                                         <fieldset class="item name">
                                             <input type="text" name="name" ng-model="point.name"
                                                     data-required="true" data-error-message="Required" />
@@ -324,7 +158,7 @@
                                             <button class="btn-small btn-save" data-icon="z"
                                                     gm-checksley-submit-button></button>
                                             <button class="btn-small btn-cancel" data-icon="p"
-                                                    ng-click="closeForm(point)"></button>
+                                                    ng-click="editCtrl.closeForm(point)"></button>
                                         </fieldset>
                                     </form>
                                 </div>
@@ -333,12 +167,12 @@
                     </div>
                 </div>
             </div>
-            <div class="value-container" ng-controller="TaskStatusesAdminController">
+            <div class="value-container" ng-controller="TaskStatusesAdminController as ctrl">
                 <div class="header">
                     <p data-icon="y" class="title" i18next="admin.task-statuses">Task Statuses</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened"
+                                ng-click="ctrl.openForm()" ng-hide="formOpened"
                                 i18next="admin.add-task-status">
                             Add new task status</a>
                     </div>
@@ -352,7 +186,7 @@
                     </div>
                     <div class="flex-body">
                         <form class="flex-row new-form" ng-show="formOpened"
-                                gm-checksley-form="create()">
+                                gm-checksley-form="ctrl.create()">
                             <fieldset class="item name">
                                 <input type="text" name="name" ng-model="status.name"i
                                        data-required="true" data-error-message="Required" />
@@ -371,14 +205,16 @@
                                 <button class="btn-small btn-save" data-icon="z"
                                         gm-checksley-submit-button></button>
                                 <button class="btn-small btn-cancel" data-icon="p"
-                                        ng-click="closeForm()"></button>
+                                        ng-click="ctrl.closeForm()"></button>
                             </fieldset>
                         </form>
                         <div class="task-statuses-sortables"
-                                gm-sortable=".task-statuses-sortables" ng-model="taskStatuses">
-                            <div class="flex-row" ng-repeat="status in taskStatuses"
-                                    gm-sortable-index="{{$index}}">
-                                <div class="row-value" ng-controller="TaskStatusController">
+                            gm-sortable="task-statuses"
+                            gm-sortable-selector=".flex-row"
+                            gm-sortable-item-name="status"
+                            gm-sortable-on-update="ctrl.sortableOnUpdate">
+                            <div class="flex-row" ng-repeat="status in taskStatuses">
+                                <div class="row-value" ng-controller="ChoiceController as editCtrl">
                                     <div class="data" ng-hide="formOpened">
                                         <div class="item name">{{ status.name }}</div>
                                         <div class="item is-closed">{{ status.is_closed }}</div>
@@ -388,13 +224,13 @@
                                         </div>
                                         <div class="options">
                                             <a class="btn-small btn-edit" data-icon="j"
-                                                    ng-click="openForm()"></a>
+                                                    ng-click="editCtrl.openForm()"></a>
                                             <a class="btn-small btn-remove" data-icon="h"
-                                                    ng-click="delete(status)"></a>
+                                                    ng-click="editCtrl.delete(status)"></a>
                                         </div>
                                     </div>
                                     <form class="modify-form" ng-show="formOpened"
-                                            gm-checksley-form="update(status)">
+                                            gm-checksley-form="editCtrl.update(status)">
                                         <fieldset class="item name">
                                             <input type="text" name="name" ng-model="status.name"i
                                                    data-required="true" data-error-message="Required" />
@@ -414,7 +250,7 @@
                                             <button class="btn-small btn-save" data-icon="z"
                                                     gm-checksley-submit-button></button>
                                             <button class="btn-small btn-cancel" data-icon="p"
-                                                    ng-click="closeForm(status)"></button>
+                                                    ng-click="editCtrl.closeForm(status)"></button>
                                         </fieldset>
                                     </form>
                                 </div>
@@ -423,12 +259,12 @@
                     </div>
                 </div>
             </div>
-            <div class="value-container" ng-controller="IssueStatusesAdminController">
+            <div class="value-container" ng-controller="IssueStatusesAdminController as ctrl">
                 <div class="header">
                     <p data-icon="y" class="title" i18next="admin.issue-statuses">Issue statuses</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened"
+                                ng-click="ctrl.openForm()" ng-hide="formOpened"
                                 i18next="admin.add-issue-status">
                             Add new issue status</a>
                     </div>
@@ -442,7 +278,7 @@
                     </div>
                     <div class="flex-body">
                         <form class="flex-row new-form" ng-show="formOpened"
-                                gm-checksley-form="create()">
+                                gm-checksley-form="ctrl.create()">
                             <fieldset class="item name">
                                 <input type="text" name="name" ng-model="status.name"
                                         data-required="true" data-error-message="Required" />
@@ -461,14 +297,16 @@
                                 <button class="btn-small btn-save" data-icon="z"
                                         gm-checksley-submit-button></button>
                                 <button class="btn-small btn-cancel" data-icon="p"
-                                        ng-click="closeForm()"></button>
+                                        ng-click="ctrl.closeForm()"></button>
                             </fieldset>
                         </form>
                         <div class="issue-statuses-sortables"
-                                gm-sortable=".issue-statuses-sortables" ng-model="issueStatuses">
-                            <div class="flex-row" ng-repeat="status in issueStatuses"
-                                    gm-sortable-index="{{$index}}">
-                                <div class="row-value" ng-controller="IssueStatusController">
+                            gm-sortable="issue-statuses"
+                            gm-sortable-selector=".flex-row"
+                            gm-sortable-item-name="status"
+                            gm-sortable-on-update="ctrl.sortableOnUpdate">
+                            <div class="flex-row" ng-repeat="status in issueStatuses">
+                                <div class="row-value" ng-controller="ChoiceController as editCtrl">
                                     <div class="data" ng-hide="formOpened">
                                         <div class="item name">{{ status.name }}</div>
                                         <div class="item is-closed">{{ status.is_closed }}</div>
@@ -478,13 +316,13 @@
                                         </div>
                                         <div class="options">
                                             <a class="btn-small btn-edit" data-icon="j"
-                                                    ng-click="openForm()"></a>
+                                                    ng-click="editCtrl.openForm()"></a>
                                             <a class="btn-small btn-remove" data-icon="h"
-                                                    ng-click="delete(status)"></a>
+                                                    ng-click="editCtrl.delete(status)"></a>
                                         </div>
                                     </div>
                                     <form class="modify-form" ng-show="formOpened"
-                                            gm-checksley-form="update(status)">
+                                            gm-checksley-form="editCtrl.update(status)">
                                         <fieldset class="item name">
                                             <input type="text" name="name" ng-model="status.name"
                                                     data-required="true" data-error-message="Required" />
@@ -504,7 +342,7 @@
                                             <button class="btn-small btn-save" data-icon="z"
                                                     gm-checksley-submit-button></button>
                                             <button class="btn-small btn-cancel" data-icon="p"
-                                                    ng-click="closeForm(status)"></button>
+                                                    ng-click="editCtrl.closeForm(status)"></button>
                                         </fieldset>
                                     </form>
                                 </div>
@@ -513,12 +351,12 @@
                     </div>
                 </div>
             </div>
-            <div class="value-container" ng-controller="IssueTypesAdminController">
+            <div class="value-container" ng-controller="IssueTypesAdminController as ctrl">
                 <div class="header">
                     <p data-icon="a" class="title" i18next="admin.issue-types">Issue types</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened"
+                                ng-click="ctrl.openForm()" ng-hide="formOpened"
                                 i18next="admin.add-issue-type">
                             Add new issue type</a>
                     </div>
@@ -531,7 +369,7 @@
                     </div>
                     <div class="flex-body">
                         <form class="flex-row new-form" ng-show="formOpened"
-                                gm-checksley-form="create()">
+                                gm-checksley-form="ctrl.create()">
                             <fieldset class="item name">
                                 <input type="text" name="name" ng-model="type.name"
                                        data-required="true" data-error-message="Required" />
@@ -547,14 +385,16 @@
                                 <button class="btn-small btn-save" data-icon="z"
                                         gm-checksley-submit-button></button>
                                 <button class="btn-small btn-cancel" data-icon="p"
-                                        ng-click="closeForm()"></button>
+                                        ng-click="ctrl.closeForm()"></button>
                             </fieldset>
                         </form>
                         <div class="issue-types-sortables"
-                                gm-sortable=".issue-types-sortables" ng-model="issueTypes">
-                            <div class="flex-row" ng-repeat="type in issueTypes"
-                                    gm-sortable-index="{{$index}}">
-                                <div class="row-value" ng-controller="IssueTypeController">
+                            gm-sortable="issue-types"
+                            gm-sortable-selector=".flex-row"
+                            gm-sortable-item-name="type"
+                            gm-sortable-on-update="ctrl.sortableOnUpdate">
+                            <div class="flex-row" ng-repeat="type in issueTypes">
+                                <div class="row-value" ng-controller="ChoiceController as editCtrl">
                                     <div class="data" ng-hide="formOpened">
                                         <div class="item name">{{ type.name }}</div>
                                         <div class="item color">
@@ -563,13 +403,13 @@
                                         </div>
                                         <div class="options">
                                             <a class="btn-small btn-edit" data-icon="j"
-                                                    ng-click="openForm()"></a>
+                                                    ng-click="editCtrl.openForm()"></a>
                                             <a class="btn-small btn-remove" data-icon="h"
-                                                    ng-click="delete(type)"></a>
+                                                    ng-click="editCtrl.delete(type)"></a>
                                         </div>
                                     </div>
                                     <form class="modify-form" ng-show="formOpened"
-                                            gm-checksley-form="update(type)">
+                                            gm-checksley-form="editCtrl.update(type)">
                                         <fieldset class="item name">
                                             <input type="text" name="name" ng-model="type.name"
                                                    data-required="true" data-error-message="Required" />
@@ -585,7 +425,7 @@
                                             <button class="btn-small btn-save" data-icon="z"
                                                     gm-checksley-submit-button></button>
                                             <button class="btn-small btn-cancel" data-icon="p"
-                                                    ng-click="closeForm(type)"></button>
+                                                    ng-click="editCtrl.closeForm(type)"></button>
                                         </fieldset>
                                     </form>
                                 </div>
@@ -594,12 +434,12 @@
                     </div>
                 </div>
             </div>
-            <div class="value-container" ng-controller="PrioritiesAdminController">
+            <div class="value-container" ng-controller="PrioritiesAdminController as ctrl">
                 <div class="header">
                     <p data-icon="o" class="title" i18next="admin.priorities">Priorities</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened"
+                                ng-click="ctrl.openForm()" ng-hide="formOpened"
                                 i18next="admin.add-priority">
                             Add new priority</a>
                     </div>
@@ -612,7 +452,7 @@
                     </div>
                     <div class="flex-body">
                         <form class="flex-row new-form" ng-show="formOpened"
-                                gm-checksley-form="create()">
+                                gm-checksley-form="ctrl.create()">
                             <fieldset class="item name">
                                 <input type="text" name="name" ng-model="priority.name"
                                         data-required="true" data-error-message="Required" />
@@ -628,14 +468,16 @@
                                 <button class="btn-small btn-save" data-icon="z"
                                         gm-checksley-submit-button></button>
                                 <button class="btn-small btn-cancel" data-icon="p"
-                                        ng-click="closeForm()"></button>
+                                        ng-click="ctrl.closeForm()"></button>
                             </fieldset>
                         </form>
                         <div class="priorities-sortables"
-                                gm-sortable=".priorities-sortables" ng-model="priorities">
-                            <div class="flex-row" ng-repeat="priority in priorities"
-                                    gm-sortable-index="{{$index}}">
-                                <div class="row-value" ng-controller="PriorityController">
+                            gm-sortable="priorities"
+                            gm-sortable-selector=".flex-row"
+                            gm-sortable-item-name="priority"
+                            gm-sortable-on-update="ctrl.sortableOnUpdate">
+                            <div class="flex-row" ng-repeat="priority in priorities">
+                                <div class="row-value" ng-controller="ChoiceController as editCtrl">
                                     <div class="data" ng-hide="formOpened">
                                         <div class="item name">{{ priority.name }}</div>
                                         <div class="item color">
@@ -644,13 +486,13 @@
                                         </div>
                                         <div class="options">
                                             <a class="btn-small btn-edit" data-icon="j"
-                                                    ng-click="openForm()"></a>
+                                                    ng-click="editCtrl.openForm()"></a>
                                             <a class="btn-small btn-remove" data-icon="h"
-                                                    ng-click="delete(priority)"></a>
+                                                    ng-click="editCtrl.delete(priority)"></a>
                                         </div>
                                     </div>
                                     <form class="modify-form" ng-show="formOpened"
-                                            gm-checksley-form="update(priority)">
+                                            gm-checksley-form="editCtrl.update(priority)">
                                         <fieldset class="item name">
                                             <input type="text" name="name" ng-model="priority.name"
                                                     data-required="true" data-error-message="Required" />
@@ -666,7 +508,7 @@
                                             <button class="btn-small btn-save" data-icon="z"
                                                     gm-checksley-submit-button></button>
                                             <button class="btn-small btn-cancel" data-icon="p"
-                                                    ng-click="closeForm(priority)"></button>
+                                                    ng-click="editCtrl.closeForm(priority)"></button>
                                         </fieldset>
                                     </form>
                                 </div>
@@ -675,12 +517,12 @@
                     </div>
                 </div>
             </div>
-            <div class="value-container" ng-controller="SeveritiesAdminController">
+            <div class="value-container" ng-controller="SeveritiesAdminController as ctrl">
                 <div class="header">
                     <p data-icon="H" class="title" i18next="admin.severities">Severities</p>
                     <div class="buttons">
                         <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="openForm()" ng-hide="formOpened"
+                                ng-click="ctrl.openForm()" ng-hide="formOpened"
                                 i18next="admin.add-severity">
                             Add new severity</a>
                     </div>
@@ -693,7 +535,7 @@
                     </div>
                     <div class="flex-body">
                         <form class="flex-row new-form" ng-show="formOpened"
-                                gm-checksley-form="create()">
+                                gm-checksley-form="ctrl.create()">
                             <fieldset class="item name">
                                 <input type="text" name="name" ng-model="severity.name"
                                         data-required="true" data-error-message="Required" />
@@ -709,14 +551,16 @@
                                 <button class="btn-small btn-save" data-icon="z"
                                         gm-checksley-submit-button></button>
                                 <button class="btn-small btn-cancel" data-icon="p"
-                                        ng-click="closeForm()"></button>
+                                        ng-click="ctrl.closeForm()"></button>
                             </fieldset>
                         </form>
                         <div class"severities-sortables"
-                                gm-sortable=".severities-sortables" ng-model="severities">
-                            <div class="flex-row"  ng-repeat="severity in severities"
-                                    gm-sortable-index="{{$index}}">
-                                <div class="row-value" ng-controller="SeverityController">
+                            gm-sortable="severities"
+                            gm-sortable-selector=".flex-row"
+                            gm-sortable-item-name="severity"
+                            gm-sortable-on-update="ctrl.sortableOnUpdate">
+                            <div class="flex-row"  ng-repeat="severity in severities">
+                                <div class="row-value" ng-controller="ChoiceController as editCtrl">
                                     <div class="data" ng-hide="formOpened">
                                         <div class="item name">{{ severity.name }}</div>
                                         <div class="item color">
@@ -725,13 +569,13 @@
                                         </div>
                                         <div class="options">
                                             <a class="btn-small btn-edit" data-icon="j"
-                                                    ng-click="openForm()"></a>
+                                                    ng-click="editCtrl.openForm()"></a>
                                             <a class="btn-small btn-remove" data-icon="h"
-                                                    ng-click="delete(severity)"></a>
+                                                    ng-click="editCtrl.delete(severity)"></a>
                                         </div>
                                     </div>
                                     <form class="modify-form" ng-show="formOpened"
-                                            gm-checksley-form="update(severity)">
+                                            gm-checksley-form="editCtrl.update(severity)">
                                         <fieldset class="item name">
                                             <input type="text" name="name" ng-model="severity.name"
                                                     data-required="true" data-error-message="Required" />
@@ -747,7 +591,7 @@
                                             <button class="btn-small btn-save" data-icon="z"
                                                     gm-checksley-submit-button></button>
                                             <button class="btn-small btn-cancel" data-icon="p"
-                                                    ng-click="closeForm(severity)"></button>
+                                                    ng-click="editCtrl.closeForm(severity)"></button>
                                         </fieldset>
                                     </form>
                                 </div>
@@ -758,162 +602,7 @@
             </div>
         </div>
     </div>
-
-    <div class="tab-container" ng-show="isActive('sprints')">
-        <div class="sprint-list-container">
-            <h3 data-icon="q" i18next="admin.created-sprints">Created sprints</h3>
-            <ul class="sprint-list">
-                <li class="sprint" ng-repeat="ml in project.list_of_milestones">
-                    <a href="" data-icon="h" title="Delete sprint" i18next="title:admin.delete-sprint" ng-click="deleteMilestone(ml)"></a>
-                    {{ ml.name }}
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="tab-container" ng-show="isActive('roles')">
-        <form class="form-horizontal" gm-checksley-form="submitRoles()">
-            <div class="roles-list-container">
-                <div class="header">
-                    <p data-icon="O" class="title" i18next="admin.roles">Roles</p>
-                    <div class="buttons">
-                        <a class="button btn-value btn-add" data-icon="A"
-                                ng-click="showNewRole = true" ng-hide="showNewRole"
-                                i18next="admin.add-new-role">Add new role</a>
-                    </div>
-                </div>
-                <div class="new-role" ng-show="showNewRole">
-                    <label for="new_role_name" i18next="admin.name">Name</label>
-                    <input type="text" id="new_role_name" name="newRole.name"
-                           ng-model="newRole.name" />
-                    <input type="checkbox" id="new_role_is_computable" name="new_role_is_computable"
-                           ng-model="newRole.computable" />
-                    <label for="new_role_is_computable" i18next="admin.do-estimations">Do estimations</label>
-                    <div class="permissions">
-                        <div ng-repeat="(key, permissionGroup) in constants.permissionsGroups">
-                            <p ng-repeat="permission in permissionGroup">
-                                <input type="checkbox"
-                                    ng-model="newRolePermissions[permission.id]"
-                                    id="new_role_{{permission.id}}_permission">
-                                <label for="new_role_{{permission.id}}_permission">{{ permission.name }}</label>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="roles-list" gm-sortable=".roles-list" ng-model='constants.rolesList'>
-                    <div ng-repeat="role in constants.rolesList|orderBy:'order'" class="roles-list">
-                        <a href="" data-icon="h" title="Delete role" i18next="title:admin.delete-role" ng-click="deleteRole(ml)"></a>
-                        {{ role.name }}
-                        <input type="checkbox" id="{{role.id}}_is_computable" name="role_computable"
-                               ng-model="role.computable" />
-                        <label for="{{role.id}}_is_computable" i18next="admin.do-estimations">Do estimations</label>
-                        <a ng-hide="showPermissions[role.id]" ng-click="showPermissions[role.id] = true" i18next="admin.show-permissions">
-                            Show permissions
-                        </a>
-                        <a ng-show="showPermissions[role.id]" ng-click="showPermissions[role.id] = false" i18next="admin.hide-permissions">
-                            Hide permissions
-                        </a>
-                        <div class="permissions" ng-show="showPermissions[role.id]">
-                            <div ng-repeat="(key, permissionGroup) in constants.permissionsGroups">
-                                <p ng-repeat="permission in permissionGroup">
-                                    <input type="checkbox"
-                                        ng-model="rolePermissions[role.id][permission.id]"
-                                        id="{{role.id}}_{{permission.id}}_permission">
-                                    <label for="{{role.id}}_{{permission.id}}_permission">{{ permission.name }}</label>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <fieldset class="project-submit">
-                <button type="submit" class="button button-edit" gm-checksley-submit-button i18next="admin.save">Save</button>
-            </fieldset>
-        </form>
-    </div>
-
-    <div class="tab-container" ng-show="isActive('memberships')">
-        <div class="project-members">
-            <div class="project-members-options">
-                <a href="" class="add-member" data-icon="A" title="Add member"
-                    ng-click="toggleForm()" i18next="title:admin.add-member,admin.add-member">Add member</a>
-            </div>
-            <div class="invitation-form">
-                <div class="add-member-form" ng-show="formOpened">
-                    <h4 i18next="admin.add-new-member">Add new member</h4>
-                    <form gm-checksley-form="submitMembership()">
-                        <fieldset>
-                            <label class="control-label" for="role" i18next="admin.role">Role</label>
-                            <select id="role" name="role" ng-model="membership.role" data-required="true"
-                                    ng-options="r.id as r.name for r in constants.rolesList|orderBy:'order'">
-                            </select>
-                        </fieldset>
-                        <fieldset class="project-name">
-                            <label class="control-label" for="email" i18next="admin.email">Email address</label>
-                            <input type="text" id="email" ng-model="membership.email"
-                                data-required="true" />
-                        </fieldset>
-                        <fieldset>
-                            <button type="submit" class="button button-edit" gm-checksley-submit-button i18next="admin.add-member">Add member</button>
-                            <button type="submit" class="button button-cancel" ng-click="closeForm()" i18next="admin.cancel">Cancel</button>
-                        </fieldset>
-                    </form>
-                </div>
-            </div>
-            <div class="project-members-list" >
-                <table class="membership-list">
-                    <thead>
-                        <tr>
-                            <th class="user" i18next="admin.full-name">Full name</td>
-                            <th class="email" i18next="admin.email">Email</td>
-                            <th class="role" i18next="admin.role">Role</th>
-                            <th class="status" i18next="admin.status">Status</td>
-                            <th class="options"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="mbr in project.memberships">
-                            <td class="user"><span class="user" gm-colorize-user="constants.users[mbr.user]">{{ memberName(mbr) }}</span></td>
-                            <td class="email"><span class="email">{{ memberEmail(mbr) }}</span></td>
-                            <td class="role"><span class="role">[<a href="" gm-popover="updateMemberRole(mbr, selectedId)"
-                                        data-tmpl="#role-popover">{{ mbr.role_name }}</a>]</span></td>
-
-                            <td class="status"><span class="status">{{ memberStatus(mbr) }}</span></td>
-                            <td class="options">
-                                <a href="" data-icon="h"  title="Delete Member" ng-click="deleteMember(mbr)" i18next="title:admin.delete-member"></a>
-                                <a ng-hide="mbr.user" data-icon="l"
-                                    gm-popover
-                                    data-tmpl="#invitation-link-popover"
-                                    data-placement="left"
-                                    i18next="title:admin.invitation-link"></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <!-- <a class="button button-delete" ng-click="deleteProject()">Delete project</a>-->
 </main>
-
-<script type="text/template" id="role-popover">
-    <div class="role-popover">
-        <p class="title" i18next="admin.select-role">Select role:</p>
-        <ul>
-            <li ng-repeat="obj in constants.rolesList|orderBy:'order'">
-                <a href="" data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
-            </li>
-        </ul>
-    </div>
-</script>
-
-<script type="text/template" id="invitation-link-popover">
-    <div class="invitation-link-popover">
-        <p class="link">{{ getAbsoluteUrl(urls.invitationUrl(mbr.token, false)) }}</p>
-    </div>
-</script>
 
 <script type="text/template" id="status-color-picker-popover">
     <div class="colorSelector" coffee-color-picker="status.color = $color"

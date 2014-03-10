@@ -87,15 +87,6 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
            item.__hidden = false for item in $scope.unassignedUs
 
     resortUserStories = ->
-        # Save only us that have milestone assigned
-        saveChangedMilestone = ->
-            ussWithMilestones = _.filter($scope.unassignedUs, "milestone")
-            pchain = _.map ussWithMilestones, (us) ->
-                us.milestone = null
-                return us.save()
-
-            return $q.all(pchain)
-
         saveChangedOrder = ->
             for item, index in $scope.unassignedUs
                 item.order = index
@@ -114,8 +105,7 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
 
             return promise
 
-        $q.when(saveChangedMilestone())
-          .then(saveChangedOrder)
+        $q.when(saveChangedOrder())
           .then(calculateStats)
 
     loadUserStories = ->
@@ -266,13 +256,20 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
 
         filterUsBySelectedTags()
 
-    # Signal Handlign
-    $scope.$on("sortable:changed", resortUserStories)
-    $scope.$on("sortable:changed", ->
+    $scope.sortableOnAdd = (us, index) ->
+        us.milestone = null
+        us.save().then ->
+            $scope.unassignedUs.splice(index, 0, us)
+            resortUserStories()
+
+    $scope.sortableOnUpdate = (uss) ->
+        $scope.unassignedUs = uss
+        resortUserStories()
+
+    $scope.sortableOnRemove = (us) ->
+        _.remove($scope.unassignedUs, us)
         selected = $scope.selectedUserStories = getSelectedUserStories()
         $scope.selectedStoryPoints = calculateStoryPoints(selected)
-    )
-
 
 BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next) ->
     $scope.formOpened = false
@@ -535,7 +532,19 @@ BacklogMilestoneController = ($scope, $q, rs, $gmFlash, $i18next) ->
         $scope.ml.refresh()
 
     calculateStats()
-    $scope.$on("sortable:changed", normalizeMilestones)
+
+    $scope.sortableOnAdd = (us, index) ->
+        us.milestone = $scope.ml.id
+        us.save().then ->
+            $scope.ml.user_stories.splice(index, 0, us)
+            normalizeMilestones()
+
+    $scope.sortableOnUpdate = (uss) ->
+        $scope.ml.user_stories = uss
+        normalizeMilestones()
+
+    $scope.sortableOnRemove = (us) ->
+        _.remove($scope.ml.user_stories, us)
 
     return
 

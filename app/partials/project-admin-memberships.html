@@ -1,0 +1,83 @@
+<header class="header-container" ng-include="'/partials/header.html'"></header>
+
+<main class="project-admin-view">
+    <ul class="tabs clearfix" ng-include="'/partials/includes/project-admin-header.html'"></ul>
+    <div class="tab-container">
+        <div class="project-members">
+            <div class="project-members-options">
+                <a href="" class="add-member" data-icon="A" title="Add member"
+                    ng-click="ctrl.toggleForm()" i18next="title:admin.add-member,admin.add-member">Add member</a>
+            </div>
+            <div class="invitation-form">
+                <div class="add-member-form" ng-show="formOpened">
+                    <h4 i18next="admin.add-new-member">Add new member</h4>
+                    <form gm-checksley-form="ctrl.submitMembership()">
+                        <fieldset>
+                            <label class="control-label" for="role" i18next="admin.role">Role</label>
+                            <select id="role" name="role" ng-model="membership.role" data-required="true"
+                                    ng-options="r.id as r.name for r in constants.rolesList|orderBy:'order'">
+                            </select>
+                        </fieldset>
+                        <fieldset class="project-name">
+                            <label class="control-label" for="email" i18next="admin.email">Email address</label>
+                            <input type="text" id="email" ng-model="membership.email"
+                                data-required="true" />
+                        </fieldset>
+                        <fieldset>
+                            <button type="submit" class="button button-edit" gm-checksley-submit-button i18next="admin.add-member">Add member</button>
+                            <button type="submit" class="button button-cancel" ng-click="closeForm()" i18next="admin.cancel">Cancel</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="project-members-list" >
+                <table class="membership-list">
+                    <thead>
+                        <tr>
+                            <th class="user" i18next="admin.full-name">Full name</td>
+                            <th class="email" i18next="admin.email">Email</td>
+                            <th class="role" i18next="admin.role">Role</th>
+                            <th class="status" i18next="admin.status">Status</td>
+                            <th class="options"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="mbr in project.memberships">
+                            <td class="user"><span class="user" gm-colorize-user="constants.users[mbr.user]">{{ ctrl.memberName(mbr) }}</span></td>
+                            <td class="email"><span class="email">{{ ctrl.memberEmail(mbr) }}</span></td>
+                            <td class="role"><span class="role">[<a href="" gm-popover="ctrl.updateMemberRole(mbr, selectedId)"
+                                        data-tmpl="#role-popover">{{ mbr.role_name }}</a>]</span></td>
+
+                            <td class="status"><span class="status">{{ ctrl.memberStatus(mbr) }}</span></td>
+                            <td class="options">
+                                <a href="" data-icon="h"  title="Delete Member" ng-click="ctrl.deleteMember(mbr)" i18next="title:admin.delete-member"></a>
+                                <a ng-hide="mbr.user" data-icon="l"
+                                    gm-popover
+                                    data-tmpl="#invitation-link-popover"
+                                    data-placement="left"
+                                    i18next="title:admin.invitation-link"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script type="text/template" id="role-popover">
+    <div class="role-popover">
+        <p class="title" i18next="admin.select-role">Select role:</p>
+        <ul>
+            <li ng-repeat="obj in constants.rolesList|orderBy:'order'">
+                <a href="" data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script type="text/template" id="invitation-link-popover">
+    <div class="invitation-link-popover">
+        <p class="link">{{ ctrl.getAbsoluteUrl(urls.invitationUrl(mbr.token, false)) }}</p>
+    </div>
+</script>
