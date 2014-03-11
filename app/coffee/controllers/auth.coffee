@@ -82,6 +82,7 @@ class RecoveryController extends TaigaBaseController
             @.location.url("/login")
             @.scope.$apply()
 
+
 ChangePasswordController = ($scope, $rootScope, $location, $routeParams, rs, $i18next) ->
     $rootScope.pageTitle = $i18next.t('login.password-change-title')
     $rootScope.pageSection = 'login'
@@ -177,6 +178,8 @@ PublicRegisterController = ($scope, $rootScope, $location, rs, $data, $gmAuth, $
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
+            $scope.error = true
+            $scope.errorMessage = data._error_message or data._error_type
 
     return
 
@@ -198,6 +201,8 @@ InvitationRegisterController = ($scope, $params, $rootScope, $location, rs, $dat
 
         promise.then null, (data) ->
             $scope.checksleyErrors = data
+            $scope.error = true
+            $scope.errorMessage = data._error_message or data._error_type
 
     return
 

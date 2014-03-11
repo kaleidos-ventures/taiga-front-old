@@ -77,7 +77,7 @@
                         <span i18next="register.loading">Our Oompa Loompas are registering you, please wait...</span>
                     </p>
                     <p class="error" ng-show="error" i18next="register.error">
-                        Your username or password are incorrects.
+                        {{ errorMessage }}
                     </p>
                 </div>
             </form>
