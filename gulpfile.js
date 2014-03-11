@@ -37,6 +37,7 @@ var externalSources = [
     "app/js/emoticons-define.js",
     "app/components/select2/select2.js",
     "app/components/i18next/i18next.js",
+    "app/js/jquery.color.js",
     "app/js/coffeeColorPicker.js",
     "app/js/coffeeColorPicker.angular.js",
     "app/components/google-diff-match-patch-js/diff_match_patch_uncompressed.js",
