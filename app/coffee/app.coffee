@@ -211,6 +211,7 @@ modules = [
     "gmOverlay",
     "i18next",
     "favico",
+    "ui.select2"
 ]
 
 

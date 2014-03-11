@@ -442,6 +442,7 @@ GmSelect2Tags = ->
             element.select2({tags: tags})
             colorizeTags()
 
+
 GmSelectFix = ->
     require: 'ngModel',
     link: (scope, element, attrs, ngModel) ->
@@ -449,6 +450,7 @@ GmSelectFix = ->
             if (value == null)
                 value = ''
             return value
+
 
 module = angular.module('taiga.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])

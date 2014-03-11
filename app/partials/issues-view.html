@@ -203,6 +203,17 @@
                         <div id="description-preview" class="preview"></div>
                     </fieldset>
 
+                    <fieldset class="issue-watchers">
+                        <label i18next="issue.watchers-label">Watchers</label>
+                        <select name="watchers" multiple
+                                ng-model="form.watchers" ui-select2="watcherSelectOptions"
+                                data-placeholder="{{ 'issue.watchers-placeholder'|i18next }}">
+                            <option ng-repeat="m in project.active_memberships" value="{{ m.user }}">
+                                {{ m.full_name }}
+                            </option>
+                        </select>
+                    </fieldset>
+
                     <fieldset class="issue-comment">
                         <label for="inputEmail" i18next="issue.comment-label">Comment</label>
                         <textarea name="comment" ng-model="form.comment" gm-markitup preview-id="comment-preview"></textarea>

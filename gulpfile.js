@@ -36,6 +36,7 @@ var externalSources = [
     "app/js/curvedLines.js",
     "app/js/emoticons-define.js",
     "app/components/select2/select2.js",
+    "app/components/angular-ui-select2/src/select2.js",
     "app/components/i18next/i18next.js",
     "app/js/jquery.color.js",
     "app/js/coffeeColorPicker.js",
