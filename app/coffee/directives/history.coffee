@@ -149,13 +149,11 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
             return null
 
         makeHistoryItem = (item, type) ->
-            changes = Lazy(fields[type])
-                        .map((name) -> {name: name, field: item.changed_fields[name]})
-                        .reject((x) -> _.isEmpty(x["field"]))
-                        .map((x) -> makeChangeItem(x["name"], x["field"], type))
-                        .reject((x) -> x is null)
-
-            changesArray = changes.toArray()
+            changes = _(fields[type]).map((name) -> {name: name, field: item.changed_fields[name]})
+                                     .reject((x) -> _.isEmpty(x["field"]))
+                                     .map((x) -> makeChangeItem(x["name"], x["field"], type))
+                                     .reject((x) -> x is null)
+            changesArray = changes.value()
 
             if item.comment.length == 0 and changesArray.length == 0
                 return null
@@ -176,9 +174,10 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
             return historyItem
 
         makeHistoryItems = (rawItems, type)  ->
-            return Lazy(rawItems)
-                        .map((x) -> makeHistoryItem(x, type))
-                        .reject((x) -> _.isNull(x))
+            return _(rawItems).map((x) -> makeHistoryItem(x, type))
+                              .reject((x) -> _.isNull(x))
+                              .value()
+
 
         baseTemplate = _.str.trim(angular.element("#change-template").html())
 
@@ -193,7 +192,7 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
             cachedScope.$destroy() if cachedScope != null
 
             # Make new list
-            historyItems = makeHistoryItems(items.models, type).toArray()
+            historyItems = makeHistoryItems(items.models, type)
 
             if historyItems.length == 0
                 element.hide()

@@ -18,7 +18,6 @@ var externalSources = [
     "app/components/markitup/markitup/jquery.markitup.js",
     "app/components/marked/lib/marked.js",
     "app/components/lodash/dist/lodash.js",
-    "app/components/lazy.js/lazy.js",
     "app/components/emoticons/lib/emoticons.js",
     "app/components/underscore.string/lib/underscore.string.js",
     "app/components/angular/angular.js",
