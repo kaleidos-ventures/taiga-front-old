@@ -52,7 +52,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         {templateUrl: 'partials/backlog.html', controller: "BacklogController"})
 
     $routeProvider.when('/project/:pslug/kanban',
-        {templateUrl: 'partials/kanban.html', controller: "KanbanController"})
+        {templateUrl: 'partials/kanban.html', controller: "KanbanController as ctrl"})
 
     $routeProvider.when('/project/:pslug/user-story/:ref',
         {templateUrl: 'partials/user-story-view.html', controller: "UserStoryViewController"})

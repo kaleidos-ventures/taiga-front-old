@@ -28,7 +28,7 @@ ModalServiceFactory = ($rootScope, $q, $log) ->
 
         ctrl = dom.controller()
         scp = dom.scope()
-        ctrl.initialize(defered, ctx)
+        ctrl.start(defered, ctx)
         return defered.promise
 
     service.close = (name) ->

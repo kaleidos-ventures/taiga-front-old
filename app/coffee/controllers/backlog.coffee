@@ -306,7 +306,7 @@ BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash,
     closeModal = ->
         $scope.formOpened = false
 
-    @.initialize = (dfr, ctx) ->
+    @.start = (dfr, ctx) ->
         $scope.defered = dfr
         $scope.context = ctx
         openModal()
@@ -365,7 +365,7 @@ BacklogBulkUserStoriesModalController = ($scope, $rootScope, $gmOverlay, rs, $gm
     closeModal = ->
         $scope.bulkFormOpened = false
 
-    @.initialize = (dfr, ctx) ->
+    @.start = (dfr, ctx) ->
         $scope.defered = dfr
         $scope.context = ctx
         openModal()

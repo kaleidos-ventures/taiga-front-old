@@ -11,7 +11,7 @@
                                         style="border-right-color: {{ status.color }}">
                                     <div class="badge" style="background-color: {{ status.color }};">
                                         {{ status.name }}
-                                        <a class="plus" ng-click="openCreateUsForm(status.id)" data-icon="A"></a>
+                                        <a class="plus" ng-click="ctrl.openCreateUsForm(status.id)" data-icon="A"></a>
                                     </div>
                                 </td>
                             </tr>
@@ -22,8 +22,9 @@
                                         ng-repeat="status in constants.usStatusesList|orderBy:'order'">
 
                                     <div class="tasks" gm-sortable="userstories" gm-sortable-selector=".task-box"
-                                        gm-sortable-item-name="us" gm-sortable-on-add="sortableOnAdd"
-                                        gm-sortable-on-update="sortableOnUpdate" gm-sortable-on-remove="sortableOnRemove">
+                                        gm-sortable-item-name="us" gm-sortable-on-add="ctrl.sortableOnAdd"
+                                        gm-sortable-on-update="ctrl.sortableOnUpdate"
+                                        gm-sortable-on-remove="ctrl.sortableOnRemove">
                                         <div class="task-box" ng-repeat="us in uss[status.id]">
                                             <div ng-include="'/partials/kanban-us.html'"></div>
                                         </div>
@@ -42,10 +43,10 @@
 <div id="kanban-us-modalform"
         gm-modal="us-form"
         ng-show="formOpened"
-        ng-controller="KanbanUsModalController">
+        ng-controller="KanbanUsModalController as modalCtrl">
 
     <div class="new-us-modal modal">
-        <form class="inline-form us-form" gm-checksley-form="submit()">
+        <form class="inline-form us-form" gm-checksley-form="modalCtrl.submit()">
             <div class="modal-header" ng-switch on="context.type">
                 <h3 ng-switch-when="create" i18next="kanban.create-user-story">Create user story</h3>
                 <h3 ng-switch-when="edit" i18next="kanban.modify-user-story">Modify user story</h3>
@@ -133,7 +134,7 @@
                 <div gm-spinner class="spinner-container"></div>
                 <input type="submit" class="button button-success"
                        gm-checksley-submit-button value="Save" i18next="value:kanban.save" />
-                <a href="" class="button button-cancel" ng-click="close()" i18next="kanban.close">Close</a>
+                <a href="" class="button button-cancel" ng-click="modalCtrl.close()" i18next="kanban.close">Close</a>
             </div>
         </form>
     </div>

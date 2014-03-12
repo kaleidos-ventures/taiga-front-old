@@ -12,36 +12,44 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-KanbanController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $model, $i18next, $favico) ->
-    $favico.reset()
-    # Global Scope Variables
-    $rootScope.pageTitle = $i18next.t('common.kanban')
-    $rootScope.pageSection = 'kanban'
-    $rootScope.pageBreadcrumb = [
-        ["", ""],
-        [$i18next.t('common.kanban'), null]
-    ]
+class KanbanController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', '$routeParams', '$q', 'resource',
+               '$data','$modal', "$model", "$i18next", "$favico"]
 
-    formatUserStories = ->
-        $scope.uss = {}
-        for status in $scope.constants.usStatusesList
-            $scope.uss[status.id] = []
+    constructor: (@scope, @rootScope, @routeParams, @q, @rs, @data, @modal, @model, @i18next, @favico) ->
+        super(scope)
 
-        for us in $scope.userstories
-            $scope.uss[us.status].push(us)
+    initialize: ->
+        @favico.reset()
+        # Global Scope Variables
+        @rootScope.pageTitle = @i18next.t('common.kanban')
+        @rootScope.pageSection = 'kanban'
+        @rootScope.pageBreadcrumb = [
+            ["", ""],
+            [@i18next.t('common.kanban'), null]
+        ]
+
+        @rs.resolve(pslug: @routeParams.pslug).then (data) =>
+            @rootScope.projectSlug = @routeParams.pslug
+            @rootScope.projectId = data.project
+
+            @data.loadProject(@scope).then =>
+                @data.loadUsersAndRoles(@scope).then =>
+                    @data.loadUserStories(@scope).then =>
+                        @formatUserStories()
+
+
+    formatUserStories: ->
+        @scope.uss = {}
+        for status in @scope.constants.usStatusesList
+            @scope.uss[status.id] = []
+
+        for us in @scope.userstories
+            @scope.uss[us.status].push(us)
 
         return
 
-    rs.resolve(pslug: $routeParams.pslug).then (data) ->
-        $rootScope.projectSlug = $routeParams.pslug
-        $rootScope.projectId = data.project
-
-        $data.loadProject($scope).then ->
-            $data.loadUsersAndRoles($scope).then ->
-                $data.loadUserStories($scope).then ->
-                    formatUserStories()
-
-    $scope.saveUsPoints = (us, role, ref) ->
+    saveUsPoints: (us, role, ref) ->
         points = _.clone(us.points)
         points[role.id] = ref
 
@@ -52,54 +60,54 @@ KanbanController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $mo
         promise.then ->
             us._moving = false
             calculateStats()
-            $scope.$broadcast("points:changed")
+            @scope.$broadcast("points:changed")
 
         promise.then null, (data, status) ->
             us._moving = false
             us.revert()
 
-    $scope.saveUsStatus = (us, id) ->
+    saveUsStatus: (us, id) ->
         us.status = id
         us._moving = true
         us.save().then (data) ->
             data._moving = false
 
-    initializeUsForm = (us, status) ->
+    initializeUsForm: (us, status) ->
         if us?
             return us
 
         result = {}
-        result['project'] = $scope.projectId
-        result['status'] = status or $scope.project.default_us_status
+        result['project'] = @scope.projectId
+        result['status'] = status or @scope.project.default_us_status
         points = {}
-        for role in $scope.constants.computableRolesList
-            points[role.id] = $scope.project.default_points
+        for role in @scope.constants.computableRolesList
+            points[role.id] = @scope.project.default_points
         result['points'] = points
         return result
 
-    $scope.openCreateUsForm = (statusId) ->
-        promise = $modal.open("us-form", {'us': initializeUsForm(null, statusId), 'type': 'create'})
-        promise.then (us) ->
-            newUs = $model.make_model("userstories", us)
-            $scope.userstories.push(newUs)
-            formatUserStories()
+    openCreateUsForm: (statusId) ->
+        promise = @modal.open("us-form", {'us': @initializeUsForm(null, statusId), 'type': 'create'})
+        promise.then (us) =>
+            newUs = @model.make_model("userstories", us)
+            @scope.userstories.push(newUs)
+            @formatUserStories()
 
-    $scope.openEditUsForm = (us) ->
-        promise = $modal.open("us-form", {'us': us, 'type': 'edit'})
-        promise.then ->
-            formatUserStories()
+    openEditUsForm: (us) ->
+        promise = @modal.open("us-form", {'us': us, 'type': 'edit'})
+        promise.then =>
+            @formatUserStories()
 
-    resortUserStories = (statusId)->
-        for item, index in $scope.uss[statusId]
+    resortUserStories: (statusId)->
+        for item, index in @scope.uss[statusId]
             item.order = index
 
-        modifiedUs = _.filter($scope.uss[statusId], (x) -> x.isModified())
-        bulkData = _.map($scope.uss[statusId], (value, index) -> [value.id, index])
+        modifiedUs = _.filter(@scope.uss[statusId], (x) -> x.isModified())
+        bulkData = _.map(@scope.uss[statusId], (value, index) -> [value.id, index])
 
         for item in modifiedUs
             item._moving = true
 
-        promise = rs.updateBulkUserStoriesOrder($scope.projectId, bulkData)
+        promise = @rs.updateBulkUserStoriesOrder(@scope.projectId, bulkData)
         promise = promise.then ->
             for us in modifiedUs
                 us.markSaved()
@@ -107,104 +115,112 @@ KanbanController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $mo
 
         return promise
 
-    $scope.sortableOnAdd = (us, index, sortableScope) ->
+    sortableOnAdd: (us, index, sortableScope) =>
         us.status = sortableScope.status.id
 
         us._moving = true
-        us.save().then ->
-            if $scope.project.is_backlog_activated
-                $scope.uss[sortableScope.status.id].splice(us.order, 0, us)
+        us.save().then =>
+            if @scope.project.is_backlog_activated
+                @scope.uss[sortableScope.status.id].splice(us.order, 0, us)
             else
-                $scope.uss[sortableScope.status.id].splice(index, 0, us)
-                resortUserStories(sortableScope.status.id)
+                @scope.uss[sortableScope.status.id].splice(index, 0, us)
+                @resortUserStories(sortableScope.status.id)
             us._moving = false
 
-    $scope.sortableOnUpdate = (uss, sortableScope, us) ->
-        if $scope.project.is_backlog_activated
-            $data.loadUserStories($scope).then ->
-                formatUserStories()
+    sortableOnUpdate: (uss, sortableScope, us) =>
+        if @scope.project.is_backlog_activated
+            @data.loadUserStories(@scope).then =>
+                @formatUserStories()
         else
-            $scope.uss[sortableScope.status.id] = uss
-            resortUserStories(sortableScope.status.id)
+            @scope.uss[sortableScope.status.id] = uss
+            @resortUserStories(sortableScope.status.id)
 
-    $scope.sortableOnRemove = (us, sortableScope) ->
-        _.remove($scope.uss[sortableScope.status.id], us)
-    return
+    sortableOnRemove: (us, sortableScope) =>
+        _.remove(@scope.uss[sortableScope.status.id], us)
 
 
-KanbanUsModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs, $i18next) ->
-    $scope.type = "create"
-    $scope.formOpened = false
+class KanbanUsModalController extends ModalBaseController
+    @.$inject = ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', "$i18next"]
 
-    # Load data
-    $scope.defered = null
-    $scope.context = null
+    constructor: (@scope, @rootScope, @gmOverlay, @gmFlash, @rs, @i18next) ->
+        super(scope)
 
-    loadProjectTags = ->
-        rs.getProjectTags($scope.projectId).then (data) ->
-            $scope.projectTags = data
+    initialize: ->
+        @scope.type = "create"
+        @scope.formOpened = false
 
-    openModal = ->
-        loadProjectTags()
-        $scope.form = $scope.context.us
-        $scope.formOpened = true
+        # Load data
+        @scope.defered = null
+        @scope.context = null
 
-        $scope.$broadcast("checksley:reset")
-        $scope.$broadcast("wiki:clean-previews")
+        @scope.$on "select2:changed", (ctx, value) =>
+            @scope.form.tags = value
 
-        $scope.overlay = $gmOverlay()
-        $scope.overlay.open().then ->
-            $scope.formOpened = false
+    loadProjectTags: ->
+        @rs.getProjectTags(@scope.projectId).then (data) =>
+            @scope.projectTags = data
 
-    closeModal = ->
-        $scope.formOpened = false
+    openModal: ->
+        @loadProjectTags()
+        @scope.form = @scope.context.us
+        @scope.formOpened = true
 
-    @.initialize = (dfr, ctx) ->
-        $scope.defered = dfr
-        $scope.context = ctx
-        openModal()
+        @scope.$broadcast("checksley:reset")
+        @scope.$broadcast("wiki:clean-previews")
 
-    @.delete = ->
-        closeModal()
-        $scope.form = form
-        $scope.formOpened = true
+        @scope.overlay = @gmOverlay()
+        @scope.overlay.open().then =>
+            @scope.formOpened = false
 
-    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
-        if $scope.form.id?
-            promise = $scope.form.save(false)
+    closeModal: ->
+        @scope.formOpened = false
+
+    start: (dfr, ctx) ->
+        @scope.defered = dfr
+        @scope.context = ctx
+        @openModal()
+
+    delete: ->
+        @closeModal()
+        @scope.form = form
+        @scope.formOpened = true
+
+    submit: ->
+        if @scope.form.id?
+            promise = @scope.form.save(false)
         else
-            promise = rs.createUs($scope.form)
-        $scope.$emit("spinner:start")
+            promise = @rs.createUs(@scope.form)
+        @scope.$emit("spinner:start")
 
-        promise.then (data) ->
-            $scope.$emit("spinner:stop")
-            closeModal()
-            $scope.overlay.close()
-            $scope.form.id = data.id
-            $scope.form.ref = data.ref
-            $scope.defered.resolve($scope.form)
-            $gmFlash.info($i18next.t('kanban.user-story-saved'))
+        promise.then (data) =>
+            @scope.$emit("spinner:stop")
+            @closeModal()
+            @scope.overlay.close()
+            @scope.form.id = data.id
+            @scope.form.ref = data.ref
+            @scope.defered.resolve(@scope.form)
+            @gmFlash.info(@i18next.t('kanban.user-story-saved'))
 
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
 
-    $scope.close = ->
-        $scope.formOpened = false
-        $scope.overlay.close()
+    close: ->
+        @scope.formOpened = false
+        @scope.overlay.close()
 
-        if $scope.form.id?
-            $scope.form.revert()
+        if @scope.form.id?
+            @scope.form.revert()
         else
-            $scope.form = {}
-
-    $scope.$on "select2:changed", (ctx, value) ->
-        $scope.form.tags = value
-
-    return
+            @scope.form = {}
 
 
-KanbanUsController = ($scope, $rootScope, $q, $location) ->
-    $scope.updateUsAssignation = (us, id) ->
+class KanbanUsController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', '$q', "$location"]
+
+    constructor: (@scope, @rootScope, @q, @location) ->
+        super(scope)
+
+    updateUsAssignation: (us, id) ->
         us.assigned_to = id || null
         us._moving = true
         us.save().then((us) ->
@@ -214,15 +230,11 @@ KanbanUsController = ($scope, $rootScope, $q, $location) ->
             us._moving = false
         )
 
-    $scope.openUs = (projectSlug, usRef)->
-        $location.url("/project/#{projectSlug}/user-story/#{usRef}")
-
-    return
+    openUs: (projectSlug, usRef) ->
+        @location.url("/project/#{projectSlug}/user-story/#{usRef}")
 
 
 module = angular.module("taiga.controllers.kanban", [])
-module.controller("KanbanController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data',
-                                       '$modal', "$model", "$i18next", "$favico",  KanbanController])
-module.controller("KanbanUsController", ['$scope', '$rootScope', '$q', "$location", KanbanUsController])
-module.controller("KanbanUsModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource',
-                                              "$i18next", KanbanUsModalController])
+module.controller("KanbanController", KanbanController)
+module.controller("KanbanUsController", KanbanUsController)
+module.controller("KanbanUsModalController", KanbanUsModalController)

@@ -204,7 +204,7 @@ TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs, $i
     closeModal = ->
         $scope.formOpened = false
 
-    @.initialize = (dfr, ctx) ->
+    @.start = (dfr, ctx) ->
         $scope.defered = dfr
         $scope.context = ctx
         openModal()
@@ -265,7 +265,7 @@ TaskboardBulkTasksModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlas
     closeModal = ->
         $scope.bulkTasksFormOpened = false
 
-    @.initialize = (dfr, ctx) ->
+    @.start = (dfr, ctx) ->
         $scope.defered = dfr
         $scope.context = ctx
         openModal()

@@ -465,7 +465,7 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next,
     closeModal = ->
         $scope.formOpened = false
 
-    @.initialize = (dfr, ctx) ->
+    @.start = (dfr, ctx) ->
         $scope.defered = dfr
         $scope.context = ctx
         openModal()

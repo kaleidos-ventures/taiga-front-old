@@ -1,5 +1,5 @@
-<div class="task-box-content clearfix" ng-controller="KanbanUsController"
-     ng-dblclick="openUs(projectSlug, us.ref)" ng-class="{blocked: us.is_blocked}">
+<div class="task-box-content clearfix" ng-controller="KanbanUsController as usCtrl"
+     ng-dblclick="usCtrl.openUs(projectSlug, us.ref)" ng-class="{blocked: us.is_blocked}">
     <div class="veil" ng-show="us._moving">
         <span ng-class="{spinner: us._moving}" data-icon="x"></span>
     </div>
@@ -7,13 +7,13 @@
     <div class="title">#{{ us.ref }} {{ us.subject }}</div>
 
     <div class="assign-to">
-        <a href="" gm-popover="updateUsAssignation(us, selectedId)"
+        <a href="" gm-popover="usCtrl.updateUsAssignation(us, selectedId)"
             data-tmpl="#developers-popover"
             gm-colorize-user="constants.users[us.assigned_to]">
                 {{ constants.users[us.assigned_to].full_name || t("kanban.unassigned") }}</a>
     </div>
     <div class="us-options clearfix">
-        <a data-icon="j" ng-click="openEditUsForm(us)" class="edit-task"></a>
+        <a data-icon="j" ng-click="ctrl.openEditUsForm(us)" class="edit-task"></a>
         <a data-icon="l" href="{{ urls.userStoryUrl(projectSlug, us.ref, false, {status: status.id}) }}" class="view-task"></a>
         <a data-icon="o" class="icon blocked" ng-show="us.is_blocked"
               gm-popover data-tmpl="#us-blocked-popover"></a>
