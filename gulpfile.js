@@ -13,7 +13,6 @@ var template = require("gulp-template");
 
 var externalSources = [
     "app/components/jquery/dist/jquery.js",
-    //"app/components/jquery-ui/ui/jquery-ui.js",
     "app/components/Sortable/Sortable.js",
     "app/components/markitup/markitup/jquery.markitup.js",
     "app/components/marked/lib/marked.js",
@@ -42,7 +41,6 @@ var externalSources = [
     "app/js/coffeeColorPicker.js",
     "app/js/coffeeColorPicker.angular.js",
     "app/components/google-diff-match-patch-js/diff_match_patch_uncompressed.js",
-    "app/components/jqueryui-touch-punch/jquery.ui.touch-punch.js",
     "app/js/highlight.pack.js",
     "app/components/jquery-textcomplete/jquery.textcomplete.js",
     "app/components/isMobile/isMobile.js",
