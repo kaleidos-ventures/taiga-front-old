@@ -134,10 +134,13 @@
                             <label i18next="user-story.assigned-to-label">Assigned to</label>
 
                             <select class="assigned-to" name="assigned_to"
-                                    ng-model="form.assigned_to" data-type="number"
-                                    data-error-message="Required"
-                                    ng-options="c.user as c.full_name for c in project.active_memberships">
+                                    ng-model="form.assigned_to"
+                                    ui-select2="assignedToSelectOptions"
+                                    data-error-message="Required">
                                 <option value="" i18next="user-story.unassigned">Unassigned</option>
+                                <option ng-repeat="m in project.active_memberships" value="{{ m.user }}">
+                                    {{ m.full_name }}
+                                </option>
                             </select>
                         </fieldset>
 

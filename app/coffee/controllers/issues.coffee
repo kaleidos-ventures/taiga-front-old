@@ -383,8 +383,8 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         $scope.form.tags = value
 
     watcherSelectOptionsShowMember = (option, container) ->
-        member = _.find($scope.project.active_memberships, {user: parseInt(option.id, 10)})
-        # TODO: Make me more beautifull and elegant
+        member = _.find($rootScope.constants.users, {id: parseInt(option.id, 10)})
+        # TODO: Make me more beautiful and elegant
         return "<span style=\"color: black; padding: 0px 5px;
                               border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
 
@@ -392,6 +392,19 @@ IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $da
         allowClear: true
         formatResult: watcherSelectOptionsShowMember
         formatSelection: watcherSelectOptionsShowMember
+    }
+
+    assignedToSelectOptionsShowMember = (option, container) ->
+        if option.id
+            member = _.find($rootScope.constants.users, {id: parseInt(option.id, 10)})
+            # TODO: Make me more beautiful and elegant
+            return "<span style=\"color: black; padding: 0px 5px;
+                                  border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
+         return "<span\">#{option.text}</span>"
+
+    $scope.assignedToSelectOptions = {
+        formatResult: assignedToSelectOptionsShowMember
+        formatSelection: assignedToSelectOptionsShowMember
     }
 
     return
@@ -510,6 +523,19 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next,
 
     $scope.$on "select2:changed", (ctx, value) ->
         $scope.form.tags = value
+
+    assignedToSelectOptionsShowMember = (option, container) ->
+        if option.id
+            member = _.find($rootScope.constants.users, {id: parseInt(option.id, 10)})
+            # TODO: make me more beautiful and elegant
+            return "<span style=\"color: black; padding: 0px 5px;
+                                  border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
+         return "<span\">#{option.text}</span>"
+
+    $scope.assignedToSelectOptions = {
+        formatResult: assignedToSelectOptionsShowMember
+        formatSelection: assignedToSelectOptionsShowMember
+    }
 
     return
 

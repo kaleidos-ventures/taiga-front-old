@@ -73,11 +73,16 @@
                         </select>
                     </fieldset>
                     <fieldset>
-                        <label i18next="kanban.assigned-to">Assigned to</label>
-                        <select class="status" name="assigned_to" ng-model="form.assigned_to"
-                                ng-options="c.user as c.full_name for c in project.active_memberships">
+                        <label for="assigned_to" i18next="kanban.assigned-to">Assigned to</label>
+                        <select name="assigned_to"
+                                ng-model="form.assigned_to"
+                                ui-select2="assignedToSelectOptions">
                             <option value="" i18next="task.unassigned">Unassigned</option>
+                            <option ng-repeat="m in project.active_memberships" value="{{ m.user }}">
+                                {{ m.full_name }}
+                            </option>
                         </select>
+                        {{ assignedToSelectOptions }}
                     </fieldset>
                 </div>
                 <div class="fieldset-row requirements">
