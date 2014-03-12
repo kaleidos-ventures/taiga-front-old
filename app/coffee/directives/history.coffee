@@ -1,3 +1,11 @@
+_.mixin({
+    findByValues: (collection, property, values) ->
+        return _.filter(collection, (item) ->
+            return _.contains(values, item[property])
+        )
+})
+
+
 GmHistoryDirective = ($compile, $rootScope, $i18next) ->
     restrict: "A"
     require: "?ngModel"
@@ -7,7 +15,10 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                 return switch name
                     when "status"
                         if value
-                            return scope.constants.usStatuses[value].name
+                            try
+                                return scope.constants.usStatuses[value].name
+                            catch
+                                return null
                         return null
                     when "tags"
                         if value
@@ -21,26 +32,40 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                         else null
                     when "watchers"
                         if value
-                            return _.map(value, (v) -> scope.constants.users[v].full_name).join(", ")
+                            watchers_ids = _.map(value, (v) -> parseInt(v, 10))
+                            watchers = _.findByValues(scope.constants.users, "id", watchers_ids)
+                            return _.map(watchers, "full_name").join(", ")
                         return null
                     else value
             issue: (name, value) ->
                 return switch name
                     when "type"
                         if value
-                            return scope.constants.issueTypes[value].name
+                            try
+                                return scope.constants.issueTypes[value].name
+                            catch
+                                return null
                         return null
                     when "priority"
                         if value
-                            return scope.constants.priorities[value].name
+                            try
+                                return scope.constants.priorities[value].name
+                            catch
+                                return null
                         return null
                     when "status"
                         if value
-                            return scope.constants.issueStatuses[value].name
+                            try
+                                return scope.constants.issueStatuses[value].name
+                            catch
+                                return null
                         return null
                     when "severity"
                         if value
-                            return scope.constants.severities[value].name
+                            try
+                                return scope.constants.severities[value].name
+                            catch
+                                return null
                         return null
                     when "tags"
                         if value
@@ -48,7 +73,10 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                         else null
                     when "assigned_to"
                         if value
-                            return scope.constants.users[value].full_name
+                            try
+                                return scope.constants.users[value].full_name
+                            catch
+                                return null
                         return $i18next.t("common.unassigned")
                     when "is_blocked"
                         if value is true
@@ -58,7 +86,9 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                         else null
                     when "watchers"
                         if value
-                            return _.map(value, (v) -> scope.constants.users[v].full_name).join(", ")
+                            watchers_ids = _.map(value, (v) -> parseInt(v, 10))
+                            watchers = _.findByValues(scope.constants.users, "id", watchers_ids)
+                            return _.map(watchers, "full_name").join(", ")
                         return null
                     else value
             task: (name, value) ->
@@ -69,11 +99,17 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                         else null
                     when "status"
                         if value
-                            return scope.constants.taskStatuses[value].name
+                            try
+                                return scope.constants.taskStatuses[value].name
+                            catch
+                                return null
                         return null
                     when "assigned_to"
                         if value
-                            return scope.constants.users[value].full_name
+                            try
+                                return scope.constants.users[value].full_name
+                            catch
+                                return null
                         return $i18next.t("common.unassigned")
                     when "is_iocaine", "is_blocked"
                         if value is true
@@ -83,7 +119,9 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                         else null
                     when "watchers"
                         if value
-                            return _.map(value, (v) -> scope.constants.users[v].full_name).join(", ")
+                            watchers_ids = _.map(value, (v) -> parseInt(v, 10))
+                            watchers = _.findByValues(scope.constants.users, "id", watchers_ids)
+                            return _.map(watchers, "full_name").join(", ")
                         return null
                     else value
         }
