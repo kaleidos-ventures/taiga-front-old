@@ -47,11 +47,13 @@ class ShowProjectsController extends TaigaBaseController
             @scope.loading = true
             @scope.showingProjects = true
 
-            @rs.getProjects().then (projects) =>
+            promise = @rs.getProjects()
+
+            promise.then (projects) =>
                 @scope.myProjects = projects
                 @scope.loading = false
 
-            @rs.getProjects().then null, =>
+            promise.then null, =>
                 @scope.myProjects = []
                 @scope.loading = false
 
