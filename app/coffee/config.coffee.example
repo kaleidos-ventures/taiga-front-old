@@ -1,4 +1,4 @@
-# Copyright 2013 Andrey Antukh <niwi@niwi.be>
+# Copyright 2013-2014 Andrey Antukh <niwi@niwi.be>
 #
 # Licensed under the Apache License, Version 2.0 (the "License")
 # you may not use this file except in compliance with the License.
@@ -12,18 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-angular.module('taiga.config', []).value('config', {
+angular.module('taiga.localconfig', []).value('localconfig', {
     host: "localhost:8000"
     scheme: "http"
-    defaultLanguage: "en"
-    debug: false
-    notificationLevelOptions:
-        "all_owned_projects": "All events on my projects"
-        "only_watching": "Only events for objects i watch"
-        "only_assigned": "Only events for objects assigned to me"
-        "only_owner": "Only events for objects owned by me"
-        "no_events": "No events"
-    languageOptions:
-        "es": "Spanish"
-        "en": "English"
+    debug: true
 })

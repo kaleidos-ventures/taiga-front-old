@@ -120,8 +120,8 @@ class ChangePasswordController extends TaigaBaseController
 
 class ProfileController extends TaigaBaseController
     @.$inject = ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource',
-                 'config', '$i18next', "$favico"]
-    constructor: (@scope, @rootScope, @gmAuth, @gmFlash, @rs, @config, @i18next, @favico) ->
+                 '$gmConfig', '$i18next', "$favico"]
+    constructor: (@scope, @rootScope, @gmAuth, @gmFlash, @rs, @gmConfig, @i18next, @favico) ->
         super(scope)
 
     initialize: ->
@@ -133,8 +133,8 @@ class ProfileController extends TaigaBaseController
             ["Taiga", @rootScope.urls.projectsUrl()],
             [@i18next.t("profile.profile"), null]
         ]
-        @scope.notificationLevelOptions = @config.notificationLevelOptions
-        @scope.languageOptions = @config.languageOptions
+        @scope.notificationLevelOptions = @gmConfig.get("notificationLevelOptions")
+        @scope.languageOptions = @gmConfig.get("languageOptions")
 
         @scope.formData = {}
         @scope.authForm = @scope.auth
