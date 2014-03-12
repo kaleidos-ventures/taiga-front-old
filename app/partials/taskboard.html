@@ -119,16 +119,17 @@
                                         Add a bulk of tasks
                                     </a>
                                 </td>
-                                <td class="col-task-status col-task-{{ status.name|slugify }}"
+                                <td class="col-task-status col-task-{{ status.name|slugify }} tasks"
                                         ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
-                                        style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
+                                        style="width: {{ 100/(constants.taskStatusesList.length+1) }}%"
+                                        gm-sortable="tasks" gm-sortable-selector=".task-box"
+                                        gm-sortable-item-name="task"
+                                        gm-sortable-on-add="sortableOnAdd"
+                                        gm-sortable-on-update="sortableOnUpdate"
+                                        gm-sortable-on-remove="sortableOnRemove">
 
-                                    <div class="tasks" gm-sortable="tasks" gm-sortable-selector=".task-box"
-                                        gm-sortable-item-name="task" gm-sortable-on-add="sortableOnAdd"
-                                        gm-sortable-on-update="sortableOnUpdate" gm-sortable-on-remove="sortableOnRemove">
-                                        <div class="task-box" ng-repeat="task in usTasks[us.id][status.id]">
-                                            <div ng-include="'/partials/taskboard-task.html'"></div>
-                                        </div>
+                                    <div class="task-box" ng-repeat="task in usTasks[us.id][status.id]">
+                                        <div ng-include="'/partials/taskboard-task.html'"></div>
                                     </div>
                                 </td>
                             </tr>
@@ -144,16 +145,18 @@
                                         Add new task
                                     </a>
                                 </td>
-                                <td class="col-task-status col-task-{{ status.name|slugify }}"
+                                <td class="col-task-status col-task-{{ status.name|slugify }} tasks"
                                         ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
-                                        style="width: {{ 100/(constants.taskStatusesList.length+1) }}%">
+                                        style="width: {{ 100/(constants.taskStatusesList.length+1) }}%"
+                                        gm-sortable="tasks"
+                                        gm-sortable-selector=".task-box"
+                                        gm-sortable-item-name="task"
+                                        gm-sortable-on-add="sortableOnAdd"
+                                        gm-sortable-on-update="sortableOnUpdate"
+                                        gm-sortable-on-remove="sortableOnRemove">
 
-                                    <div class="tasks" gm-sortable="tasks" gm-sortable-selector=".task-box"
-                                        gm-sortable-item-name="task" gm-sortable-on-add="sortableOnAdd"
-                                        gm-sortable-on-update="sortableOnUpdate" gm-sortable-on-remove="sortableOnRemove">
-                                        <div class="task-box" ng-repeat="task in unassignedTasks[status.id]">
-                                            <div ng-include="'/partials/taskboard-task.html'"></div>
-                                        </div>
+                                    <div class="task-box" ng-repeat="task in unassignedTasks[status.id]">
+                                        <div ng-include="'/partials/taskboard-task.html'"></div>
                                     </div>
                                 </td>
                             </tr>

@@ -18,16 +18,16 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="col-task-status col-task-{{ status.name|slugify }}"
-                                        ng-repeat="status in constants.usStatusesList|orderBy:'order'">
-
-                                    <div class="tasks" gm-sortable="userstories" gm-sortable-selector=".task-box"
+                                <td class="col-task-status col-task-{{ status.name|slugify }} tasks"
+                                        ng-repeat="status in constants.usStatusesList|orderBy:'order'"
+                                        gm-sortable="userstories"
+                                        gm-sortable-selector=".task-box"
                                         gm-sortable-item-name="us" gm-sortable-on-add="ctrl.sortableOnAdd"
                                         gm-sortable-on-update="ctrl.sortableOnUpdate"
                                         gm-sortable-on-remove="ctrl.sortableOnRemove">
-                                        <div class="task-box" ng-repeat="us in uss[status.id]">
-                                            <div ng-include="'/partials/kanban-us.html'"></div>
-                                        </div>
+
+                                    <div class="task-box" ng-repeat="us in uss[status.id]">
+                                        <div ng-include="'/partials/kanban-us.html'"></div>
                                     </div>
                                 </td>
                             </tr>
