@@ -9,23 +9,23 @@
         <ul class="results-tab clearfix" ng-show="results.count > 0">
             <li class="userstory-tab"
                 ng-repeat="type in resultTypes"
-                ng-class="{active: isTypeActive(type)}"
-                ng-click="setActiveType(type)">
-                {{ translateResultType(type) }} ({{ results[type].length }})
+                ng-class="{active: ctrl.isTypeActive(type)}"
+                ng-click="ctrl.setActiveType(type)">
+                {{ ctrl.translateResultType(type) }} ({{ results[type].length }})
             </li>
         </ul>
 
         <div class="search-results">
-            <div class="results" ng-repeat="type in resultTypes" ng-show="isTypeActive(type)">
+            <div class="results" ng-repeat="type in resultTypes" ng-show="ctrl.isTypeActive(type)">
                 <ul class="result-list">
                     <li class="result-item" ng-repeat="item in results[type]">
                         <div class="title">
-                            <a href="{{ translateTypeUrl(type, projectSlug, item) }}">
-                                {{ translateTypeTitle(type, item) }}
+                            <a href="{{ ctrl.translateTypeUrl(type, projectSlug, item) }}">
+                                {{ ctrl.translateTypeTitle(type, item) }}
                             </a>
                         </div>
                         <div class="description">
-                            {{ translateTypeDescription(type, item)|truncate:200 }}
+                            {{ ctrl.translateTypeDescription(type, item)|truncate:200 }}
                         </div>
                     </li>
                 </ul>

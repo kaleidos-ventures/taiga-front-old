@@ -79,7 +79,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         {templateUrl: 'partials/wiki-historical.html', controller: "WikiHistoricalController as ctrl"})
 
     $routeProvider.when('/project/:pslug/search',
-        {controller: "SearchController", templateUrl: "partials/search.html"})
+        {controller: "SearchController as ctrl", templateUrl: "partials/search.html"})
 
     $routeProvider.when('/project/:pslug/admin/main',
         {controller: "ProjectAdminMainController as ctrl", templateUrl: "partials/project-admin-main.html"})
