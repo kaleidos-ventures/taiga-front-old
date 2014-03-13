@@ -13,21 +13,22 @@
 # limitations under the License.
 
 
-class AuthService extends TaigaBaseService
-    @.$inject = ["$rootScope", "$gmStorage", "$model"]
-    constructor: (@rootScope, @gmStorage, @model) ->
-        service = {}
+AuthProvider = ($rootScope, $gmStorage, $model) ->
+    service = {}
 
-    getUser: ->
-        userData = @gmStorage.get('userInfo')
+    service.getUser = ->
+        userData = $gmStorage.get('userInfo')
         if userData
-            return @model.make_model("users", userData)
+            return $model.make_model("users", userData)
         return null
 
-    setUser: (user) ->
-        @rootScope.auth = user
-        @rootScope.$broadcast('i18n:change', user.default_language)
-        @gmStorage.set("userInfo", user.getAttrs())
+    service.setUser = (user) ->
+        $rootScope.auth = user
+        $rootScope.$broadcast('i18n:change', user.default_language)
+        $gmStorage.set("userInfo", user.getAttrs())
+
+    return service
+
 
 module = angular.module('taiga.services.common', [])
-module.factory("$gmAuth", AuthService)
+module.factory("$gmAuth", ["$rootScope", "$gmStorage", "$model", AuthProvider])
