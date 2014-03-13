@@ -12,35 +12,61 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $confirm, $modal, $i18next, $location, $favico, SelectedTags) ->
-    $favico.reset()
-    # Global Scope Variables
-    $rootScope.pageTitle = $i18next.t('common.issues')
-    $rootScope.pageSection = 'issues'
-    $rootScope.pageBreadcrumb = [
-        ["", ""],
-        [$i18next.t('common.issues'), null]
-    ]
+class IssuesController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', '$routeParams', '$filter', '$q',
+                 'resource', "$data", "$confirm", "$modal", '$i18next',
+                 '$location', '$favico', 'SelectedTags']
+    constructor: (@scope, @rootScope, @routeParams, @filter, @q, @rs, @data, @confirm, @modal, @i18next, @location, @favico, @SelectedTags) ->
+        super(scope)
 
-    SelectedTags($rootScope.projectId).issues_order.setDefault({field: 'created_date', reverse: true})
+    debounceMethods: ->
+        toggleShowGraphs = @toggleShowGraphs
+        @toggleShowGraphs = gm.utils.safeDebounced @scope, 500, toggleShowGraphs
 
-    $scope.filtersOpened = false
-    $scope.filtersData = {}
-    $scope.sortingOrder = SelectedTags($rootScope.projectId).issues_order.getField()
-    $scope.sortingReverse = SelectedTags($rootScope.projectId).issues_order.isReverse()
-    $scope.page = 1
-    $scope.showGraphs = false
+    initialize: ->
+        @debounceMethods()
 
-    $scope.issuesQueryParams = ->
-        tags = SelectedTags($rootScope.projectId).issues.tags.join()
-        status = SelectedTags($rootScope.projectId).issues.status.join()
-        type = SelectedTags($rootScope.projectId).issues.type.join()
-        severity = SelectedTags($rootScope.projectId).issues.severity.join()
-        priority = SelectedTags($rootScope.projectId).issues.priority.join()
-        owner = SelectedTags($rootScope.projectId).issues.owner.join()
-        assigned_to = SelectedTags($rootScope.projectId).issues.assigned_to.join()
-        order_by = SelectedTags($rootScope.projectId).issues_order.getField()
-        if SelectedTags($rootScope.projectId).issues_order.isReverse()
+        @favico.reset()
+        # Global Scope Variables
+        @rootScope.pageTitle = @i18next.t('common.issues')
+        @rootScope.pageSection = 'issues'
+        @rootScope.pageBreadcrumb = [
+            ["", ""],
+            [@i18next.t('common.issues'), null]
+        ]
+
+        @SelectedTags(@rootScope.projectId).issues_order.setDefault({field: 'created_date', reverse: true})
+
+        @scope.filtersOpened = false
+        @scope.filtersData = {}
+        @scope.sortingOrder = @SelectedTags(@rootScope.projectId).issues_order.getField()
+        @scope.sortingReverse = @SelectedTags(@rootScope.projectId).issues_order.isReverse()
+        @scope.page = 1
+        @scope.showGraphs = false
+
+        @scope.setPage = (n) ->
+            @scope.page = n
+            @filterIssues()
+
+        # Load initial data
+        @rs.resolve(pslug: @routeParams.pslug).then (data) =>
+            @rootScope.projectSlug = @routeParams.pslug
+            @rootScope.projectId = data.project
+            @data.loadProject(@scope).then =>
+                @data.loadUsersAndRoles(@scope).then =>
+                    @loadIssuesData().then =>
+                        @filterIssues()
+
+    issuesQueryParams: ->
+        tags = @SelectedTags(@rootScope.projectId).issues.tags.join()
+        status = @SelectedTags(@rootScope.projectId).issues.status.join()
+        type = @SelectedTags(@rootScope.projectId).issues.type.join()
+        severity = @SelectedTags(@rootScope.projectId).issues.severity.join()
+        priority = @SelectedTags(@rootScope.projectId).issues.priority.join()
+        owner = @SelectedTags(@rootScope.projectId).issues.owner.join()
+        assigned_to = @SelectedTags(@rootScope.projectId).issues.assigned_to.join()
+        order_by = @SelectedTags(@rootScope.projectId).issues_order.getField()
+        if @SelectedTags(@rootScope.projectId).issues_order.isReverse()
             order_by = "-#{order_by}"
 
         params = {}
@@ -59,32 +85,30 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
     ## Tags generation functions
     #####
 
-    $scope.selectedTags = -> _.flatten((tags.values() for tags in _.values(SelectedTags($rootScope.projectId).issues)), true)
+    selectedTags: ->
+        _.flatten((tags.values() for tags in _.values(@SelectedTags(@rootScope.projectId).issues)), true)
 
-    generateTagId = (tag) ->
-        return "#{tag.type}-#{tag.id or tag.name}"
+    isTagSelected: (tag) ->
+        return @SelectedTags(@rootScope.projectId).issues[tag.type].fetch(tag)?
 
-    isTagSelected = (tag) ->
-        return SelectedTags($rootScope.projectId).issues[tag.type].fetch(tag)?
-
-    toggleTag = (tag) ->
-        tags = SelectedTags($rootScope.projectId).issues[tag.type]
+    toggleTag: (tag) ->
+        tags = @SelectedTags(@rootScope.projectId).issues[tag.type]
         if tags.fetch(tag)?
             tags.remove(tag)
         else
             tags.store(tag)
 
-        $scope.currentPage = 0
-        filterIssues()
+        @scope.currentPage = 0
+        @filterIssues()
 
-    refreshSelectedTags =  ->
-        _.forEach SelectedTags($rootScope.projectId).issues, (tagGroup) ->
+    refreshSelectedTags:  ->
+        _.forEach @SelectedTags(@rootScope.projectId).issues, (tagGroup) =>
             _.forEach tagGroup.values(), (storedTag) =>
-                newTag = _.find($scope[tagGroup.constructor.scopeVar], {id: storedTag.id})
+                newTag = _.find(@scope[tagGroup.constructor.scopeVar], {id: storedTag.id})
                 if newTag
                     tagGroup.update(storedTag, newTag)
 
-    generateTagsFromList = (list, constants, type, scopeVar) ->
+    generateTagsFromList: (list, constants, type, scopeVar) ->
         tags = []
         for value in list
             [id, count] = value
@@ -98,20 +122,20 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
             }
             tags.push(tag)
 
-        $scope[scopeVar] = tags
+        @scope[scopeVar] = tags
 
-    generateTagsFromUsers = (list, type, scopeVar)->
+    generateTagsFromUsers: (list, type, scopeVar) ->
         tags = []
         for userCounter in list
             if userCounter[0] is null
                 tag = {
                     id: "null",
-                    name: $i18next.t("common.unassigned"),
+                    name: @i18next.t("common.unassigned"),
                     count: userCounter[1],
                     type: type
                 }
             else
-                user = $scope.constants.users[userCounter[0]]
+                user = @scope.constants.users[userCounter[0]]
                 tag = {
                     id: user.id,
                     name: gm.utils.truncate(user.full_name, 17),
@@ -121,293 +145,279 @@ IssuesController = ($scope, $rootScope, $routeParams, $filter, $q, rs, $data, $c
 
             tags.push(tag)
 
-        $scope[scopeVar] = _.sortBy tags, (item) ->
+        @scope[scopeVar] = _.sortBy tags, (item) ->
             if item.id == "null"
                 # NOTE: This is a hack to order users by full name but set
                 #       "Unassigned" as the first element. \o/ \o/ \o/ \o/
                 return "0000000000000000"
             return item.name
 
-    generateTagList = ->
+    generateTagList: ->
         tags = []
 
-        for tagCounter in $scope.filtersData.tags
+        for tagCounter in @scope.filtersData.tags
             tag = {id: tagCounter[0], name: tagCounter[0], count: tagCounter[1], type: "tags"}
             tags.push(tag)
 
-        $scope.tags = tags
+        @scope.tags = tags
 
-    regenerateTags = ->
-        generateTagsFromList($scope.filtersData.statuses, $scope.constants.issueStatuses, "status", "statusTags")
-        generateTagsFromList($scope.filtersData.types, $scope.constants.types, "type", "typeTags")
-        generateTagsFromList($scope.filtersData.severities, $scope.constants.severities, "severity", "severityTags")
-        generateTagsFromList($scope.filtersData.priorities, $scope.constants.priorities, "priority", "priorityTags")
-        generateTagsFromUsers($scope.filtersData.owners, "owner", "addedByTags")
-        generateTagsFromUsers($scope.filtersData.assigned_to, "assigned_to", "assignedToTags")
-        generateTagList()
+    regenerateTags: ->
+        @generateTagsFromList(@scope.filtersData.statuses, @scope.constants.issueStatuses, "status", "statusTags")
+        @generateTagsFromList(@scope.filtersData.types, @scope.constants.types, "type", "typeTags")
+        @generateTagsFromList(@scope.filtersData.severities, @scope.constants.severities, "severity", "severityTags")
+        @generateTagsFromList(@scope.filtersData.priorities, @scope.constants.priorities, "priority", "priorityTags")
+        @generateTagsFromUsers(@scope.filtersData.owners, "owner", "addedByTags")
+        @generateTagsFromUsers(@scope.filtersData.assigned_to, "assigned_to", "assignedToTags")
+        @generateTagList()
 
-    getFilterParams = ->
+    getFilterParams: ->
+        params = {"page": @scope.page}
 
-        params = {"page": $scope.page}
-
-        for key, value of _.groupBy($scope.selectedTags(), "type")
+        for key, value of _.groupBy(@selectedTags(), "type")
             params[key] = _.map(value, "id").join(",")
 
-        params["order_by"] = $scope.sortingOrder
-        if $scope.sortingReverse
+        params["order_by"] = @scope.sortingOrder
+        if @scope.sortingReverse
             params["order_by"] = "-#{params["order_by"]}"
 
         return params
 
-    filterIssues = ->
-        $scope.$emit("spinner:start")
+    filterIssues: ->
+        @scope.$emit("spinner:start")
 
-        params = getFilterParams()
+        params = @getFilterParams()
 
-        rs.getIssues($scope.projectId, params).then (result) ->
-            $scope.issues = result.models
-            $scope.count = result.count
-            $scope.paginatedBy = result.paginatedBy
-            $scope.$emit("spinner:stop")
+        @rs.getIssues(@scope.projectId, params).then (result) =>
+            @scope.issues = result.models
+            @scope.count = result.count
+            @scope.paginatedBy = result.paginatedBy
+            @scope.$emit("spinner:stop")
 
-    loadIssuesData = ->
-        promise = rs.getIssuesFiltersData($scope.projectId).then (data) ->
-            $scope.filtersData = data
-            regenerateTags()
-            refreshSelectedTags()
-            loadStats()
+    loadIssuesData: ->
+        promise = @rs.getIssuesFiltersData(@scope.projectId).then (data) =>
+            @scope.filtersData = data
+            @regenerateTags()
+            @refreshSelectedTags()
+            @loadStats()
             return data
 
         return promise
 
-    loadStats = ->
-        rs.getIssuesStats($scope.projectId).then (data) ->
-            $scope.issuesStats = data
-            $favico.badge($scope.issuesStats.total_issues - $scope.issuesStats.closed_issues)
+    loadStats: ->
+        @rs.getIssuesStats(@scope.projectId).then (data) =>
+            @scope.issuesStats = data
+            @favico.badge(@scope.issuesStats.total_issues - @scope.issuesStats.closed_issues)
 
-    # Load initial data
-    rs.resolve(pslug: $routeParams.pslug).then (data) ->
-        $rootScope.projectSlug = $routeParams.pslug
-        $rootScope.projectId = data.project
-        $data.loadProject($scope).then ->
-            $data.loadUsersAndRoles($scope).then ->
-                loadIssuesData().then ->
-                    filterIssues()
+    refreshIssues: ->
+        @scope.refreshing = true
+        @loadIssuesData().then =>
+            @filterIssues().then =>
+                @scope.refreshing = false
 
-    $scope.setPage = (n) ->
-        $scope.page = n
-        filterIssues()
+    openCreateIssueForm: ->
+        promise = @modal.open("issue-form", {'type': 'create'})
+        promise.then (issue) =>
+            @scope.issues.push(issue)
+            @refreshIssues()
 
-    $scope.refreshIssues = ->
-        $scope.refreshing = true
-        loadIssuesData().then ->
-            filterIssues().then ->
-                $scope.refreshing = false
+    openEditIssueForm: (issue) ->
+        promise = @modal.open("issue-form", {'issue': issue, 'type': 'edit'})
+        promise.then =>
+            @refreshIssues()
 
-    $scope.toggleTag = toggleTag
-    $scope.isTagSelected = isTagSelected
+    # Debounced Method (see debounceMethods method)
+    toggleShowGraphs: =>
+        @scope.showGraphs = not @scope.showGraphs
 
-    $scope.openCreateIssueForm = ->
-        promise = $modal.open("issue-form", {'type': 'create'})
-        promise.then (issue) ->
-            $scope.issues.push(issue)
-            $scope.refreshIssues()
-
-    $scope.openEditIssueForm = (issue) ->
-        promise = $modal.open("issue-form", {'issue': issue, 'type': 'edit'})
-        promise.then ->
-            $scope.refreshIssues()
-
-    $scope.toggleShowGraphs = gm.utils.safeDebounced $scope, 500, ->
-        $scope.showGraphs = not $scope.showGraphs
-
-    $scope.updateIssueAssignation = (issue, id) ->
+    updateIssueAssignation: (issue, id) ->
         issue.assigned_to = id || null
-        issue.save().then ->
-            $scope.refreshIssues()
+        issue.save().then =>
+            @refreshIssues()
 
-    $scope.updateIssueStatus = (issue, id) ->
+    updateIssueStatus: (issue, id) ->
         issue.status = id
-        issue.save().then ->
-            $scope.refreshIssues()
+        issue.save().then =>
+            @refreshIssues()
 
-    $scope.updateIssueSeverity = (issue, id) ->
+    updateIssueSeverity: (issue, id) ->
         issue.severity = id
 
-        issue.save().then ->
-            $scope.refreshIssues()
+        issue.save().then =>
+            @refreshIssues()
 
-    $scope.updateIssuePriority = (issue, id) ->
+    updateIssuePriority: (issue, id) ->
         issue.priority = id
-        issue.save().then ->
-            $scope.refreshIssues()
+        issue.save().then =>
+            @refreshIssues()
 
-    $scope.changeSort = (field, reverse) ->
-        SelectedTags($rootScope.projectId).issues_order.set field: field, reverse: reverse
-        $scope.sortingOrder = field
-        $scope.sortingReverse = reverse
-        filterIssues()
+    changeSort: (field, reverse) ->
+        @SelectedTags(@rootScope.projectId).issues_order.set field: field, reverse: reverse
+        @scope.sortingOrder = field
+        @scope.sortingReverse = reverse
+        @filterIssues()
 
-    $scope.isSortingBy = (field) -> $scope.sortingOrder == field
-    $scope.isSortingReverse = (field) -> $scope.sortingOrder == field and $scope.sortingReverse
+    removeIssue: (issue) ->
+        issue.remove().then =>
+            index = @scope.issues.indexOf(issue)
+            @scope.issues.splice(index, 1)
+            @refreshIssues()
 
-    $scope.removeIssue = (issue) ->
-        issue.remove().then ->
-            index = $scope.issues.indexOf(issue)
-            $scope.issues.splice(index, 1)
-            $scope.refreshIssues()
-
-    $scope.openIssue = (projectSlug, issueRef)->
-        $location.url("/project/#{projectSlug}/issues/#{issueRef}")
-
-    return
+    openIssue: (projectSlug, issueRef)->
+        @location.url("/project/#{projectSlug}/issues/#{issueRef}")
 
 
-IssuesViewController = ($scope, $location, $rootScope, $routeParams, $q, rs, $data,
-                        $confirm, $gmFlash, $i18next, $favico, SelectedTags) ->
-    $favico.reset()
-    $rootScope.pageTitle = $i18next.t('common.issues')
-    $rootScope.pageSection = 'issues'
-    $rootScope.pageBreadcrumb = [
-        ["", ""],
-        [$i18next.t('common.issues'), null],
-    ]
+class IssuesViewController extends TaigaBaseController
+    @.$inject = ['$scope', '$location', '$rootScope', '$routeParams', '$q',
+                 'resource', "$data", "$confirm", "$gmFlash", '$i18next',
+                 '$favico']
+    constructor: (@scope, @location, @rootScope, @routeParams, @q, @rs, @data, @confirm, @gmFlash, @i18next, @favico) ->
+        super(scope)
 
-    $scope.issue = {}
-    $scope.form = {}
-    $scope.updateFormOpened = false
-    $scope.newAttachments = []
-    $scope.attachments = []
+    debounceMethods: ->
+        submit = @submit
+        @submit = gm.utils.safeDebounced @scope, 500, submit
 
-    $scope.issuesQueryParams = ->
-        return $location.search()
+    initialize: ->
+        @debounceMethods()
+        @favico.reset()
+        @rootScope.pageTitle = @i18next.t('common.issues')
+        @rootScope.pageSection = 'issues'
+        @rootScope.pageBreadcrumb = [
+            ["", ""],
+            [@i18next.t('common.issues'), null],
+        ]
 
-    loadIssue = ->
-        params = $scope.issuesQueryParams()
-        rs.getIssue($scope.projectId, $scope.issueId, params).then (issue) ->
-            $scope.issue = issue
-            $scope.form = _.extend({}, $scope.issue._attrs)
+        @scope.issue = {}
+        @scope.form = {}
+        @scope.updateFormOpened = false
+        @scope.newAttachments = []
+        @scope.attachments = []
 
-            breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[1] = [$i18next.t('common.issues'), $rootScope.urls.issuesUrl($scope.projectSlug)]
+        @rs.resolve(pslug: @routeParams.pslug, issueref: @routeParams.ref).then (data) =>
+            @rootScope.projectSlug = @routeParams.pslug
+            @rootScope.projectId = data.project
+            @rootScope.issueId = data.issue
+
+            @data.loadProject(@scope).then =>
+                @data.loadUsersAndRoles(@scope).then =>
+                    @loadIssue()
+                    @loadAttachments()
+                    @loadHistorical()
+                    @loadProjectTags()
+
+        @scope.$on "select2:changed", (ctx, value) =>
+            @scope.form.tags = value
+
+        @scope.watcherSelectOptions = {
+            allowClear: true
+            formatResult: @watcherSelectOptionsShowMember
+            formatSelection: @watcherSelectOptionsShowMember
+        }
+
+        @scope.assignedToSelectOptions = {
+            formatResult: @assignedToSelectOptionsShowMember
+            formatSelection: @assignedToSelectOptionsShowMember
+        }
+
+    issuesQueryParams: ->
+        return @location.search()
+
+    loadIssue: ->
+        params = @issuesQueryParams()
+        @rs.getIssue(@scope.projectId, @scope.issueId, params).then (issue) =>
+            @scope.issue = issue
+            @scope.form = _.extend({}, @scope.issue._attrs)
+
+            breadcrumb = _.clone(@rootScope.pageBreadcrumb)
+            breadcrumb[1] = [@i18next.t('common.issues'), @rootScope.urls.issuesUrl(@scope.projectSlug)]
             breadcrumb[2] = ["##{issue.ref}", null]
-            $rootScope.pageTitle = "#{$i18next.t('common.issues')} - ##{issue.ref}"
+            @rootScope.pageTitle = "#{@i18next.t('common.issues')} - ##{issue.ref}"
 
-            $rootScope.pageBreadcrumb = breadcrumb
+            @rootScope.pageBreadcrumb = breadcrumb
 
-    loadHistorical = (page=1) ->
-        rs.getIssueHistorical($scope.issueId, {page: page}).then (historical) ->
-            if $scope.historical and page != 1
-                historical.models = _.union($scope.historical.models, historical.models)
+    loadHistorical: (page=1) ->
+        @rs.getIssueHistorical(@scope.issueId, {page: page}).then (historical) =>
+            if @scope.historical and page != 1
+                historical.models = _.union(@scope.historical.models, historical.models)
 
-            $scope.showMoreHistoricaButton = historical.models.length < historical.count
-            $scope.historical = historical
+            @scope.showMoreHistoricaButton = historical.models.length < historical.count
+            @scope.historical = historical
 
-    $scope.loadMoreHistorical = ->
-        page = if $scope.historical then $scope.historical.current + 1 else 1
-        loadHistorical(page=page)
+    loadMoreHistorical: ->
+        page = if @scope.historical then @scope.historical.current + 1 else 1
+        @loadHistorical(page=page)
 
-    loadProjectTags = ->
-        rs.getProjectTags($scope.projectId).then (data) ->
-            $scope.projectTags = data
+    loadProjectTags: ->
+        @rs.getProjectTags(@scope.projectId).then (data) =>
+            @scope.projectTags = data
 
-    loadAttachments = ->
-        promise = rs.getIssueAttachments($scope.projectId, $scope.issueId)
-        promise.then (attachments) ->
-            $scope.attachments = attachments
+    loadAttachments: ->
+        promise = @rs.getIssueAttachments(@scope.projectId, @scope.issueId)
+        promise.then (attachments) =>
+            @scope.attachments = attachments
 
-    saveNewAttachments = ->
-        if $scope.newAttachments.length == 0
+    saveNewAttachments: ->
+        if @scope.newAttachments.length == 0
             return
 
         promises = []
-        for attachment in $scope.newAttachments
-            promise = rs.uploadIssueAttachment($scope.projectId, $scope.issueId, attachment)
+        for attachment in @scope.newAttachments
+            promise = @rs.uploadIssueAttachment(@scope.projectId, @scope.issueId, attachment)
             promises.push(promise)
 
-        promise = $q.all(promises)
-        promise.then ->
-            gm.safeApply $scope, ->
-                $scope.newAttachments = []
-                loadAttachments()
+        promise = @q.all(promises)
+        promise.then =>
+            gm.safeApply @scope, =>
+                @scope.newAttachments = []
+                @loadAttachments()
 
-    rs.resolve(pslug: $routeParams.pslug, issueref: $routeParams.ref).then (data) ->
-        $rootScope.projectSlug = $routeParams.pslug
-        $rootScope.projectId = data.project
-        $rootScope.issueId = data.issue
+    # Debounced Method (see debounceMethods method)
+    submit: =>
+        for key, value of @scope.form
+            @scope.issue[key] = value
 
-        $data.loadProject($scope).then ->
-            $data.loadUsersAndRoles($scope).then ->
-                loadIssue()
-                loadAttachments()
-                loadHistorical()
-                loadProjectTags()
+        @scope.$emit("spinner:start")
 
-    $scope.isSameAs = (property, id) ->
-        return ($scope.issue[property] == parseInt(id, 10))
+        gm.safeApply @scope, =>
+            promise = @scope.issue.save()
+            promise.then =>
+                @scope.$emit("spinner:stop")
+                @loadIssue()
+                @loadHistorical()
+                @saveNewAttachments()
+                @gmFlash.info(@i18next.t("issue.issue-saved"))
 
-    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
-        for key, value of $scope.form
-            $scope.issue[key] = value
+            promise.then null, (data) =>
+                @scope.checksleyErrors = data
 
-        $scope.$emit("spinner:start")
-
-        gm.safeApply $scope, ->
-            promise = $scope.issue.save()
-            promise.then ->
-                $scope.$emit("spinner:stop")
-                loadIssue()
-                loadHistorical()
-                saveNewAttachments()
-                $gmFlash.info($i18next.t("issue.issue-saved"))
-
-            promise.then null, (data) ->
-                $scope.checksleyErrors = data
-
-    $scope.removeAttachment = (attachment) ->
-        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
-        promise.then () ->
-            $scope.attachments = _.without($scope.attachments, attachment)
+    removeAttachment: (attachment) ->
+        promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
+        promise.then () =>
+            @scope.attachments = _.without(@scope.attachments, attachment)
             attachment.remove()
 
-    $scope.removeNewAttachment = (attachment) ->
-        $scope.newAttachments = _.without($scope.newAttachments, attachment)
+    removeNewAttachment: (attachment) ->
+        @scope.newAttachments = _.without(@scope.newAttachments, attachment)
 
-    $scope.removeIssue = (issue) ->
-        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
-        promise.then ->
-            issue.remove().then ->
-                $location.url("/project/#{$scope.projectSlug}/issues/")
+    removeIssue: (issue) ->
+        promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
+        promise.then =>
+            issue.remove().then =>
+                @location.url("/project/#{@scope.projectSlug}/issues/")
 
-    $scope.$on "select2:changed", (ctx, value) ->
-        $scope.form.tags = value
-
-    watcherSelectOptionsShowMember = (option, container) ->
-        member = _.find($rootScope.constants.users, {id: parseInt(option.id, 10)})
+    watcherSelectOptionsShowMember: (option, container) =>
+        member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
         # TODO: Make me more beautiful and elegant
         return "<span style=\"color: black; padding: 0px 5px;
                               border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
 
-    $scope.watcherSelectOptions = {
-        allowClear: true
-        formatResult: watcherSelectOptionsShowMember
-        formatSelection: watcherSelectOptionsShowMember
-    }
-
-    assignedToSelectOptionsShowMember = (option, container) ->
+    assignedToSelectOptionsShowMember: (option, container) =>
         if option.id
-            member = _.find($rootScope.constants.users, {id: parseInt(option.id, 10)})
+            member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
             # TODO: Make me more beautiful and elegant
             return "<span style=\"color: black; padding: 0px 5px;
                                   border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
          return "<span\">#{option.text}</span>"
-
-    $scope.assignedToSelectOptions = {
-        formatResult: assignedToSelectOptionsShowMember
-        formatSelection: assignedToSelectOptionsShowMember
-    }
-
-    return
 
 
 IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next, $confirm, $q) ->
@@ -541,11 +551,7 @@ IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next,
 
 
 module = angular.module("taiga.controllers.issues", [])
-module.controller("IssuesController", ['$scope', '$rootScope', '$routeParams', '$filter',
-                  '$q', 'resource', "$data", "$confirm", "$modal", '$i18next',
-                  '$location', '$favico', 'SelectedTags',  IssuesController])
-module.controller("IssuesViewController", ['$scope', '$location', '$rootScope',
-                  '$routeParams', '$q', 'resource', "$data", "$confirm", "$gmFlash", '$i18next',
-                  '$favico', 'SelectedTags', IssuesViewController])
+module.controller("IssuesController", IssuesController)
+module.controller("IssuesViewController", IssuesViewController)
 module.controller("IssuesModalController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
                   "$gmFlash", "$i18next", "$confirm", "$q", IssuesModalController])

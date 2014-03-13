@@ -2,10 +2,10 @@
 <div class="middle-container issues-content">
     <div class="new-issue">
         <a class="button new-button" gm-modal="#new-issue-modal"
-           ng-click="openCreateIssueForm()" data-icon="a" i18next="issues.new-issue">New issue</a>
-        <a class="button refresh-button" ng-click="refreshIssues()" data-icon="x"
+           ng-click="ctrl.openCreateIssueForm()" data-icon="a" i18next="issues.new-issue">New issue</a>
+        <a class="button refresh-button" ng-click="ctrl.refreshIssues()" data-icon="x"
             ng-class="{active: refreshing}" i18next="issues.refresh">Refresh</a>
-        <a class="button graphs-button" data-icon="k" ng-click="toggleShowGraphs()"
+        <a class="button graphs-button" data-icon="k" ng-click="ctrl.toggleShowGraphs()"
             ng-class="{'active': showGraphs}" i18next="issues.graphs">Graphs</a>
         <a class="button tags-button" data-icon="f" ng-click="showTags = !showTags"
             ng-class="{'active': showTags}" i18next="issues.tags-button">Tags</a>
@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="tags-list-sbox">
-                    <div class="tag selected" style="background: {{ tag.color }}" ng-repeat="tag in selectedTags()" ng-click="toggleTag(tag)">
+                    <div class="tag selected" style="background: {{ tag.color }}" ng-repeat="tag in ctrl.selectedTags()" ng-click="ctrl.toggleTag(tag)">
                         <div class="name" ng-hide="tag.type == 'assigned_to' || tag.type == 'owner'">
                             {{ tag.name }}
                         </div>
@@ -76,7 +76,7 @@
                     <h3 i18next="issues.status">Status:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in statusTags"
-                             ng-click="toggleTag(tag)" ng-class="{selected: isTagSelected(tag)}">
+                             ng-click="ctrl.toggleTag(tag)" ng-class="{selected: ctrl.isTagSelected(tag)}">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
@@ -86,7 +86,7 @@
                     <h3 i18next="issues.type">Type:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in typeTags"
-                             ng-click="toggleTag(tag)" ng-class="{selected: isTagSelected(tag)}" >
+                             ng-click="ctrl.toggleTag(tag)" ng-class="{selected: ctrl.isTagSelected(tag)}" >
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
@@ -96,7 +96,7 @@
                     <h3 i18next="issues.severity">Severity:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in severityTags"
-                             ng-click="toggleTag(tag)" ng-class="{selected: isTagSelected(tag)}" >
+                             ng-click="ctrl.toggleTag(tag)" ng-class="{selected: ctrl.isTagSelected(tag)}" >
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
@@ -106,7 +106,7 @@
                     <h3 i18next="issues.priority">Priority:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in priorityTags"
-                             ng-click="toggleTag(tag)" ng-class="{selected: isTagSelected(tag)}">
+                             ng-click="ctrl.toggleTag(tag)" ng-class="{selected: ctrl.isTagSelected(tag)}">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
@@ -115,8 +115,8 @@
                 <li ng-show="addedByTags.length>1">
                     <h3 i18next="issues.added-by">Added by:</h3>
                     <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in addedByTags" ng-click="toggleTag(tag)"
-                                ng-class="{selected: isTagSelected(tag)}">
+                        <div class="tag" ng-repeat="tag in addedByTags" ng-click="ctrl.toggleTag(tag)"
+                                ng-class="{selected: ctrl.isTagSelected(tag)}">
                             <div class="name" gm-colorize-user="constants.users[tag.id]">
                                 {{ tag.name }}
                             </div>
@@ -127,8 +127,8 @@
                 <li>
                     <h3 i18next="issues.assigned-to">Assigned to:</h3>
                     <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in assignedToTags" ng-click="toggleTag(tag)"
-                                ng-class="{selected: isTagSelected(tag)}">
+                        <div class="tag" ng-repeat="tag in assignedToTags" ng-click="ctrl.toggleTag(tag)"
+                                ng-class="{selected: ctrl.isTagSelected(tag)}">
                             <div class="name" gm-colorize-user="constants.users[tag.id]">
                                 {{ tag.name }}
                             </div>
@@ -139,8 +139,8 @@
                 <li>
                     <h3 i18next="issues.tags">Tags:</h3>
                     <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in tags" ng-click="toggleTag(tag)"
-                                ng-class="{selected: isTagSelected(tag)}" gm-colorize-tag>
+                        <div class="tag" ng-repeat="tag in tags" ng-click="ctrl.toggleTag(tag)"
+                                ng-class="{selected: ctrl.isTagSelected(tag)}" gm-colorize-tag>
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
@@ -153,7 +153,7 @@
 
     <div class="issues-container">
         <div class="issues-table-list">
-            <div class="flex-header" gm-issues-sort="changeSort(field, reverse)">
+            <div class="flex-header" gm-issues-sort="ctrl.changeSort(field, reverse)">
                 <div i18next="issues.severity-header"
                      data-field="severity"
                      class="issue-sortable-field issue-severity"
@@ -211,9 +211,9 @@
                 <div class="empty" ng-show="issues.length == 0">
                     There aren't issues to show.
                 </div>
-                <div class="issue-item" ng-repeat="issue in issues" ng-dblclick="openIssue(projectSlug, issue.ref)">
+                <div class="issue-item" ng-repeat="issue in issues" ng-dblclick="ctrl.openIssue(projectSlug, issue.ref)">
                     <div class="issue-severity">
-                        <a href="" gm-popover="updateIssueSeverity(issue, selectedId)"
+                        <a href="" gm-popover="ctrl.updateIssueSeverity(issue, selectedId)"
                             data-tmpl="#severity-popover"
                                 class="severity-{{ constants.severities[issue.severity].name|lowercase }}">
                             {{ constants.severities[issue.severity].name|lowercase }}
@@ -226,7 +226,7 @@
                         </a>
                     </div>
                     <div class="issue-title">
-                        <a class="title" href="{{ urls.issuesUrl(projectSlug, issue.ref, false, issuesQueryParams()) }}">
+                        <a class="title" href="{{ urls.issuesUrl(projectSlug, issue.ref, false, ctrl.issuesQueryParams()) }}">
                             #{{ issue.ref }} {{ issue.subject }}
                         </a>
                         <div class="tags" ng-show="showTags">
@@ -248,21 +248,21 @@
                         <span>{{ issue.modified_date|momentFormat:"lll" }}</span>
                     </div>
                     <div class="issue-state">
-                        <a href="" gm-popover="updateIssueStatus(issue, selectedId)"
+                        <a href="" gm-popover="ctrl.updateIssueStatus(issue, selectedId)"
                             data-tmpl="#status-popover">{{ constants.issueStatuses[issue.status].name }}</a>
 
                         <span data-icon="o" class="icon blocked" ng-show="issue.is_blocked"
                               gm-popover data-tmpl="#issue-blocked-popover"></span>
                     </div>
                     <div class="issue-priority">
-                        <a href="" gm-popover="updateIssuePriority(issue, selectedId)"
+                        <a href="" gm-popover="ctrl.updateIssuePriority(issue, selectedId)"
                             class="priority-{{ constants.priorities[issue.priority].name|lowercase }}"
                                     data-tmpl="#priority-popover">{{ constants.priorities[issue.priority].name }}</a>
                     </div>
                     <div class="issue-assigned-to">
                         <div class="button-item" ng-show="issue.assigned_to" >
                             <i class="icon-user"></i>
-                            <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-placement="left">
+                            <a href="" gm-popover="ctrl.updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-placement="left">
                                <span gm-colorize-user="constants.users[issue.assigned_to]">
                                    {{ constants.users[issue.assigned_to].full_name }}
                                </span>
@@ -270,7 +270,7 @@
                         </div>
                         <div class="button-item" ng-show="!issue.assigned_to">
                             <i class="icon-question-sign"></i>
-                            <a href="" gm-popover="updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-placement="left">
+                            <a href="" gm-popover="ctrl.updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-placement="left">
                                 <span i18next="issues.unassigned">Unassigned</span>
                             </a>
                         </div>
@@ -281,10 +281,10 @@
                                 data-placement="left">
                             <span class="help-box" i18next="issues.preview">Preview</span>
                         </a>
-                        <a data-icon="j" class="btn-small-edit option" ng-click="openEditIssueForm(issue)">
+                        <a data-icon="j" class="btn-small-edit option" ng-click="ctrl.openEditIssueForm(issue)">
                             <span class="help-box" i18next="issues.edit">Edit</span>
                         </a>
-                        <a data-icon="h" class="btn-small-remove option" gm-popover="removeIssue(issue)"
+                        <a data-icon="h" class="btn-small-remove option" gm-popover="ctrl.removeIssue(issue)"
                                 data-tmpl="#issue-remove-popover"
                                 data-placement="left">
                             <span class="help-box" i18next="issues.remove">Remove</span>

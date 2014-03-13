@@ -58,10 +58,10 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         {templateUrl: 'partials/user-story-view.html', controller: "UserStoryViewController"})
 
     $routeProvider.when('/project/:pslug/issues',
-        {templateUrl: 'partials/issues.html', controller: "IssuesController"})
+        {templateUrl: 'partials/issues.html', controller: "IssuesController as ctrl"})
 
     $routeProvider.when('/project/:pslug/issues/:ref',
-        {templateUrl: 'partials/issues-view.html', controller: "IssuesViewController"})
+        {templateUrl: 'partials/issues-view.html', controller: "IssuesViewController as ctrl"})
 
     $routeProvider.when('/project/:pslug/tasks/:ref',
         {templateUrl: 'partials/tasks-view.html', controller: "TasksViewController"})
