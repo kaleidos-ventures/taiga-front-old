@@ -42,7 +42,12 @@ class WikiController extends TaigaBaseController
     constructor: (@scope, @rootScope, @location, @routeParams, @data, @rs, @confirm, @q, @i18next, @favico) ->
         super(scope)
 
+    debounceMethods: ->
+        savePage = @savePage
+        @savePage = gm.utils.safeDebounced @scope, 500, savePage
+
     initialize: ->
+        @debounceMethods()
         @favico.reset()
         @rootScope.pageTitle = "#{@i18next.t("common.wiki")} - #{@routeParams.slug}"
         @rootScope.pageSection = 'wiki'
@@ -104,7 +109,8 @@ class WikiController extends TaigaBaseController
             @scope.formOpened = false
             @scope.content = @scope.page.content
 
-    savePage: gm.utils.safeDebounced @scope, 400, ->
+    # Debounced Method (see debounceMethods method)
+    savePage: =>
         if @scope.page is undefined
             promise = @rs.createWikiPage(@scope.projectId, @rootScope.slug, @scope.content)
 
@@ -141,108 +147,111 @@ class WikiController extends TaigaBaseController
         @scope.newAttachments = _.without(@scope.newAttachments, attachment)
 
 
-WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next, $favico) ->
-    $favico.reset()
-    $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug} - #{$i18next.t("wiki-historical.historical")}"
-    $rootScope.pageSection = 'wiki'
-    $rootScope.pageBreadcrumb = [
-        ["", ""]
-        [$i18next.t("common.wiki"), $rootScope.urls.wikiUrl($rootScope.projectSlug, "home")]
-        [$routeParams.slug, $rootScope.urls.wikiUrl($rootScope.projectSlug, $routeParams.slug)]
-        [$i18next.t("wiki-historical.historical"), null]
-    ]
+class WikiHistoricalController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', '$location', '$routeParams', '$data',
+                 'resource', "$confirm", "$q", "$i18next", "$favico"]
+    constructor: (@scope, @rootScope, @location, @routeParams, @data, @rs, @confirm, @q, @i18next, @favico) ->
+        super(scope)
 
-    $scope.attachments = []
+    initialize: ->
+        @favico.reset()
+        @rootScope.pageTitle = "#{@i18next.t("common.wiki")} - #{@routeParams.slug} - #{@i18next.t("wiki-historical.historical")}"
+        @rootScope.pageSection = 'wiki'
+        @rootScope.pageBreadcrumb = [
+            ["", ""]
+            [@i18next.t("common.wiki"), @rootScope.urls.wikiUrl(@rootScope.projectSlug, "home")]
+            [@routeParams.slug, @rootScope.urls.wikiUrl(@rootScope.projectSlug, @routeParams.slug)]
+            [@i18next.t("wiki-historical.historical"), null]
+        ]
 
-    rs.resolve(pslug: $routeParams.pslug).then (data) ->
-        $rootScope.projectSlug = $routeParams.pslug
-        $rootScope.projectId = data.project
-        $rootScope.slug = $routeParams.slug
+        @scope.attachments = []
 
-        $data.loadProject($scope).then ->
-            $data.loadUsersAndRoles($scope).then ->
-                promise = rs.getWikiPage($scope.projectId, $rootScope.slug)
-                promise.then (page) ->
-                    $scope.page = page
-                    $scope.content = page.content
-                    loadAttachments(page)
-                    loadHistorical()
+        @rs.resolve(pslug: @routeParams.pslug).then (data) =>
+            @rootScope.projectSlug = @routeParams.pslug
+            @rootScope.projectId = data.project
+            @rootScope.slug = @routeParams.slug
 
-    loadAttachments = (page) ->
-        rs.getWikiPageAttachments($scope.projectId, page.id).then (attachments) ->
-            $scope.attachments = attachments
+            @data.loadProject(@scope).then =>
+                @data.loadUsersAndRoles(@scope).then =>
+                    promise = @rs.getWikiPage(@scope.projectId, @rootScope.slug)
+                    promise.then (page) =>
+                        @scope.page = page
+                        @scope.content = page.content
+                        @loadAttachments(page)
+                        @loadHistorical()
 
-    loadHistorical = (page=1) ->
-        rs.getWikiPageHistorical($scope.page.id, {page: page}).then (historical) ->
-            if $scope.historical and page != 1
-                historical.models = _.union($scope.historical.models, historical.models)
+        @scope.$on "wiki:restored", (ctx, data) =>
+            promise = @rs.getWikiPage(@scope.projectId, @rootScope.slug)
+            promise.then (page) =>
+                @scope.page = page
+                @scope.content = page.content
+                @loadAttachments(page)
+                @loadHistorical()
 
-            $scope.showMoreHistoricaButton = historical.models.length < historical.count
-            $scope.historical = historical
+    loadAttachments: (page) ->
+        @rs.getWikiPageAttachments(@scope.projectId, page.id).then (attachments) =>
+            @scope.attachments = attachments
 
-    $scope.loadMoreHistorical = ->
-        page = if $scope.historical then $scope.historical.current + 1 else 1
-        loadHistorical(page=page)
+    loadHistorical: (page=1) ->
+        @rs.getWikiPageHistorical(@scope.page.id, {page: page}).then (historical) =>
+            if @scope.historical and page != 1
+                historical.models = _.union(@scope.historical.models, historical.models)
 
-    $scope.$on "wiki:restored", (ctx, data) ->
-        promise = rs.getWikiPage($scope.projectId, $rootScope.slug)
-        promise.then (page) ->
-            $scope.page = page
-            $scope.content = page.content
-            loadAttachments(page)
-            loadHistorical()
+            @scope.showMoreHistoricaButton = historical.models.length < historical.count
+            @scope.historical = historical
 
-    return
+    loadMoreHistorical: ->
+        page = if @scope.historical then @scope.historical.current + 1 else 1
+        @loadHistorical(page=page)
 
 
-WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q, $i18next) ->
-    $scope.showChanges = false
+class WikiHistoricalItemController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', 'resource', '$confirm', '$gmFlash',
+                 '$q', "$i18next"]
+    constructor: (@scope, @rootScope, @rs, @confirm, @gmFlash, @q, @i18next) ->
+        super(scope)
 
-    $scope.showContent = true
-    $scope.showPreviousDiff = false
-    $scope.showCurrentDiff = false
+    initialize: ->
+        @scope.showChanges = false
+        @scope.showContent = true
+        @scope.showPreviousDiff = false
+        @scope.showCurrentDiff = false
 
-    $scope.toggleShowChanges = ->
-        $scope.showChanges = not $scope.showChanges
+    toggleShowChanges: ->
+        @scope.showChanges = not @scope.showChanges
 
-    $scope.activeShowContent = ->
-        $scope.showContent = true
-        $scope.showPreviousDiff = false
-        $scope.showCurrentDiff = false
+    activeShowContent: ->
+        @scope.showContent = true
+        @scope.showPreviousDiff = false
+        @scope.showCurrentDiff = false
 
-    $scope.activeShowPreviousDiff = ->
-        $scope.showContent = false
-        $scope.showPreviousDiff = true
-        $scope.showCurrentDiff = false
+    activeShowPreviousDiff: ->
+        @scope.showContent = false
+        @scope.showPreviousDiff = true
+        @scope.showCurrentDiff = false
 
-    $scope.activeShowCurrentDiff = ->
-        $scope.showContent = false
-        $scope.showPreviousDiff = false
-        $scope.showCurrentDiff = true
+    activeShowCurrentDiff: ->
+        @scope.showContent = false
+        @scope.showPreviousDiff = false
+        @scope.showCurrentDiff = true
 
-    $scope.restoreWikiPage = (hitem) ->
+    restoreWikiPage: (hitem) ->
         date = moment(hitem.created_date).format("llll")
 
-        promise = $confirm.confirm $i18next.t("wiki-historical.gone-back-sure", {'date': date})
-        promise.then () ->
-            promise = rs.restoreWikiPage(hitem.object_id, hitem.id)
+        promise = @confirm.confirm @i18next.t("wiki-historical.gone-back-sure", {'date': date})
+        promise.then () =>
+            promise = @rs.restoreWikiPage(hitem.object_id, hitem.id)
 
-            promise.then (data) ->
-                $scope.$emit("wiki:restored")
-                $gmFlash.info($i18next.t("wiki-historical.gone-back-success", {'date': date}))
+            promise.then (data) =>
+                @scope.$emit("wiki:restored")
+                @gmFlash.info(@i18next.t("wiki-historical.gone-back-success", {'date': date}))
 
-            promise.then null, (data, status) ->
-                $gmFlash.error($i18next.t("wiki-historical.gone-back-error"))
-
-    return
-
+            promise.then null, (data, status) =>
+                @gmFlash.error(@i18next.t("wiki-historical.gone-back-error"))
 
 module = angular.module("taiga.controllers.wiki", [])
 module.controller("WikiController", WikiController)
 module.controller("WikiHelpController", WikiHelpController)
-module.controller("WikiHistoricalController", ['$scope', '$rootScope', '$location', '$routeParams',
-                                               '$data', 'resource', "$confirm", "$q", "$i18next", "$favico",
-                                               WikiHistoricalController])
-module.controller("WikiHistoricalItemController", ['$scope', '$rootScope', 'resource', '$confirm',
-                                                   '$gmFlash',  '$q', "$i18next", WikiHistoricalItemController])
+module.controller("WikiHistoricalController", WikiHistoricalController)
+module.controller("WikiHistoricalItemController", WikiHistoricalItemController)
 

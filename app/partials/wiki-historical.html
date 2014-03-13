@@ -25,12 +25,12 @@
                             <span i18next="wiki-historical.no-historical-items">This wiki page has no past yet</span>
                         </li>
                         <li class="history-item" ng-repeat="hitem in historical.models"
-                            ng-controller="WikiHistoricalItemController">
+                            ng-controller="WikiHistoricalItemController as historyCtrl">
                             <div class="title">
                                 <a href="" data-icon="C" ng-show="showChanges" class="show-button"
-                                    ng-click="toggleShowChanges()"></a>
+                                    ng-click="historyCtrl.toggleShowChanges()"></a>
                                 <a href="" data-icon="B" ng-hide="showChanges" class="hide-button"
-                                    ng-click="toggleShowChanges()"></a>
+                                    ng-click="historyCtrl.toggleShowChanges()"></a>
 
                                 <span class="updated">
                                     <span i18next="wiki-historical.updated-by-history">
@@ -50,18 +50,18 @@
                                 <div ng-bind-html="content|diff:hitem.changed_fields.content.new"
                                      ng-show="showCurrentDiff" class="current-diff" ></div>
 
-                                <a href="" ng-click="restoreWikiPage(hitem)"
+                                <a href="" ng-click="historyCtrl.restoreWikiPage(hitem)"
                                    class="button button-restore" i18next="wiki-historical.restore">Restore</a>
 
-                                <a href="" ng-click="activeShowCurrentDiff()"
+                                <a href="" ng-click="historyCtrl.activeShowCurrentDiff()"
                                    i18next="wiki-historical.show-current-diff"
                                    ng-class="showCurrentDiff && 'selected'"
                                    class="button button-current-diff">show diff with current version</a>
-                                <a href="" ng-click="activeShowPreviousDiff()"
+                                <a href="" ng-click="historyCtrl.activeShowPreviousDiff()"
                                    i18next="wiki-historical.show-previous-diff"
                                    ng-class="showPreviousDiff && 'selected'"
                                    class="button button-previous-diff">Show diff with previous version</a>
-                                <a href="" ng-click="activeShowContent()"
+                                <a href="" ng-click="historyCtrl.activeShowContent()"
                                    i18next="wiki-historical.show-content"
                                    ng-class="showContent && 'selected'"
                                    class="button button-content selected">Show content</a>
@@ -69,7 +69,7 @@
                         </li>
                     </ul>
                 </div>
-                <a class="more" data-icon="C" href="" ng-click="loadMoreHistorical()"
+                <a class="more" data-icon="C" href="" ng-click="ctrl.loadMoreHistorical()"
                    ng-show="showMoreHistoricaButton" i18next="wiki-historical.see-more">See more</a>
             </div>
         </div>
