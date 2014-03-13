@@ -296,9 +296,9 @@
         </div>
     </div>
 </div>
-<div ng-show="formOpened" ng-controller="IssuesModalController" gm-modal="issue-form">
+<div ng-show="formOpened" ng-controller="IssuesModalController as modalCtrl" gm-modal="issue-form">
     <div class="new-issue-modal modal">
-        <form class="inline-form issue-form" gm-checksley-form="submit()">
+        <form class="inline-form issue-form" gm-checksley-form="modalCtrl.submit()">
             <div class="modal-header" ng-switch on="context.type">
                 <h3 ng-switch-when="create" i18next="issues.create-issue">Create issue</h3>
                 <h3 ng-switch-when="edit" i18next="issues.modify-issue">Modify issue</h3>
@@ -395,7 +395,7 @@
                                 <a class="delete" data-icon="h" href=""
                                    title="Delete the new attachment"
                                    i18next="title:issue.delete-new-attachment"
-                                   ng-click="removeAttachment(attachment)"></a>
+                                   ng-click="modalCtrl.removeAttachment(attachment)"></a>
                                 <span>{{ attachment.name }}</span>
                                 <span>[{{ attachment.size|sizeFormat }}]</span>
                             </li>
@@ -411,7 +411,7 @@
                                 <a class="delete" data-icon="h" href=""
                                    title="Delete the new attachment"
                                    i18next="title:issue.delete-new-attachment"
-                                   ng-click="removeNewAttachment(attachment)"></a>
+                                   ng-click="modalCtrl.removeNewAttachment(attachment)"></a>
                                 <span>{{ attachment.name }}</span>
                                 <span>[{{ attachment.size|sizeFormat }}]</span>
                             </li>
@@ -425,7 +425,7 @@
             <div class="modal-footer">
                 <div gm-spinner class="spinner-container"></div>
                 <input type="submit" gm-checksley-submit-button class="button button-success" value="Save"  i18next="value:issues.form-save"/>
-                <a href="" class="button button-cancel" ng-click="close()" i18next="issues.form-close">Close</a>
+                <a href="" class="button button-cancel" ng-click="modalCtrl.close()" i18next="issues.form-close">Close</a>
             </div>
         </form>
     </div>

@@ -14,7 +14,7 @@
 
 class IssuesController extends TaigaBaseController
     @.$inject = ['$scope', '$rootScope', '$routeParams', '$filter', '$q',
-                 'resource', "$data", "$confirm", "$modal", '$i18next',
+                 'resource', '$data', '$confirm', '$modal', '$i18next',
                  '$location', '$favico', 'SelectedTags']
     constructor: (@scope, @rootScope, @routeParams, @filter, @q, @rs, @data, @confirm, @modal, @i18next, @location, @favico, @SelectedTags) ->
         super(scope)
@@ -268,7 +268,7 @@ class IssuesController extends TaigaBaseController
 
 class IssuesViewController extends TaigaBaseController
     @.$inject = ['$scope', '$location', '$rootScope', '$routeParams', '$q',
-                 'resource', "$data", "$confirm", "$gmFlash", '$i18next',
+                 'resource', '$data', '$confirm', '$gmFlash', '$i18next',
                  '$favico']
     constructor: (@scope, @location, @rootScope, @routeParams, @q, @rs, @data, @confirm, @gmFlash, @i18next, @favico) ->
         super(scope)
@@ -356,7 +356,7 @@ class IssuesViewController extends TaigaBaseController
         promise.then (attachments) =>
             @scope.attachments = attachments
 
-    saveNewAttachments: ->
+    saveNewAttachments: =>
         if @scope.newAttachments.length == 0
             return
 
@@ -420,138 +420,147 @@ class IssuesViewController extends TaigaBaseController
          return "<span\">#{option.text}</span>"
 
 
-IssuesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next, $confirm, $q) ->
-    $scope.type = "create"
-    $scope.formOpened = false
+class IssuesModalController extends ModalBaseController
+    @.$inject = ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash',
+                 '$i18next', '$confirm', '$q']
+    constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next, @confirm, @q) ->
+        super(scope)
 
-    # Load data
-    $scope.defered = null
-    $scope.context = null
+    debounceMethods: ->
+        submit = @submit
+        @submit = gm.utils.safeDebounced @scope, 500, submit
 
-    $scope.newAttachments = []
-    $scope.attachments = []
+    initialize: ->
+        @debounceMethods()
+        @scope.type = "create"
+        @scope.formOpened = false
 
-    saveNewAttachments = (projectId, issueId) ->
-        if $scope.newAttachments.length == 0
+        # Load data
+        @scope.defered = null
+        @scope.context = null
+
+        @scope.newAttachments = []
+        @scope.attachments = []
+
+        @scope.$on "select2:changed", (ctx, value) =>
+            @scope.form.tags = value
+
+        @scope.assignedToSelectOptions = {
+            formatResult: @assignedToSelectOptionsShowMember
+            formatSelection: @assignedToSelectOptionsShowMember
+        }
+
+    saveNewAttachments: (projectId, issueId) =>
+        if @scope.newAttachments.length == 0
             return
 
         promises = []
-        for attachment in $scope.newAttachments
-            promise = rs.uploadIssueAttachment(projectId, issueId, attachment)
+        for attachment in @scope.newAttachments
+            promise = @rs.uploadIssueAttachment(projectId, issueId, attachment)
             promises.push(promise)
 
-        promise = $q.all(promises)
-        promise.then ->
-            gm.safeApply $scope, ->
-                $scope.newAttachments = []
+        promise = @q.all(promises)
+        promise.then =>
+            gm.safeApply @scope, =>
+                @scope.newAttachments = []
         return promise
 
-    $scope.removeAttachment = (attachment) ->
-        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
-        promise.then () ->
-            $scope.attachments = _.without($scope.attachments, attachment)
+    removeAttachment: (attachment) ->
+        promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
+        promise.then () =>
+            @scope.attachments = _.without(@scope.attachments, attachment)
             attachment.remove()
 
-    $scope.removeNewAttachment = (attachment) ->
-        $scope.newAttachments = _.without($scope.newAttachments, attachment)
+    removeNewAttachment: (attachment) ->
+        @scope.newAttachments = _.without(@scope.newAttachments, attachment)
 
-    loadAttachments = (projectId, issueId) ->
-        promise = rs.getIssueAttachments(projectId, issueId)
+    loadAttachments: (projectId, issueId) ->
+        promise = @rs.getIssueAttachments(projectId, issueId)
         promise.then (attachments) ->
-            $scope.attachments = attachments
+            @scope.attachments = attachments
 
-    loadProjectTags = ->
-        rs.getProjectTags($scope.projectId).then (data) ->
-            $scope.projectTags = data
+    loadProjectTags: =>
+        @rs.getProjectTags(@scope.projectId).then (data) =>
+            @scope.projectTags = data
 
-    openModal = ->
-        loadProjectTags()
-        if $scope.context.issue?
-            $scope.form = $scope.context.issue
-            loadAttachments($scope.projectId, $scope.form.id)
+    openModal: ->
+        @loadProjectTags()
+        if @scope.context.issue?
+            @scope.form = @scope.context.issue
+            @loadAttachments(@scope.projectId, @scope.form.id)
         else
-            $scope.form = {
-                status: $scope.project.default_issue_status
-                type: $scope.project.default_issue_type
-                priority: $scope.project.default_priority
-                severity: $scope.project.default_severity
+            @scope.form = {
+                status: @scope.project.default_issue_status
+                type: @scope.project.default_issue_type
+                priority: @scope.project.default_priority
+                severity: @scope.project.default_severity
             }
-        $scope.formOpened = true
+        @scope.formOpened = true
 
-        $scope.$broadcast("checksley:reset")
-        $scope.$broadcast("wiki:clean-previews")
+        @scope.$broadcast("checksley:reset")
+        @scope.$broadcast("wiki:clean-previews")
 
-        $scope.overlay = $gmOverlay()
-        $scope.overlay.open().then ->
-            $scope.formOpened = false
+        @scope.overlay = @gmOverlay()
+        @scope.overlay.open().then =>
+            @scope.formOpened = false
 
-    closeModal = ->
-        $scope.formOpened = false
+    closeModal: ->
+        @scope.formOpened = false
 
-    @.start = (dfr, ctx) ->
-        $scope.defered = dfr
-        $scope.context = ctx
-        openModal()
+    start: (dfr, ctx) ->
+        @scope.defered = dfr
+        @scope.context = ctx
+        @openModal()
 
-    @.delete = ->
-        closeModal()
-        $scope.form = form
-        $scope.formOpened = true
+    delete: ->
+        @closeModal()
+        @scope.form = form
+        @scope.formOpened = true
 
-    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
-        if $scope.form.id?
-            promise = $scope.form.save(false)
+    # Debounced Method (see debounceMethods method)
+    submit: =>
+        if @scope.form.id?
+            promise = @scope.form.save(false)
         else
-            promise = rs.createIssue($rootScope.projectId, $scope.form)
-        $scope.$emit("spinner:start")
+            promise = @rs.createIssue(@rootScope.projectId, @scope.form)
+        @scope.$emit("spinner:start")
 
-        promise.then (data) ->
-            finishSubmit = ->
-                $scope.$emit("spinner:stop")
-                closeModal()
-                $scope.overlay.close()
-                $scope.defered.resolve($scope.form)
-                $gmFlash.info($i18next.t('issue.issue-saved'))
+        promise.then (data) =>
+            finishSubmit = =>
+                @scope.$emit("spinner:stop")
+                @closeModal()
+                @scope.overlay.close()
+                @scope.defered.resolve(@scope.form)
+                @gmFlash.info(@i18next.t('issue.issue-saved'))
 
-            if $scope.newAttachments.length > 0
-                saveNewAttachments($scope.projectId, data.id).then ->
+            if @scope.newAttachments.length > 0
+                @saveNewAttachments(@scope.projectId, data.id).then =>
                     finishSubmit()
             else
                 finishSubmit()
 
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
 
-    $scope.close = ->
-        $scope.formOpened = false
-        $scope.overlay.close()
+    close: ->
+        @scope.formOpened = false
+        @scope.overlay.close()
 
-        if $scope.form.id?
-            $scope.form.revert()
+        if @scope.form.id?
+            @scope.form.revert()
         else
-            $scope.form = {}
+            @scope.form = {}
 
-    $scope.$on "select2:changed", (ctx, value) ->
-        $scope.form.tags = value
-
-    assignedToSelectOptionsShowMember = (option, container) ->
+    assignedToSelectOptionsShowMember: (option, container) =>
         if option.id
-            member = _.find($rootScope.constants.users, {id: parseInt(option.id, 10)})
+            member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
             # TODO: make me more beautiful and elegant
             return "<span style=\"color: black; padding: 0px 5px;
                                   border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
-         return "<span\">#{option.text}</span>"
-
-    $scope.assignedToSelectOptions = {
-        formatResult: assignedToSelectOptionsShowMember
-        formatSelection: assignedToSelectOptionsShowMember
-    }
-
-    return
+        return "<span\">#{option.text}</span>"
 
 
 module = angular.module("taiga.controllers.issues", [])
 module.controller("IssuesController", IssuesController)
 module.controller("IssuesViewController", IssuesViewController)
-module.controller("IssuesModalController", ['$scope', '$rootScope', '$gmOverlay', 'resource',
-                  "$gmFlash", "$i18next", "$confirm", "$q", IssuesModalController])
+module.controller("IssuesModalController", IssuesModalController)
