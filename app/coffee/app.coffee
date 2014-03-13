@@ -34,19 +34,19 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         {templateUrl: 'partials/recovery.html', controller: "RecoveryController as ctrl"})
 
     $routeProvider.when('/change-password',
-        {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController"})
+        {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController as ctrl"})
 
     $routeProvider.when('/change-password/:token',
-        {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController"})
+        {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController as ctrl"})
 
     $routeProvider.when('/profile',
-        {templateUrl: 'partials/profile.html', controller: "ProfileController"})
+        {templateUrl: 'partials/profile.html', controller: "ProfileController as ctrl"})
 
     $routeProvider.when("/register",
-        {controller: "PublicRegisterController", templateUrl: "partials/register.html"})
+        {controller: "PublicRegisterController as ctrl", templateUrl: "partials/register.html"})
 
     $routeProvider.when("/invitation/:token",
-        {controller: "InvitationRegisterController", templateUrl: "partials/invitation-register.html"})
+        {controller: "InvitationRegisterController as ctrl", templateUrl: "partials/invitation-register.html"})
 
     $routeProvider.when('/project/:pslug/backlog',
         {templateUrl: 'partials/backlog.html', controller: "BacklogController"})

@@ -18,38 +18,36 @@ class LoginController extends TaigaBaseController
                  '$i18next', '$favico']
 
     constructor: (@scope, @rootScope, @location, @routeParams, @rs, @gmAuth, @i18next, @favico) ->
-        favico.reset()
-        rootScope.pageTitle = i18next.t('login.login-title')
-        rootScope.pageSection = 'login'
-        @.form = {}
         super(scope)
 
     initialize: ->
-        console.log("INITIALIZE", arguments)
-
-    destroy: ->
-        super()
-        console.log("DESTROY")
+        @favico.reset()
+        @rootScope.pageTitle = @i18next.t('login.login-title')
+        @rootScope.pageSection = 'login'
+        @scope.form = {}
+        @scope.success = false
+        @scope.error = false
 
     submit: ->
-        username = @.form.username
-        password = @.form.password
+        username = @scope.form.username
+        password = @scope.form.password
 
-        @.loading = true
-        @.rs.login(username, password)
-            .then(@.onSuccess, @.onError)
-            .then(=> @.loading = false)
+        @scope.loading = true
+        @rs.login(username, password)
+            .then(@onSuccess, @onError)
+            .then =>
+                @.loading = false
 
     onError: (data) ->
-        @.error = true
-        @.errorMessage = data.detail
+        @scope.error = true
+        @scope.errorMessage = data.detail
 
     onSuccess: (user) ->
-        @.gmAuth.setUser(user)
-        if @.routeParams['next'] and @.routeParams['next'] != '/login'
-            @.location.url(@.routeParams['next'])
+        @gmAuth.setUser(user)
+        if @routeParams['next'] and @routeParams['next'] != '/login'
+            @location.url(@routeParams['next'])
         else
-            @.location.url("/")
+            @location.url("/")
 
 
 class RecoveryController extends TaigaBaseController
@@ -59,163 +57,173 @@ class RecoveryController extends TaigaBaseController
         rootScope.pageTitle = i18n.t('login.password-recovery-title')
         rootScope.pageSection = 'login'
 
-        @.formData = {}
-        @.success = false
-        @.error = false
+        @scope.formData = {}
+        @scope.success = false
+        @scope.error = false
         super(scope)
 
     submit: ->
-        @.rs.recovery(@.formData.email)
+        @.rs.recovery(@scope.formData.email)
             .then(@.onSuccess, @.onError)
 
-    onError: (data) ->
-        @.error = true
-        @.success = false
-        @.formData = {}
-        @.errorMessage = data.detail
+    onError: (data) =>
+        @scope.error = true
+        @scope.success = false
+        @scope.formData = {}
+        @scope.errorMessage = data._error_message
 
-    onSuccess: ->
-        @.success = true
-        @.error = false
+    onSuccess: =>
+        @scope.success = true
+        @scope.error = false
 
-        gm.utils.delay 1000, =>
+        gm.utils.delay 2000, =>
             @.location.url("/login")
             @.scope.$apply()
 
 
-ChangePasswordController = ($scope, $rootScope, $location, $routeParams, rs, $i18next) ->
-    $rootScope.pageTitle = $i18next.t('login.password-change-title')
-    $rootScope.pageSection = 'login'
+class ChangePasswordController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', '$location', '$routeParams',
+                 'resource', '$i18next']
+    constructor: (@scope, @rootScope, @location, @routeParams, @rs, @i18next) ->
+        super(scope)
 
-    $scope.error = false
-    $scope.success = false
-    $scope.formData = {}
+    initialize: ->
+        @rootScope.pageTitle = @i18next.t('login.password-change-title')
+        @rootScope.pageSection = 'login'
 
-    if $routeParams.token?
-        $scope.tokenInParams = true
-    else
-        $scope.tokenInParams = false
+        @scope.error = false
+        @scope.success = false
+        @scope.formData = {}
 
-    $scope.submit = ->
-        token = $routeParams.token or $scope.formData.token
-        promise = rs.changePasswordFromRecovery(token, $scope.formData.password)
-        promise.then ->
-            $scope.success = true
-            $scope.error = false
+        if @routeParams.token?
+            @scope.tokenInParams = true
+        else
+            @scope.tokenInParams = false
 
-            gm.utils.delay 1000, ->
-                $location.url("/login")
-                $scope.$apply()
+    submit: ->
+        token = @routeParams.token or @scope.formData.token
+        promise = @rs.changePasswordFromRecovery(token, @scope.formData.password)
+        promise.then =>
+            @scope.success = true
+            @scope.error = false
 
-        promise.then null, (data) ->
-            $scope.error = true
-            $scope.success = false
-            $scope.formData = {}
-            $scope.errorMessage = data.detail
+            gm.utils.delay 1000, =>
+                @location.url("/login")
+                @scope.$apply()
 
-    return
+        promise.then null, (data) =>
+            @scope.error = true
+            @scope.success = false
+            @scope.formData = {}
+            @scope.errorMessage = data.detail
 
 
-ProfileController = ($scope, $rootScope, $gmAuth, $gmFlash, rs, config, $i18next, $favico) ->
-    $favico.reset()
-    $rootScope.pageTitle = $i18next.t('profile.profile')
-    $rootScope.projectId = null
-    $rootScope.pageSection = 'profile'
-    $rootScope.pageBreadcrumb = [
-        ["Taiga", $rootScope.urls.projectsUrl()],
-        [$i18next.t("profile.profile"), null]
-    ]
-    $scope.notificationLevelOptions = config.notificationLevelOptions
-    $scope.languageOptions = config.languageOptions
+class ProfileController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource',
+                 'config', '$i18next', "$favico"]
+    constructor: (@scope, @rootScope, @gmAuth, @gmFlash, @rs, @config, @i18next, @favico) ->
+        super(scope)
 
-    $scope.formData = {}
-    $scope.authForm = $scope.auth
+    initialize: ->
+        @favico.reset()
+        @rootScope.pageTitle = @i18next.t('profile.profile')
+        @rootScope.projectId = null
+        @rootScope.pageSection = 'profile'
+        @rootScope.pageBreadcrumb = [
+            ["Taiga", @rootScope.urls.projectsUrl()],
+            [@i18next.t("profile.profile"), null]
+        ]
+        @scope.notificationLevelOptions = @config.notificationLevelOptions
+        @scope.languageOptions = @config.languageOptions
 
-    if not $scope.authForm.notify_level?
-        $scope.authForm.notify_level = _.keys($scope.notificationLevelOptions)[0]
-    if not $scope.authForm.default_language?
-        $scope.authForm.default_language = _.keys($scope.languageOptions)[0]
+        @scope.formData = {}
+        @scope.authForm = @scope.auth
 
-    $scope.submitProfile = (form) ->
+        if not @scope.authForm.notify_level?
+            @scope.authForm.notify_level = _.keys(@scope.notificationLevelOptions)[0]
+        if not @scope.authForm.default_language?
+            @scope.authForm.default_language = _.keys(@scope.languageOptions)[0]
+
+    submitProfile: (form) ->
         promise = form.save()
 
-        promise.then (user) ->
-            $gmAuth.setUser(user)
-            $gmFlash.info($i18next.t('profile.saved-successful'))
+        promise.then (user) =>
+            @gmAuth.setUser(user)
+            @gmFlash.info(@i18next.t('profile.saved-successful'))
 
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
 
-    $scope.submitPassword = ->
-        promise = rs.changePasswordForCurrentUser($scope.formData.password)
+    submitPassword: ->
+        promise = @rs.changePasswordForCurrentUser(@scope.formData.password)
 
-        promise.then (data) ->
-            $gmFlash.info($i18next.t('profile.password-changed-successful'))
+        promise.then (data) =>
+            @gmFlash.info(@i18next.t('profile.password-changed-successful'))
 
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
-
-    return
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
 
 
-PublicRegisterController = ($scope, $rootScope, $location, rs, $data, $gmAuth, $i18next) ->
-    $rootScope.pageTitle = $i18next.t('register.register')
-    $rootScope.pageSection = 'login'
-    $scope.form = {"type": "public"}
+class PublicRegisterController extends TaigaBaseController
+    @.$inject = ["$scope", "$rootScope", "$location", "resource", "$data",
+                 "$gmAuth", "$i18next"]
+    constructor: (@scope, @rootScope, @location, @rs, @data, @gmAuth, @i18next) ->
+        super(scope)
 
-    $scope.$watch "site.data.public_register", (value) ->
-        if value == false
-            $location.url("/login")
+    initialize: ->
+        @rootScope.pageTitle = @i18next.t('register.register')
+        @rootScope.pageSection = 'login'
+        @scope.form = {"type": "public"}
 
-    $scope.submit = ->
-        form = _.clone($scope.form)
+        @scope.$watch "site.data.public_register", (value) ->
+            if value == false
+                @location.url("/login")
 
-        promise = rs.register(form)
-        promise.then (user) ->
-            $gmAuth.setUser(user)
-            $rootScope.auth = user
-            $location.url("/")
+    submit: ->
+        form = _.clone(@scope.form)
 
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
-            $scope.error = true
-            $scope.errorMessage = data._error_message or data._error_type
+        promise = @rs.register(form)
+        promise.then (user) =>
+            @gmAuth.setUser(user)
+            @rootScope.auth = user
+            @location.url("/")
 
-    return
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
+            @scope.error = true
+            @scope.errorMessage = data._error_message or data._error_type
 
 
-InvitationRegisterController = ($scope, $params, $rootScope, $location, rs, $data, $gmAuth, $i18next) ->
-    $rootScope.pageTitle = $i18next.t('register.register')
-    $rootScope.pageSection = 'login'
-    $scope.form = {existing: "on", "type": "private", "token": $params.token}
+class InvitationRegisterController extends TaigaBaseController
+    @.$inject = ["$scope", "$routeParams", "$rootScope", "$location",
+                 "resource", "$data", "$gmAuth", "$i18next"]
+    constructor: (@scope, @params, @rootScope, @location, @rs, @data, @gmAuth, @i18next) ->
+        super(scope)
 
-    $scope.submit = ->
-        form = _.clone($scope.form)
+    initialize: ->
+        @rootScope.pageTitle = @i18next.t('register.register')
+        @rootScope.pageSection = 'login'
+        @scope.form = {existing: "on", "type": "private", "token": @params.token}
+
+    submit: ->
+        form = _.clone(@scope.form)
         form.existing = if form.existing == "on" then true else false
 
-        promise = rs.register(form)
-        promise.then (user) ->
-            $gmAuth.setUser(user)
-            $rootScope.auth = user
-            $location.url("/")
+        promise = @rs.register(form)
+        promise.then (user) =>
+            @gmAuth.setUser(user)
+            @rootScope.auth = user
+            @location.url("/")
 
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
-            $scope.error = true
-            $scope.errorMessage = data._error_message or data._error_type
-
-    return
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
+            @scope.error = true
+            @scope.errorMessage = data._error_message or data._error_type
 
 module = angular.module("taiga.controllers.auth", [])
 module.controller("LoginController", LoginController)
 module.controller("RecoveryController", RecoveryController)
-
-module.controller("ChangePasswordController", ['$scope', '$rootScope', '$location', '$routeParams', 'resource',
-                                               '$i18next', ChangePasswordController])
-module.controller("ProfileController", ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource', 'config',
-                                        '$i18next', "$favico", ProfileController])
-module.controller("PublicRegisterController", ["$scope", "$rootScope", "$location", "resource", "$data",
-                                               "$gmAuth", "$i18next", PublicRegisterController])
-module.controller("InvitationRegisterController", ["$scope", "$routeParams", "$rootScope", "$location",
-                                                   "resource", "$data", "$gmAuth", "$i18next",
-                                                   InvitationRegisterController])
+module.controller("ChangePasswordController", ChangePasswordController)
+module.controller("ProfileController", ProfileController)
+module.controller("PublicRegisterController", PublicRegisterController)
+module.controller("InvitationRegisterController", InvitationRegisterController)

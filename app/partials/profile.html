@@ -3,7 +3,7 @@
     <div class="profile-box">
         <div class="profile-data">
             <div class="update-form">
-                <form class="form-horizontal" gm-checksley-form="submitProfile(authForm)">
+                <form class="form-horizontal" gm-checksley-form="ctrl.submitProfile(authForm)">
                     <fieldset>
                         <label i18next="profile.username">Username:</label>
                         <input type="text" name="username" data-required="true" value="" ng-model="authForm.username"></input>
@@ -61,7 +61,7 @@
         <div class="profile-password">
             <div class="update-form">
 
-                <form class="form-horizontal" gm-checksley-form="submitPassword()">
+                <form class="form-horizontal" gm-checksley-form="ctrl.submitPassword()">
                     <fieldset>
                         <label i18next="profile.password">Password:</label>
                         <input name="password" type="password" ng-model="formData.password" data-minlength="6"></input>

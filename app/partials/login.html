@@ -9,14 +9,14 @@
             <form id="login-form" class="login-form" method="post" action="" gm-checksley-form="ctrl.submit()">
                 <fieldset class="form-field">
                     <label i18next="login.username-label">Username: </label>
-                    <input type="text" ng-model="ctrl.form.username"
+                    <input type="text" ng-model="form.username"
                         data-required="true" data-minlength="3"
                         i18next="placeholder:login.username-placeholder"
                         placeholder="username..." />
                 </fieldset>
                 <fieldset class="form-field">
                     <label i18next="login.password-label">Password</label>
-                    <input type="password" ng-model="ctrl.form.password"
+                    <input type="password" ng-model="form.password"
                         data-required="true" data-minlength="6"
                         placeholder="password..."
                         i18next="placeholder:login.password-placeholder" />
@@ -36,11 +36,11 @@
 
                 <!-- if success {.loading } else {.error} -->
                 <div class="login-message">
-                    <p class="loading" ng-show="!ctrl.error && ctrl.loading">
+                    <p class="loading" ng-show="!error && loading">
                         <span class="loading-ico"></span>
                         <span i18next="login.loading">Our Oompa Loompas are identifying you, please wait...</span>
                     </p>
-                    <p class="error" ng-show="ctrl.error" i18next="login.error">
+                    <p class="error" ng-show="error" i18next="login.error">
                         Your username or password are incorrect
                     </p>
                 </div>
