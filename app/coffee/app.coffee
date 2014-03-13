@@ -97,7 +97,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         {controller: "ProjectAdminMembershipsController as ctrl", templateUrl: "partials/project-admin-memberships.html"})
 
     $routeProvider.when('/admin',
-        {controller: "SiteAdminController", templateUrl: "partials/site-admin.html"})
+        {controller: "SiteAdminController as ctrl", templateUrl: "partials/site-admin.html"})
 
     $routeProvider.otherwise({redirectTo: '/login'})
 

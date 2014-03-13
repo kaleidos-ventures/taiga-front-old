@@ -12,26 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-SiteAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model,
-                       rs, $confirm, $location, $i18next, config, $gmUrls, $favico) ->
-    $favico.reset()
-    $rootScope.pageTitle = $i18next.t('common.admin-panel')
-    $rootScope.pageSection = 'admin'
-    $rootScope.pageBreadcrumb = [
-        [$i18next.t('common.administer-site'), null],
-    ]
+class SiteAdminController extends TaigaBaseController
+    @.$inject = ["$scope", "$rootScope", "$routeParams", "$data", "$gmFlash",
+                 "$model", "resource", "$confirm", "$location", "$i18next",
+                 "config", "$gmUrls", "$favico"]
+    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model,
+                  @rs, @confirm, @location, @i18next, @config, @gmUrls, @favico) ->
+        super(scope)
 
-    $scope.activeTab = "data"
+    initialize: ->
+        @favico.reset()
+        @rootScope.pageTitle = @i18next.t('common.admin-panel')
+        @rootScope.pageSection = 'admin'
+        @rootScope.pageBreadcrumb = [
+            [@i18next.t('common.administer-site'), null],
+        ]
 
-    $scope.languageOptions = config.languageOptions
+        @scope.activeTab = "data"
 
-    $scope.isActive = (type) ->
-        return type == $scope.activeTab
+        @scope.languageOptions = @config.languageOptions
 
-    $scope.setActive = (type) ->
-        $scope.activeTab = type
+        @loadMembers()
+        @loadSite()
 
-    $scope.setMemberAs = (mbr, role) ->
+    isActive: (type) ->
+        return type == @scope.activeTab
+
+    setActive: (type) ->
+        @scope.activeTab = type
+
+    setMemberAs: (mbr, role) ->
         if role == 'owner'
             mbr.is_owner = true
             mbr.is_staff = true
@@ -43,73 +53,64 @@ SiteAdminController = ($scope, $rootScope, $routeParams, $data, $gmFlash, $model
             mbr.is_staff = false
 
         promise = mbr.save()
-        promise.then ->
-            $gmFlash.info($i18next.t("admin-site.role-changed"))
+        promise.then =>
+            @gmFlash.info(@i18next.t("admin-site.role-changed"))
 
-        promise.then null, ->
+        promise.then null, =>
             mbr.revert()
-            $gmFlash.warn($i18next.t("admin-site.error-changing-the-role"))
+            @gmFlash.warn(@i18next.t("admin-site.error-changing-the-role"))
 
-    $scope.submit = ->
+    submit: ->
         extraParams = {
-            url: "#{$gmUrls.api('sites')}",
+            url: "#{@gmUrls.api('sites')}",
             method: "POST"
         }
 
-        promise = $scope.currentSite.save(false, extraParams)
-        promise.then (data) ->
-            $gmFlash.info($i18next.t("admin-site.saved-success"))
-            $scope.site.data = data
-            $rootScope.$broadcast('i18n:change')
+        promise = @scope.currentSite.save(false, extraParams)
+        promise.then (data) =>
+            @gmFlash.info(@i18next.t("admin-site.saved-success"))
+            @scope.site.data = data
+            @rootScope.$broadcast('i18n:change')
 
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
 
-    $scope.deleteProject = (project) ->
-        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
-        promise.then () ->
-            $model.make_model('site-projects', project).remove().then ->
-                loadSite()
+    deleteProject: (project) ->
+        promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
+        promise.then () =>
+            @model.make_model('site-projects', project).remove().then =>
+                @loadSite()
 
-    $scope.openNewProjectForm = ->
-        $scope.addProjectFormOpened = true
-        $scope.newProjectName = ""
-        $scope.newProjectDescription = ""
-        $scope.newProjectSprints = ""
-        $scope.newProjectPoints = ""
+    openNewProjectForm: ->
+        @scope.addProjectFormOpened = true
+        @scope.newProjectName = ""
+        @scope.newProjectDescription = ""
+        @scope.newProjectSprints = ""
+        @scope.newProjectPoints = ""
 
-    $scope.closeNewProjectForm = ->
-        $scope.addProjectFormOpened = false
+    closeNewProjectForm: ->
+        @scope.addProjectFormOpened = false
 
-    $scope.submitProject = () ->
+    submitProject: ->
         projectData = {
-            name: $scope.newProjectName,
-            description: $scope.newProjectDescription,
-            total_story_points: $scope.newProjectPoints
-            total_milestones: $scope.newProjectSprints
+            name: @scope.newProjectName,
+            description: @scope.newProjectDescription,
+            total_story_points: @scope.newProjectPoints
+            total_milestones: @scope.newProjectSprints
         }
-        rs.createProject(projectData, $scope.newProjectTemplate).then ->
-            $gmFlash.info($i18next.t("admin-site.project-created"))
-            $scope.addProjectFormOpened = false
-            loadSite()
+        @rs.createProject(projectData, @scope.newProjectTemplate).then =>
+            @gmFlash.info(@i18next.t("admin-site.project-created"))
+            @scope.addProjectFormOpened = false
+            @loadSite()
 
-    loadMembers = () ->
-        rs.getSiteMembers().then (members) ->
-            $scope.members = members
+    loadMembers: ->
+        @rs.getSiteMembers().then (members) =>
+            @scope.members = members
 
-    loadSite = () ->
-        rs.getSite().then (site) ->
-            $scope.currentSite = site
-
-    loadMembers()
-    loadSite()
-
-    return
+    loadSite: ->
+        @rs.getSite().then (site) =>
+            @scope.currentSite = site
 
 
 module = angular.module("taiga.controllers.site", [])
-module.controller("SiteAdminController", ["$scope", "$rootScope",
-                                          "$routeParams", "$data", "$gmFlash",
-                                          "$model", "resource", "$confirm",
-                                          "$location", "$i18next", "config",
-                                          "$gmUrls", "$favico", SiteAdminController])
+module.controller("SiteAdminController", SiteAdminController)

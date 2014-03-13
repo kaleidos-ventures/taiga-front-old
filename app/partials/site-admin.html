@@ -3,23 +3,23 @@
 <main class="site-admin-view" ng-show="auth.is_site_owner || auth.is_site_staff">
 
     <ul class="tabs clearfix">
-        <li class="userstory-tab" ng-class="{active: isActive('data')}"
-            ng-click="setActive('data')" i18next="admin-site.site-profile">
+        <li class="userstory-tab" ng-class="{active: ctrl.isActive('data')}"
+            ng-click="ctrl.setActive('data')" i18next="admin-site.site-profile">
             Site profile
         </li>
-        <li class="userstory-tab" ng-class="{active: isActive('memberships')}"
-            ng-click="setActive('memberships')" i18next="admin-site.memberships">
+        <li class="userstory-tab" ng-class="{active: ctrl.isActive('memberships')}"
+            ng-click="ctrl.setActive('memberships')" i18next="admin-site.memberships">
             Memberships
         </li>
-        <li class="userstory-tab" ng-class="{active: isActive('projects')}"
-            ng-click="setActive('projects')" i18next="admin-site.projects">
+        <li class="userstory-tab" ng-class="{active: ctrl.isActive('projects')}"
+            ng-click="ctrl.setActive('projects')" i18next="admin-site.projects">
             Projects
         </li>
     </ul>
 
-    <div class="tab-container" ng-show="isActive('data')">
+    <div class="tab-container" ng-show="ctrl.isActive('data')">
         <div class="update-form">
-            <form class="form-horizontal" gm-checksley-form="submit()">
+            <form class="form-horizontal" gm-checksley-form="ctrl.submit()">
                 <fieldset class="site-public-register">
                     <input type="checkbox" id="publicRegister" name="publicRegister" ng-model="currentSite.public_register" data-error-message="Required" />
                     <label class="control-label" for="publicRegister" i18next="admin-site.public-register">Public register</label>
@@ -39,7 +39,7 @@
             </form>
         </div>
     </div>
-    <div class="tab-container" ng-show="isActive('memberships')">
+    <div class="tab-container" ng-show="ctrl.isActive('memberships')">
         <div class="site-members">
             <div class="site-members-list" >
                 <table class="membership-list">
@@ -66,17 +66,17 @@
                                         ng-class="{ active: mbr.is_owner }"
                                         title="Set as owner"
                                         i18next="title:admin-site.set-as-owner"
-                                        ng-click="setMemberAs(mbr, 'owner')"></span>
+                                        ng-click="ctrl.setMemberAs(mbr, 'owner')"></span>
                                     <span class="action" data-icon="Q"
                                         ng-class="{ active: !mbr.is_owner && mbr.is_staff }"
                                         title="Set as staff"
                                         i18next="title:admin-site.set-as-staff"
-                                        ng-click="setMemberAs(mbr, 'staff')"></span>
+                                        ng-click="ctrl.setMemberAs(mbr, 'staff')"></span>
                                     <span class="action" data-icon="P"
                                         ng-class="{ active: !mbr.is_owner && !mbr.is_staff }"
                                         title="Set as normal user"
                                         i18next="title:admin-site.set-as-normal-user"
-                                        ng-click="setMemberAs(mbr, 'normal')"></span>
+                                        ng-click="ctrl.setMemberAs(mbr, 'normal')"></span>
                                 </div>
                             </td>
                         </tr>
@@ -85,17 +85,17 @@
             </div>
         </div>
     </div>
-    <div class="tab-container" ng-show="isActive('projects')">
+    <div class="tab-container" ng-show="ctrl.isActive('projects')">
         <div class="project-list-container">
             <h3 data-icon="q" i18next="admin-site.projects">Projects</h3>
             <div class="project-members-options">
                 <a href="" class="add-project" data-icon="A" title="Add project"
-                    ng-click="openNewProjectForm()" i18next="title:admin-site.add-project,admin-site.add-project">Add project</a>
+                    ng-click="ctrl.openNewProjectForm()" i18next="title:admin-site.add-project,admin-site.add-project">Add project</a>
             </div>
             <div class="invitation-form">
                 <div class="add-member-form" ng-show="addProjectFormOpened">
                     <h4 i18next="admin-site.add-new-project">Add new project</h4>
-                    <form gm-checksley-form="submitProject()">
+                    <form gm-checksley-form="ctrl.submitProject()">
                         <fieldset class="project-name">
                             <label class="control-label" for="name" i18next="admin-site.name">Name</label>
                             <input type="text" id="name" ng-model="newProjectName" data-required="true" />
@@ -126,7 +126,7 @@
                                 Add project
                             </button>
                             <button class="button button-cancel"
-                                ng-click="closeNewProjectForm()"
+                                ng-click="ctrl.closeNewProjectForm()"
                                 i18next="admin-site.cancel">
                                 Cancel
                             </button>
@@ -136,7 +136,7 @@
             </div>
             <ul class="project-list">
                 <li class="project" ng-repeat="pr in currentSite.projects">
-                    <a href="" data-icon="h" title="Delete project" i18next="title:admin-site.delete-project" ng-click="deleteProject(pr)"></a>
+                    <a href="" data-icon="h" title="Delete project" i18next="title:admin-site.delete-project" ng-click="ctrl.deleteProject(pr)"></a>
                     <a href="#/project/{{pr.slug}}/admin">{{ pr.name }}</a>
                 </li>
             </ul>
