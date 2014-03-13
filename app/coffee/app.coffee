@@ -25,7 +25,7 @@ gm.format = (fmt, obj, named) ->
 
 configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider, $gmUrlsProvider) ->
     $routeProvider.when('/',
-        {templateUrl: 'partials/project-list.html', controller: "ProjectListController"})
+        {templateUrl: 'partials/project-list.html', controller: "ProjectListController as ctrl"})
 
     $routeProvider.when('/login',
         {templateUrl: 'partials/login.html', controller: "LoginController as ctrl"})
@@ -49,7 +49,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         {controller: "InvitationRegisterController as ctrl", templateUrl: "partials/invitation-register.html"})
 
     $routeProvider.when('/project/:pslug/backlog',
-        {templateUrl: 'partials/backlog.html', controller: "BacklogController"})
+        {templateUrl: 'partials/backlog.html', controller: "BacklogController as ctrl"})
 
     $routeProvider.when('/project/:pslug/kanban',
         {templateUrl: 'partials/kanban.html', controller: "KanbanController as ctrl"})
@@ -67,7 +67,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         {templateUrl: 'partials/tasks-view.html', controller: "TasksViewController as ctrl"})
 
     $routeProvider.when('/project/:pslug/taskboard/:sslug',
-        {templateUrl: 'partials/taskboard.html', controller: "TaskboardController"})
+        {templateUrl: 'partials/taskboard.html', controller: "TaskboardController as ctrl"})
 
     $routeProvider.when('/project/:pslug/wiki-help',
         {templateUrl: 'partials/wiki-help.html', controller: "WikiHelpController as ctrl"})

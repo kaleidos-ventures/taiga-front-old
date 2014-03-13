@@ -83,7 +83,7 @@
                                             <ul class="us-points-per-role">
                                                 <li ng-repeat="role in constants.computableRolesList"
                                                     class="us-point"
-                                                    gm-popover="saveUsPoints(us, role, selectedId)"
+                                                    gm-popover="ctrl.saveUsPoints(us, role, selectedId)"
                                                     data-tmpl="#points-popover">
                                                     {{ role.name }}: {{ constants.points[us.points[role.id]].name }}
                                                 </li>
@@ -100,7 +100,7 @@
                                             <div class="icon" data-icon="N"
                                                  ng-show="us.team_requirement"></div>
                                             <div class="label"
-                                                 gm-popover="saveUsStatus(us, selectedId)"
+                                                 gm-popover="ctrl.saveUsStatus(us, selectedId)"
                                                  data-tmpl="#usstatuses-popover"
                                                  style="background-color: {{ constants.usStatuses[us.status].color }}">
                                                 {{ constants.usStatuses[us.status].name }}</div>
@@ -109,12 +109,12 @@
                                         </div>
                                     </div>
                                     <a href="" data-icon="A" class="add-new-task"
-                                       ng-click="openCreateTaskForm(us)"
+                                       ng-click="ctrl.openCreateTaskForm(us)"
                                        i18next="taskboard.add-new-task">
                                         Add new task
                                     </a>
                                     <a href="" data-icon="A" class="add-bulk-of-tasks"
-                                       ng-click="openBulkTasksForm(us)"
+                                       ng-click="ctrl.openBulkTasksForm(us)"
                                        i18next="taskboard.add-bulk-of-tasks">
                                         Add a bulk of tasks
                                     </a>
@@ -140,7 +140,7 @@
                                         <div class="description"></div>
                                     </div>
                                     <a href="" data-icon="A" class="add-new-task"
-                                       ng-click="openCreateTaskForm(us)"
+                                       ng-click="ctrl.openCreateTaskForm(us)"
                                        i18next="taskboard.add-new-task">
                                         Add new task
                                     </a>
@@ -151,9 +151,8 @@
                                         gm-sortable="tasks"
                                         gm-sortable-selector=".task-box"
                                         gm-sortable-item-name="task"
-                                        gm-sortable-on-add="sortableOnAdd"
-                                        gm-sortable-on-update="sortableOnUpdate"
-                                        gm-sortable-on-remove="sortableOnRemove">
+                                        gm-sortable-on-add="ctrl.sortableOnAdd"
+                                        gm-sortable-on-remove="ctrl.sortableOnRemove">
 
                                     <div class="task-box" ng-repeat="task in unassignedTasks[status.id]">
                                         <div ng-include="'/partials/taskboard-task.html'"></div>
@@ -172,10 +171,10 @@
 <div id="taskboard-task-modalform"
         gm-modal="task-form"
         ng-show="formOpened"
-        ng-controller="TaskboardTaskModalController">
+        ng-controller="TaskboardTaskModalController as tbModalCtrl">
 
     <div class="new-task-modal modal">
-        <form class="inline-form task-form" gm-checksley-form="submit()">
+        <form class="inline-form task-form" gm-checksley-form="tbModalCtrl.submit()">
             <div class="modal-header" ng-switch on="context.type">
                 <h3 ng-switch-when="create" i18next="taskboard.create-task">Create task</h3>
                 <h3 ng-switch-when="edit" i18next="taskboard.modify-task">Modify task</h3>
@@ -255,7 +254,7 @@
             <div class="modal-footer">
                 <div gm-spinner class="spinner-container"></div>
                 <input type="submit" class="button button-success" gm-checksley-submit-button value="Save"  i18next="value:taskboard.save"/>
-                <a href="" class="button button-cancel" ng-click="close()" i18next="taskboard.close">Close</a>
+                <a href="" class="button button-cancel" ng-click="tbModalCtrl.close()" i18next="taskboard.close">Close</a>
             </div>
         </form>
     </div>
@@ -264,10 +263,10 @@
 <div id="bulk-tasks-modalform"
     gm-modal="bulk-tasks-form"
     ng-show="bulkTasksFormOpened"
-    ng-controller="TaskboardBulkTasksModalController">
+    ng-controller="TaskboardBulkTasksModalController as tbBulkModalCtrl">
 
     <div class="bulk-tasks-modal modal">
-        <form class="inline-form task-form" gm-checksley-form="submit()">
+        <form class="inline-form task-form" gm-checksley-form="tbBulkModalCtrl.submit()">
             <div class="modal-header" ng-switch on="context.type">
                 <h3 i18next="taskboard.bulk-tasks">Create a bulk of tasks</h3>
             </div>
@@ -283,7 +282,7 @@
                 <div gm-spinner class="spinner-container"></div>
                 <input type="submit" class="button button-success"
                        gm-checksley-submit-button value="Save" i18next="value:taskboard.save" />
-                <a href="" class="button button-cancel" ng-click="close()" i18next="taskboard.close">Close</a>
+                <a href="" class="button button-cancel" ng-click="tbBulkModalCtrl.close()" i18next="taskboard.close">Close</a>
             </div>
         </form>
     </div>

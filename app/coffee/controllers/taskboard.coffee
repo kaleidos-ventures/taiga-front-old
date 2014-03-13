@@ -12,54 +12,65 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, $model, $i18next, $favico) ->
-    $favico.reset()
-    # Global Scope Variables
-    $rootScope.pageTitle = $i18next.t('common.taskboard')
-    $rootScope.pageSection = 'dashboard'
-    $rootScope.pageBreadcrumb = [
-        ["", ""],
-        [$i18next.t('common.taskboard'), null]
-    ]
+class TaskboardController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', '$routeParams', '$q', 'resource',
+                 '$data', '$modal', "$model", "$i18next", "$favico"]
+    constructor: (@scope, @rootScope, @routeParams, @q, @rs, @data, @modal, @model, @i18next, @favico) ->
+        super(scope)
 
-    calculateTotalPoints = (us) ->
-        total = 0
+    initialize: ->
+        @favico.reset()
+        # Global Scope Variables
+        @rootScope.pageTitle = @i18next.t('common.taskboard')
+        @rootScope.pageSection = 'dashboard'
+        @rootScope.pageBreadcrumb = [
+            ["", ""],
+            [@i18next.t('common.taskboard'), null]
+        ]
 
-        for role in $scope.constants.computableRolesList
-            pointId = us.points[role.id]
-            total += $scope.constants.points[pointId].value
+        @rs.resolve(pslug: @routeParams.pslug, mlref: @routeParams.sslug).then (data) ->
+            @rootScope.projectSlug = @routeParams.pslug
+            @rootScope.projectId = data.project
+            @rootScope.sprintSlug = @routeParams.sid
+            @rootScope.sprintId = data.milestone
 
-        return total
+            @data.loadProject(@scope).then ->
+                @data.loadUsersAndRoles(@scope).then ->
+                    promise = @data.loadTaskboardData(@scope)
+                    promise.then(@loadTasks)
 
-    formatUserStoryTasks = ->
-        $scope.usTasks = {}
-        $scope.unassignedTasks = {}
+        @scope.$on "stats:reload", ->
+            @calculateStats()
 
-        for us in $scope.userstoriesList
-            $scope.usTasks[us.id] = {}
+    formatUserStoryTasks: ->
+        @scope.usTasks = {}
+        @scope.unassignedTasks = {}
 
-            for status in $scope.constants.taskStatusesList
-                $scope.usTasks[us.id][status.id] = []
+        for us in @scope.userstoriesList
+            @scope.usTasks[us.id] = {}
 
-        for status in $scope.constants.taskStatusesList
-            $scope.unassignedTasks[status.id] = []
+            for status in @scope.constants.taskStatusesList
+                @scope.usTasks[us.id][status.id] = []
 
-        for task in $scope.tasks
+        for status in @scope.constants.taskStatusesList
+            @scope.unassignedTasks[status.id] = []
+
+        for task in @scope.tasks
             if task.user_story == null
-                $scope.unassignedTasks[task.status].push(task)
+                @scope.unassignedTasks[task.status].push(task)
             else
                 # why? because a django-filters sucks
-                if $scope.usTasks[task.user_story]?
-                    $scope.usTasks[task.user_story][task.status].push(task)
+                if @scope.usTasks[task.user_story]?
+                    @scope.usTasks[task.user_story][task.status].push(task)
 
         return
 
-    calculateStats = ->
-        rs.getMilestoneStats($scope.sprintId).then (milestoneStats) ->
+    calculateStats: ->
+        @rs.getMilestoneStats(@scope.sprintId).then (milestoneStats) ->
             totalPoints = _.reduce(milestoneStats.total_points, (x, y) -> x + y) || 0
             completedPoints = _.reduce(milestoneStats.completed_points, (x, y) -> x + y) || 0
             percentageCompletedPoints = ((completedPoints*100) / totalPoints).toFixed(1)
-            $scope.stats = {
+            @scope.stats = {
                 totalPoints: totalPoints
                 completedPoints: completedPoints
                 remainingPoints: totalPoints - completedPoints
@@ -72,26 +83,15 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
                 remainingTasks: milestoneStats.total_tasks - milestoneStats.completed_tasks
                 iocaineDoses: milestoneStats.iocaine_doses
             }
-            $scope.milestoneStats = milestoneStats
+            @scope.milestoneStats = milestoneStats
 
-    loadTasks = ->
-        rs.getTasks($scope.projectId, $scope.sprintId).then (tasks) ->
-            $scope.tasks = tasks
-            formatUserStoryTasks()
-            calculateStats()
+    loadTasks: ->
+        @rs.getTasks(@scope.projectId, @scope.sprintId).then (tasks) =>
+            @scope.tasks = tasks
+            @formatUserStoryTasks()
+            @calculateStats()
 
-    rs.resolve(pslug: $routeParams.pslug, mlref: $routeParams.sslug).then (data) ->
-        $rootScope.projectSlug = $routeParams.pslug
-        $rootScope.projectId = data.project
-        $rootScope.sprintSlug = $routeParams.sid
-        $rootScope.sprintId = data.milestone
-
-        $data.loadProject($scope).then ->
-            $data.loadUsersAndRoles($scope).then ->
-                promise = $data.loadTaskboardData($scope)
-                promise.then(loadTasks)
-
-    $scope.saveUsPoints = (us, role, ref) ->
+    saveUsPoints: (us, role, ref) ->
         points = _.clone(us.points)
         points[role.id] = ref
 
@@ -99,57 +99,54 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
 
         us._moving = true
         promise = us.save()
-        promise.then ->
+        promise.then =>
             us._moving = false
-            calculateStats()
-            $scope.$broadcast("points:changed")
+            @calculateStats()
+            @scope.$broadcast("points:changed")
 
-        promise.then null, (data, status) ->
+        promise.then null, (data, status) =>
             us._moving = false
             us.revert()
 
-    $scope.saveUsStatus = (us, id) ->
+    saveUsStatus: (us, id) ->
         us.status = id
         us._moving = true
-        us.save().then (data) ->
+        us.save().then (data) =>
             data._moving = false
 
-    $scope.openBulkTasksForm = (us) ->
-        promise = $modal.open("bulk-tasks-form", {us: us})
-        promise.then (tasks) ->
-            _.each tasks, (task) ->
-                newTask = $model.make_model("tasks", task)
-                $scope.tasks.push(newTask)
+    openBulkTasksForm: (us) ->
+        promise = @modal.open("bulk-tasks-form", {us: us})
+        promise.then (tasks) =>
+            _.each tasks, (task) =>
+                newTask = @model.make_model("tasks", task)
+                @scope.tasks.push(newTask)
 
-            formatUserStoryTasks()
-            calculateStats()
+            @formatUserStoryTasks()
+            @calculateStats()
 
-    $scope.openCreateTaskForm = (us) ->
+    openCreateTaskForm: (us) ->
         options =
-            status: $scope.project.default_task_status
-            project: $scope.projectId
-            milestone: $scope.sprintId
+            status: @scope.project.default_task_status
+            project: @scope.projectId
+            milestone: @scope.sprintId
 
         if us != undefined
             options.user_story = us.id
 
-        promise = $modal.open("task-form", {'task': options, 'type': 'create'})
-        promise.then (task) ->
-            newTask = $model.make_model("tasks", task)
-            $scope.tasks.push(newTask)
-            formatUserStoryTasks()
-            calculateStats()
+        promise = @modal.open("task-form", {'task': options, 'type': 'create'})
+        promise.then (task) =>
+            newTask = @model.make_model("tasks", task)
+            @scope.tasks.push(newTask)
+            @formatUserStoryTasks()
+            @calculateStats()
 
-    $scope.openEditTaskForm = (us, task) ->
-        promise = $modal.open("task-form", {'task': task, 'type': 'edit'})
-        promise.then ->
-            formatUserStoryTasks()
-            calculateStats()
+    openEditTaskForm: (us, task) ->
+        promise = @modal.open("task-form", {'task': task, 'type': 'edit'})
+        promise.then =>
+            @formatUserStoryTasks()
+            @calculateStats()
 
-    $scope.$on "stats:reload", ->
-        calculateStats()
-
-    $scope.sortableOnAdd = (task, index, sortableScope) ->
+    sortableOnAdd: (task, index, sortableScope) ->
         if sortableScope.us?
             task.user_story = sortableScope.us.id
         else
@@ -157,187 +154,189 @@ TaskboardController = ($scope, $rootScope, $routeParams, $q, rs, $data, $modal, 
         task.status = sortableScope.status.id
 
         task._moving = true
-        task.save().then ->
+        task.save().then =>
             if sortableScope.us?
-                $scope.usTasks[sortableScope.us.id][sortableScope.status.id].splice(index, 0, task)
+                @scope.usTasks[sortableScope.us.id][sortableScope.status.id].splice(index, 0, task)
                 sortableScope.us.refresh()
             else
-                $scope.unassignedTasks[sortableScope.status.id].splice(index, 0, task)
+                @scope.unassignedTasks[sortableScope.status.id].splice(index, 0, task)
             task._moving = false
 
-    $scope.sortableOnUpdate = (tasks, sortableScope) ->
-
-    $scope.sortableOnRemove = (task, sortableScope) ->
+    sortableOnRemove: (task, sortableScope) ->
         if sortableScope.us?
-            _.remove($scope.usTasks[sortableScope.us.id][sortableScope.status.id], task)
+            _.remove(@scope.usTasks[sortableScope.us.id][sortableScope.status.id], task)
         else
-            _.remove($scope.unassignedTasks[sortableScope.status.id], task)
-
-    return
+            _.remove(@scope.unassignedTasks[sortableScope.status.id], task)
 
 
-TaskboardTaskModalController = ($scope, $rootScope, $gmOverlay, $gmFlash, rs, $i18next) ->
-    $scope.type = "create"
-    $scope.formOpened = false
-    $scope.bulkTasksFormOpened = false
+class TaskboardTaskModalController extends ModalBaseController
+    @.$inject = ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource',
+                 '$i18next']
+    constructor: (@scope, @rootScope, @gmOverlay, @gmFlash, @rs, @i18next) ->
+        super(scope)
 
-    # Load data
-    $scope.defered = null
-    $scope.context = null
+    initialize: ->
+        @scope.type = "create"
+        @scope.formOpened = false
+        @scope.bulkTasksFormOpened = false
 
-    loadProjectTags = ->
-        rs.getProjectTags($scope.projectId).then (data) ->
-            $scope.projectTags = data
+        # Load data
+        @scope.defered = null
+        @scope.context = null
 
-    openModal = ->
-        loadProjectTags()
-        $scope.form = $scope.context.task
-        $scope.formOpened = true
+        @scope.$on "select2:changed", (ctx, value) =>
+            @scope.form.tags = value
 
-        $scope.$broadcast("checksley:reset")
-        $scope.$broadcast("wiki:clean-previews")
+        @scope.assignedToSelectOptions = {
+            formatResult: @assignedToSelectOptionsShowMember
+            formatSelection: @assignedToSelectOptionsShowMember
+        }
 
-        $scope.overlay = $gmOverlay()
-        $scope.overlay.open().then ->
-            $scope.formOpened = false
+    loadProjectTags: ->
+        @rs.getProjectTags(@scope.projectId).then (data) =>
+            @scope.projectTags = data
 
-    closeModal = ->
-        $scope.formOpened = false
+    openModal: ->
+        @loadProjectTags()
+        @scope.form = @scope.context.task
+        @scope.formOpened = true
 
-    @.start = (dfr, ctx) ->
-        $scope.defered = dfr
-        $scope.context = ctx
-        openModal()
+        @scope.$broadcast("checksley:reset")
+        @scope.$broadcast("wiki:clean-previews")
 
-    @.delete = ->
-        closeModal()
-        $scope.form = form
-        $scope.formOpened = true
+        @scope.overlay = @gmOverlay()
+        @scope.overlay.open().then =>
+            @scope.formOpened = false
 
-    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
-        if $scope.form.id?
-            promise = $scope.form.save(false)
+    closeModal: ->
+        @scope.formOpened = false
+
+    start: (dfr, ctx) ->
+        @scope.defered = dfr
+        @scope.context = ctx
+        @openModal()
+
+    delete: ->
+        @closeModal()
+        @scope.form = form
+        @scope.formOpened = true
+
+    submit: gm.utils.safeDebounced @scope, 400, ->
+        if @scope.form.id?
+            promise = @scope.form.save(false)
         else
-            promise = rs.createTask($scope.form)
-        $scope.$emit("spinner:start")
+            promise = @rs.createTask(@scope.form)
+        @scope.$emit("spinner:start")
 
-        promise.then (data) ->
-            $scope.$emit("spinner:stop")
-            closeModal()
-            $scope.overlay.close()
-            $scope.form.id = data.id
-            $scope.form.ref = data.ref
-            $scope.defered.resolve($scope.form)
-            $gmFlash.info($i18next.t('taskboard.user-story-saved'))
+        promise.then (data) =>
+            @scope.$emit("spinner:stop")
+            @closeModal()
+            @scope.overlay.close()
+            @scope.form.id = data.id
+            @scope.form.ref = data.ref
+            @scope.defered.resolve(@scope.form)
+            @gmFlash.info(@i18next.t('taskboard.user-story-saved'))
 
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
 
-    $scope.close = ->
-        $scope.formOpened = false
-        $scope.overlay.close()
+    close: ->
+        @scope.formOpened = false
+        @scope.overlay.close()
 
-        if $scope.form.id?
-            $scope.form.revert()
+        if @scope.form.id?
+            @scope.form.revert()
         else
-            $scope.form = {}
+            @scope.form = {}
 
-    $scope.$on "select2:changed", (ctx, value) ->
-        $scope.form.tags = value
-
-    assignedToSelectOptionsShowMember = (option, container) ->
+    assignedToSelectOptionsShowMember: (option, container) =>
         if option.id
-            member = _.find($rootScope.constants.users, {id: parseInt(option.id, 10)})
+            member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
             # TODO: make me more beautiful and elegant
             return "<span style=\"color: black; padding: 0px 5px;
                                   border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
          return "<span\">#{option.text}</span>"
 
-    $scope.assignedToSelectOptions = {
-        formatResult: assignedToSelectOptionsShowMember
-        formatSelection: assignedToSelectOptionsShowMember
-    }
 
-    return
+class TaskboardBulkTasksModalController extends ModalBaseController
+    @.$inject = ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash',
+                 '$i18next']
+    constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next) ->
+        super(scope)
 
-TaskboardBulkTasksModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next) ->
-    $scope.bulkTasksFormOpened = false
+    initialize: ->
+        @scope.bulkTasksFormOpened = false
 
-    # Load data
-    $scope.defered = null
-    $scope.context = null
+        # Load data
+        @scope.defered = null
+        @scope.context = null
 
-    openModal = ->
-        $scope.bulkTasksFormOpened = true
-        $scope.$broadcast("checksley:reset")
+    openModal: ->
+        @scope.bulkTasksFormOpened = true
+        @scope.$broadcast("checksley:reset")
 
-        $scope.overlay = $gmOverlay()
-        $scope.overlay.open().then ->
-            $scope.bulkTasksFormOpened = false
+        @scope.overlay = @gmOverlay()
+        @scope.overlay.open().then =>
+            @scope.bulkTasksFormOpened = false
 
-    closeModal = ->
-        $scope.bulkTasksFormOpened = false
+    closeModal: ->
+        @scope.bulkTasksFormOpened = false
 
-    @.start = (dfr, ctx) ->
-        $scope.defered = dfr
-        $scope.context = ctx
-        openModal()
+    start: (dfr, ctx) ->
+        @scope.defered = dfr
+        @scope.context = ctx
+        @openModal()
 
-    @.delete = ->
-        closeModal()
-        $scope.form = form
-        $scope.bulkTasksFormOpened = true
+    delete: ->
+        @closeModal()
+        @scope.form = form
+        @scope.bulkTasksFormOpened = true
 
-    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
-        promise = rs.createBulkTasks($scope.projectId, $scope.context.us.id, $scope.form)
-        $scope.$emit("spinner:start")
+    submit: gm.utils.safeDebounced @scope, 400, ->
+        promise = @rs.createBulkTasks(@scope.projectId, @scope.context.us.id, @scope.form)
+        @scope.$emit("spinner:start")
 
-        promise.then (data) ->
-            $scope.$emit("spinner:stop")
-            closeModal()
-            $scope.overlay.close()
-            $scope.defered.resolve(data.data)
-            $gmFlash.info($i18next.t('taskboard.bulk-tasks-created', { count: data.data.length }))
-            $scope.form = {}
+        promise.then (data) =>
+            @scope.$emit("spinner:stop")
+            @closeModal()
+            @scope.overlay.close()
+            @scope.defered.resolve(data.data)
+            @gmFlash.info(@i18next.t('taskboard.bulk-tasks-created', { count: data.data.length }))
+            @scope.form = {}
 
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
 
-    $scope.close = ->
-        $scope.bulkTasksFormOpened = false
-        $scope.overlay.close()
-        $scope.form = {}
-
-    $scope.$on "select2:changed", (ctx, value) ->
-        $scope.form.tags = value
-
-    return
+    close: ->
+        @scope.bulkTasksFormOpened = false
+        @scope.overlay.close()
+        @scope.form = {}
 
 
-TaskboardTaskController = ($scope, $rootScope, $q, $location) ->
-    $scope.updateTaskAssignation = (task, id) ->
+class TaskboardTaskController extends TaigaBaseController
+    @.$inject = ['$scope', '$location']
+
+    constructor: (@scope, @location) ->
+        super(scope)
+
+    updateTaskAssignation: (task, id) ->
         task.assigned_to = id || null
         task._moving = true
-        task.save().then((task) ->
+        promise = task.save()
+
+        promise.then (task) =>
             task._moving = false
-        , ->
+
+        promise.then null, =>
             task.revert()
             task._moving = false
-        )
 
-    $scope.openTask = (projectSlug, taskRef)->
-        $location.url("/project/#{projectSlug}/tasks/#{taskRef}")
-
-    return
+    openTask: (projectSlug, taskRef) ->
+        @location.url("/project/#{projectSlug}/tasks/#{taskRef}")
 
 
 module = angular.module("taiga.controllers.taskboard", [])
-module.controller("TaskboardTaskController", ['$scope', '$rootScope', '$q', "$location",
-                                              TaskboardTaskController])
-module.controller("TaskboardController", ['$scope', '$rootScope', '$routeParams', '$q', 'resource', '$data',
-                                          '$modal', "$model", "$i18next", "$favico", TaskboardController])
-module.controller("TaskboardTaskModalController", ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource',
-                                                   "$i18next", TaskboardTaskModalController])
-module.controller('TaskboardBulkTasksModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource',
-                                                        '$gmFlash', '$i18next',
-                                                        TaskboardBulkTasksModalController])
+module.controller("TaskboardController",  TaskboardController])
+module.controller("TaskboardTaskModalController",  TaskboardTaskModalController])
+module.controller('TaskboardBulkTasksModalController', TaskboardBulkTasksModalController)
+module.controller("TaskboardTaskController", TaskboardTaskController)
