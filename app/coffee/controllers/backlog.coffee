@@ -293,7 +293,12 @@ class BacklogUserStoryModalController extends ModalBaseController
     constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next) ->
         super(scope)
 
+    debounceMethods: ->
+        submit = @submit
+        @submit = gm.utils.safeDebounced @scope, 500, submit
+
     initialize: ->
+        @debounceMethods()
         @scope.formOpened = false
         @scope.bulkFormOpened = false
 
@@ -341,7 +346,8 @@ class BacklogUserStoryModalController extends ModalBaseController
         @scope.form = form
         @scope.formOpened = true
 
-    submit: gm.utils.safeDebounced @scope, 400, =>
+    # Debounced Method (see debounceMethods method)
+    submit: =>
         if @scope.form.id?
             promise = @scope.form.save()
         else
@@ -374,7 +380,12 @@ class BacklogBulkUserStoriesModalController extends ModalBaseController
     constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next) ->
         super(scope)
 
+    debounceMethods: ->
+        submit = @submit
+        @submit = gm.utils.safeDebounced @scope, 500, submit
+
     initialize: ->
+        @debounceMethods()
         @scope.bulkFormOpened = false
 
         # Load data
@@ -402,7 +413,8 @@ class BacklogBulkUserStoriesModalController extends ModalBaseController
         @scope.form = form
         @scope.bulkFormOpened = true
 
-    submit: gm.utils.safeDebounced @scope, 400, ->
+    # Debounced Method (see debounceMethods method)
+    submit: =>
         promise = @rs.createBulkUserStories(@scope.projectId, @scope.form)
         @scope.$emit("spinner:start")
 
@@ -429,7 +441,12 @@ class BacklogMilestonesController extends TaigaBaseController
     constructor: (@scope, @rootScope, @rs, @gmFlash, @i18next, @location) ->
         super(scope)
 
+    debounceMethods: ->
+        sprintSubmit = @sprintSubmit
+        @sprintSubmit = gm.utils.safeDebounced @scope, 500, sprintSubmit
+
     initialize: ->
+        @debounceMethods()
         # Local scope variables
         @scope.sprintFormOpened = false
 
@@ -449,7 +466,8 @@ class BacklogMilestonesController extends TaigaBaseController
     openUserStory: (projectSlug, usRef) ->
         @location.url("/project/#{projectSlug}/user-story/#{usRef}")
 
-    sprintSubmit: gm.utils.safeDebounced @scope, 400, ->
+    # Debounced Method (see debounceMethods method)
+    sprintSubmit: =>
         if @scope.form.save is undefined
             promise = @rs.createMilestone(@scope.projectId, @scope.form)
 
@@ -482,13 +500,18 @@ class BacklogMilestonesController extends TaigaBaseController
 
 class BacklogMilestoneController extends TaigaBaseController
     @.$inject = ['$scope', '$q', 'resource', '$gmFlash', '$i18next']
-    constructor: (@scope, @q, rs, @gmFlash, @i18next) ->
+    constructor: (@scope, @q, @rs, @gmFlash, @i18next) ->
         super(scope)
 
+    debounceMethods: ->
+        submit = @submit
+        @submit = gm.utils.safeDebounced @scope, 500, submit
+
     initialize: ->
+        @debounceMethods()
         @scope.editFormOpened = false
         @scope.viewUSs = not @scope.ml.closed
-        calculateStats()
+        @calculateStats()
 
     calculateTotalPoints: (us) ->
         total = 0
@@ -510,7 +533,7 @@ class BacklogMilestoneController extends TaigaBaseController
             closed: closed
             percentage: if total then ((closed * 100) / total).toFixed(1) else 0.0
 
-    normalizeMilestones: ->
+    normalizeMilestones: =>
         saveChangedMilestone = =>
             console.log "saveChangedMilestone"
             for item, index in @scope.ml.user_stories
@@ -549,7 +572,8 @@ class BacklogMilestoneController extends TaigaBaseController
     toggleViewUSs: ->
         @scope.viewUSs = not @scope.viewUSs
 
-    submit: gm.utils.safeDebounced @scope, 400, ->
+    # Debounced Method (see debounceMethods method)
+    submit: =>
         promise = @scope.ml.save()
 
         promise.then (data) =>
