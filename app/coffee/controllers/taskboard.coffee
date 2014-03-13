@@ -28,18 +28,18 @@ class TaskboardController extends TaigaBaseController
             [@i18next.t('common.taskboard'), null]
         ]
 
-        @rs.resolve(pslug: @routeParams.pslug, mlref: @routeParams.sslug).then (data) ->
+        @rs.resolve(pslug: @routeParams.pslug, mlref: @routeParams.sslug).then (data) =>
             @rootScope.projectSlug = @routeParams.pslug
             @rootScope.projectId = data.project
             @rootScope.sprintSlug = @routeParams.sid
             @rootScope.sprintId = data.milestone
 
-            @data.loadProject(@scope).then ->
-                @data.loadUsersAndRoles(@scope).then ->
+            @data.loadProject(@scope).then =>
+                @data.loadUsersAndRoles(@scope).then =>
                     promise = @data.loadTaskboardData(@scope)
                     promise.then(@loadTasks)
 
-        @scope.$on "stats:reload", ->
+        @scope.$on "stats:reload", =>
             @calculateStats()
 
     formatUserStoryTasks: ->
@@ -66,7 +66,7 @@ class TaskboardController extends TaigaBaseController
         return
 
     calculateStats: ->
-        @rs.getMilestoneStats(@scope.sprintId).then (milestoneStats) ->
+        @rs.getMilestoneStats(@scope.sprintId).then (milestoneStats) =>
             totalPoints = _.reduce(milestoneStats.total_points, (x, y) -> x + y) || 0
             completedPoints = _.reduce(milestoneStats.completed_points, (x, y) -> x + y) || 0
             percentageCompletedPoints = ((completedPoints*100) / totalPoints).toFixed(1)
@@ -175,7 +175,12 @@ class TaskboardTaskModalController extends ModalBaseController
     constructor: (@scope, @rootScope, @gmOverlay, @gmFlash, @rs, @i18next) ->
         super(scope)
 
+    debounceMethods: ->
+        submit = @submit
+        @submit = gm.utils.safeDebounced @scope, 500, submit
+
     initialize: ->
+        @debounceMethods()
         @scope.type = "create"
         @scope.formOpened = false
         @scope.bulkTasksFormOpened = false
@@ -221,7 +226,8 @@ class TaskboardTaskModalController extends ModalBaseController
         @scope.form = form
         @scope.formOpened = true
 
-    submit: gm.utils.safeDebounced @scope, 400, ->
+    # Debounced Method (see debounceMethods method)
+    submit: =>
         if @scope.form.id?
             promise = @scope.form.save(false)
         else
@@ -264,7 +270,12 @@ class TaskboardBulkTasksModalController extends ModalBaseController
     constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next) ->
         super(scope)
 
+    debounceMethods: ->
+        submit = @submit
+        @submit = gm.utils.safeDebounced @scope, 500, submit
+
     initialize: ->
+        @debounceMethods()
         @scope.bulkTasksFormOpened = false
 
         # Load data
@@ -292,7 +303,8 @@ class TaskboardBulkTasksModalController extends ModalBaseController
         @scope.form = form
         @scope.bulkTasksFormOpened = true
 
-    submit: gm.utils.safeDebounced @scope, 400, ->
+    # Debounced Method (see debounceMethods method)
+    submit: =>
         promise = @rs.createBulkTasks(@scope.projectId, @scope.context.us.id, @scope.form)
         @scope.$emit("spinner:start")
 
