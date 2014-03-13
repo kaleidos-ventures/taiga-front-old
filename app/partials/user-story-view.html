@@ -6,12 +6,12 @@
             <a class="button"
                i18next="pagination.prev"
                ng-show="userStory.neighbors.previous.ref"
-               ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.previous.ref, false, getQueryParams())}}">Previous</a>
+               ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.previous.ref, false, ctrl.getQueryParams())}}">Previous</a>
             <a class="button"
                i18next="pagination.next"
                ng-show="userStory.neighbors.next.ref"
-               ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.next.ref, false, getQueryParams())}}">Next</a>
-            <a class="button button-delete" ng-click="removeUserStory(userStory)" i18next="user-story.delete-user-story">
+               ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.next.ref, false, ctrl.getQueryParams())}}">Next</a>
+            <a class="button button-delete" ng-click="ctrl.removeUserStory(userStory)" i18next="user-story.delete-user-story">
                 Delete user story
             </a>
         </div>
@@ -35,7 +35,7 @@
                     <li class="attachments-item" ng-repeat="attachment in attachments">
                         <a class="delete" data-icon="h" href="" title="Delete attachment"
                            i18next="title:user-story.delete-attachment"
-                           ng-click="removeAttachment(attachment)"></a>
+                           ng-click="ctrl.removeAttachment(attachment)"></a>
                         <a href="{{ attachment.url }}">{{ attachment.name }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
                         <span>{{ 'user-story.on-date'|i18next:{date:momentFormat(attachment.created_date, "LLLL")} }}</span>
@@ -119,7 +119,7 @@
             <div class="update-form">
                 <h4 i18next="user-story.update-user-story">Update user story</h4>
 
-                <form class="form-horizontal" gm-checksley-form="submit()">
+                <form class="form-horizontal" gm-checksley-form="ctrl.submit()">
                     <div>
                         <fieldset class="task-status">
                             <label class="control-label" for="inputEmail" i18next="user-story.status-label">Status:</label>
@@ -234,7 +234,7 @@
                                 <a class="delete" data-icon="h" href=""
                                    title="Delete the new attachment"
                                    i18next="title:user-story.delete-new-attachment"
-                                   ng-click="removeNewAttachment(attachment)"></a>
+                                   ng-click="ctrl.removeNewAttachment(attachment)"></a>
                                 <span>{{ attachment.name }}</span>
                                 <span>[{{ attachment.size|sizeFormat }}]</span>
                             </li>
@@ -260,7 +260,7 @@
             <div class="history">
                 <h3 i18next="user-story.history">History</h3>
                 <div class="history-items-container"></div>
-                <a class="more" data-icon="C" href="" ng-click="loadMoreHistorical()"
+                <a class="more" data-icon="C" href="" ng-click="ctrl.loadMoreHistorical()"
                    ng-show="showMoreHistoricaButton" i18next="user-story.see-more">See More</a>
             </div>
         </div>
@@ -279,7 +279,7 @@
                        i18next="pagination.next"
                        ng-show="userStory.neighbors.next.ref"
                        ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.next.ref)}}">Next</a>
-                    <a class="button button-delete" ng-click="removeUserStory(userStory)" i18next="user-story.delete-user-story">Delete user story</a>
+                    <a class="button button-delete" ng-click="ctrl.removeUserStory(userStory)" i18next="user-story.delete-user-story">Delete user story</a>
                 </div>
             </div>
         </div>

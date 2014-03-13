@@ -55,7 +55,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         {templateUrl: 'partials/kanban.html', controller: "KanbanController as ctrl"})
 
     $routeProvider.when('/project/:pslug/user-story/:ref',
-        {templateUrl: 'partials/user-story-view.html', controller: "UserStoryViewController"})
+        {templateUrl: 'partials/user-story-view.html', controller: "UserStoryViewController as ctrl"})
 
     $routeProvider.when('/project/:pslug/issues',
         {templateUrl: 'partials/issues.html', controller: "IssuesController as ctrl"})
