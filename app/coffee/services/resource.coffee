@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope,
+ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, $rootScope,
                     $i18next, $filter, $log, $cacheFactory) ->
     cache = $cacheFactory("httpCache", 512)
     service = {}
@@ -874,6 +874,6 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, config, $rootScope,
     return service
 
 
-module = angular.module('taiga.services.resource', ['taiga.config'])
-module.factory('resource', ['$http', '$q', '$gmStorage', '$gmUrls', '$model', 'config', '$rootScope',
+module = angular.module('taiga.services.resource', [])
+module.factory('resource', ['$http', '$q', '$gmStorage', '$gmUrls', '$model', '$rootScope',
                             '$i18next', '$filter', '$log', "$cacheFactory", ResourceProvider])

@@ -15,9 +15,9 @@
 class SiteAdminController extends TaigaBaseController
     @.$inject = ["$scope", "$rootScope", "$routeParams", "$data", "$gmFlash",
                  "$model", "resource", "$confirm", "$location", "$i18next",
-                 "config", "$gmUrls", "$favico"]
+                 "$gmConfig", "$gmUrls", "$favico"]
     constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model,
-                  @rs, @confirm, @location, @i18next, @config, @gmUrls, @favico) ->
+                  @rs, @confirm, @location, @i18next, @gmConfig, @gmUrls, @favico) ->
         super(scope)
 
     initialize: ->
@@ -30,7 +30,7 @@ class SiteAdminController extends TaigaBaseController
 
         @scope.activeTab = "data"
 
-        @scope.languageOptions = @config.languageOptions
+        @scope.languageOptions = @gmConfig.get("languageOptions")
 
         @loadMembers()
         @loadSite()

@@ -1,4 +1,4 @@
-# Copyright 2013 Andrey Antukh <niwi@niwi.be>
+# Copyright 2013-2014 Andrey Antukh <niwi@niwi.be>
 #
 # Licensed under the Apache License, Version 2.0 (the "License")
 # you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ gm.format = (fmt, obj, named) ->
     else
         return fmt.replace /%s/g, (match) -> String(obj.shift())
 
-configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider, $gmUrlsProvider) ->
+configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider, $gmUrlsProvider) ->
     $routeProvider.when('/',
         {templateUrl: 'partials/project-list.html', controller: "ProjectListController as ctrl"})
 
@@ -181,56 +181,7 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
     $gmUrlsProvider.setUrls("api", apiUrls)
 
 
-modules = [
-    "ngRoute",
-    "ngAnimate",
-    "ngSanitize",
-
-    "taiga.controllers.common",
-    "taiga.controllers.auth",
-    "taiga.controllers.backlog",
-    "taiga.controllers.kanban",
-    "taiga.controllers.user-story",
-    "taiga.controllers.search",
-    "taiga.controllers.taskboard",
-    "taiga.controllers.issues",
-    "taiga.controllers.project",
-    "taiga.controllers.tasks",
-    "taiga.controllers.wiki",
-    "taiga.controllers.site",
-    "taiga.filters",
-    "taiga.services.common",
-    "taiga.services.model",
-    "taiga.services.resource",
-    "taiga.services.tags",
-    "taiga.directives.generic",
-    "taiga.directives.common",
-    "taiga.directives.graphs",
-    "taiga.directives.tasks",
-    "taiga.directives.issues",
-    "taiga.directives.history",
-    "taiga.directives.wiki",
-    "taiga.directives.backlog",
-
-    "coffeeColorPicker",
-
-    # Plugins modules.
-    "gmUrls",
-    "gmFlash",
-    "gmModal",
-    "gmStorage",
-    "gmConfirm",
-    "gmOverlay",
-    "i18next",
-    "favico",
-    "ui.select2"
-]
-
-
-init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $data, $log, $favico) ->
-    if not config.debug
-        $log.debug = ->
-
+init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, $gmConfig, localconfig, $data, $log, $favico) ->
     $rootScope.pageTitle = ""
     $rootScope.auth = $gmAuth.getUser()
 
@@ -261,11 +212,18 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
 
     $rootScope.constants.users = {}
 
+    # Initialize configuration
+    $gmConfig.initialize(localconfig)
+
     # Configure on init a default host and scheme for api urls.
-    $gmUrls.setHost("api", config.host, config.scheme)
+    $gmUrls.setHost("api", $gmConfig.get("host"), $gmConfig.get("scheme"))
+
 
     $data.loadSiteInfo($rootScope).then (sitedata) ->
         $log.debug "Site data:", sitedata
+
+    if not $gmConfig.get("debug")
+        $log.debug = ->
 
     $rootScope.baseUrls =
         projects: "/"
@@ -402,7 +360,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
         $gmStorage.clear()
         $location.url("/login")
 
-    $i18next.initialize(false, config.defaultLanguage)
+    $i18next.initialize($gmConfig.get("defaultLanguage"))
 
     $rootScope.$on "i18n:change", (event, lang) ->
         if lang
@@ -412,7 +370,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
         else if $rootScope.site.data.default_language
             newLang = $rootScope.site.data.default_language
         else
-            newLang = config.defaultLanguage
+            newLang = $gmConfig.get("defaultLanguage")
 
         $i18next.setLang(newLang)
         moment.lang(newLang)
@@ -451,19 +409,61 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, config, $
 
     $favico.newFavico()
 
-angular.module('taiga', modules)
-       .config(['$routeProvider', '$locationProvider', '$httpProvider', '$provide', '$compileProvider', '$gmUrlsProvider', configCallback])
-       .run(['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls', '$i18next', 'config', '$data', '$log', '$favico', init])
 
-angular.module('taiga.config', []).value('config', {
-    host: "localhost:8000"
-    scheme: "http"
-    defaultLanguage: "en"
-    notificationLevelOptions: {
-        "all_owned_projects": "All events on my projects"
-        "only_watching": "Only events for objects i watch"
-        "only_assigned": "Only events for objects assigned to me"
-        "only_owner": "Only events for objects owned by me"
-        "no_events": "No events"
-    }
-})
+modules = [
+    "ngRoute",
+    "ngAnimate",
+    "ngSanitize",
+
+    "taiga.controllers.common",
+    "taiga.controllers.auth",
+    "taiga.controllers.backlog",
+    "taiga.controllers.kanban",
+    "taiga.controllers.user-story",
+    "taiga.controllers.search",
+    "taiga.controllers.taskboard",
+    "taiga.controllers.issues",
+    "taiga.controllers.project",
+    "taiga.controllers.tasks",
+    "taiga.controllers.wiki",
+    "taiga.controllers.site",
+    "taiga.filters",
+    "taiga.services.common",
+    "taiga.services.model",
+    "taiga.services.resource",
+    "taiga.services.tags",
+    "taiga.directives.generic",
+    "taiga.directives.common",
+    "taiga.directives.graphs",
+    "taiga.directives.tasks",
+    "taiga.directives.issues",
+    "taiga.directives.history",
+    "taiga.directives.wiki",
+    "taiga.directives.backlog",
+    "taiga.localconfig",
+
+    "coffeeColorPicker",
+
+    # Plugins modules.
+    "gmUrls",
+    "gmFlash",
+    "gmModal",
+    "gmStorage",
+    "gmConfirm",
+    "gmOverlay",
+    "gmConfig",
+    "i18next",
+    "favico",
+    "ui.select2"
+]
+
+init.$inject = ['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls',
+                '$i18next', '$gmConfig', 'localconfig', '$data', '$log', '$favico']
+
+configure.$inject = ['$routeProvider', '$locationProvider', '$httpProvider',
+                     '$provide', '$compileProvider', '$gmUrlsProvider']
+
+angular.module("taiga.localconfig", []).value("localconfig", {})
+angular.module('taiga', modules)
+       .config(configure)
+       .run(init)
