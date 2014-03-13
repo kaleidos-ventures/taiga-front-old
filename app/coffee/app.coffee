@@ -70,10 +70,10 @@ configCallback = ($routeProvider, $locationProvider, $httpProvider, $provide, $c
         {templateUrl: 'partials/taskboard.html', controller: "TaskboardController"})
 
     $routeProvider.when('/project/:pslug/wiki-help',
-        {templateUrl: 'partials/wiki-help.html', controller: "WikiHelpController"})
+        {templateUrl: 'partials/wiki-help.html', controller: "WikiHelpController as ctrl"})
 
     $routeProvider.when('/project/:pslug/wiki/:slug',
-        {templateUrl: 'partials/wiki.html', controller: "WikiController"})
+        {templateUrl: 'partials/wiki.html', controller: "WikiController as ctrl"})
 
     $routeProvider.when('/project/:pslug/wiki/:slug/historical',
         {templateUrl: 'partials/wiki-historical.html', controller: "WikiHistoricalController"})

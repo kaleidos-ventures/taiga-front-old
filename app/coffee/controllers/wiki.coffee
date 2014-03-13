@@ -12,139 +12,133 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-WikiHelpController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next, $favico) ->
-    $favico.reset()
-    $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug}"
-    $rootScope.pageSection = 'wiki'
-    $rootScope.pageBreadcrumb = [
-        ["", ""]
-        [$i18next.t("common.wiki"), $rootScope.urls.wikiUrl($routeParams.pslug, "home")]
-        [$i18next.t("wiki.help"), null]
-    ]
+class WikiHelpController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', '$routeParams', '$data',
+                 'resource', "$i18next", "$favico"]
+    constructor: (@scope, @rootScope, @routeParams, @data, @rs, @i18next, @favico) ->
+        super(scope)
 
-    projectId = $rootScope.projectId
+    initialize: ->
+        @favico.reset()
+        @rootScope.pageTitle = "#{@i18next.t("common.wiki")} - #{@routeParams.slug}"
+        @rootScope.pageSection = 'wiki'
+        @rootScope.pageBreadcrumb = [
+            ["", ""]
+            [@i18next.t("common.wiki"), @rootScope.urls.wikiUrl(@routeParams.pslug, "home")]
+            [@i18next.t("wiki.help"), null]
+        ]
 
-    rs.resolve(pslug: $routeParams.pslug).then (data) ->
-        $rootScope.projectSlug = $routeParams.pslug
-        $rootScope.projectId = data.project
-        $rootScope.slug = $routeParams.slug
+        @rs.resolve(pslug: @routeParams.pslug).then (data) =>
+            @rootScope.projectSlug = @routeParams.pslug
+            @rootScope.projectId = data.project
+            @rootScope.slug = @routeParams.slug
 
-        $data.loadProject($scope).then ->
-            $data.loadUsersAndRoles($scope)
+            @data.loadProject(@scope).then =>
+                @data.loadUsersAndRoles(@scope)
 
-    return
+class WikiController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', '$location', '$routeParams', '$data',
+                 'resource', "$confirm", "$q", "$i18next", "$favico"]
+    constructor: (@scope, @rootScope, @location, @routeParams, @data, @rs, @confirm, @q, @i18next, @favico) ->
+        super(scope)
 
+    initialize: ->
+        @favico.reset()
+        @rootScope.pageTitle = "#{@i18next.t("common.wiki")} - #{@routeParams.slug}"
+        @rootScope.pageSection = 'wiki'
+        @rootScope.pageBreadcrumb = [
+            ["", ""]
+            [@i18next.t("common.wiki"), @rootScope.urls.wikiUrl(@rootScope.projectSlug, "home")]
+            [@routeParams.slug, null]
+        ]
 
+        @scope.formOpened = false
+        @scope.form = {}
+        @scope.newAttachments = []
+        @scope.attachments = []
 
-WikiController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next, $favico) ->
-    $favico.reset()
-    $rootScope.pageTitle = "#{$i18next.t("common.wiki")} - #{$routeParams.slug}"
-    $rootScope.pageSection = 'wiki'
-    $rootScope.pageBreadcrumb = [
-        ["", ""]
-        [$i18next.t("common.wiki"), $rootScope.urls.wikiUrl($rootScope.projectSlug, "home")]
-        [$routeParams.slug, null]
-    ]
+        @rs.resolve(pslug: @routeParams.pslug).then (data) =>
+            @rootScope.projectSlug = @routeParams.pslug
+            @rootScope.projectId = data.project
+            @rootScope.slug = @routeParams.slug
 
-    $scope.formOpened = false
-    $scope.form = {}
-    $scope.newAttachments = []
-    $scope.attachments = []
+            @data.loadProject(@scope).then =>
+                @data.loadUsersAndRoles(@scope).then =>
+                    promise = @rs.getWikiPage(@scope.projectId, @rootScope.slug)
+                    promise.then (page) =>
+                        @scope.page = page
+                        @scope.content = page.content
+                        @loadAttachments(page)
 
-    projectId = $rootScope.projectId
+                    promise.then null, (data) =>
+                        @scope.formOpened = true
 
-    loadAttachments = (page) ->
-        rs.getWikiPageAttachments($scope.projectId, page.id).then (attachments) ->
-            $scope.attachments = attachments
+    loadAttachments: (page) ->
+        @rs.getWikiPageAttachments(@scope.projectId, page.id).then (attachments) =>
+            @scope.attachments = attachments
 
-    saveNewAttachments = ->
-        if $scope.newAttachments.length == 0
+    saveNewAttachments: ->
+        if @scope.newAttachments.length == 0
             return
 
         promises = []
-        for attachment in $scope.newAttachments
-            promise = rs.uploadWikiPageAttachment($scope.projectId, $scope.page.id, attachment)
+        for attachment in @scope.newAttachments
+            promise = @rs.uploadWikiPageAttachment(@scope.projectId, @scope.page.id, attachment)
             promises.push(promise)
 
-        promise = $q.all(promises)
-        promise.then ->
-            $scope.newAttachments = []
-            loadAttachments($scope.page)
+        promise = @q.all(promises)
+        promise.then =>
+            @scope.newAttachments = []
+            @loadAttachments(@scope.page)
 
 
-    rs.resolve(pslug: $routeParams.pslug).then (data) ->
-        $rootScope.projectSlug = $routeParams.pslug
-        $rootScope.projectId = data.project
-        $rootScope.slug = $routeParams.slug
+    openEditForm: ->
+        @scope.formOpened = true
+        @scope.content = @scope.page.content
 
-        $data.loadProject($scope).then ->
-            $data.loadUsersAndRoles($scope).then ->
-                promise = rs.getWikiPage($scope.projectId, $rootScope.slug)
-                promise.then (page) ->
-                    $scope.page = page
-                    $scope.content = page.content
-                    loadAttachments(page)
-
-                promise.then null, (data) ->
-                    $scope.formOpened = true
-
-    $scope.openEditForm = ->
-        $scope.formOpened = true
-        $scope.content = $scope.page.content
-
-    $scope.discartCurrentChanges = ->
-        $scope.newAttachments = []
-        if $scope.page is undefined
-            $scope.content = ""
+    discartCurrentChanges: ->
+        @scope.newAttachments = []
+        if @scope.page is undefined
+            @scope.content = ""
         else
-            $scope.formOpened = false
-            $scope.content = $scope.page.content
+            @scope.formOpened = false
+            @scope.content = @scope.page.content
 
-    $scope.savePage = gm.utils.safeDebounced $scope, 400, ->
-        if $scope.page is undefined
-            promise = rs.createWikiPage($scope.projectId, $rootScope.slug, $scope.content)
+    savePage: gm.utils.safeDebounced @scope, 400, ->
+        if @scope.page is undefined
+            promise = @rs.createWikiPage(@scope.projectId, @rootScope.slug, @scope.content)
 
-            promise.then (page) ->
-                $scope.page = page
-                $scope.formOpened = false
-                $scope.content = $scope.page.content
-                saveNewAttachments()
-
-            promise.then null, (data) ->
-                $scope.checksleyErrors = data
         else
-            $scope.page.content = $scope.content
-            promise = $scope.page.save()
+            @scope.page.content = @scope.content
+            promise = @scope.page.save()
 
-            promise.then (page) ->
-                $scope.page = page
-                $scope.formOpened = false
-                $scope.content = $scope.page.content
-                saveNewAttachments()
+        promise.then (page) =>
+            @scope.page = page
+            @scope.formOpened = false
+            @scope.content = @scope.page.content
+            @saveNewAttachments()
 
-            promise.then null, (data) ->
-                $scope.checksleyErrors = data
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
 
-    $scope.deletePage = ->
-        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
-        promise.then () ->
-            $scope.page.remove().then ->
-                $scope.page = undefined
-                $scope.content = ""
-                $scope.attachments = []
-                $scope.newAttachments = []
-                $scope.formOpened = true
+    deletePage: ->
+        promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
+        promise.then =>
+            @scope.page.remove().then =>
+                @scope.page = undefined
+                @scope.content = ""
+                @scope.attachments = []
+                @scope.newAttachments = []
+                @scope.formOpened = true
 
-    $scope.deleteAttachment = (attachment) ->
-        promise = $confirm.confirm($i18next.t('common.are-you-sure'))
-        promise.then () ->
-            $scope.attachments = _.without($scope.attachments, attachment)
+    deleteAttachment: (attachment) ->
+        promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
+        promise.then =>
+            @scope.attachments = _.without(@scope.attachments, attachment)
             attachment.remove()
 
-    $scope.deleteNewAttachment = (attachment) ->
-        $scope.newAttachments = _.without($scope.newAttachments, attachment)
-
-    return
+    deleteNewAttachment: (attachment) ->
+        @scope.newAttachments = _.without(@scope.newAttachments, attachment)
 
 
 WikiHistoricalController = ($scope, $rootScope, $location, $routeParams, $data, rs, $confirm, $q, $i18next, $favico) ->
@@ -244,12 +238,8 @@ WikiHistoricalItemController = ($scope, $rootScope, rs, $confirm, $gmFlash, $q, 
 
 
 module = angular.module("taiga.controllers.wiki", [])
-module.controller("WikiController", ['$scope', '$rootScope', '$location', '$routeParams',
-                                     '$data', 'resource', "$confirm", "$q", "$i18next", "$favico",
-                                     WikiController])
-module.controller("WikiHelpController", ['$scope', '$rootScope', '$location', '$routeParams',
-                                     '$data', 'resource', "$confirm", "$q", "$i18next", "$favico",
-                                     WikiHelpController])
+module.controller("WikiController", WikiController)
+module.controller("WikiHelpController", WikiHelpController)
 module.controller("WikiHistoricalController", ['$scope', '$rootScope', '$location', '$routeParams',
                                                '$data', 'resource', "$confirm", "$q", "$i18next", "$favico",
                                                WikiHistoricalController])
