@@ -65,6 +65,7 @@ class TasksViewController extends TaigaBaseController
             allowClear: true
             formatResult: @watcherSelectOptionsShowMember
             formatSelection: @watcherSelectOptionsShowMember
+            containerCssClass: "watcher-user"
         }
 
     loadAttachments: ->
@@ -151,14 +152,14 @@ class TasksViewController extends TaigaBaseController
         if option.id
             member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
             # TODO: make me more beautiful and elegant
-            return "<span style=\"color: black; padding: 0px 5px;
+            return "<span style=\"padding: 0px 5px;
                                   border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
          return "<span\">#{option.text}</span>"
 
     watcherSelectOptionsShowMember: (option, container) =>
         member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
         # TODO: Make me more beautiful and elegant
-        return "<span style=\"color: black; padding: 0px 5px;
+        return "<span style=\"padding: 0px 5px;
                               border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
 
 
