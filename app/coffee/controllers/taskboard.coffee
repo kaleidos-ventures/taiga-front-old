@@ -336,7 +336,7 @@ class TaskboardTaskController extends TaigaBaseController
 
 
 module = angular.module("taiga.controllers.taskboard", [])
-module.controller("TaskboardController",  TaskboardController])
-module.controller("TaskboardTaskModalController",  TaskboardTaskModalController])
+module.controller("TaskboardController", TaskboardController)
+module.controller("TaskboardTaskModalController", TaskboardTaskModalController)
 module.controller('TaskboardBulkTasksModalController', TaskboardBulkTasksModalController)
 module.controller("TaskboardTaskController", TaskboardTaskController)

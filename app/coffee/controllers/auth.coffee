@@ -13,9 +13,8 @@
 # limitations under the License.
 
 class LoginController extends TaigaBaseController
-    @.$inject = ['$scope', '$rootScope', '$location',
-                 '$routeParams', 'resource', '$gmAuth',
-                 '$i18next', '$favico']
+    @.$inject = ['$scope', '$rootScope', '$location', '$routeParams',
+                 'resource', '$gmAuth', '$i18next', '$favico']
 
     constructor: (@scope, @rootScope, @location, @routeParams, @rs, @gmAuth, @i18next, @favico) ->
         super(scope)
