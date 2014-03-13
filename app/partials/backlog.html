@@ -1,6 +1,6 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container backlog-content row-fluid">
-    <div class="span8" ng-controller="BacklogUserStoriesController">
+    <div class="span8" ng-controller="BacklogUserStoriesController as blCtrl">
         <div class="graphics-container">
             <div class="user-story-stats" url="">
                 <div class="progress-box">
@@ -46,12 +46,12 @@
                         i18next="backlog.new-user-story">New user story</a>
                     <ul class="us-story-dropdown" ng-show="usDropdown" ng-mouseleave="usDropdown=false">
                         <li>
-                            <a ng-click="openCreateUserStoryForm()" i18next="backlog.new-user-story">
+                            <a ng-click="blCtrl.openCreateUserStoryForm()" i18next="backlog.new-user-story">
                                 New user story
                             </a>
                         </li>
                         <li>
-                            <a ng-click="openBulkUserStoriesForm()" i18next="backlog.bulk-user-stories">
+                            <a ng-click="blCtrl.openBulkUserStoriesForm()" i18next="backlog.bulk-user-stories">
                                 Bulk user stories
                             </a>
                         </li>
@@ -74,15 +74,15 @@
                    </a>
                 </div>
                 <div class="tags-list-sbox">
-                    <div class="tag selected" ng-repeat="tag in selectedTags()"
-                         ng-click="toggleTag(tag)" gm-colorize-tag>
+                    <div class="tag selected" ng-repeat="tag in blCtrl.selectedTags()"
+                         ng-click="blCtrl.toggleTag(tag)" gm-colorize-tag>
                         <div class="name">{{ tag.name }}</div>
                         <div class="count">{{ tag.count }}</div>
                     </div>
                 </div>
                 <div class="filters-visual-box" ng-show="filtersOpened">
                     <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in tags" ng-click="toggleTag(tag)"
+                        <div class="tag" ng-repeat="tag in tags" ng-click="blCtrl.toggleTag(tag)"
                                 ng-class="{selected: tag.selected}" gm-colorize-tag>
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
@@ -115,12 +115,12 @@
                             </div>
 
                             <div class="option refresh-option">
-                                <label for="refresh-backlog" ng-click="refreshBacklog()">Refresh</label>
-                                <a class="refresh-button" id="refresh-backlog" ng-class="{active: refreshing}" ng-click="refreshBacklog()" data-icon="x"></a>
+                                <label for="refresh-backlog" ng-click="blCtrl.refreshBacklog()">Refresh</label>
+                                <a class="refresh-button" id="refresh-backlog" ng-class="{active: refreshing}" ng-click="blCtrl.refreshBacklog()" data-icon="x"></a>
                             </div>
                             <div class="option" ng-show="selectedUserStories">
                                 <a href="" class="add-selected-us" data-icon="A"
-                                   ng-click="moveSelectedUserStoriesToCurrentSprint()">
+                                   ng-click="blCtrl.moveSelectedUserStoriesToCurrentSprint()">
                                      {{ 'backlog.selected-story-points'|i18next:{selectedStoryPoints: selectedStoryPoints} }}
                                  </a>
                             </div>
@@ -136,12 +136,12 @@
                     <div class="us-options" i18next="backlog.options">Options</div>
                 </div>
                 <div class="flex-body" gm-sortable="userstories"
-                    gm-sortable-selector=".us-item" gm-sortable-on-add="sortableOnAdd"
-                    gm-sortable-on-update="sortableOnUpdate" gm-sortable-item-name="us"
-                    gm-sortable-on-remove="sortableOnRemove" gm-doomline>
+                    gm-sortable-selector=".us-item" gm-sortable-on-add="blCtrl.sortableOnAdd"
+                    gm-sortable-on-update="blCtrl.sortableOnUpdate" gm-sortable-item-name="us"
+                    gm-sortable-on-remove="blCtrl.sortableOnRemove" gm-doomline>
                     <div class="us-item nga-us-item" ng-repeat="us in unassignedUs|onlyVisible"
                         ng-class="{selected:us.selected}"
-                        ng-dblclick="openUserStory(projectSlug, us.ref)"
+                        ng-dblclick="blCtrl.openUserStory(projectSlug, us.ref)"
                         ng-include="'/partials/backlog-us-row.html'">
                     </div>
                 </div>
@@ -149,7 +149,7 @@
         </div>
     </div>
 
-    <div class="milestones span4" ng-controller="BacklogMilestonesController" ng-init="sprintFormOpened=false">
+    <div class="milestones span4" ng-controller="BacklogMilestonesController as mlsCtrl" ng-init="sprintFormOpened=false">
         <div class="header-box">
             <div class="title-sbox">
                 <div class="title">{{ project.total_milestones }}</div>
@@ -163,7 +163,7 @@
         </div>
 
         <div class="milestone-form-box nga-milestone" ng-show="sprintFormOpened">
-            <form action="" gm-checksley-form="sprintSubmit()">
+            <form action="" gm-checksley-form="mlsCtrl.sprintSubmit()">
                 <fieldset>
                     <label for="name" i18next="backlog.sprint-name-label">Sprint name:</label>
                     <input type="text" data-required="true" ng-model="form.name" name="name"
@@ -199,7 +199,7 @@
 
             <div class="sprint-sbox" ng-repeat="ml in milestones"
                 ng-class="{active: !ml.closed}"
-                ng-controller="BacklogMilestoneController"
+                ng-controller="BacklogMilestoneController as mlCtrl"
                 ng-mouseover="showEditOption=true"
                 ng-mouseout="showEditOption=false">
                 <div class="header">
@@ -207,7 +207,7 @@
                         <a class="name" href="{{ urls.taskboardUrl(projectSlug, ml.slug) }}">
                             {{ ml.name }}
                         </a>
-                        <a class="edit" href="" ng-click="showEditForm(ml.id)"
+                        <a class="edit" href="" ng-click="mlCtrl.showEditForm(ml.id)"
                            ng-show="showEditOption" data-icon="d"></a>
                         <span>{{ 'backlog.from-to'|i18next:{from: momentFormat(ml.estimated_start,"L"), to: momentFormat(ml.estimated_finish,"L")} }}</span>
                     </div>
@@ -230,11 +230,11 @@
                         </div>
                         <div class="us-viewer" ng-show="ml.closed" ng-switch="viewUSs">
                            <a data-icon="C" class="show" href="" ng-switch-when="false"
-                               ng-click="toggleViewUSs()" i18next="backlog.sprint-show-uss">
+                               ng-click="mlCtrl.toggleViewUSs()" i18next="backlog.sprint-show-uss">
                                Show USs
                            </a>
                            <a data-icon="B" class="hide" href="" ng-switch-default
-                              ng-click="toggleViewUSs()" i18next="backlog.sprint-hide-uss">
+                              ng-click="mlCtrl.toggleViewUSs()" i18next="backlog.sprint-hide-uss">
                                Hide USs
                            </a>
                         </div>
@@ -245,10 +245,10 @@
                         <div class="us-table-list">
                             <div class="flex-body" gm-sortable="userstories" gm-sortable-selector=".us-item"
                                  ng-model="milestones[$index].user_stories" gm-sortable-item-name="us"
-                                 gm-sortable-on-add="sortableOnAdd" gm-sortable-on-update="sortableOnUpdate"
-                                 gm-sortable-on-remove="sortableOnRemove">
+                                 gm-sortable-on-add="mlCtrl.sortableOnAdd" gm-sortable-on-update="mlCtrl.sortableOnUpdate"
+                                 gm-sortable-on-remove="mlCtrl.sortableOnRemove">
                                 <div class="us-item" ng-repeat="us in ml.user_stories|orderBy:'order'"
-                                     ng-dblclick="openUserStory(projectSlug, us.ref)" ng-include="'/partials/backlog-us-row.html'">
+                                     ng-dblclick="mlsCtrl.openUserStory(projectSlug, us.ref)" ng-include="'/partials/backlog-us-row.html'">
                                 </div>
                             </div>
                         </div>
@@ -256,7 +256,7 @@
                 </div>
 
                 <div class="milestone-edit-form-box" ng-show="editFormOpened">
-                    <form action="" gm-checksley-form="submit()">
+                    <form action="" gm-checksley-form="mlCtrl.submit()">
                         <fieldset>
                             <label i18next="backlog.sprint-name-label">Sprint name:</label>
                             <input type="text" data-required="true" ng-model="ml.name"
@@ -285,7 +285,7 @@
                         <div class="btn-group">
                             <input type="submit" class="button button-success"
                                    gm-checksley-submit-button value="Save" i18next="value:backlog.save"/>
-                            <a href="" class="button" ng-click="closeEditForm()" i18next="backlog.close">Close</a>
+                            <a href="" class="button" ng-click="mlCtrl.closeEditForm()" i18next="backlog.close">Close</a>
                         </div>
                     </form>
                 </div>
@@ -298,10 +298,10 @@
 <div id="userstory-modalform"
     gm-modal="user-story-form"
     ng-show="formOpened"
-    ng-controller="BacklogUserStoryModalController">
+    ng-controller="BacklogUserStoryModalController as blUsModal">
 
     <div class="new-us-modal modal">
-        <form class="inline-form us-form" gm-checksley-form="submit()">
+        <form class="inline-form us-form" gm-checksley-form="blUsModal.submit()">
             <div class="modal-header" ng-switch on="context.type">
                 <h3 ng-switch-when="create" i18next="backlog.create-user-story">Create user story</h3>
                 <h3 ng-switch-when="edit" i18next="backlog.modify-user-story">Modify user story</h3>
@@ -382,7 +382,7 @@
                 <div gm-spinner class="spinner-container"></div>
                 <input type="submit" class="button button-success"
                        gm-checksley-submit-button value="Save" i18next="value:backlog.save" />
-                <a href="" class="button button-cancel" ng-click="close()" i18next="backlog.close">Close</a>
+                <a href="" class="button button-cancel" ng-click="blUsModal.close()" i18next="backlog.close">Close</a>
             </div>
         </form>
     </div>
@@ -392,10 +392,10 @@
 <div id="bulk-user-stories-modalform"
     gm-modal="bulk-user-stories-form"
     ng-show="bulkFormOpened"
-    ng-controller="BacklogBulkUserStoriesModalController">
+    ng-controller="BacklogBulkUserStoriesModalController as blBulkModal">
 
     <div class="bulk-us-modal modal">
-        <form class="inline-form us-form" gm-checksley-form="submit()">
+        <form class="inline-form us-form" gm-checksley-form="blBulkModal.submit()">
             <div class="modal-header" ng-switch on="context.type">
                 <h3 i18next="backlog.bulk-user-stories">Create a bulk of USs</h3>
             </div>
@@ -411,7 +411,7 @@
                 <div gm-spinner class="spinner-container"></div>
                 <input type="submit" class="button button-success"
                        gm-checksley-submit-button value="Save" i18next="value:backlog.save" />
-                <a href="" class="button button-cancel" ng-click="close()" i18next="backlog.close">Close</a>
+                <a href="" class="button button-cancel" ng-click="blBulkModal.close()" i18next="backlog.close">Close</a>
             </div>
         </form>
     </div>

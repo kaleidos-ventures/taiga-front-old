@@ -13,52 +13,79 @@
 # limitations under the License.
 
 
-BacklogController = ($scope, $rootScope, $routeParams, rs, $data, $i18next, $favico, SelectedTags) ->
-    $favico.reset()
-    # Global Scope Variables
-    $rootScope.pageTitle = $i18next.t("common.backlog")
-    $rootScope.pageSection = 'backlog'
-    $rootScope.pageBreadcrumb = [
-        ["", ""]
-        [$i18next.t("common.backlog"), null]
-    ]
+class BacklogController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', '$routeParams', 'resource', '$data',
+                 '$i18next', '$favico']
+    constructor: (@scope, @rootScope, @routeParams, @rs, @data, @i18next, @favico) ->
+        super(scope)
 
-    $scope.stats = {}
+    initialize: ->
+        @favico.reset()
+        # Global Scope Variables
+        @rootScope.pageTitle = @i18next.t("common.backlog")
+        @rootScope.pageSection = 'backlog'
+        @rootScope.pageBreadcrumb = [
+            ["", ""]
+            [@i18next.t("common.backlog"), null]
+        ]
 
-    $scope.$on "stats:update", (ctx, data) ->
-        $data.loadProjectStats($scope).then ->
-            if $scope.projectStats.total_points > 0
-                $scope.percentageClosedPoints = ($scope.projectStats.closed_points * 100) / $scope.projectStats.total_points
+        @scope.stats = {}
+
+        @scope.$on "stats:update", (ctx, data) =>
+            @reloadStats()
+
+        @scope.$on "milestones:loaded", (ctx, data) =>
+            if data.length > 0
+                @rootScope.sprintId = data[0].id
+
+        @rs.resolve(pslug: @routeParams.pslug).then (data) =>
+            @rootScope.projectSlug = @routeParams.pslug
+            @rootScope.projectId = data.project
+            @data.loadProject(@scope).then =>
+                @scope.$emit("stats:update")
+                @data.loadUsersAndRoles(@scope)
+
+    reloadStats: ->
+        @data.loadProjectStats(@scope).then =>
+            if @scope.projectStats.total_points > 0
+                @scope.percentageClosedPoints = (@scope.projectStats.closed_points * 100) / @scope.projectStats.total_points
             else
-                $scope.percentageClosedPoints = 0
+                @scope.percentageClosedPoints = 0
 
-            $scope.percentageBarCompleted = $scope.percentageClosedPoints
+            @scope.percentageBarCompleted = @scope.percentageClosedPoints
 
-            if $scope.percentageBarCompleted > 100
-                $scope.percentageBarCompleted = 99
-
-    $scope.$on "milestones:loaded", (ctx, data) ->
-        if data.length > 0
-            $rootScope.sprintId = data[0].id
-
-    rs.resolve(pslug: $routeParams.pslug).then (data) ->
-        $rootScope.projectSlug = $routeParams.pslug
-        $rootScope.projectId = data.project
-        $data.loadProject($scope).then ->
-            $scope.$emit("stats:update")
-            $data.loadUsersAndRoles($scope)
-    return
+            if @scope.percentageBarCompleted > 100
+                @scope.percentageBarCompleted = 99
 
 
-BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $location, SelectedTags) ->
-    calculateStats = ->
-        $scope.$emit("stats:update")
+class BacklogUserStoriesController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal',
+                 '$location', 'SelectedTags']
+    constructor: (@scope, @rootScope, @q, @rs, @data, @modal, @location, @SelectedTags) ->
+        super(scope)
 
-    generateTagList = ->
+    initialize: ->
+        # Local scope variables
+        @scope.selectedUserStories = null
+        @scope.selectedStoryPoints = 9
+
+        @scope.filtersOpened = if @SelectedTags(@rootScope.projectId).backlog.isEmpty() then false else true
+        @scope.showTags = false
+
+        @scope.$on("points:loaded", @loadUserStories)
+        @scope.$on("userstory-form:create", @loadUserStories)
+
+        @scope.$on "milestones:loaded", (ctx, data) =>
+            @scope.milestones = data
+
+    calculateStats: ->
+        @scope.$emit("stats:update")
+
+    generateTagList: ->
         tagsDict = {}
         tags = []
 
-        for us in $scope.unassignedUs
+        for us in @scope.unassignedUs
             for tag in us.tags
                 if tagsDict[tag] is undefined
                     tagsDict[tag] = 1
@@ -67,54 +94,54 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
 
         for key, val of tagsDict
             tag = {name:key, count:val}
-            tag.selected = true if SelectedTags($rootScope.projectId).backlog.fetch(tag)
+            tag.selected = true if @SelectedTags(@rootScope.projectId).backlog.fetch(tag)
             tags.push(tag)
 
-        $scope.tags = tags
+        @scope.tags = tags
 
-    $scope.selectedTags = ->
-        return SelectedTags($rootScope.projectId).backlog.values()
+    selectedTags: ->
+        return @SelectedTags(@rootScope.projectId).backlog.values()
 
-    filterUsBySelectedTags = ->
-       selectedTagNames = SelectedTags($rootScope.projectId).backlog.names()
+    filterUsBySelectedTags: ->
+       selectedTagNames = @SelectedTags(@rootScope.projectId).backlog.names()
        if selectedTagNames.length > 0
-           for item in $scope.unassignedUs
+           for item in @scope.unassignedUs
                if _.intersection(selectedTagNames, item.tags).length == 0
                    item.__hidden = true
                else
                    item.__hidden = false
        else
-           item.__hidden = false for item in $scope.unassignedUs
+           item.__hidden = false for item in @scope.unassignedUs
 
-    resortUserStories = ->
-        saveChangedOrder = ->
-            for item, index in $scope.unassignedUs
+    resortUserStories: ->
+        saveChangedOrder = =>
+            for item, index in @scope.unassignedUs
                 item.order = index
 
-            modifiedUs = _.filter($scope.unassignedUs, (x) -> x.isModified())
-            bulkData = _.map($scope.unassignedUs, (value, index) -> [value.id, index])
+            modifiedUs = _.filter(@scope.unassignedUs, (x) -> x.isModified())
+            bulkData = _.map(@scope.unassignedUs, (value, index) -> [value.id, index])
 
             for item in modifiedUs
                 item._moving = true
 
-            promise = rs.updateBulkUserStoriesOrder($scope.projectId, bulkData)
-            promise = promise.then ->
+            promise = @rs.updateBulkUserStoriesOrder(@scope.projectId, bulkData)
+            promise = promise.then =>
                 for us in modifiedUs
                     us.markSaved()
                     us._moving = false
 
             return promise
 
-        $q.when(saveChangedOrder())
-          .then(calculateStats)
+        @q.when(saveChangedOrder())
+          .then(@calculateStats)
 
-    loadUserStories = ->
-        $data.loadUnassignedUserStories($scope).then ->
-            generateTagList()
-            filterUsBySelectedTags()
-            calculateStats()
+    loadUserStories: =>
+        @data.loadUnassignedUserStories(@scope).then =>
+            @generateTagList()
+            @filterUsBySelectedTags()
+            @calculateStats()
 
-    calculateStoryPoints = (selectedUserStories) ->
+    calculateStoryPoints: (selectedUserStories) ->
         total = 0
 
         if not selectedUserStories?
@@ -122,107 +149,95 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
 
         for us in selectedUserStories
             for roleId, pointId of us.points
-                pointsValue = $scope.constants.points[pointId].value
+                pointsValue = @scope.constants.points[pointId].value
                 if pointsValue is null
                     pointsValue = 0
                 total += pointsValue
 
         return total
 
-    getSelectedUserStories = ->
-        selected = _.filter($scope.unassignedUs, "selected")
+    getSelectedUserStories: ->
+        selected = _.filter(@scope.unassignedUs, "selected")
         if selected.length == 0
             return null
         return selected
 
-    getUnselectedUserStories = ->
-        selected = _.reject($scope.unassignedUs, "selected")
+    getUnselectedUserStories: ->
+        selected = _.reject(@scope.unassignedUs, "selected")
         if selected.length == 0
             return null
         return selected
 
-    # Local scope variables
-    $scope.selectedUserStories = null
-    $scope.selectedStoryPoints = 9
-
-    $scope.filtersOpened = if SelectedTags($rootScope.projectId).backlog.isEmpty() then false else true
-    $scope.showTags = false
-
-    $scope.moveSelectedUserStoriesToCurrentSprint = ->
-        if $scope.milestones.length == 0
+    moveSelectedUserStoriesToCurrentSprint: ->
+        if @scope.milestones.length == 0
             return
 
-        milestone = $scope.milestones[0]
+        milestone = @scope.milestones[0]
 
-        selected = getSelectedUserStories()
-        unselected = getUnselectedUserStories()
+        selected = @getSelectedUserStories()
+        unselected = @getUnselectedUserStories()
 
         for us in selected
             milestone.user_stories.push(us)
             us.milestone = milestone.id
             us.save()
 
-        $scope.unassignedUs = unselected
+        @scope.unassignedUs = unselected
 
-    $scope.changeUserStoriesSelection = ->
-        selected = $scope.selectedUserStories = getSelectedUserStories()
-        $scope.selectedStoryPoints = calculateStoryPoints(selected)
+    changeUserStoriesSelection: ->
+        selected = @scope.selectedUserStories = @getSelectedUserStories()
+        @scope.selectedStoryPoints = @calculateStoryPoints(selected)
 
-    $scope.refreshBacklog = ->
-        $scope.refreshing = true
-        loadUserStories().then ->
-            $scope.refreshing = false
+    refreshBacklog: ->
+        @scope.refreshing = true
+        @loadUserStories().then ->
+            @scope.refreshing = false
 
-    $scope.openUserStory = (projectSlug, usRef) ->
-        $location.url("/project/#{projectSlug}/user-story/#{usRef}")
+    openUserStory: (projectSlug, usRef) ->
+        @location.url("/project/#{projectSlug}/user-story/#{usRef}")
 
-    $scope.getUserStoryQueryParams = -> {milestone: 'null', tags: SelectedTags($rootScope.projectId).backlog.join()}
+    getUserStoryQueryParams: ->
+        {milestone: 'null', tags: @SelectedTags(@rootScope.projectId).backlog.join()}
 
-    $scope.$on("points:loaded", loadUserStories)
-    $scope.$on("userstory-form:create", loadUserStories)
-
-    $scope.$on "milestones:loaded", (ctx, data) ->
-        $scope.milestones = data
-
-    initializeUsForm = (us) ->
+    initializeUsForm: (us) ->
         result = {}
         if us?
             result = us
         else
             points = {}
-            for role in $scope.constants.computableRolesList
-                points[role.id] = $scope.project.default_points
+            for role in @scope.constants.computableRolesList
+                points[role.id] = @scope.project.default_points
             result['points'] = points
-            result['project'] = $scope.projectId
-            result['status'] = $scope.project.default_us_status
+            result['project'] = @scope.projectId
+            result['status'] = @scope.project.default_us_status
 
         return result
 
-    $scope.openBulkUserStoriesForm = ->
-        promise = $modal.open("bulk-user-stories-form", {})
-        promise.then ->
-            loadUserStories()
+    openBulkUserStoriesForm: ->
+        promise = @modal.open("bulk-user-stories-form", {})
+        promise.then =>
+            @loadUserStories()
 
-    $scope.openCreateUserStoryForm = ->
-        promise = $modal.open("user-story-form", {"us": initializeUsForm(), "type": "create"})
-        promise.then ->
-            loadUserStories()
+    openCreateUserStoryForm: ->
+        promise = @modal.open("user-story-form", {"us": @initializeUsForm(), "type": "create"})
+        promise.then =>
+            @loadUserStories()
 
-    $scope.openEditUserStoryForm = (us) ->
-        promise = $modal.open("user-story-form", {"us": initializeUsForm(us), "type": "edit"})
-        promise.then ->
-            loadUserStories()
+    openEditUserStoryForm: (us) ->
+        promise = @modal.open("user-story-form", {"us": @initializeUsForm(us), "type": "edit"})
+        promise.then =>
+            @loadUserStories()
 
-    $scope.removeUs = (us) ->
-        us.remove().then ->
-            index = $scope.unassignedUs.indexOf(us)
-            $scope.unassignedUs.splice(index, 1)
+    removeUs: (us) ->
+        us.remove().then =>
+            index = @scope.unassignedUs.indexOf(us)
+            @scope.unassignedUs.splice(index, 1)
 
-            calculateStats()
-            generateTagList()
-            filterUsBySelectedTags()
+            @calculateStats()
+            @generateTagList()
+            @filterUsBySelectedTags()
 
-    $scope.saveUsPoints = (us, role, ref) ->
+    saveUsPoints: (us, role, ref) ->
         points = _.clone(us.points)
         points[role.id] = ref
 
@@ -230,336 +245,342 @@ BacklogUserStoriesController = ($scope, $rootScope, $q, rs, $data, $modal, $loca
 
         us._moving = true
         promise = us.save()
-        promise.then ->
+        promise.then =>
             us._moving = false
-            calculateStats()
-            $scope.$broadcast("points:changed")
+            @calculateStats()
+            @scope.$broadcast("points:changed")
 
-        promise.then null, (data, status) ->
+        promise.then null, (data, status) =>
             us._moving = false
             us.revert()
 
-    $scope.saveUsStatus = (us, id) ->
+    saveUsStatus: (us, id) ->
         us.status = id
         us._moving = true
-        us.save().then (data) ->
+        us.save().then (data) =>
             data._moving = false
 
     # User Story Filters
-    $scope.toggleTag = (tag) ->
+    toggleTag: (tag) ->
         if tag.selected
             tag.selected = false
-            SelectedTags($rootScope.projectId).backlog.remove(tag)
+            @SelectedTags(@rootScope.projectId).backlog.remove(tag)
         else
             tag.selected = true
-            SelectedTags($rootScope.projectId).backlog.store(tag)
+            @SelectedTags(@rootScope.projectId).backlog.store(tag)
 
-        filterUsBySelectedTags()
+        @filterUsBySelectedTags()
 
-    $scope.sortableOnAdd = (us, index) ->
+    sortableOnAdd: (us, index) ->
         us.milestone = null
-        us.save().then ->
-            $scope.unassignedUs.splice(index, 0, us)
-            resortUserStories()
+        us.save().then =>
+            @scope.unassignedUs.splice(index, 0, us)
+            @resortUserStories()
 
-    $scope.sortableOnUpdate = (uss) ->
-        $scope.unassignedUs = uss
-        resortUserStories()
+    sortableOnUpdate: (uss) ->
+        @scope.unassignedUs = uss
+        @resortUserStories()
 
-    $scope.sortableOnRemove = (us) ->
-        _.remove($scope.unassignedUs, us)
-        selected = $scope.selectedUserStories = getSelectedUserStories()
-        $scope.selectedStoryPoints = calculateStoryPoints(selected)
+    sortableOnRemove: (us) ->
+        _.remove(@scope.unassignedUs, us)
+        selected = @scope.selectedUserStories = @getSelectedUserStories()
+        @scope.selectedStoryPoints = @calculateStoryPoints(selected)
 
-BacklogUserStoryModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next) ->
-    $scope.formOpened = false
-    $scope.bulkFormOpened = false
 
-    # Load data
-    $scope.defered = null
-    $scope.context = null
+class BacklogUserStoryModalController extends ModalBaseController
+    @.$inject = ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash',
+                 '$i18next']
+    constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next) ->
+        super(scope)
 
-    loadProjectTags = ->
-        rs.getProjectTags($scope.projectId).then (data) ->
-            $scope.projectTags = data
+    initialize: ->
+        @scope.formOpened = false
+        @scope.bulkFormOpened = false
 
-    openModal = ->
-        loadProjectTags()
-        $scope.formOpened = true
-        $scope.form = $scope.context.us
+        # Load data
+        @scope.defered = null
+        @scope.context = null
+
+        @scope.$on "select2:changed", (ctx, value) =>
+            @scope.form.tags = value
+
+    loadProjectTags: ->
+        @rs.getProjectTags(@scope.projectId).then (data) =>
+            @scope.projectTags = data
+
+    openModal: ->
+        @loadProjectTags()
+        @scope.formOpened = true
+        @scope.form = @scope.context.us
 
         # TODO: More general solution must be found.
         # This hack is used to take care on save user story as PATCH requests
         # and save correctly the multiple deep levels attributes
-        usCopy = _.cloneDeep($scope.context.us)
-        $scope.$watch('form.points', ->
-            if JSON.stringify($scope.form.points) != JSON.stringify(usCopy.points)
-                $scope.form.points = _.clone($scope.form.points)
+        usCopy = _.cloneDeep(@scope.context.us)
+        @scope.$watch('form.points', =>
+            if JSON.stringify(@scope.form.points) != JSON.stringify(usCopy.points)
+                @scope.form.points = _.clone(@scope.form.points)
         , true)
-        $scope.$broadcast("checksley:reset")
-        $scope.$broadcast("wiki:clean-previews")
+        @scope.$broadcast("checksley:reset")
+        @scope.$broadcast("wiki:clean-previews")
 
-        $scope.overlay = $gmOverlay()
-        $scope.overlay.open().then ->
-            $scope.formOpened = false
+        @scope.overlay = @gmOverlay()
+        @scope.overlay.open().then =>
+            @scope.formOpened = false
 
-    closeModal = ->
-        $scope.formOpened = false
+    closeModal: ->
+        @scope.formOpened = false
 
-    @.start = (dfr, ctx) ->
-        $scope.defered = dfr
-        $scope.context = ctx
-        openModal()
+    start: (dfr, ctx) ->
+        @scope.defered = dfr
+        @scope.context = ctx
+        @openModal()
 
-    @.delete = ->
-        closeModal()
-        $scope.form = form
-        $scope.formOpened = true
+    delete: ->
+        @closeModal()
+        @scope.form = form
+        @scope.formOpened = true
 
-    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
-        if $scope.form.id?
-            promise = $scope.form.save()
+    submit: gm.utils.safeDebounced @scope, 400, =>
+        if @scope.form.id?
+            promise = @scope.form.save()
         else
-            promise = rs.createUserStory($scope.form)
-        $scope.$emit("spinner:start")
+            promise = @rs.createUserStory(@scope.form)
+        @scope.$emit("spinner:start")
 
-        promise.then (data) ->
-            $scope.$emit("spinner:stop")
-            closeModal()
-            $scope.overlay.close()
-            $scope.defered.resolve()
-            $gmFlash.info($i18next.t('backlog.user-story-saved'))
+        promise.then (data) =>
+            @scope.$emit("spinner:stop")
+            @closeModal()
+            @scope.overlay.close()
+            @scope.defered.resolve()
+            @gmFlash.info(@i18next.t('backlog.user-story-saved'))
 
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
 
-    $scope.close = ->
-        $scope.formOpened = false
-        $scope.overlay.close()
+    close: ->
+        @scope.formOpened = false
+        @scope.overlay.close()
 
-        if $scope.form.id?
-            $scope.form.revert()
+        if @scope.form.id?
+            @scope.form.revert()
         else
-            $scope.form = {}
-
-    $scope.$on "select2:changed", (ctx, value) ->
-        $scope.form.tags = value
-
-    return
-
-BacklogBulkUserStoriesModalController = ($scope, $rootScope, $gmOverlay, rs, $gmFlash, $i18next) ->
-    $scope.bulkFormOpened = false
-
-    # Load data
-    $scope.defered = null
-    $scope.context = null
-
-    openModal = ->
-        $scope.bulkFormOpened = true
-        $scope.$broadcast("checksley:reset")
-
-        $scope.overlay = $gmOverlay()
-        $scope.overlay.open().then ->
-            $scope.bulkFormOpened = false
-
-    closeModal = ->
-        $scope.bulkFormOpened = false
-
-    @.start = (dfr, ctx) ->
-        $scope.defered = dfr
-        $scope.context = ctx
-        openModal()
-
-    @.delete = ->
-        closeModal()
-        $scope.form = form
-        $scope.bulkFormOpened = true
-
-    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
-        promise = rs.createBulkUserStories($scope.projectId, $scope.form)
-        $scope.$emit("spinner:start")
-
-        promise.then (data) ->
-            $scope.$emit("spinner:stop")
-            closeModal()
-            $scope.overlay.close()
-            $scope.defered.resolve()
-            $gmFlash.info($i18next.t('backlog.bulk-user-stories-created', { count: data.data.length }))
-            $scope.form = {}
-
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
-
-    $scope.close = ->
-        $scope.bulkFormOpened = false
-        $scope.overlay.close()
-        $scope.form = {}
-
-    $scope.$on "select2:changed", (ctx, value) ->
-        $scope.form.tags = value
-
-    return
+            @scope.form = {}
 
 
-BacklogMilestonesController = ($scope, $rootScope, rs, $gmFlash, $i18next, $location) ->
-    # Local scope variables
-    $scope.sprintFormOpened = false
+class BacklogBulkUserStoriesModalController extends ModalBaseController
+    @.$inject = ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash',
+                 '$i18next']
+    constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next) ->
+        super(scope)
 
-    calculateStats = ->
-        $scope.$emit("stats:update")
+    initialize: ->
+        @scope.bulkFormOpened = false
 
-    $scope.openUserStory = (projectSlug, usRef)->
-        $location.url("/project/#{projectSlug}/user-story/#{usRef}")
+        # Load data
+        @scope.defered = null
+        @scope.context = null
 
-    $scope.sprintSubmit = gm.utils.safeDebounced $scope, 400, ->
-        if $scope.form.save is undefined
-            promise = rs.createMilestone($scope.projectId, $scope.form)
+    openModal: ->
+        @scope.bulkFormOpened = true
+        @scope.$broadcast("checksley:reset")
 
-            promise.then (milestone) ->
-                $scope.milestones.unshift(milestone)
+        @scope.overlay = @gmOverlay()
+        @scope.overlay.open().then =>
+            @scope.bulkFormOpened = false
+
+    closeModal: ->
+        @scope.bulkFormOpened = false
+
+    start: (dfr, ctx) ->
+        @scope.defered = dfr
+        @scope.context = ctx
+        @openModal()
+
+    delete: ->
+        @closeModal()
+        @scope.form = form
+        @scope.bulkFormOpened = true
+
+    submit: gm.utils.safeDebounced @scope, 400, ->
+        promise = @rs.createBulkUserStories(@scope.projectId, @scope.form)
+        @scope.$emit("spinner:start")
+
+        promise.then (data) =>
+            @scope.$emit("spinner:stop")
+            @closeModal()
+            @scope.overlay.close()
+            @scope.defered.resolve()
+            @gmFlash.info(@i18next.t('backlog.bulk-user-stories-created', { count: data.data.length }))
+            @scope.form = {}
+
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
+
+    close: ->
+        @scope.bulkFormOpened = false
+        @scope.overlay.close()
+        @scope.form = {}
+
+
+class BacklogMilestonesController extends TaigaBaseController
+    @.$inject = ['$scope', '$rootScope', 'resource', '$gmFlash', '$i18next',
+                 '$location']
+    constructor: (@scope, @rootScope, @rs, @gmFlash, @i18next, @location) ->
+        super(scope)
+
+    initialize: ->
+        # Local scope variables
+        @scope.sprintFormOpened = false
+
+        @scope.$on "points:loaded", =>
+            @rs.getMilestones(@rootScope.projectId).then (data) =>
+                # HACK: because django-filter does not works properly
+                # @scope.milestones = data
+                @scope.milestones = _.filter data, (item) =>
+                    item.project == @rootScope.projectId
+
+                @calculateStats()
+                @rootScope.$broadcast("milestones:loaded", @scope.milestones)
+
+    calculateStats: ->
+        @scope.$emit("stats:update")
+
+    openUserStory: (projectSlug, usRef) ->
+        @location.url("/project/#{projectSlug}/user-story/#{usRef}")
+
+    sprintSubmit: gm.utils.safeDebounced @scope, 400, ->
+        if @scope.form.save is undefined
+            promise = @rs.createMilestone(@scope.projectId, @scope.form)
+
+            promise.then (milestone) =>
+                @scope.milestones.unshift(milestone)
                 # Clear the current form after creating
                 # of new sprint is completed
-                $scope.form = {}
-                $scope.sprintFormOpened = false
+                @scope.form = {}
+                @scope.sprintFormOpened = false
                 # Update the sprintId value for correct
                 # linking of dashboard menu item to the
                 # last created milestone
-                $rootScope.sprintId = milestone.id
+                @rootScope.sprintId = milestone.id
                 # Show a success message
-                $gmFlash.info($i18next.t('backlog.sprint-saved'))
+                @gmFlash.info(@i18next.t('backlog.sprint-saved'))
 
-            promise.then null, (data) ->
-                $scope.checksleyErrors = data
+            promise.then null, (data) =>
+                @scope.checksleyErrors = data
         else
-            promise = $scope.form.save()
+            promise = @scope.form.save()
 
-            promise.then (data) ->
-                $scope.form = {}
-                $scope.sprintFormOpened = false
-                $gmFlash.info($i18next.t('backlog.sprint-saved'))
+            promise.then (data) =>
+                @scope.form = {}
+                @scope.sprintFormOpened = false
+                @gmFlash.info(@i18next.t('backlog.sprint-saved'))
 
-            promise.then null, (data) ->
-                $scope.checksleyErrors = data
-
-    $scope.$on "points:loaded", ->
-        rs.getMilestones($rootScope.projectId).then (data) ->
-            # HACK: because django-filter does not works properly
-            # $scope.milestones = data
-            $scope.milestones = _.filter data, (item) ->
-                item.project == $rootScope.projectId
-
-            calculateStats()
-            $rootScope.$broadcast("milestones:loaded", $scope.milestones)
-
-    return
+            promise.then null, (data) =>
+                @scope.checksleyErrors = data
 
 
-BacklogMilestoneController = ($scope, $q, rs, $gmFlash, $i18next) ->
-    calculateTotalPoints = (us) ->
+class BacklogMilestoneController extends TaigaBaseController
+    @.$inject = ['$scope', '$q', 'resource', '$gmFlash', '$i18next']
+    constructor: (@scope, @q, rs, @gmFlash, @i18next) ->
+        super(scope)
+
+    initialize: ->
+        @scope.editFormOpened = false
+        @scope.viewUSs = not @scope.ml.closed
+        calculateStats()
+
+    calculateTotalPoints: (us) ->
         total = 0
         for roleId, pointId of us.points
-            total += $scope.constants.points[pointId].value
+            total += @scope.constants.points[pointId].value
         return total
 
-    calculateStats = ->
+    calculateStats: ->
         total = 0
         closed = 0
 
-        for us in $scope.ml.user_stories
-            points = calculateTotalPoints(us)
+        for us in @scope.ml.user_stories
+            points = @calculateTotalPoints(us)
             total += points
             closed += points if us.is_closed
 
-        $scope.stats =
+        @scope.stats =
             total: total
             closed: closed
             percentage: if total then ((closed * 100) / total).toFixed(1) else 0.0
 
-    normalizeMilestones = ->
-        saveChangedMilestone = ->
+    normalizeMilestones: ->
+        saveChangedMilestone = =>
             console.log "saveChangedMilestone"
-            for item, index in $scope.ml.user_stories
-                item.milestone = $scope.ml.id
+            for item, index in @scope.ml.user_stories
+                item.milestone = @scope.ml.id
 
-            filtered = _.filter($scope.ml.user_stories, (x) -> x.isModified())
+            filtered = _.filter(@scope.ml.user_stories, (x) -> x.isModified())
             pchain = _.map(filtered, (x) -> x.save())
 
-            return $q.all(pchain)
+            return @q.all(pchain)
 
-        saveChangedOrder = ->
+        saveChangedOrder = =>
             console.log "saveChangedOrder"
-            for item, index in $scope.ml.user_stories
+            for item, index in @scope.ml.user_stories
                 item.order = index
                 if item.isModified()
                     item._moving = true
 
-            bulkData = _.map($scope.ml.user_stories, (value, index) -> [value.id, index])
-            return rs.updateBulkUserStoriesOrder($scope.projectId, bulkData)
+            bulkData = _.map(@scope.ml.user_stories, (value, index) -> [value.id, index])
+            return @rs.updateBulkUserStoriesOrder(@scope.projectId, bulkData)
 
-        markAsSaved = ->
-            for item in $scope.ml.user_stories
+        markAsSaved = =>
+            for item in @scope.ml.user_stories
                 item._moving = false
                 item.markSaved()
 
             return null
 
-        $q.when(saveChangedMilestone())
+        @q.when(saveChangedMilestone())
           .then(saveChangedOrder)
           .then(markAsSaved)
-          .then(calculateStats)
+          .then(@calculateStats)
 
-    $scope.editFormOpened = false
-    $scope.viewUSs = not $scope.ml.closed
+    showEditForm: ->
+        @scope.editFormOpened = true
 
-    $scope.showEditForm = () ->
-        $scope.editFormOpened = true
+    toggleViewUSs: ->
+        @scope.viewUSs = not @scope.viewUSs
 
-    $scope.toggleViewUSs = ->
-        $scope.viewUSs = not $scope.viewUSs
+    submit: gm.utils.safeDebounced @scope, 400, ->
+        promise = @scope.ml.save()
 
-    $scope.submit = gm.utils.safeDebounced $scope, 400, ->
-        promise = $scope.ml.save()
+        promise.then (data) =>
+            @scope.editFormOpened = false
+            @gmFlash.info(@i18next.t('backlog.sprint-modified'))
 
-        promise.then (data) ->
-            $scope.editFormOpened = false
-            $gmFlash.info($i18next.t('backlog.sprint-modified'))
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
 
-        promise.then null, (data) ->
-            $scope.checksleyErrors = data
+    closeEditForm: ->
+        @scope.editFormOpened = false
+        @scope.ml.refresh()
 
-    $scope.closeEditForm = ->
-        $scope.editFormOpened = false
-        $scope.ml.refresh()
+    sortableOnAdd: (us, index) ->
+        us.milestone = @scope.ml.id
+        us.save().then =>
+            @scope.ml.user_stories.splice(index, 0, us)
+            @normalizeMilestones()
 
-    calculateStats()
+    sortableOnUpdate: (uss) ->
+        @scope.ml.user_stories = uss
+        @normalizeMilestones()
 
-    $scope.sortableOnAdd = (us, index) ->
-        us.milestone = $scope.ml.id
-        us.save().then ->
-            $scope.ml.user_stories.splice(index, 0, us)
-            normalizeMilestones()
-
-    $scope.sortableOnUpdate = (uss) ->
-        $scope.ml.user_stories = uss
-        normalizeMilestones()
-
-    $scope.sortableOnRemove = (us) ->
-        _.remove($scope.ml.user_stories, us)
-
-    return
+    sortableOnRemove: (us) ->
+        _.remove(@scope.ml.user_stories, us)
 
 
 module = angular.module("taiga.controllers.backlog", [])
-module.controller('BacklogMilestoneController', ['$scope', '$q', 'resource', '$gmFlash', '$i18next',
-                                                 BacklogMilestoneController])
-module.controller('BacklogMilestonesController', ['$scope', '$rootScope', 'resource', '$gmFlash', '$i18next',
-                                                  '$location', BacklogMilestonesController])
-module.controller('BacklogUserStoriesController', ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal',
-                                                   '$location', 'SelectedTags', BacklogUserStoriesController])
-module.controller('BacklogController', ['$scope', '$rootScope', '$routeParams', 'resource', '$data', '$i18next',
-                                        '$favico', 'SelectedTags', BacklogController])
-module.controller('BacklogUserStoryModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource',
-                                                      '$gmFlash', '$i18next', BacklogUserStoryModalController])
-module.controller('BacklogBulkUserStoriesModalController', ['$scope', '$rootScope', '$gmOverlay', 'resource',
-                                                            '$gmFlash', '$i18next',
-                                                            BacklogBulkUserStoriesModalController])
+module.controller('BacklogController', BacklogController)
+module.controller('BacklogUserStoriesController', BacklogUserStoriesController)
+module.controller('BacklogUserStoryModalController', BacklogUserStoryModalController)
+module.controller('BacklogBulkUserStoriesModalController', BacklogBulkUserStoriesModalController)
+module.controller('BacklogMilestonesController', BacklogMilestonesController)
+module.controller('BacklogMilestoneController', BacklogMilestoneController)
