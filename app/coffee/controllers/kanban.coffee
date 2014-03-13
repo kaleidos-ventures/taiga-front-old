@@ -156,27 +156,19 @@ class KanbanUsModalController extends ModalBaseController
         @scope.$on "select2:changed", (ctx, value) =>
             @scope.form.tags = value
 
+        @scope.assignedToSelectOptions = {
+            formatResult: @assignedToSelectOptionsShowMember
+            formatSelection: @assignedToSelectOptionsShowMember
+        }
+
     loadProjectTags: ->
         @rs.getProjectTags(@scope.projectId).then (data) =>
             @scope.projectTags = data
-
-    _assignedToSelectOptionsShowMember: (option, container) ->
-        if option.id
-            member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
-            # TODO: make me more beautiful and elegant
-            return "<span style=\"color: black; padding: 0px 5px;
-                                  border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
-         return "<span\">#{option.text}</span>"
 
     openModal: ->
         @loadProjectTags()
         @scope.form = @scope.context.us
         @scope.formOpened = true
-
-        @scope.assignedToSelectOptions = {
-            formatResult: @_assignedToSelectOptionsShowMember
-            formatSelection: @_assignedToSelectOptionsShowMember
-        }
 
         @scope.$broadcast("checksley:reset")
         @scope.$broadcast("wiki:clean-previews")
@@ -225,6 +217,14 @@ class KanbanUsModalController extends ModalBaseController
             @scope.form.revert()
         else
             @scope.form = {}
+
+    assignedToSelectOptionsShowMember: (option, container) =>
+        if option.id
+            member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
+            # TODO: make me more beautiful and elegant
+            return "<span style=\"color: black; padding: 0px 5px;
+                                  border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
+         return "<span\">#{option.text}</span>"
 
 
 class KanbanUsController extends TaigaBaseController
