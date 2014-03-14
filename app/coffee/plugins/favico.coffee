@@ -13,10 +13,8 @@
 # limitations under the License.
 
 
-FavicoProvider = () ->
-    service = {}
-
-    defaultOptions = {
+class FavicoService extends TaigaBaseService
+    _defaultOptions: {
         bgColor: "#d00"             # Hex background color
         textColor: "#fff"           # Hex text color
         fontFamily: "sans-serif"    # [Arial, Verdana, Times New Roman, serif, sans-serif,...]
@@ -26,22 +24,23 @@ FavicoProvider = () ->
         animation: "popFade"          # [slide, fade, pop, popFade, none]
     }
 
-    service.newFavico = (opts=defaultOptions) ->
-        service._favico = new Favico(opts)
+    favico: null
 
-    service.badge = (num) ->
-        service._favico.badge(num)
+    newFavico: (opts) ->
+        opts = opts or @_defaultOptions
+        @_favico = new Favico(opts)
 
-    service.reset = () ->
+    badge: (num) ->
+        @_favico.badge(num)
+
+    reset: () ->
         try
-            service._favico.reset()
+            @_favico.reset()
         catch err
 
-    service.destroy = () ->
-        service._favico = null
-
-    return service
+    destroy: () ->
+        @_favico = null
 
 
 module = angular.module('favico', [])
-module.factory('$favico', [FavicoProvider])
+module.service('$favico', FavicoService)
