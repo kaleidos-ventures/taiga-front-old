@@ -12,6 +12,64 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+class I18NextService extends TaigaBaseService
+    @.$inject = ["$rootScope", "$q"]
+    constructor: (@rootScope, @q) ->
+        i18n.addPostProcessor "lodashTemplate", (value, key, options) ->
+            template = _.template(value)
+            return template(options.scope)
+        @t = @translate
+
+    _defaultOptions: {
+        postProcess: "lodashTemplate"
+        fallbackLng: "en"
+        useLocalStorage: false
+        localStorageExpirationTime: 60*60*24*1000 # 1 day
+        ns: 'app'
+        resGetPath: 'locales/__lng__/__ns__.json'
+        getAsync: false
+    }
+
+    setLang: (lang) ->
+        $rootScope.currentLang = lang
+        options = _.clone(@._defaultOptions, true)
+        i18n.setLng lang, options, =>
+            @rootScope.$broadcast("i18next:changeLang")
+
+    getCurrentLang: ->
+        return @rootScope.currentLang
+
+    translate: (key, options)->
+        return @rootScope.t(key, options)
+
+    initialize: (async=false, defaultLang="en") ->
+        # Put to rootScope a initial values
+        options = _.clone(@._defaultOptions, true)
+        options.lng = @rootScope.currentLang = defaultLang
+
+        if async
+            options.getAsync = true
+            defer = @q.defer()
+
+            onI18nextInit = (t) =>
+                @rootScope.$apply =>
+                    @rootScope.translate = t
+                    @rootScope.t = t
+                    defer.resolve(t)
+                    @rootScope.$broadcast("i18next:loadComplete", t)
+
+                return defer.promise
+
+            i18n.init(options, onI18nextInit)
+
+        else
+            i18n.init(options)
+            @rootScope.translate = i18n.t
+            @rootScope.t = i18n.t
+            @rootScope.$broadcast("i18next:loadComplete", i18n.t)
+
+
 I18NextDirective = ($parse, $rootScope) ->
     restrict: "A"
     link: (scope, elm, attrs) ->
@@ -30,71 +88,12 @@ I18NextDirective = ($parse, $rootScope) ->
         $rootScope.$on "i18next:changeLang", ->
             evaluateTranslation()
 
-I18NextProvider = ($rootScope, $q) ->
-    i18n.addPostProcessor "lodashTemplate", (value, key, options) ->
-        template = _.template(value)
-        return template(options.scope)
-
-    service = {}
-
-    service.defaultOptions = {
-        postProcess: "lodashTemplate"
-        fallbackLng: "en"
-        useLocalStorage: false
-        localStorageExpirationTime: 60*60*24*1000 # 1 day
-        ns: 'app'
-        resGetPath: 'locales/__lng__/__ns__.json'
-        getAsync: false
-    }
-
-    service.setLang = (lang) ->
-        $rootScope.currentLang = lang
-        options = _.clone(service.defaultOptions, true)
-        i18n.setLng lang, options, ->
-            $rootScope.$broadcast("i18next:changeLang")
-
-    service.getCurrentLang = ->
-        return $rootScope.currentLang
-
-    service.translate = (key, options)->
-        return $rootScope.t(key, options)
-
-    service.t = service.translate
-
-    service.initialize = (async=false, defaultLang="en") ->
-        # Put to rootScope a initial values
-        options = _.clone(service.defaultOptions, true)
-        options.lng = $rootScope.currentLang = defaultLang
-
-        if async
-            options.getAsync = true
-            defer = $q.defer()
-
-            onI18nextInit = (t) ->
-                $rootScope.$apply ->
-                    $rootScope.translate = t
-                    $rootScope.t = t
-                    defer.resolve(t)
-                    $rootScope.$broadcast("i18next:loadComplete", t)
-
-                return defer.promise
-
-            i18n.init(options, onI18nextInit)
-
-        else
-            i18n.init(options)
-            $rootScope.translate = i18n.t
-            $rootScope.t = i18n.t
-            $rootScope.$broadcast("i18next:loadComplete", i18n.t)
-
-    return service
-
 
 I18NextTranslateFilter = ($i18next) ->
     return (key, options) ->
         return $i18next.t(key, options)
 
 module = angular.module('i18next', [])
-module.factory("$i18next", ['$rootScope', '$q', I18NextProvider])
+module.service("$i18next", I18NextService)
 module.directive('i18next', ['$parse', '$rootScope', I18NextDirective])
 module.filter('i18next', ['$i18next', I18NextTranslateFilter])
