@@ -120,10 +120,9 @@
                 </fieldset>
                 <fieldset class="fieldset-row">
                     <label i18next="kanban.tags">Tags</label>
-                    <input type="text" class="tags" name="tags" value=""
-                           gm-select2-tags="projectTags" ng-model="form.tags"
-                           placeholder="Ex: backend, backoffice, ecommerce..."
-                           i18next="placeholder:kanban.tags-placeholder"></input>
+                    <input type="text" name="tags"
+                           ng-model="form.tags" ui-select2="tagsSelectOptions"
+                           data-placeholder="{{'kanban.tags-placeholder'|i18next }}" />
                 </fieldset>
                 <fieldset class="fieldset-row">
                     <label i18next="kanban.description">Description</label>
