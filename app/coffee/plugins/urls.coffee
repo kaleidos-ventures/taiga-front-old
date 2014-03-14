@@ -16,47 +16,42 @@ format = (fmt, obj) ->
     obj = _.clone(obj)
     return fmt.replace /%s/g, (match) -> String(obj.shift())
 
-UrlsProvider = ->
-    data = {
+class UrlsService
+    constructor: (data) ->
+        @data = data
+
+    setHost: (ns, host, scheme) ->
+        @data.host[ns] = host
+        @data.scheme[ns] = scheme
+
+
+class UrlsProvider
+    data: {
         urls: {}
         host: {}
         scheme: {}
     }
 
-    setHost = (ns, host, scheme) ->
-        data.host[ns] = host
-        data.scheme[ns] = scheme
-
-    setUrls = (ns, urls) ->
+    setUrls: (ns, urls) ->
         if _.toArray(arguments).length != 2
             throw Error("wrong arguments to setUrls")
 
-        data.urls[ns] = urls
-        service[ns] = ->
+        @data.urls[ns] = urls
+        UrlsService.prototype[ns] = ->
             if _.toArray(arguments).length < 1
                 throw Error("wrong arguments")
 
             args = _.toArray(arguments)
             name = args.slice(0, 1)[0]
-            url = format(data.urls[ns][name], args.slice(1))
+            url = format(@data.urls[ns][name], args.slice(1))
 
-            if data.host[ns]
-                return format("%s://%s%s", [data.scheme[ns], data.host[ns], url])
+            if @data.host[ns]
+                return format("%s://%s%s", [@data.scheme[ns], @data.host[ns], url])
 
             return url
 
-    service = {}
-    service.data = data
-    service.setUrls = setUrls
-    service.setHost = setHost
-
-    @.setUrls = setUrls
-    @.setHost = setHost
-
-    @.$get = ->
-        return service
-
-    return
+    $get: ->
+        return new UrlsService(@data)
 
 module = angular.module("gmUrls", [])
 module.provider('$gmUrls', UrlsProvider)
