@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-class AuthService
+class AuthService extends TaigaBaseService
     @.$inject = ["$rootScope", "$gmStorage", "$model"]
     constructor: (@rootScope, @gmStorage, @model) ->
         super()
@@ -30,4 +30,4 @@ class AuthService
         @gmStorage.set("userInfo", user.getAttrs())
 
 module = angular.module('taiga.services.common', [])
-module.service("$gmAuth", AuthProvider)
+module.service("$gmAuth", AuthService)

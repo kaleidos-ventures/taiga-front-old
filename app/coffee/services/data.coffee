@@ -1,10 +1,13 @@
-DataServiceProvider = ($rootScope, $q, rs) ->
-    service = {}
+class DataService extends TaigaBaseService
+    @.$inject = ["$rootScope", "$q", "resource"]
 
-    service.loadPermissions = ($scope) ->
-        promise = rs.getPermissions().then (permissions) ->
-            $rootScope.constants.permissionsList = permissions
-            $rootScope.constants.permissionsGroups = permissions
+    constructor: (@rootScope, @q, @rs) ->
+        super()
+
+    loadPermissions: ($scope) ->
+        promise = @rs.getPermissions().then (permissions) =>
+            @rootScope.constants.permissionsList = permissions
+            @rootScope.constants.permissionsGroups = permissions
 
             groups = {}
             for permission in permissions
@@ -14,25 +17,25 @@ DataServiceProvider = ($rootScope, $q, rs) ->
                 else
                     groups[resource] = [permission]
 
-            $rootScope.constants.permissionsGroups = groups
+            @rootScope.constants.permissionsGroups = groups
 
         return promise
 
-    service.loadProjectStats = ($scope) ->
-        promise = rs.getProjectStats($scope.projectId).then (projectStats) ->
+    loadProjectStats: ($scope) ->
+        promise = @rs.getProjectStats($scope.projectId).then (projectStats) =>
             $scope.projectStats = projectStats
-            $rootScope.$broadcast("project_stats:loaded", projectStats)
+            @rootScope.$broadcast("project_stats:loaded", projectStats)
 
         return promise
 
-    service.loadProject = ($scope) ->
-        promise = rs.getProject($scope.projectId).then (project) ->
+    loadProject: ($scope) ->
+        promise = @rs.getProject($scope.projectId).then (project) =>
             $scope.project = project
-            $rootScope.$broadcast("project:loaded", project)
+            @rootScope.$broadcast("project:loaded", project)
 
-            breadcrumb = _.clone($rootScope.pageBreadcrumb)
-            breadcrumb[0] = [project.name, $rootScope.urls.backlogUrl(project.slug)]
-            $rootScope.pageBreadcrumb = breadcrumb
+            breadcrumb = _.clone(@rootScope.pageBreadcrumb)
+            breadcrumb[0] = [project.name, @rootScope.urls.backlogUrl(project.slug)]
+            @rootScope.pageBreadcrumb = breadcrumb
 
             # USs
             for item in project.points
@@ -40,7 +43,7 @@ DataServiceProvider = ($rootScope, $q, rs) ->
                 $scope.constants.pointsByOrder[item.order] = item
 
             $scope.constants.pointsList = _.sortBy(project.points, "order")
-            $rootScope.$broadcast("points:loaded", project.points)
+            @rootScope.$broadcast("points:loaded", project.points)
 
             # Us statuses
             _.each(project.us_statuses, (status) -> $scope.constants.usStatuses[status.id] = status)
@@ -64,13 +67,13 @@ DataServiceProvider = ($rootScope, $q, rs) ->
 
         return promise
 
-    service.loadTaskboardData = ($scope) ->
-        promise = $q.all [
-            rs.getTasks($scope.projectId, $scope.sprintId),
-            rs.getMilestone($scope.projectId, $scope.sprintId),
+    loadTaskboardData: ($scope) ->
+        promise = @q.all [
+            @rs.getTasks($scope.projectId, $scope.sprintId),
+            @rs.getMilestone($scope.projectId, $scope.sprintId),
         ]
 
-        promise = promise.then (results) ->
+        promise = promise.then (results) =>
             [tasks, milestone] = results
             $scope.milestone = milestone
 
@@ -83,33 +86,33 @@ DataServiceProvider = ($rootScope, $q, rs) ->
             return results
         return promise
 
-    service.loadUnassignedUserStories = ($scope) ->
-        promise = rs.getUnassignedUserStories($rootScope.projectId)
-        promise = promise.then (unassignedUs) ->
-            projectId = parseInt($rootScope.projectId, 10)
+    loadUnassignedUserStories: ($scope) ->
+        promise = @rs.getUnassignedUserStories(@rootScope.projectId)
+        promise = promise.then (unassignedUs) =>
+            projectId = parseInt(@rootScope.projectId, 10)
 
             $scope.unassignedUs = _.filter(unassignedUs, {"project": projectId, milestone: null})
             $scope.unassignedUs = _.sortBy($scope.unassignedUs, "order")
-            $rootScope.$broadcast("userstories:loaded")
+            @rootScope.$broadcast("userstories:loaded")
             return $scope.unassignedUs
         return promise
 
-    service.loadUserStories = ($scope) ->
-        promise = rs.getUserStories($rootScope.projectId)
-        promise = promise.then (uss) ->
+    loadUserStories: ($scope) ->
+        promise = @rs.getUserStories(@rootScope.projectId)
+        promise = promise.then (uss) =>
             $scope.userstories = _.sortBy(uss, "order")
-            $rootScope.$broadcast("userstories:loaded")
+            @rootScope.$broadcast("userstories:loaded")
             return $scope.userstories
         return promise
 
     # NOTE: This method depends on getProject
-    service.loadUsersAndRoles = ($scope) ->
-        promise = $q.all [
-            rs.getUsers($scope.project.id),
-            rs.getRoles($scope.project.id),
+    loadUsersAndRoles: ($scope) ->
+        promise = @q.all [
+            @rs.getUsers($scope.project.id),
+            @rs.getRoles($scope.project.id),
         ]
 
-        promise = promise.then (results) ->
+        promise = promise.then (results) =>
             [users, roles] = results
 
             $scope.constants.usersList = _.sortBy(users, "id")
@@ -117,8 +120,8 @@ DataServiceProvider = ($rootScope, $q, rs) ->
 
             _.each(users, (item) -> $scope.constants.users[item.id] = item)
 
-            $rootScope.$broadcast("roles:loaded", roles)
-            $rootScope.$broadcast("users:loaded", users)
+            @rootScope.$broadcast("roles:loaded", roles)
+            @rootScope.$broadcast("users:loaded", users)
 
             availableRoles = _($scope.project.memberships).map("role").uniq().value()
 
@@ -128,21 +131,19 @@ DataServiceProvider = ($rootScope, $q, rs) ->
             return results
         return promise
 
-    service.loadSiteInfo = ($scope) ->
+    loadSiteInfo: ($scope) ->
         $scope.site = {}
 
-        defered = $q.defer()
-        promise = rs.getSiteInfo()
-        promise.then (data) ->
+        defered = @q.defer()
+        promise = @rs.getSiteInfo()
+        promise.then (data) =>
             $scope.site = _.merge($scope.site, data)
             defered.resolve($scope.site)
 
-        promise.then null, ->
+        promise.then null, =>
             defered.reject()
 
         return defered.promise
 
-    return service
-
 module = angular.module("taiga.services.data", [])
-module.factory("$data", ["$rootScope", "$q", "resource", DataServiceProvider])
+module.service("$data", DataService)

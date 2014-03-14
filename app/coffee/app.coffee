@@ -415,7 +415,6 @@ modules = [
     "ngAnimate",
     "ngSanitize",
 
-    "taiga.controllers.common",
     "taiga.controllers.auth",
     "taiga.controllers.backlog",
     "taiga.controllers.kanban",
@@ -428,6 +427,7 @@ modules = [
     "taiga.controllers.wiki",
     "taiga.controllers.site",
     "taiga.filters",
+    "taiga.services.data",
     "taiga.services.common",
     "taiga.services.model",
     "taiga.services.resource",
