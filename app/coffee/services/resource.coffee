@@ -345,7 +345,7 @@ class ResourceService extends TaigaBaseService
             return milestone
 
         # Third step: make milestone models
-        _makeModel = (milestone) ->
+        _makeModel = (milestone) =>
             return @model.make_model("milestone", milestone)
 
         return _getMilestone().then(_makeUserStoryModels).then(_makeModel)
