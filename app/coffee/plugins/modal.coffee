@@ -12,32 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ModalServiceFactory = ($rootScope, $q, $log) ->
-    modals = {}
-    service = {}
+class ModalService extends TaigaBaseService
+    @.$inject = ["$q", "$log"]
+    constructor: (@q, @log) ->
+        super()
 
-    service.register = (name, domId) ->
-        $log.debug "registering modal: #{name}"
-        modals[name] = domId
+    modals: {}
 
-    service.open = (name, ctx) ->
-        dom = angular.element("##{modals[name]}")
+    register: (name, domId) ->
+        @log.debug "registering modal: #{name}"
+        @modals[name] = domId
+
+    open: (name, ctx) ->
+        dom = angular.element("##{@modals[name]}")
         $(dom.find('.modal')).css('top': $(document).scrollTop() + 15)
 
-        defered = $q.defer()
+        defered = @q.defer()
 
         ctrl = dom.controller()
         scp = dom.scope()
         ctrl.start(defered, ctx)
         return defered.promise
 
-    service.close = (name) ->
-        dom = angular.element("##{modals[name]}")
+    close: (name) ->
+        dom = angular.element("##{@modals[name]}")
 
         ctrl = dom.controller()
         ctrl.delete()
-
-    return service
 
 
 ModalRegisterDirective = ($rootScope, $modal) ->
@@ -50,5 +51,5 @@ ModalRegisterDirective = ($rootScope, $modal) ->
 
 
 module = angular.module("gmModal", [])
-module.factory("$modal", ["$rootScope", "$q", "$log", ModalServiceFactory])
+module.service("$modal", ModalService)
 module.directive("gmModal", ["$rootScope", "$modal", ModalRegisterDirective])
