@@ -70,7 +70,7 @@ class TasksViewController extends TaigaPageController
             allowClear: true
             formatResult: @watcherSelectOptionsShowMember
             formatSelection: @watcherSelectOptionsShowMember
-            containerCssClass: "watcher-user"
+            containerCssClass: "watchers-selector"
         }
 
     loadAttachments: ->
