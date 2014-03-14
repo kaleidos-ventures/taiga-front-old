@@ -20,7 +20,7 @@ class SimpleConfirmService extends TaigaBaseService
     confirm: (message) ->
         defered = @q.defer()
 
-        _.defer ->
+        _.defer =>
             res = @window.confirm(message)
             if res
                 defered.resolve()
@@ -32,4 +32,4 @@ class SimpleConfirmService extends TaigaBaseService
 
 
 module = angular.module('gmConfirm', [])
-module.service('$confirm', SimpleConfirmService])
+module.service('$confirm', SimpleConfirmService)
