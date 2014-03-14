@@ -29,5 +29,5 @@ class AuthService extends TaigaBaseService
         @rootScope.$broadcast('i18n:change', user.default_language)
         @gmStorage.set("userInfo", user.getAttrs())
 
-module = angular.module('taiga.services.common', [])
+module = angular.module('taiga.services.auth', [])
 module.service("$gmAuth", AuthService)

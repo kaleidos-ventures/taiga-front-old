@@ -428,7 +428,7 @@ modules = [
     "taiga.controllers.site",
     "taiga.filters",
     "taiga.services.data",
-    "taiga.services.common",
+    "taiga.services.auth",
     "taiga.services.model",
     "taiga.services.resource",
     "taiga.services.tags",
