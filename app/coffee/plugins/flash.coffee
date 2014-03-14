@@ -12,15 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FlashMessagesProvider = ($rootScope, $q, $window) ->
-    service = {}
-    service.info = (message) ->
-        $rootScope.$broadcast("flash:new", true, message)
+class FlashMessagesService extends TaigaBaseService
+    @.$inject = ['$rootScope']
+    constructor: (@rootScope) ->
+        super()
 
-    service.error = (message) ->
-        $rootScope.$broadcast("flash:new", false, message)
+    info: (message) ->
+        @rootScope.$broadcast("flash:new", true, message)
 
-    return service
+    error: (message) ->
+        @rootScope.$broadcast("flash:new", false, message)
 
 
 FlashMessagesDirective = ->
@@ -44,5 +45,5 @@ FlashMessagesDirective = ->
 
 
 module = angular.module('gmFlash', [])
-module.factory('$gmFlash', ["$rootScope", "$q", "$window", FlashMessagesProvider])
+module.service('$gmFlash', FlashMessagesService)
 module.directive('gmFlashMessages', FlashMessagesDirective)
