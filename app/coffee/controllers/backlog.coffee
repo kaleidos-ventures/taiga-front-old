@@ -306,12 +306,20 @@ class BacklogUserStoryModalController extends ModalBaseController
         @scope.defered = null
         @scope.context = null
 
-        @scope.$on "select2:changed", (ctx, value) =>
-            @scope.form.tags = value
+        @scope.tagsSelectOptions = {
+            multiple: true
+            simple_tags: true
+            tags: @getTagsList
+            formatSelection: @tagsSelectOptionsShowColorizedTags
+            containerCssClass: "tags-selector"
+        }
 
     loadProjectTags: ->
         @rs.getProjectTags(@scope.projectId).then (data) =>
-            @scope.projectTags = data
+            @projectTags = data
+
+    getTagsList: =>
+        @projectTags or []
 
     openModal: ->
         @loadProjectTags()
@@ -372,6 +380,23 @@ class BacklogUserStoryModalController extends ModalBaseController
             @scope.form.revert()
         else
             @scope.form = {}
+
+    tagsSelectOptionsShowColorizedTags: (option, container) =>
+        hash = hex_sha1(option.text.trim().toLowerCase())
+        color = hash
+            .substring(0,6)
+            .replace('8','0')
+            .replace('9','1')
+            .replace('a','2')
+            .replace('b','3')
+            .replace('c','4')
+            .replace('d','5')
+            .replace('e','6')
+            .replace('f','7')
+
+        container.parent().css('background', "##{color}")
+        container.text(option.text)
+        return
 
 
 class BacklogBulkUserStoriesModalController extends ModalBaseController

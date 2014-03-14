@@ -329,10 +329,9 @@
                     </fieldset>
                     <fieldset>
                         <label i18next="backlog.tags">Tags</label>
-                        <input type="text" class="tags" name="tags" value=""
-                               gm-select2-tags="projectTags" ng-model="form.tags"
-                               placeholder="Ex: backend, backoffice, ecommerce..."
-                               i18next="placeholder:backlog.tags-placeholder"></input>
+                        <input type="text" name="tags"
+                               ng-model="form.tags" ui-select2="tagsSelectOptions"
+                               data-placeholder="{{'backlog.tags-placeholder'|i18next }}" />
                     </fieldset>
                 </div>
                 <div class="fieldset-row requirements">
