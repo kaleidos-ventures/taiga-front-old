@@ -209,8 +209,7 @@ class TaskboardTaskModalController extends ModalBaseController
         @scope.$broadcast("checksley:reset")
         @scope.$broadcast("wiki:clean-previews")
 
-        @scope.overlay = @gmOverlay()
-        @scope.overlay.open().then =>
+        @gmOverlay.open().then =>
             @scope.formOpened = false
 
     closeModal: ->
@@ -237,7 +236,7 @@ class TaskboardTaskModalController extends ModalBaseController
         promise.then (data) =>
             @scope.$emit("spinner:stop")
             @closeModal()
-            @scope.overlay.close()
+            @gmOverlay.close()
             @scope.form.id = data.id
             @scope.form.ref = data.ref
             @scope.defered.resolve(@scope.form)
@@ -248,7 +247,7 @@ class TaskboardTaskModalController extends ModalBaseController
 
     close: ->
         @scope.formOpened = false
-        @scope.overlay.close()
+        @gmOverlay.close()
 
         if @scope.form.id?
             @scope.form.revert()
@@ -286,8 +285,7 @@ class TaskboardBulkTasksModalController extends ModalBaseController
         @scope.bulkTasksFormOpened = true
         @scope.$broadcast("checksley:reset")
 
-        @scope.overlay = @gmOverlay()
-        @scope.overlay.open().then =>
+        @gmOverlay.open().then =>
             @scope.bulkTasksFormOpened = false
 
     closeModal: ->
@@ -311,7 +309,7 @@ class TaskboardBulkTasksModalController extends ModalBaseController
         promise.then (data) =>
             @scope.$emit("spinner:stop")
             @closeModal()
-            @scope.overlay.close()
+            @gmOverlay.close()
             @scope.defered.resolve(data.data)
             @gmFlash.info(@i18next.t('taskboard.bulk-tasks-created', { count: data.data.length }))
             @scope.form = {}
@@ -321,7 +319,7 @@ class TaskboardBulkTasksModalController extends ModalBaseController
 
     close: ->
         @scope.bulkTasksFormOpened = false
-        @scope.overlay.close()
+        @gmOverlay.close()
         @scope.form = {}
 
 

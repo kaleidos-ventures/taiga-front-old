@@ -173,8 +173,7 @@ class KanbanUsModalController extends ModalBaseController
         @scope.$broadcast("checksley:reset")
         @scope.$broadcast("wiki:clean-previews")
 
-        @scope.overlay = @gmOverlay()
-        @scope.overlay.open().then =>
+        @gmOverlay.open().then =>
             @scope.formOpened = false
 
     closeModal: ->
@@ -200,7 +199,7 @@ class KanbanUsModalController extends ModalBaseController
         promise.then (data) =>
             @scope.$emit("spinner:stop")
             @closeModal()
-            @scope.overlay.close()
+            @gmOverlay.close()
             @scope.form.id = data.id
             @scope.form.ref = data.ref
             @scope.defered.resolve(@scope.form)
@@ -211,7 +210,7 @@ class KanbanUsModalController extends ModalBaseController
 
     close: ->
         @scope.formOpened = false
-        @scope.overlay.close()
+        @gmOverlay.close()
 
         if @scope.form.id?
             @scope.form.revert()

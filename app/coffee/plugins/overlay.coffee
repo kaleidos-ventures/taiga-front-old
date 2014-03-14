@@ -12,35 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-OverlayProvider = ($rootScope, $q, $log) ->
-    class OverlayService
-        constructor: ->
-            @.el = angular.element("<div />", {"class": "overlay"})
-            @.defered = $q.defer()
+class OverlayService extends TaigaBaseService
+    @.$inject = ["$rootScope", "$q", "$log"]
+    constructor: (@rootScope, @q, @log) ->
+        super()
 
-            _.bindAll(@)
+    close: ->
+        @log.debug "OverlayService.close"
+        @.el.off()
+        @.el.remove()
 
-        close: ->
-            $log.debug "OverlayService.close"
-            @.el.off()
-            @.el.remove()
+    open: ->
+        @log.debug "OverlayService.open"
 
-        open: ->
-            $log.debug "OverlayService.open"
-            self = @
+        @.defered = @q.defer()
+        @.el = angular.element("<div />", {"class": "overlay"})
 
-            @.el.on "click", (event) ->
-                $rootScope.$apply ->
-                    self.close()
-                    self.defered.resolve()
+        @.el.on "click", (event) =>
+            @rootScope.$apply =>
+                @.close()
+                @.defered.resolve()
 
-            body = angular.element("body")
-            body.append(@.el)
+        body = angular.element("body")
+        body.append(@.el)
 
-            return @.defered.promise
-
-    return -> new OverlayService()
+        return @.defered.promise
 
 
 module = angular.module("gmOverlay", [])
-module.factory('$gmOverlay', ["$rootScope", "$q", "$log", OverlayProvider])
+module.service('$gmOverlay', OverlayService)

@@ -337,8 +337,7 @@ class BacklogUserStoryModalController extends ModalBaseController
         @scope.$broadcast("checksley:reset")
         @scope.$broadcast("wiki:clean-previews")
 
-        @scope.overlay = @gmOverlay()
-        @scope.overlay.open().then =>
+        @gmOverlay.open().then =>
             @scope.formOpened = false
 
     closeModal: ->
@@ -365,7 +364,7 @@ class BacklogUserStoryModalController extends ModalBaseController
         promise.then (data) =>
             @scope.$emit("spinner:stop")
             @closeModal()
-            @scope.overlay.close()
+            @gmOverlay.close()
             @scope.defered.resolve()
             @gmFlash.info(@i18next.t('backlog.user-story-saved'))
 
@@ -374,7 +373,7 @@ class BacklogUserStoryModalController extends ModalBaseController
 
     close: ->
         @scope.formOpened = false
-        @scope.overlay.close()
+        @gmOverlay.close()
 
         if @scope.form.id?
             @scope.form.revert()
@@ -421,8 +420,7 @@ class BacklogBulkUserStoriesModalController extends ModalBaseController
         @scope.bulkFormOpened = true
         @scope.$broadcast("checksley:reset")
 
-        @scope.overlay = @gmOverlay()
-        @scope.overlay.open().then =>
+        @gmOverlay.open().then =>
             @scope.bulkFormOpened = false
 
     closeModal: ->
@@ -446,7 +444,7 @@ class BacklogBulkUserStoriesModalController extends ModalBaseController
         promise.then (data) =>
             @scope.$emit("spinner:stop")
             @closeModal()
-            @scope.overlay.close()
+            @gmOverlay.close()
             @scope.defered.resolve()
             @gmFlash.info(@i18next.t('backlog.bulk-user-stories-created', { count: data.data.length }))
             @scope.form = {}
@@ -456,7 +454,7 @@ class BacklogBulkUserStoriesModalController extends ModalBaseController
 
     close: ->
         @scope.bulkFormOpened = false
-        @scope.overlay.close()
+        @gmOverlay.close()
         @scope.form = {}
 
 
