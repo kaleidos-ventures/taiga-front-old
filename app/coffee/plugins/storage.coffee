@@ -12,30 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-StorageProvider = ($rootScope) ->
-    service = {}
-    service.get = (key, _default) ->
+class StorageService extends TaigaBaseService
+    @.$inject = ["$rootScope"]
+    constructor: ($rootScope) ->
+        super()
+
+    get: (key, _default) ->
         serializedValue = localStorage.getItem(key)
         if serializedValue == null
             return _default or null
 
         return JSON.parse(serializedValue)
 
-    service.set = (key, val) ->
+    set: (key, val) ->
         if _.isObject(key)
-            _.each key, (val, key) ->
-                service.set(key, val)
+            _.each key, (val, key) =>
+                @set(key, val)
         else
             localStorage.setItem(key, JSON.stringify(val))
 
-    service.remove = (key) ->
+    remove: (key) ->
         localStorage.removeItem(key)
 
-    service.clear = ->
+    clear: ->
         localStorage.clear()
-
-    return service
 
 
 module = angular.module('gmStorage', [])
-module.factory('$gmStorage', ['$rootScope', StorageProvider])
+module.service('$gmStorage', StorageService)
