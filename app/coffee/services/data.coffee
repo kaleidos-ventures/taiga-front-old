@@ -144,5 +144,5 @@ DataServiceProvider = ($rootScope, $q, rs) ->
 
     return service
 
-module = angular.module("taiga.controllers.common", [])
+module = angular.module("taiga.services.data", [])
 module.factory("$data", ["$rootScope", "$q", "resource", DataServiceProvider])
