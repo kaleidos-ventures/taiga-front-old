@@ -14,14 +14,15 @@
 
 class SearchController extends TaigaPageController
     @.$inject = ["$scope", "$rootScope", "$routeParams", "$data", "resource",
-                 "$i18next"]
-    constructor: (@scope, @rootScope, @routeParams, @data, @rs, @i18next) ->
-        super(scope)
+                 "$i18next", "$favico"]
+    constructor: (@scope, @rootScope, @routeParams, @data, @rs, @i18next, @favico) ->
+        super(scope, rootScope, favico)
+
+    section: 'search'
+    getTitle: ->
+        @i18next.t("common.search")
 
     initialize: ->
-        @rootScope.pageTitle = @i18next.t("common.search")
-        @rootScope.pageSection = 'search'
-
         @rootScope.pageBreadcrumb = [
             ["", ""]
             [@i18next.t("common.search"), null]

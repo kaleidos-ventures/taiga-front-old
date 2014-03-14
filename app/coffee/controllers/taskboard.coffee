@@ -16,13 +16,13 @@ class TaskboardController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$routeParams', '$q', 'resource',
                  '$data', '$modal', "$model", "$i18next", "$favico"]
     constructor: (@scope, @rootScope, @routeParams, @q, @rs, @data, @modal, @model, @i18next, @favico) ->
-        super(scope)
+        super(scope, rootScope, favico)
+
+    section: 'dashboard'
+    getTitle: ->
+        @i18next.t('common.taskboard')
 
     initialize: ->
-        @favico.reset()
-        # Global Scope Variables
-        @rootScope.pageTitle = @i18next.t('common.taskboard')
-        @rootScope.pageSection = 'dashboard'
         @rootScope.pageBreadcrumb = [
             ["", ""],
             [@i18next.t('common.taskboard'), null]

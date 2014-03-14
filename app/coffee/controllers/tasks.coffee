@@ -18,17 +18,18 @@ class TasksViewController extends TaigaPageController
                  '$confirm', 'resource', "$data", "$gmFlash", "$i18next",
                  "$favico"]
     constructor: (@scope, @location, @rootScope, @routeParams, @q, @confirm, @rs, @data, @gmFlash, @i18next, @favico) ->
-        super(scope)
+        super(scope, rootScope, favico)
 
     debounceMethods: ->
         submit = @submit
         @submit = gm.utils.safeDebounced @scope, 500, submit
 
+    section: 'tasks'
+    getTitle: ->
+        @i18next.t("common.tasks")
+
     initialize: ->
         @debounceMethods()
-        @favico.reset()
-        @rootScope.pageTitle = @i18next.t("common.tasks")
-        @rootScope.pageSection = 'tasks'
         @rootScope.pageBreadcrumb = [
             ["", ""],
             [@i18next.t("common.tasks"), null],

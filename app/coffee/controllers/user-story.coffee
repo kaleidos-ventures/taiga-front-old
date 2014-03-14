@@ -18,17 +18,18 @@ class UserStoryViewController extends TaigaPageController
                  "resource", "$data", "$confirm", "$gmFlash", "$i18next",
                  "$favico"]
     constructor: (@scope, @location, @rootScope, @routeParams, @q, @rs, @data, @confirm, @gmFlash, @i18next, @favico) ->
-        super(scope)
+        super(scope, rootScope, favico)
 
     debounceMethods: ->
         submit = @submit
         @submit = gm.utils.safeDebounced @scope, 500, submit
 
+    section: 'user-stories'
+    getTitle: ->
+        @i18next.t("user-story.user-story")
+
     initialize: ->
         @debounceMethods()
-        @favico.reset()
-        @rootScope.pageTitle = @i18next.t("user-story.user-story")
-        @rootScope.pageSection = 'user-stories'
         @rootScope.pageBreadcrumb = [
             ["", ""],
             [@i18next.t("user-story.user-story"), null],

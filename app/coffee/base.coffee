@@ -27,6 +27,11 @@ class TaigaBaseService extends TaigaBase
 class ModalBaseController extends TaigaBaseController
 
 class TaigaPageController extends TaigaBaseController
+    constructor: (scope, rootScope, favico) ->
+        favico.reset()
+        rootScope.pageSection = @.section
+        rootScope.pageTitle = @.getTitle()
+        super(scope)
 
 @.TaigaBaseController = TaigaBaseController
 @.TaigaPageController = TaigaPageController

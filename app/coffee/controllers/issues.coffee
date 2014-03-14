@@ -17,19 +17,19 @@ class IssuesController extends TaigaPageController
                  'resource', '$data', '$confirm', '$modal', '$i18next',
                  '$location', '$favico', 'SelectedTags']
     constructor: (@scope, @rootScope, @routeParams, @filter, @q, @rs, @data, @confirm, @modal, @i18next, @location, @favico, @SelectedTags) ->
-        super(scope)
+        super(scope, rootScope, favico)
 
     debounceMethods: ->
         toggleShowGraphs = @toggleShowGraphs
         @toggleShowGraphs = gm.utils.safeDebounced @scope, 500, toggleShowGraphs
 
+    section: 'issues'
+    getTitle: ->
+        @i18next.t('common.issues')
+
     initialize: ->
         @debounceMethods()
 
-        @favico.reset()
-        # Global Scope Variables
-        @rootScope.pageTitle = @i18next.t('common.issues')
-        @rootScope.pageSection = 'issues'
         @rootScope.pageBreadcrumb = [
             ["", ""],
             [@i18next.t('common.issues'), null]
@@ -271,17 +271,18 @@ class IssuesViewController extends TaigaPageController
                  'resource', '$data', '$confirm', '$gmFlash', '$i18next',
                  '$favico']
     constructor: (@scope, @location, @rootScope, @routeParams, @q, @rs, @data, @confirm, @gmFlash, @i18next, @favico) ->
-        super(scope)
+        super(scope, rootScope, favico)
 
     debounceMethods: ->
         submit = @submit
         @submit = gm.utils.safeDebounced @scope, 500, submit
 
+    section: 'issues'
+    getTitle: ->
+        @i18next.t('common.issues')
+
     initialize: ->
         @debounceMethods()
-        @favico.reset()
-        @rootScope.pageTitle = @i18next.t('common.issues')
-        @rootScope.pageSection = 'issues'
         @rootScope.pageBreadcrumb = [
             ["", ""],
             [@i18next.t('common.issues'), null],

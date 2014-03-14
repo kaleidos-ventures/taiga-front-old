@@ -17,13 +17,13 @@ class BacklogController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$routeParams', 'resource', '$data',
                  '$i18next', '$favico']
     constructor: (@scope, @rootScope, @routeParams, @rs, @data, @i18next, @favico) ->
-        super(scope)
+        super(scope, rootScope, favico)
+
+    section: 'backlog'
+    getTitle: ->
+        @i18next.t("common.backlog")
 
     initialize: ->
-        @favico.reset()
-        # Global Scope Variables
-        @rootScope.pageTitle = @i18next.t("common.backlog")
-        @rootScope.pageSection = 'backlog'
         @rootScope.pageBreadcrumb = [
             ["", ""]
             [@i18next.t("common.backlog"), null]

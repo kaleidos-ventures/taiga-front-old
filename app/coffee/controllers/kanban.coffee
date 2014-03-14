@@ -17,13 +17,13 @@ class KanbanController extends TaigaPageController
                '$data','$modal', "$model", "$i18next", "$favico"]
 
     constructor: (@scope, @rootScope, @routeParams, @q, @rs, @data, @modal, @model, @i18next, @favico) ->
-        super(scope)
+        super(scope, rootScope, favico)
+
+    section: 'kanban'
+    getTitle: ->
+        @i18next.t('common.kanban')
 
     initialize: ->
-        @favico.reset()
-        # Global Scope Variables
-        @rootScope.pageTitle = @i18next.t('common.kanban')
-        @rootScope.pageSection = 'kanban'
         @rootScope.pageBreadcrumb = [
             ["", ""],
             [@i18next.t('common.kanban'), null]

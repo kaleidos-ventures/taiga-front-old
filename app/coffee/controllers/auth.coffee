@@ -17,12 +17,14 @@ class LoginController extends TaigaPageController
                  'resource', '$gmAuth', '$i18next', '$favico']
 
     constructor: (@scope, @rootScope, @location, @routeParams, @rs, @gmAuth, @i18next, @favico) ->
-        super(scope)
+        super(scope, rootScope, favico)
+
+    section: 'login'
+
+    getTitle: ->
+        @i18next.t('login.login-title')
 
     initialize: ->
-        @favico.reset()
-        @rootScope.pageTitle = @i18next.t('login.login-title')
-        @rootScope.pageSection = 'login'
         @scope.form = {}
         @scope.success = false
         @scope.error = false
@@ -50,16 +52,20 @@ class LoginController extends TaigaPageController
 
 
 class RecoveryController extends TaigaPageController
-    @.$inject = ["$scope", "$rootScope", "$location", "resource", "$i18next"]
+    @.$inject = ["$scope", "$rootScope", "$location", "resource", "$i18next", "$favico"]
 
-    constructor: (@scope, @rootScope, @location, @rs, @i18n) ->
-        rootScope.pageTitle = i18n.t('login.password-recovery-title')
-        rootScope.pageSection = 'login'
+    constructor: (@scope, @rootScope, @location, @rs, @i18n, @favico) ->
+        super(scope, rootScope, favico)
 
+    section: 'login'
+
+    getTitle: ->
+        @i18n.t('login.password-recovery-title')
+
+    initialize: ->
         @scope.formData = {}
         @scope.success = false
         @scope.error = false
-        super(scope)
 
     submit: ->
         @.rs.recovery(@scope.formData.email)
@@ -82,14 +88,15 @@ class RecoveryController extends TaigaPageController
 
 class ChangePasswordController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$location', '$routeParams',
-                 'resource', '$i18next']
-    constructor: (@scope, @rootScope, @location, @routeParams, @rs, @i18next) ->
-        super(scope)
+                 'resource', '$i18next', '$favico']
+    constructor: (@scope, @rootScope, @location, @routeParams, @rs, @i18next, @favico) ->
+        super(scope, rootscope, favico)
+
+    section: 'login'
+    getTitle: ->
+        @i18next.t('login.password-change-title')
 
     initialize: ->
-        @rootScope.pageTitle = @i18next.t('login.password-change-title')
-        @rootScope.pageSection = 'login'
-
         @scope.error = false
         @scope.success = false
         @scope.formData = {}
@@ -121,7 +128,7 @@ class ProfileController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource',
                  '$gmConfig', '$i18next', "$favico"]
     constructor: (@scope, @rootScope, @gmAuth, @gmFlash, @rs, @gmConfig, @i18next, @favico) ->
-        super(scope)
+        super(scope, rootScope, favico)
 
     initialize: ->
         @favico.reset()
@@ -165,15 +172,16 @@ class ProfileController extends TaigaPageController
 
 class PublicRegisterController extends TaigaPageController
     @.$inject = ["$scope", "$rootScope", "$location", "resource", "$data",
-                 "$gmAuth", "$i18next"]
-    constructor: (@scope, @rootScope, @location, @rs, @data, @gmAuth, @i18next) ->
-        super(scope)
+                 "$gmAuth", "$i18next", "$favico"]
+    constructor: (@scope, @rootScope, @location, @rs, @data, @gmAuth, @i18next, @favico) ->
+        super(scope, rootScope, favico)
+
+    section: 'login'
+    getTitle: ->
+        @i18next.t('register.register')
 
     initialize: ->
-        @rootScope.pageTitle = @i18next.t('register.register')
-        @rootScope.pageSection = 'login'
         @scope.form = {"type": "public"}
-
         @scope.$watch "site.data.public_register", (value) ->
             if value == false
                 @location.url("/login")
@@ -195,13 +203,15 @@ class PublicRegisterController extends TaigaPageController
 
 class InvitationRegisterController extends TaigaPageController
     @.$inject = ["$scope", "$routeParams", "$rootScope", "$location",
-                 "resource", "$data", "$gmAuth", "$i18next"]
-    constructor: (@scope, @params, @rootScope, @location, @rs, @data, @gmAuth, @i18next) ->
-        super(scope)
+                 "resource", "$data", "$gmAuth", "$i18next", '$favico']
+    constructor: (@scope, @params, @rootScope, @location, @rs, @data, @gmAuth, @i18next, @favico) ->
+        super(scope, rootScope, favico)
+
+    section: 'login'
+    getTitle: ->
+        @i18next.t('register.register')
 
     initialize: ->
-        @rootScope.pageTitle = @i18next.t('register.register')
-        @rootScope.pageSection = 'login'
         @scope.form = {existing: "on", "type": "private", "token": @params.token}
 
     submit: ->

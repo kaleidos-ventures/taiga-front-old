@@ -16,12 +16,13 @@ class WikiHelpController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$routeParams', '$data',
                  'resource', "$i18next", "$favico"]
     constructor: (@scope, @rootScope, @routeParams, @data, @rs, @i18next, @favico) ->
-        super(scope)
+        super(scope, rootScope, favico)
+
+    section: 'wiki'
+    getTitle: ->
+        "#{@i18next.t("common.wiki")} - #{@routeParams.slug}"
 
     initialize: ->
-        @favico.reset()
-        @rootScope.pageTitle = "#{@i18next.t("common.wiki")} - #{@routeParams.slug}"
-        @rootScope.pageSection = 'wiki'
         @rootScope.pageBreadcrumb = [
             ["", ""]
             [@i18next.t("common.wiki"), @rootScope.urls.wikiUrl(@routeParams.pslug, "home")]
@@ -40,17 +41,18 @@ class WikiController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$location', '$routeParams', '$data',
                  'resource', "$confirm", "$q", "$i18next", "$favico"]
     constructor: (@scope, @rootScope, @location, @routeParams, @data, @rs, @confirm, @q, @i18next, @favico) ->
-        super(scope)
+        super(scope, rootScope, favico)
 
     debounceMethods: ->
         savePage = @savePage
         @savePage = gm.utils.safeDebounced @scope, 500, savePage
 
+    section: 'wiki'
+    getTitle: ->
+        "#{@i18next.t("common.wiki")} - #{@routeParams.slug}"
+
     initialize: ->
         @debounceMethods()
-        @favico.reset()
-        @rootScope.pageTitle = "#{@i18next.t("common.wiki")} - #{@routeParams.slug}"
-        @rootScope.pageSection = 'wiki'
         @rootScope.pageBreadcrumb = [
             ["", ""]
             [@i18next.t("common.wiki"), @rootScope.urls.wikiUrl(@rootScope.projectSlug, "home")]
@@ -151,12 +153,13 @@ class WikiHistoricalController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$location', '$routeParams', '$data',
                  'resource', "$confirm", "$q", "$i18next", "$favico"]
     constructor: (@scope, @rootScope, @location, @routeParams, @data, @rs, @confirm, @q, @i18next, @favico) ->
-        super(scope)
+        super(scope, rootScope, favico)
+
+    section: 'wiki'
+    getTitle: ->
+        "#{@i18next.t("common.wiki")} - #{@routeParams.slug} - #{@i18next.t("wiki-historical.historical")}"
 
     initialize: ->
-        @favico.reset()
-        @rootScope.pageTitle = "#{@i18next.t("common.wiki")} - #{@routeParams.slug} - #{@i18next.t("wiki-historical.historical")}"
-        @rootScope.pageSection = 'wiki'
         @rootScope.pageBreadcrumb = [
             ["", ""]
             [@i18next.t("common.wiki"), @rootScope.urls.wikiUrl(@rootScope.projectSlug, "home")]

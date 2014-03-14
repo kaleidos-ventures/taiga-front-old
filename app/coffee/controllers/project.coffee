@@ -17,13 +17,14 @@ class ProjectListController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', 'resource', '$i18next', '$favico']
 
     constructor: (@scope, @rootScope, @rs, @i18next, @favico) ->
-        super(scope)
+        super(scope, rootScope, favico)
+
+    section: 'projects'
+    getTitle: ->
+        @i18next.t('common.dashboard')
 
     initialize: ->
-        @favico.reset()
         @rootScope.projectSlug = undefined
-        @rootScope.pageTitle = @i18next.t('common.dashboard')
-        @rootScope.pageSection = 'projects'
         @rootScope.pageBreadcrumb = [
             ["Taiga", @rootScope.urls.projectsUrl()],
             [@i18next.t('common.dashboard'), null]
@@ -60,11 +61,13 @@ class ShowProjectsController extends TaigaBaseController
 
 class ProjectAdminController extends TaigaPageController
     constructor: (@scope, @rootScope, @routeParams, @data, @rs, @i18next, @favico, @location) ->
-        super(scope)
+        super(scope, rootScope, favico)
+
+    section: 'admin'
+    getTitle: ->
+        @i18next.t('common.admin-panel')
 
     initialize: ->
-        @favico.reset()
-        @rootScope.pageTitle = @i18next.t('common.admin-panel')
         @rootScope.pageSection = 'admin'
         @rootScope.pageBreadcrumb = [
             ["", ""],

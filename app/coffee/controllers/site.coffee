@@ -18,12 +18,13 @@ class SiteAdminController extends TaigaPageController
                  "$gmConfig", "$gmUrls", "$favico"]
     constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model,
                   @rs, @confirm, @location, @i18next, @gmConfig, @gmUrls, @favico) ->
-        super(scope)
+        super(scope, rootScope, favico)
+
+    section: 'admin'
+    getTitle: ->
+        @i18next.t('common.admin-panel')
 
     initialize: ->
-        @favico.reset()
-        @rootScope.pageTitle = @i18next.t('common.admin-panel')
-        @rootScope.pageSection = 'admin'
         @rootScope.pageBreadcrumb = [
             [@i18next.t('common.administer-site'), null],
         ]
