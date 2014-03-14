@@ -146,8 +146,9 @@
 
                         <fieldset class="task-tags">
                             <label i18next="user-story.tags-label">Tags</label>
-                            <input type="text" name="tags" ng-model="form.tags"
-                                   gm-select2-tags="projectTags"></input>
+                            <input type="text" name="tags"
+                                   ng-model="form.tags" ui-select2="tagsSelectOptions"
+                                   data-placeholder="{{'user-story.tags-placeholder'|i18next }}" />
                         </fieldset>
                     </div>
 
