@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class SiteAdminController extends TaigaBaseController
+class SiteAdminController extends TaigaPageController
     @.$inject = ["$scope", "$rootScope", "$routeParams", "$data", "$gmFlash",
                  "$model", "resource", "$confirm", "$location", "$i18next",
                  "$gmConfig", "$gmUrls", "$favico"]

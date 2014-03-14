@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-class ProjectListController extends TaigaBaseController
+class ProjectListController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', 'resource', '$i18next', '$favico']
 
     constructor: (@scope, @rootScope, @rs, @i18next, @favico) ->
@@ -58,7 +58,7 @@ class ShowProjectsController extends TaigaBaseController
                 @scope.loading = false
 
 
-class ProjectAdminController extends TaigaBaseController
+class ProjectAdminController extends TaigaPageController
     constructor: (@scope, @rootScope, @routeParams, @data, @rs, @i18next, @favico, @location) ->
         super(scope)
 

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class SearchController extends TaigaBaseController
+class SearchController extends TaigaPageController
     @.$inject = ["$scope", "$rootScope", "$routeParams", "$data", "resource",
                  "$i18next"]
     constructor: (@scope, @rootScope, @routeParams, @data, @rs, @i18next) ->

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-class UserStoryViewController extends TaigaBaseController
+class UserStoryViewController extends TaigaPageController
     @.$inject = ["$scope", "$location", "$rootScope", "$routeParams", "$q",
                  "resource", "$data", "$confirm", "$gmFlash", "$i18next",
                  "$favico"]

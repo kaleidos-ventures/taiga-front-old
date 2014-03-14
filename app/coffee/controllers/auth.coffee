@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class LoginController extends TaigaBaseController
+class LoginController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$location', '$routeParams',
                  'resource', '$gmAuth', '$i18next', '$favico']
 
@@ -49,7 +49,7 @@ class LoginController extends TaigaBaseController
             @location.url("/")
 
 
-class RecoveryController extends TaigaBaseController
+class RecoveryController extends TaigaPageController
     @.$inject = ["$scope", "$rootScope", "$location", "resource", "$i18next"]
 
     constructor: (@scope, @rootScope, @location, @rs, @i18n) ->
@@ -80,7 +80,7 @@ class RecoveryController extends TaigaBaseController
             @.scope.$apply()
 
 
-class ChangePasswordController extends TaigaBaseController
+class ChangePasswordController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$location', '$routeParams',
                  'resource', '$i18next']
     constructor: (@scope, @rootScope, @location, @routeParams, @rs, @i18next) ->
@@ -117,7 +117,7 @@ class ChangePasswordController extends TaigaBaseController
             @scope.errorMessage = data.detail
 
 
-class ProfileController extends TaigaBaseController
+class ProfileController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource',
                  '$gmConfig', '$i18next', "$favico"]
     constructor: (@scope, @rootScope, @gmAuth, @gmFlash, @rs, @gmConfig, @i18next, @favico) ->
@@ -163,7 +163,7 @@ class ProfileController extends TaigaBaseController
             @scope.checksleyErrors = data
 
 
-class PublicRegisterController extends TaigaBaseController
+class PublicRegisterController extends TaigaPageController
     @.$inject = ["$scope", "$rootScope", "$location", "resource", "$data",
                  "$gmAuth", "$i18next"]
     constructor: (@scope, @rootScope, @location, @rs, @data, @gmAuth, @i18next) ->
@@ -193,7 +193,7 @@ class PublicRegisterController extends TaigaBaseController
             @scope.errorMessage = data._error_message or data._error_type
 
 
-class InvitationRegisterController extends TaigaBaseController
+class InvitationRegisterController extends TaigaPageController
     @.$inject = ["$scope", "$routeParams", "$rootScope", "$location",
                  "resource", "$data", "$gmAuth", "$i18next"]
     constructor: (@scope, @params, @rootScope, @location, @rs, @data, @gmAuth, @i18next) ->

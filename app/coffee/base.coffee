@@ -26,6 +26,9 @@ class TaigaBaseService extends TaigaBase
 
 class ModalBaseController extends TaigaBaseController
 
+class TaigaPageController extends TaigaBaseController
+
 @.TaigaBaseController = TaigaBaseController
+@.TaigaPageController = TaigaPageController
 @.TaigaBaseService = TaigaBaseService
 @.ModalBaseController = ModalBaseController

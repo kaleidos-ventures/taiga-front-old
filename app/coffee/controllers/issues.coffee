@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class IssuesController extends TaigaBaseController
+class IssuesController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$routeParams', '$filter', '$q',
                  'resource', '$data', '$confirm', '$modal', '$i18next',
                  '$location', '$favico', 'SelectedTags']
@@ -266,7 +266,7 @@ class IssuesController extends TaigaBaseController
         @location.url("/project/#{projectSlug}/issues/#{issueRef}")
 
 
-class IssuesViewController extends TaigaBaseController
+class IssuesViewController extends TaigaPageController
     @.$inject = ['$scope', '$location', '$rootScope', '$routeParams', '$q',
                  'resource', '$data', '$confirm', '$gmFlash', '$i18next',
                  '$favico']

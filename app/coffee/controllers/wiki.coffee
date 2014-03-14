@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class WikiHelpController extends TaigaBaseController
+class WikiHelpController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$routeParams', '$data',
                  'resource', "$i18next", "$favico"]
     constructor: (@scope, @rootScope, @routeParams, @data, @rs, @i18next, @favico) ->
@@ -36,7 +36,7 @@ class WikiHelpController extends TaigaBaseController
             @data.loadProject(@scope).then =>
                 @data.loadUsersAndRoles(@scope)
 
-class WikiController extends TaigaBaseController
+class WikiController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$location', '$routeParams', '$data',
                  'resource', "$confirm", "$q", "$i18next", "$favico"]
     constructor: (@scope, @rootScope, @location, @routeParams, @data, @rs, @confirm, @q, @i18next, @favico) ->
@@ -147,7 +147,7 @@ class WikiController extends TaigaBaseController
         @scope.newAttachments = _.without(@scope.newAttachments, attachment)
 
 
-class WikiHistoricalController extends TaigaBaseController
+class WikiHistoricalController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$location', '$routeParams', '$data',
                  'resource', "$confirm", "$q", "$i18next", "$favico"]
     constructor: (@scope, @rootScope, @location, @routeParams, @data, @rs, @confirm, @q, @i18next, @favico) ->

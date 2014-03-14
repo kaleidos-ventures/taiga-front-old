@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-class BacklogController extends TaigaBaseController
+class BacklogController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$routeParams', 'resource', '$data',
                  '$i18next', '$favico']
     constructor: (@scope, @rootScope, @routeParams, @rs, @data, @i18next, @favico) ->

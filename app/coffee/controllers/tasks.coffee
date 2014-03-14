@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-class TasksViewController extends TaigaBaseController
+class TasksViewController extends TaigaPageController
     @.$inject = ['$scope', '$location', '$rootScope', '$routeParams', '$q',
                  '$confirm', 'resource', "$data", "$gmFlash", "$i18next",
                  "$favico"]

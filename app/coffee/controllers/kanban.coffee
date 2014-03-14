@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class KanbanController extends TaigaBaseController
+class KanbanController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$routeParams', '$q', 'resource',
                '$data','$modal', "$model", "$i18next", "$favico"]
 
