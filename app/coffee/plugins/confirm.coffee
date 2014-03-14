@@ -12,22 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-SimpleConfirmProvider = ($rootScope, $q, $window) ->
-    service = {}
-    service.confirm = (message) ->
-        defered = $q.defer()
+class SimpleConfirmService extends TaigaBaseService
+    @.$inject = ["$rootScope", "$q", "$window"]
+    constructor: (@rootScope, @q, @window) ->
+        super()
+
+    confirm: (message) ->
+        defered = @q.defer()
 
         _.defer ->
-            res = $window.confirm(message)
+            res = @window.confirm(message)
             if res
                 defered.resolve()
             else
                 defered.reject()
-            $rootScope.$apply()
+            @rootScope.$apply()
 
         return defered.promise
-    return service
 
 
 module = angular.module('gmConfirm', [])
-module.factory('$confirm', ["$rootScope", "$q", "$window", SimpleConfirmProvider])
+module.service('$confirm', SimpleConfirmService])
