@@ -12,211 +12,214 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, $rootScope,
-                    $i18next, $filter, $log, $cacheFactory) ->
-    cache = $cacheFactory("httpCache", 512)
-    service = {}
-    headers = (diablePagination=true) ->
+class ResourceService extends TaigaBaseService
+    @.$inject = ['$http', '$q', '$gmStorage', '$gmUrls', '$model',
+                 '$rootScope', '$i18next', '$filter', '$log', "$cacheFactory"]
+    constructor: (@http, @q, @gmStorage, @gmUrls, @model, @rootScope, @i18next, @filter, @log, @cacheFactory) ->
+        _cache = @cacheFactory("httpCache", 512)
+        super()
+
+    _headers: (diablePagination=true) ->
         data = {}
-        token = $gmStorage.get('token')
+        token = @gmStorage.get('token')
 
         data["Authorization"] = "Bearer #{token}" if token
         data["X-Disable-Pagination"] = "true" if diablePagination
 
         return data
 
-    queryMany = (name, params, options, urlParams) ->
+    _queryMany: (name, params, options, urlParams) ->
         defaultHttpParams = {
             method: "GET",
-            headers:  headers(),
-            url: $gmUrls.api(name, urlParams)
+            headers:  @_headers(),
+            url: @gmUrls.api(name, urlParams)
         }
 
         if not _.isEmpty(params)
             defaultHttpParams.params = params
 
         httpParams = _.extend({}, defaultHttpParams, options)
-        defered = $q.defer()
+        defered = @q.defer()
 
-        promise = $http(httpParams)
-        promise.success (data, status) ->
-            models = _.map data, (attrs) -> $model.make_model(name, attrs)
+        promise = @http(httpParams)
+        promise.success (data, status) =>
+            models = _.map data, (attrs) => @model.make_model(name, attrs)
             defered.resolve(models)
 
-        promise.error (data, status) ->
+        promise.error (data, status) =>
             defered.reject(data, status)
 
         return defered.promise
 
-    queryRaw = (name, id, params, options, cls) ->
-        defaultHttpParams = {method: "GET", headers:  headers()}
+    _queryRaw: (name, id, params, options, cls) ->
+        defaultHttpParams = {method: "GET", headers:  @_headers()}
 
         if id
-            defaultHttpParams.url = "#{$gmUrls.api(name)}/#{id}"
+            defaultHttpParams.url = "#{@gmUrls.api(name)}/#{id}"
         else
-            defaultHttpParams.url = "#{$gmUrls.api(name)}"
+            defaultHttpParams.url = "#{@gmUrls.api(name)}"
 
         if not _.isEmpty(params)
             defaultHttpParams.params = params
 
         httpParams =  _.extend({}, defaultHttpParams, options)
 
-        defered = $q.defer()
+        defered = @q.defer()
 
-        promise = $http(httpParams)
-        promise.success (data, status) ->
+        promise = @http(httpParams)
+        promise.success (data, status) =>
             defered.resolve(data, cls)
 
-        promise.error (data, status) ->
+        promise.error (data, status) =>
             defered.reject()
 
         return defered.promise
 
-    queryOne = (name, id, params, options, cls) ->
-        defaultHttpParams = {method: "GET", headers:  headers()}
+    _queryOne: (name, id, params, options, cls) ->
+        defaultHttpParams = {method: "GET", headers:  @_headers()}
 
         if id
-            defaultHttpParams.url = "#{$gmUrls.api(name)}/#{id}"
+            defaultHttpParams.url = "#{@gmUrls.api(name)}/#{id}"
         else
-            defaultHttpParams.url = "#{$gmUrls.api(name)}"
+            defaultHttpParams.url = "#{@gmUrls.api(name)}"
 
         if not _.isEmpty(params)
             defaultHttpParams.params = params
 
         httpParams =  _.extend({}, defaultHttpParams, options)
 
-        defered = $q.defer()
+        defered = @q.defer()
 
-        promise = $http(httpParams)
-        promise.success (data, status) ->
-            defered.resolve($model.make_model(name, data, cls))
+        promise = @http(httpParams)
+        promise.success (data, status) =>
+            defered.resolve(@model.make_model(name, data, cls))
 
-        promise.error (data, status) ->
+        promise.error (data, status) =>
             defered.reject()
 
         return defered.promise
 
-    queryManyPaginated = (name, params, options, cls, urlParams) ->
+    _queryManyPaginated: (name, params, options, cls, urlParams) ->
         defaultHttpParams = {
             method: "GET",
-            headers: headers(false),
-            url: $gmUrls.api(name, urlParams)
+            headers: @_headers(false),
+            url: @gmUrls.api(name, urlParams)
         }
         if not _.isEmpty(params)
             defaultHttpParams.params = params
 
         httpParams =  _.extend({}, defaultHttpParams, options)
-        defered = $q.defer()
+        defered = @q.defer()
 
-        promise = $http(httpParams)
-        promise.success (data, status, headersFn) ->
+        promise = @http(httpParams)
+        promise.success (data, status, headersFn) =>
             currentHeaders = headersFn()
 
             result = {}
-            result.models = _.map(data, (attrs) -> $model.make_model(name, attrs, cls))
+            result.models = _.map(data, (attrs) => @model.make_model(name, attrs, cls))
             result.count = parseInt(currentHeaders["x-pagination-count"], 10)
             result.current = parseInt(currentHeaders["x-pagination-current"] or 1, 10)
             result.paginatedBy = parseInt(currentHeaders["x-paginated-by"], 10)
 
             defered.resolve(result)
 
-        promise.error (data, status) ->
+        promise.error (data, status) =>
             defered.reject()
 
         return defered.promise
 
     # Resource Methods
-    service.register = (formdata) ->
-        defered = $q.defer()
+    register: (formdata) ->
+        defered = @q.defer()
 
-        onSuccess = (data, status) ->
-            $gmStorage.set("token", data["auth_token"])
-            user = $model.make_model("users", data)
+        onSuccess = (data, status) =>
+            @gmStorage.set("token", data["auth_token"])
+            user = @model.make_model("users", data)
             defered.resolve(user)
 
-        onError = (data, status) ->
+        onError = (data, status) =>
             defered.reject(data)
 
-        promise = $http({method:'POST', url: $gmUrls.api('auth-register'), data: JSON.stringify(formdata)})
+        promise = @http({method:'POST', url: @gmUrls.api('auth-register'), data: JSON.stringify(formdata)})
         promise.success(onSuccess)
         promise.error(onError)
 
         return defered.promise
 
     # Login request
-    service.login = (username, password) ->
-        defered = $q.defer()
+    login: (username, password) ->
+        defered = @q.defer()
 
-        onSuccess = (data, status) ->
-            $gmStorage.set("token", data["auth_token"])
-            user = $model.make_model("users", data)
+        onSuccess = (data, status) =>
+            @gmStorage.set("token", data["auth_token"])
+            user = @model.make_model("users", data)
             defered.resolve(user)
 
-        onError = (data, status) ->
+        onError = (data, status) =>
             defered.reject(data)
 
         postData =
             "username": username
             "password":password
 
-        $http({method:'POST', url: $gmUrls.api('auth'), data: JSON.stringify(postData)})
+        @http({method:'POST', url: @gmUrls.api('auth'), data: JSON.stringify(postData)})
             .success(onSuccess)
             .error(onError)
 
         return defered.promise
 
-    service.recovery = (email) ->
-        defered = $q.defer()
+    recovery: (email) ->
+        defered = @q.defer()
         postData = {username: email}
-        url = $gmUrls.api("users-password-recovery")
+        url = @gmUrls.api("users-password-recovery")
 
-        onSuccess = (data, status) ->
+        onSuccess = (data, status) =>
             defered.resolve(data)
 
-        onError = (data, status) ->
+        onError = (data, status) =>
             defered.reject(data)
 
-        $http({method: "POST", url: url, data: JSON.stringify(postData)})
+        @http({method: "POST", url: url, data: JSON.stringify(postData)})
             .success(onSuccess)
             .error(onError)
 
         return defered.promise
 
-    service.changePasswordFromRecovery = (token, password) ->
-        defered = $q.defer()
+    changePasswordFromRecovery: (token, password) ->
+        defered = @q.defer()
         postData = {password: password, token: token}
-        url = $gmUrls.api("users-change-password-from-recovery")
+        url = @gmUrls.api("users-change-password-from-recovery")
 
-        onSuccess = (data, status) ->
+        onSuccess = (data, status) =>
             defered.resolve(data)
 
-        onError = (data, status) ->
+        onError = (data, status) =>
             defered.reject(data)
 
-        $http({method: "POST", url: url, data: JSON.stringify(postData)})
+        @http({method: "POST", url: url, data: JSON.stringify(postData)})
             .success(onSuccess)
             .error(onError)
 
         return defered.promise
 
-    service.changePasswordForCurrentUser = (password) ->
-        defered = $q.defer()
+    changePasswordForCurrentUser: (password) ->
+        defered = @q.defer()
         postData = {password: password}
-        url = $gmUrls.api("users-change-password")
+        url = @gmUrls.api("users-change-password")
 
-        onSuccess = (data, status) ->
+        onSuccess = (data, status) =>
             defered.resolve(data)
 
-        onError = (data, status) ->
+        onError = (data, status) =>
             defered.reject(data)
 
-        $http({method: "POST", url: url, data: JSON.stringify(postData), headers: headers()})
+        @http({method: "POST", url: url, data: JSON.stringify(postData), headers: @_headers()})
             .success(onSuccess)
             .error(onError)
 
         return defered.promise
 
-    service.resolve = (options) ->
+    resolve: (options) ->
         params = {}
         params.project = options.pslug if options.pslug?
         params.us = options.usref if options.usref?
@@ -233,70 +236,70 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, $rootScope,
         ]
 
         key = _.map(args, (it) -> if it == undefined then "" else it).join(":")
-        return queryRaw("resolver", null, params, {cache:cache})
+        return @_queryRaw("resolver", null, params, {cache:@_cache})
 
     # Get a site
-    service.getSite = -> queryOne('sites')
+    getSite: -> @_queryOne('sites')
 
     # Get a members list
-    service.getSiteMembers = -> queryMany('site-members')
+    getSiteMembers: -> @_queryMany('site-members')
 
     # Create a project
-    service.createProject = (data, templateName) ->
-        return $model.create("site-projects", data, $model.Model, {}, {template: templateName})
+    createProject: (data, templateName) ->
+        return @model.create("site-projects", data, @model.Model, {}, {template: templateName})
 
     # Get a project list
-    service.getProjects = -> queryMany('projects')
+    getProjects: -> @_queryMany('projects')
 
     # Get a project list
-    service.getPermissions = -> queryMany('permissions')
+    getPermissions: -> @_queryMany('permissions')
 
     # Get a project
-    service.getProject = (projectId) ->
-        return queryOne("projects", projectId, {cache:cache})
+    getProject: (projectId) ->
+        return @_queryOne("projects", projectId, {cache:@_cache})
 
     # Get a project stats
-    service.getProjectStats = (projectId) ->
-        return queryOne("projects", "#{projectId}/stats")
+    getProjectStats: (projectId) ->
+        return @_queryOne("projects", "#{projectId}/stats")
 
     # Get a issues stats
-    service.getIssuesStats = (projectId) ->
-        return queryOne("projects", "#{projectId}/issues_stats")
+    getIssuesStats: (projectId) ->
+        return @_queryOne("projects", "#{projectId}/issues_stats")
 
     # Get a project tags
-    service.getProjectTags = (projectId) ->
-        return queryRaw("projects", "#{projectId}/tags")
+    getProjectTags: (projectId) ->
+        return @_queryRaw("projects", "#{projectId}/tags")
 
     # Get a issues filters
-    service.getIssuesFiltersData = (projectId) ->
-        return queryOne("projects", "#{projectId}/issue_filters_data")
+    getIssuesFiltersData: (projectId) ->
+        return @_queryOne("projects", "#{projectId}/issue_filters_data")
 
     # Create a memberships
-    service.createMembership = (form) ->
-        return $model.create("memberships", form)
+    createMembership: (form) ->
+        return @model.create("memberships", form)
 
     # Get roles
-    service.getRoles = (projectId) ->
-        return queryMany('roles', {project: projectId}, {cache:cache})
+    getRoles: (projectId) ->
+        return @_queryMany('roles', {project: projectId}, {cache:@_cache})
 
     # Create role
-    service.createRole = (projectId, role) ->
+    createRole: (projectId, role) ->
         role.project = projectId
-        return $model.create("roles", role)
+        return @model.create("roles", role)
 
     # Get a milestone lines for a project.
-    service.getMilestones = (projectId) ->
+    getMilestones: (projectId) ->
         # First step: obtain data
-        _getMilestones = ->
-            defered = $q.defer()
+        _getMilestones = =>
+            defered = @q.defer()
 
             params =
                 "method":"GET"
-                "headers": headers()
-                "url": $gmUrls.api("milestones")
+                "headers": @_headers()
+                "url": @gmUrls.api("milestones")
                 "params": {"project": projectId}
 
-            $http(params).success((data, status) ->
+            @http(params).success((data, status) ->
                 defered.resolve(data)
             ).error((data, status) ->
                 defered.reject(data, status)
@@ -305,29 +308,29 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, $rootScope,
             return defered.promise
 
         # Second step: make user story models
-        _makeUserStoryModels = (objects) ->
+        _makeUserStoryModels = (objects) =>
             for milestone in objects
-                milestone.user_stories = _.map milestone.user_stories, (obj) -> $model.make_model("userstories", obj)
+                milestone.user_stories = _.map milestone.user_stories, (obj) => @model.make_model("userstories", obj)
 
             return objects
 
         # Third step: make milestone models
-        _makeModels = (objects) ->
-            return _.map objects, (obj) -> $model.make_model("milestones", obj)
+        _makeModels = (objects) =>
+            return _.map objects, (obj) => @model.make_model("milestones", obj)
 
         return _getMilestones().then(_makeUserStoryModels).then(_makeModels)
 
-    service.getMilestone = (projectId, sprintId) ->
-        _getMilestone = ->
-            defered = $q.defer()
+    getMilestone: (projectId, sprintId) ->
+        _getMilestone = =>
+            defered = @q.defer()
 
             params =
                 "method": "GET"
-                "headers": headers()
-                "url": "#{$gmUrls.api("milestones")}/#{sprintId}"
+                "headers": @_headers()
+                "url": "#{@gmUrls.api("milestones")}/#{sprintId}"
                 "params": {"project": projectId}
 
-            $http(params).success((data, status) ->
+            @http(params).success((data, status) ->
                 defered.resolve(data)
             ).error((data, status) ->
                 defered.reject(data, status)
@@ -336,83 +339,82 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, $rootScope,
             return defered.promise
 
         # Second step: make user story models
-        _makeUserStoryModels = (milestone) ->
-            milestone.user_stories = _.map milestone.user_stories, (obj) -> $model.make_model("userstories", obj)
+        _makeUserStoryModels = (milestone) =>
+            milestone.user_stories = _.map milestone.user_stories, (obj) => @model.make_model("userstories", obj)
 
             return milestone
 
         # Third step: make milestone models
         _makeModel = (milestone) ->
-            return $model.make_model("milestone", milestone)
+            return @model.make_model("milestone", milestone)
 
         return _getMilestone().then(_makeUserStoryModels).then(_makeModel)
 
-    service.getMilestoneStats = (sprintId) ->
-        return queryOne("milestones", "#{sprintId}/stats")
+    getMilestoneStats: (sprintId) ->
+        return @_queryOne("milestones", "#{sprintId}/stats")
 
     # Get unassigned user stories list for a project.
-    service.getUnassignedUserStories = (projectId) ->
-        return queryMany("userstories", {"project":projectId, "milestone": "null"})
+    getUnassignedUserStories: (projectId) ->
+        return @_queryMany("userstories", {"project":projectId, "milestone": "null"})
 
     # Get all user stories list for a project.
-    service.getUserStories = (projectId) ->
-        return queryMany("userstories", {"project":projectId})
+    getUserStories: (projectId) ->
+        return @_queryMany("userstories", {"project":projectId})
 
     # Get a user stories list by projectId and sprintId.
-    service.getMilestoneUserStories = (projectId, sprintId) ->
-        return queryMany("userstories", {"project":projectId, "milestone": sprintId})
+    getMilestoneUserStories: (projectId, sprintId) ->
+        return @_queryMany("userstories", {"project":projectId, "milestone": sprintId})
 
     # Get a user stories by projectId and userstory id
-    service.getUserStory = (projectId, userStoryId, params) ->
+    getUserStory: (projectId, userStoryId, params) ->
         params = _.defaults(params, {project: projectId})
-        return queryOne("userstories", userStoryId, params)
+        return @_queryOne("userstories", userStoryId, params)
 
-    service.getUserStoryHistorical = (userStoryId, filters={}) ->
+    getUserStoryHistorical: (userStoryId, filters={}) ->
         urlParams = [userStoryId]
         parameters = _.extend({}, filters)
-        return queryManyPaginated("userstories-historical", parameters, null , null,
-                                  urlParams)
+        return @_queryManyPaginated("userstories-historical", parameters, null , null, urlParams)
 
-    service.getTasks = (projectId, sprintId) ->
+    getTasks: (projectId, sprintId) ->
         params = {project:projectId}
         if sprintId != undefined
             params.milestone = sprintId
 
-        return queryMany("tasks", params)
+        return @_queryMany("tasks", params)
 
-    service.getIssues = (projectId, filters={}) ->
+    getIssues: (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
-        return queryManyPaginated("issues", parameters)
+        return @_queryManyPaginated("issues", parameters)
 
-    service.getIssue = (projectId, issueId, params) ->
+    getIssue: (projectId, issueId, params) ->
         params = _.defaults(params, {project: projectId})
-        return queryOne("issues", issueId, params)
+        return @_queryOne("issues", issueId, params)
 
-    service.getIssueHistorical = (issueId, filters={}) ->
+    getIssueHistorical: (issueId, filters={}) ->
         urlParams = [issueId]
         parameters = _.extend({}, filters)
-        return queryManyPaginated("issues-historical", parameters, null , null, urlParams)
+        return @_queryManyPaginated("issues-historical", parameters, null , null, urlParams)
 
-    service.getTask = (projectId, taskId) ->
-        return queryOne("tasks", taskId, {project:projectId})
+    getTask: (projectId, taskId) ->
+        return @_queryOne("tasks", taskId, {project:projectId})
 
-    service.getTaskHistorical = (taskId, filters={}) ->
+    getTaskHistorical: (taskId, filters={}) ->
         urlParams = [taskId]
         parameters = _.extend({}, filters)
-        return queryManyPaginated("tasks-historical", parameters, null , null, urlParams)
+        return @_queryManyPaginated("tasks-historical", parameters, null , null, urlParams)
 
-    service.search = (projectId, term, getAll) ->
-        defered = $q.defer()
+    search: (projectId, term, getAll) ->
+        defered = @q.defer()
 
         params = {
             "method": "GET"
-            "headers": headers()
-            "url": $gmUrls.api("search")
+            "headers": @_headers()
+            "url": @gmUrls.api("search")
             "params": {"project": projectId, "text": term, "get_all": getAll or false}
             "cache": false
         }
 
-        promise = $http(params)
+        promise = @http(params)
         promise.success (data, status) ->
             defered.resolve(data)
 
@@ -423,180 +425,180 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, $rootScope,
 
     # Get a users with role developer for
     # one concret project.
-    service.getUsers = (projectId) ->
+    getUsers: (projectId) ->
         if projectId
             params = {project: projectId}
         else
             params = {}
-        return queryMany("users", params)
+        return @_queryMany("users", params)
 
-    service.createUs = (form) ->
-        return $model.create("userstories", form)
+    createUs: (form) ->
+        return @model.create("userstories", form)
 
-    service.createTask = (form) ->
-        return $model.create("tasks", form)
+    createTask: (form) ->
+        return @model.create("tasks", form)
 
-    service.createIssue = (projectId, form) ->
+    createIssue: (projectId, form) ->
         obj = _.extend({}, form, {project: projectId})
-        defered = $q.defer()
+        defered = @q.defer()
 
-        promise = $http.post($gmUrls.api("issues"), obj, {headers:headers()})
-        promise.success (data, status) ->
-            defered.resolve($model.make_model("issues", data))
+        promise = @http.post(@gmUrls.api("issues"), obj, {headers:@_headers()})
+        promise.success (data, status) =>
+            defered.resolve(@model.make_model("issues", data))
 
         promise.error (data, status) ->
             defered.reject()
 
         return defered.promise
 
-    service.createUserStory = (data) ->
-        return $model.create('userstories', data)
+    createUserStory: (data) ->
+        return @model.create('userstories', data)
 
-    service.createBulkUserStories = (projectId, form) ->
+    createBulkUserStories: (projectId, form) ->
         obj = _.extend({}, form, {projectId: projectId})
-        return $http.post($gmUrls.api("bulk-create-us"), obj, {headers:headers()})
+        return @http.post(@gmUrls.api("bulk-create-us"), obj, {headers:@_headers()})
 
-    service.createBulkTasks = (projectId, usId, form) ->
+    createBulkTasks: (projectId, usId, form) ->
         obj = _.extend({}, form, {projectId: projectId, usId: usId})
-        return $http.post($gmUrls.api("bulk-create-tasks"), obj, {headers:headers()})
+        return @http.post(@gmUrls.api("bulk-create-tasks"), obj, {headers:@_headers()})
 
-    service.updateBulkUserStoriesOrder = (projectId, data) ->
+    updateBulkUserStoriesOrder: (projectId, data) ->
         obj = {
             projectId: projectId
             bulkStories: data
         }
-        return $http.post($gmUrls.api("bulk-update-us-order"), obj, {headers:headers()})
+        return @http.post(@gmUrls.api("bulk-update-us-order"), obj, {headers:@_headers()})
 
-    service.setUsMilestone = (usId, milestoneId) ->
-        defered = $q.defer()
+    setUsMilestone: (usId, milestoneId) ->
+        defered = @q.defer()
 
         obj = { milestone: milestoneId }
 
-        promise = $http({method: "PATCH", url: "#{$gmUrls.api("userstories")}/#{usId}", data: obj, headers:headers()})
+        promise = @http({method: "PATCH", url: "#{@gmUrls.api("userstories")}/#{usId}", data: obj, headers:@_headers()})
 
-        promise.success (data, status) ->
-            defered.resolve($model.make_model('userstories', data))
+        promise.success (data, status) =>
+            defered.resolve(@model.make_model('userstories', data))
 
         promise.error (data, status) ->
             defered.reject(data)
 
         return defered.promise
 
-    service.createMilestone = (projectId, form) ->
-        #return $model.create('milestones', data)
+    createMilestone: (projectId, form) ->
+        #return @model.create('milestones', data)
         obj = _.extend({}, form, {project: projectId})
-        defered = $q.defer()
+        defered = @q.defer()
 
-        promise = $http.post($gmUrls.api("milestones"), obj, {headers:headers()})
+        promise = @http.post(@gmUrls.api("milestones"), obj, {headers:@_headers()})
 
-        promise.success (data, status) ->
-            defered.resolve($model.make_model("milestones", data))
+        promise.success (data, status) =>
+            defered.resolve(@model.make_model("milestones", data))
 
         promise.error (data, status) ->
             defered.reject(data)
 
         return defered.promise
 
-    service.getWikiPage = (projectId, slug) ->
-        defered = $q.defer()
+    getWikiPage: (projectId, slug) ->
+        defered = @q.defer()
 
         httpParams = {
             method: "GET"
-            headers: headers()
-            url: $gmUrls.api("wiki")
+            headers: @_headers()
+            url: @gmUrls.api("wiki")
             params: {project: projectId, slug: slug }
         }
 
-        promise = $http(httpParams)
-        promise.success (data) ->
+        promise = @http(httpParams)
+        promise.success (data) =>
             if data.length == 0
                 defered.reject()
             else
-                defered.resolve($model.make_model("wiki", data[0]))
+                defered.resolve(@model.make_model("wiki", data[0]))
 
         promise.error ->
             defered.reject()
 
         return defered.promise
 
-    service.getWikiPageHistorical = (wikiId, filters={}) ->
+    getWikiPageHistorical: (wikiId, filters={}) ->
         urlParams = [wikiId]
         parameters = _.extend({}, filters)
-        return queryManyPaginated("wiki-historical", parameters, null , null, urlParams)
+        return @_queryManyPaginated("wiki-historical", parameters, null , null, urlParams)
 
-    service.createTask = (form) ->
-        return $model.create("tasks", form)
+    createTask: (form) ->
+        return @model.create("tasks", form)
 
-    service.restoreWikiPage = (wikiPageId, versionId) ->
-        url = "#{$gmUrls.api("wiki-restore", [wikiPageId])}/#{versionId}"
+    restoreWikiPage: (wikiPageId, versionId) ->
+        url = "#{@gmUrls.api("wiki-restore", [wikiPageId])}/#{versionId}"
 
-        defered = $q.defer()
+        defered = @q.defer()
 
-        promise = $http.post(url, {}, {headers:headers()})
-        promise.success (data, status) ->
-            defered.resolve($model.make_model("wiki", data))
+        promise = @http.post(url, {}, {headers:@_headers()})
+        promise.success (data, status) =>
+            defered.resolve(@model.make_model("wiki", data))
 
         promise.error (data, status) ->
             defered.reject(data, status)
 
         return defered.promise
 
-    service.createWikiPage = (projectId, slug, content) ->
+    createWikiPage: (projectId, slug, content) ->
         obj = {
             "content": content
             "slug": slug
             "project": projectId
         }
 
-        defered = $q.defer()
+        defered = @q.defer()
 
-        promise = $http.post($gmUrls.api("wiki"), obj, {headers:headers()})
-        promise.success (data, status) ->
-            defered.resolve($model.make_model("wiki", data))
+        promise = @http.post(@gmUrls.api("wiki"), obj, {headers:@_headers()})
+        promise.success (data, status) =>
+            defered.resolve(@model.make_model("wiki", data))
 
         promise.error (data, status) ->
             defered.reject()
 
         return defered.promise
 
-    service.getIssueAttachments = (projectId, issueId) ->
-        return queryMany("issues/attachments", {project: projectId, object_id: issueId})
+    getIssueAttachments: (projectId, issueId) ->
+        return @_queryMany("issues/attachments", {project: projectId, object_id: issueId})
 
-    service.getTaskAttachments = (projectId, taskId) ->
-        return queryMany("tasks/attachments", {project: projectId, object_id: taskId})
+    getTaskAttachments: (projectId, taskId) ->
+        return @_queryMany("tasks/attachments", {project: projectId, object_id: taskId})
 
-    service.getUserStoryAttachments = (projectId, userStoryId) ->
-        return queryMany("userstories/attachments", {project: projectId, object_id: userStoryId})
+    getUserStoryAttachments: (projectId, userStoryId) ->
+        return @_queryMany("userstories/attachments", {project: projectId, object_id: userStoryId})
 
-    service.getWikiPageAttachments = (projectId, wikiPageId) ->
-        return queryMany("wiki/attachments", {project: projectId, object_id: wikiPageId})
+    getWikiPageAttachments: (projectId, wikiPageId) ->
+        return @_queryMany("wiki/attachments", {project: projectId, object_id: wikiPageId})
 
-    service.uploadIssueAttachment = (projectId, issueId, file, progress=true) ->
-        defered = $q.defer()
+    uploadIssueAttachment: (projectId, issueId, file, progress=true) ->
+        defered = @q.defer()
 
         if file is undefined
             defered.resolve(null)
             return defered.promise
 
-        uploadProgress = (evt) ->
-            $rootScope.$apply ->
+        uploadProgress = (evt) =>
+            @rootScope.$apply =>
                 file.status = "in-progress"
                 file.totalSize = evt.total
                 file.uploadSize = evt.loaded
-                file.progressSizeData = $i18next.t("issue.file-upload-data", {
-                    upload: $filter("sizeFormat")(evt.loaded),
-                    total: $filter("sizeFormat")(evt.total)
+                file.progressSizeData = @i18next.t("issue.file-upload-data", {
+                    upload: @filter("sizeFormat")(evt.loaded),
+                    total: @filter("sizeFormat")(evt.total)
                 })
                 file.uploadPercent = Math.round((evt.loaded / evt.total) * 100)
 
-        uploadComplete = (evt) ->
-            $rootScope.$apply ->
+        uploadComplete = (evt) =>
+            @rootScope.$apply =>
                 file.status = "done"
                 data = JSON.parse(evt.target.responseText)
                 defered.resolve(data)
 
-        uploadFailed = (evt) ->
-            $rootScope.$apply ->
+        uploadFailed = (evt) =>
+            @rootScope.$apply =>
                 file.status = "error"
                 defered.reject("fail")
 
@@ -612,37 +614,37 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, $rootScope,
 
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
-        xhr.open("POST", $gmUrls.api("issues/attachments"))
-        xhr.setRequestHeader("Authorization", "Bearer #{$gmStorage.get('token')}")
+        xhr.open("POST", @gmUrls.api("issues/attachments"))
+        xhr.setRequestHeader("Authorization", "Bearer #{@gmStorage.get('token')}")
         xhr.send(formData)
         return defered.promise
 
-    service.uploadTaskAttachment = (projectId, taskId, file, progress=true) ->
-        defered = $q.defer()
+    uploadTaskAttachment: (projectId, taskId, file, progress=true) ->
+        defered = @q.defer()
 
         if file is undefined
             defered.resolve(null)
             return defered.promise
 
-        uploadProgress = (evt) ->
-            $rootScope.$apply ->
+        uploadProgress = (evt) =>
+            @rootScope.$apply =>
                 file.status = "in-progress"
                 file.totalSize = evt.total
                 file.uploadSize = evt.loaded
-                file.progressSizeData = $i18next.t("task.file-upload-data", {
-                    upload: $filter("sizeFormat")(evt.loaded),
-                    total: $filter("sizeFormat")(evt.total)
+                file.progressSizeData = @i18next.t("task.file-upload-data", {
+                    upload: @filter("sizeFormat")(evt.loaded),
+                    total: @filter("sizeFormat")(evt.total)
                 })
                 file.uploadPercent = Math.round((evt.loaded / evt.total) * 100)
 
-        uploadComplete = (evt) ->
-            $rootScope.$apply ->
+        uploadComplete = (evt) =>
+            @rootScope.$apply ->
                 file.status = "done"
                 data = JSON.parse(evt.target.responseText)
                 defered.resolve(data)
 
-        uploadFailed = (evt) ->
-            $rootScope.$apply ->
+        uploadFailed = (evt) =>
+            @rootScope.$apply ->
                 file.status = "error"
                 defered.reject("fail")
 
@@ -658,37 +660,37 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, $rootScope,
 
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
-        xhr.open("POST", $gmUrls.api("tasks/attachments"))
-        xhr.setRequestHeader("Authorization", "Bearer #{$gmStorage.get('token')}")
+        xhr.open("POST", @gmUrls.api("tasks/attachments"))
+        xhr.setRequestHeader("Authorization", "Bearer #{@gmStorage.get('token')}")
         xhr.send(formData)
         return defered.promise
 
-    service.uploadUserStoryAttachment = (projectId, userStoryId, file, progress=true) ->
-        defered = $q.defer()
+    uploadUserStoryAttachment: (projectId, userStoryId, file, progress=true) ->
+        defered = @q.defer()
 
         if file is undefined
             defered.resolve(null)
             return defered.promise
 
-        uploadProgress = (evt) ->
-            $rootScope.$apply ->
+        uploadProgress = (evt) =>
+            @rootScope.$apply =>
                 file.status = "in-progress"
                 file.totalSize = evt.total
                 file.uploadSize = evt.loaded
-                file.progressSizeData = $i18next.t("user-story.file-upload-data", {
-                    upload: $filter("sizeFormat")(evt.loaded),
-                    total: $filter("sizeFormat")(evt.total)
+                file.progressSizeData = @i18next.t("user-story.file-upload-data", {
+                    upload: @filter("sizeFormat")(evt.loaded),
+                    total: @filter("sizeFormat")(evt.total)
                 })
                 file.uploadPercent = Math.round((evt.loaded / evt.total) * 100)
 
-        uploadComplete = (evt) ->
-            $rootScope.$apply ->
+        uploadComplete = (evt) =>
+            @rootScope.$apply ->
                 file.status = "done"
                 data = JSON.parse(evt.target.responseText)
                 defered.resolve(data)
 
-        uploadFailed = (evt) ->
-            $rootScope.$apply ->
+        uploadFailed = (evt) =>
+            @rootScope.$apply ->
                 file.status = "error"
                 defered.reject("fail")
 
@@ -704,38 +706,38 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, $rootScope,
 
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
-        xhr.open("POST", $gmUrls.api("userstories/attachments"))
-        xhr.setRequestHeader("Authorization", "Bearer #{$gmStorage.get('token')}")
+        xhr.open("POST", @gmUrls.api("userstories/attachments"))
+        xhr.setRequestHeader("Authorization", "Bearer #{@gmStorage.get('token')}")
         xhr.send(formData)
         return defered.promise
 
-    service.uploadWikiPageAttachment = (projectId, wikiPageId, file, progress=true) ->
-        defered = $q.defer()
+    uploadWikiPageAttachment: (projectId, wikiPageId, file, progress=true) ->
+        defered = @q.defer()
 
         if file is undefined
             defered.resolve(null)
             return defered.promise
 
-        uploadProgress = (evt) ->
-            $rootScope.$apply ->
+        uploadProgress = (evt) =>
+            @rootScope.$apply =>
                 file.status = "in-progress"
                 file.totalSize = evt.total
                 file.uploadSize = evt.loaded
-                file.progressSizeData = $i18next.t("wiki.file-upload-data", {
-                    upload: $filter("sizeFormat")(evt.loaded),
-                    total: $filter("sizeFormat")(evt.total)
+                file.progressSizeData = @i18next.t("wiki.file-upload-data", {
+                    upload: @filter("sizeFormat")(evt.loaded),
+                    total: @filter("sizeFormat")(evt.total)
                 })
                 console.log file.progressSizeData
                 file.uploadPercent = Math.round((evt.loaded / evt.total) * 100)
 
-        uploadComplete = (evt) ->
-            $rootScope.$apply ->
+        uploadComplete = (evt) =>
+            @rootScope.$apply ->
                 file.status = "done"
                 data = JSON.parse(evt.target.responseText)
                 defered.resolve(data)
 
-        uploadFailed = (evt) ->
-            $rootScope.$apply ->
+        uploadFailed = (evt) =>
+            @rootScope.$apply ->
                 file.status = "error"
                 defered.reject("fail")
 
@@ -751,20 +753,20 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, $rootScope,
 
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
-        xhr.open("POST", $gmUrls.api("wiki/attachments"))
-        xhr.setRequestHeader("Authorization", "Bearer #{$gmStorage.get('token')}")
+        xhr.open("POST", @gmUrls.api("wiki/attachments"))
+        xhr.setRequestHeader("Authorization", "Bearer #{@gmStorage.get('token')}")
         xhr.send(formData)
         return defered.promise
 
-    service.getSiteInfo = () ->
+    getSiteInfo: () ->
         httpParams = {
             method: "GET"
-            headers: headers()
-            url: $gmUrls.api("sites")
+            headers: @_headers()
+            url: @gmUrls.api("sites")
         }
-        defered = $q.defer()
+        defered = @q.defer()
 
-        promise = $http(httpParams)
+        promise = @http(httpParams)
         promise.success (data, status, headersFn) ->
             defered.resolve({"headers": headersFn(), "data": data})
 
@@ -773,107 +775,104 @@ ResourceProvider = ($http, $q, $gmStorage, $gmUrls, $model, $rootScope,
 
         return defered.promise
 
-    service.getUserStoryStatuses = (projectId, filters={}) ->
+    getUserStoryStatuses: (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
-        return queryMany("choices/userstory-statuses", parameters)
+        return @_queryMany("choices/userstory-statuses", parameters)
 
-    service.createUserStoryStatus = (form) ->
-        return $model.create("choices/userstory-statuses", form)
+    createUserStoryStatus: (form) ->
+        return @model.create("choices/userstory-statuses", form)
 
-    service.updateBulkUserStoryStatusesOrder = (projectId, data) ->
+    updateBulkUserStoryStatusesOrder: (projectId, data) ->
         obj = {
             project: projectId
             bulk_userstory_statuses: data
         }
-        return $http.post($gmUrls.api("choices/userstory-statuses/bulk-update-order"), obj, {headers:headers()})
+        return @http.post(@gmUrls.api("choices/userstory-statuses/bulk-update-order"), obj, {headers:@_headers()})
 
-    service.getPoints = (projectId, filters={}) ->
+    getPoints: (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
-        return queryMany("choices/points", parameters)
+        return @_queryMany("choices/points", parameters)
 
-    service.createPoints = (form) ->
-        return $model.create("choices/points", form)
+    createPoints: (form) ->
+        return @model.create("choices/points", form)
 
-    service.updateBulkPointsOrder = (projectId, data) ->
+    updateBulkPointsOrder: (projectId, data) ->
         obj = {
             project: projectId
             bulk_points: data
         }
-        return $http.post($gmUrls.api("choices/points/bulk-update-order"), obj, {headers:headers()})
+        return @http.post(@gmUrls.api("choices/points/bulk-update-order"), obj, {headers:@_headers()})
 
-    service.getTaskStatuses = (projectId, filters={}) ->
+    getTaskStatuses: (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
-        return queryMany("choices/task-statuses", parameters)
+        return @_queryMany("choices/task-statuses", parameters)
 
-    service.createTaskStatus = (form) ->
-        return $model.create("choices/task-statuses", form)
+    createTaskStatus: (form) ->
+        return @model.create("choices/task-statuses", form)
 
-    service.updateBulkTaskStatusesOrder = (projectId, data) ->
+    updateBulkTaskStatusesOrder: (projectId, data) ->
         obj = {
             project: projectId
             bulk_task_statuses: data
         }
-        return $http.post($gmUrls.api("choices/task-statuses/bulk-update-order"), obj, {headers:headers()})
+        return @http.post(@gmUrls.api("choices/task-statuses/bulk-update-order"), obj, {headers:@_headers()})
 
-    service.getIssueStatuses = (projectId, filters={}) ->
+    getIssueStatuses: (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
-        return queryMany("choices/issue-statuses", parameters)
+        return @_queryMany("choices/issue-statuses", parameters)
 
-    service.createIssueStatus = (form) ->
-        return $model.create("choices/issue-statuses", form)
+    createIssueStatus: (form) ->
+        return @model.create("choices/issue-statuses", form)
 
-    service.updateBulkIssueStatusesOrder = (projectId, data) ->
+    updateBulkIssueStatusesOrder: (projectId, data) ->
         obj = {
             project: projectId
             bulk_issue_statuses: data
         }
-        return $http.post($gmUrls.api("choices/issue-statuses/bulk-update-order"), obj, {headers:headers()})
+        return @http.post(@gmUrls.api("choices/issue-statuses/bulk-update-order"), obj, {headers:@_headers()})
 
-    service.getIssueTypes = (projectId, filters={}) ->
+    getIssueTypes: (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
-        return queryMany("choices/issue-types", parameters, {cache:false})
+        return @_queryMany("choices/issue-types", parameters, {cache:false})
 
-    service.createIssueType = (form) ->
-        return $model.create("choices/issue-types", form)
+    createIssueType: (form) ->
+        return @model.create("choices/issue-types", form)
 
-    service.updateBulkIssueTypesOrder = (projectId, data) ->
+    updateBulkIssueTypesOrder: (projectId, data) ->
         obj = {
             project: projectId
             bulk_issue_types: data
         }
-        return $http.post($gmUrls.api("choices/issue-types/bulk-update-order"), obj, {headers:headers()})
+        return @http.post(@gmUrls.api("choices/issue-types/bulk-update-order"), obj, {headers:@_headers()})
 
-    service.getPriorities = (projectId, filters={}) ->
+    getPriorities: (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
-        return queryMany("choices/priorities", parameters, {cache:false})
+        return @_queryMany("choices/priorities", parameters, {cache:false})
 
-    service.createPriority = (form) ->
-        return $model.create("choices/priorities", form)
+    createPriority: (form) ->
+        return @model.create("choices/priorities", form)
 
-    service.updateBulkPrioritiesOrder = (projectId, data) ->
+    updateBulkPrioritiesOrder: (projectId, data) ->
         obj = {
             project: projectId
             bulk_priorities: data
         }
-        return $http.post($gmUrls.api("choices/priorities/bulk-update-order"), obj, {headers:headers()})
+        return @http.post(@gmUrls.api("choices/priorities/bulk-update-order"), obj, {headers:@_headers()})
 
-    service.getSeverities = (projectId, filters={}) ->
+    getSeverities: (projectId, filters={}) ->
         parameters = _.extend({}, filters, {project:projectId})
-        return queryMany("choices/severities", parameters)
+        return @_queryMany("choices/severities", parameters)
 
-    service.createSeverity = (form) ->
-        return $model.create("choices/severities", form)
+    createSeverity: (form) ->
+        return @model.create("choices/severities", form)
 
-    service.updateBulkSeveritiesOrder = (projectId, data) ->
+    updateBulkSeveritiesOrder: (projectId, data) ->
         obj = {
             project: projectId
             bulk_severities: data
         }
-        return $http.post($gmUrls.api("choices/severities/bulk-update-order"), obj, {headers:headers()})
-
-    return service
+        return @http.post(@gmUrls.api("choices/severities/bulk-update-order"), obj, {headers:@_headers()})
 
 
 module = angular.module('taiga.services.resource', [])
-module.factory('resource', ['$http', '$q', '$gmStorage', '$gmUrls', '$model', '$rootScope',
-                            '$i18next', '$filter', '$log', "$cacheFactory", ResourceProvider])
+module.service('resource', ResourceService)
