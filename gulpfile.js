@@ -100,8 +100,8 @@ gulp.task("lint", function() {
     gulp.src(coffeeSources)
         .pipe(coffeelint("coffeelint.json"))
         .pipe(coffeelint.reporter())
-    gulp.src("app/less/taiga-main.less")
-        .pipe(recess({strictPropertyOrder: false}))
+    //gulp.src("app/less/taiga-main.less")
+    //    .pipe(recess({strictPropertyOrder: false}))
 });
 
 gulp.task("template", function() {
