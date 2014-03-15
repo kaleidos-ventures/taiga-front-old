@@ -25,6 +25,39 @@ class TaigaBaseFilter extends TaigaBase
 class TaigaBaseService extends TaigaBase
 
 class ModalBaseController extends TaigaBaseController
+    debounceMethods: ->
+        submit = @submit
+        @submit = gm.utils.safeDebounced @scope, 500, submit
+
+    initialize: ->
+        @debounceMethods()
+        @scope.formOpened = false
+
+        # Load data
+        @scope.defered = null
+        @scope.context = null
+
+    closeModal: ->
+        @scope.formOpened = false
+
+    start: (dfr, ctx) ->
+        @scope.defered = dfr
+        @scope.context = ctx
+        @openModal()
+
+    delete: ->
+        @closeModal()
+        @scope.form = form
+        @scope.formOpened = true
+
+    close: ->
+        @scope.formOpened = false
+        @gmOverlay.close()
+
+        if @scope.form.id?
+            @scope.form.revert()
+        else
+            @scope.form = {}
 
 class TaigaPageController extends TaigaBaseController
     constructor: (scope, rootScope, favico) ->

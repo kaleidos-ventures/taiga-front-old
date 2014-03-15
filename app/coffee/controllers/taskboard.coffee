@@ -175,20 +175,8 @@ class TaskboardTaskModalController extends ModalBaseController
     constructor: (@scope, @rootScope, @gmOverlay, @gmFlash, @rs, @i18next) ->
         super(scope)
 
-    debounceMethods: ->
-        submit = @submit
-        @submit = gm.utils.safeDebounced @scope, 500, submit
-
     initialize: ->
-        @debounceMethods()
         @scope.type = "create"
-        @scope.formOpened = false
-        @scope.bulkTasksFormOpened = false
-
-        # Load data
-        @scope.defered = null
-        @scope.context = null
-
         @scope.tagsSelectOptions = {
             multiple: true
             simple_tags: true
@@ -201,6 +189,8 @@ class TaskboardTaskModalController extends ModalBaseController
             formatResult: @assignedToSelectOptionsShowMember
             formatSelection: @assignedToSelectOptionsShowMember
         }
+
+        super()
 
     loadProjectTags: ->
         @rs.getProjectTags(@scope.projectId).then (data) =>
@@ -219,19 +209,6 @@ class TaskboardTaskModalController extends ModalBaseController
 
         @gmOverlay.open().then =>
             @scope.formOpened = false
-
-    closeModal: ->
-        @scope.formOpened = false
-
-    start: (dfr, ctx) ->
-        @scope.defered = dfr
-        @scope.context = ctx
-        @openModal()
-
-    delete: ->
-        @closeModal()
-        @scope.form = form
-        @scope.formOpened = true
 
     # Debounced Method (see debounceMethods method)
     submit: =>
@@ -253,14 +230,6 @@ class TaskboardTaskModalController extends ModalBaseController
         promise.then null, (data) =>
             @scope.checksleyErrors = data
 
-    close: ->
-        @scope.formOpened = false
-        @gmOverlay.close()
-
-        if @scope.form.id?
-            @scope.form.revert()
-        else
-            @scope.form = {}
 
     tagsSelectOptionsShowColorizedTags: (option, container) =>
         hash = hex_sha1(option.text.trim().toLowerCase())
@@ -294,37 +263,13 @@ class TaskboardBulkTasksModalController extends ModalBaseController
     constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next) ->
         super(scope)
 
-    debounceMethods: ->
-        submit = @submit
-        @submit = gm.utils.safeDebounced @scope, 500, submit
-
-    initialize: ->
-        @debounceMethods()
-        @scope.bulkTasksFormOpened = false
-
-        # Load data
-        @scope.defered = null
-        @scope.context = null
-
     openModal: ->
-        @scope.bulkTasksFormOpened = true
+        @scope.formOpened = true
         @scope.$broadcast("checksley:reset")
 
         @gmOverlay.open().then =>
-            @scope.bulkTasksFormOpened = false
+            @scope.formOpened = false
 
-    closeModal: ->
-        @scope.bulkTasksFormOpened = false
-
-    start: (dfr, ctx) ->
-        @scope.defered = dfr
-        @scope.context = ctx
-        @openModal()
-
-    delete: ->
-        @closeModal()
-        @scope.form = form
-        @scope.bulkTasksFormOpened = true
 
     # Debounced Method (see debounceMethods method)
     submit: =>
@@ -341,11 +286,6 @@ class TaskboardBulkTasksModalController extends ModalBaseController
 
         promise.then null, (data) =>
             @scope.checksleyErrors = data
-
-    close: ->
-        @scope.bulkTasksFormOpened = false
-        @gmOverlay.close()
-        @scope.form = {}
 
 
 class TaskboardTaskController extends TaigaBaseController

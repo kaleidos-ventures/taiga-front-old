@@ -147,12 +147,6 @@ class KanbanUsModalController extends ModalBaseController
 
     initialize: ->
         @scope.type = "create"
-        @scope.formOpened = false
-
-        # Load data
-        @scope.defered = null
-        @scope.context = null
-
         @scope.tagsSelectOptions = {
             multiple: true
             simple_tags: true
@@ -165,6 +159,7 @@ class KanbanUsModalController extends ModalBaseController
             formatResult: @assignedToSelectOptionsShowMember
             formatSelection: @assignedToSelectOptionsShowMember
         }
+        super()
 
     loadProjectTags: ->
         @rs.getProjectTags(@scope.projectId).then (data) =>
@@ -184,19 +179,6 @@ class KanbanUsModalController extends ModalBaseController
         @gmOverlay.open().then =>
             @scope.formOpened = false
 
-    closeModal: ->
-        @scope.formOpened = false
-
-    start: (dfr, ctx) ->
-        @scope.defered = dfr
-        @scope.context = ctx
-        @openModal()
-
-    delete: ->
-        @closeModal()
-        @scope.form = form
-        @scope.formOpened = true
-
     submit: ->
         if @scope.form.id?
             promise = @scope.form.save(false)
@@ -215,15 +197,6 @@ class KanbanUsModalController extends ModalBaseController
 
         promise.then null, (data) =>
             @scope.checksleyErrors = data
-
-    close: ->
-        @scope.formOpened = false
-        @gmOverlay.close()
-
-        if @scope.form.id?
-            @scope.form.revert()
-        else
-            @scope.form = {}
 
     assignedToSelectOptionsShowMember: (option, container) =>
         if option.id

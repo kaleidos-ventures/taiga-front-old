@@ -453,19 +453,8 @@ class IssuesModalController extends ModalBaseController
     constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next, @confirm, @q) ->
         super(scope)
 
-    debounceMethods: ->
-        submit = @submit
-        @submit = gm.utils.safeDebounced @scope, 500, submit
-
     initialize: ->
-        @debounceMethods()
         @scope.type = "create"
-        @scope.formOpened = false
-
-        # Load data
-        @scope.defered = null
-        @scope.context = null
-
         @scope.newAttachments = []
         @scope.attachments = []
 
@@ -481,6 +470,7 @@ class IssuesModalController extends ModalBaseController
             formatResult: @assignedToSelectOptionsShowMember
             formatSelection: @assignedToSelectOptionsShowMember
         }
+        super()
 
     saveNewAttachments: (projectId, issueId) =>
         if @scope.newAttachments.length == 0
@@ -538,19 +528,6 @@ class IssuesModalController extends ModalBaseController
         @gmOverlay.open().then =>
             @scope.formOpened = false
 
-    closeModal: ->
-        @scope.formOpened = false
-
-    start: (dfr, ctx) ->
-        @scope.defered = dfr
-        @scope.context = ctx
-        @openModal()
-
-    delete: ->
-        @closeModal()
-        @scope.form = form
-        @scope.formOpened = true
-
     # Debounced Method (see debounceMethods method)
     submit: =>
         if @scope.form.id?
@@ -575,15 +552,6 @@ class IssuesModalController extends ModalBaseController
 
         promise.then null, (data) =>
             @scope.checksleyErrors = data
-
-    close: ->
-        @scope.formOpened = false
-        @gmOverlay.close()
-
-        if @scope.form.id?
-            @scope.form.revert()
-        else
-            @scope.form = {}
 
     tagsSelectOptionsShowColorizedTags: (option, container) =>
         hash = hex_sha1(option.text.trim().toLowerCase())
