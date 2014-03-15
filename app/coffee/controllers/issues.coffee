@@ -16,7 +16,9 @@ class IssuesController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$routeParams', '$filter', '$q',
                  'resource', '$data', '$confirm', '$modal', '$i18next',
                  '$location', '$favico', 'SelectedTags']
-    constructor: (@scope, @rootScope, @routeParams, @filter, @q, @rs, @data, @confirm, @modal, @i18next, @location, @favico, @SelectedTags) ->
+    constructor: (@scope, @rootScope, @routeParams, @filter, @q, @rs, @data,
+                  @confirm, @modal, @i18next, @location, @favico,
+                  @SelectedTags) ->
         super(scope, rootScope, favico)
 
     debounceMethods: ->
@@ -415,7 +417,7 @@ class IssuesViewController extends TaigaPageController
             issue.remove().then =>
                 @location.url("/project/#{@scope.projectSlug}/issues/")
 
-    tagsSelectOptionsShowColorizedTags: (option, container) =>
+    tagsSelectOptionsShowColorizedTags: (option, container) ->
         hash = hex_sha1(option.text.trim().toLowerCase())
         color = hash
             .substring(0,6)
@@ -545,7 +547,7 @@ class IssuesModalController extends ModalBaseController
                 @gmFlash.info(@i18next.t('issue.issue-saved'))
 
             if @scope.newAttachments.length > 0
-                @saveNewAttachments(@scope.projectId, data.id).then =>
+                @saveNewAttachments(@scope.projectId, data.id).then ->
                     finishSubmit()
             else
                 finishSubmit()
@@ -553,7 +555,7 @@ class IssuesModalController extends ModalBaseController
         promise.then null, (data) =>
             @scope.checksleyErrors = data
 
-    tagsSelectOptionsShowColorizedTags: (option, container) =>
+    tagsSelectOptionsShowColorizedTags: (option, container) ->
         hash = hex_sha1(option.text.trim().toLowerCase())
         color = hash
             .substring(0,6)

@@ -147,9 +147,14 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location, rs)
                         regexp.test(user.username)
                         regexp.test(user.email)
                     ]
+
+                userData = (user) ->
+                    {username: user.username, name: user.full_name}
+
                 getUsersList = () ->
                     users = $rootScope.constants.usersList
-                    return ({username: user.username, name: user.full_name} for user in users when filterUser(regexp, user))
+                    return (userData(user) for user in users when filterUser(regexp, user))
+
                 callback(getUsersList())
             template: (value) ->
                 return "#{value.name}"
@@ -253,7 +258,15 @@ wikiInit = ($routeParams, $rootScope) ->
 
     renderer.image = (href, title, text) ->
         if href.indexOf(':att:') == 0
-            marked.Renderer::image($rootScope.urls.attachmentUrl($routeParams.pslug, 'wikipage', href.substring(5)), title, text)
+            marked.Renderer::image(
+                $rootScope.urls.attachmentUrl(
+                    $routeParams.pslug,
+                    'wikipage',
+                    href.substring(5)
+                ),
+                title,
+                text
+            )
         else
             marked.Renderer::image(href, title, text)
 
@@ -268,5 +281,7 @@ wikiInit = ($routeParams, $rootScope) ->
 
 
 module = angular.module('taiga.directives.wiki', []).run ['$routeParams', '$rootScope', wikiInit ]
-module.directive('gmMarkitup', ["$rootScope", "$parse", "$i18next", "$sanitize", "$location", "resource", gmMarkitupConstructor])
+module.directive('gmMarkitup', ["$rootScope", "$parse", "$i18next",
+                                "$sanitize", "$location", "resource",
+                                gmMarkitupConstructor])
 module.directive("gmRenderMarkdown", ["$rootScope", "$parse", "$sanitize", GmRenderMarkdownDirective])

@@ -127,8 +127,11 @@ GmPopoverDirective = ($parse, $compile) ->
         autoHide = element.data('auto-hide')
         placement = element.data('placement') or 'right'
 
-        acceptSelector = element.data('accept-selector') or '.popover-content .button-success, .popover-content .btn-accept'
-        cancelSelector = element.data('cancel-selector') or '.popover-content .button-delete'
+        defaultAcceptSelector = '.popover-content .button-success, .popover-content .btn-accept'
+        defaultCancelSelector = '.popover-content .button-delete'
+
+        acceptSelector = element.data('accept-selector') or defaultAcceptSelector
+        cancelSelector = element.data('cancel-selector') or defaultCancelSelector
 
 
         element.on "click", (event) ->
@@ -395,7 +398,9 @@ GmPaginator = ($parse) ->
                     else if i == (scope[pageVar] - before_current) and scope[pageVar] > (at_begin + before_current)
                         scope.paginationItems.push(classes:"dots", type:"dots")
                     else if i > (scope[pageVar] + after_current) and i <= (numPages - at_end)
+                        true # ignore
                     else if i < (scope[pageVar] - before_current) and i > at_begin
+                        true # ignore
                     else if i == scope[pageVar]
                         scope.paginationItems.push(classes:"page active", num:i, type:"page-active")
                     else

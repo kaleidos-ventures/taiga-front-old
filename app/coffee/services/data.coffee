@@ -73,7 +73,7 @@ class DataService extends TaigaBaseService
             @rs.getMilestone($scope.projectId, $scope.sprintId),
         ]
 
-        promise = promise.then (results) =>
+        promise = promise.then (results) ->
             [tasks, milestone] = results
             $scope.milestone = milestone
 
@@ -136,11 +136,11 @@ class DataService extends TaigaBaseService
 
         defered = @q.defer()
         promise = @rs.getSiteInfo()
-        promise.then (data) =>
+        promise.then (data) ->
             $scope.site = _.merge($scope.site, data)
             defered.resolve($scope.site)
 
-        promise.then null, =>
+        promise.then null, ->
             defered.reject()
 
         return defered.promise

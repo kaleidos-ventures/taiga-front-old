@@ -104,14 +104,14 @@ class TaskboardController extends TaigaPageController
             @calculateStats()
             @scope.$broadcast("points:changed")
 
-        promise.then null, (data, status) =>
+        promise.then null, (data, status) ->
             us._moving = false
             us.revert()
 
     saveUsStatus: (us, id) ->
         us.status = id
         us._moving = true
-        us.save().then (data) =>
+        us.save().then (data) ->
             data._moving = false
 
     openBulkTasksForm: (us) ->
@@ -231,7 +231,7 @@ class TaskboardTaskModalController extends ModalBaseController
             @scope.checksleyErrors = data
 
 
-    tagsSelectOptionsShowColorizedTags: (option, container) =>
+    tagsSelectOptionsShowColorizedTags: (option, container) ->
         hash = hex_sha1(option.text.trim().toLowerCase())
         color = hash
             .substring(0,6)
@@ -299,10 +299,10 @@ class TaskboardTaskController extends TaigaBaseController
         task._moving = true
         promise = task.save()
 
-        promise.then (task) =>
+        promise.then (task) ->
             task._moving = false
 
-        promise.then null, =>
+        promise.then null, ->
             task.revert()
             task._moving = false
 

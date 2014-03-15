@@ -206,7 +206,7 @@ class KanbanUsModalController extends ModalBaseController
                                   border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
          return "<span\">#{option.text}</span>"
 
-    tagsSelectOptionsShowColorizedTags: (option, container) =>
+    tagsSelectOptionsShowColorizedTags: (option, container) ->
         hash = hex_sha1(option.text.trim().toLowerCase())
         color = hash
             .substring(0,6)

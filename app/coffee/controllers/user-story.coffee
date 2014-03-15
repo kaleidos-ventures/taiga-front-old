@@ -103,7 +103,10 @@ class UserStoryViewController extends TaigaPageController
             if @scope.userStory.milestone == null
                 breadcrumb[1] = [@i18next.t('common.backlog'), @rootScope.urls.backlogUrl(@scope.projectSlug)]
             else
-                breadcrumb[1] = [@i18next.t('common.taskboard'), @rootScope.urls.taskboardUrl(@scope.projectSlug, @scope.userStory.milestone_slug)]
+                breadcrumb[1] = [
+                    @i18next.t('common.taskboard'),
+                    @rootScope.urls.taskboardUrl(@scope.projectSlug, @scope.userStory.milestone_slug)
+                ]
             breadcrumb[2] = [@i18next.t("user-story.user-story") + " ##{userStory.ref}", null]
             @rootScope.pageTitle = "#{@i18next.t("user-story.user-story")} - ##{userStory.ref}"
             @rootScope.pageBreadcrumb = breadcrumb
@@ -180,7 +183,7 @@ class UserStoryViewController extends TaigaPageController
             userStory.remove().then =>
                 @location.url("/project/#{@scope.projectSlug}/backlog")
 
-    tagsSelectOptionsShowColorizedTags: (option, container) =>
+    tagsSelectOptionsShowColorizedTags: (option, container) ->
         hash = hex_sha1(option.text.trim().toLowerCase())
         color = hash
             .substring(0,6)

@@ -31,8 +31,8 @@ class Tags extends Persist
     join: (sep=",") -> @names().join(sep)
 
     store: (tag) ->
-         @tags[@key(tag)] = tag
-         @save()
+        @tags[@key(tag)] = tag
+        @save()
 
     update: (tag, newValues) ->
         @tags[@key(tag)] = _.defaults(newValues, @tags[@key(tag)])

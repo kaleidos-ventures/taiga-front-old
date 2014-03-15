@@ -47,8 +47,10 @@ class BacklogController extends TaigaPageController
 
     reloadStats: ->
         @data.loadProjectStats(@scope).then =>
-            if @scope.projectStats.total_points > 0
-                @scope.percentageClosedPoints = (@scope.projectStats.closed_points * 100) / @scope.projectStats.total_points
+            closedPoints = @scope.projectStats.closed_points
+            totalPoints = @scope.projectStats.total_points
+            if totalPoints > 0
+                @scope.percentageClosedPoints = (closedPoints * 100) / totalPoints
             else
                 @scope.percentageClosedPoints = 0
 
@@ -103,15 +105,15 @@ class BacklogUserStoriesController extends TaigaBaseController
         return @SelectedTags(@rootScope.projectId).backlog.values()
 
     filterUsBySelectedTags: ->
-       selectedTagNames = @SelectedTags(@rootScope.projectId).backlog.names()
-       if selectedTagNames.length > 0
-           for item in @scope.unassignedUs
-               if _.intersection(selectedTagNames, item.tags).length == 0
-                   item.__hidden = true
-               else
-                   item.__hidden = false
-       else
-           item.__hidden = false for item in @scope.unassignedUs
+        selectedTagNames = @SelectedTags(@rootScope.projectId).backlog.names()
+        if selectedTagNames.length > 0
+            for item in @scope.unassignedUs
+                if _.intersection(selectedTagNames, item.tags).length == 0
+                    item.__hidden = true
+                else
+                    item.__hidden = false
+        else
+            item.__hidden = false for item in @scope.unassignedUs
 
     resortUserStories: ->
         saveChangedOrder = =>
@@ -125,7 +127,7 @@ class BacklogUserStoriesController extends TaigaBaseController
                 item._moving = true
 
             promise = @rs.updateBulkUserStoriesOrder(@scope.projectId, bulkData)
-            promise = promise.then =>
+            promise = promise.then ->
                 for us in modifiedUs
                     us.markSaved()
                     us._moving = false
@@ -250,14 +252,14 @@ class BacklogUserStoriesController extends TaigaBaseController
             @calculateStats()
             @scope.$broadcast("points:changed")
 
-        promise.then null, (data, status) =>
+        promise.then null, (data, status) ->
             us._moving = false
             us.revert()
 
     saveUsStatus: (us, id) ->
         us.status = id
         us._moving = true
-        us.save().then (data) =>
+        us.save().then (data) ->
             data._moving = false
 
     # User Story Filters
@@ -347,7 +349,7 @@ class BacklogUserStoryModalController extends ModalBaseController
         promise.then null, (data) =>
             @scope.checksleyErrors = data
 
-    tagsSelectOptionsShowColorizedTags: (option, container) =>
+    tagsSelectOptionsShowColorizedTags: (option, container) ->
         hash = hex_sha1(option.text.trim().toLowerCase())
         color = hash
             .substring(0,6)

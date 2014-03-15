@@ -89,7 +89,8 @@ class ProjectAdminMainController extends ProjectAdminController
                 "$model", "resource", "$confirm", "$location", '$i18next',
                 '$q', '$favico']
 
-    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model, @rs, @confirm, @location, @i18next, @q, @favico) ->
+    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model,
+                  @rs, @confirm, @location, @i18next, @q, @favico) ->
         super(scope, rootScope, routeParams, data, rs, i18next, favico, location)
 
     activeTab: 'main'
@@ -108,7 +109,8 @@ class ProjectAdminValuesController extends ProjectAdminController
                 "$model", "resource", "$confirm", "$location", '$i18next',
                 '$q', '$favico']
 
-    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model, @rs, @confirm, @location, @i18next, @q, @favico) ->
+    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model,
+                  @rs, @confirm, @location, @i18next, @q, @favico) ->
         super(scope, rootScope, routeParams, data, rs, i18next, favico, location)
 
     activeTab: "values"
@@ -123,7 +125,8 @@ class ProjectAdminMilestonesController extends ProjectAdminController
                 "$model", "resource", "$confirm", "$location", '$i18next',
                 '$q', '$favico']
 
-    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model, @rs, @confirm, @location, @i18next, @q, @favico) ->
+    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model,
+                  @rs, @confirm, @location, @i18next, @q, @favico) ->
         super(scope, rootScope, routeParams, data, rs, i18next, favico, location)
 
     activeTab: "milestones"
@@ -139,7 +142,8 @@ class ProjectAdminMembershipsController extends ProjectAdminController
                 "$model", "resource", "$confirm", "$location", '$i18next',
                 '$q', '$favico']
 
-    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model, @rs, @confirm, @location, @i18next, @q, @favico) ->
+    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model,
+                  @rs, @confirm, @location, @i18next, @q, @favico) ->
         super(scope, rootScope, routeParams, data, rs, i18next, favico, location)
 
     activeTab: "memberships"
@@ -219,7 +223,8 @@ class ProjectAdminRolesController extends ProjectAdminController
                 "$model", "resource", "$confirm", "$location", '$i18next',
                 '$q', '$favico']
 
-    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model, @rs, @confirm, @location, @i18next, @q, @favico) ->
+    constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model,
+                  @rs, @confirm, @location, @i18next, @q, @favico) ->
         super(scope, rootScope, routeParams, data, rs, i18next, favico, location)
 
     activeTab: "roles"

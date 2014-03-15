@@ -46,7 +46,7 @@ class ResourceService extends TaigaBaseService
             models = _.map data, (attrs) => @model.make_model(name, attrs)
             defered.resolve(models)
 
-        promise.error (data, status) =>
+        promise.error (data, status) ->
             defered.reject(data, status)
 
         return defered.promise
@@ -67,10 +67,10 @@ class ResourceService extends TaigaBaseService
         defered = @q.defer()
 
         promise = @http(httpParams)
-        promise.success (data, status) =>
+        promise.success (data, status) ->
             defered.resolve(data, cls)
 
-        promise.error (data, status) =>
+        promise.error (data, status) ->
             defered.reject()
 
         return defered.promise
@@ -94,7 +94,7 @@ class ResourceService extends TaigaBaseService
         promise.success (data, status) =>
             defered.resolve(@model.make_model(name, data, cls))
 
-        promise.error (data, status) =>
+        promise.error (data, status) ->
             defered.reject()
 
         return defered.promise
@@ -123,7 +123,7 @@ class ResourceService extends TaigaBaseService
 
             defered.resolve(result)
 
-        promise.error (data, status) =>
+        promise.error (data, status) ->
             defered.reject()
 
         return defered.promise
@@ -137,7 +137,7 @@ class ResourceService extends TaigaBaseService
             user = @model.make_model("users", data)
             defered.resolve(user)
 
-        onError = (data, status) =>
+        onError = (data, status) ->
             defered.reject(data)
 
         promise = @http({method:'POST', url: @gmUrls.api('auth-register'), data: JSON.stringify(formdata)})
@@ -155,7 +155,7 @@ class ResourceService extends TaigaBaseService
             user = @model.make_model("users", data)
             defered.resolve(user)
 
-        onError = (data, status) =>
+        onError = (data, status) ->
             defered.reject(data)
 
         postData =
@@ -173,10 +173,10 @@ class ResourceService extends TaigaBaseService
         postData = {username: email}
         url = @gmUrls.api("users-password-recovery")
 
-        onSuccess = (data, status) =>
+        onSuccess = (data, status) ->
             defered.resolve(data)
 
-        onError = (data, status) =>
+        onError = (data, status) ->
             defered.reject(data)
 
         @http({method: "POST", url: url, data: JSON.stringify(postData)})
@@ -190,10 +190,10 @@ class ResourceService extends TaigaBaseService
         postData = {password: password, token: token}
         url = @gmUrls.api("users-change-password-from-recovery")
 
-        onSuccess = (data, status) =>
+        onSuccess = (data, status) ->
             defered.resolve(data)
 
-        onError = (data, status) =>
+        onError = (data, status) ->
             defered.reject(data)
 
         @http({method: "POST", url: url, data: JSON.stringify(postData)})
@@ -207,10 +207,10 @@ class ResourceService extends TaigaBaseService
         postData = {password: password}
         url = @gmUrls.api("users-change-password")
 
-        onSuccess = (data, status) =>
+        onSuccess = (data, status) ->
             defered.resolve(data)
 
-        onError = (data, status) =>
+        onError = (data, status) ->
             defered.reject(data)
 
         @http({method: "POST", url: url, data: JSON.stringify(postData), headers: @_headers()})
@@ -435,9 +435,6 @@ class ResourceService extends TaigaBaseService
     createUs: (form) ->
         return @model.create("userstories", form)
 
-    createTask: (form) ->
-        return @model.create("tasks", form)
-
     createIssue: (projectId, form) ->
         obj = _.extend({}, form, {project: projectId})
         defered = @q.defer()
@@ -592,13 +589,13 @@ class ResourceService extends TaigaBaseService
                 file.uploadPercent = Math.round((evt.loaded / evt.total) * 100)
 
         uploadComplete = (evt) =>
-            @rootScope.$apply =>
+            @rootScope.$apply ->
                 file.status = "done"
                 data = JSON.parse(evt.target.responseText)
                 defered.resolve(data)
 
         uploadFailed = (evt) =>
-            @rootScope.$apply =>
+            @rootScope.$apply ->
                 file.status = "error"
                 defered.reject("fail")
 

@@ -37,6 +37,7 @@ class FavicoService extends TaigaBaseService
         try
             @_favico.reset()
         catch err
+            true # ignore
 
     destroy: () ->
         @_favico = null

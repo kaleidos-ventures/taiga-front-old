@@ -93,8 +93,10 @@ configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compil
     $routeProvider.when('/project/:pslug/admin/roles',
         {controller: "ProjectAdminRolesController as ctrl", templateUrl: "partials/project-admin-roles.html"})
 
-    $routeProvider.when('/project/:pslug/admin/memberships',
-        {controller: "ProjectAdminMembershipsController as ctrl", templateUrl: "partials/project-admin-memberships.html"})
+    $routeProvider.when('/project/:pslug/admin/memberships', {
+        controller: "ProjectAdminMembershipsController as ctrl",
+        templateUrl: "partials/project-admin-memberships.html"
+    })
 
     $routeProvider.when('/admin',
         {controller: "SiteAdminController as ctrl", templateUrl: "partials/site-admin.html"})

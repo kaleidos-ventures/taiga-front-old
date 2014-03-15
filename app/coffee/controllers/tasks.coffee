@@ -17,7 +17,8 @@ class TasksViewController extends TaigaPageController
     @.$inject = ['$scope', '$location', '$rootScope', '$routeParams', '$q',
                  '$confirm', 'resource', "$data", "$gmFlash", "$i18next",
                  "$favico"]
-    constructor: (@scope, @location, @rootScope, @routeParams, @q, @confirm, @rs, @data, @gmFlash, @i18next, @favico) ->
+    constructor: (@scope, @location, @rootScope, @routeParams, @q, @confirm,
+                  @rs, @data, @gmFlash, @i18next, @favico) ->
         super(scope, rootScope, favico)
 
     debounceMethods: ->
@@ -91,7 +92,10 @@ class TasksViewController extends TaigaPageController
             @scope.form = _.extend({}, @scope.task._attrs)
 
             breadcrumb = _.clone(@rootScope.pageBreadcrumb)
-            breadcrumb[1] = [@i18next.t('common.tasks'), @rootScope.urls.taskboardUrl(@rootScope.projectSlug, @scope.task.milestone_slug)]
+            breadcrumb[1] = [
+                @i18next.t('common.tasks'),
+                @rootScope.urls.taskboardUrl(@rootScope.projectSlug, @scope.task.milestone_slug)
+            ]
             breadcrumb[2] = ["##{task.ref}", null]
             @rootScope.pageTitle = "#{@i18next.t("common.tasks")} - ##{task.ref}"
 
@@ -157,7 +161,7 @@ class TasksViewController extends TaigaPageController
             task.remove().then =>
                 @location.url("/project/#{@scope.projectSlug}/taskboard/#{task.milestone_slug}")
 
-    tagsSelectOptionsShowColorizedTags: (option, container) =>
+    tagsSelectOptionsShowColorizedTags: (option, container) ->
         hash = hex_sha1(option.text.trim().toLowerCase())
         color = hash
             .substring(0,6)
