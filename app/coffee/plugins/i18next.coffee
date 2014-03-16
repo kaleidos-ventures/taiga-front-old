@@ -32,7 +32,7 @@ class I18NextService extends TaigaBaseService
         @t = @translate
 
     setLang: (lang) ->
-        $rootScope.currentLang = lang
+        @rootScope.currentLang = lang
         options = _.clone(@._defaultOptions, true)
         i18n.setLng lang, options, =>
             @rootScope.$broadcast("i18next:changeLang")
