@@ -49,10 +49,11 @@ class EventsService
 
     onOpen: ->
         @.log.debug "WebSocket connection opened"
+        token = @gmAuth.getToken()
+        sessionId = @gmAuth.getSessionId()
 
-        connection_id = @.generateUniqueId()
-        console.log("Connection id:", connection_id)
-        @.ws.send('{"token": "eyJ1c2VyX2lkIjoxfQ:1WOArJ:V3yF_KGTslhJyMt09nhm00g-2Vc"}')
+        data = {token: token, sessionId: sessionId}
+        @.ws.send(JSON.stringify(data))
 
     onMessage: (event) ->
         @.log.debug "WebSocket message received: #{event.data}"

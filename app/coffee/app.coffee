@@ -29,7 +29,7 @@ generateUniqueSessionIdentifier = ->
     return hex_sha1("" + date + "" + randomNumber)
 
 configure = ($routeProvider, $locationProvider, $httpProvider, $provide,
-             $compileProvider, $gmUrlsProvider, $gmEventsProvider) ->
+             $compileProvider, $gmUrlsProvider, $gmEventsProvider, $gmAuthProvider) ->
     $routeProvider.when('/',
         {templateUrl: 'partials/project-list.html', controller: "ProjectListController as ctrl"})
 
@@ -126,6 +126,8 @@ configure = ($routeProvider, $locationProvider, $httpProvider, $provide,
         "X-Host": window.location.hostname
         "X-Session-Id": sessionId
     }
+
+    $gmAuthProvider.initialize(sessionId)
 
     authHttpIntercept = ($q, $location) ->
         return (promise) ->
@@ -494,7 +496,8 @@ init.$inject = ['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls',
                 '$favico', '$gmEvents']
 
 configure.$inject = ['$routeProvider', '$locationProvider', '$httpProvider',
-                     '$provide', '$compileProvider', '$gmUrlsProvider', '$gmEventsProvider']
+                     '$provide', '$compileProvider', '$gmUrlsProvider',
+                     '$gmEventsProvider', '$gmAuthProvider']
 
 angular.module("taiga.localconfig", []).value("localconfig", {})
 angular.module('taiga', modules)

@@ -14,8 +14,6 @@
 
 
 class AuthService extends TaigaBaseService
-    @.$inject = ["$rootScope", "$gmStorage", "$model"]
-
     constructor: (@rootScope, @gmStorage, @model) ->
         super()
 
@@ -40,10 +38,29 @@ class AuthService extends TaigaBaseService
     getToken: ->
         @gmStorage.get("token")
 
+    setSessionId: (sessionId) ->
+        @.sessionId = sessionId
+
+    getSessionId: ->
+        return @.sessionId
+
     isAuthenticated: ->
         if @.getUser() != null
             return true
         return false
 
-module = angular.module('taiga.services.auth', ['taiga.services.model', 'gmStorage'])
-module.service("$gmAuth", AuthService)
+
+class AuthProvider
+    initialize: (sessionId) ->
+        @.sessionId = sessionId
+
+    $get: ($rootScope, $gmStorage, $model) ->
+        service = new AuthService($rootScope, $gmStorage, $model)
+        service.setSessionId(@.sessionId)
+
+        return service
+
+    @.prototype.$get.$inject = ["$rootScope", "$gmStorage", "$model"]
+
+module = angular.module('taiga.services.auth', [])
+module.provider("$gmAuth", AuthProvider)
