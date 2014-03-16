@@ -12,24 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+defaultOptions = {
+    postProcess: "lodashTemplate"
+    fallbackLng: "en"
+    useLocalStorage: false
+    localStorageExpirationTime: 60*60*24*1000 # 1 day
+    ns: 'app'
+    resGetPath: 'locales/__lng__/__ns__.json'
+    getAsync: false
+}
 
 class I18NextService extends TaigaBaseService
     @.$inject = ["$rootScope", "$q"]
+
     constructor: (@rootScope, @q) ->
         i18n.addPostProcessor "lodashTemplate", (value, key, options) ->
             template = _.template(value)
             return template(options.scope)
         @t = @translate
-
-    _defaultOptions: {
-        postProcess: "lodashTemplate"
-        fallbackLng: "en"
-        useLocalStorage: false
-        localStorageExpirationTime: 60*60*24*1000 # 1 day
-        ns: 'app'
-        resGetPath: 'locales/__lng__/__ns__.json'
-        getAsync: false
-    }
 
     setLang: (lang) ->
         $rootScope.currentLang = lang
@@ -45,7 +45,7 @@ class I18NextService extends TaigaBaseService
 
     initialize: (async=false, defaultLang="en") ->
         # Put to rootScope a initial values
-        options = _.clone(@._defaultOptions, true)
+        options = _.clone(defaultOptions, true)
         options.lng = @rootScope.currentLang = defaultLang
 
         if async
