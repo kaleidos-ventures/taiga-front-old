@@ -182,11 +182,8 @@ configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compil
 
     $gmUrlsProvider.setUrls("api", apiUrls)
 
-
-init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, $gmConfig, localconfig, $data, $log, $favico) ->
+assignInitialConstants = ($rootScope) ->
     $rootScope.pageTitle = ""
-    $rootScope.auth = $gmAuth.getUser()
-
     $rootScope.constants = {}
 
     $rootScope.constants.usStatuses = {}
@@ -214,20 +211,12 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, $gmConfig
 
     $rootScope.constants.users = {}
 
-    # Initialize configuration
-    $gmConfig.initialize(localconfig)
+assignNavegationUrls = ($rootScope) ->
+    conditionalUrl = (url, raw) ->
+        return url if raw
+        return "/##{url}"
 
-    # Configure on init a default host and scheme for api urls.
-    $gmUrls.setHost("api", $gmConfig.get("host"), $gmConfig.get("scheme"))
-
-
-    $data.loadSiteInfo($rootScope).then (sitedata) ->
-        $log.debug "Site data:", sitedata
-
-    if not $gmConfig.get("debug")
-        $log.debug = ->
-
-    $rootScope.baseUrls =
+    $rootScope.baseUrls = {
         projects: "/"
         backlog: "/project/%s/backlog"
         kanban: "/project/%s/kanban"
@@ -244,12 +233,8 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, $gmConfig
         invitation: "/invitation/%s"
         admin: "/project/%s/admin/%s"
         attachment: "/media/attachment-files/%s/%s/%s"
+    }
 
-    conditionalUrl = (url, raw) ->
-        return url if raw
-        return "/##{url}"
-
-    # TODO: refactor this.
     $rootScope.urls =
         projectsUrl: ->
             return '/#/'
@@ -355,6 +340,35 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, $gmConfig
 
             return baseUrl + url
 
+
+
+init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, $gmConfig, localconfig, $data, $log, $favico) ->
+    $rootScope.auth = $gmAuth.getUser()
+
+    # Assing to root scope intial empty constants
+    assignInitialConstants($rootScope)
+
+    # Assign navegration urls
+    assignNavegationUrls($rootScope)
+
+    # Initialize configuration
+    $gmConfig.initialize(localconfig)
+
+    # Configure on init a default host and scheme for api urls.
+    $gmUrls.setHost("api", $gmConfig.get("host"), $gmConfig.get("scheme"))
+
+    # Initialize i18next service
+    $i18next.initialize($gmConfig.get("defaultLanguage"))
+
+    # Load site data.
+    $data.loadSiteInfo($rootScope).then (sitedata) ->
+        $log.debug "Site data:", sitedata
+
+    # Overwrite debug logging function if loging is disabled
+    # Is seems hacky but is the unque way at this momment.
+    if not $gmConfig.get("debug")
+        $log.debug = ->
+
     $rootScope.momentFormat = (input, format) ->
         return moment(input).format(format)
 
@@ -362,7 +376,8 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, $gmConfig
         $gmStorage.clear()
         $location.url("/login")
 
-    $i18next.initialize($gmConfig.get("defaultLanguage"))
+    # FIXME: the following next two event assignations
+    # related to i18n seems need a refactor ;)
 
     $rootScope.$on "i18n:change", (event, lang) ->
         if lang
