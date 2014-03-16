@@ -15,6 +15,7 @@
 
 class AuthService extends TaigaBaseService
     @.$inject = ["$rootScope", "$gmStorage", "$model"]
+
     constructor: (@rootScope, @gmStorage, @model) ->
         super()
 
@@ -28,6 +29,11 @@ class AuthService extends TaigaBaseService
         @rootScope.auth = user
         @rootScope.$broadcast('i18n:change', user.default_language)
         @gmStorage.set("userInfo", user.getAttrs())
+
+    isAuthenticated: ->
+        if @.getUser() != null
+            return true
+        return false
 
 module = angular.module('taiga.services.auth', [])
 module.service("$gmAuth", AuthService)
