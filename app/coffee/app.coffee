@@ -483,6 +483,7 @@ modules = [
     "gmConfirm",
     "gmOverlay",
     "gmConfig",
+    "gmEvents",
     "i18next",
     "favico",
     "ui.select2"
