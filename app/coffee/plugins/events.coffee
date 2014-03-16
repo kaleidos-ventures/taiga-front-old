@@ -18,6 +18,7 @@ class EventsService
 
     initialize: (sessionId) ->
         @.sessionId = sessionId
+        @.listeners = {}
 
         if @.win.WebSocket is undefined
             @.log.debug "WebSockets not supported on your browser"
@@ -58,12 +59,31 @@ class EventsService
     onMessage: (event) ->
         @.log.debug "WebSocket message received: #{event.data}"
 
+        eventData = JSON.parse(event.data)
+        type = eventData.type
+        if type == "model-changes"
+            @.processModelChangesEvent(eventData)
+
+    processModelChangesEvent: (event) ->
+        data = event.data
+        key = data.matches
+
+        if @.listeners[key] is undefined
+            return
+
+        @.listeners[key](data)
+
     onError: (error) ->
         @.log.error "WebSocket error: #{error}"
 
     onClose: ->
         @.log.debug "WebSocket closed."
 
+    addListener: (key, fn) ->
+        @.listeners[key] = fn
+
+    dropListener: (key) ->
+        delete @.listeners[key]
 
 class EventsProvider
     setSessionId: (sessionId) ->
