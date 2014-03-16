@@ -62,8 +62,8 @@ class BacklogController extends TaigaPageController
 
 class BacklogUserStoriesController extends TaigaBaseController
     @.$inject = ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal',
-                 '$location', 'SelectedTags']
-    constructor: (@scope, @rootScope, @q, @rs, @data, @modal, @location, @SelectedTags) ->
+                 '$location', 'SelectedTags', '$gmEvents']
+    constructor: (@scope, @rootScope, @q, @rs, @data, @modal, @location, @SelectedTags, @gmEvents) ->
         super(scope)
 
     initialize: ->
@@ -79,6 +79,9 @@ class BacklogUserStoriesController extends TaigaBaseController
 
         @scope.$on "milestones:loaded", (ctx, data) =>
             @scope.milestones = data
+
+        @gmEvents.addListener "userstories.userstory", (event) =>
+            @.refreshBacklog()
 
     calculateStats: ->
         @scope.$emit("stats:update")
