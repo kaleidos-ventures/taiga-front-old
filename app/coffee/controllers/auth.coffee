@@ -14,9 +14,9 @@
 
 class LoginController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$location', '$routeParams',
-                 'resource', '$gmAuth', '$i18next', '$favico']
+                 'resource', '$gmAuth', '$i18next', '$favico', '$gmEvents']
 
-    constructor: (@scope, @rootScope, @location, @routeParams, @rs, @gmAuth, @i18next, @favico) ->
+    constructor: (@scope, @rootScope, @location, @routeParams, @rs, @gmAuth, @i18next, @favico, @gmEvents) ->
         super(scope, rootScope, favico)
 
     section: 'login'
@@ -44,6 +44,8 @@ class LoginController extends TaigaPageController
         @scope.errorMessage = data.detail
 
     onSuccess: (user) ->
+        @gmEvents.setupConnection()
+
         if @routeParams['next'] and @routeParams['next'] != '/login'
             @location.url(@routeParams['next'])
         else
