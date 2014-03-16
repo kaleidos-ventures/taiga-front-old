@@ -44,7 +44,6 @@ class LoginController extends TaigaPageController
         @scope.errorMessage = data.detail
 
     onSuccess: (user) ->
-        @gmAuth.setUser(user)
         if @routeParams['next'] and @routeParams['next'] != '/login'
             @location.url(@routeParams['next'])
         else
@@ -127,6 +126,7 @@ class ChangePasswordController extends TaigaPageController
 class ProfileController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource',
                  '$gmConfig', '$i18next', "$favico"]
+
     constructor: (@scope, @rootScope, @gmAuth, @gmFlash, @rs, @gmConfig, @i18next, @favico) ->
         super(scope, rootScope, favico)
 
@@ -191,8 +191,6 @@ class PublicRegisterController extends TaigaPageController
 
         promise = @rs.register(form)
         promise.then (user) =>
-            @gmAuth.setUser(user)
-            @rootScope.auth = user
             @location.url("/")
 
         promise.then null, (data) =>
@@ -220,8 +218,6 @@ class InvitationRegisterController extends TaigaPageController
 
         promise = @rs.register(form)
         promise.then (user) =>
-            @gmAuth.setUser(user)
-            @rootScope.auth = user
             @location.url("/")
 
         promise.then null, (data) =>

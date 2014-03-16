@@ -13,15 +13,17 @@
 # limitations under the License.
 
 class ResourceService extends TaigaBaseService
-    @.$inject = ['$http', '$q', '$gmStorage', '$gmUrls', '$model',
-                 '$rootScope', '$i18next', '$filter', '$log', "$cacheFactory"]
-    constructor: (@http, @q, @gmStorage, @gmUrls, @model, @rootScope, @i18next, @filter, @log, @cacheFactory) ->
+    @.$inject = ["$http", "$q", "$gmAuth", "$gmUrls", "$model",
+                 "$rootScope", "$i18next", "$filter", "$log", "$cacheFactory"]
+
+    constructor: (@http, @q, @gmAuth, @gmUrls, @model, @rootScope,
+                  @i18next, @filter, @log, @cacheFactory) ->
         _cache = @cacheFactory("httpCache", 512)
         super()
 
     _headers: (diablePagination=true) ->
         data = {}
-        token = @gmStorage.get('token')
+        token = @gmAuth.getToken()
 
         data["Authorization"] = "Bearer #{token}" if token
         data["X-Disable-Pagination"] = "true" if diablePagination
@@ -133,14 +135,16 @@ class ResourceService extends TaigaBaseService
         defered = @q.defer()
 
         onSuccess = (data, status) =>
-            @gmStorage.set("token", data["auth_token"])
             user = @model.make_model("users", data)
+            @gmAuth.setToken(data["auth_token"])
+            @gmAuth.setUser(user)
+
             defered.resolve(user)
 
         onError = (data, status) ->
             defered.reject(data)
 
-        promise = @http({method:'POST', url: @gmUrls.api('auth-register'), data: JSON.stringify(formdata)})
+        promise = @http({method:"POST", url: @gmUrls.api("auth-register"), data: JSON.stringify(formdata)})
         promise.success(onSuccess)
         promise.error(onError)
 
@@ -151,18 +155,21 @@ class ResourceService extends TaigaBaseService
         defered = @q.defer()
 
         onSuccess = (data, status) =>
-            @gmStorage.set("token", data["auth_token"])
             user = @model.make_model("users", data)
+            @gmAuth.setToken(data["auth_token"])
+            @gmAuth.setUser(user)
+
             defered.resolve(user)
 
         onError = (data, status) ->
             defered.reject(data)
 
-        postData =
+        postData = {
             "username": username
             "password":password
+        }
 
-        @http({method:'POST', url: @gmUrls.api('auth'), data: JSON.stringify(postData)})
+        @http({method:"POST", url: @gmUrls.api("auth"), data: JSON.stringify(postData)})
             .success(onSuccess)
             .error(onError)
 
@@ -239,20 +246,20 @@ class ResourceService extends TaigaBaseService
         return @_queryRaw("resolver", null, params, {cache:@_cache})
 
     # Get a site
-    getSite: -> @_queryOne('sites')
+    getSite: -> @_queryOne("sites")
 
     # Get a members list
-    getSiteMembers: -> @_queryMany('site-members')
+    getSiteMembers: -> @_queryMany("site-members")
 
     # Create a project
     createProject: (data, templateName) ->
         return @model.create("site-projects", data, @model.Model, {}, {template: templateName})
 
     # Get a project list
-    getProjects: -> @_queryMany('projects')
+    getProjects: -> @_queryMany("projects")
 
     # Get a project list
-    getPermissions: -> @_queryMany('permissions')
+    getPermissions: -> @_queryMany("permissions")
 
     # Get a project
     getProject: (projectId) ->
@@ -280,7 +287,7 @@ class ResourceService extends TaigaBaseService
 
     # Get roles
     getRoles: (projectId) ->
-        return @_queryMany('roles', {project: projectId}, {cache:@_cache})
+        return @_queryMany("roles", {project: projectId}, {cache:@_cache})
 
     # Create role
     createRole: (projectId, role) ->
@@ -449,7 +456,7 @@ class ResourceService extends TaigaBaseService
         return defered.promise
 
     createUserStory: (data) ->
-        return @model.create('userstories', data)
+        return @model.create("userstories", data)
 
     createBulkUserStories: (projectId, form) ->
         obj = _.extend({}, form, {projectId: projectId})
@@ -474,7 +481,7 @@ class ResourceService extends TaigaBaseService
         promise = @http({method: "PATCH", url: "#{@gmUrls.api("userstories")}/#{usId}", data: obj, headers:@_headers()})
 
         promise.success (data, status) =>
-            defered.resolve(@model.make_model('userstories', data))
+            defered.resolve(@model.make_model("userstories", data))
 
         promise.error (data, status) ->
             defered.reject(data)
@@ -482,7 +489,7 @@ class ResourceService extends TaigaBaseService
         return defered.promise
 
     createMilestone: (projectId, form) ->
-        #return @model.create('milestones', data)
+        #return @model.create("milestones", data)
         obj = _.extend({}, form, {project: projectId})
         defered = @q.defer()
 
@@ -612,7 +619,7 @@ class ResourceService extends TaigaBaseService
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
         xhr.open("POST", @gmUrls.api("issues/attachments"))
-        xhr.setRequestHeader("Authorization", "Bearer #{@gmStorage.get('token')}")
+        xhr.setRequestHeader("Authorization", "Bearer #{@gmAuth.getToken()}")
         xhr.send(formData)
         return defered.promise
 
@@ -658,7 +665,7 @@ class ResourceService extends TaigaBaseService
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
         xhr.open("POST", @gmUrls.api("tasks/attachments"))
-        xhr.setRequestHeader("Authorization", "Bearer #{@gmStorage.get('token')}")
+        xhr.setRequestHeader("Authorization", "Bearer #{@gmAuth.getToken()}")
         xhr.send(formData)
         return defered.promise
 
@@ -704,7 +711,7 @@ class ResourceService extends TaigaBaseService
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
         xhr.open("POST", @gmUrls.api("userstories/attachments"))
-        xhr.setRequestHeader("Authorization", "Bearer #{@gmStorage.get('token')}")
+        xhr.setRequestHeader("Authorization", "Bearer #{@gmAuth.getToken()}")
         xhr.send(formData)
         return defered.promise
 
@@ -751,7 +758,7 @@ class ResourceService extends TaigaBaseService
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
         xhr.open("POST", @gmUrls.api("wiki/attachments"))
-        xhr.setRequestHeader("Authorization", "Bearer #{@gmStorage.get('token')}")
+        xhr.setRequestHeader("Authorization", "Bearer #{@gmAuth.getToken()}")
         xhr.send(formData)
         return defered.promise
 
@@ -871,5 +878,5 @@ class ResourceService extends TaigaBaseService
         return @http.post(@gmUrls.api("choices/severities/bulk-update-order"), obj, {headers:@_headers()})
 
 
-module = angular.module('taiga.services.resource', [])
-module.service('resource', ResourceService)
+module = angular.module("taiga.services.resource", [])
+module.service("resource", ResourceService)

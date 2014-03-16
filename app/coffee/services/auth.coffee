@@ -30,6 +30,12 @@ class AuthService extends TaigaBaseService
         @rootScope.$broadcast('i18n:change', user.default_language)
         @gmStorage.set("userInfo", user.getAttrs())
 
+    setToken: (token) ->
+        @gmStorage.set("token", token)
+
+    getToken: ->
+        @gmStorage.get("token")
+
     isAuthenticated: ->
         if @.getUser() != null
             return true
