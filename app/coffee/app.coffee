@@ -23,7 +23,13 @@ gm.format = (fmt, obj, named) ->
     else
         return fmt.replace /%s/g, (match) -> String(obj.shift())
 
-configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider, $gmUrlsProvider) ->
+generateUniqueSessionIdentifier = ->
+    date = (new Date()).getTime()
+    randomNumber = Math.floor(Math.random() * 0x9000000)
+    return hex_sha1("" + date + "" + randomNumber)
+
+configure = ($routeProvider, $locationProvider, $httpProvider, $provide,
+             $compileProvider, $gmUrlsProvider, $gmEventsProvider) ->
     $routeProvider.when('/',
         {templateUrl: 'partials/project-list.html', controller: "ProjectListController as ctrl"})
 
@@ -103,10 +109,13 @@ configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compil
 
     $routeProvider.otherwise({redirectTo: '/login'})
 
+    sessionId = generateUniqueSessionIdentifier()
+
     defaultHeaders = {
         "Content-Type": "application/json"
         "Accept-Language": "en"
         "X-Host": window.location.hostname
+        "X-Session-Id": sessionId
     }
 
     $httpProvider.defaults.headers.delete = defaultHeaders
@@ -115,6 +124,7 @@ configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compil
     $httpProvider.defaults.headers.put = defaultHeaders
     $httpProvider.defaults.headers.get = {
         "X-Host": window.location.hostname
+        "X-Session-Id": sessionId
     }
 
     authHttpIntercept = ($q, $location) ->
@@ -478,7 +488,7 @@ init.$inject = ['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls',
                 '$i18next', '$gmConfig', 'localconfig', '$data', '$log', '$favico']
 
 configure.$inject = ['$routeProvider', '$locationProvider', '$httpProvider',
-                     '$provide', '$compileProvider', '$gmUrlsProvider']
+                     '$provide', '$compileProvider', '$gmUrlsProvider', '$gmEventsProvider']
 
 angular.module("taiga.localconfig", []).value("localconfig", {})
 angular.module('taiga', modules)
