@@ -350,9 +350,9 @@ assignNavegationUrls = ($rootScope, $gmUrls) ->
 
             return baseUrl + url
 
+init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next,
+        $gmConfig, localconfig, $data, $log, $favico, $gmEvents) ->
 
-
-init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, $gmConfig, localconfig, $data, $log, $favico) ->
     $rootScope.auth = $gmAuth.getUser()
 
     # Assing to root scope intial empty constants
@@ -369,6 +369,10 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, $gmConfig
 
     # Initialize i18next service
     $i18next.initialize($gmConfig.get("defaultLanguage"))
+
+    # Initialize events and connect
+    if $gmAuth.isAuthenticated()
+        $gmEvents.setupConnection()
 
     # Load site data.
     $data.loadSiteInfo($rootScope).then (sitedata) ->
@@ -485,7 +489,8 @@ modules = [
 ]
 
 init.$inject = ['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls',
-                '$i18next', '$gmConfig', 'localconfig', '$data', '$log', '$favico']
+                '$i18next', '$gmConfig', 'localconfig', '$data', '$log',
+                '$favico', '$gmEvents']
 
 configure.$inject = ['$routeProvider', '$locationProvider', '$httpProvider',
                      '$provide', '$compileProvider', '$gmUrlsProvider', '$gmEventsProvider']
