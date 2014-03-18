@@ -7,7 +7,7 @@
                 <h3 data-icon="E" i18next="wiki.attachments">Attachments</h3>
                 <ul class="attachments-items">
                     <li class="attachments-item" ng-repeat="attachment in attachments">
-                        <a href="{{ attachment.url }}">{{ attachment.name }}</a>
+                        <a href="{{ attachment.url }}" target="_blank">{{ attachment.name }}</a>
                         <span>[{{ attachment.size|sizeFormat }}]</span>
                         <span>{{ "wiki.on-date"|i18next:{date:momentFormat(attachment.created_date, 'LLLL')} }}</span>
                     </li>
@@ -64,7 +64,7 @@
                     <a class="delete" data-icon="h" href="" title="Delete attachment"
                        ng-click="ctrl.deleteAttachment(attachment)"
                        i18next="title:wiki.delete-attachment"></a>
-                    <a href="{{ attachment.url }}">{{ attachment.name }}</a>
+                    <a href="{{ attachment.url }}" target="_blank">{{ attachment.name }}</a>
                     <span>[{{ attachment.size|sizeFormat }}]</span>
                     <span>{{ "wiki.on-date"|i18next:{date:momentFormat(attachment.created_date, 'LLLL')} }}</span>
                 </li>
