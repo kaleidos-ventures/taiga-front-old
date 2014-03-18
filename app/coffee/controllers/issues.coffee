@@ -155,10 +155,30 @@ class IssuesController extends TaigaPageController
             return item.name
 
     generateTagList: ->
-        tags = []
+        colorizeTag = (name) ->
+            hash = hex_sha1(name.toLowerCase())
+            color = hash
+                .substring(0,6)
+                .replace('8','0')
+                .replace('9','1')
+                .replace('a','2')
+                .replace('b','3')
+                .replace('c','4')
+                .replace('d','5')
+                .replace('e','6')
+                .replace('f','7')
 
+            return "##{color}"
+
+        tags = []
         for tagCounter in @scope.filtersData.tags
-            tag = {id: tagCounter[0], name: tagCounter[0], count: tagCounter[1], type: "tags"}
+            tag = {
+                id: tagCounter[0],
+                name: tagCounter[0],
+                count: tagCounter[1],
+                type: "tags"
+                color: colorizeTag(tagCounter[0])
+            }
             tags.push(tag)
 
         @scope.tags = tags
