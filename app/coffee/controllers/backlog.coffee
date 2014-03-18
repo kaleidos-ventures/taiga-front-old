@@ -192,7 +192,7 @@ class BacklogUserStoriesController extends TaigaBaseController
 
     refreshBacklog: ->
         @scope.refreshing = true
-        @loadUserStories().then ->
+        @loadUserStories().then =>
             @scope.refreshing = false
 
     openUserStory: (projectSlug, usRef) ->
