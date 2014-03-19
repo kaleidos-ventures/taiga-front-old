@@ -254,6 +254,7 @@
     },
     "profile": {
         "profile": "Perfil",
+        "profile-title": "Mi Perfil",
         "username": "Nombre de usuario:",
         "first-name": "Nombre:",
         "last-name": "Apellido:",

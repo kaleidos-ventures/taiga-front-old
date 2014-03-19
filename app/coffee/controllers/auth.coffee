@@ -130,6 +130,10 @@ class ProfileController extends TaigaPageController
     constructor: (@scope, @rootScope, @gmAuth, @gmFlash, @rs, @gmConfig, @i18next, @favico) ->
         super(scope, rootScope, favico)
 
+    section: 'profile'
+    getTitle: ->
+        @i18next.t('profile.profile-title')
+
     initialize: ->
         @favico.reset()
         @rootScope.pageTitle = @i18next.t('profile.profile')
