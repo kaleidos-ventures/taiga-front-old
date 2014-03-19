@@ -258,7 +258,7 @@ class ProjectAdminRolesController extends ProjectAdminController
             @scope.newRole.permissions = permissions
 
             creationPromise = @rs.createRole(@rootScope.projectId, @scope.newRole).then (data) =>
-                loadRoles().then =>
+                @loadRoles().then =>
                     @scope.newRole = {}
                     @scope.showNewRole = false
                     @scope.newRolePermissions = []
