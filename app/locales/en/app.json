@@ -232,6 +232,7 @@
         "severity-label": "Severity:",
         "assigned-to-label": "Assigned to:",
         "tags-label": "Tags:",
+        "tags-placeholder": "Pick tags",
         "unassigned": "Unassigned",
         "is-blocked": "Is blocked",
         "blocking-reasons": "Reasons for blocking",

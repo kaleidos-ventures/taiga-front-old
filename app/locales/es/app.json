@@ -232,6 +232,7 @@
         "severity-label": "Severidad:",
         "assigned-to-label": "Asignada a:",
         "tags-label": "Etiquetas:",
+        "tags-placeholder": "Escoja etiquetas",
         "unassigned": "Sin asignar",
         "is-blocked": "Está bloqueada",
         "blocking-reasons": "Motivos del bloqueo",
