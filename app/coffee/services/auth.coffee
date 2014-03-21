@@ -41,5 +41,5 @@ class AuthService extends TaigaBaseService
             return true
         return false
 
-module = angular.module('taiga.services.auth', [])
+module = angular.module('taiga.services.auth', ['taiga.services.model', 'gmStorage'])
 module.service("$gmAuth", AuthService)
