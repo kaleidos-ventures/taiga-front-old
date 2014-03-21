@@ -878,5 +878,5 @@ class ResourceService extends TaigaBaseService
         return @http.post(@gmUrls.api("choices/severities/bulk-update-order"), obj, {headers:@_headers()})
 
 
-module = angular.module("taiga.services.resource", [])
+module = angular.module("taiga.services.resource", ['taiga.services.auth', 'gmUrls', 'taiga.services.model', 'i18next'])
 module.service("resource", ResourceService)

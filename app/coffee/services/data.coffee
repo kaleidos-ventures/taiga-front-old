@@ -145,5 +145,5 @@ class DataService extends TaigaBaseService
 
         return defered.promise
 
-module = angular.module("taiga.services.data", [])
+module = angular.module("taiga.services.data", ['taiga.services.resource'])
 module.service("$data", DataService)

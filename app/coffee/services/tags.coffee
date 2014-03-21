@@ -106,5 +106,5 @@ SelectedTagsProvider = ($gmStorage) ->
             }
         return tags[projectId]
 
-module = angular.module('taiga.services.tags', [])
+module = angular.module('taiga.services.tags', ['gmStorage'])
 module.factory('SelectedTags', ["$gmStorage", SelectedTagsProvider])
