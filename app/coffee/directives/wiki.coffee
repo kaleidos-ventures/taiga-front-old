@@ -255,7 +255,7 @@ wikiInit = ($routeParams, $rootScope) ->
         else if href.indexOf(':sprint:') == 0
             renderer.realLink($rootScope.urls.taskboardUrl($routeParams.pslug, href.substring(11)), title, text)
         else
-            renderer.realLink(@, href, title, text)
+            renderer.realLink(href, title, text)
 
     renderer.realImage = renderer.image
     renderer.image = (href, title, text) ->
