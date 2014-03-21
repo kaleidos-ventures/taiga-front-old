@@ -10,6 +10,7 @@ var jshint = require("gulp-jshint");
 var karma = require("gulp-karma");
 var gutil = require("gulp-util");
 var template = require("gulp-template");
+var gulpif = require('gulp-if');
 
 var externalSources = [
     "app/components/jquery/dist/jquery.js",
@@ -50,6 +51,13 @@ var externalSources = [
 var coffeeSources = [
     "app/coffee/*.coffee",
     "app/coffee/**/*.coffee"
+];
+
+var testSources = [
+    "app/dist/libs.js",
+    "app/components/angular-mocks/angular-mocks.js",
+    "app/dist/app.js",
+    "test/**/*.coffee"
 ];
 
 // define tasks here
@@ -111,15 +119,11 @@ gulp.task("template", function() {
         .pipe(gulp.dest("app"));
 });
 
-gulp.task("build-tests", function() {
-    gulp.src(["test/**/*.coffee"])
-        .pipe(coffee({"bare": true}).on("error", gutil.log))
+gulp.task("test", ["coffee", "libs"], function() {
+    gulp.src(testSources)
+        .pipe(gulpif(/[.]coffee$/, coffee({"bare": true}).on("error", gutil.log)))
         .pipe(concat("tests.js"))
-        .pipe(gulp.dest("test"));
-});
-
-gulp.task("test", ["coffee", "libs", "build-tests"], function() {
-    gulp.src(["app/dist/libs.js", "app/dist/app.js", "test/tests.js"])
+        .pipe(gulp.dest("test"))
         .pipe(karma({configFile: "karma.conf.coffee", action: "run"}));
 });
 
