@@ -17,10 +17,16 @@ describe 'filter', ->
         ))
 
     describe 'slugify', ->
-        it('should change the case to capitalize case', inject((slugifyFilter) ->
+        it('should convert a string in a slug', inject((slugifyFilter) ->
             expect(slugifyFilter('test')).toEqual('test')
             expect(slugifyFilter('Test')).toEqual('test')
             expect(slugifyFilter('test two')).toEqual('test-two')
             expect(slugifyFilter('test_three')).toEqual('test-three')
             expect(slugifyFilter('testñfour')).toEqual('testnfour')
+        ))
+
+    describe 'truncate', ->
+        it('should truncate a word', inject((truncateFilter) ->
+            expect(truncateFilter('test of truncation', 20)).toEqual('test of truncation')
+            expect(truncateFilter('test of truncation', 10)).toEqual('test of...')
         ))
