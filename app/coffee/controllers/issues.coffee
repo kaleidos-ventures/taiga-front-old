@@ -46,7 +46,7 @@ class IssuesController extends TaigaPageController
         @scope.page = 1
         @scope.showGraphs = false
 
-        @scope.setPage = (n) ->
+        @scope.setPage = (n) =>
             @scope.page = n
             @filterIssues()
 
