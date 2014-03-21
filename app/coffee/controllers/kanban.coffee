@@ -45,7 +45,7 @@ class KanbanController extends TaigaPageController
             @scope.uss[status.id] = []
 
         for us in @scope.userstories
-            @scope.uss[us.status].push(us)
+            @scope.uss[us.status]?.push(us)
 
         return
 

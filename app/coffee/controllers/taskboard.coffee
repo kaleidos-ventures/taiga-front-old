@@ -57,11 +57,11 @@ class TaskboardController extends TaigaPageController
 
         for task in @scope.tasks
             if task.user_story == null
-                @scope.unassignedTasks[task.status].push(task)
+                @scope.unassignedTasks[task.status]?.push(task)
             else
                 # why? because a django-filters sucks
                 if @scope.usTasks[task.user_story]?
-                    @scope.usTasks[task.user_story][task.status].push(task)
+                    @scope.usTasks[task.user_story][task.status]?.push(task)
 
         return
 
