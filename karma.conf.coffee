@@ -8,6 +8,5 @@ module.exports = (config) ->
           "test/tests.js"
         ],
         basePath: '.'
-        singleRun: true
-        browsers: ['PhantomJS']
+        browsers: ['PhantomJS', 'Chrome']
         frameworks: ['jasmine']

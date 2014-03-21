@@ -41,7 +41,7 @@ class I18NextService extends TaigaBaseService
         return @rootScope.currentLang
 
     translate: (key, options)->
-        return @rootScope.t(key, options)
+        return i18n.t(key, options)
 
     initialize: (async=false, defaultLang="en") ->
         # Put to rootScope a initial values
