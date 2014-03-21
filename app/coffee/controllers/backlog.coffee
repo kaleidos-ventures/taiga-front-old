@@ -562,8 +562,10 @@ class BacklogMilestoneController extends TaigaBaseController
     sortableOnRemove: (us) ->
         _.remove(@scope.ml.user_stories, us)
 
-
-module = angular.module("taiga.controllers.backlog", [])
+moduleDeps = ['taiga.services.data', 'favico', 'gmModal',
+              'taiga.services.tags', 'gmOverlay', 'taiga.services.resource',
+              'gmFlash', 'i18next']
+module = angular.module("taiga.controllers.backlog", moduleDeps)
 module.controller('BacklogController', BacklogController)
 module.controller('BacklogUserStoriesController', BacklogUserStoriesController)
 module.controller('BacklogUserStoryModalController', BacklogUserStoryModalController)

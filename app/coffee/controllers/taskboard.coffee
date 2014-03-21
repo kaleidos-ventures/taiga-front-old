@@ -310,7 +310,10 @@ class TaskboardTaskController extends TaigaBaseController
         @location.url("/project/#{projectSlug}/tasks/#{taskRef}")
 
 
-module = angular.module("taiga.controllers.taskboard", [])
+moduleDeps = ['taiga.services.resource', 'taiga.services.data', 'gmModal',
+              "taiga.services.model", "i18next", "favico", 'gmOverlay',
+              'gmFlash']
+module = angular.module("taiga.controllers.taskboard", moduleDeps)
 module.controller("TaskboardController", TaskboardController)
 module.controller("TaskboardTaskModalController", TaskboardTaskModalController)
 module.controller('TaskboardBulkTasksModalController', TaskboardBulkTasksModalController)

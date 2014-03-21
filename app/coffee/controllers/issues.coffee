@@ -601,7 +601,10 @@ class IssuesModalController extends ModalBaseController
         return "<span\">#{option.text}</span>"
 
 
-module = angular.module("taiga.controllers.issues", [])
+moduleDeps = ['gmModal', 'taiga.services.tags', 'taiga.services.resource',
+              'taiga.services.data', 'gmConfirm', 'favico', 'gmOverlay',
+              'gmFlash', 'i18next']
+module = angular.module("taiga.controllers.issues", moduleDeps)
 module.controller("IssuesController", IssuesController)
 module.controller("IssuesViewController", IssuesViewController)
 module.controller("IssuesModalController", IssuesModalController)

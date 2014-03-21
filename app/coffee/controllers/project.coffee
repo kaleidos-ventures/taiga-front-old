@@ -489,7 +489,9 @@ class SeveritiesAdminController extends ChoicesAdminController
         @rs.updateBulkSeveritiesOrder(@scope.projectId, bulkData)
 
 
-module = angular.module("taiga.controllers.project", [])
+moduleDeps = ["taiga.services.data", "gmFlash", "taiga.services.model",
+              "taiga.services.resource", "gmConfirm", 'i18next', 'favico']
+module = angular.module("taiga.controllers.project", moduleDeps)
 module.controller("ProjectListController", ProjectListController)
 module.controller("ProjectAdminMainController",  ProjectAdminMainController)
 module.controller("ProjectAdminValuesController", ProjectAdminValuesController)

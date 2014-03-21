@@ -214,5 +214,7 @@ class UserStoryViewController extends TaigaPageController
         return "<span style=\"padding: 0px 5px;
                               border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
 
-module = angular.module("taiga.controllers.user-story", [])
+moduleDeps = ["taiga.services.resource", "taiga.services.data", "gmConfirm",
+              "gmFlash", "i18next", "favico"]
+module = angular.module("taiga.controllers.user-story", moduleDeps)
 module.controller("UserStoryViewController", UserStoryViewController)

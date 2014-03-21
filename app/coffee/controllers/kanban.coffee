@@ -244,7 +244,10 @@ class KanbanUsController extends TaigaBaseController
         @location.url("/project/#{projectSlug}/user-story/#{usRef}")
 
 
-module = angular.module("taiga.controllers.kanban", [])
+moduleDeps = ['taiga.services.resource', 'taiga.services.data', 'gmModal',
+              'taiga.services.model', 'i18next', 'favico', 'gmOverlay',
+              'gmFlash']
+module = angular.module("taiga.controllers.kanban", moduleDeps)
 module.controller("KanbanController", KanbanController)
 module.controller("KanbanUsController", KanbanUsController)
 module.controller("KanbanUsModalController", KanbanUsModalController)

@@ -193,5 +193,7 @@ class TasksViewController extends TaigaPageController
                               border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
 
 
-module = angular.module("taiga.controllers.tasks", [])
+moduleDeps = ['gmConfirm', 'taiga.services.resource', "taiga.services.data",
+              "gmFlash", "i18next", "favico"]
+module = angular.module("taiga.controllers.tasks", moduleDeps)
 module.controller("TasksViewController", TasksViewController)

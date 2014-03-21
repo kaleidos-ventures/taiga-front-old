@@ -229,7 +229,8 @@ class InvitationRegisterController extends TaigaPageController
             @scope.error = true
             @scope.errorMessage = data._error_message or data._error_type
 
-module = angular.module("taiga.controllers.auth", [])
+moduleDeps = ['taiga.services.resource', 'taiga.services.data', 'taiga.services.auth', 'i18next', 'favico', 'gmConfig']
+module = angular.module("taiga.controllers.auth", moduleDeps)
 module.controller("LoginController", LoginController)
 module.controller("RecoveryController", RecoveryController)
 module.controller("ChangePasswordController", ChangePasswordController)

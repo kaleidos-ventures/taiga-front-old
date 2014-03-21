@@ -113,5 +113,8 @@ class SiteAdminController extends TaigaPageController
             @scope.currentSite = site
 
 
-module = angular.module("taiga.controllers.site", [])
+moduleDeps = ["taiga.services.data", "gmFlash", "taiga.services.model",
+              "taiga.services.resource", "gmConfirm", "i18next", "gmConfig",
+              "gmUrls", "favico"]
+module = angular.module("taiga.controllers.site", moduleDeps)
 module.controller("SiteAdminController", SiteAdminController)

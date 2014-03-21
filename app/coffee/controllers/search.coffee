@@ -86,6 +86,6 @@ class SearchController extends TaigaPageController
     setActiveType: (type) ->
         @scope.activeType = type
 
-
-module = angular.module("taiga.controllers.search", [])
+moduleDeps = ["taiga.services.data", "taiga.services.resource", "i18next", "favico"]
+module = angular.module("taiga.controllers.search", moduleDeps)
 module.controller("SearchController", SearchController)
