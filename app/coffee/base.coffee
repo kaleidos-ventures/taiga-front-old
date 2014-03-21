@@ -15,8 +15,7 @@ class TaigaBaseController extends TaigaBase
         # Do nothing explicitly
 
     initialize: ->
-        # Only demostrative console log.
-        console.log("INITIALIZE BASE", arguments)
+        # Do nothing explicitly
 
 class TaigaBaseDirective extends TaigaBase
 
