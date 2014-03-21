@@ -211,5 +211,5 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
         ngModel.$render = () ->
             render(ngModel.$viewValue or [])
 
-module = angular.module('taiga.directives.history', [])
+module = angular.module('taiga.directives.history', ['i18next'])
 module.directive("gmHistory", ['$compile', '$rootScope', '$i18next', GmHistoryDirective])

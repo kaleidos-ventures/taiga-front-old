@@ -38,6 +38,6 @@ GmIssuesSortedByDirective = (SelectedTags) ->
         #     setStyle element, SelectedTags(scope.projectId).issues_order.isReverse()
         return
 
-module = angular.module('taiga.directives.issues', [])
+module = angular.module('taiga.directives.issues', ['taiga.services.tags'])
 module.directive('gmIssuesSort', ["$parse", GmIssuesSortDirective])
 module.directive('gmIssuesSortedBy', ["SelectedTags", GmIssuesSortedByDirective])

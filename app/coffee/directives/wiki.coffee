@@ -281,8 +281,8 @@ wikiInit = ($routeParams, $rootScope) ->
         renderer: renderer
     }
 
-
-module = angular.module('taiga.directives.wiki', []).run ['$routeParams', '$rootScope', wikiInit ]
+moduleDeps = ['i18next', 'taiga.services.resource']
+module = angular.module('taiga.directives.wiki', moduleDeps).run ['$routeParams', '$rootScope', wikiInit ]
 module.directive('gmMarkitup', ["$rootScope", "$parse", "$i18next",
                                 "$sanitize", "$location", "resource",
                                 gmMarkitupConstructor])
