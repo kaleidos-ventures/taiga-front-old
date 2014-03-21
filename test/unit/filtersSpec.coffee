@@ -15,3 +15,12 @@ describe 'filter', ->
             expect(capitalizeFilter('taiga')).toEqual('Taiga')
             expect(capitalizeFilter('TaIgA')).toEqual('Taiga')
         ))
+
+    describe 'slugify', ->
+        it('should change the case to capitalize case', inject((slugifyFilter) ->
+            expect(slugifyFilter('test')).toEqual('test')
+            expect(slugifyFilter('Test')).toEqual('test')
+            expect(slugifyFilter('test two')).toEqual('test-two')
+            expect(slugifyFilter('test_three')).toEqual('test-three')
+            expect(slugifyFilter('testñfour')).toEqual('testnfour')
+        ))
