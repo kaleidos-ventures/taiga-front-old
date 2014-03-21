@@ -179,7 +179,7 @@ class KanbanUsModalController extends ModalBaseController
         @gmOverlay.open().then =>
             @scope.formOpened = false
 
-    submit: ->
+    submit: =>
         if @scope.form.id?
             promise = @scope.form.save(false)
         else
