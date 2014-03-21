@@ -211,7 +211,7 @@ assignInitialConstants = ($rootScope) ->
 
     $rootScope.constants.users = {}
 
-assignNavegationUrls = ($rootScope) ->
+assignNavegationUrls = ($rootScope, $gmUrls) ->
     conditionalUrl = (url, raw) ->
         return url if raw
         return "/##{url}"
@@ -349,7 +349,7 @@ init = ($rootScope, $location, $gmStorage, $gmAuth, $gmUrls, $i18next, $gmConfig
     assignInitialConstants($rootScope)
 
     # Assign navegration urls
-    assignNavegationUrls($rootScope)
+    assignNavegationUrls($rootScope, $gmUrls)
 
     # Initialize configuration
     $gmConfig.initialize(localconfig)

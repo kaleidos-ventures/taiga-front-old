@@ -241,24 +241,26 @@ wikiInit = ($routeParams, $rootScope) ->
 
     renderer = new marked.Renderer()
 
+    renderer.realLink = renderer.link
     renderer.link = (href, title, text) ->
         if href == _.string.slugify(href)
             # It's an internal link to a wiki page
-            marked.Renderer::link($rootScope.urls.wikiUrl($routeParams.pslug, href), title, text)
+            renderer.realLink($rootScope.urls.wikiUrl($routeParams.pslug, href), title, text)
         else if href.indexOf(':us:') == 0
-            marked.Renderer::link($rootScope.urls.userStoryUrl($routeParams.pslug, href.substring(4)), title, text)
+            renderer.realLink($rootScope.urls.userStoryUrl($routeParams.pslug, href.substring(4)), title, text)
         else if href.indexOf(':task:') == 0
-            marked.Renderer::link($rootScope.urls.tasksUrl($routeParams.pslug, href.substring(6)), title, text)
+            renderer.realLink($rootScope.urls.tasksUrl($routeParams.pslug, href.substring(6)), title, text)
         else if href.indexOf(':issue:') == 0
-            marked.Renderer::link($rootScope.urls.issuesUrl($routeParams.pslug, href.substring(7)), title, text)
+            renderer.realLink($rootScope.urls.issuesUrl($routeParams.pslug, href.substring(7)), title, text)
         else if href.indexOf(':sprint:') == 0
-            marked.Renderer::link($rootScope.urls.taskboardUrl($routeParams.pslug, href.substring(11)), title, text)
+            renderer.realLink($rootScope.urls.taskboardUrl($routeParams.pslug, href.substring(11)), title, text)
         else
-            marked.Renderer::link(href, title, text)
+            renderer.realLink(@, href, title, text)
 
+    renderer.realImage = renderer.image
     renderer.image = (href, title, text) ->
         if href.indexOf(':att:') == 0
-            marked.Renderer::image(
+            renderer.realImage(
                 $rootScope.urls.attachmentUrl(
                     $routeParams.pslug,
                     'wikipage',
@@ -268,7 +270,7 @@ wikiInit = ($routeParams, $rootScope) ->
                 text
             )
         else
-            marked.Renderer::image(href, title, text)
+            renderer.realImage(href, title, text)
 
     marked.setOptions {
         highlight: (code, lang) ->
