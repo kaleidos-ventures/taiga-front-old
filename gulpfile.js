@@ -139,8 +139,7 @@ gulp.task("e2e-test", ["coffee", "libs"], function() {
         .pipe(concat("e2etests.js"))
         .pipe(gulp.dest("test"))
         .pipe(protractor({
-            configFile: "protractor.config.js",
-            args: ['--baseUrl', 'http://127.0.0.1:9001']
+            configFile: "protractor.config.js"
         }));
 });
 
