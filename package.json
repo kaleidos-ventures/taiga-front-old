@@ -25,6 +25,7 @@
     "karma": "~0.10.9",
     "gulp-karma": "0.0.2",
     "gulp-template": "^0.1.1",
-    "gulp-if": "0.0.5"
+    "gulp-if": "0.0.5",
+    "gulp-protractor": "0.0.7"
   }
 }
