@@ -11,4 +11,5 @@ app/dist/*
 app/coffee/config.coffee
 .venv
 test/tests.js
+test/e2etests.js
 tags

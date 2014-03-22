@@ -11,6 +11,8 @@ var karma = require("gulp-karma");
 var gutil = require("gulp-util");
 var template = require("gulp-template");
 var gulpif = require('gulp-if');
+var protractor = require("gulp-protractor").protractor;
+
 
 var externalSources = [
     "app/components/jquery/dist/jquery.js",
@@ -57,7 +59,11 @@ var testSources = [
     "app/dist/libs.js",
     "app/components/angular-mocks/angular-mocks.js",
     "app/dist/app.js",
-    "test/**/*.coffee"
+    "test/unit/*.coffee"
+];
+
+var e2eTestSources = [
+    "test/e2e/*.coffee"
 ];
 
 // define tasks here
@@ -125,6 +131,17 @@ gulp.task("test", ["coffee", "libs"], function() {
         .pipe(concat("tests.js"))
         .pipe(gulp.dest("test"))
         .pipe(karma({configFile: "karma.conf.coffee", action: "run"}));
+});
+
+gulp.task("e2e-test", ["coffee", "libs"], function() {
+    gulp.src(e2eTestSources)
+        .pipe(gulpif(/[.]coffee$/, coffee({"bare": true}).on("error", gutil.log)))
+        .pipe(concat("e2etests.js"))
+        .pipe(gulp.dest("test"))
+        .pipe(protractor({
+            configFile: "protractor.config.js",
+            args: ['--baseUrl', 'http://127.0.0.1:9001']
+        }));
 });
 
 gulp.task("watch", function () {
