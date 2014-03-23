@@ -60,10 +60,12 @@ SizeFormatFilter = ->
         if precision == 'undefined'
             precision = 1
 
-        units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB']
+        units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB']
         number = Math.floor(Math.log(input) / Math.log(1024))
-        return (input / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' +
-               units[number]
+        if number > 5
+            number = 5
+        size = (input / Math.pow(1024, number)).toFixed(precision)
+        return  "#{size} #{units[number]}"
 
 DiffFilter = ($sce) ->
     return (newText, oldText, semantic=true, efficiency=false) ->
