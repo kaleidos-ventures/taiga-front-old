@@ -43,3 +43,20 @@ describe 'filter', ->
 
             expect(sizeFormatFilter(2*1024*1024+10, 1)).toEqual('2.0 MB')
         ))
+
+    describe 'onlyVisible', ->
+        it('should filter objects __hidden field equals to true', inject((onlyVisibleFilter) ->
+            objects = [
+                { id: "test1", __hidden: true }
+                { id: "test2", __hidden: false }
+                { id: "test3", __hidden: true }
+                { id: "test4" }
+            ]
+            expectedObjects = [
+                { id: "test2", __hidden: false }
+                { id: "test4" }
+            ]
+
+            expect(onlyVisibleFilter(objects)).toEqual(expectedObjects)
+        ))
+
