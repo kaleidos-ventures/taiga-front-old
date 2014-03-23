@@ -534,11 +534,11 @@ class ResourceService extends TaigaBaseService
         return @model.create("tasks", form)
 
     restoreWikiPage: (wikiPageId, versionId) ->
-        url = "#{@gmUrls.api("wiki-restore", [wikiPageId])}/#{versionId}"
+        url = "#{@gmUrls.api("wiki-restore", [wikiPageId])}"
 
         defered = @q.defer()
 
-        promise = @http.post(url, {}, {headers:@_headers()})
+        promise = @http.post(url, {}, {headers:@_headers(), params: {version: versionId}})
         promise.success (data, status) =>
             defered.resolve(@model.make_model("wiki", data))
 
