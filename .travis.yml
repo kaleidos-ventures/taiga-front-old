@@ -6,6 +6,7 @@ before_install:
     - npm install
     - npm install -g bower
     - bower install
+    - apt-get install -qq google-chrome
 script:
     - gulp test
 notifications:
