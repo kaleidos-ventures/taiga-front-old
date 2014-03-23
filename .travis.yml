@@ -1,10 +1,10 @@
 language: node_js
 node_js:
     - "0.10.26"
-install:
-    - sudo npm install -g gulp
+before_install:
+    - npm install -g gulp
     - npm install
-    - sudo npm install -g bower
+    - npm install -g bower
     - bower install
 script:
     - gulp test
