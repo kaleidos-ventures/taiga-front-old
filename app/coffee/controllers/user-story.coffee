@@ -170,7 +170,7 @@ class UserStoryViewController extends TaigaPageController
 
     removeAttachment: (attachment) ->
         promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
-        promise.then () ->
+        promise.then () =>
             @scope.attachments = _.without(@scope.attachments, attachment)
             attachment.remove()
 
