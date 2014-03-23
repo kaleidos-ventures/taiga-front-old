@@ -3,6 +3,8 @@ Taiga Front
 
 .. image:: http://kaleidos.net/static/img/badge.png
     :target: http://kaleidos.net/community/taiga/
+.. image:: https://travis-ci.org/taigaio/taiga-front.svg?branch=master
+    :target: https://travis-ci.org/taigaio/taiga-front
 
 
 Setup initial environment
