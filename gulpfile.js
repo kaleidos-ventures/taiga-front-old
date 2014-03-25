@@ -12,6 +12,8 @@ var gutil = require("gulp-util");
 var template = require("gulp-template");
 var gulpif = require('gulp-if');
 var protractor = require("gulp-protractor").protractor;
+var coveralls = require('gulp-coveralls');
+var clean = require('gulp-clean');
 
 
 var externalSources = [
@@ -55,10 +57,11 @@ var coffeeSources = [
     "app/coffee/**/*.coffee"
 ];
 
-var testSources = externalSources +
-    ["app/components/angular-mocks/angular-mocks.js" ] +
-    coffeeSources +
-    [ "test/unit/*.coffee" ];
+var testSources = [
+    "app/components/angular-mocks/angular-mocks.js",
+    "test/unit/*.coffee",
+    "test/unit/**/*.coffee"
+];
 
 var e2eTestSources = [
     "test/e2e/*.coffee"
@@ -82,34 +85,34 @@ gulp.task("pro", ["less", "template"], function() {
 });
 
 gulp.task("coffee", function() {
-    gulp.src(coffeeSources)
+    return gulp.src(coffeeSources)
         .pipe(coffee().on("error", gutil.log))
         .pipe(concat("app.js"))
         .pipe(gulp.dest("app/dist/"));
 });
 
 gulp.task("hint", function() {
-    gulp.src(coffeeSources)
+    return gulp.src(coffeeSources)
         .pipe(coffee().on("error", gutil.log))
         .pipe(jshint())
         .pipe(jshint.reporter("default"))
 });
 
 gulp.task("less", function() {
-    gulp.src("app/less/taiga-main.less")
+    return gulp.src("app/less/taiga-main.less")
         .pipe(less().on("error", gutil.log))
         .pipe(concat("style.css"))
         .pipe(gulp.dest("app/less"));
 });
 
 gulp.task("libs", function() {
-    gulp.src(externalSources)
+    return gulp.src(externalSources)
         .pipe(concat("libs.js"))
         .pipe(gulp.dest("app/dist/"));
 });
 
 gulp.task("lint", function() {
-    gulp.src(coffeeSources)
+    return gulp.src(coffeeSources)
         .pipe(coffeelint("coffeelint.json"))
         .pipe(coffeelint.reporter())
     //gulp.src("app/less/taiga-main.less")
@@ -117,22 +120,26 @@ gulp.task("lint", function() {
 });
 
 gulp.task("template", function() {
-    gulp.src("app/index.template.html")
+    return gulp.src("app/index.template.html")
         .pipe(template({stamp: (new Date()).getTime()}))
         .pipe(concat("index.html"))
         .pipe(gulp.dest("app"));
 });
 
-gulp.task("test", function() {
-    gulp.src(testSources)
+gulp.task("build-tests", function() {
+    return gulp.src(testSources)
         .pipe(gulpif(/[.]coffee$/, coffee({"bare": true}).on("error", gutil.log)))
         .pipe(concat("tests.js"))
         .pipe(gulp.dest("test"))
+});
+
+gulp.task("test", ["build-tests", "coffee", "libs"], function() {
+    return gulp.src(["app/dist/libs.js", "app/dist/app.js", "test/tests.js"])
         .pipe(karma({configFile: "karma.conf.coffee", action: "run"}));
 });
 
 gulp.task("e2e-test", ["coffee", "libs"], function() {
-    gulp.src(e2eTestSources)
+    return gulp.src(e2eTestSources)
         .pipe(gulpif(/[.]coffee$/, coffee({"bare": true}).on("error", gutil.log)))
         .pipe(concat("e2etests.js"))
         .pipe(gulp.dest("test"))
@@ -152,3 +159,20 @@ gulp.task("connect", connect.server({
     port: 9001,
     livereload: false,
 }));
+
+gulp.task("coveralls", function() {
+    return gulp.src('coverage/Firefox 27.0.0 (Linux)/lcov.info')
+        .pipe(coveralls());
+});
+
+gulp.task('clean', function() {
+    cleanGlobs = [
+        'app/dist/*.js',
+        'test/tests.js',
+        'test/e2etests.js',
+        'app/less/style.css',
+        'coverage'
+    ]
+    return gulp.src(cleanGlobs, {read: false})
+        .pipe(clean());
+});
