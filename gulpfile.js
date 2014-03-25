@@ -139,6 +139,13 @@ gulp.task("test", ["build-tests", "coffee", "libs"], function() {
         .on('error', function(err) { throw err; });
 });
 
+gulp.task("test-watch", ["build-tests", "coffee", "libs"], function() {
+    gulp.watch(testSources, ["build-tests"]);
+    gulp.src(["app/dist/libs.js", "app/dist/app.js", "test/tests.js"])
+        .pipe(karma({configFile: "karma.conf.coffee", action: "watch"}))
+        .on('error', function(err) { throw err; });
+});
+
 gulp.task("e2e-test", ["coffee", "libs"], function() {
     return gulp.src(e2eTestSources)
         .pipe(gulpif(/[.]coffee$/, coffee({"bare": true}).on("error", gutil.log)))
