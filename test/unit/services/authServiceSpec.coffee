@@ -6,7 +6,7 @@ describe 'authService', ->
     describe '$gmAuth', ->
         it('should allow to set and get the token', inject(($gmAuth) ->
             $gmAuth.setToken('test-token')
-            expect($gmAuth.getToken()).toEqual('test-token')
+            expect($gmAuth.getToken()).to.be.equal('test-token')
         ))
 
         #it('should allow to set and get the user', inject(($gmAuth, $rootScope) ->

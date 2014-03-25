@@ -16,29 +16,29 @@ describe 'commonDirectives', ->
         it('should select the page section li', inject(($compile, $rootScope) ->
             $rootScope.pageSection = "backlog"
             $compile(element)($rootScope)
-            expect(element.find(".backlog").hasClass('selected')).toBe(true)
+            expect(element.find(".backlog").hasClass('selected')).to.be.true
 
             $rootScope.pageSection = "kanban"
             $compile(element)($rootScope)
-            expect(element.find(".kanban").hasClass('selected')).toBe(true)
+            expect(element.find(".kanban").hasClass('selected')).to.be.true
 
             $rootScope.pageSection = "issues"
             $compile(element)($rootScope)
-            expect(element.find(".issues").hasClass('selected')).toBe(true)
+            expect(element.find(".issues").hasClass('selected')).to.be.true
 
             $rootScope.pageSection = "questions"
             $compile(element)($rootScope)
-            expect(element.find(".questions").hasClass('selected')).toBe(true)
+            expect(element.find(".questions").hasClass('selected')).to.be.true
 
             $rootScope.pageSection = "wiki"
             $compile(element)($rootScope)
-            expect(element.find(".wiki").hasClass('selected')).toBe(true)
+            expect(element.find(".wiki").hasClass('selected')).to.be.true
 
             $rootScope.pageSection = "admin"
             $compile(element)($rootScope)
-            expect(element.find(".admin").hasClass('selected')).toBe(true)
+            expect(element.find(".admin").hasClass('selected')).to.be.true
 
             $rootScope.pageSection = "backlog"
             $compile(element)($rootScope)
-            expect(element.find(".kanban").hasClass('selected')).toBe(false)
+            expect(element.find(".kanban").hasClass('selected')).to.be.false
         ))

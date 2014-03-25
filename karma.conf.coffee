@@ -3,7 +3,7 @@ module.exports = (config) ->
     config.set
         basePath: '.'
         browsers: ['PhantomJS', 'Firefox']
-        frameworks: ['jasmine']
+        frameworks: ['mocha', 'chai']
         reporters: ['progress', 'coverage']
         preprocessors: {
             'app/dist/app.js': ['coverage']

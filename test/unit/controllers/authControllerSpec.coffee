@@ -19,4 +19,4 @@ describe 'authController', ->
         ))
 
         it 'should have section login', ->
-            expect(ctrl.section).toEqual('login')
+            expect(ctrl.section).to.be.equal('login')

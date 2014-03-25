@@ -162,7 +162,7 @@ gulp.task("connect", connect.server({
 }));
 
 gulp.task("coveralls", function() {
-    return gulp.src('coverage/Firefox 27.0.0 (Linux)/lcov.info')
+    return gulp.src(['coverage/Firefox*/lcov.info'])
         .pipe(coveralls());
 });
 
