@@ -27,8 +27,11 @@ class FavicoService extends TaigaBaseService
     favico: null
 
     newFavico: (opts) ->
-        opts = opts or @_defaultOptions
-        @_favico = new Favico(opts)
+        try
+            opts = opts or @_defaultOptions
+            @_favico = new Favico(opts)
+        catch
+            false
 
     badge: (num) ->
         @_favico.badge(num)
