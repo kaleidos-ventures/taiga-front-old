@@ -19,6 +19,7 @@ describe 'dataService', ->
             {codename: 'view_task'}
             {codename: 'edit_task'}
         ])
+        httpBackend.whenGET('http://localhost:8000/api/v1/projects/1/stats').respond(200, { test: "test" })
 
     describe '$data', ->
         afterEach ->
@@ -36,14 +37,24 @@ describe 'dataService', ->
         it 'should allow to load the userstories of the current project', inject ($data, $rootScope) ->
             scope = $rootScope.$new()
             $rootScope.projectId = 1
+
+            signalEmitted = false
+            $rootScope.$on "userstories:loaded", ->
+                signalEmitted = true
+
             httpBackend.expectGET('http://localhost:8000/api/v1/userstories?project=1')
             $data.loadUserStories(scope)
             httpBackend.flush()
             expect(_.map(scope.userstories, (us) -> us.getAttrs())).to.be.deep.equal([{order: 1}, {order: 3}])
+            expect(signalEmitted).to.be.true
 
         it 'should allow to load the unassigned userstories of the current project', inject ($data, $rootScope) ->
             scope = $rootScope.$new()
             $rootScope.projectId = 1
+            signalEmitted = false
+            $rootScope.$on "userstories:loaded", ->
+                signalEmitted = true
+
             httpBackend.expectGET('http://localhost:8000/api/v1/userstories?milestone=null&project=1')
             $data.loadUnassignedUserStories(scope)
             httpBackend.flush()
@@ -51,6 +62,21 @@ describe 'dataService', ->
                 {project: 1, order: 1, milestone: null}
                 {project: 1, order: 3, milestone: null}
             ])
+            expect(signalEmitted).to.be.true
+
+        it 'should allow to load the current project stats', inject ($data, $rootScope) ->
+            scope = $rootScope.$new()
+            scope.projectId = 1
+            signalEmitted = false
+            $rootScope.$on "project_stats:loaded", ->
+                signalEmitted = true
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/projects/1/stats')
+            $data.loadProjectStats(scope)
+            httpBackend.flush()
+
+            expect(scope.projectStats.getAttrs()).to.be.deep.equal({test: "test"})
+            expect(signalEmitted).to.be.true
 
         it 'should allow to load the list of permissions', inject ($data, $rootScope) ->
             httpBackend.expectGET('http://localhost:8000/api/v1/permissions')
