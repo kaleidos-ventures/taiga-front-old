@@ -4,7 +4,7 @@ class DataService extends TaigaBaseService
     constructor: (@rootScope, @q, @rs) ->
         super()
 
-    loadPermissions: ($scope) ->
+    loadPermissions: () ->
         promise = @rs.getPermissions().then (permissions) =>
             @rootScope.constants.permissionsList = permissions
             @rootScope.constants.permissionsGroups = permissions

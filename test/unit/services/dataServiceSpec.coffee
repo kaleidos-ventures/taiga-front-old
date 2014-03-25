@@ -1,5 +1,4 @@
 describe 'dataService', ->
-    rootScope = null
     httpBackend = null
 
     beforeEach(module('taiga'))
@@ -9,6 +8,12 @@ describe 'dataService', ->
         httpBackend = $httpBackend
         httpBackend.whenGET('http://localhost:8000/api/v1/sites').respond(200, {test: "test"})
         httpBackend.whenGET('http://localhost:8000/api/v1/userstories?project=1').respond(200, [{order: 3}, {order: 1}])
+        httpBackend.whenGET('http://localhost:8000/api/v1/permissions').respond(200, [
+            {codename: 'view_us'}
+            {codename: 'edit_us'}
+            {codename: 'view_task'}
+            {codename: 'edit_task'}
+        ])
 
     describe '$data', ->
         afterEach ->
@@ -30,3 +35,28 @@ describe 'dataService', ->
             $data.loadUserStories(scope)
             httpBackend.flush()
             expect(_.map(scope.userstories, (us) -> us.getAttrs())).to.be.deep.equal([{order: 1}, {order: 3}])
+
+        it 'should allow to load the list of permissions', inject ($data, $rootScope, $model) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/permissions')
+            $data.loadPermissions()
+            httpBackend.flush()
+            expectedListResult = [
+                {codename: 'view_us'}
+                {codename: 'edit_us'}
+                {codename: 'view_task'}
+                {codename: 'edit_task'}
+            ]
+            expect(_.map($rootScope.constants.permissionsList, (perm) -> perm.getAttrs())).to.be.deep.equal(expectedListResult)
+            expectedGroupResult = {
+                us: [
+                    {codename: 'view_us'}
+                    {codename: 'edit_us'}
+                ]
+                task: [
+                    {codename: 'view_task'}
+                    {codename: 'edit_task'}
+                ]
+            }
+            $rootScope.constants.permissionsGroups.us = _.map($rootScope.constants.permissionsGroups.us, (us) -> us.getAttrs())
+            $rootScope.constants.permissionsGroups.task = _.map($rootScope.constants.permissionsGroups.task, (task) -> task.getAttrs())
+            expect($rootScope.constants.permissionsGroups).to.be.deep.equal(expectedGroupResult)
