@@ -655,6 +655,9 @@ class IssueUserStoryModalController extends ModalBaseController
         console.log @scope
         @scope.form = @scope.context.us
 
+        @scope.$broadcast("checksley:reset")
+        @scope.$broadcast("wiki:clean-previews")
+
         @gmOverlay.open().then =>
             @scope.formOpened = false
 
