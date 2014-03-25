@@ -5,7 +5,8 @@ Taiga Front
     :target: http://kaleidos.net/community/taiga/
 .. image:: https://travis-ci.org/taigaio/taiga-front.svg?branch=master
     :target: https://travis-ci.org/taigaio/taiga-front
-
+.. image:: https://coveralls.io/repos/taigaio/taiga-front/badge.png?branch=master
+    :target: https://coveralls.io/r/taigaio/taiga-front?branch=master
 
 Setup initial environment
 -------------------------
