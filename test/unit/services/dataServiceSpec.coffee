@@ -8,6 +8,11 @@ describe 'dataService', ->
         httpBackend = $httpBackend
         httpBackend.whenGET('http://localhost:8000/api/v1/sites').respond(200, {test: "test"})
         httpBackend.whenGET('http://localhost:8000/api/v1/userstories?project=1').respond(200, [{order: 3}, {order: 1}])
+        httpBackend.whenGET('http://localhost:8000/api/v1/userstories?milestone=null&project=1').respond(200, [
+            {project: 1, order: 3, milestone: null}
+            {project: 1, order: 1, milestone: null}
+            {project: 1, order: 7, milestone: 2}
+        ])
         httpBackend.whenGET('http://localhost:8000/api/v1/permissions').respond(200, [
             {codename: 'view_us'}
             {codename: 'edit_us'}
@@ -28,7 +33,7 @@ describe 'dataService', ->
             expect(scope.site).to.be.deep.equal({headers: {}, data: {test: "test"}})
             scope.site = {}
 
-        it 'should allow to load the userstories of the current project', inject ($data, $rootScope, $model) ->
+        it 'should allow to load the userstories of the current project', inject ($data, $rootScope) ->
             scope = $rootScope.$new()
             $rootScope.projectId = 1
             httpBackend.expectGET('http://localhost:8000/api/v1/userstories?project=1')
@@ -36,7 +41,18 @@ describe 'dataService', ->
             httpBackend.flush()
             expect(_.map(scope.userstories, (us) -> us.getAttrs())).to.be.deep.equal([{order: 1}, {order: 3}])
 
-        it 'should allow to load the list of permissions', inject ($data, $rootScope, $model) ->
+        it 'should allow to load the unassigned userstories of the current project', inject ($data, $rootScope) ->
+            scope = $rootScope.$new()
+            $rootScope.projectId = 1
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstories?milestone=null&project=1')
+            $data.loadUnassignedUserStories(scope)
+            httpBackend.flush()
+            expect(_.map(scope.unassignedUs, (us) -> us.getAttrs())).to.be.deep.equal([
+                {project: 1, order: 1, milestone: null}
+                {project: 1, order: 3, milestone: null}
+            ])
+
+        it 'should allow to load the list of permissions', inject ($data, $rootScope) ->
             httpBackend.expectGET('http://localhost:8000/api/v1/permissions')
             $data.loadPermissions()
             httpBackend.flush()
