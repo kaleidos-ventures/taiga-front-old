@@ -104,6 +104,18 @@
                     <strong i18next="issue.attachments-count">Attachments:</strong>
                     {{ attachments.length }}
                 </li>
+                <li data-icon="f" ng-show="issue.generated_user_stories">
+                    <strong i18next="issue.generated-user-stories">Generated user stories:</strong>
+                    <span>
+                        <ul>
+                            <li ng-repeat="us in issue.generated_user_stories" class="us-link">
+                                <a href="{{ urls.userStoryUrl(projectSlug, us.ref, false) }}">
+                                    #{{ us.ref }} {{ us.subject }}
+                                </a>
+                            </li>
+                        </ul>
+                    </span>
+                </li>
             </ul>
         </div>
     </div>
@@ -252,6 +264,8 @@
                                 gm-checksley-submit-button i18next="issue.save">Save</button>
 
                         <div gm-spinner class="spinner-container"></div>
+                        <a href="" class="button button-generate-us" ng-click="ctrl.openCreateUserStoryForm()"
+                           i18next="issue.generate-new-user-story">Generate a new user story</a>
                     </fieldset>
                 </form>
             </div>
@@ -287,29 +301,125 @@
             </div>
         </div>
     </div>
-    <script type="text/angular-template" id="change-template">
-        <ul class="history-items">
-            <li class="history-item" ng-repeat="hitem in historyItems">
-                <div class="title">
-                    <span class="updated">
-                        <span i18next="issue.updated-by-history">
-                            Updated by
-                        </span>
-                        <span gm-colorize-user="hitem.by">{{ hitem.by.full_name }}</span></span>
-                    <span class="date">{{ hitem.modified_date|momentFromNow }}</span>
-                </div>
-                <div class="changes">
-                    <div class="change" ng-repeat="change in hitem.changes">
-                        <strong>{{ change.name|capitalize }}</strong>:
-                        <span ng-show="change.old != '' && change.old != null" ng-bind-html="'issue.change-from'|i18next:{value: change.old}"></span>
-                        <span ng-bind-html="'issue.change-to'|i18next:{value: change.new||''}"></span></span>
-                    </div>
-                </div>
-                <div class="comment" ng-show="hitem.comment">
-                    <strong i18next="issue.comment-history">Comment:</strong>
-                    <div gm-render-markdown="hitem.comment"></div>
-                </div>
-            </li>
-        </ul>
-    </script>
 </div>
+
+<!-- user story form -->
+<div id="user-story-modalform"
+    gm-modal="generate-user-story-form"
+    ng-show="formOpened"
+    ng-controller="IssueUserStoryModalController as issUsModal">
+
+    <div class="new-us-modal modal">
+        <form class="inline-form us-form" gm-checksley-form="issUsModal.submit()">
+            <div class="modal-header">
+                <h3 i18next="issue.us-modal-create-user-story-from-this-issue">Create user story from this issue</h3>
+            </div>
+            <div class="modal-body">
+                <fieldset class="fieldset-row">
+                    <fieldset>
+                        <label i18next="issue.us-modal-subject">Subject</label>
+                        <input class="subject" type="text" ng-model="form.subject" data-required="true"
+                               name="subject" placeholder="A descriptive name..." data-maxlength="500"
+                               i18next="placeholder:issue.us-modal-subject-placeholder"></input>
+                    </fieldset>
+                </fieldset>
+                <div class="fieldset-row" gm-role-points-edition></div>
+                <div class="fieldset-row clearfix status-tags">
+                    <fieldset>
+                        <label i18next="issue.us-modal-status">Status</label>
+                        <select class="status" name="status" ng-model="form.status"
+                            data-type="number" data-required="true"
+                            data-error-message="This field is required."
+                            ng-options="c.id as c.name for c in constants.usStatusesList|orderBy:'order'"
+                            i18next="data-error-message:field-required"
+                            ></select>
+                        </select>
+                    </fieldset>
+                    <fieldset>
+                        <label i18next="issue.us-modal-tags">Tags</label>
+                        <input type="text" name="tags"
+                               ng-model="form.tags" ui-select2="tagsSelectOptions"
+                               data-placeholder="{{'issue.us-modal-tags-placeholder'|i18next }}" />
+                    </fieldset>
+                </div>
+                <div class="fieldset-row requirements">
+                    <fieldset>
+                        <input type="checkbox" id="us-modal-client-requirement" class="hidden"
+                               ng-model="form.client_requirement" name="client_requirement"/>
+                        <label for="us-modal-client-requirement">
+                            <span data-icon="J" class="icon client-requirement"></span>
+                            <span i18next="issue.us-modal-client-requirement">Client Requirement</span>
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <input type="checkbox"id="us-modal-team-requirement" class="hidden"
+                               ng-model="form.team_requirement" name="team_requirement">
+                        <label for="us-modal-team-requirement">
+                            <span data-icon="N" class="icon team-requirement"></span>
+                            <span i18next="issue.us-modal-team-requirement">Team Requirement</span>
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <input type="checkbox"id="us-modal-is-blocked" class="hidden"
+                               ng-model="form.is_blocked" name="is_blocked">
+                        <label for="us-modal-is-blocked">
+                            <span data-icon="o" class="icon blocked"></span>
+                            <span i18next="issue.us-modal-is-blocked">Is blocked</span>
+                        </label>
+                    </fieldset>
+                </div>
+                <fieldset class="fieldset-row" ng-show="form.is_blocked">
+                    <label i18next="issue.us-modal-blocking-reasons">Reasons for blocking</label>
+                    <textarea class="blocked-note" name="blocked_note"
+                              placeholder="Some reasons..."
+                              i18next="placeholder:issue.us-modal-blocking-reasons-placeholder"
+                              ng-model="form.blocked_note"
+                              gm-markitup preview-id="us-modal-blocked-preview"></textarea>
+                    <div id="us-modal-blocked-preview" class="preview"></div>
+                </fieldset>
+                <fieldset class="fieldset-row">
+                    <label i18next="issue.us-modal-description">Description</label>
+                    <textarea class="description" name="description"
+                              placeholder="A good description..."
+                              i18next="placeholder:issue.us-modal-description-placeholder"
+                              ng-model="form.description"
+                              gm-markitup preview-id="us-modal-preview"></textarea>
+                    <div id="us-modal-preview" class="preview"></div>
+                </fieldset>
+            </div>
+
+            <div class="modal-footer">
+                <div gm-spinner class="spinner-container"></div>
+                <input type="submit" class="button button-success"
+                       gm-checksley-submit-button value="Save" i18next="value:issue.us-modal-save" />
+                <a href="" class="button button-cancel" ng-click="issUsModal.close()" i18next="issue.us-modal-close">Close</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/angular-template" id="change-template">
+    <ul class="history-items">
+        <li class="history-item" ng-repeat="hitem in historyItems">
+            <div class="title">
+                <span class="updated">
+                    <span i18next="issue.updated-by-history">
+                        Updated by
+                    </span>
+                    <span gm-colorize-user="hitem.by">{{ hitem.by.full_name }}</span></span>
+                <span class="date">{{ hitem.modified_date|momentFromNow }}</span>
+            </div>
+            <div class="changes">
+                <div class="change" ng-repeat="change in hitem.changes">
+                    <strong>{{ change.name|capitalize }}</strong>:
+                    <span ng-show="change.old != '' && change.old != null" ng-bind-html="'issue.change-from'|i18next:{value: change.old}"></span>
+                    <span ng-bind-html="'issue.change-to'|i18next:{value: change.new||''}"></span></span>
+                </div>
+            </div>
+            <div class="comment" ng-show="hitem.comment">
+                <strong i18next="issue.comment-history">Comment:</strong>
+                <div gm-render-markdown="hitem.comment"></div>
+            </div>
+        </li>
+    </ul>
+</script>

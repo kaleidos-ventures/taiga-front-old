@@ -291,8 +291,8 @@ class IssuesController extends TaigaPageController
 class IssuesViewController extends TaigaPageController
     @.$inject = ['$scope', '$location', '$rootScope', '$routeParams', '$q',
                  'resource', '$data', '$confirm', '$gmFlash', '$i18next',
-                 '$favico']
-    constructor: (@scope, @location, @rootScope, @routeParams, @q, @rs, @data, @confirm, @gmFlash, @i18next, @favico) ->
+                 '$favico', '$modal']
+    constructor: (@scope, @location, @rootScope, @routeParams, @q, @rs, @data, @confirm, @gmFlash, @i18next, @favico, @modal) ->
         super(scope, rootScope, favico)
 
     debounceMethods: ->
@@ -466,7 +466,32 @@ class IssuesViewController extends TaigaPageController
             # TODO: Make me more beautiful and elegant
             return "<span style=\"padding: 0px 5px;
                                   border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
-         return "<span\">#{option.text}</span>"
+        return "<span\">#{option.text}</span>"
+
+    openCreateUserStoryForm: () ->
+        initializeForm = () =>
+            result = {}
+            if @scope.issue?
+                result["subject"] = @scope.issue.subject
+                result["description"] = @scope.issue.description
+                result["is_blocked"] = @scope.issue.is_blocked
+                result["blocked_note"] = @scope.issue.blocked_note
+                result["tags"] = @scope.issue.tags
+
+            points = {}
+            for role in @scope.constants.computableRolesList
+                points[role.id] = @scope.project.default_points
+            result['points'] = points
+            result['project'] = @scope.projectId
+            result['status'] = @scope.project.default_us_status
+
+            result["generated_from_issue"] = @scope.issue.id
+            return result
+
+        promise = @modal.open("generate-user-story-form", {"us": initializeForm(), "type": "create"})
+        promise.then =>
+            @loadIssue()
+            @loadHistorical()
 
 
 class IssuesModalController extends ModalBaseController
@@ -601,6 +626,69 @@ class IssuesModalController extends ModalBaseController
         return "<span\">#{option.text}</span>"
 
 
+class IssueUserStoryModalController extends ModalBaseController
+    @.$inject = ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash',
+                 '$i18next']
+    constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next) ->
+        super(scope)
+
+    initialize: ->
+        @scope.tagsSelectOptions = {
+            multiple: true
+            simple_tags: true
+            tags: @getTagsList
+            formatSelection: @tagsSelectOptionsShowColorizedTags
+            containerCssClass: "tags-selector"
+        }
+        super()
+
+    loadProjectTags: ->
+        @rs.getProjectTags(@scope.projectId).then (data) =>
+            @projectTags = data
+
+    getTagsList: =>
+        @projectTags or []
+
+    openModal: () ->
+        @loadProjectTags()
+        @scope.formOpened = true
+        console.log @scope
+        @scope.form = @scope.context.us
+
+        @gmOverlay.open().then =>
+            @scope.formOpened = false
+
+    # Debounced Method (see debounceMethods method)
+    submit: =>
+        @scope.$emit("spinner:start")
+        promise = @rs.createUserStory(@scope.form)
+        promise.then (data) =>
+            @scope.$emit("spinner:stop")
+            @closeModal()
+            @gmOverlay.close()
+            @scope.defered.resolve()
+            @gmFlash.info(@i18next.t('issue.user-story-saved'))
+
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
+
+    tagsSelectOptionsShowColorizedTags: (option, container) ->
+        hash = hex_sha1(option.text.trim().toLowerCase())
+        color = hash
+            .substring(0,6)
+            .replace('8','0')
+            .replace('9','1')
+            .replace('a','2')
+            .replace('b','3')
+            .replace('c','4')
+            .replace('d','5')
+            .replace('e','6')
+            .replace('f','7')
+
+        container.parent().css('background', "##{color}")
+        container.text(option.text)
+        return
+
 moduleDeps = ['gmModal', 'taiga.services.tags', 'taiga.services.resource',
               'taiga.services.data', 'gmConfirm', 'favico', 'gmOverlay',
               'gmFlash', 'i18next']
@@ -608,3 +696,4 @@ module = angular.module("taiga.controllers.issues", moduleDeps)
 module.controller("IssuesController", IssuesController)
 module.controller("IssuesViewController", IssuesViewController)
 module.controller("IssuesModalController", IssuesModalController)
+module.controller('IssueUserStoryModalController', IssueUserStoryModalController)

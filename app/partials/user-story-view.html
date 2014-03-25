@@ -67,6 +67,14 @@
                 <h3 i18next="user-story.user-story-data">User story data</h3>
             </div>
             <ul class="info-rows">
+                <li data-icon="a" ng-show="userStory.origin_issue">
+                    <strong i18next="user-story.origin-issue">Origin issue:</strong>
+                    <span>
+                        <a href="{{ urls.issuesUrl(projectSlug, userStory.origin_issue.ref, false) }}">
+                            #{{ userStory.origin_issue.ref }} {{ userStory.origin_issue.subject }}
+                        </a>
+                    </span>
+                </li>
                 <li data-icon="t">
                     <strong i18next="user-story.added-by">Added by:</strong>
                     <span gm-colorize-user="constants.users[userStory.owner]">{{ constants.users[userStory.owner].full_name }}</span>
