@@ -55,12 +55,10 @@ var coffeeSources = [
     "app/coffee/**/*.coffee"
 ];
 
-var testSources = [
-    "app/dist/libs.js",
-    "app/components/angular-mocks/angular-mocks.js",
-    "app/dist/app.js",
-    "test/unit/*.coffee"
-];
+var testSources = externalSources +
+    ["app/components/angular-mocks/angular-mocks.js" ] +
+    coffeeSources +
+    [ "test/unit/*.coffee" ];
 
 var e2eTestSources = [
     "test/e2e/*.coffee"
@@ -125,7 +123,7 @@ gulp.task("template", function() {
         .pipe(gulp.dest("app"));
 });
 
-gulp.task("test", ["coffee", "libs"], function() {
+gulp.task("test", function() {
     gulp.src(testSources)
         .pipe(gulpif(/[.]coffee$/, coffee({"bare": true}).on("error", gutil.log)))
         .pipe(concat("tests.js"))
