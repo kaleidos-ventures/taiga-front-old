@@ -598,7 +598,11 @@ class ResourceService extends TaigaBaseService
         uploadComplete = (evt) =>
             @rootScope.$apply ->
                 file.status = "done"
-                data = JSON.parse(evt.target.responseText)
+                try
+                    data = JSON.parse(evt.target.responseText)
+                catch
+                    # NOTE: HACK: In firefox evt.target.responseText is HTML instead json text Why? Why?
+                    data = {}
                 defered.resolve(data)
 
         uploadFailed = (evt) =>
@@ -644,7 +648,11 @@ class ResourceService extends TaigaBaseService
         uploadComplete = (evt) =>
             @rootScope.$apply ->
                 file.status = "done"
-                data = JSON.parse(evt.target.responseText)
+                try
+                    data = JSON.parse(evt.target.responseText)
+                catch
+                    # NOTE: HACK: In firefox evt.target.responseText is HTML instead json text Why? Why?
+                    data = {}
                 defered.resolve(data)
 
         uploadFailed = (evt) =>
@@ -690,7 +698,11 @@ class ResourceService extends TaigaBaseService
         uploadComplete = (evt) =>
             @rootScope.$apply ->
                 file.status = "done"
-                data = JSON.parse(evt.target.responseText)
+                try
+                    data = JSON.parse(evt.target.responseText)
+                catch
+                    # NOTE: HACK: In firefox evt.target.responseText is HTML instead json text Why? Why?
+                    data = {}
                 defered.resolve(data)
 
         uploadFailed = (evt) =>
@@ -737,7 +749,11 @@ class ResourceService extends TaigaBaseService
         uploadComplete = (evt) =>
             @rootScope.$apply ->
                 file.status = "done"
-                data = JSON.parse(evt.target.responseText)
+                try
+                    data = JSON.parse(evt.target.responseText)
+                catch
+                    # NOTE: HACK: In firefox evt.target.responseText is HTML instead json text Why? Why?
+                    data = {}
                 defered.resolve(data)
 
         uploadFailed = (evt) =>
