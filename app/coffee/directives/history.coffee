@@ -6,7 +6,7 @@ _.mixin({
 })
 
 
-GmHistoryDirective = ($compile, $rootScope, $i18next) ->
+GmHistoryDirective = ($compile, $rootScope, $i18next, gmWiki) ->
     restrict: "A"
     require: "?ngModel"
     link: (scope, elm, attrs, ngModel) ->
@@ -35,6 +35,10 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                             watchers_ids = _.map(value, (v) -> parseInt(v, 10))
                             watchers = _.findByValues(scope.constants.users, "id", watchers_ids)
                             return _.map(watchers, "full_name").join(", ")
+                        return null
+                    when "description"
+                        if value
+                            return gmWiki.render(value)
                         return null
                     else value
             issue: (name, value) ->
@@ -90,6 +94,10 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                             watchers = _.findByValues(scope.constants.users, "id", watchers_ids)
                             return _.map(watchers, "full_name").join(", ")
                         return null
+                    when "description"
+                        if value
+                            return gmWiki.render(value)
+                        return null
                     else value
             task: (name, value) ->
                 return switch name
@@ -122,6 +130,10 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
                             watchers_ids = _.map(value, (v) -> parseInt(v, 10))
                             watchers = _.findByValues(scope.constants.users, "id", watchers_ids)
                             return _.map(watchers, "full_name").join(", ")
+                        return null
+                    when "description"
+                        if value
+                            return gmWiki.render(value)
                         return null
                     else value
         }
@@ -212,4 +224,4 @@ GmHistoryDirective = ($compile, $rootScope, $i18next) ->
             render(ngModel.$viewValue or [])
 
 module = angular.module('taiga.directives.history', ['i18next'])
-module.directive("gmHistory", ['$compile', '$rootScope', '$i18next', GmHistoryDirective])
+module.directive("gmHistory", ['$compile', '$rootScope', '$i18next', 'gmWiki', GmHistoryDirective])
