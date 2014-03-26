@@ -3,7 +3,7 @@
     <div class="new-issue">
         <a class="button new-button" gm-modal="#new-issue-modal"
            ng-click="ctrl.openCreateIssueForm()" data-icon="a" i18next="issues.new-issue">New issue</a>
-        <a class="button refresh-button" ng-click="ctrl.refreshIssues()" data-icon="x"
+        <a class="button refresh-button" ng-click="ctrl.refreshAll()" data-icon="x"
             ng-class="{active: refreshing}" i18next="issues.refresh">Refresh</a>
         <a class="button graphs-button" data-icon="k" ng-click="ctrl.toggleShowGraphs()"
             ng-class="{'active': showGraphs}" i18next="issues.graphs">Graphs</a>
@@ -60,11 +60,10 @@
                 </div>
 
                 <div class="tags-list-sbox">
-                    <div class="tag selected" style="background: {{ tag.color }}" ng-repeat="tag in ctrl.selectedTags() track by $index" ng-click="ctrl.toggleTag(tag)">
-                        <div class="name" ng-hide="tag.type == 'assigned_to' || tag.type == 'owner'">
-                            {{ tag.name }}
-                        </div>
-                        <div class="name" ng-show="tag.type == 'assigned_to' || tag.type == 'owner'" gm-colorize-user="constants.users[tag.id]">
+                    <div class="tag selected" style="background: {{ tag.color }}"
+                         ng-repeat="tag in ctrl.selectedFilters"
+                         ng-click="ctrl.toggleFilter(tag)">
+                        <div class="name">
                             {{ tag.name }}
                         </div>
                         <div class="count">{{ tag.count }}</div>
@@ -72,65 +71,72 @@
                 </div>
             </div>
             <ul class="filters-visual-box" ng-show="filtersOpened">
-                <li ng-show="statusTags.length>1">
+                <li ng-show="filters.statuses.length > 0">
                     <h3 i18next="issues.status">Status:</h3>
                     <div class="tags-list-sbox">
-                        <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in statusTags"
-                             ng-click="ctrl.toggleTag(tag)" ng-class="{selected: ctrl.isTagSelected(tag)}">
+                        <div class="tag" style="background-color: {{ tag.color }}"
+                             ng-repeat="tag in filters.statuses"
+                             ng-click="ctrl.toggleFilter(tag)"
+                             ng-class="{selected: ctrl.isTagSelected(tag)}">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
                 </li>
-                <li ng-show="typeTags.length>1">
+                <li ng-show="filters.types.length > 0">
                     <h3 i18next="issues.type">Type:</h3>
                     <div class="tags-list-sbox">
-                        <div class="tag" style="background-color: {{ tag.color }}" ng-repeat="tag in typeTags"
-                             ng-click="ctrl.toggleTag(tag)" ng-class="{selected: ctrl.isTagSelected(tag)}" >
+                        <div class="tag" style="background-color: {{ tag.color }}"
+                             ng-repeat="tag in filters.types"
+                             ng-click="ctrl.toggleFilter(tag)"
+                             ng-class="{selected: ctrl.isTagSelected(tag)}" >
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
                 </li>
-                <li ng-show="severityTags.length>1">
+                <li ng-show="filters.severities.length > 0">
                     <h3 i18next="issues.severity">Severity:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}"
-                                ng-repeat="tag in severityTags" ng-click="ctrl.toggleTag(tag)"
-                                ng-class="{selected: ctrl.isTagSelected(tag)}" >
+                             ng-repeat="tag in filters.severities"
+                             ng-click="ctrl.toggleFilter(tag)"
+                             ng-class="{selected: ctrl.isTagSelected(tag)}" >
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
                 </li>
-                <li ng-show="priorityTags.length>1">
+                <li ng-show="filters.priorities.length > 0">
                     <h3 i18next="issues.priority">Priority:</h3>
                     <div class="tags-list-sbox">
                         <div class="tag" style="background-color: {{ tag.color }}"
-                                ng-repeat="tag in priorityTags" ng-click="ctrl.toggleTag(tag)"
-                                ng-class="{selected: ctrl.isTagSelected(tag)}">
+                             ng-repeat="tag in filters.priorities"
+                             ng-click="ctrl.toggleFilter(tag)"
+                             ng-class="{selected: ctrl.isTagSelected(tag)}">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
                 </li>
-                <li ng-show="addedByTags.length>1">
-                    <h3 i18next="issues.added-by">Added by:</h3>
-                    <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in addedByTags" ng-click="ctrl.toggleTag(tag)"
-                                ng-class="{selected: ctrl.isTagSelected(tag)}">
-                            <div class="name" gm-colorize-user="constants.users[tag.id]">
-                                {{ tag.name }}
-                            </div>
-                            <div class="count">{{ tag.count }}</div>
-                        </div>
-                    </div>
-                </li>
+                <!-- <li ng-show="addedByTags.length>1"> -->
+                <!--     <h3 i18next="issues.added-by">Added by:</h3> -->
+                <!--     <div class="tags-list-sbox"> -->
+                <!--         <div class="tag" ng-repeat="tag in addedByTags" ng-click="ctrl.toggleTag(tag)" -->
+                <!--                 ng-class="{selected: ctrl.isTagSelected(tag)}"> -->
+                <!--             <div class="name" gm-colorize-user="constants.users[tag.id]"> -->
+                <!--                 {{ tag.name }} -->
+                <!--             </div> -->
+                <!--             <div class="count">{{ tag.count }}</div> -->
+                <!--         </div> -->
+                <!--     </div> -->
+                <!-- </li> -->
                 <li>
                     <h3 i18next="issues.assigned-to">Assigned to:</h3>
                     <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in assignedToTags" ng-click="ctrl.toggleTag(tag)"
-                                ng-class="{selected: ctrl.isTagSelected(tag)}">
+                        <div class="tag" ng-repeat="tag in filters.assignedTo"
+                             ng-click="ctrl.toggleFilter(tag)"
+                             ng-class="{selected: ctrl.isTagSelected(tag)}">
                             <div class="name" gm-colorize-user="constants.users[tag.id]">
                                 {{ tag.name }}
                             </div>
@@ -141,14 +147,15 @@
                 <li>
                     <h3 i18next="issues.tags">Tags:</h3>
                     <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in tags track by $index" ng-click="ctrl.toggleTag(tag)"
-                                ng-class="{selected: ctrl.isTagSelected(tag)}" gm-colorize-tag>
+                        <div class="tag" ng-repeat="tag in filters.tags track by $index"
+                             ng-click="ctrl.toggleFilter(tag)"
+                             ng-class="{selected: ctrl.isTagSelected(tag)}" gm-colorize-tag>
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
                     </div>
                 </li>
-            </div>
+            </ul>
         </div>
         <div class="filters-selected-box"></div>
     </div>

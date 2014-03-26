@@ -15,10 +15,10 @@
 class IssuesController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$routeParams', '$filter', '$q',
                  'resource', '$data', '$confirm', '$modal', '$i18next',
-                 '$location', '$favico', 'SelectedTags']
+                 '$location', '$favico', '$gmFilters']
+
     constructor: (@scope, @rootScope, @routeParams, @filter, @q, @rs, @data,
-                  @confirm, @modal, @i18next, @location, @favico,
-                  @SelectedTags) ->
+                  @confirm, @modal, @i18next, @location, @favico, @gmFilters) ->
         super(scope, rootScope, favico)
 
     debounceMethods: ->
@@ -30,19 +30,19 @@ class IssuesController extends TaigaPageController
         @i18next.t('common.issues')
 
     initialize: ->
-        @debounceMethods()
+        @.debounceMethods()
 
         @rootScope.pageBreadcrumb = [
             ["", ""],
             [@i18next.t('common.issues'), null]
         ]
 
-        @SelectedTags(@rootScope.projectId).issues_order.setDefault({field: 'created_date', reverse: true})
+        # @SelectedTags(@rootScope.projectId).issues_order.setDefault({field: 'created_date', reverse: true})
 
         @scope.filtersOpened = false
-        @scope.filtersData = {}
-        @scope.sortingOrder = @SelectedTags(@rootScope.projectId).issues_order.getField()
-        @scope.sortingReverse = @SelectedTags(@rootScope.projectId).issues_order.isReverse()
+        @scope.filters = {}
+        @.selectedFilters = []
+
         @scope.page = 1
         @scope.showGraphs = false
 
@@ -54,160 +54,94 @@ class IssuesController extends TaigaPageController
         @rs.resolve(pslug: @routeParams.pslug).then (data) =>
             @rootScope.projectSlug = @routeParams.pslug
             @rootScope.projectId = data.project
+
             @data.loadProject(@scope).then =>
                 @data.loadUsersAndRoles(@scope).then =>
-                    @loadIssuesData().then =>
-                        @filterIssues()
-
-    issuesQueryParams: ->
-        tags = @SelectedTags(@rootScope.projectId).issues.tags.join()
-        status = @SelectedTags(@rootScope.projectId).issues.status.join()
-        type = @SelectedTags(@rootScope.projectId).issues.type.join()
-        severity = @SelectedTags(@rootScope.projectId).issues.severity.join()
-        priority = @SelectedTags(@rootScope.projectId).issues.priority.join()
-        owner = @SelectedTags(@rootScope.projectId).issues.owner.join()
-        assigned_to = @SelectedTags(@rootScope.projectId).issues.assigned_to.join()
-        order_by = @SelectedTags(@rootScope.projectId).issues_order.getField()
-        if @SelectedTags(@rootScope.projectId).issues_order.isReverse()
-            order_by = "-#{order_by}"
-
-        params = {}
-        params.tags = tags if tags != ""
-        params.status = status if status != ""
-        params.type = type if type != ""
-        params.severity = severity if severity != ""
-        params.priority = priority if priority != ""
-        params.owner = owner if owner != ""
-        params.assigned_to = assigned_to if assigned_to != ""
-        params.order_by = order_by
-
-        return params
+                    @.updateSelectedOrder()
+                    @.refreshAll()
 
     #####
-    ## Tags generation functions
+    ## Refresh page operations
     #####
 
-    selectedTags: ->
-        _.flatten((tags.values() for tags in _.values(@SelectedTags(@rootScope.projectId).issues)), true)
+    refreshIssues: ->
+        return @.loadStats().then =>
+            return @.loadIssues()
 
-    isTagSelected: (tag) ->
-        return @SelectedTags(@rootScope.projectId).issues[tag.type].fetch(tag)?
+    refreshFilters: ->
+        return @.loadIssuesFiltersData().then =>
+            @.initializeSelectedFilters()
 
-    toggleTag: (tag) ->
-        tags = @SelectedTags(@rootScope.projectId).issues[tag.type]
-        if tags.fetch(tag)?
-            tags.remove(tag)
+    refreshAll: ->
+        @scope.refreshing = true
+        return @.refreshFilters().then =>
+            return @.refreshIssues().then =>
+                @scope.refreshing = false
+
+    #####
+    ## Filters/Sorting scope functions
+    #####
+
+    isTagSelected: (filterTag) ->
+        projectId = @rootScope.projectId
+        namespace = "issues-filter"
+        return @gmFilters.isFilterSelected(projectId, namespace, filterTag)
+
+    toggleFilter: (filterTag) ->
+        position = @.selectedFilters.indexOf(filterTag)
+        if position == -1
+            @.selectedFilters.push(filterTag)
+            @gmFilters.selectFilter(@rootScope.projectId, "issues-filter", filterTag)
         else
-            tags.store(tag)
+            @.selectedFilters.splice(position, 1)
+            @gmFilters.unselectFilter(@rootScope.projectId, "issues-filter", filterTag)
 
         @scope.currentPage = 0
-        @filterIssues()
+        @.refreshIssues()
 
-    refreshSelectedTags:  ->
-        _.forEach @SelectedTags(@rootScope.projectId).issues, (tagGroup) =>
-            _.forEach tagGroup.values(), (storedTag) =>
-                newTag = _.find(@scope[tagGroup.constructor.scopeVar], {id: storedTag.id})
-                if newTag
-                    tagGroup.update(storedTag, newTag)
+    changeSort: (field, reverse) ->
+        @gmFilters.setOrdering(@rootScope.projectId, "issues-ordering",
+                               [field, reverse])
+        @.updateSelectedOrder()
+        @.refreshIssues()
 
-    generateTagsFromList: (list, constants, type, scopeVar) ->
-        tags = []
-        for value in list
-            [id, count] = value
-            element = constants[id]
-            tag = {
-                id: element.id,
-                name: element.name,
-                count: count,
-                type: type,
-                color: element.color
-            }
-            tags.push(tag)
+    # Using a $gmFilters service for populate a scope with
+    # a fresh list of selected filters state previously persisted
+    initializeSelectedFilters: ->
+        filters = @gmFilters.getSelectedFiltersList(@rootScope.projectId, "issues-filter", @scope.filters)
+        @.selectedFilters = filters
 
-        @scope[scopeVar] = tags
+    # Using a $gmFilters service for populate a scope with
+    # a fresh list of selected sorting state previously persisted
+    updateSelectedOrder: ->
+        ordering = @gmFilters.getOrdering(@rootScope.projectId, "issues-ordering")
+        if ordering is null
+            @scope.sortingOrder = "status"
+            @scope.reverseOrder = false
+        else
+            @scope.sortingOrder = ordering[0]
+            @scope.sortingReverse = ordering[1]
 
-    generateTagsFromUsers: (list, type, scopeVar) ->
-        tags = []
-        for userCounter in list
-            if userCounter[0] is null
-                tag = {
-                    id: "null",
-                    name: @i18next.t("common.unassigned"),
-                    count: userCounter[1],
-                    type: type
-                }
-            else
-                user = @scope.constants.users[userCounter[0]]
-                tag = {
-                    id: user.id,
-                    name: gm.utils.truncate(user.full_name, 17),
-                    count: userCounter[1],
-                    type: type
-                }
+    #####
+    ## Load operations.
+    #####
 
-            tags.push(tag)
-
-        @scope[scopeVar] = _.sortBy tags, (item) ->
-            if item.id == "null"
-                # NOTE: This is a hack to order users by full name but set
-                #       "Unassigned" as the first element. \o/ \o/ \o/ \o/
-                return "0000000000000000"
-            return item.name
-
-    generateTagList: ->
-        colorizeTag = (name) ->
-            hash = hex_sha1(name.toLowerCase())
-            color = hash
-                .substring(0,6)
-                .replace('8','0')
-                .replace('9','1')
-                .replace('a','2')
-                .replace('b','3')
-                .replace('c','4')
-                .replace('d','5')
-                .replace('e','6')
-                .replace('f','7')
-
-            return "##{color}"
-
-        tags = []
-        for tagCounter in @scope.filtersData.tags
-            tag = {
-                id: tagCounter[0],
-                name: tagCounter[0],
-                count: tagCounter[1],
-                type: "tags"
-                color: colorizeTag(tagCounter[0])
-            }
-            tags.push(tag)
-
-        @scope.tags = tags
-
-    regenerateTags: ->
-        @generateTagsFromList(@scope.filtersData.statuses, @scope.constants.issueStatuses, "status", "statusTags")
-        @generateTagsFromList(@scope.filtersData.types, @scope.constants.types, "type", "typeTags")
-        @generateTagsFromList(@scope.filtersData.severities, @scope.constants.severities, "severity", "severityTags")
-        @generateTagsFromList(@scope.filtersData.priorities, @scope.constants.priorities, "priority", "priorityTags")
-        @generateTagsFromUsers(@scope.filtersData.owners, "owner", "addedByTags")
-        @generateTagsFromUsers(@scope.filtersData.assigned_to, "assigned_to", "assignedToTags")
-        @generateTagList()
-
-    getFilterParams: ->
+    getFilterParams: (page, selectedFilters, sortingOrder, reverseOrder) ->
         params = {"page": @scope.page}
-
-        for key, value of _.groupBy(@selectedTags(), "type")
+        for key, value of _.groupBy(selectedFilters, "type")
             params[key] = _.map(value, "id").join(",")
 
-        params["order_by"] = @scope.sortingOrder
-        if @scope.sortingReverse
+        params["order_by"] = sortingOrder
+        if reverseOrder
             params["order_by"] = "-#{params["order_by"]}"
 
         return params
 
-    filterIssues: ->
+    loadIssues: ->
         @scope.$emit("spinner:start")
 
-        params = @getFilterParams()
+        params = @.getFilterParams(@scope.page, @.selectedFilters,
+                                   @scope.sortingOrder, @scope.reverseOrder)
 
         @rs.getIssues(@scope.projectId, params).then (result) =>
             @scope.issues = result.models
@@ -215,26 +149,19 @@ class IssuesController extends TaigaPageController
             @scope.paginatedBy = result.paginatedBy
             @scope.$emit("spinner:stop")
 
-    loadIssuesData: ->
-        promise = @rs.getIssuesFiltersData(@scope.projectId).then (data) =>
-            @scope.filtersData = data
-            @regenerateTags()
-            @refreshSelectedTags()
-            @loadStats()
+    loadIssuesFiltersData: ->
+        return @rs.getIssuesFiltersData(@scope.projectId).then (data) =>
+            @scope.filters = @gmFilters.generateFiltersForIssues(data.getAttrs(), @scope.constants)
             return data
 
-        return promise
-
     loadStats: ->
-        @rs.getIssuesStats(@scope.projectId).then (data) =>
+        return @rs.getIssuesStats(@scope.projectId).then (data) =>
             @scope.issuesStats = data
             @favico.badge(@scope.issuesStats.total_issues - @scope.issuesStats.closed_issues)
 
-    refreshIssues: ->
-        @scope.refreshing = true
-        @loadIssuesData().then =>
-            @filterIssues().then =>
-                @scope.refreshing = false
+    #####
+    ## Interface (visual) operations
+    #####
 
     openCreateIssueForm: ->
         promise = @modal.open("issue-form", {'type': 'create'})
@@ -271,12 +198,6 @@ class IssuesController extends TaigaPageController
         issue.priority = id
         issue.save().then =>
             @refreshIssues()
-
-    changeSort: (field, reverse) ->
-        @SelectedTags(@rootScope.projectId).issues_order.set field: field, reverse: reverse
-        @scope.sortingOrder = field
-        @scope.sortingReverse = reverse
-        @filterIssues()
 
     removeIssue: (issue) ->
         issue.remove().then =>

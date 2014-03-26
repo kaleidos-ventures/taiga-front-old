@@ -65,6 +65,7 @@ class TaigaPageController extends TaigaBaseController
         rootScope.pageTitle = @.getTitle()
         super(scope)
 
+
 @.TaigaBaseController = TaigaBaseController
 @.TaigaPageController = TaigaPageController
 @.TaigaBaseService = TaigaBaseService

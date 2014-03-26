@@ -31,6 +31,10 @@ class StorageService extends TaigaBaseService
         else
             localStorage.setItem(key, JSON.stringify(val))
 
+    contains: (key) ->
+        value = @.get(key)
+        return (value != null)
+
     remove: (key) ->
         localStorage.removeItem(key)
 
