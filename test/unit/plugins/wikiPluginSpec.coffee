@@ -55,6 +55,12 @@ describe 'gmWiki', ->
             expectedResult = '<p><img src="test.png" alt="test"></p>\n'
             expect(gmWiki.render('![test](test.png)')).to.be.equal(expectedResult)
 
+        it 'should allow to render code in the wiki', inject (gmWiki, $routeParams, $rootScope) ->
+            expectedResult = '<pre><code class="lang-python">print(<span class="hljs-string">"test"</span>)\n</code></pre>\n'
+            expect(gmWiki.render('```python\nprint("test")\n```')).to.be.equal(expectedResult)
+            expectedResult = '<pre><code><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">"test"</span>)</span></span>\n</code></pre>'
+            expect(gmWiki.render('```\nprint("test")\n```')).to.be.equal(expectedResult)
+
     describe 'wiki filter', ->
         it 'should allow to render in wiki format', inject (wikiFilter) ->
             expect(wikiFilter('**test**')).to.be.equal('<p><strong>test</strong></p>\n')
