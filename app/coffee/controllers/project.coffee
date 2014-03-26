@@ -181,20 +181,18 @@ class ProjectAdminMembershipsController extends ProjectAdminController
             @scope.checksleyErrors = data
 
     memberStatus: (member) ->
-        if member.user != null
+        if member?.user != null
             return "Active"
         else
             return "Inactive"
 
     memberName: (member) ->
-        if member.full_name
-            return member.full_name
-        return ""
+        return member?.full_name
 
     memberEmail: (member) ->
-        if member.user and @scope.constants.users[member.user]
+        if member?.user and @scope.constants.users[member.user]
             return @scope.constants.users[member.user].email
-        return member.email
+        return member?.email
 
     deleteMember: (member) ->
         promise = @confirm.confirm(@i18next.t("common.are-you-sure"))
