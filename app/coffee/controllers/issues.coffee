@@ -652,7 +652,6 @@ class IssueUserStoryModalController extends ModalBaseController
     openModal: () ->
         @loadProjectTags()
         @scope.formOpened = true
-        console.log @scope
         @scope.form = @scope.context.us
 
         @scope.$broadcast("checksley:reset")
