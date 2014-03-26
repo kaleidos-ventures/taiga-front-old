@@ -268,7 +268,7 @@ wikiInit = ($routeParams, $rootScope) ->
         else if href.indexOf(':issue:') == 0
             renderer.realLink($rootScope.urls.issuesUrl($routeParams.pslug, href.substring(7)), title, text)
         else if href.indexOf(':sprint:') == 0
-            renderer.realLink($rootScope.urls.taskboardUrl($routeParams.pslug, href.substring(11)), title, text)
+            renderer.realLink($rootScope.urls.taskboardUrl($routeParams.pslug, href.substring(8)), title, text)
         else
             renderer.realLink(href, title, text)
 
