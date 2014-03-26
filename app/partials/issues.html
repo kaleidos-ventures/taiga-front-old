@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="tags-list-sbox">
-                    <div class="tag selected" style="background: {{ tag.color }}" ng-repeat="tag in ctrl.selectedTags() track by tag.id" ng-click="ctrl.toggleTag(tag)">
+                    <div class="tag selected" style="background: {{ tag.color }}" ng-repeat="tag in ctrl.selectedTags() track by $index" ng-click="ctrl.toggleTag(tag)">
                         <div class="name" ng-hide="tag.type == 'assigned_to' || tag.type == 'owner'">
                             {{ tag.name }}
                         </div>
@@ -141,7 +141,7 @@
                 <li>
                     <h3 i18next="issues.tags">Tags:</h3>
                     <div class="tags-list-sbox">
-                        <div class="tag" ng-repeat="tag in tags track by tag.id" ng-click="ctrl.toggleTag(tag)"
+                        <div class="tag" ng-repeat="tag in tags track by $index" ng-click="ctrl.toggleTag(tag)"
                                 ng-class="{selected: ctrl.isTagSelected(tag)}" gm-colorize-tag>
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
