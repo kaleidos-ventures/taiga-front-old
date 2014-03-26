@@ -221,20 +221,35 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location, rs)
             $("##{attrs.previewId}").hide()
             $("##{attrs.previewId}").html("")
 
-GmRenderMarkdownDirective = ($rootScope, $parse, $sanitize) ->
+GmRenderMarkdownDirective = ($rootScope, $parse, gmWiki) ->
     return (scope, elm, attrs) ->
         element = angular.element(elm)
         projectId = scope.projectId
 
-        if not attrs.gmRenderMarkdown
-            result = $.emoticons.replaceExcludingPre(marked(element.text()))
+        if attrs.gmRenderMarkdown
+            data = scope.$eval(attrs.gmRenderMarkdown)
+            if data != undefined
+                result = gmWiki.render(data)
+                element.html(result)
+        else
+            result = gmWiki.render(element.text())
             element.html(result)
 
         scope.$watch attrs.gmRenderMarkdown, ->
             data = scope.$eval(attrs.gmRenderMarkdown)
             if data != undefined
-                result = $.emoticons.replaceExcludingPre(marked(data))
+                result = gmWiki.render(data)
                 element.html(result)
+
+class GmRenderMarkdownService
+    @.$inject = []
+
+    render: (text) ->
+        return $.emoticons.replaceExcludingPre(marked(text))
+
+GmRenderMarkdownFilter = (gmWiki) ->
+    return (input) ->
+        return gmWiki.render(input)
 
 wikiInit = ($routeParams, $rootScope) ->
     hljs.initHighlightingOnLoad()
@@ -281,9 +296,10 @@ wikiInit = ($routeParams, $rootScope) ->
         renderer: renderer
     }
 
-moduleDeps = ['i18next', 'taiga.services.resource']
-module = angular.module('taiga.directives.wiki', moduleDeps).run ['$routeParams', '$rootScope', wikiInit ]
+moduleDeps = ['i18next', 'taiga.services.resource', 'ngRoute']
+module = angular.module('gmWiki', moduleDeps).run ['$routeParams', '$rootScope', wikiInit ]
 module.directive('gmMarkitup', ["$rootScope", "$parse", "$i18next",
-                                "$sanitize", "$location", "resource",
-                                gmMarkitupConstructor])
-module.directive("gmRenderMarkdown", ["$rootScope", "$parse", "$sanitize", GmRenderMarkdownDirective])
+                                "$location", "resource", gmMarkitupConstructor])
+module.directive("gmRenderMarkdown", ["$rootScope", "$parse", "gmWiki", GmRenderMarkdownDirective])
+module.service("gmWiki", GmRenderMarkdownService)
+module.filter("wiki", ["gmWiki", GmRenderMarkdownFilter])

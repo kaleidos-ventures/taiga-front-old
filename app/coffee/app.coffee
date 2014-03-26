@@ -455,7 +455,6 @@ modules = [
     "taiga.directives.tasks",
     "taiga.directives.issues",
     "taiga.directives.history",
-    "taiga.directives.wiki",
     "taiga.directives.backlog",
     "taiga.localconfig",
 
@@ -471,7 +470,8 @@ modules = [
     "gmConfig",
     "i18next",
     "favico",
-    "ui.select2"
+    "ui.select2",
+    "gmWiki"
 ]
 
 init.$inject = ['$rootScope', '$location', '$gmStorage', '$gmAuth', '$gmUrls',

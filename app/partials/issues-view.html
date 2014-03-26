@@ -413,7 +413,7 @@
                 <div class="change" ng-repeat="change in hitem.changes">
                     <strong>{{ change.name|capitalize }}</strong>:
                     <span ng-show="change.old != '' && change.old != null" ng-bind-html="'issue.change-from'|i18next:{value: change.old}"></span>
-                    <span ng-bind-html="'issue.change-to'|i18next:{value: change.new||''}"></span></span>
+                    <span ng-bind-html="'issue.change-to'|i18next:{value: change.new||''}"></span>
                 </div>
             </div>
             <div class="comment" ng-show="hitem.comment">
