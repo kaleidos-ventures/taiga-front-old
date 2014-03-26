@@ -1,7 +1,6 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
 <div class="middle-container dashboard-content">
-    <!-- Temporary hidden -->
-    <div class="row-fluid first-row stats-row">
+    <div class="row-fluid first-row stats-row" ng-hide="statsClosed">
         <div class="span12">
             <div class="stats-container">
                 <div class="row-fluid">
@@ -59,7 +58,21 @@
             </div>
         </div>
     </div>
-
+    <div class="actions-container">
+        <div class="actions-bar-sbox">
+            <div class="title-sbox">
+                <a data-icon="C" href="" ng-class="{active: !statsClosed}"
+                   ng-click="statsClosed=!statsClosed">
+                   <span ng-show="!statsClosed" i18next="taskboard.hide-stats">
+                       Hide statistics
+                   </span>
+                   <span ng-show="statsClosed" i18next="taskboard.show-stats">
+                       Show statistics
+                   </span>
+               </a>
+            </div>
+        </div>
+    </div>
     <div class="row-fluid">
         <div class="span12">
             <div class="kanban-container tasks-container">

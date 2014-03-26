@@ -3262,9 +3262,6 @@ body.login {
 
 .dashboard-content {
     padding: 10px;
-    .first-row {
-        margin: 40px 0;
-    }
     .stats-container {
         overflow: hidden;
         padding: 5px;
@@ -3386,7 +3383,45 @@ body.login {
             }
         }
     }
-
+    .actions-container {
+        .actions-bar-sbox {
+            margin: 2px 0;
+            padding: 5px 5px 5px 15px;
+            overflow: hidden;
+            .title-sbox {
+                font-family: 'ColabThi';
+                font-size: 100%;
+                a {
+                    color: #666;
+                    padding: 5px;
+                    padding-left: 20px;
+                    position: relative;
+                    padding-left: 20px;
+                    &:before {
+                        position: absolute;
+                        top: 20%;
+                        left: 0%;
+                        -webkit-transform: rotate(0deg);
+                        -moz-transform: rotate(0deg);
+                        -ms-transform: rotate(0deg);
+                        -o-transform: rotate(0deg);
+                        transform: rotate(0deg);
+                        transition: all .2s ease-in;
+                    }
+                    &:hover, &.active {
+                        &:before {
+                            -webkit-transform: rotate(180deg);
+                            -moz-transform: rotate(180deg);
+                            transform: rotate(180deg);
+                        }
+                    }
+                }
+            }
+            .buttons-sbox {
+                float: right;
+            }
+        }
+    } 
     .new-task-modal {
         padding: 5px;
         width: 500px;

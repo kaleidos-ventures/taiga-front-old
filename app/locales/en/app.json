@@ -425,6 +425,8 @@
         "finish-date": "finish<br />date",
         "data": "Data",
         "iocaine-doses": "Iocaine doses",
+        "hide-stats": "Hide statistics",
+        "show-stats": "Show statistics",
         "add-new-task": "Add new task",
         "create-task": "Create task",
         "modify-task": "Modify task",
