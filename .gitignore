@@ -6,7 +6,7 @@ app/js/taiga.min.js
 app/less/style.css
 app/components
 node_modules
-
+coverage
 app/dist/*
 app/coffee/config.coffee
 .venv
