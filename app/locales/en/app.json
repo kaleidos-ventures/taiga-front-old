@@ -501,6 +501,7 @@
         "historical": "Historical",
         "attachments": "Attachments",
         "no-historical-items": "This wiki page has no past yet",
+        "last-update-by-history": "Last update by",
         "updated-by-history": "Updated by",
         "show-content": "Show content",
         "show-current-diff": "Show diff with current version",

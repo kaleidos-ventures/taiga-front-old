@@ -501,6 +501,7 @@
         "historical": "Historial",
         "attachments": "Adjuntos",
         "no-historical-items": "Esta página del wiki todavía no ha forjado un pasado",
+        "last-update-by-history": "Última actualización por",
         "updated-by-history": "Actualizado por",
         "show-content": "Ver contenido",
         "show-current-diff": "Ver diff con la versión actual",

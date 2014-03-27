@@ -197,10 +197,13 @@ class WikiHistoricalController extends TaigaPageController
 
     loadHistorical: (page=1) ->
         @rs.getWikiPageHistorical(@scope.page.id, {page: page}).then (historical) =>
-            if @scope.historical and page != 1
+            if page == 1
+                @scope.currentVersion = _.first(historical.models)
+                historical.models = _.rest(historical.models)
+            else
                 historical.models = _.union(@scope.historical.models, historical.models)
 
-            @scope.showMoreHistoricaButton = historical.models.length < historical.count
+            @scope.showMoreHistoricaButton = historical.models.length < historical.count - 1
             @scope.historical = historical
 
     loadMoreHistorical: ->
