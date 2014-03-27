@@ -21,6 +21,9 @@ class UrlsService
         @data = data
 
     setHost: (ns, host, scheme) ->
+        if _.toArray(arguments).length != 3
+            throw Error("wrong arguments to setHost")
+
         @data.host[ns] = host
         @data.scheme[ns] = scheme
 
