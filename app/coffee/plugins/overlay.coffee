@@ -26,16 +26,19 @@ class OverlayService extends TaigaBaseService
         @log.debug "OverlayService.open"
 
         @.defered = @q.defer()
-        @.el = angular.element("<div />", {"class": "overlay"})
+
+        if angular.element(".overlay").length == 0
+            @.el = angular.element("<div />", {"class": "overlay"})
+
+            body = angular.element("body")
+            body.append(@.el)
+        else
+            @.el = angular.element(".overlay")
 
         @.el.on "click", (event) =>
             @rootScope.$apply =>
                 @.close()
                 @.defered.resolve()
-
-        body = angular.element("body")
-        body.append(@.el)
-
         return @.defered.promise
 
 
