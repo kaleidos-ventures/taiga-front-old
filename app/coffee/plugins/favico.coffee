@@ -24,13 +24,15 @@ class FavicoService extends TaigaBaseService
         animation: "popFade"          # [slide, fade, pop, popFade, none]
     }
 
-    favico: null
+    constructor: ->
+        @_favico = null
 
     newFavico: (opts) ->
         try
-            opts = opts or @_defaultOptions
-            @_favico = new Favico(opts)
-        catch
+            if @_favico is null
+                opts = opts or @_defaultOptions
+                @_favico = new Favico(opts)
+        catch err
             false
 
     badge: (num) ->

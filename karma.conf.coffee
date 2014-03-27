@@ -2,7 +2,7 @@
 module.exports = (config) ->
     config.set
         basePath: '.'
-        browsers: ['PhantomJS', 'Firefox']
+        browsers: ['PhantomJS']
         frameworks: ['mocha', 'chai']
         reporters: ['progress', 'coverage']
         preprocessors: {
