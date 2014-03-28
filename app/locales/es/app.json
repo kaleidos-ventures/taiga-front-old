@@ -72,7 +72,8 @@
         "error-on-delete": "El elemento no se ha borrado",
         "yes": "Si",
         "no": "No",
-        "videoconference": "Video conferencia"
+        "videoconference": "Video conferencia",
+        "file-upload-data": "__upload__ de __total__"
     },
     "backlog": {
         "total": "Total",
@@ -251,7 +252,6 @@
         "updated-by-history": "Actualizada por",
         "comment-history": "Comentario:",
         "issue-saved": "La petición ha sido guardada",
-        "file-upload-data": "__upload__ de __total__",
         "generated-user-stories": "Generated user stories:",
         "generate-new-user-story": "Generar nueva historia de usuario",
         "us-modal-create-user-story-from-this-issue": "Crear historia de usuario a partir de esta petición",
@@ -493,7 +493,6 @@
         "see-more": "Ver más",
         "updated-by-history": "Actualizada por",
         "comment-history": "Comentario:",
-        "file-upload-data": "__upload__ de __total__"
     },
     "wiki-historical": {
         "on-date": "el __date__",
@@ -524,7 +523,6 @@
         "delete-attachment": "Borrar el adjunto",
         "save-button": "Guardar",
         "cancel-button": "Cancelar",
-        "file-upload-data": "__upload__ de __total__"
     },
     "user-story": {
         "user-story-ref": "Historia de usuario #__ref__",
@@ -572,7 +570,6 @@
         "see-more": "Ver más",
         "updated-by-history": "Actualizada por",
         "comment": "Comentario:",
-        "file-upload-data": "__upload__ de __total__"
     },
     "wiki-editor": {
         "heading-1": "Encabezado de primer nivel",

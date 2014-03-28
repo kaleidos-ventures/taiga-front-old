@@ -567,7 +567,7 @@ class ResourceService extends TaigaBaseService
     getWikiPageAttachments: (projectId, wikiPageId) ->
         return @_queryMany("wiki/attachments", {project: projectId, object_id: wikiPageId})
 
-    uploadIssueAttachment: (projectId, issueId, file, progress=true) ->
+    _uploadAttachment: (projectId, objectId, file, progress, apiUrlKey) ->
         defered = @q.defer()
 
         if file is undefined
@@ -579,7 +579,7 @@ class ResourceService extends TaigaBaseService
                 file.status = "in-progress"
                 file.totalSize = evt.total
                 file.uploadSize = evt.loaded
-                file.progressSizeData = @i18next.t("issue.file-upload-data", {
+                file.progressSizeData = @i18next.t("common.file-upload-data", {
                     upload: @filter("sizeFormat")(evt.loaded),
                     total: @filter("sizeFormat")(evt.total)
                 })
@@ -602,7 +602,7 @@ class ResourceService extends TaigaBaseService
 
         formData = new FormData()
         formData.append("project", projectId)
-        formData.append("object_id", issueId)
+        formData.append("object_id", objectId)
         formData.append("attached_file", file)
 
         xhr = new XMLHttpRequest()
@@ -612,161 +612,22 @@ class ResourceService extends TaigaBaseService
 
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
-        xhr.open("POST", @gmUrls.api("issues/attachments"))
+        xhr.open("POST", @gmUrls.api(apiUrlKey))
         xhr.setRequestHeader("Authorization", "Bearer #{@gmAuth.getToken()}")
         xhr.send(formData)
         return defered.promise
+
+    uploadIssueAttachment: (projectId, issueId, file, progress=true) ->
+        @_uploadAttachment(projectId, issueId, file, progress, "issues/attachments")
 
     uploadTaskAttachment: (projectId, taskId, file, progress=true) ->
-        defered = @q.defer()
-
-        if file is undefined
-            defered.resolve(null)
-            return defered.promise
-
-        uploadProgress = (evt) =>
-            @rootScope.$apply =>
-                file.status = "in-progress"
-                file.totalSize = evt.total
-                file.uploadSize = evt.loaded
-                file.progressSizeData = @i18next.t("task.file-upload-data", {
-                    upload: @filter("sizeFormat")(evt.loaded),
-                    total: @filter("sizeFormat")(evt.total)
-                })
-                file.uploadPercent = Math.round((evt.loaded / evt.total) * 100)
-
-        uploadComplete = (evt) =>
-            @rootScope.$apply ->
-                file.status = "done"
-                try
-                    data = JSON.parse(evt.target.responseText)
-                catch
-                    # NOTE: HACK: In firefox evt.target.responseText is HTML instead json text Why? Why?
-                    data = {}
-                defered.resolve(data)
-
-        uploadFailed = (evt) =>
-            @rootScope.$apply ->
-                file.status = "error"
-                defered.reject("fail")
-
-        formData = new FormData()
-        formData.append("project", projectId)
-        formData.append("object_id", taskId)
-        formData.append("attached_file", file)
-
-        xhr = new XMLHttpRequest()
-
-        if progress?
-            xhr.upload.addEventListener("progress", uploadProgress, false)
-
-        xhr.addEventListener("load", uploadComplete, false)
-        xhr.addEventListener("error", uploadFailed, false)
-        xhr.open("POST", @gmUrls.api("tasks/attachments"))
-        xhr.setRequestHeader("Authorization", "Bearer #{@gmAuth.getToken()}")
-        xhr.send(formData)
-        return defered.promise
+        @_uploadAttachment(projectId, taskId, file, progress, "tasks/attachments")
 
     uploadUserStoryAttachment: (projectId, userStoryId, file, progress=true) ->
-        defered = @q.defer()
-
-        if file is undefined
-            defered.resolve(null)
-            return defered.promise
-
-        uploadProgress = (evt) =>
-            @rootScope.$apply =>
-                file.status = "in-progress"
-                file.totalSize = evt.total
-                file.uploadSize = evt.loaded
-                file.progressSizeData = @i18next.t("user-story.file-upload-data", {
-                    upload: @filter("sizeFormat")(evt.loaded),
-                    total: @filter("sizeFormat")(evt.total)
-                })
-                file.uploadPercent = Math.round((evt.loaded / evt.total) * 100)
-
-        uploadComplete = (evt) =>
-            @rootScope.$apply ->
-                file.status = "done"
-                try
-                    data = JSON.parse(evt.target.responseText)
-                catch
-                    # NOTE: HACK: In firefox evt.target.responseText is HTML instead json text Why? Why?
-                    data = {}
-                defered.resolve(data)
-
-        uploadFailed = (evt) =>
-            @rootScope.$apply ->
-                file.status = "error"
-                defered.reject("fail")
-
-        formData = new FormData()
-        formData.append("project", projectId)
-        formData.append("object_id", userStoryId)
-        formData.append("attached_file", file)
-
-        xhr = new XMLHttpRequest()
-
-        if progress?
-            xhr.upload.addEventListener("progress", uploadProgress, false)
-
-        xhr.addEventListener("load", uploadComplete, false)
-        xhr.addEventListener("error", uploadFailed, false)
-        xhr.open("POST", @gmUrls.api("userstories/attachments"))
-        xhr.setRequestHeader("Authorization", "Bearer #{@gmAuth.getToken()}")
-        xhr.send(formData)
-        return defered.promise
+        @_uploadAttachment(projectId, userStoryId, file, progress, "userstories/attachments")
 
     uploadWikiPageAttachment: (projectId, wikiPageId, file, progress=true) ->
-        defered = @q.defer()
-
-        if file is undefined
-            defered.resolve(null)
-            return defered.promise
-
-        uploadProgress = (evt) =>
-            @rootScope.$apply =>
-                file.status = "in-progress"
-                file.totalSize = evt.total
-                file.uploadSize = evt.loaded
-                file.progressSizeData = @i18next.t("wiki.file-upload-data", {
-                    upload: @filter("sizeFormat")(evt.loaded),
-                    total: @filter("sizeFormat")(evt.total)
-                })
-                console.log file.progressSizeData
-                file.uploadPercent = Math.round((evt.loaded / evt.total) * 100)
-
-        uploadComplete = (evt) =>
-            @rootScope.$apply ->
-                file.status = "done"
-                try
-                    data = JSON.parse(evt.target.responseText)
-                catch
-                    # NOTE: HACK: In firefox evt.target.responseText is HTML instead json text Why? Why?
-                    data = {}
-                defered.resolve(data)
-
-        uploadFailed = (evt) =>
-            @rootScope.$apply ->
-                file.status = "error"
-                defered.reject("fail")
-
-        formData = new FormData()
-        formData.append("project", projectId)
-        formData.append("object_id", wikiPageId)
-        formData.append("attached_file", file)
-
-        xhr = new XMLHttpRequest()
-
-        if progress?
-            xhr.upload.addEventListener("progress", uploadProgress, false)
-
-        xhr.addEventListener("load", uploadComplete, false)
-        xhr.addEventListener("error", uploadFailed, false)
-        xhr.open("POST", @gmUrls.api("wiki/attachments"))
-        xhr.setRequestHeader("Authorization", "Bearer #{@gmAuth.getToken()}")
-        xhr.send(formData)
-        return defered.promise
+        @_uploadAttachment(projectId, wikiPageId, file, progress, "wiki/attachments")
 
     getSiteInfo: () ->
         httpParams = {
