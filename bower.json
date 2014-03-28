@@ -22,10 +22,11 @@
     "lodash": "~2.4.1",
     "emoticons": "~0.1.7",
     "jquery-flot": "~0.8.2",
-    "angular": "1.2.14",
-    "angular-route": "1.2.14",
-    "angular-animate": "1.2.14",
-    "angular-sanitize": "1.2.14",
+    "angular": "1.2.13",
+    "angular-route": "1.2.12",
+    "angular-animate": "1.2.12",
+    "angular-sanitize": "1.2.12",
+    "angular-mocks": "1.2.12",
     "kalendae": "~0.4.1",
     "checksley": "~0.5.0",
     "i18next": "~1.7.1",
@@ -40,11 +41,10 @@
     "moment": "~2.5.1",
     "isMobile": "~0.3.1",
     "favico.js": "0.3.4",
-    "Sortable": "~0.1.8",
-    "angular-mocks": "~1.2.14"
+    "Sortable": "~0.1.8"
   },
   "resolutions": {
-    "angular": "~1.2.14",
+    "angular": "1.2.12",
     "lodash": "~2.4.1",
     "moment": "~2.5.1",
     "jquery": "~2.1.0"
