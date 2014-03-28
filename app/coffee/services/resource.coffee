@@ -166,7 +166,7 @@ class ResourceService extends TaigaBaseService
 
         postData = {
             "username": username
-            "password":password
+            "password": password
         }
 
         @http({method:"POST", url: @gmUrls.api("auth"), data: JSON.stringify(postData)})

@@ -24,6 +24,43 @@ describe 'resourceService', ->
         httpBackend.whenGET('http://localhost:8000/api/v1/projects/1/stats').respond(200, { test: "test" })
         httpBackend.whenGET('http://localhost:8000/api/v1/projects/100/stats').respond(404)
 
+        httpBackend.whenPOST('http://localhost:8000/api/v1/auth/register', {"test": "data"}).respond(200, {'auth_token': 'test'})
+        httpBackend.whenPOST('http://localhost:8000/api/v1/auth/register', {"test": "bad-data"}).respond(400)
+
+        httpBackend.whenPOST(
+            'http://localhost:8000/api/v1/auth',
+            {"username": "test", "password": "test"}
+        ).respond(200, {'auth_token': 'test'})
+        httpBackend.whenPOST(
+            'http://localhost:8000/api/v1/auth',
+            {"username": "bad", "password": "bad"}
+        ).respond(400)
+
+        httpBackend.whenPOST(
+            'http://localhost:8000/api/v1/users/password_recovery',
+            {"username": "test"}
+        ).respond(200, {'auth_token': 'test'})
+        httpBackend.whenPOST(
+            'http://localhost:8000/api/v1/users/password_recovery',
+            {"username": "bad"}
+        ).respond(400)
+        httpBackend.whenPOST(
+            'http://localhost:8000/api/v1/users/change_password_from_recovery',
+            {"password": "test", "token": "test"}
+        ).respond(200)
+        httpBackend.whenPOST(
+            'http://localhost:8000/api/v1/users/change_password_from_recovery',
+            {"password": "bad", "token": "bad"}
+        ).respond(400)
+        httpBackend.whenPOST(
+            'http://localhost:8000/api/v1/users/change_password',
+            {"password": "test"}
+        ).respond(200)
+        httpBackend.whenPOST(
+            'http://localhost:8000/api/v1/users/change_password',
+            {"password": "bad"}
+        ).respond(400)
+
     describe 'resource service', ->
         afterEach ->
             httpBackend.verifyNoOutstandingExpectation()
@@ -73,3 +110,70 @@ describe 'resourceService', ->
             promise = resource.getPermissions()
             httpBackend.flush()
             promise.should.be.fullfilled
+
+        it 'should allow to register a user', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/auth/register', {"test": "data"})
+            promise = resource.register({"test": "data"})
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/auth/register', {"test": "bad-data"})
+            promise = resource.register({"test": "bad-data"})
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to login with a username and password', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/auth', {"username": "test", "password": "test"})
+            promise = resource.login("test", "test")
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/auth', {"username": "bad", "password": "bad"})
+            promise = resource.login("bad", "bad")
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to recover password with your email', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/users/password_recovery', {"username": "test"})
+            promise = resource.recovery("test")
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/users/password_recovery', {"username": "bad"})
+            promise = resource.recovery("bad")
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to change password from a recovery token', inject (resource) ->
+            httpBackend.expectPOST(
+                'http://localhost:8000/api/v1/users/change_password_from_recovery',
+                {"password": "test", "token": "test"}
+            )
+            promise = resource.changePasswordFromRecovery("test", "test")
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST(
+                'http://localhost:8000/api/v1/users/change_password_from_recovery',
+                {"password": "bad", "token": "bad"}
+            )
+            promise = resource.changePasswordFromRecovery("bad", "bad")
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to change password for the current user', inject (resource) ->
+            httpBackend.expectPOST(
+                'http://localhost:8000/api/v1/users/change_password',
+                {"password": "test"}
+            )
+            promise = resource.changePasswordForCurrentUser("test")
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST(
+                'http://localhost:8000/api/v1/users/change_password',
+                {"password": "bad"}
+            )
+            promise = resource.changePasswordForCurrentUser("bad")
+            promise.should.be.rejected
+            httpBackend.flush()
