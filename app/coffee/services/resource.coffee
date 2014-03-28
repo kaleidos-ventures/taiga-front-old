@@ -233,16 +233,6 @@ class ResourceService extends TaigaBaseService
         params.task = options.taskref if options.taskref?
         params.issue = options.issueref if options.issueref?
         params.milestone = options.mlref if options.mlref?
-
-        args = [
-            options.pslug
-            options.usref
-            options.taskref
-            options.issueref
-            options.mlref
-        ]
-
-        key = _.map(args, (it) -> if it == undefined then "" else it).join(":")
         return @_queryRaw("resolver", null, params, {cache:@_cache})
 
     # Get a site
