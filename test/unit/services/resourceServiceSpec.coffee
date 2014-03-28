@@ -82,6 +82,9 @@ describe 'resourceService', ->
         httpBackend.whenGET('http://localhost:8000/api/v1/projects/1/issues_stats').respond(200)
         httpBackend.whenGET('http://localhost:8000/api/v1/projects/100/issues_stats').respond(404)
 
+        httpBackend.whenGET('http://localhost:8000/api/v1/projects/1/tags').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/projects/100/tags').respond(400)
+
     describe 'resource service', ->
         afterEach ->
             httpBackend.verifyNoOutstandingExpectation()
