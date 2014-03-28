@@ -33,13 +33,14 @@ describe 'filter', ->
 
     describe 'momentFormat', ->
         it "should format a date", inject (momentFormatFilter) ->
-            expect(momentFormatFilter("2013-02-08T09:30:26.123", "DD-MM-YYYY")).to.be.equal("08-02-2013")
+            date = "2013-02-08T09:30:26+01:00"
+            expect(momentFormatFilter(date, "DD-MM-YYYY")).to.be.equal("08-02-2013")
 
         it "should return the same", inject (momentFormatFilter) ->
-            expect(momentFormatFilter("2013-02-08T09:30:26.123", "")).to.be.equal("2013-02-08T09:30:26+01:00")
-            expect(momentFormatFilter("2013-02-08T09:30:26.123", null)).to.be.equal("2013-02-08T09:30:26+01:00")
-            expect(momentFormatFilter("2013-02-08T09:30:26.123", undefined)).to.be.equal(
-                                                              "2013-02-08T09:30:26+01:00")
+            date = "2013-02-08T09:30:26+01:00"
+            expect(momentFormatFilter(date, "")).to.be.equal(date)
+            expect(momentFormatFilter(date, null)).to.be.equal(date)
+            expect(momentFormatFilter(date, undefined)).to.be.equal(date)
 
         it "should return nothing", inject (momentFormatFilter) ->
             expect(momentFormatFilter(null)).to.be.equal("")
