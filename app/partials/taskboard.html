@@ -77,12 +77,12 @@
         <div class="span12">
             <div class="kanban-container tasks-container">
                 <div class="header">
-                    <table>
+                    <table gm-equal-column-width min-width="250" watch="constants.taskStatusesList">
                         <thead>
                             <tr>
-                                <td class="row-us-description" style="width: {{ 100/(constants.taskStatusesList.length+1) }}%"></td>
+                                <td class="row-us-description"></td>
                                 <td class="" ng-repeat="status in constants.taskStatusesList|orderBy:'order'"
-                                        style="width: {{ 100/(constants.taskStatusesList.length+1) }}%; border-right-color: {{ status.color }}">
+                                        style="border-right-color: {{ status.color }}">
                                     <div class="badge" style="background-color: {{ status.color }};">{{ status.name }}</div>
                                 </td>
                             </tr>

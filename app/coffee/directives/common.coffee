@@ -425,6 +425,20 @@ GmSelectFix = ->
                 value = ''
             return value
 
+GmEqualColumnWidth = ->
+    link: (scope, element, attrs) ->
+        scope.$watch attrs.watch, ->
+            tds = element.find('thead tr td')
+            if tds.length == 0
+                return
+            minWidth = attrs.minWidth or 0
+            optimalWidth = $(element).width() / tds.length
+            if optimalWidth < minWidth
+                width = minWidth
+            else
+                width = optimalWidth
+
+            $(tds).attr('width', "#{width}px")
 
 GmSortableDirective = ($log, $rootScope) ->
     scope: true
@@ -476,3 +490,4 @@ module.directive('gmPaginator', ['$parse', GmPaginator])
 module.directive('gmSpinner', ['$parse', '$rootScope', GmSpinner])
 module.directive('gmSelectFix', GmSelectFix)
 module.directive('gmSortable', ["$log", "$rootScope", GmSortableDirective])
+module.directive('gmEqualColumnWidth', GmEqualColumnWidth)
