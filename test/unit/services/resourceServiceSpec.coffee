@@ -73,8 +73,8 @@ describe 'resourceService', ->
             {'test': 'bad'}
         ).respond(400)
         httpBackend.whenGET('http://localhost:8000/api/v1/projects').respond(200)
-        httpBackend.whenGET('http://localhost:8000/api/v1/projects/1').respond(200)
-        httpBackend.whenGET('http://localhost:8000/api/v1/projects/100').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/projects/1?').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/projects/100?').respond(400)
 
         httpBackend.whenGET('http://localhost:8000/api/v1/projects/1/stats').respond(200, { test: "test" })
         httpBackend.whenGET('http://localhost:8000/api/v1/projects/100/stats').respond(404)
@@ -242,12 +242,12 @@ describe 'resourceService', ->
             promise.should.be.fullfilled
 
         it 'should allow to get a project', inject (resource) ->
-            httpBackend.expectGET('http://localhost:8000/api/v1/projects/1')
+            httpBackend.expectGET('http://localhost:8000/api/v1/projects/1?')
             promise = resource.getProject(1)
             httpBackend.flush()
             promise.should.be.fullfilled
 
-            httpBackend.expectGET('http://localhost:8000/api/v1/projects/100')
+            httpBackend.expectGET('http://localhost:8000/api/v1/projects/100?')
             promise = resource.getProject(100)
             promise.should.be.rejected
             httpBackend.flush()
