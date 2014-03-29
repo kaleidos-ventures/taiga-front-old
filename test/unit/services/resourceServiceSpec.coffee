@@ -84,6 +84,14 @@ describe 'resourceService', ->
 
         httpBackend.whenGET('http://localhost:8000/api/v1/projects/1/tags').respond(200)
         httpBackend.whenGET('http://localhost:8000/api/v1/projects/100/tags').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/projects/1/issue_filters_data').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/projects/100/issue_filters_data').respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/memberships?', {"test": "test"}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/memberships?', {"test": "bad"}).respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/roles?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/roles?project=100').respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/roles?', {"test": "test", "project": 1}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/roles?', {"test": "bad", "project": 1}).respond(400)
 
     describe 'resource service', ->
         afterEach ->
@@ -282,5 +290,49 @@ describe 'resourceService', ->
 
             httpBackend.expectGET('http://localhost:8000/api/v1/projects/100/tags')
             promise = resource.getProjectTags(100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get a project issues filters data', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/projects/1/issue_filters_data')
+            promise = resource.getIssuesFiltersData(1)
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/projects/100/issue_filters_data')
+            promise = resource.getIssuesFiltersData(100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a membership', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/memberships?', {"test": "test"})
+            promise = resource.createMembership({"test": "test"})
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/memberships?', {"test": "bad"})
+            promise = resource.createMembership({"test": "bad"})
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get a project roles', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/roles?project=1')
+            promise = resource.getRoles(1)
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/roles?project=100')
+            promise = resource.getRoles(100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a role', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/roles?', {"test": "test", "project": 1})
+            promise = resource.createRole(1, {"test": "test"})
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/roles?', {"test": "bad", "project": 1})
+            promise = resource.createRole(1, {"test": "bad"})
             promise.should.be.rejected
             httpBackend.flush()
