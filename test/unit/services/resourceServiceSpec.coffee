@@ -92,6 +92,10 @@ describe 'resourceService', ->
         httpBackend.whenGET('http://localhost:8000/api/v1/roles?project=100').respond(400)
         httpBackend.whenPOST('http://localhost:8000/api/v1/roles?', {"test": "test", "project": 1}).respond(200)
         httpBackend.whenPOST('http://localhost:8000/api/v1/roles?', {"test": "bad", "project": 1}).respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/milestones?project=1').respond(200, [{"user_stories": [{"test": "test"}]}])
+        httpBackend.whenGET('http://localhost:8000/api/v1/milestones?project=100').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/milestones/1?project=1').respond(200, {"user_stories": [{"test": "test"}]})
+        httpBackend.whenGET('http://localhost:8000/api/v1/milestones/100?project=1').respond(400)
 
     describe 'resource service', ->
         afterEach ->
@@ -334,5 +338,27 @@ describe 'resourceService', ->
 
             httpBackend.expectPOST('http://localhost:8000/api/v1/roles?', {"test": "bad", "project": 1})
             promise = resource.createRole(1, {"test": "bad"})
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get all the milestones of a project', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/milestones?project=1')
+            promise = resource.getMilestones(1)
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/milestones?project=100')
+            promise = resource.getMilestones(100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get one milestone', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/milestones/1?project=1')
+            promise = resource.getMilestone(1, 1)
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/milestones/100?project=1')
+            promise = resource.getMilestone(1, 100)
             promise.should.be.rejected
             httpBackend.flush()
