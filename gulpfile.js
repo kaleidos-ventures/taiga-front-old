@@ -14,7 +14,7 @@ var gulpif = require('gulp-if');
 var protractor = require("gulp-protractor").protractor;
 var coveralls = require('gulp-coveralls');
 var clean = require('gulp-clean');
-
+var plumber = require('gulp-plumber');
 
 var externalSources = [
     "app/components/jquery/dist/jquery.js",
@@ -86,7 +86,8 @@ gulp.task("pro", ["less", "template"], function() {
 
 gulp.task("coffee", function() {
     return gulp.src(coffeeSources)
-        .pipe(coffee().on("error", gutil.log))
+        .pipe(plumber())
+        .pipe(coffee())
         .pipe(concat("app.js"))
         .pipe(gulp.dest("app/dist/"));
 });
