@@ -213,7 +213,8 @@ class IssuesViewController extends TaigaPageController
     @.$inject = ['$scope', '$location', '$rootScope', '$routeParams', '$q',
                  'resource', '$data', '$confirm', '$gmFlash', '$i18next',
                  '$favico', '$modal']
-    constructor: (@scope, @location, @rootScope, @routeParams, @q, @rs, @data, @confirm, @gmFlash, @i18next, @favico, @modal) ->
+    constructor: (@scope, @location, @rootScope, @routeParams, @q, @rs, @data,
+                  @confirm, @gmFlash, @i18next, @favico, @modal) ->
         super(scope, rootScope, favico)
 
     debounceMethods: ->

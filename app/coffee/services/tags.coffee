@@ -116,7 +116,7 @@ class FiltersService extends TaigaBaseService
     # Given a raw filters data of one unique type (like tags, owners,
     # statuses, etc...) return a preprocessed list of filter objects.
     generateFiltersFromGenericList: (data, constants, type) ->
-        filters = _.map data, (item) =>
+        filters = _.map data, (item) ->
             filterId = item[0]
             filterCounter = item[1]
             resolvedFilter = constants[filterId]
