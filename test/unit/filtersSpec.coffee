@@ -20,6 +20,7 @@ describe 'filter', ->
         it('should truncate a word', inject((truncateFilter) ->
             expect(truncateFilter('test of truncation', 20)).to.be.equal('test of truncation')
             expect(truncateFilter('test of truncation', 10)).to.be.equal('test of...')
+            expect(truncateFilter('test of truncation with default value')).to.be.equal('test of truncation with...')
         ))
 
     describe 'slugify', ->
@@ -57,6 +58,7 @@ describe 'filter', ->
             expect(lowercaseFilter('Taiga')).to.be.equal('taiga')
             expect(lowercaseFilter('taiga')).to.be.equal('taiga')
             expect(lowercaseFilter('TaIgA')).to.be.equal('taiga')
+            expect(lowercaseFilter()).to.be.equal('')
         ))
 
     describe 'capitalize', ->
@@ -65,19 +67,24 @@ describe 'filter', ->
             expect(capitalizeFilter('Taiga')).to.be.equal('Taiga')
             expect(capitalizeFilter('taiga')).to.be.equal('Taiga')
             expect(capitalizeFilter('TaIgA')).to.be.equal('Taiga')
+            expect(capitalizeFilter('')).to.be.equal('')
         ))
 
     describe 'sizeFormat', ->
         it('should return the size in human readable format', inject((sizeFormatFilter) ->
             expect(sizeFormatFilter(1000, 1)).to.be.equal('1000.0 bytes')
-            expect(sizeFormatFilter(1024, 1)).to.be.equal('1.0 KB')
-            expect(sizeFormatFilter(1024*1024, 1)).to.be.equal('1.0 MB')
-            expect(sizeFormatFilter(1024*1024*1024, 1)).to.be.equal('1.0 GB')
-            expect(sizeFormatFilter(1024*1024*1024*1024, 1)).to.be.equal('1.0 TB')
-            expect(sizeFormatFilter(1024*1024*1024*1024*1024, 1)).to.be.equal('1.0 PB')
-            expect(sizeFormatFilter(1024*1024*1024*1024*1024*1024, 1)).to.be.equal('1024.0 PB')
+            expect(sizeFormatFilter(1000)).to.be.equal('1000.0 bytes')
+            expect(sizeFormatFilter(1024)).to.be.equal('1.0 KB')
+            expect(sizeFormatFilter(1024*1024)).to.be.equal('1.0 MB')
+            expect(sizeFormatFilter(1024*1024*1024)).to.be.equal('1.0 GB')
+            expect(sizeFormatFilter(1024*1024*1024*1024)).to.be.equal('1.0 TB')
+            expect(sizeFormatFilter(1024*1024*1024*1024*1024)).to.be.equal('1.0 PB')
+            expect(sizeFormatFilter(1024*1024*1024*1024*1024*1024)).to.be.equal('1024.0 PB')
 
-            expect(sizeFormatFilter(2*1024*1024+10, 1)).to.be.equal('2.0 MB')
+            expect(sizeFormatFilter(2*1024*1024+10)).to.be.equal('2.0 MB')
+
+            expect(sizeFormatFilter(Math.Inf)).to.be.equal('-')
+            expect(sizeFormatFilter(0)).to.be.equal('0 bytes')
         ))
 
     describe 'diff', ->
@@ -91,4 +98,12 @@ describe 'filter', ->
 
         it 'should marks the deleted text', inject (diffFilter, $sce) ->
             expect($sce.getTrustedHtml(diffFilter("Sample text", "Sample text with extra text"))).to.be.equal(
+                           "<span>Sample text</span><del style=\"background:#ffe6e6;\"> with extra text</del>")
+
+        it 'should allow to disable semantic diff', inject (diffFilter, $sce) ->
+            expect($sce.getTrustedHtml(diffFilter("Sample text", "Sample text with extra text", false))).to.be.equal(
+                           "<span>Sample text</span><del style=\"background:#ffe6e6;\"> with extra text</del>")
+
+        it 'should allow to enable efficiency on diff', inject (diffFilter, $sce) ->
+            expect($sce.getTrustedHtml(diffFilter("Sample text", "Sample text with extra text", null, true))).to.be.equal(
                            "<span>Sample text</span><del style=\"background:#ffe6e6;\"> with extra text</del>")

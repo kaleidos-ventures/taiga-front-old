@@ -57,7 +57,7 @@ SizeFormatFilter = ->
         if input == 0
             return '0 bytes'
 
-        if precision == 'undefined'
+        if precision == undefined
             precision = 1
 
         units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB']
