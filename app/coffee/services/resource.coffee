@@ -384,7 +384,7 @@ class ResourceService extends TaigaBaseService
         return @_queryManyPaginated("issues", parameters)
 
     getIssue: (projectId, issueId, params) ->
-        params = _.defaults(params, {project: projectId})
+        params = _.extend({}, params, {project: projectId})
         return @_queryOne("issues", issueId, params)
 
     getIssueHistorical: (issueId, filters={}) ->

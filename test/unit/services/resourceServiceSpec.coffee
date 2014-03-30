@@ -106,6 +106,24 @@ describe 'resourceService', ->
         httpBackend.whenGET('http://localhost:8000/api/v1/userstories/1/historical').respond(200)
         httpBackend.whenGET('http://localhost:8000/api/v1/userstories/100/historical').respond(400)
         httpBackend.whenGET('http://localhost:8000/api/v1/userstories/1/historical?filter=test').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/tasks?milestone=1&project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/tasks?milestone=100&project=1').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/tasks?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issues?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issues?project=100').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issues?filters=test&project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issues/1?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issues/100?project=1').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issues/1/historical').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issues/100/historical').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issues/1/historical?filter=test').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/tasks/1?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/tasks/100?project=1').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/tasks/1/historical').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/tasks/100/historical').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/tasks/1/historical?filter=test').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/search?get_all=false&project=1&text=test').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/search?get_all=false&project=1&text=bad').respond(400)
 
     describe 'resource service', ->
         afterEach ->
@@ -425,4 +443,101 @@ describe 'resourceService', ->
             httpBackend.expectGET('http://localhost:8000/api/v1/userstories/1/historical?filter=test')
             promise = resource.getUserStoryHistorical(1, {"filter": "test"})
             promise.should.be.fullfilled
+            httpBackend.flush()
+
+        it 'should allow to get the tasks of a milestone', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/tasks?milestone=1&project=1')
+            promise = resource.getTasks(1, 1)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/tasks?milestone=100&project=1')
+            promise = resource.getTasks(1, 100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/tasks?project=1')
+            promise = resource.getTasks(1)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+        it 'should allow to get the issues of a project', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/issues?project=1')
+            promise = resource.getIssues(1)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/issues?project=100')
+            promise = resource.getIssues(100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/issues?filters=test&project=1')
+            promise = resource.getIssues(1, {"filters": "test"})
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+        it 'should allow to get a issue', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/issues/1?project=1')
+            promise = resource.getIssue(1, 1)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/issues/100?project=1')
+            promise = resource.getIssue(1, 100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get a issue history', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/issues/1/historical')
+            promise = resource.getIssueHistorical(1)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/issues/100/historical')
+            promise = resource.getIssueHistorical(100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/issues/1/historical?filter=test')
+            promise = resource.getIssueHistorical(1, {"filter": "test"})
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+        it 'should allow to get a task', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/tasks/1?project=1')
+            promise = resource.getTask(1, 1)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/tasks/100?project=1')
+            promise = resource.getTask(1, 100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get a task history', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/tasks/1/historical')
+            promise = resource.getTaskHistorical(1)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/tasks/100/historical')
+            promise = resource.getTaskHistorical(100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/tasks/1/historical?filter=test')
+            promise = resource.getTaskHistorical(1, {"filter": "test"})
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+        it 'should allow to search', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/search?get_all=false&project=1&text=test')
+            promise = resource.search(1, "test", false)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/search?get_all=false&project=1&text=bad')
+            promise = resource.search(1, "bad", false)
+            promise.should.be.rejected
             httpBackend.flush()
