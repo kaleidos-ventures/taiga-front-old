@@ -97,33 +97,20 @@ describe 'resourceService', ->
         httpBackend.whenGET('http://localhost:8000/api/v1/milestones/1?project=1').respond(200, {"user_stories": [{"test": "test"}]})
         httpBackend.whenGET('http://localhost:8000/api/v1/milestones/100?project=1').respond(400)
         httpBackend.whenGET('http://localhost:8000/api/v1/resolver').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/milestones/1/stats').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/milestones/100/stats').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/userstories?milestone=1&project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/userstories?milestone=100&project=1').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/userstories/1?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/userstories/100?project=1').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/userstories/1/historical').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/userstories/100/historical').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/userstories/1/historical?filter=test').respond(200)
 
     describe 'resource service', ->
         afterEach ->
             httpBackend.verifyNoOutstandingExpectation()
             httpBackend.verifyNoOutstandingRequest()
-
-        it 'should allow to get the userstories of a project', inject (resource) ->
-            httpBackend.expectGET('http://localhost:8000/api/v1/userstories?project=1')
-            promise = resource.getUserStories(1)
-            promise.should.be.fullfilled
-            httpBackend.flush()
-
-            httpBackend.expectGET('http://localhost:8000/api/v1/userstories?project=100')
-            promise = resource.getUserStories(100)
-            promise.should.be.rejected
-            httpBackend.flush()
-
-        it 'should allow to get unassigned userstories of a project', inject (resource) ->
-            httpBackend.expectGET('http://localhost:8000/api/v1/userstories?milestone=null&project=1')
-            promise = resource.getUnassignedUserStories(1)
-            promise.should.be.fullfilled
-            httpBackend.flush()
-
-            httpBackend.expectGET('http://localhost:8000/api/v1/userstories?milestone=null&project=100')
-            promise = resource.getUnassignedUserStories(100)
-            promise.should.be.rejected
-            httpBackend.flush()
 
         it 'should allow to register a user', inject (resource, $gmAuth) ->
             $gmAuth.unsetUser(null)
@@ -367,4 +354,75 @@ describe 'resourceService', ->
             httpBackend.expectGET('http://localhost:8000/api/v1/milestones/100?project=1')
             promise = resource.getMilestone(1, 100)
             promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get a milestone stats', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/milestones/1/stats')
+            promise = resource.getMilestoneStats(1)
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/milestones/100/stats')
+            promise = resource.getMilestoneStats(100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get unassigned userstories of a project', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstories?milestone=null&project=1')
+            promise = resource.getUnassignedUserStories(1)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstories?milestone=null&project=100')
+            promise = resource.getUnassignedUserStories(100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get the userstories of a project', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstories?project=1')
+            promise = resource.getUserStories(1)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstories?project=100')
+            promise = resource.getUserStories(100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get the userstories of a milestone', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstories?milestone=1&project=1')
+            promise = resource.getMilestoneUserStories(1, 1)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstories?milestone=100&project=1')
+            promise = resource.getMilestoneUserStories(1, 100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get a userstory', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstories/1?project=1')
+            promise = resource.getUserStory(1, 1)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstories/100?project=1')
+            promise = resource.getUserStory(1, 100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get a userstory history', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstories/1/historical')
+            promise = resource.getUserStoryHistorical(1)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstories/100/historical')
+            promise = resource.getUserStoryHistorical(100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstories/1/historical?filter=test')
+            promise = resource.getUserStoryHistorical(1, {"filter": "test"})
+            promise.should.be.fullfilled
             httpBackend.flush()

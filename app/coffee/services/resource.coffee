@@ -364,7 +364,7 @@ class ResourceService extends TaigaBaseService
 
     # Get a user stories by projectId and userstory id
     getUserStory: (projectId, userStoryId, params) ->
-        params = _.defaults(params, {project: projectId})
+        params = _.extend({}, params, {project: projectId})
         return @_queryOne("userstories", userStoryId, params)
 
     getUserStoryHistorical: (userStoryId, filters={}) ->
