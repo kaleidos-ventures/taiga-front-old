@@ -96,6 +96,7 @@ describe 'resourceService', ->
         httpBackend.whenGET('http://localhost:8000/api/v1/milestones?project=100').respond(400)
         httpBackend.whenGET('http://localhost:8000/api/v1/milestones/1?project=1').respond(200, {"user_stories": [{"test": "test"}]})
         httpBackend.whenGET('http://localhost:8000/api/v1/milestones/100?project=1').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/resolver').respond(200)
 
     describe 'resource service', ->
         afterEach ->
@@ -216,6 +217,11 @@ describe 'resourceService', ->
             )
             promise = resource.resolve({pslug: "bad", usref: 3, taskref: 10, issueref: 7, mlref: 4})
             promise.should.be.rejected
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/resolver')
+            promise = resource.resolve({})
+            promise.should.be.fullfilled
             httpBackend.flush()
 
         it 'should allow to get the site info', inject (resource) ->
