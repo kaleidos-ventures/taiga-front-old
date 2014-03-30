@@ -429,9 +429,6 @@ class ResourceService extends TaigaBaseService
             params = {}
         return @_queryMany("users", params)
 
-    createUs: (form) ->
-        return @model.create("userstories", form)
-
     createIssue: (projectId, form) ->
         obj = _.extend({}, form, {project: projectId})
         defered = @q.defer()

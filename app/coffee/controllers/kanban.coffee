@@ -183,7 +183,7 @@ class KanbanUsModalController extends ModalBaseController
         if @scope.form.id?
             promise = @scope.form.save(false)
         else
-            promise = @rs.createUs(@scope.form)
+            promise = @rs.createUserStory(@scope.form)
         @scope.$emit("spinner:start")
 
         promise.then (data) =>

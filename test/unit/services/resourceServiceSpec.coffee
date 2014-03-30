@@ -124,6 +124,17 @@ describe 'resourceService', ->
         httpBackend.whenGET('http://localhost:8000/api/v1/tasks/1/historical?filter=test').respond(200)
         httpBackend.whenGET('http://localhost:8000/api/v1/search?get_all=false&project=1&text=test').respond(200)
         httpBackend.whenGET('http://localhost:8000/api/v1/search?get_all=false&project=1&text=bad').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/users?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/users?project=100').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/users').respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/userstories?', {"test": "test"}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/userstories?', {"test": "bad"}).respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/issues', {"test": "test", "project": 1}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/issues', {"test": "bad", "project": 1}).respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/userstories/bulk_create', {"test": "test", "projectId": 1}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/userstories/bulk_create', {"test": "bad", "projectId": 1}).respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/tasks/bulk_create', {"test": "test", "projectId": 1, "usId": 2}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/tasks/bulk_create', {"test": "bad", "projectId": 1, "usId": 2}).respond(400)
 
     describe 'resource service', ->
         afterEach ->
@@ -539,5 +550,65 @@ describe 'resourceService', ->
 
             httpBackend.expectGET('http://localhost:8000/api/v1/search?get_all=false&project=1&text=bad')
             promise = resource.search(1, "bad", false)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to users', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/users?project=1')
+            promise = resource.getUsers(1)
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/users?project=100')
+            promise = resource.getUsers(100)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/users')
+            promise = resource.getUsers()
+            promise.should.be.fullfilled
+            httpBackend.flush()
+
+        it 'should allow to create a issue', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/issues', {"test": "test", "project": 1})
+            promise = resource.createIssue(1, {"test": "test"})
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/issues', {"test": "bad", "project": 1})
+            promise = resource.createIssue(1, {"test": "bad"})
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a user story', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/userstories?', {"test": "test"})
+            promise = resource.createUserStory({"test": "test"})
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/userstories?', {"test": "bad"})
+            promise = resource.createUserStory({"test": "bad"})
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a bulk of user stories', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/userstories/bulk_create', {"test": "test", "projectId": 1})
+            promise = resource.createBulkUserStories(1, {"test": "test"})
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/userstories/bulk_create', {"test": "bad", "projectId": 1})
+            promise = resource.createBulkUserStories(1, {"test": "bad"})
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a bulk of tasks', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/tasks/bulk_create', {"test": "test", "projectId": 1, "usId": 2})
+            promise = resource.createBulkTasks(1, 2, {"test": "test"})
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/tasks/bulk_create', {"test": "bad", "projectId": 1, "usId": 2})
+            promise = resource.createBulkTasks(1, 2, {"test": "bad"})
             promise.should.be.rejected
             httpBackend.flush()
