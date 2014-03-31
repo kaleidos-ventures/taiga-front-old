@@ -32,12 +32,10 @@ GmIssuesSortDirective = ($parse) ->
 
             event.preventDefault()
 
-GmIssuesSortedByDirective = (SelectedTags) ->
+GmIssuesSortedByDirective = () ->
     link: (scope, element, attrs) ->
-        # if SelectedTags(scope.projectId).issues_order.getField() == attrs.field
-        #     setStyle element, SelectedTags(scope.projectId).issues_order.isReverse()
         return
 
 module = angular.module('taiga.directives.issues', ['taiga.services.tags'])
 module.directive('gmIssuesSort', ["$parse", GmIssuesSortDirective])
-module.directive('gmIssuesSortedBy', ["SelectedTags", GmIssuesSortedByDirective])
+# module.directive('gmIssuesSortedBy', ["SelectedTags", GmIssuesSortedByDirective])

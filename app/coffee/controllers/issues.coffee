@@ -37,8 +37,6 @@ class IssuesController extends TaigaPageController
             [@i18next.t('common.issues'), null]
         ]
 
-        # @SelectedTags(@rootScope.projectId).issues_order.setDefault({field: 'created_date', reverse: true})
-
         @scope.filtersOpened = false
         @scope.filters = {}
         @.selectedFilters = []
