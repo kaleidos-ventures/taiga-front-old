@@ -28,6 +28,7 @@ class LoginController extends TaigaPageController
         @scope.form = {}
         @scope.success = false
         @scope.error = false
+        @scope.errorMessage = ''
 
     submit: ->
         username = @scope.form.username

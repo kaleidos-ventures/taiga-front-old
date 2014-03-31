@@ -35,6 +35,9 @@
     "karma-chai": "^0.1.0",
     "chai-as-promised": "^4.1.1",
     "karma-chai-plugins": "^0.2.0",
-    "gulp-plumber": "^0.5.6"
+    "gulp-plumber": "^0.5.6",
+    "sinon": "^1.9.0",
+    "karma-sinon": "^1.0.3",
+    "karma-sinon-chai": "^0.1.5"
   }
 }
