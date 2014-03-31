@@ -82,3 +82,9 @@ describe 'tagsService', ->
             expect(result[1].count).to.be.equal(5)
             expect(result[1].type).to.be.equal(type)
         )
+
+        it "Store/Retrieve ordering", inject(($gmFilters) ->
+            $gmFilters.setOrdering(1, "ns", {orderBy: "owner"})
+            result = $gmFilters.getOrdering(1, "ns")
+            expect(result.orderBy).to.be.equal("owner")
+        )
