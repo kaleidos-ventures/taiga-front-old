@@ -554,6 +554,7 @@
         "assigned-to-label": "Assigned to:",
         "unassigned": "Unassigned",
         "tags-label": "Tags:",
+        "tags-placeholder": "Pick tags",
         "edit-subject-description": "Edit <b>Subject</b> and <b>Description</b>...",
         "subject-label": "Subject:",
         "description-label": "Description:",

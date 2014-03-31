@@ -550,6 +550,7 @@
         "update-user-story": "Actualizar historia de usuario",
         "status-label": "Estado:",
         "tags-label": "Etiquetas:",
+        "tags-placeholder": "Escoja etiquetas",
         "assigned-to-label": "Asignada a:",
         "unassigned": "Sin asignar",
         "edit-subject-description": "Editar <b>Asunto</b> y <b>Descripción</b>...",
