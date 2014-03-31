@@ -1,41 +1,64 @@
-setStyle = (element, reverse=false) ->
-    if reverse
-        element.addClass("icon-chevron-up")
-    else
-        element.addClass("icon-chevron-down")
+GmIssuesSortedByDirective = ($rootScope, $gmFilters) ->
+    removeOrderingState = (element) ->
+        candidates = element.parent().find(".icon-chevron-up, .icon-chevron-down")
+        candidates.removeClass("icon-chevron-up")
+        candidates.removeClass("icon-chevron-down")
 
-GmIssuesSortDirective = ($parse) ->
-    link: (scope, elm, attrs) ->
-        element = angular.element(elm)
-        callback = $parse(attrs.gmIssuesSort)
+    setStyle = (element, reverse=false) ->
+        if reverse
+            element.addClass("icon-chevron-up")
+        else
+            element.addClass("icon-chevron-down")
 
-        element.on "click", ".issue-sortable-field", (event) ->
-            target = angular.element(event.currentTarget)
-            if target.data('field') == scope.sortingOrder
-                scope.sortingReverse = !scope.sortingReverse
+    getCurrentOrdering = ->
+        ordering = $gmFilters.getOrdering($rootScope.projectId, "issues-ordering")
+
+        if ordering is null
+            result = {}
+            result.orderBy = "status"
+            result.isReverse = false
+            return result
+
+        if ordering.isReverse is undefined
+            ordering.isReverse = false
+
+        return ordering
+
+    setCurrentOrdering = (ordering) ->
+        $gmFilters.setOrdering($rootScope.projectId, "issues-ordering", ordering)
+
+    link = (scope, element, attrs) ->
+        field = attrs.gmIssuesSortedBy
+
+        # Destructor
+        element.on "$destroy", (event) ->
+            element.off()
+
+        # Event Handling
+        element.on "click", (event) ->
+            removeOrderingState(element)
+
+            ordering = getCurrentOrdering()
+            if ordering.orderBy == field
+                ordering.isReverse = not ordering.isReverse
             else
-                scope.sortingOrder = target.data('field')
-                scope.sortingReverse = false
+                ordering.orderBy = field
 
-            locals = {
-                field: target.data('field')
-                reverse: scope.sortingReverse
-            }
+            setCurrentOrdering(ordering)
+            setStyle(element, ordering.isReverse)
+            scope.ctrl.refreshIssues()
 
-            scope.$apply ->
-                callback(scope, locals)
+        # Setting initial state
+        initialize = _.once ->
+            ordering = getCurrentOrdering()
+            if ordering.orderBy == field
+                setStyle(element, ordering.isReverse)
 
-            target.parent().children().removeClass("icon-chevron-down")
-            target.parent().children().removeClass("icon-chevron-up")
+        scope.$watch "projectId", (v) ->
+            initialize() if v != undefined
 
-            setStyle target, scope.sortingReverse
+    return {link: link}
 
-            event.preventDefault()
-
-GmIssuesSortedByDirective = () ->
-    link: (scope, element, attrs) ->
-        return
 
 module = angular.module('taiga.directives.issues', ['taiga.services.tags'])
-module.directive('gmIssuesSort', ["$parse", GmIssuesSortDirective])
-# module.directive('gmIssuesSortedBy', ["SelectedTags", GmIssuesSortedByDirective])
+module.directive('gmIssuesSortedBy', ["$rootScope", "$gmFilters", GmIssuesSortedByDirective])

@@ -39,6 +39,7 @@ class IssuesController extends TaigaPageController
 
         @scope.filtersOpened = false
         @scope.filters = {}
+
         @.selectedFilters = []
 
         @scope.page = 1
@@ -55,7 +56,6 @@ class IssuesController extends TaigaPageController
 
             @data.loadProject(@scope).then =>
                 @data.loadUsersAndRoles(@scope).then =>
-                    @.updateSelectedOrder()
                     @.refreshAll()
 
     #####
@@ -97,49 +97,36 @@ class IssuesController extends TaigaPageController
         @scope.currentPage = 0
         @.refreshIssues()
 
-    changeSort: (field, reverse) ->
-        @gmFilters.setOrdering(@rootScope.projectId, "issues-ordering",
-                               [field, reverse])
-        @.updateSelectedOrder()
-        @.refreshIssues()
-
     # Using a $gmFilters service for populate a scope with
     # a fresh list of selected filters state previously persisted
     initializeSelectedFilters: ->
         filters = @gmFilters.getSelectedFiltersList(@rootScope.projectId, "issues-filter", @scope.filters)
         @.selectedFilters = filters
 
-    # Using a $gmFilters service for populate a scope with
-    # a fresh list of selected sorting state previously persisted
-    updateSelectedOrder: ->
-        ordering = @gmFilters.getOrdering(@rootScope.projectId, "issues-ordering")
-        if ordering is null
-            @scope.sortingOrder = "status"
-            @scope.reverseOrder = false
-        else
-            @scope.sortingOrder = ordering[0]
-            @scope.sortingReverse = ordering[1]
-
     #####
     ## Load operations.
     #####
 
-    getFilterParams: (page, selectedFilters, sortingOrder, reverseOrder) ->
+    getOrdering: ->
+        return @gmFilters.getOrdering(@rootScope.projectId, "issues-ordering")
+
+    makeFilterParams: ->
         params = {"page": @scope.page}
-        for key, value of _.groupBy(selectedFilters, "type")
+        for key, value of _.groupBy(@.selectedFilters, "type")
             params[key] = _.map(value, "id").join(",")
 
-        params["order_by"] = sortingOrder
-        if reverseOrder
-            params["order_by"] = "-#{params["order_by"]}"
+        ordering = @.getOrdering()
+        if ordering.orderBy
+            if ordering.isReverse
+                params.order_by = "-#{ordering.orderBy}"
+            else
+                params.order_by = ordering.orderBy
 
         return params
 
     loadIssues: ->
         @scope.$emit("spinner:start")
-
-        params = @.getFilterParams(@scope.page, @.selectedFilters,
-                                   @scope.sortingOrder, @scope.reverseOrder)
+        params = @.makeFilterParams()
 
         @rs.getIssues(@scope.projectId, params).then (result) =>
             @scope.issues = result.models
