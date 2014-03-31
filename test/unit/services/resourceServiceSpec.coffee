@@ -135,6 +135,83 @@ describe 'resourceService', ->
         httpBackend.whenPOST('http://localhost:8000/api/v1/userstories/bulk_create', {"test": "bad", "projectId": 1}).respond(400)
         httpBackend.whenPOST('http://localhost:8000/api/v1/tasks/bulk_create', {"test": "test", "projectId": 1, "usId": 2}).respond(200)
         httpBackend.whenPOST('http://localhost:8000/api/v1/tasks/bulk_create', {"test": "bad", "projectId": 1, "usId": 2}).respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/userstories/bulk_update_order', {"projectId": 1, "bulkStories": [[1, 2], [2, 1]]}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/userstories/bulk_update_order', {"projectId": 100, "bulkStories": [[1, 2], [2, 1]]}).respond(400)
+        httpBackend.whenPATCH('http://localhost:8000/api/v1/userstories/1', {"milestone": 2}).respond(200)
+        httpBackend.whenPATCH('http://localhost:8000/api/v1/userstories/100', {"milestone": 1}).respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/milestones', {"project": 1, "test": "test"}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/milestones', {"project": 100, "test": "test"}).respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/wiki?project=1&slug=test').respond(200, "wiki")
+        httpBackend.whenGET('http://localhost:8000/api/v1/wiki?project=1&slug=bad').respond(400, "wiki")
+        httpBackend.whenGET('http://localhost:8000/api/v1/wiki?project=1&slug=empty').respond(200, [])
+        httpBackend.whenGET('http://localhost:8000/api/v1/wiki/test/historical').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/wiki/test/historical?filters=test').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/wiki/bad/historical?filters=test').respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/tasks?', {"test": "test"}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/tasks?', {"test": "bad"}).respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/wiki/test/restore?version=1').respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/wiki/bad/restore?version=1').respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/wiki', {"content": "test", "slug": "test-slug", "project": 1}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/wiki', {"content": "bad", "slug": "test-slug", "project": 1}).respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issue-attachments?object_id=1&project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issue-attachments?object_id=1&project=100').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/task-attachments?object_id=1&project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/task-attachments?object_id=1&project=100').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/userstory-attachments?object_id=1&project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/userstory-attachments?object_id=1&project=100').respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/wiki-attachments?object_id=1&project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/wiki-attachments?object_id=1&project=100').respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/issue-attachments', {"project": 1, "object_id": 1, "data": "test"}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/issue-attachments', {"project": 1, "object_id": 1, "data": "bad"}).respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/userstory-statuses?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/userstory-statuses?project=1&test=test').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/userstory-statuses?project=100').respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/userstory-statuses?', {"test": "test"}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/userstory-statuses?', {"test": "bad"}).respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/userstory-statuses/bulk_update_order', {"project": 1, "bulk_userstory_statuses": [[1, 2], [2, 1]]}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/userstory-statuses/bulk_update_order', {"project": 100, "bulk_userstory_statuses": [[1, 2], [2, 1]]}).respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/points?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/points?project=1&test=test').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/points?project=100').respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/points?', {"test": "test"}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/points?', {"test": "bad"}).respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/points/bulk_update_order', {"project": 1, "bulk_points": [[1, 2], [2, 1]]}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/points/bulk_update_order', {"project": 100, "bulk_points": [[1, 2], [2, 1]]}).respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/task-statuses?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/task-statuses?project=1&test=test').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/task-statuses?project=100').respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/task-statuses?', {"test": "test"}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/task-statuses?', {"test": "bad"}).respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/task-statuses/bulk_update_order', {"project": 1, "bulk_task_statuses": [[1, 2], [2, 1]]}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/task-statuses/bulk_update_order', {"project": 100, "bulk_task_statuses": [[1, 2], [2, 1]]}).respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issue-statuses?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issue-statuses?project=1&test=test').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issue-statuses?project=100').respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/issue-statuses?', {"test": "test"}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/issue-statuses?', {"test": "bad"}).respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/issue-statuses/bulk_update_order', {"project": 1, "bulk_issue_statuses": [[1, 2], [2, 1]]}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/issue-statuses/bulk_update_order', {"project": 100, "bulk_issue_statuses": [[1, 2], [2, 1]]}).respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issue-types?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issue-types?project=1&test=test').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/issue-types?project=100').respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/issue-types?', {"test": "test"}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/issue-types?', {"test": "bad"}).respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/issue-types/bulk_update_order', {"project": 1, "bulk_issue_types": [[1, 2], [2, 1]]}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/issue-types/bulk_update_order', {"project": 100, "bulk_issue_types": [[1, 2], [2, 1]]}).respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/priorities?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/priorities?project=1&test=test').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/priorities?project=100').respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/priorities?', {"test": "test"}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/priorities?', {"test": "bad"}).respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/priorities/bulk_update_order', {"project": 1, "bulk_priorities": [[1, 2], [2, 1]]}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/priorities/bulk_update_order', {"project": 100, "bulk_priorities": [[1, 2], [2, 1]]}).respond(400)
+        httpBackend.whenGET('http://localhost:8000/api/v1/severities?project=1').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/severities?project=1&test=test').respond(200)
+        httpBackend.whenGET('http://localhost:8000/api/v1/severities?project=100').respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/severities?', {"test": "test"}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/severities?', {"test": "bad"}).respond(400)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/severities/bulk_update_order', {"project": 1, "bulk_severities": [[1, 2], [2, 1]]}).respond(200)
+        httpBackend.whenPOST('http://localhost:8000/api/v1/severities/bulk_update_order', {"project": 100, "bulk_severities": [[1, 2], [2, 1]]}).respond(400)
 
     describe 'resource service', ->
         afterEach ->
@@ -611,4 +688,430 @@ describe 'resourceService', ->
             httpBackend.expectPOST('http://localhost:8000/api/v1/tasks/bulk_create', {"test": "bad", "projectId": 1, "usId": 2})
             promise = resource.createBulkTasks(1, 2, {"test": "bad"})
             promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a bulk of tasks', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/tasks/bulk_create', {"test": "test", "projectId": 1, "usId": 2})
+            promise = resource.createBulkTasks(1, 2, {"test": "test"})
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/tasks/bulk_create', {"test": "bad", "projectId": 1, "usId": 2})
+            promise = resource.createBulkTasks(1, 2, {"test": "bad"})
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow update the user stories order in bulk', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/userstories/bulk_update_order', {"projectId": 1, "bulkStories": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkUserStoriesOrder(1, [[1, 2], [2, 1]])
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/userstories/bulk_update_order', {"projectId": 100, "bulkStories": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkUserStoriesOrder(100, [[1, 2], [2, 1]])
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow set the milestone of a user story', inject (resource) ->
+            httpBackend.expectPATCH('http://localhost:8000/api/v1/userstories/1', {"milestone": 2})
+            promise = resource.setUsMilestone(1, 2)
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectPATCH('http://localhost:8000/api/v1/userstories/100', {"milestone": 1})
+            promise = resource.setUsMilestone(100, 1)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow create a milestone', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/milestones', {"project": 1, "test": "test"})
+            promise = resource.createMilestone(1, {"test": "test"})
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/milestones', {"project": 100, "test": "test"})
+            promise = resource.createMilestone(100, {"test": "test"})
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get a wiki page', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/wiki?project=1&slug=test')
+            promise = resource.getWikiPage(1, "test")
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/wiki?project=1&slug=bad')
+            promise = resource.getWikiPage(1, "bad")
+            promise.should.be.rejected
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/wiki?project=1&slug=empty')
+            promise = resource.getWikiPage(1, "empty")
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get a wiki page historical', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/wiki/test/historical')
+            promise = resource.getWikiPageHistorical("test")
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/wiki/test/historical?filters=test')
+            promise = resource.getWikiPageHistorical("test", {"filters": "test"})
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/wiki/bad/historical?filters=test')
+            promise = resource.getWikiPageHistorical("bad", {"filters": "test"})
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a task', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/tasks?', {"test": "test"})
+            promise = resource.createTask({"test": "test"})
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/tasks?', {"test": "bad"})
+            promise = resource.createTask({"test": "bad"})
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to restore a wiki page', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/wiki/test/restore?version=1')
+            promise = resource.restoreWikiPage("test", 1)
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/wiki/bad/restore?version=1')
+            promise = resource.restoreWikiPage("bad", 1)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a wiki page', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/wiki', {"content": "test", "slug": "test-slug", "project": 1})
+            promise = resource.createWikiPage(1, "test-slug", "test")
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/wiki', {"content": "bad", "slug": "test-slug", "project": 1})
+            promise = resource.createWikiPage(1, "test-slug", "bad")
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get the attachments of an issue', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/issue-attachments?object_id=1&project=1')
+            promise = resource.getIssueAttachments(1, 1)
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/issue-attachments?object_id=1&project=100')
+            promise = resource.getIssueAttachments(100, 1)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get the attachments of a task', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/task-attachments?object_id=1&project=1')
+            promise = resource.getTaskAttachments(1, 1)
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/task-attachments?object_id=1&project=100')
+            promise = resource.getTaskAttachments(100, 1)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get the attachments of an issue', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstory-attachments?object_id=1&project=1')
+            promise = resource.getUserStoryAttachments(1, 1)
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstory-attachments?object_id=1&project=100')
+            promise = resource.getUserStoryAttachments(100, 1)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get the attachments of an issue', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/wiki-attachments?object_id=1&project=1')
+
+            promise = resource.getWikiPageAttachments(1, 1)
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/wiki-attachments?object_id=1&project=100')
+            promise = resource.getWikiPageAttachments(100, 1)
+            promise.should.be.rejected
+            httpBackend.flush()
+
+        it 'should allow to get the site info', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/sites')
+            promise = resource.getSiteInfo()
+            promise.should.fullfilled
+            httpBackend.flush()
+
+        it 'should allow to get the user stories statuses', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstory-statuses?project=1')
+            promise = resource.getUserStoryStatuses(1)
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstory-statuses?project=1&test=test')
+            promise = resource.getUserStoryStatuses(1, {"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/userstory-statuses?project=100')
+            promise = resource.getUserStoryStatuses(100)
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a user stories status', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/userstory-statuses?', {"test": "test"})
+            promise = resource.createUserStoryStatus({"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/userstory-statuses?', {"test": "bad"})
+            promise = resource.createUserStoryStatus({"test": "bad"})
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to bulk update the user stories statuses orders', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/userstory-statuses/bulk_update_order', {"project": 1, "bulk_userstory_statuses": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkUserStoryStatusesOrder(1, [[1, 2], [2, 1]])
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/userstory-statuses/bulk_update_order', {"project": 100, "bulk_userstory_statuses": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkUserStoryStatusesOrder(100, [[1, 2], [2, 1]])
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to get the user stories points', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/points?project=1')
+            promise = resource.getPoints(1)
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/points?project=1&test=test')
+            promise = resource.getPoints(1, {"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/points?project=100')
+            promise = resource.getPoints(100)
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a user stories status', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/points?', {"test": "test"})
+            promise = resource.createPoints({"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/points?', {"test": "bad"})
+            promise = resource.createPoints({"test": "bad"})
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to bulk update the user stories points orders', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/points/bulk_update_order', {"project": 1, "bulk_points": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkPointsOrder(1, [[1, 2], [2, 1]])
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/points/bulk_update_order', {"project": 100, "bulk_points": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkPointsOrder(100, [[1, 2], [2, 1]])
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to get the tasks statuses', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/task-statuses?project=1')
+            promise = resource.getTaskStatuses(1)
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/task-statuses?project=1&test=test')
+            promise = resource.getTaskStatuses(1, {"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/task-statuses?project=100')
+            promise = resource.getTaskStatuses(100)
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a tasks status', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/task-statuses?', {"test": "test"})
+            promise = resource.createTaskStatus({"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/task-statuses?', {"test": "bad"})
+            promise = resource.createTaskStatus({"test": "bad"})
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to bulk update the tasks statuses orders', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/task-statuses/bulk_update_order', {"project": 1, "bulk_task_statuses": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkTaskStatusesOrder(1, [[1, 2], [2, 1]])
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/task-statuses/bulk_update_order', {"project": 100, "bulk_task_statuses": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkTaskStatusesOrder(100, [[1, 2], [2, 1]])
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to get the issues statuses', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/issue-statuses?project=1')
+            promise = resource.getIssueStatuses(1)
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/issue-statuses?project=1&test=test')
+            promise = resource.getIssueStatuses(1, {"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/issue-statuses?project=100')
+            promise = resource.getIssueStatuses(100)
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a issues status', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/issue-statuses?', {"test": "test"})
+            promise = resource.createIssueStatus({"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/issue-statuses?', {"test": "bad"})
+            promise = resource.createIssueStatus({"test": "bad"})
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to bulk update the issues statuses orders', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/issue-statuses/bulk_update_order', {"project": 1, "bulk_issue_statuses": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkIssueStatusesOrder(1, [[1, 2], [2, 1]])
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/issue-statuses/bulk_update_order', {"project": 100, "bulk_issue_statuses": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkIssueStatusesOrder(100, [[1, 2], [2, 1]])
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to get the issues types', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/issue-types?project=1')
+            promise = resource.getIssueTypes(1)
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/issue-types?project=1&test=test')
+            promise = resource.getIssueTypes(1, {"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/issue-types?project=100')
+            promise = resource.getIssueTypes(100)
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a issues type', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/issue-types?', {"test": "test"})
+            promise = resource.createIssueType({"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/issue-types?', {"test": "bad"})
+            promise = resource.createIssueType({"test": "bad"})
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to bulk update the issues types orders', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/issue-types/bulk_update_order', {"project": 1, "bulk_issue_types": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkIssueTypesOrder(1, [[1, 2], [2, 1]])
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/issue-types/bulk_update_order', {"project": 100, "bulk_issue_types": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkIssueTypesOrder(100, [[1, 2], [2, 1]])
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to get the priorities', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/priorities?project=1')
+            promise = resource.getPriorities(1)
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/priorities?project=1&test=test')
+            promise = resource.getPriorities(1, {"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/priorities?project=100')
+            promise = resource.getPriorities(100)
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a priority', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/priorities?', {"test": "test"})
+            promise = resource.createPriority({"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/priorities?', {"test": "bad"})
+            promise = resource.createPriority({"test": "bad"})
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to bulk update the priorities orders', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/priorities/bulk_update_order', {"project": 1, "bulk_priorities": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkPrioritiesOrder(1, [[1, 2], [2, 1]])
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/priorities/bulk_update_order', {"project": 100, "bulk_priorities": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkPrioritiesOrder(100, [[1, 2], [2, 1]])
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to get the severities', inject (resource) ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/severities?project=1')
+            promise = resource.getSeverities(1)
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/severities?project=1&test=test')
+            promise = resource.getSeverities(1, {"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectGET('http://localhost:8000/api/v1/severities?project=100')
+            promise = resource.getSeverities(100)
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to create a severity', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/severities?', {"test": "test"})
+            promise = resource.createSeverity({"test": "test"})
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/severities?', {"test": "bad"})
+            promise = resource.createSeverity({"test": "bad"})
+            promise.should.rejected
+            httpBackend.flush()
+
+        it 'should allow to bulk update the severities orders', inject (resource) ->
+            httpBackend.expectPOST('http://localhost:8000/api/v1/severities/bulk_update_order', {"project": 1, "bulk_severities": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkSeveritiesOrder(1, [[1, 2], [2, 1]])
+            promise.should.fullfilled
+            httpBackend.flush()
+
+            httpBackend.expectPOST('http://localhost:8000/api/v1/severities/bulk_update_order', {"project": 100, "bulk_severities": [[1, 2], [2, 1]]})
+            promise = resource.updateBulkSeveritiesOrder(100, [[1, 2], [2, 1]])
+            promise.should.rejected
             httpBackend.flush()
