@@ -62,8 +62,8 @@ class BacklogController extends TaigaPageController
 
 class BacklogUserStoriesController extends TaigaBaseController
     @.$inject = ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal',
-                 '$location', 'SelectedTags']
-    constructor: (@scope, @rootScope, @q, @rs, @data, @modal, @location, @SelectedTags) ->
+                 '$location', '$gmFilters']
+    constructor: (@scope, @rootScope, @q, @rs, @data, @modal, @location, @gmFilters) ->
         super(scope)
 
     initialize: ->
@@ -71,11 +71,12 @@ class BacklogUserStoriesController extends TaigaBaseController
         @scope.selectedUserStories = null
         @scope.selectedStoryPoints = 9
 
-        @scope.filtersOpened = if @SelectedTags(@rootScope.projectId).backlog.isEmpty() then false else true
+        @scope.selectedFilters = []
+        @scope.filtersOpened = false
         @scope.showTags = false
 
-        @scope.$on("points:loaded", @loadUserStories)
-        @scope.$on("userstory-form:create", @loadUserStories)
+        @scope.$on("points:loaded", _.bind(@.refreshBacklog, @))
+        @scope.$on("userstory-form:create", _.bind(@.refreshBacklog, @))
 
         @scope.$on "milestones:loaded", (ctx, data) =>
             @scope.milestones = data
@@ -83,37 +84,45 @@ class BacklogUserStoriesController extends TaigaBaseController
     calculateStats: ->
         @scope.$emit("stats:update")
 
-    generateTagList: ->
-        tagsDict = {}
-        tags = []
+    # Method used on initialize controller process for create
+    # a initial list of tags from user stories list.
+    # Also, can be used for regenerate a tag list when new
+    # user story is added.
+    initializeFilters: ->
+        @.filters = {tags: @gmFilters.generateTagsFromUserStoriesList(@scope.unassignedUs)}
+        @.selectedFilters = @gmFilters.getSelectedFiltersList(@rootScope.projectId, "backlog-filter", @.filters)
 
-        for us in @scope.unassignedUs
-            for tag in us.tags
-                if tagsDict[tag] is undefined
-                    tagsDict[tag] = 1
-                else
-                    tagsDict[tag] += 1
+    isFilterSelected: (filterTag) ->
+        projectId = @rootScope.projectId
+        namespace = "backlog-filter"
+        return @gmFilters.isFilterSelected(projectId, namespace, filterTag)
 
-        for key, val of tagsDict
-            tag = {name:key, count:val}
-            tag.selected = true if @SelectedTags(@rootScope.projectId).backlog.fetch(tag)
-            tags.push(tag)
+    toggleFilter: (filterTag) ->
+        ft = _.clone(filterTag, true)
+        item = _.find(@.selectedFilters, {type: ft.type, id: ft.id})
 
-        @scope.tags = tags
+        if item is undefined
+            @gmFilters.selectFilter(@rootScope.projectId, "backlog-filter", filterTag)
+            @.selectedFilters.push(ft)
+        else
+            @gmFilters.unselectFilter(@rootScope.projectId, "backlog-filter", filterTag)
+            @.selectedFilters = _.reject(@.selectedFilters, item)
 
-    selectedTags: ->
-        return @SelectedTags(@rootScope.projectId).backlog.values()
+        @.filterUsBySelectedTags()
 
     filterUsBySelectedTags: ->
-        selectedTagNames = @SelectedTags(@rootScope.projectId).backlog.names()
-        if selectedTagNames.length > 0
+        if @.selectedFilters.length == 0
             for item in @scope.unassignedUs
-                if _.intersection(selectedTagNames, item.tags).length == 0
+                item.__hidden = false
+        else
+            for item in @scope.unassignedUs
+                itemTags = _.map(@gmFilters.plainTagsToObjectTags(item.tags), @gmFilters.filterToText)
+                selectedTags = _.map(@.selectedFilters, @gmFilters.filterToText)
+
+                if _.intersection(selectedTags, itemTags).length == 0
                     item.__hidden = true
                 else
                     item.__hidden = false
-        else
-            item.__hidden = false for item in @scope.unassignedUs
 
     resortUserStories: ->
         saveChangedOrder = =>
@@ -135,17 +144,20 @@ class BacklogUserStoriesController extends TaigaBaseController
             return promise
 
         @q.when(saveChangedOrder())
-          .then(@calculateStats)
+          .then(@.calculateStats)
 
     loadUserStories: =>
-        @data.loadUnassignedUserStories(@scope).then =>
-            @generateTagList()
-            @filterUsBySelectedTags()
-            @calculateStats()
+        return @data.loadUnassignedUserStories(@scope).then(@.initializeFilters)
+
+    refreshBacklog: ->
+        @scope.refreshing = true
+        @.loadUserStories().then =>
+            @.filterUsBySelectedTags()
+            @.calculateStats()
+            @scope.refreshing = false
 
     calculateStoryPoints: (selectedUserStories) ->
         total = 0
-
         if not selectedUserStories?
             return 0
 
@@ -190,16 +202,11 @@ class BacklogUserStoriesController extends TaigaBaseController
         selected = @scope.selectedUserStories = @getSelectedUserStories()
         @scope.selectedStoryPoints = @calculateStoryPoints(selected)
 
-    refreshBacklog: ->
-        @scope.refreshing = true
-        @loadUserStories().then =>
-            @scope.refreshing = false
-
     openUserStory: (projectSlug, usRef) ->
         @location.url("/project/#{projectSlug}/user-story/#{usRef}")
 
     getUserStoryQueryParams: ->
-        {milestone: 'null', tags: @SelectedTags(@rootScope.projectId).backlog.join()}
+        return {milestone: "null"}
 
     initializeUsForm: (us) ->
         result = {}
@@ -261,17 +268,6 @@ class BacklogUserStoriesController extends TaigaBaseController
         us._moving = true
         us.save().then (data) ->
             data._moving = false
-
-    # User Story Filters
-    toggleTag: (tag) ->
-        if tag.selected
-            tag.selected = false
-            @SelectedTags(@rootScope.projectId).backlog.remove(tag)
-        else
-            tag.selected = true
-            @SelectedTags(@rootScope.projectId).backlog.store(tag)
-
-        @filterUsBySelectedTags()
 
     sortableOnAdd: (us, index) ->
         us.milestone = null

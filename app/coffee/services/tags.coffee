@@ -171,6 +171,15 @@ class FiltersService extends TaigaBaseService
                 return "000000000000000"
             return item.name
 
+    # User stories have tags attribute with plain
+    # text tags, that should be converted on
+    generateTagsFromUserStoriesList: (userstories) ->
+        plainTags = _.flatten(_.map(userstories, "tags"))
+        tags = _.map _.countBy(plainTags), (value, key) ->
+            return [key, value]
+
+        return @.generateFiltersFromTagsList(tags)
+
     # Given a text, convert it to rgb color using a first 6 hex chars
     # from sha1 hash of that text.
     getColorForText: (text) ->
@@ -228,7 +237,13 @@ class FiltersService extends TaigaBaseService
             return @.isFilterSelected(projectId, namespace, filterItem)
 
     filterToText: (filter) ->
-        return "#{filter.id}:#{filter.name}:#{filter.type}"
+        return "#{filter.id}:#{filter.name}:#{filter.type}".toLowerCase()
+
+    # Method used for convert plain array of tag strings to complete
+    # js object that represent generic filter.
+    plainTagsToObjectTags: (tags) ->
+        return _.map tags, (item) ->
+            return {id: item, name: item, type: "tags"}
 
     # Given a namespace and filter, check if specified filter
     # is selected or not.
