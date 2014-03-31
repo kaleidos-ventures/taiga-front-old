@@ -89,6 +89,11 @@ describe 'authController', ->
             })
             httpBackend = $httpBackend
             httpBackend.whenGET('http://localhost:8000/api/v1/sites').respond(200, {test: "test"})
+            httpBackend.whenPOST("http://localhost:8000/api/v1/users/password_recovery", {"username": "test"}).respond(200)
+            httpBackend.whenPOST(
+                "http://localhost:8000/api/v1/users/password_recovery",
+                {"username": "bad"}
+            ).respond(400, {"_error_message": "test"})
             httpBackend.flush()
         ))
 
@@ -118,3 +123,19 @@ describe 'authController', ->
             ctrl.location.url.getCall(0).calledWith('/login').should.be.ok
             expect(ctrl.scope.error).to.be.false
             expect(ctrl.scope.success).to.be.true
+
+        it 'should send a recover request on submit', ->
+            httpBackend.expectPOST("http://localhost:8000/api/v1/users/password_recovery", {"username": "test"})
+            ctrl.scope.formData.email = "test"
+            ctrl.submit()
+            httpBackend.flush()
+            expect(ctrl.scope.error).to.be.false
+            expect(ctrl.scope.success).to.be.true
+
+            httpBackend.expectPOST("http://localhost:8000/api/v1/users/password_recovery", {"username": "bad"})
+            ctrl.scope.formData.email = "bad"
+            ctrl.submit()
+            httpBackend.flush()
+            expect(ctrl.scope.error).to.be.true
+            expect(ctrl.scope.errorMessage).to.be.equal('test')
+            expect(ctrl.scope.success).to.be.false
