@@ -66,6 +66,7 @@ class RecoveryController extends TaigaPageController
         @scope.formData = {}
         @scope.success = false
         @scope.error = false
+        @scope.errorMessage = ''
 
     submit: ->
         @.rs.recovery(@scope.formData.email)
@@ -81,9 +82,10 @@ class RecoveryController extends TaigaPageController
         @scope.success = true
         @scope.error = false
 
-        gm.utils.delay 2000, =>
+        setTimeout(=>
             @.location.url("/login")
             @.scope.$apply()
+        , 2000)
 
 
 class ChangePasswordController extends TaigaPageController
