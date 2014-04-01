@@ -588,7 +588,6 @@ class ResourceService extends TaigaBaseService
                 try
                     data = JSON.parse(evt.target.responseText)
                 catch
-                    # NOTE: HACK: In firefox evt.target.responseText is HTML instead json text Why? Why?
                     data = {}
                 defered.resolve(data)
 
@@ -606,11 +605,11 @@ class ResourceService extends TaigaBaseService
 
         if progress?
             xhr.upload.addEventListener("progress", uploadProgress, false)
-
         xhr.addEventListener("load", uploadComplete, false)
         xhr.addEventListener("error", uploadFailed, false)
         xhr.open("POST", @gmUrls.api(apiUrlKey))
         xhr.setRequestHeader("Authorization", "Bearer #{@gmAuth.getToken()}")
+        xhr.setRequestHeader('Accept', 'application/json')
         xhr.send(formData)
         return defered.promise
 
