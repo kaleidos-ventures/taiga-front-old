@@ -30,7 +30,7 @@ describe "IssuesOrderByDirective", ->
     ))
 
     it "Test simple rendering 01", ->
-        $gmFilters.setOrdering(1, "issues-ordering", {orderBy: "severity", isReverse: true})
+        $gmFilters.setOrdering(1, "issues", {orderBy: "severity", isReverse: true})
 
         element = $compile(template)($rootScope);
 
@@ -41,7 +41,7 @@ describe "IssuesOrderByDirective", ->
         expect(refreshCalledCounter).to.be.equal(0)
 
     it "Test simple rendering 02", ->
-        $gmFilters.setOrdering(1, "issues-ordering", {orderBy: "severity", isReverse: false})
+        $gmFilters.setOrdering(1, "issues", {orderBy: "severity", isReverse: false})
 
         element = $compile(template)($rootScope);
 
@@ -52,7 +52,7 @@ describe "IssuesOrderByDirective", ->
         expect(refreshCalledCounter).to.be.equal(0)
 
     it "Test rendering with events", ->
-        $gmFilters.setOrdering(1, "issues-ordering", {orderBy: "severity", isReverse: false})
+        $gmFilters.setOrdering(1, "issues", {orderBy: "severity", isReverse: false})
 
         element = $compile(template)($rootScope);
 
@@ -66,5 +66,5 @@ describe "IssuesOrderByDirective", ->
         expect(element.is(".icon-chevron-up")).to.be.true
         expect(refreshCalledCounter).to.be.equal(1)
 
-        result = $gmFilters.getOrdering(1, "issues-ordering")
+        result = $gmFilters.getOrdering(1, "issues")
         expect(result.isReverse).to.be.true

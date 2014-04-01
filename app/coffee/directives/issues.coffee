@@ -11,7 +11,7 @@ GmIssuesSortedByDirective = ($rootScope, $gmFilters) ->
             element.addClass("icon-chevron-down")
 
     getCurrentOrdering = ->
-        ordering = $gmFilters.getOrdering($rootScope.projectId, "issues-ordering")
+        ordering = $gmFilters.getOrdering($rootScope.projectId, "issues")
 
         if ordering is null
             result = {}
@@ -25,7 +25,7 @@ GmIssuesSortedByDirective = ($rootScope, $gmFilters) ->
         return ordering
 
     setCurrentOrdering = (ordering) ->
-        $gmFilters.setOrdering($rootScope.projectId, "issues-ordering", ordering)
+        $gmFilters.setOrdering($rootScope.projectId, "issues", ordering)
 
     link = (scope, element, attrs) ->
         field = attrs.gmIssuesSortedBy

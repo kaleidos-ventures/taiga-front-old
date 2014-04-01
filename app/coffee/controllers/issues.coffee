@@ -82,17 +82,17 @@ class IssuesController extends TaigaPageController
 
     isTagSelected: (filterTag) ->
         projectId = @rootScope.projectId
-        namespace = "issues-filter"
+        namespace = "issues"
         return @gmFilters.isFilterSelected(projectId, namespace, filterTag)
 
     toggleFilter: (filterTag) ->
         position = @.selectedFilters.indexOf(filterTag)
         if position == -1
             @.selectedFilters.push(filterTag)
-            @gmFilters.selectFilter(@rootScope.projectId, "issues-filter", filterTag)
+            @gmFilters.selectFilter(@rootScope.projectId, "issues", filterTag)
         else
             @.selectedFilters.splice(position, 1)
-            @gmFilters.unselectFilter(@rootScope.projectId, "issues-filter", filterTag)
+            @gmFilters.unselectFilter(@rootScope.projectId, "issues", filterTag)
 
         @scope.currentPage = 0
 
@@ -104,34 +104,17 @@ class IssuesController extends TaigaPageController
     # Using a $gmFilters service for populate a scope with
     # a fresh list of selected filters state previously persisted
     initializeSelectedFilters: ->
-        filters = @gmFilters.getSelectedFiltersList(@rootScope.projectId, "issues-filter", @scope.filters)
+        filters = @gmFilters.getSelectedFiltersList(@rootScope.projectId, "issues", @scope.filters)
         @.selectedFilters = filters
 
     #####
     ## Load operations.
     #####
 
-    getOrdering: ->
-        return @gmFilters.getOrdering(@rootScope.projectId, "issues-ordering")
-
-    makeFilterParams: ->
-        params = {"page": @scope.page}
-        for key, value of _.groupBy(@.selectedFilters, "type")
-            params[key] = _.map(value, "id").join(",")
-
-        ordering = @.getOrdering()
-        if ordering.orderBy
-            if ordering.isReverse
-                params.order_by = "-#{ordering.orderBy}"
-            else
-                params.order_by = ordering.orderBy
-
-        return params
-
     loadIssues: ->
         @scope.$emit("spinner:start")
-        params = @.makeFilterParams()
-
+        params = @gmFilters.makeIssuesQueryParams(@rootScope.projectId, "issues",
+                                                  @scope.filters, {page: @scope.page})
         @rs.getIssues(@scope.projectId, params).then (result) =>
             @scope.issues = result.models
             @scope.count = result.count
@@ -199,26 +182,26 @@ class IssuesController extends TaigaPageController
 
 
 class IssuesViewController extends TaigaPageController
-    @.$inject = ['$scope', '$location', '$rootScope', '$routeParams', '$q',
-                 'resource', '$data', '$confirm', '$gmFlash', '$i18next',
-                 '$favico', '$modal']
+    @.$inject = ["$scope", "$location", "$rootScope", "$routeParams", "$q",
+                 "resource", "$data", "$confirm", "$gmFlash", "$i18next",
+                 "$favico", "$modal", "$gmFilters"]
     constructor: (@scope, @location, @rootScope, @routeParams, @q, @rs, @data,
-                  @confirm, @gmFlash, @i18next, @favico, @modal) ->
+                  @confirm, @gmFlash, @i18next, @favico, @modal, @gmFilters) ->
         super(scope, rootScope, favico)
 
     debounceMethods: ->
         submit = @submit
         @submit = gm.utils.safeDebounced @scope, 500, submit
 
-    section: 'issues'
+    section: "issues"
     getTitle: ->
-        @i18next.t('common.issues')
+        @i18next.t("common.issues")
 
     initialize: ->
         @debounceMethods()
         @rootScope.pageBreadcrumb = [
             ["", ""],
-            [@i18next.t('common.issues'), null],
+            [@i18next.t("common.issues"), null],
         ]
 
         @scope.issue = {}
@@ -234,10 +217,10 @@ class IssuesViewController extends TaigaPageController
 
             @data.loadProject(@scope).then =>
                 @data.loadUsersAndRoles(@scope).then =>
-                    @loadIssue()
-                    @loadAttachments()
-                    @loadHistorical()
-                    @loadProjectTags()
+                    @.loadIssue()
+                    @.loadAttachments()
+                    @.loadHistorical()
+                    @.loadProjectTags()
 
         @scope.tagsSelectOptions = {
             multiple: true
@@ -260,16 +243,16 @@ class IssuesViewController extends TaigaPageController
         }
 
     issuesQueryParams: ->
-        return @location.search()
+        return @gmFilters.getLastIssuesQueryParams(@rootScope.projectId, "issues")
 
     loadIssue: ->
-        params = @issuesQueryParams()
+        params = @.issuesQueryParams()
         @rs.getIssue(@scope.projectId, @scope.issueId, params).then (issue) =>
             @scope.issue = issue
             @scope.form = _.extend({}, @scope.issue._attrs)
 
             breadcrumb = _.clone(@rootScope.pageBreadcrumb)
-            breadcrumb[1] = [@i18next.t('common.issues'), @rootScope.urls.issuesUrl(@scope.projectSlug)]
+            breadcrumb[1] = [@i18next.t("common.issues"), @rootScope.urls.issuesUrl(@scope.projectSlug)]
             breadcrumb[2] = ["##{issue.ref}", null]
             @rootScope.pageTitle = "#{@i18next.t('common.issues')} - ##{issue.ref}"
 

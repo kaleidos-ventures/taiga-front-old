@@ -154,12 +154,12 @@ class FiltersService extends TaigaBaseService
     # Given a namespace and filter, check if specified filter
     # is selected or not.
     isFilterSelected: (projectId, namespace, filterTag) ->
-        key = "#{projectId}:#{namespace}"
+        key = "#{projectId}:#{namespace}-filtering"
         filters = @gmStorage.get(key, [])
         return (filters.indexOf(@.filterToText(filterTag)) != -1)
 
     selectFilter: (projectId, namespace, filterTag) ->
-        key = "#{projectId}:#{namespace}"
+        key = "#{projectId}:#{namespace}-filtering"
 
         filters = @gmStorage.get(key, [])
         filterKey = @.filterToText(filterTag)
@@ -170,7 +170,7 @@ class FiltersService extends TaigaBaseService
             @gmStorage.set(key, filters)
 
     unselectFilter: (projectId, namespace, filterTag) ->
-        key = "#{projectId}:#{namespace}"
+        key = "#{projectId}:#{namespace}-filtering"
 
         filters = @gmStorage.get(key, [])
         filterKey = @.filterToText(filterTag)
@@ -184,14 +184,46 @@ class FiltersService extends TaigaBaseService
     # abstraction over gmStorage service for simplify access and avoid
     # reuse ordering from one page in an other.
     setOrdering: (projectId, namespace, ordering) ->
-        hash = @.generateHash([projectId, namespace])
+        orderingNamespace = "#{projectId}:#{namespace}-ordering"
+        hash = @.generateHash([projectId, orderingNamespace])
         @gmStorage.set(hash, ordering)
 
     # Namespaced method fro obtain stored ordering. This is a reverse
     # method of `setOrdering`.
     getOrdering: (projectId, namespace) ->
-        hash = @.generateHash([projectId, namespace])
-        return @gmStorage.get(hash)
+        orderingNamespace = "#{projectId}:#{namespace}-ordering"
+        hash = @.generateHash([projectId, orderingNamespace])
+        return @gmStorage.get(hash) or {}
+
+    storeLastIssuesQueryParams: (projectId, namespace, params={}) ->
+        ns = "#{projectId}:#{namespace}-queryparams"
+        hash = @.generateHash([projectId, ns])
+        @gmStorage.set(hash, params)
+
+    getLastIssuesQueryParams: (projectId, namespace) ->
+        ns = "#{projectId}:#{namespace}-queryparams"
+        hash = @.generateHash([projectId, ns])
+        return @gmStorage.get(hash) or {}
+
+    makeIssuesQueryParams: (projectId, namespace, filters, extra={}) ->
+        ordering = @.getOrdering(projectId, namespace)
+        selectedFilters = @.getSelectedFiltersList(projectId, namespace, filters)
+
+        params = {}
+        params.page = if extra.page is undefined then 1 else extra.page
+
+        for key, value of _.groupBy(selectedFilters, "type")
+            params[key] = _.map(value, "id").join(",")
+
+        if ordering.orderBy
+            if ordering.isReverse
+                params.order_by = "-#{ordering.orderBy}"
+            else
+                params.order_by = ordering.orderBy
+
+        @.storeLastIssuesQueryParams(projectId, namespace, params)
+        return params
+
 
 module = angular.module("taiga.services.tags", ["gmStorage", "i18next"])
 module.service("$gmFilters", FiltersService)
