@@ -95,6 +95,10 @@ class IssuesController extends TaigaPageController
             @gmFilters.unselectFilter(@rootScope.projectId, "issues-filter", filterTag)
 
         @scope.currentPage = 0
+
+        # Mark selected filters modified
+        # for properly dispatch watchers
+        @.selectedFilters = _.clone(@.selectedFilters, false)
         @.refreshIssues()
 
     # Using a $gmFilters service for populate a scope with

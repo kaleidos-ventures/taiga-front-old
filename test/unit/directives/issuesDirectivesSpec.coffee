@@ -1,14 +1,3 @@
-template = """
-<div
-    class="issue-sortable-field issue-severity"
-    ng-model="ordering"
-    gm-refresh-callback="refresh()"
-    gm-issues-sorted-by="severity">
-    Severity
-</div>
-"""
-
-
 describe "IssuesOrderByDirective", ->
     $rootScope = null
     $compile = null
@@ -17,6 +6,16 @@ describe "IssuesOrderByDirective", ->
     refreshCalledCounter = 0
     refresh = ->
         refreshCalledCounter += 1
+
+    template = """
+    <div
+        class="issue-sortable-field issue-severity"
+        ng-model="ordering"
+        gm-refresh-callback="refresh()"
+        gm-issues-sorted-by="severity">
+        Severity
+    </div>
+    """
 
     beforeEach(module("taiga.services.tags"))
     beforeEach(module("taiga.directives.issues"))
