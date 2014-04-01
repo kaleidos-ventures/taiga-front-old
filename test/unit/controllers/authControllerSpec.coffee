@@ -8,17 +8,10 @@ describe 'authController', ->
         scope = null
         ctrl = null
 
-        beforeEach(inject(($rootScope, $location, $controller, $routeParams, resource, $gmAuth, $i18next, $favico, $httpBackend) ->
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
             scope = $rootScope.$new()
             ctrl = $controller('LoginController', {
                 $scope: scope,
-                $rootScope: $rootScope,
-                $location: $location,
-                $routeParams: $routeParams,
-                resource: resource,
-                $gmAuth: $gmAuth,
-                $i18next: $i18next,
-                $favico: $favico
             })
             httpBackend = $httpBackend
             httpBackend.whenGET('http://localhost:8000/api/v1/sites').respond(200, {test: "test"})
@@ -76,16 +69,12 @@ describe 'authController', ->
         ctrl = null
         clock = null
 
-        beforeEach(inject(($rootScope, $location, $controller, resource, $i18next, $favico, $httpBackend) ->
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
             clock = sinon.useFakeTimers()
             scope = $rootScope.$new()
             ctrl = $controller('RecoveryController', {
                 $scope: scope,
                 $rootScope: $rootScope,
-                $location: $location,
-                rs: resource,
-                $i18next: $i18next,
-                $favico: $favico
             })
             httpBackend = $httpBackend
             httpBackend.whenGET('http://localhost:8000/api/v1/sites').respond(200, {test: "test"})
@@ -139,3 +128,86 @@ describe 'authController', ->
             expect(ctrl.scope.error).to.be.true
             expect(ctrl.scope.errorMessage).to.be.equal('test')
             expect(ctrl.scope.success).to.be.false
+
+    describe 'ChangePasswordController', ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+        clock = null
+        routeParams = null
+
+        beforeEach(inject(($rootScope, $controller, $routeParams, $httpBackend) ->
+            clock = sinon.useFakeTimers()
+            scope = $rootScope.$new()
+            routeParams = $routeParams
+            ctrl = $controller('ChangePasswordController', {
+                $scope: scope,
+                $routeParams: routeParams,
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET('http://localhost:8000/api/v1/sites').respond(200, {test: "test"})
+            httpBackend.whenPOST("http://localhost:8000/api/v1/users/change_password_from_recovery", {"token": "test-token", "password": "test-pass"}).respond(200)
+            httpBackend.whenPOST("http://localhost:8000/api/v1/users/change_password_from_recovery", {"token": "bad-token", "password": "test-pass"}).respond(400, {"detail": "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+            clock.restore()
+
+        it 'should have section login', ->
+            expect(ctrl.section).to.be.equal('login')
+
+        it 'should have a title', ->
+            expect(ctrl.getTitle).to.be.ok
+
+        it 'should allow to initialize without token in params', ->
+            expect(ctrl.scope.error).to.be.false
+            expect(ctrl.scope.success).to.be.false
+            expect(ctrl.scope.formData).to.be.deep.equal({})
+            expect(ctrl.scope.tokenInParams).to.be.false
+
+        it 'should allow to initialize with token in params', inject ($rootScope, $routeParams, $controller) ->
+            $routeParams.token = "test"
+            scope = $rootScope.$new()
+            newCtrl = $controller('ChangePasswordController', {
+                $scope: scope,
+                $routeParams: $routeParams,
+            })
+            expect(newCtrl.scope.tokenInParams).to.be.true
+
+        it 'should allow to submit the change password request', ->
+            sinon.spy(ctrl.location, "url")
+            ctrl.scope.formData.token = "test-token"
+            ctrl.scope.formData.password = "test-pass"
+            httpBackend.expectPOST("http://localhost:8000/api/v1/users/change_password_from_recovery", {"token": "test-token", "password": "test-pass"})
+            promise = ctrl.submit()
+            httpBackend.flush()
+            promise.should.be.fullfilled
+            expect(ctrl.scope.success).to.be.true
+            expect(ctrl.scope.error).to.be.false
+            clock.tick(2100)
+            ctrl.location.url.getCall(0).calledWith('/login').should.be.ok
+
+            ctrl.scope.formData.token = "bad-token"
+            ctrl.scope.formData.password = "test-pass"
+            httpBackend.expectPOST("http://localhost:8000/api/v1/users/change_password_from_recovery", {"token": "bad-token", "password": "test-pass"})
+            promise = ctrl.submit()
+            httpBackend.flush()
+            promise.should.be.rejected
+            expect(ctrl.scope.error).to.be.true
+            expect(ctrl.scope.success).to.be.false
+            expect(ctrl.scope.formData).to.be.deep.equal({})
+            expect(ctrl.scope.errorMessage).to.be.equal('test')
+
+            ctrl.routeParams.token = "test-token"
+            ctrl.scope.formData.password = "test-pass"
+            httpBackend.expectPOST("http://localhost:8000/api/v1/users/change_password_from_recovery", {"token": "test-token", "password": "test-pass"})
+            promise = ctrl.submit()
+            httpBackend.flush()
+            promise.should.be.fullfilled
+            expect(ctrl.scope.success).to.be.true
+            expect(ctrl.scope.error).to.be.false
+            clock.tick(2100)
+            ctrl.location.url.getCall(0).calledWith('/login').should.be.ok

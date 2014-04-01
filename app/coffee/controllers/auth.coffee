@@ -92,7 +92,7 @@ class ChangePasswordController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$location', '$routeParams',
                  'resource', '$i18next', '$favico']
     constructor: (@scope, @rootScope, @location, @routeParams, @rs, @i18next, @favico) ->
-        super(scope, rootscope, favico)
+        super(scope, rootScope, favico)
 
     section: 'login'
     getTitle: ->
@@ -115,15 +115,18 @@ class ChangePasswordController extends TaigaPageController
             @scope.success = true
             @scope.error = false
 
-            gm.utils.delay 1000, =>
+            setTimeout(=>
                 @location.url("/login")
                 @scope.$apply()
+            , 2000)
 
         promise.then null, (data) =>
             @scope.error = true
             @scope.success = false
             @scope.formData = {}
             @scope.errorMessage = data.detail
+
+        return promise
 
 
 class ProfileController extends TaigaPageController
