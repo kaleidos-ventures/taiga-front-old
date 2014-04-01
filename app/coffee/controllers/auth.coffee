@@ -155,10 +155,8 @@ class ProfileController extends TaigaPageController
         @scope.formData = {}
         @scope.authForm = @scope.auth
 
-        if not @scope.authForm.notify_level?
-            @scope.authForm.notify_level = _.keys(@scope.notificationLevelOptions)[0]
-        if not @scope.authForm.default_language?
-            @scope.authForm.default_language = _.keys(@scope.languageOptions)[0]
+        @scope.authForm.notify_level = @scope.authForm.notify_level or _.keys(@scope.notificationLevelOptions)[0]
+        @scope.authForm.default_language = @scope.authForm.default_language or _.keys(@scope.languageOptions)[0]
 
     submitProfile: (form) ->
         promise = form.save()

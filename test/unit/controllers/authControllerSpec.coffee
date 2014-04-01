@@ -211,3 +211,66 @@ describe 'authController', ->
             expect(ctrl.scope.error).to.be.false
             clock.tick(2100)
             ctrl.location.url.getCall(0).calledWith('/login').should.be.ok
+
+    describe 'ProfileController', ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+        clock = null
+        routeParams = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+            clock = sinon.useFakeTimers()
+            scope = $rootScope.$new()
+            gmFlashMock = {
+                info: (text) ->
+            }
+            gmAuthMock = {
+                setUser: (user) ->
+            }
+            ctrl = $controller('ProfileController', {
+                $scope: scope,
+                $gmFlash: gmFlashMock,
+                $gmAuth: gmAuthMock
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET('http://localhost:8000/api/v1/sites').respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+            clock.restore()
+
+        it 'should have section profile', ->
+            expect(ctrl.section).to.be.equal('profile')
+
+        it 'should have a title', ->
+            expect(ctrl.getTitle).to.be.ok
+
+        it 'should allow to submit the profile info', inject ($model) ->
+            sinon.spy(ctrl.gmAuth, "setUser")
+            sinon.spy(ctrl.gmFlash, "info")
+
+            httpBackend.expectPATCH("http://localhost:8000/api/v1/users/1", {"test": "test"}).respond(200)
+            form = $model.make_model("users", {id: 1, test: ""})
+            form.test = "test"
+            promise = ctrl.submitProfile(form)
+            httpBackend.flush()
+            promise.should.be.fullfilled
+
+            ctrl.gmAuth.setUser.should.have.been.calledOnce
+            ctrl.gmFlash.info.should.have.been.calledOnce
+
+            httpBackend.expectPATCH("http://localhost:8000/api/v1/users/1", {"test": "bad"}).respond(400, {'detail': 'test'})
+            form = $model.make_model("users", {id: 1, test: ""})
+            form.test = "bad"
+            promise = ctrl.submitProfile(form)
+            httpBackend.flush()
+            promise.should.become({'detail': 'test'})
+            expect(ctrl.scope.checksleyErrors).to.be.deep.equal({'detail': 'test'})
+
+            # No extra calls
+            ctrl.gmAuth.setUser.should.have.been.calledOnce
+            ctrl.gmFlash.info.should.have.been.calledOnce
