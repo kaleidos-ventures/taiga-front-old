@@ -4,6 +4,10 @@
         <span ng-class="{spinner: us._moving}" data-icon="x"></span>
     </div>
 
+    <div class="us-points" gm-popover data-tmpl="#us-points-per-role-popover">
+        <span>Points: </span><span class="total">{{ us.total_points }}</span>
+    </div>
+
     <div class="title">#{{ us.ref }} {{ us.subject }}</div>
 
     <div class="assign-to">

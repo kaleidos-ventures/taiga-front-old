@@ -154,15 +154,15 @@
         </ul>
     </div>
 </script>
-<script type="text/template" id="points-popover">
-    <div class="us-points-popover">
-        <ul>
-            <li class="item btn-accept" ng-repeat="obj in constants.pointsList" data-id="{{ obj.id }}">
-                <a href="">{{ obj.name }}</a>
+<script type="text/template" id="us-points-per-role-popover">
+    <div class="points-per-role-popover">
+        <ul class="us-points-per-role">
+            <li ng-repeat="role in constants.computableRolesList" class="us-point">
+                {{ role.name }}: {{ constants.points[us.points[role.id]].name }}
             </li>
         </ul>
     </div>
-</script>
+<script>
 
 <script type="text/template" id="us-blocked-popover">
     <div class="us-blocked-popover">
