@@ -46,7 +46,8 @@ GmIssuesSortedByDirective = ($rootScope, $gmFilters) ->
 
             setCurrentOrdering(ordering)
             setStyle(element, ordering.isReverse)
-            scope.ctrl.refreshIssues()
+
+            scope.$evalAsync(attrs.gmRefreshCallback)
 
         # Setting initial state
         initialize = _.once ->

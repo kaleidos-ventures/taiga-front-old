@@ -166,6 +166,7 @@
                 <div i18next="issues.severity-header"
                      class="issue-sortable-field issue-severity"
                      ng-model="ctrl.ordering"
+                     gm-refresh-callback="ctrl.refreshIssues()"
                      gm-issues-sorted-by="severity">
                     Severity
                 </div>
@@ -173,42 +174,49 @@
                 <div i18next="issues.subject-header"
                      class="issue-sortable-field issue-title"
                      ng-model="ctrl.ordering"
+                     gm-refresh-callback="ctrl.refreshIssues()"
                      gm-issues-sorted-by="subject">
                     Subject
                 </div>
                 <div i18next="issues.added-by-header"
                      class="issue-sortable-field issue-added-by"
                      ng-model="ctrl.ordering"
+                     gm-refresh-callback="ctrl.refreshIssues()"
                      gm-issues-sorted-by="owner">
                     Added by
                 </div>
                 <div i18next="issues.created-date-header"
                      class="issue-sortable-field issue-created-date"
                      ng-model="ctrl.ordering"
+                     gm-refresh-callback="ctrl.refreshIssues()"
                      gm-issues-sorted-by="created_date">
                     Created
                 </div>
                 <div i18next="issues.modified-date-header"
                      ng-model="ctrl.ordering"
                      class="issue-sortable-field issue-modified-date"
+                     gm-refresh-callback="ctrl.refreshIssues()"
                      gm-issues-sorted-by="modified_date">
                     Modified
                 </div>
                 <div i18next="issues.status-header"
                      class="issue-sortable-field issue-state"
                      ng-model="ctrl.ordering"
+                     gm-refresh-callback="ctrl.refreshIssues()"
                      gm-issues-sorted-by="status">
                     Status
                 </div>
                 <div i18next="issues.priority-header"
                      class="issue-sortable-field issue-priority"
                      ng-model="ctrl.ordering"
+                     gm-refresh-callback="ctrl.refreshIssues()"
                      gm-issues-sorted-by="priority">
                     Priority
                 </div>
                 <div i18next="issues.assigned-to-header"
                      class="issue-sortable-field issue-assigned-to"
                      ng-model="ctrl.ordering"
+                     gm-refresh-callback="ctrl.refreshIssues()"
                      gm-issues-sorted-by="assigned_to">
                     Assigned to
                 </div>
