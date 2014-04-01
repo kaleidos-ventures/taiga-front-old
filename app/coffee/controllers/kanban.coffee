@@ -13,20 +13,20 @@
 # limitations under the License.
 
 class KanbanController extends TaigaPageController
-    @.$inject = ['$scope', '$rootScope', '$routeParams', '$q', 'resource',
-               '$data','$modal', "$model", "$i18next", "$favico"]
+    @.$inject = ["$scope", "$rootScope", "$routeParams", "$q", "resource",
+               "$data","$modal", "$model", "$i18next", "$favico"]
 
     constructor: (@scope, @rootScope, @routeParams, @q, @rs, @data, @modal, @model, @i18next, @favico) ->
         super(scope, rootScope, favico)
 
-    section: 'kanban'
+    section: "kanban"
     getTitle: ->
-        @i18next.t('common.kanban')
+        @i18next.t("common.kanban")
 
     initialize: ->
         @rootScope.pageBreadcrumb = [
             ["", ""],
-            [@i18next.t('common.kanban'), null]
+            [@i18next.t("common.kanban"), null]
         ]
 
         @rs.resolve(pslug: @routeParams.pslug).then (data) =>
@@ -77,23 +77,23 @@ class KanbanController extends TaigaPageController
             return us
 
         result = {}
-        result['project'] = @scope.projectId
-        result['status'] = status or @scope.project.default_us_status
+        result["project"] = @scope.projectId
+        result["status"] = status or @scope.project.default_us_status
         points = {}
         for role in @scope.constants.computableRolesList
             points[role.id] = @scope.project.default_points
-        result['points'] = points
+        result["points"] = points
         return result
 
     openCreateUsForm: (statusId) ->
-        promise = @modal.open("us-form", {'us': @initializeUsForm(null, statusId), 'type': 'create'})
+        promise = @modal.open("us-form", {"us": @initializeUsForm(null, statusId), "type": "create"})
         promise.then (us) =>
             newUs = @model.make_model("userstories", us)
             @scope.userstories.push(newUs)
             @formatUserStories()
 
     openEditUsForm: (us) ->
-        promise = @modal.open("us-form", {'us': us, 'type': 'edit'})
+        promise = @modal.open("us-form", {"us": us, "type": "edit"})
         promise.then =>
             @formatUserStories()
 
@@ -140,7 +140,7 @@ class KanbanController extends TaigaPageController
 
 
 class KanbanUsModalController extends ModalBaseController
-    @.$inject = ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource', "$i18next"]
+    @.$inject = ["$scope", "$rootScope", "$gmOverlay", "$gmFlash", "resource", "$i18next"]
 
     constructor: (@scope, @rootScope, @gmOverlay, @gmFlash, @rs, @i18next) ->
         super(scope)
@@ -193,7 +193,7 @@ class KanbanUsModalController extends ModalBaseController
             @scope.form.id = data.id
             @scope.form.ref = data.ref
             @scope.defered.resolve(@scope.form)
-            @gmFlash.info(@i18next.t('kanban.user-story-saved'))
+            @gmFlash.info(@i18next.t("kanban.user-story-saved"))
 
         promise.then null, (data) =>
             @scope.checksleyErrors = data
@@ -210,22 +210,22 @@ class KanbanUsModalController extends ModalBaseController
         hash = hex_sha1(option.text.trim().toLowerCase())
         color = hash
             .substring(0,6)
-            .replace('8','0')
-            .replace('9','1')
-            .replace('a','2')
-            .replace('b','3')
-            .replace('c','4')
-            .replace('d','5')
-            .replace('e','6')
-            .replace('f','7')
+            .replace("8","0")
+            .replace("9","1")
+            .replace("a","2")
+            .replace("b","3")
+            .replace("c","4")
+            .replace("d","5")
+            .replace("e","6")
+            .replace("f","7")
 
-        container.parent().css('background', "##{color}")
+        container.parent().css("background", "##{color}")
         container.text(option.text)
         return
 
 
 class KanbanUsController extends TaigaBaseController
-    @.$inject = ['$scope', '$rootScope', '$q', "$location"]
+    @.$inject = ["$scope", "$rootScope", "$q", "$location"]
 
     constructor: (@scope, @rootScope, @q, @location) ->
         super(scope)
@@ -244,9 +244,9 @@ class KanbanUsController extends TaigaBaseController
         @location.url("/project/#{projectSlug}/user-story/#{usRef}")
 
 
-moduleDeps = ['taiga.services.resource', 'taiga.services.data', 'gmModal',
-              'taiga.services.model', 'i18next', 'favico', 'gmOverlay',
-              'gmFlash']
+moduleDeps = ["taiga.services.resource", "taiga.services.data", "gmModal",
+              "taiga.services.model", "i18next", "favico", "gmOverlay",
+              "gmFlash"]
 module = angular.module("taiga.controllers.kanban", moduleDeps)
 module.controller("KanbanController", KanbanController)
 module.controller("KanbanUsController", KanbanUsController)
