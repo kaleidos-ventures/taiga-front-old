@@ -80,7 +80,7 @@ class IssuesController extends TaigaPageController
     ## Filters/Sorting scope functions
     #####
 
-    isTagSelected: (filterTag) ->
+    isFilterSelected: (filterTag) ->
         projectId = @rootScope.projectId
         namespace = "issues"
         return @gmFilters.isFilterSelected(projectId, namespace, filterTag)

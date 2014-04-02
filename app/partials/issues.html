@@ -71,7 +71,7 @@
                         <div class="tag" style="background-color: {{ tag.color }}"
                              ng-repeat="tag in filters.statuses"
                              ng-click="ctrl.toggleFilter(tag)"
-                             ng-class="{selected: ctrl.isTagSelected(tag)}">
+                             ng-class="{selected: ctrl.isFilterSelected(tag)}">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
@@ -83,7 +83,7 @@
                         <div class="tag" style="background-color: {{ tag.color }}"
                              ng-repeat="tag in filters.types"
                              ng-click="ctrl.toggleFilter(tag)"
-                             ng-class="{selected: ctrl.isTagSelected(tag)}" >
+                             ng-class="{selected: ctrl.isFilterSelected(tag)}" >
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
@@ -95,7 +95,7 @@
                         <div class="tag" style="background-color: {{ tag.color }}"
                              ng-repeat="tag in filters.severities"
                              ng-click="ctrl.toggleFilter(tag)"
-                             ng-class="{selected: ctrl.isTagSelected(tag)}" >
+                             ng-class="{selected: ctrl.isFilterSelected(tag)}" >
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
@@ -107,7 +107,7 @@
                         <div class="tag" style="background-color: {{ tag.color }}"
                              ng-repeat="tag in filters.priorities"
                              ng-click="ctrl.toggleFilter(tag)"
-                             ng-class="{selected: ctrl.isTagSelected(tag)}">
+                             ng-class="{selected: ctrl.isFilterSelected(tag)}">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
@@ -117,7 +117,7 @@
                 <!--     <h3 i18next="issues.added-by">Added by:</h3> -->
                 <!--     <div class="tags-list-sbox"> -->
                 <!--         <div class="tag" ng-repeat="tag in addedByTags" ng-click="ctrl.toggleTag(tag)" -->
-                <!--                 ng-class="{selected: ctrl.isTagSelected(tag)}"> -->
+                <!--                 ng-class="{selected: ctrl.isFilterSelected(tag)}"> -->
                 <!--             <div class="name" gm-colorize-user="constants.users[tag.id]"> -->
                 <!--                 {{ tag.name }} -->
                 <!--             </div> -->
@@ -130,7 +130,7 @@
                     <div class="tags-list-sbox">
                         <div class="tag" ng-repeat="tag in filters.assignedTo"
                              ng-click="ctrl.toggleFilter(tag)"
-                             ng-class="{selected: ctrl.isTagSelected(tag)}">
+                             ng-class="{selected: ctrl.isFilterSelected(tag)}">
                             <div class="name" gm-colorize-user="constants.users[tag.id]">
                                 {{ tag.name }}
                             </div>
@@ -143,7 +143,7 @@
                     <div class="tags-list-sbox">
                         <div class="tag" ng-repeat="tag in filters.tags track by $index"
                              ng-click="ctrl.toggleFilter(tag)"
-                             ng-class="{selected: ctrl.isTagSelected(tag)}" gm-colorize-tag>
+                             ng-class="{selected: ctrl.isFilterSelected(tag)}" gm-colorize-tag>
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>
