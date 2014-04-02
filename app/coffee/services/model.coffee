@@ -64,7 +64,7 @@ ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
 
             getter = (name) ->
                 return ->
-                    if name.substr(0,2) == "__"
+                    if typeof(name) == 'string' and name.substr(0,2) == "__"
                         return self[name]
 
                     if name not in _.keys(self._modifiedAttrs)
@@ -74,7 +74,7 @@ ModelProvider = ($q, $http, $gmUrls, $gmStorage) ->
 
             setter = (name) ->
                 return (value) ->
-                    if name.substr(0,2) == "__"
+                    if typeof(name) == 'string' and name.substr(0,2) == "__"
                         self[name] = value
                         return
 

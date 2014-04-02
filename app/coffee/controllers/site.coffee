@@ -33,6 +33,12 @@ class SiteAdminController extends TaigaPageController
 
         @scope.languageOptions = @gmConfig.get("languageOptions")
 
+        @scope.addProjectFormOpened = true
+        @scope.newProjectName = ""
+        @scope.newProjectDescription = ""
+        @scope.newProjectSprints = ""
+        @scope.newProjectPoints = ""
+
         @loadMembers()
         @loadSite()
 
@@ -52,6 +58,8 @@ class SiteAdminController extends TaigaPageController
         else if role == 'normal'
             mbr.is_owner = false
             mbr.is_staff = false
+        else
+            throw new Error('invalid role')
 
         promise = mbr.save()
         promise.then =>
@@ -59,7 +67,9 @@ class SiteAdminController extends TaigaPageController
 
         promise.then null, =>
             mbr.revert()
-            @gmFlash.warn(@i18next.t("admin-site.error-changing-the-role"))
+            @gmFlash.error(@i18next.t("admin-site.error-changing-the-role"))
+
+        return promise
 
     submit: ->
         extraParams = {
@@ -76,11 +86,14 @@ class SiteAdminController extends TaigaPageController
         promise.then null, (data) =>
             @scope.checksleyErrors = data
 
+        return promise
+
     deleteProject: (project) ->
         promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
-        promise.then () =>
+        promise.then =>
             @model.make_model('site-projects', project).remove().then =>
                 @loadSite()
+        return promise
 
     openNewProjectForm: ->
         @scope.addProjectFormOpened = true
@@ -99,10 +112,14 @@ class SiteAdminController extends TaigaPageController
             total_story_points: @scope.newProjectPoints
             total_milestones: @scope.newProjectSprints
         }
-        @rs.createProject(projectData, @scope.newProjectTemplate).then =>
+        promise = @rs.createProject(projectData, @scope.newProjectTemplate)
+        promise.then =>
             @gmFlash.info(@i18next.t("admin-site.project-created"))
             @scope.addProjectFormOpened = false
             @loadSite()
+        promise.then null, =>
+            @gmFlash.info(@i18next.t("admin-site.error-creating-project"))
+        return promise
 
     loadMembers: ->
         @rs.getSiteMembers().then (members) =>

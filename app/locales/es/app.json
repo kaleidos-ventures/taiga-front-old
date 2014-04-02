@@ -624,6 +624,7 @@
         "sprints": "Sprints",
         "points": "Puntos",
         "project-created": "Proyecto creado.",
+        "error-creating-project": "Error al crear el proyecto.",
         "saved-success": "Sitio guardado correctamente.",
         "set-as-owner": "Establecer como propietario",
         "set-as-staff": "Establecer como staff",
