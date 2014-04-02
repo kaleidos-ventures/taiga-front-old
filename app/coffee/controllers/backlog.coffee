@@ -75,11 +75,12 @@ class BacklogUserStoriesController extends TaigaBaseController
         @scope.filtersOpened = false
         @scope.showTags = false
 
-        @scope.$on("points:loaded", _.bind(@.refreshBacklog, @))
-        @scope.$on("userstory-form:create", _.bind(@.refreshBacklog, @))
-
         @scope.$on "milestones:loaded", (ctx, data) =>
             @scope.milestones = data
+
+        # Main: Entry point
+        @scope.$on("points:loaded", _.bind(@.refreshBacklog, @))
+        @scope.$on("userstory-form:create", _.bind(@.refreshBacklog, @))
 
     calculateStats: ->
         @scope.$emit("stats:update")
