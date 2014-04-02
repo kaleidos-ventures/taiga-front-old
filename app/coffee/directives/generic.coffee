@@ -66,7 +66,8 @@ GmSelectedFiltersRendererDirective = ($compile) ->
             # renderFilters(filters, scope, element)
 
             if filter
-                scope.$eval(attrs.gmToggleFilterCallback, {tag:filter})
+                scope.$apply ->
+                    scope.$eval(attrs.gmToggleFilterCallback, {tag:filter})
 
         element.on "$destroy", (event) ->
             element.off()
