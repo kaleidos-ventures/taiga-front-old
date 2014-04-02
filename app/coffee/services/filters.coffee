@@ -73,7 +73,7 @@ class FiltersService extends TaigaBaseService
             return tag
 
         return _.sortBy filters, (item) ->
-            if item.id is null
+            if item.id == "null"
                 return "000000000000000"
             return item.name
 
