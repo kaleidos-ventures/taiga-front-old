@@ -162,6 +162,90 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $location, rs) ->
                 return "$1@#{value.username} "
             maxCount: 5
         }
+        userStoryStrategy = {
+            match: /(^|\s):us#(\d+)$/,
+            search: (ref, callback) ->
+                resolvePromise = rs.resolve(pslug: $rootScope.projectSlug, usref: ref)
+                resolvePromise.then (data) ->
+                    if data.us
+                        promise = rs.getUserStory(data.project, data.us)
+                        promise.then (data) ->
+                            objects = []
+                            if data
+                                objects[0] = {
+                                    id: data.id
+                                    ref: data.ref
+                                    subject: data.subject
+                                }
+                            callback(objects, false)
+                        promise.then null, ->
+                            callback([], false)
+                    else
+                        callback([], false)
+                resolvePromise.then null, ->
+                    callback([], false)
+            template: (value) ->
+                return "US ##{value.ref} - #{value.subject}"
+            replace: (value) ->
+                return "$1[US ##{value.ref}](:us:#{value.ref} \"US ##{value.ref} - #{value.subject}\")"
+            maxCount: 1
+        }
+        taskStrategy = {
+            match: /(^|\s):task#(\d+)$/,
+            search: (ref, callback) ->
+                resolvePromise = rs.resolve(pslug: $rootScope.projectSlug, taskref: ref)
+                resolvePromise.then (data) ->
+                    if data.task
+                        promise = rs.getTask(data.project, data.task)
+                        promise.then (data) ->
+                            objects = []
+                            if data
+                                objects[0] = {
+                                    id: data.id
+                                    ref: data.ref
+                                    subject: data.subject
+                                }
+                            callback(objects, false)
+                        promise.then null, ->
+                            callback([], false)
+                    else
+                        callback([], false)
+                resolvePromise.then null, ->
+                    callback([], false)
+            template: (value) ->
+                return "Task ##{value.ref} - #{value.subject}"
+            replace: (value) ->
+                return "$1[Task ##{value.ref}](:task:#{value.ref} \"Task ##{value.ref} - #{value.subject}\")"
+            maxCount: 1
+        }
+        issueStrategy = {
+            match: /(^|\s):issue#(\d+)$/,
+            search: (ref, callback) ->
+                resolvePromise = rs.resolve(pslug: $rootScope.projectSlug, issueref: ref)
+                resolvePromise.then (data) ->
+                    if data.issue
+                        promise = rs.getIssue(data.project, data.issue)
+                        promise.then (data) ->
+                            objects = []
+                            if data
+                                objects[0] = {
+                                    id: data.id
+                                    ref: data.ref
+                                    subject: data.subject
+                                }
+                            callback(objects, false)
+                        promise.then null, ->
+                            callback([], false)
+                    else
+                        callback([], false)
+                resolvePromise.then null, ->
+                    callback([], false)
+            template: (value) ->
+                return "Issue ##{value.ref} - #{value.subject}"
+            replace: (value) ->
+                return "$1[Issue ##{value.ref}](:issue:#{value.ref} \"Issue ##{value.ref} - #{value.subject}\")"
+            maxCount: 1
+        }
         objectsStrategy = {
             match: /(^|\s)\$\$\$(.*)$/,
             search: (term, callback) ->
@@ -210,7 +294,12 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $location, rs) ->
                     else ""
             maxCount: 10
         }
-        element.textcomplete([emojiStrategy, usersStrategy, objectsStrategy])
+        element.textcomplete([emojiStrategy,
+                              usersStrategy,
+                              userStoryStrategy,
+                              taskStrategy,
+                              issueStrategy,
+                              objectsStrategy])
 
         element.markItUp(markdownSettings)
 
