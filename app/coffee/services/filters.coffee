@@ -225,5 +225,5 @@ class FiltersService extends TaigaBaseService
         return params
 
 
-module = angular.module("taiga.services.tags", ["gmStorage", "i18next"])
+module = angular.module("taiga.services.filters", ["gmStorage", "i18next"])
 module.service("$gmFilters", FiltersService)

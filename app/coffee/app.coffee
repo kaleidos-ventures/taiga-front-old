@@ -448,7 +448,7 @@ modules = [
     "taiga.services.auth",
     "taiga.services.model",
     "taiga.services.resource",
-    "taiga.services.tags",
+    "taiga.services.filters",
     "taiga.directives.generic",
     "taiga.directives.common",
     "taiga.directives.graphs",

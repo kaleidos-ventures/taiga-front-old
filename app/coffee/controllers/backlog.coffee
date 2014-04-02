@@ -14,12 +14,12 @@
 
 
 class BacklogController extends TaigaPageController
-    @.$inject = ['$scope', '$rootScope', '$routeParams', 'resource', '$data',
-                 '$i18next', '$favico']
+    @.$inject = ["$scope", "$rootScope", "$routeParams", "resource", "$data",
+                 "$i18next", "$favico"]
     constructor: (@scope, @rootScope, @routeParams, @rs, @data, @i18next, @favico) ->
         super(scope, rootScope, favico)
 
-    section: 'backlog'
+    section: "backlog"
     getTitle: ->
         @i18next.t("common.backlog")
 
@@ -61,8 +61,8 @@ class BacklogController extends TaigaPageController
 
 
 class BacklogUserStoriesController extends TaigaBaseController
-    @.$inject = ['$scope', '$rootScope', '$q', 'resource', '$data', '$modal',
-                 '$location', '$gmFilters']
+    @.$inject = ["$scope", "$rootScope", "$q", "resource", "$data", "$modal",
+                 "$location", "$gmFilters"]
     constructor: (@scope, @rootScope, @q, @rs, @data, @modal, @location, @gmFilters) ->
         super(scope)
 
@@ -217,9 +217,9 @@ class BacklogUserStoriesController extends TaigaBaseController
             points = {}
             for role in @scope.constants.computableRolesList
                 points[role.id] = @scope.project.default_points
-            result['points'] = points
-            result['project'] = @scope.projectId
-            result['status'] = @scope.project.default_us_status
+            result["points"] = points
+            result["project"] = @scope.projectId
+            result["status"] = @scope.project.default_us_status
 
         return result
 
@@ -287,8 +287,8 @@ class BacklogUserStoriesController extends TaigaBaseController
 
 
 class BacklogUserStoryModalController extends ModalBaseController
-    @.$inject = ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash',
-                 '$i18next']
+    @.$inject = ["$scope", "$rootScope", "$gmOverlay", "resource", "$gmFlash",
+                 "$i18next"]
     constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next) ->
         super(scope)
 
@@ -318,7 +318,7 @@ class BacklogUserStoryModalController extends ModalBaseController
         # This hack is used to take care on save user story as PATCH requests
         # and save correctly the multiple deep levels attributes
         usCopy = _.cloneDeep(@scope.context.us)
-        @scope.$watch('form.points', =>
+        @scope.$watch("form.points", =>
             if JSON.stringify(@scope.form.points) != JSON.stringify(usCopy.points)
                 @scope.form.points = _.clone(@scope.form.points)
         , true)
@@ -341,7 +341,7 @@ class BacklogUserStoryModalController extends ModalBaseController
             @closeModal()
             @gmOverlay.close()
             @scope.defered.resolve()
-            @gmFlash.info(@i18next.t('backlog.user-story-saved'))
+            @gmFlash.info(@i18next.t("backlog.user-story-saved"))
 
         promise.then null, (data) =>
             @scope.checksleyErrors = data
@@ -350,23 +350,23 @@ class BacklogUserStoryModalController extends ModalBaseController
         hash = hex_sha1(option.text.trim().toLowerCase())
         color = hash
             .substring(0,6)
-            .replace('8','0')
-            .replace('9','1')
-            .replace('a','2')
-            .replace('b','3')
-            .replace('c','4')
-            .replace('d','5')
-            .replace('e','6')
-            .replace('f','7')
+            .replace("8","0")
+            .replace("9","1")
+            .replace("a","2")
+            .replace("b","3")
+            .replace("c","4")
+            .replace("d","5")
+            .replace("e","6")
+            .replace("f","7")
 
-        container.parent().css('background', "##{color}")
+        container.parent().css("background", "##{color}")
         container.text(option.text)
         return
 
 
 class BacklogBulkUserStoriesModalController extends ModalBaseController
-    @.$inject = ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash',
-                 '$i18next']
+    @.$inject = ["$scope", "$rootScope", "$gmOverlay", "resource", "$gmFlash",
+                 "$i18next"]
     constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next) ->
         super(scope)
 
@@ -387,7 +387,7 @@ class BacklogBulkUserStoriesModalController extends ModalBaseController
             @closeModal()
             @gmOverlay.close()
             @scope.defered.resolve()
-            @gmFlash.info(@i18next.t('backlog.bulk-user-stories-created', { count: data.data.length }))
+            @gmFlash.info(@i18next.t("backlog.bulk-user-stories-created", { count: data.data.length }))
             @scope.form = {}
 
         promise.then null, (data) =>
@@ -395,8 +395,8 @@ class BacklogBulkUserStoriesModalController extends ModalBaseController
 
 
 class BacklogMilestonesController extends TaigaBaseController
-    @.$inject = ['$scope', '$rootScope', 'resource', '$gmFlash', '$i18next',
-                 '$location']
+    @.$inject = ["$scope", "$rootScope", "resource", "$gmFlash", "$i18next",
+                 "$location"]
     constructor: (@scope, @rootScope, @rs, @gmFlash, @i18next, @location) ->
         super(scope)
 
@@ -441,7 +441,7 @@ class BacklogMilestonesController extends TaigaBaseController
                 # last created milestone
                 @rootScope.sprintId = milestone.id
                 # Show a success message
-                @gmFlash.info(@i18next.t('backlog.sprint-saved'))
+                @gmFlash.info(@i18next.t("backlog.sprint-saved"))
 
             promise.then null, (data) =>
                 @scope.checksleyErrors = data
@@ -451,14 +451,14 @@ class BacklogMilestonesController extends TaigaBaseController
             promise.then (data) =>
                 @scope.form = {}
                 @scope.sprintFormOpened = false
-                @gmFlash.info(@i18next.t('backlog.sprint-saved'))
+                @gmFlash.info(@i18next.t("backlog.sprint-saved"))
 
             promise.then null, (data) =>
                 @scope.checksleyErrors = data
 
 
 class BacklogMilestoneController extends TaigaBaseController
-    @.$inject = ['$scope', '$q', 'resource', '$gmFlash', '$i18next']
+    @.$inject = ["$scope", "$q", "resource", "$gmFlash", "$i18next"]
     constructor: (@scope, @q, @rs, @gmFlash, @i18next) ->
         super(scope)
 
@@ -537,7 +537,7 @@ class BacklogMilestoneController extends TaigaBaseController
 
         promise.then (data) =>
             @scope.editFormOpened = false
-            @gmFlash.info(@i18next.t('backlog.sprint-modified'))
+            @gmFlash.info(@i18next.t("backlog.sprint-modified"))
 
         promise.then null, (data) =>
             @scope.checksleyErrors = data
@@ -559,13 +559,14 @@ class BacklogMilestoneController extends TaigaBaseController
     sortableOnRemove: (us) ->
         _.remove(@scope.ml.user_stories, us)
 
-moduleDeps = ['taiga.services.data', 'favico', 'gmModal',
-              'taiga.services.tags', 'gmOverlay', 'taiga.services.resource',
-              'gmFlash', 'i18next']
+moduleDeps = ["taiga.services.data", "favico", "gmModal",
+              "taiga.services.filters", "gmOverlay", "taiga.services.resource",
+              "gmFlash", "i18next"]
+
 module = angular.module("taiga.controllers.backlog", moduleDeps)
-module.controller('BacklogController', BacklogController)
-module.controller('BacklogUserStoriesController', BacklogUserStoriesController)
-module.controller('BacklogUserStoryModalController', BacklogUserStoryModalController)
-module.controller('BacklogBulkUserStoriesModalController', BacklogBulkUserStoriesModalController)
-module.controller('BacklogMilestonesController', BacklogMilestonesController)
-module.controller('BacklogMilestoneController', BacklogMilestoneController)
+module.controller("BacklogController", BacklogController)
+module.controller("BacklogUserStoriesController", BacklogUserStoriesController)
+module.controller("BacklogUserStoryModalController", BacklogUserStoryModalController)
+module.controller("BacklogBulkUserStoriesModalController", BacklogBulkUserStoriesModalController)
+module.controller("BacklogMilestonesController", BacklogMilestonesController)
+module.controller("BacklogMilestoneController", BacklogMilestoneController)

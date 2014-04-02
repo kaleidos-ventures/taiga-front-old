@@ -61,5 +61,5 @@ GmIssuesSortedByDirective = ($rootScope, $gmFilters) ->
     return {link: link}
 
 
-module = angular.module('taiga.directives.issues', ['taiga.services.tags'])
-module.directive('gmIssuesSortedBy', ["$rootScope", "$gmFilters", GmIssuesSortedByDirective])
+module = angular.module("taiga.directives.issues", ["taiga.services.filters"])
+module.directive("gmIssuesSortedBy", ["$rootScope", "$gmFilters", GmIssuesSortedByDirective])

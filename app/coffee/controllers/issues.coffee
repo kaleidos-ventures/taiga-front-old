@@ -13,9 +13,9 @@
 # limitations under the License.
 
 class IssuesController extends TaigaPageController
-    @.$inject = ['$scope', '$rootScope', '$routeParams', '$filter', '$q',
-                 'resource', '$data', '$confirm', '$modal', '$i18next',
-                 '$location', '$favico', '$gmFilters']
+    @.$inject = ["$scope", "$rootScope", "$routeParams", "$filter", "$q",
+                 "resource", "$data", "$confirm", "$modal", "$i18next",
+                 "$location", "$favico", "$gmFilters"]
 
     constructor: (@scope, @rootScope, @routeParams, @filter, @q, @rs, @data,
                   @confirm, @modal, @i18next, @location, @favico, @gmFilters) ->
@@ -25,16 +25,16 @@ class IssuesController extends TaigaPageController
         toggleShowGraphs = @toggleShowGraphs
         @toggleShowGraphs = gm.utils.safeDebounced @scope, 500, toggleShowGraphs
 
-    section: 'issues'
+    section: "issues"
     getTitle: ->
-        @i18next.t('common.issues')
+        @i18next.t("common.issues")
 
     initialize: ->
         @.debounceMethods()
 
         @rootScope.pageBreadcrumb = [
             ["", ""],
-            [@i18next.t('common.issues'), null]
+            [@i18next.t("common.issues"), null]
         ]
 
         @scope.filtersOpened = false
@@ -136,13 +136,13 @@ class IssuesController extends TaigaPageController
     #####
 
     openCreateIssueForm: ->
-        promise = @modal.open("issue-form", {'type': 'create'})
+        promise = @modal.open("issue-form", {"type": "create"})
         promise.then (issue) =>
             @scope.issues.push(issue)
             @refreshIssues()
 
     openEditIssueForm: (issue) ->
-        promise = @modal.open("issue-form", {'issue': issue, 'type': 'edit'})
+        promise = @modal.open("issue-form", {"issue": issue, "type": "edit"})
         promise.then =>
             @refreshIssues()
 
@@ -317,7 +317,7 @@ class IssuesViewController extends TaigaPageController
                 @scope.checksleyErrors = data
 
     removeAttachment: (attachment) ->
-        promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
+        promise = @confirm.confirm(@i18next.t("common.are-you-sure"))
         promise.then () =>
             @scope.attachments = _.without(@scope.attachments, attachment)
             attachment.remove()
@@ -326,7 +326,7 @@ class IssuesViewController extends TaigaPageController
         @scope.newAttachments = _.without(@scope.newAttachments, attachment)
 
     removeIssue: (issue) ->
-        promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
+        promise = @confirm.confirm(@i18next.t("common.are-you-sure"))
         promise.then =>
             issue.remove().then =>
                 @location.url("/project/#{@scope.projectSlug}/issues/")
@@ -335,16 +335,16 @@ class IssuesViewController extends TaigaPageController
         hash = hex_sha1(option.text.trim().toLowerCase())
         color = hash
             .substring(0,6)
-            .replace('8','0')
-            .replace('9','1')
-            .replace('a','2')
-            .replace('b','3')
-            .replace('c','4')
-            .replace('d','5')
-            .replace('e','6')
-            .replace('f','7')
+            .replace("8","0")
+            .replace("9","1")
+            .replace("a","2")
+            .replace("b","3")
+            .replace("c","4")
+            .replace("d","5")
+            .replace("e","6")
+            .replace("f","7")
 
-        container.parent().css('background', "##{color}")
+        container.parent().css("background", "##{color}")
         container.text(option.text)
         return
 
@@ -375,9 +375,9 @@ class IssuesViewController extends TaigaPageController
             points = {}
             for role in @scope.constants.computableRolesList
                 points[role.id] = @scope.project.default_points
-            result['points'] = points
-            result['project'] = @scope.projectId
-            result['status'] = @scope.project.default_us_status
+            result["points"] = points
+            result["project"] = @scope.projectId
+            result["status"] = @scope.project.default_us_status
 
             result["generated_from_issue"] = @scope.issue.id
             return result
@@ -389,8 +389,8 @@ class IssuesViewController extends TaigaPageController
 
 
 class IssuesModalController extends ModalBaseController
-    @.$inject = ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash',
-                 '$i18next', '$confirm', '$q']
+    @.$inject = ["$scope", "$rootScope", "$gmOverlay", "resource", "$gmFlash",
+                 "$i18next", "$confirm", "$q"]
     constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next, @confirm, @q) ->
         super(scope)
 
@@ -429,7 +429,7 @@ class IssuesModalController extends ModalBaseController
         return promise
 
     removeAttachment: (attachment) ->
-        promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
+        promise = @confirm.confirm(@i18next.t("common.are-you-sure"))
         promise.then () =>
             @scope.attachments = _.without(@scope.attachments, attachment)
             attachment.remove()
@@ -483,7 +483,7 @@ class IssuesModalController extends ModalBaseController
                 @closeModal()
                 @gmOverlay.close()
                 @scope.defered.resolve(@scope.form)
-                @gmFlash.info(@i18next.t('issue.issue-saved'))
+                @gmFlash.info(@i18next.t("issue.issue-saved"))
 
             if @scope.newAttachments.length > 0
                 @saveNewAttachments(@scope.projectId, data.id).then ->
@@ -498,16 +498,16 @@ class IssuesModalController extends ModalBaseController
         hash = hex_sha1(option.text.trim().toLowerCase())
         color = hash
             .substring(0,6)
-            .replace('8','0')
-            .replace('9','1')
-            .replace('a','2')
-            .replace('b','3')
-            .replace('c','4')
-            .replace('d','5')
-            .replace('e','6')
-            .replace('f','7')
+            .replace("8","0")
+            .replace("9","1")
+            .replace("a","2")
+            .replace("b","3")
+            .replace("c","4")
+            .replace("d","5")
+            .replace("e","6")
+            .replace("f","7")
 
-        container.parent().css('background', "##{color}")
+        container.parent().css("background", "##{color}")
         container.text(option.text)
         return
 
@@ -521,8 +521,8 @@ class IssuesModalController extends ModalBaseController
 
 
 class IssueUserStoryModalController extends ModalBaseController
-    @.$inject = ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash',
-                 '$i18next']
+    @.$inject = ["$scope", "$rootScope", "$gmOverlay", "resource", "$gmFlash",
+                 "$i18next"]
     constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next) ->
         super(scope)
 
@@ -563,7 +563,7 @@ class IssueUserStoryModalController extends ModalBaseController
             @closeModal()
             @gmOverlay.close()
             @scope.defered.resolve()
-            @gmFlash.info(@i18next.t('issue.user-story-saved'))
+            @gmFlash.info(@i18next.t("issue.user-story-saved"))
 
         promise.then null, (data) =>
             @scope.checksleyErrors = data
@@ -572,24 +572,24 @@ class IssueUserStoryModalController extends ModalBaseController
         hash = hex_sha1(option.text.trim().toLowerCase())
         color = hash
             .substring(0,6)
-            .replace('8','0')
-            .replace('9','1')
-            .replace('a','2')
-            .replace('b','3')
-            .replace('c','4')
-            .replace('d','5')
-            .replace('e','6')
-            .replace('f','7')
+            .replace("8","0")
+            .replace("9","1")
+            .replace("a","2")
+            .replace("b","3")
+            .replace("c","4")
+            .replace("d","5")
+            .replace("e","6")
+            .replace("f","7")
 
-        container.parent().css('background', "##{color}")
+        container.parent().css("background", "##{color}")
         container.text(option.text)
         return
 
-moduleDeps = ['gmModal', 'taiga.services.tags', 'taiga.services.resource',
-              'taiga.services.data', 'gmConfirm', 'favico', 'gmOverlay',
-              'gmFlash', 'i18next']
+moduleDeps = ["gmModal", "taiga.services.filters", "taiga.services.resource",
+              "taiga.services.data", "gmConfirm", "favico", "gmOverlay",
+              "gmFlash", "i18next"]
 module = angular.module("taiga.controllers.issues", moduleDeps)
 module.controller("IssuesController", IssuesController)
 module.controller("IssuesViewController", IssuesViewController)
 module.controller("IssuesModalController", IssuesModalController)
-module.controller('IssueUserStoryModalController', IssueUserStoryModalController)
+module.controller("IssueUserStoryModalController", IssueUserStoryModalController)

@@ -17,7 +17,7 @@ describe "IssuesOrderByDirective", ->
     </div>
     """
 
-    beforeEach(module("taiga.services.tags"))
+    beforeEach(module("taiga.services.filters"))
     beforeEach(module("taiga.directives.issues"))
 
     beforeEach(inject((_$compile_, _$rootScope_, _$gmFilters_) ->
