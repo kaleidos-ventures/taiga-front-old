@@ -349,11 +349,11 @@ describe 'authController', ->
             promise = ctrl.submit()
             promise.should.be.rejected
             promise.then ->
-                expect(ctrl.scope.checksleyErrors).to.be.equal("test")
+                expect(ctrl.scope.checksleyErrors).to.be.deep.equal({"_error_message": "test"})
                 expect(ctrl.scope.error).to.be.true
                 expect(ctrl.scope.errorMessage).to.be.equal("test")
 
-        it 'should watch the site.data.public_register variable ', inject ($model) ->
+        it 'should watch the site.data.public_register variable ', ->
             sinon.spy(ctrl.location, "url")
 
             ctrl.scope.$apply ->
@@ -365,3 +365,54 @@ describe 'authController', ->
             ctrl.location.url.should.have.been.calledOnce
             ctrl.location.url.should.have.been.calledWith("/login")
 
+    describe 'InvitationRegisterController', ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+        clock = null
+        routeParams = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q) ->
+            clock = sinon.useFakeTimers()
+            scope = $rootScope.$new()
+            resourceMock = {
+                register: (form) ->
+                    defered = $q.defer()
+                    if form.test == "test"
+                        defered.resolve("test")
+                    else if form.test == "bad"
+                        defered.reject({_error_message: "test"})
+                    return defered.promise
+            }
+            ctrl = $controller('InvitationRegisterController', {
+                $scope: scope
+                resource: resourceMock
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET('http://localhost:8000/api/v1/sites').respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+            clock.restore()
+
+        it 'should have section profile', ->
+            expect(ctrl.section).to.be.equal('login')
+
+        it 'should have a title', ->
+            expect(ctrl.getTitle).to.be.ok
+
+        it 'should allow to submit the register form', ->
+            sinon.spy(ctrl.location, "url")
+
+            ctrl.scope.form = {"test": "test"}
+            promise = ctrl.submit()
+            promise.should.be.fulfilled.then ->
+                ctrl.location.url.should.have.been.calledOnce
+                ctrl.location.url.should.have.been.calledWith("/")
+
+            ctrl.scope.form = {"test": "bad"}
+            promise = ctrl.submit()
+            promise.should.be.rejected

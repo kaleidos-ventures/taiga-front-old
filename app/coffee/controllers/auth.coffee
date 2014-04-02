@@ -236,6 +236,8 @@ class InvitationRegisterController extends TaigaPageController
             @scope.error = true
             @scope.errorMessage = data._error_message or data._error_type
 
+        return promise
+
 moduleDeps = ['taiga.services.resource', 'taiga.services.data',
               'taiga.services.auth', 'i18next', 'favico', 'gmConfig',
               'ngRoute']
