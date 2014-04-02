@@ -69,7 +69,7 @@ configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compil
     $routeProvider.when('/project/:pslug/taskboard/:sslug',
         {templateUrl: 'partials/taskboard.html', controller: "TaskboardController as ctrl"})
 
-    $routeProvider.when('/project/:pslug/wiki-help',
+    $routeProvider.when('/wiki-help',
         {templateUrl: 'partials/wiki-help.html', controller: "WikiHelpController as ctrl"})
 
     $routeProvider.when('/project/:pslug/wiki/:slug',
@@ -227,7 +227,7 @@ assignNavegationUrls = ($rootScope, $gmUrls) ->
         task: "/project/%s/tasks/%s"
         tasks: "/project/%s/tasks/%s"
         wiki: "/project/%s/wiki/%s"
-        wikiHelp: "/project/%s/wiki-help"
+        wikiHelp: "/wiki-help"
         wikiHistorical: "/project/%s/wiki/%s/historical"
         search: "/project/%s/search"
         invitation: "/invitation/%s"
@@ -306,9 +306,8 @@ assignNavegationUrls = ($rootScope, $gmUrls) ->
             url = gm.format($rootScope.baseUrls.wikiHistorical, [projectId, pageName])
             return conditionalUrl(url, raw)
 
-        wikiHelpUrl: (projectId) ->
-            url = gm.format($rootScope.baseUrls.wikiHelp, [projectId])
-            return conditionalUrl(url, false)
+        wikiHelpUrl: ->
+            return conditionalUrl($rootScope.baseUrls.wikiHelp, false)
 
         searchUrl: (projectId, raw) ->
             url = gm.format($rootScope.baseUrls.search, [projectId])

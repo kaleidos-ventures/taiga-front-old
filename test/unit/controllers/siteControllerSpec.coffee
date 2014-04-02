@@ -26,7 +26,7 @@ describe 'siteController', ->
             }
             ctrl = $controller('SiteAdminController', {
                 $scope: scope
-                $gmFlas: gmFlashMock
+                $gmFlash: gmFlashMock
                 $confirm: confirmMock
             })
             httpBackend = $httpBackend

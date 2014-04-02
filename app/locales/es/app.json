@@ -62,6 +62,7 @@
         "admin-panel": "Panel de administración",
         "issues": "Peticiones",
         "wiki": "Wiki",
+        "wiki-help": "Ayuda del Wiki",
         "backlog": "Backlog",
         "search": "Buscar",
         "search-placeholder": "Encuentra historias, peticiones, tareas...",

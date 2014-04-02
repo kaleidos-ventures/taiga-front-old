@@ -20,22 +20,12 @@ class WikiHelpController extends TaigaPageController
 
     section: 'wiki'
     getTitle: ->
-        "#{@i18next.t("common.wiki")} - #{@routeParams.slug}"
+        "#{@i18next.t("common.wiki-help")}"
 
     initialize: ->
         @rootScope.pageBreadcrumb = [
-            ["", ""]
-            [@i18next.t("common.wiki"), @rootScope.urls.wikiUrl(@routeParams.pslug, "home")]
-            [@i18next.t("wiki.help"), null]
+            [@i18next.t("common.wiki-help"), null]
         ]
-
-        @rs.resolve(pslug: @routeParams.pslug).then (data) =>
-            @rootScope.projectSlug = @routeParams.pslug
-            @rootScope.projectId = data.project
-            @rootScope.slug = @routeParams.slug
-
-            @data.loadProject(@scope).then =>
-                @data.loadUsersAndRoles(@scope)
 
 class WikiController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$location', '$routeParams', '$data',

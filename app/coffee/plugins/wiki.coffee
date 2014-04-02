@@ -3,7 +3,7 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $location, rs) ->
     require: "?ngModel",
     link: (scope, elm, attrs, ngModel) ->
         openHelp = () ->
-            window.open($rootScope.urls.wikiHelpUrl(scope.projectSlug), '_blank')
+            window.open($rootScope.urls.wikiHelpUrl(), '_blank')
 
         preview = () ->
             $("##{attrs.previewId}").show()

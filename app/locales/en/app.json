@@ -62,6 +62,7 @@
         "admin-panel": "Administration panel",
         "issues": "Issues",
         "wiki": "Wiki",
+        "wiki-help": "Wiki help",
         "backlog": "Backlog",
         "search": "Search",
         "search-placeholder": "Find user stories, issues, tasks...",
