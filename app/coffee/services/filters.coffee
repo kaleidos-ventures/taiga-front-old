@@ -190,18 +190,6 @@ class FiltersService extends TaigaBaseService
                     .replace("f","7"))
         return "##{color}"
 
-    # Some filter constants does not include colors because it are generated
-    # from user input. This function attach a rgb color attribute to each
-    # filter object using its name attribute as color source.
-    # TODO: seems not used, remove (?)
-    colorizeTags: (tags) ->
-        tags = _.map tags, (item) =>
-            item = _.clone(item)
-            item.color = @.getColorForText(item.name)
-            return item
-
-        return tags
-
     # Generic method for generate hash from a arbitrary length
     # collection of parameters.
     generateHash: (components=[]) ->
