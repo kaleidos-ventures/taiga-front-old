@@ -159,7 +159,7 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $location, rs) ->
             template: (value) ->
                 return "#{value.name}"
             replace: (value) ->
-                return "$1@#{value.username} "
+                return "$1_**@#{value.name}**_"
             maxCount: 5
         }
         userStoryStrategy = {
