@@ -1,5 +1,5 @@
 
-gmMarkitupConstructor = ($rootScope, $parse, $i18next, $sanitize, $location, rs) ->
+gmMarkitupConstructor = ($rootScope, $parse, $i18next, $location, rs) ->
     require: "?ngModel",
     link: (scope, elm, attrs, ngModel) ->
         openHelp = () ->
