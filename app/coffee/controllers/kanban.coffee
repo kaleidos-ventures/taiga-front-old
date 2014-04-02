@@ -14,9 +14,10 @@
 
 class KanbanController extends TaigaPageController
     @.$inject = ["$scope", "$rootScope", "$routeParams", "$q", "resource",
-               "$data","$modal", "$model", "$i18next", "$favico"]
+                 "$data","$modal", "$model", "$i18next", "$favico", "$gmFilters"]
 
-    constructor: (@scope, @rootScope, @routeParams, @q, @rs, @data, @modal, @model, @i18next, @favico) ->
+    constructor: (@scope, @rootScope, @routeParams, @q, @rs, @data,
+                  @modal, @model, @i18next, @favico, @gmFilters) ->
         super(scope, rootScope, favico)
 
     section: "kanban"
@@ -29,25 +30,89 @@ class KanbanController extends TaigaPageController
             [@i18next.t("common.kanban"), null]
         ]
 
+        # Main: entry point
         @rs.resolve(pslug: @routeParams.pslug).then (data) =>
             @rootScope.projectSlug = @routeParams.pslug
             @rootScope.projectId = data.project
 
             @data.loadProject(@scope).then =>
                 @data.loadUsersAndRoles(@scope).then =>
-                    @data.loadUserStories(@scope).then =>
-                        @formatUserStories()
+                    @.reloadUserStories()
 
+    reloadUserStories: ->
+        @data.loadUserStories(@scope).then =>
+            @.initializeFilters()
+            @.formatUserStories()
 
-    formatUserStories: ->
-        @scope.uss = {}
+    initializeFilters: ->
+        @.filters = {tags: @gmFilters.generateTagsFromUserStoriesList(@scope.userstories)}
+        @.selectedFilters = @gmFilters.getSelectedFiltersList(@rootScope.projectId, "kanban-filter", @.filters)
+
+    isFilterSelected: (filterTag) ->
+        projectId = @rootScope.projectId
+        namespace = "kanban-filter"
+        return @gmFilters.isFilterSelected(projectId, namespace, filterTag)
+
+    toggleFilter: (filterTag) ->
+        ft = _.clone(filterTag, true)
+        item = _.find(@.selectedFilters, {type: ft.type, id: ft.id})
+
+        if item is undefined
+            @gmFilters.selectFilter(@rootScope.projectId, "kanban-filter", filterTag)
+            @.selectedFilters.push(ft)
+        else
+            @gmFilters.unselectFilter(@rootScope.projectId, "kanban-filter", filterTag)
+            @.selectedFilters = _.reject(@.selectedFilters, item)
+
+        # Mark modified for properly run watch dispatchers.
+        @.selectedFilters = _.clone(@.selectedFilters, false)
+        @.formatUserStories()
+
+    resortUserStories: (statusId)->
+        for item, index in @.uss[statusId]
+            item.order = index
+
+        modifiedUs = _.filter(@.uss[statusId], (x) -> x.isModified())
+        bulkData = _.map(@.uss[statusId], (value, index) -> [value.id, index])
+
+        for item in modifiedUs
+            item._moving = true
+
+        promise = @rs.updateBulkUserStoriesOrder(@scope.projectId, bulkData)
+        promise = promise.then ->
+            for us in modifiedUs
+                us.markSaved()
+                us._moving = false
+
+        return promise
+
+    # TODO: in future this function should be moved to service for proper
+    # share it with backlog.
+    filterUserStories: ->
+        if @.selectedFilters.length == 0
+            for item in @scope.userstories
+                item.__hidden = false
+        else
+            for item in @scope.userstories
+                itemTags = _.map(@gmFilters.plainTagsToObjectTags(item.tags), @gmFilters.filterToText)
+                selectedTags = _.map(@.selectedFilters, @gmFilters.filterToText)
+                if _.intersection(selectedTags, itemTags).length == 0
+                    item.__hidden = true
+                else
+                    item.__hidden = false
+
+    prepareForRenderUserStories: ->
+        @.uss = {}
         for status in @scope.constants.usStatusesList
-            @scope.uss[status.id] = []
+            @.uss[status.id] = []
 
         for us in @scope.userstories
-            @scope.uss[us.status]?.push(us)
-
+            @.uss[us.status]?.push(us)
         return
+
+    formatUserStories: ->
+        @.filterUserStories()
+        @.prepareForRenderUserStories()
 
     saveUsPoints: (us, role, ref) ->
         points = _.clone(us.points)
@@ -90,30 +155,12 @@ class KanbanController extends TaigaPageController
         promise.then (us) =>
             newUs = @model.make_model("userstories", us)
             @scope.userstories.push(newUs)
-            @formatUserStories()
+            @.formatUserStories()
 
     openEditUsForm: (us) ->
         promise = @modal.open("us-form", {"us": us, "type": "edit"})
         promise.then =>
             @formatUserStories()
-
-    resortUserStories: (statusId)->
-        for item, index in @scope.uss[statusId]
-            item.order = index
-
-        modifiedUs = _.filter(@scope.uss[statusId], (x) -> x.isModified())
-        bulkData = _.map(@scope.uss[statusId], (value, index) -> [value.id, index])
-
-        for item in modifiedUs
-            item._moving = true
-
-        promise = @rs.updateBulkUserStoriesOrder(@scope.projectId, bulkData)
-        promise = promise.then ->
-            for us in modifiedUs
-                us.markSaved()
-                us._moving = false
-
-        return promise
 
     sortableOnAdd: (us, index, sortableScope) =>
         us.status = sortableScope.status.id
@@ -121,22 +168,22 @@ class KanbanController extends TaigaPageController
         us._moving = true
         us.save().then =>
             if @scope.project.is_backlog_activated
-                @scope.uss[sortableScope.status.id].splice(us.order, 0, us)
+                @.uss[sortableScope.status.id].splice(us.order, 0, us)
             else
-                @scope.uss[sortableScope.status.id].splice(index, 0, us)
-                @resortUserStories(sortableScope.status.id)
+                @.uss[sortableScope.status.id].splice(index, 0, us)
+                @.resortUserStories(sortableScope.status.id)
             us._moving = false
 
     sortableOnUpdate: (uss, sortableScope, us) =>
         if @scope.project.is_backlog_activated
             @data.loadUserStories(@scope).then =>
-                @formatUserStories()
+                @.formatUserStories()
         else
-            @scope.uss[sortableScope.status.id] = uss
-            @resortUserStories(sortableScope.status.id)
+            @.uss[sortableScope.status.id] = uss
+            @.resortUserStories(sortableScope.status.id)
 
     sortableOnRemove: (us, sortableScope) =>
-        _.remove(@scope.uss[sortableScope.status.id], us)
+        _.remove(@.uss[sortableScope.status.id], us)
 
 
 class KanbanUsModalController extends ModalBaseController

@@ -1,4 +1,101 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
+<div class="middle-container">
+    <div class="filters-container">
+        <div class="filters-bar-sbox">
+            <div class="title-sbox">
+                <div class="title">
+                    <a data-icon="B" href="" ng-class="{active: filtersOpened}"
+                       ng-click="filtersOpened=!filtersOpened"
+                       i18next="issues.filters">
+                        Filters
+                    </a>
+                </div>
+
+                <div class="tags-list-sbox"
+                     gm-selected-filters-renderer="ctrl.selectedFilters"
+                     gm-toggle-filter-callback="ctrl.toggleFilter(tag)">
+                </div>
+            </div>
+            <ul class="filters-visual-box" ng-show="filtersOpened">
+                <li ng-show="ctrl.filters.statuses.length > 0">
+                    <h3 i18next="issues.status">Status:</h3>
+                    <div class="tags-list-sbox">
+                        <div class="tag" style="background-color: {{ tag.color }}"
+                             ng-repeat="tag in ctrl.filters.statuses"
+                             ng-click="ctrl.toggleFilter(tag)"
+                             ng-class="{selected: ctrl.isTagSelected(tag)}">
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
+                    </div>
+                </li>
+                <li ng-show="ctrl.filters.types.length > 0">
+                    <h3 i18next="issues.type">Type:</h3>
+                    <div class="tags-list-sbox">
+                        <div class="tag" style="background-color: {{ tag.color }}"
+                             ng-repeat="tag in ctrl.filters.types"
+                             ng-click="ctrl.toggleFilter(tag)"
+                             ng-class="{selected: ctrl.isTagSelected(tag)}" >
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
+                    </div>
+                </li>
+                <li ng-show="ctrl.filters.severities.length > 0">
+                    <h3 i18next="issues.severity">Severity:</h3>
+                    <div class="tags-list-sbox">
+                        <div class="tag" style="background-color: {{ tag.color }}"
+                             ng-repeat="tag in ctrl.filters.severities"
+                             ng-click="ctrl.toggleFilter(tag)"
+                             ng-class="{selected: ctrl.isTagSelected(tag)}" >
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
+                    </div>
+                </li>
+                <li ng-show="ctrl.filters.priorities.length > 0">
+                    <h3 i18next="issues.priority">Priority:</h3>
+                    <div class="tags-list-sbox">
+                        <div class="tag" style="background-color: {{ tag.color }}"
+                             ng-repeat="tag in ctrl.filters.priorities"
+                             ng-click="ctrl.toggleFilter(tag)"
+                             ng-class="{selected: ctrl.isTagSelected(tag)}">
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
+                    </div>
+                </li>
+                <li ng-show="ctrl.filters.assignedTo.length > 0">
+                    <h3 i18next="issues.assigned-to">Assigned to:</h3>
+                    <div class="tags-list-sbox">
+                        <div class="tag" ng-repeat="tag in ctrl.filters.assignedTo"
+                             ng-click="ctrl.toggleFilter(tag)"
+                             ng-class="{selected: ctrl.isTagSelected(tag)}">
+                            <div class="name" gm-colorize-user="constants.users[tag.id]">
+                                {{ tag.name }}
+                            </div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h3 i18next="issues.tags">Tags:</h3>
+                    <div class="tags-list-sbox">
+                        <div class="tag" ng-repeat="tag in ctrl.filters.tags track by $index"
+                             ng-click="ctrl.toggleFilter(tag)"
+                             ng-class="{selected: ctrl.isTagSelected(tag)}" gm-colorize-tag>
+                            <div class="name">{{ tag.name }}</div>
+                            <div class="count">{{ tag.count }}</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="filters-selected-box"></div>
+    </div>
+</div>
+
+
 <div class="middle-container dashboard-content">
     <div class="row-fluid">
         <div class="span12">
@@ -26,7 +123,7 @@
                                         gm-sortable-on-update="ctrl.sortableOnUpdate"
                                         gm-sortable-on-remove="ctrl.sortableOnRemove">
 
-                                    <div class="task-box" ng-repeat="us in uss[status.id]">
+                                    <div class="task-box" ng-repeat="us in ctrl.uss[status.id]|onlyVisible">
                                         <div ng-include="'/partials/kanban-us.html'"></div>
                                     </div>
                                 </td>
@@ -39,11 +136,10 @@
     </div>
 </div>
 
-
 <div id="kanban-us-modalform"
-        gm-modal="us-form"
-        ng-show="formOpened"
-        ng-controller="KanbanUsModalController as modalCtrl">
+     gm-modal="us-form"
+     ng-show="formOpened"
+     ng-controller="KanbanUsModalController as modalCtrl">
 
     <div class="new-us-modal modal">
         <form class="inline-form us-form" gm-checksley-form="modalCtrl.submit()">
@@ -154,6 +250,7 @@
         </ul>
     </div>
 </script>
+
 <script type="text/template" id="us-points-per-role-popover">
     <div class="points-per-role-popover">
         <ul class="us-points-per-role">
