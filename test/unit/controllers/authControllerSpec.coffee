@@ -184,7 +184,7 @@ describe 'authController', ->
             httpBackend.expectPOST("http://localhost:8000/api/v1/users/change_password_from_recovery", {"token": "test-token", "password": "test-pass"})
             promise = ctrl.submit()
             httpBackend.flush()
-            promise.should.be.fullfilled
+            promise.should.be.fulfilled
             expect(ctrl.scope.success).to.be.true
             expect(ctrl.scope.error).to.be.false
             clock.tick(2100)
@@ -206,7 +206,7 @@ describe 'authController', ->
             httpBackend.expectPOST("http://localhost:8000/api/v1/users/change_password_from_recovery", {"token": "test-token", "password": "test-pass"})
             promise = ctrl.submit()
             httpBackend.flush()
-            promise.should.be.fullfilled
+            promise.should.be.fulfilled
             expect(ctrl.scope.success).to.be.true
             expect(ctrl.scope.error).to.be.false
             clock.tick(2100)
@@ -268,7 +268,7 @@ describe 'authController', ->
             form.test = "test"
             promise = ctrl.submitProfile(form)
             httpBackend.flush()
-            promise.should.be.fullfilled
+            promise.should.be.fulfilled
 
             ctrl.gmAuth.setUser.should.have.been.calledOnce
             ctrl.gmFlash.info.should.have.been.calledOnce
@@ -296,3 +296,72 @@ describe 'authController', ->
             ctrl.scope.formData.password = "bad"
             promise = ctrl.submitPassword()
             promise.should.be.rejected
+
+    describe 'PublicRegisterController', ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+        clock = null
+        routeParams = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q) ->
+            clock = sinon.useFakeTimers()
+            scope = $rootScope.$new()
+            resourceMock = {
+                register: (form) ->
+                    defered = $q.defer()
+                    if form.test == "test"
+                        defered.resolve("test")
+                    else if form.test == "bad"
+                        defered.reject({_error_message: "test"})
+                    return defered.promise
+            }
+            ctrl = $controller('PublicRegisterController', {
+                $scope: scope
+                resource: resourceMock
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET('http://localhost:8000/api/v1/sites').respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+            clock.restore()
+
+        it 'should have section profile', ->
+            expect(ctrl.section).to.be.equal('login')
+
+        it 'should have a title', ->
+            expect(ctrl.getTitle).to.be.ok
+
+        it 'should allow to submit the register form', inject ($model) ->
+            sinon.spy(ctrl.location, "url")
+
+            ctrl.scope.form = {"test": "test"}
+            promise = ctrl.submit()
+            promise.should.be.fulfilled.then ->
+                ctrl.location.url.should.have.been.calledOnce
+                ctrl.location.url.should.have.been.calledWith("/")
+
+            ctrl.scope.form = {"test": "bad"}
+            promise = ctrl.submit()
+            promise.should.be.rejected
+            promise.then ->
+                expect(ctrl.scope.checksleyErrors).to.be.equal("test")
+                expect(ctrl.scope.error).to.be.true
+                expect(ctrl.scope.errorMessage).to.be.equal("test")
+
+        it 'should watch the site.data.public_register variable ', inject ($model) ->
+            sinon.spy(ctrl.location, "url")
+
+            ctrl.scope.$apply ->
+                ctrl.scope.site.data.public_register = true
+            ctrl.location.url.should.not.have.been.called
+
+            ctrl.scope.$apply ->
+                ctrl.scope.site.data.public_register = false
+            ctrl.location.url.should.have.been.calledOnce
+            ctrl.location.url.should.have.been.calledWith("/login")
+

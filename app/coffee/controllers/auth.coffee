@@ -191,7 +191,7 @@ class PublicRegisterController extends TaigaPageController
 
     initialize: ->
         @scope.form = {"type": "public"}
-        @scope.$watch "site.data.public_register", (value) ->
+        @scope.$watch "site.data.public_register", (value) =>
             if value == false
                 @location.url("/login")
 
@@ -206,6 +206,8 @@ class PublicRegisterController extends TaigaPageController
             @scope.checksleyErrors = data
             @scope.error = true
             @scope.errorMessage = data._error_message or data._error_type
+
+        return promise
 
 
 class InvitationRegisterController extends TaigaPageController
