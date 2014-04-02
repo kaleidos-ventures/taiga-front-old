@@ -29,13 +29,13 @@ class WikiHelpController extends TaigaPageController
 
 class WikiController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$location', '$routeParams', '$data',
-                 'resource', "$confirm", "$q", "$i18next", "$favico"]
-    constructor: (@scope, @rootScope, @location, @routeParams, @data, @rs, @confirm, @q, @i18next, @favico) ->
+                 'resource', "$confirm", "$q", "$i18next", "$favico", "$gmFlash"]
+    constructor: (@scope, @rootScope, @location, @routeParams, @data, @rs, @confirm, @q, @i18next, @favico, @gmFlash) ->
         super(scope, rootScope, favico)
 
     debounceMethods: ->
-        savePage = @savePage
-        @savePage = gm.utils.safeDebounced @scope, 500, savePage
+        @_savePage = @savePage
+        @savePage = gm.utils.safeDebounced @scope, 500, @_savePage
 
     section: 'wiki'
     getTitle: ->
@@ -76,24 +76,31 @@ class WikiController extends TaigaPageController
 
     saveNewAttachments: ->
         if @scope.newAttachments.length == 0
-            return
+            return null
 
         promises = []
         for attachment in @scope.newAttachments
             promise = @rs.uploadWikiPageAttachment(@scope.projectId, @scope.page.id, attachment)
+            promise.then =>
+                index = @scope.newAttachments.indexOf(attachment)
+                @scope.newAttachments.splice(index, 1)
             promises.push(promise)
 
         promise = @q.all(promises)
         promise.then =>
-            @scope.newAttachments = []
             @loadAttachments(@scope.page)
 
+        promise.then null, (data) =>
+            @loadAttachments(@scope.page)
+            @gmFlash.error(@i18next.t("wiki.upload-attachment-error"))
+
+        return promise
 
     openEditForm: ->
         @scope.formOpened = true
         @scope.content = @scope.page.content
 
-    discartCurrentChanges: ->
+    discardCurrentChanges: ->
         @scope.newAttachments = []
         if @scope.page is undefined
             @scope.content = ""
@@ -118,6 +125,8 @@ class WikiController extends TaigaPageController
 
         promise.then null, (data) =>
             @scope.checksleyErrors = data
+
+        return promise
 
     deletePage: ->
         promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
