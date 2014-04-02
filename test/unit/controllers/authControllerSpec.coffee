@@ -219,7 +219,7 @@ describe 'authController', ->
         clock = null
         routeParams = null
 
-        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q) ->
             clock = sinon.useFakeTimers()
             scope = $rootScope.$new()
             gmFlashMock = {
@@ -228,10 +228,20 @@ describe 'authController', ->
             gmAuthMock = {
                 setUser: (user) ->
             }
+            resourceMock = {
+                changePasswordForCurrentUser: (password) ->
+                    defered = $q.defer()
+                    if password == "test"
+                        defered.resolve("test")
+                    else if password == "bad"
+                        defered.reject("test")
+                    return defered.promise
+            }
             ctrl = $controller('ProfileController', {
-                $scope: scope,
-                $gmFlash: gmFlashMock,
+                $scope: scope
+                $gmFlash: gmFlashMock
                 $gmAuth: gmAuthMock
+                resource: resourceMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET('http://localhost:8000/api/v1/sites').respond(200, {test: "test"})
@@ -274,3 +284,15 @@ describe 'authController', ->
             # No extra calls
             ctrl.gmAuth.setUser.should.have.been.calledOnce
             ctrl.gmFlash.info.should.have.been.calledOnce
+
+        it 'should allow to submit the password info', ->
+            sinon.spy(ctrl.gmFlash, "info")
+
+            ctrl.scope.formData.password = "test"
+            promise = ctrl.submitPassword()
+            promise.should.be.fulfilled.then ->
+                ctrl.gmFlash.info.should.to.be.calledOnce
+
+            ctrl.scope.formData.password = "bad"
+            promise = ctrl.submitPassword()
+            promise.should.be.rejected

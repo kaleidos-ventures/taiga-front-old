@@ -177,6 +177,7 @@ class ProfileController extends TaigaPageController
         promise.then null, (data) =>
             @scope.checksleyErrors = data
 
+        return promise
 
 class PublicRegisterController extends TaigaPageController
     @.$inject = ["$scope", "$rootScope", "$location", "resource", "$data",
