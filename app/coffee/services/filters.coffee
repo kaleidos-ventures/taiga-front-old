@@ -19,6 +19,12 @@ class FiltersService extends TaigaBaseService
     constructor: (@rootScope, @gmStorage, @i18next) ->
         super()
 
+    #####
+    # Functions that generate filters for issues, because issues page
+    # filtering works on server and it has distinct behavior than on
+    # backlog or kanban
+    #####
+
     # Given a raw filters data of one unique type (like tags, owners,
     # statuses, etc...) return a preprocessed list of filter objects.
     generateFiltersFromGenericList: (data, constants, type) ->
@@ -77,14 +83,97 @@ class FiltersService extends TaigaBaseService
                 return "000000000000000"
             return item.name
 
+    # Specific logic for issues page that generates a complete filters
+    # map from raw filters data obtained from backend.
+    generateFiltersForIssues: (data, constants) ->
+        filters = {
+            statuses: @.generateFiltersFromGenericList(data.statuses, constants.issueStatuses, "status"),
+            types: @.generateFiltersFromGenericList(data.types, constants.types, "type"),
+            tags: @.generateFiltersFromTagsList(data.tags),
+            severities: @.generateFiltersFromGenericList(data.severities, constants.severities, "severity"),
+            priorities: @.generateFiltersFromGenericList(data.priorities, constants.priorities, "priority"),
+            owners: @.generateFiltersFromUsersList(data.owners, constants.users, "owner"),
+            assignedTo: @.generateFiltersFromUsersList(data.assigned_to, constants.users, "assigned_to")
+        }
+
+        return filters
+
+    storeLastIssuesQueryParams: (projectId, namespace, params={}) ->
+        ns = "#{projectId}:#{namespace}-queryparams"
+        hash = @.generateHash([projectId, ns])
+        @gmStorage.set(hash, params)
+
+    getLastIssuesQueryParams: (projectId, namespace) ->
+        ns = "#{projectId}:#{namespace}-queryparams"
+        hash = @.generateHash([projectId, ns])
+        return @gmStorage.get(hash) or {}
+
+    makeIssuesQueryParams: (projectId, namespace, filters, extra={}) ->
+        ordering = @.getOrdering(projectId, namespace)
+        selectedFilters = @.getSelectedFiltersList(projectId, namespace, filters)
+
+        params = {}
+        params.page = if extra.page is undefined then 1 else extra.page
+
+        for key, value of _.groupBy(selectedFilters, "type")
+            params[key] = _.map(value, "id").join(",")
+
+        if ordering.orderBy
+            if ordering.isReverse
+                params.order_by = "-#{ordering.orderBy}"
+            else
+                params.order_by = ordering.orderBy
+
+        @.storeLastIssuesQueryParams(projectId, namespace, params)
+        return params
+
+
+    #####
+    # Functions that generates filters for kanban/backlog.
+    #####
+
     # User stories have tags attribute with plain
-    # text tags, that should be converted on
+    # text tags, that should be converted on format
+    # that taiga manages.
     generateTagsFromUserStoriesList: (userstories) ->
         plainTags = _.flatten(_.map(userstories, "tags"))
         tags = _.map _.countBy(plainTags), (value, key) ->
             return [key, value]
 
         return @.generateFiltersFromTagsList(tags)
+
+    # Analyze a user stories list and generate a filters
+    # list from it (depending on type parameter for field to analize)
+    generatePersonFiltersFromUserStories: (userstories, constants, type) ->
+        ids = _.map(userstories, type)
+
+        data = _.map _.countBy(ids), (v,k) ->
+            return [parseInt(k, 10) or null, v]
+
+        return @.generateFiltersFromUsersList(data, constants, type)
+
+    # Specific logic for kanban/backlog page that generates a complete
+    # filters map from user stories list.
+    generateFiltersForKanban: (userstories, constants) ->
+        filters = {
+            tags: @.generateTagsFromUserStoriesList(userstories)
+            assignedTo: @.generatePersonFiltersFromUserStories(userstories, constants.users, "assigned_to")
+        }
+
+        return filters
+
+    getFiltersForUserStory: (us) ->
+        filters = [
+            @.filterToText({id: us.assigned_to, type: "assigned_to"})
+        ]
+
+        tags = _.map(@.plainTagsToObjectTags(us.tags), @.filterToText)
+        return _.union(filters, tags)
+
+
+    #####
+    # Generic util functions.
+    #####
 
     # Given a text, convert it to rgb color using a first 6 hex chars
     # from sha1 hash of that text.
@@ -113,21 +202,6 @@ class FiltersService extends TaigaBaseService
 
         return tags
 
-    # Specific logic for issues page that generates a complete filters
-    # map from raw filters data obtained from backend.
-    generateFiltersForIssues: (data, constants) ->
-        filters = {
-            statuses: @.generateFiltersFromGenericList(data.statuses, constants.issueStatuses, "status"),
-            types: @.generateFiltersFromGenericList(data.types, constants.types, "type"),
-            tags: @.generateFiltersFromTagsList(data.tags),
-            severities: @.generateFiltersFromGenericList(data.severities, constants.severities, "severity"),
-            priorities: @.generateFiltersFromGenericList(data.priorities, constants.priorities, "priority"),
-            owners: @.generateFiltersFromUsersList(data.owners, constants.users, "owner"),
-            assignedTo: @.generateFiltersFromUsersList(data.assigned_to, constants.users, "assigned")
-        }
-
-        return filters
-
     # Generic method for generate hash from a arbitrary length
     # collection of parameters.
     generateHash: (components=[]) ->
@@ -143,7 +217,7 @@ class FiltersService extends TaigaBaseService
             return @.isFilterSelected(projectId, namespace, filterItem)
 
     filterToText: (filter) ->
-        return "#{filter.id}:#{filter.name}:#{filter.type}".toLowerCase()
+        return "#{filter.id}:#{filter.type}".toLowerCase()
 
     # Method used for convert plain array of tag strings to complete
     # js object that represent generic filter.
@@ -194,36 +268,6 @@ class FiltersService extends TaigaBaseService
         orderingNamespace = "#{projectId}:#{namespace}-ordering"
         hash = @.generateHash([projectId, orderingNamespace])
         return @gmStorage.get(hash) or {}
-
-    storeLastIssuesQueryParams: (projectId, namespace, params={}) ->
-        ns = "#{projectId}:#{namespace}-queryparams"
-        hash = @.generateHash([projectId, ns])
-        @gmStorage.set(hash, params)
-
-    getLastIssuesQueryParams: (projectId, namespace) ->
-        ns = "#{projectId}:#{namespace}-queryparams"
-        hash = @.generateHash([projectId, ns])
-        return @gmStorage.get(hash) or {}
-
-    makeIssuesQueryParams: (projectId, namespace, filters, extra={}) ->
-        ordering = @.getOrdering(projectId, namespace)
-        selectedFilters = @.getSelectedFiltersList(projectId, namespace, filters)
-
-        params = {}
-        params.page = if extra.page is undefined then 1 else extra.page
-
-        for key, value of _.groupBy(selectedFilters, "type")
-            params[key] = _.map(value, "id").join(",")
-
-        if ordering.orderBy
-            if ordering.isReverse
-                params.order_by = "-#{ordering.orderBy}"
-            else
-                params.order_by = ordering.orderBy
-
-        @.storeLastIssuesQueryParams(projectId, namespace, params)
-        return params
-
 
 module = angular.module("taiga.services.filters", ["gmStorage", "i18next"])
 module.service("$gmFilters", FiltersService)

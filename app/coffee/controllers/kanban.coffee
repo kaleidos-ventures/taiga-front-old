@@ -45,7 +45,7 @@ class KanbanController extends TaigaPageController
             @.formatUserStories()
 
     initializeFilters: ->
-        @.filters = {tags: @gmFilters.generateTagsFromUserStoriesList(@scope.userstories)}
+        @.filters = @gmFilters.generateFiltersForKanban(@scope.userstories, @scope.constants)
         @.selectedFilters = @gmFilters.getSelectedFiltersList(@rootScope.projectId, "kanban-filter", @.filters)
 
     isFilterSelected: (filterTag) ->
@@ -94,7 +94,7 @@ class KanbanController extends TaigaPageController
                 item.__hidden = false
         else
             for item in @scope.userstories
-                itemTags = _.map(@gmFilters.plainTagsToObjectTags(item.tags), @gmFilters.filterToText)
+                itemTags = @gmFilters.getFiltersForUserStory(item)
                 selectedTags = _.map(@.selectedFilters, @gmFilters.filterToText)
                 if _.intersection(selectedTags, itemTags).length == 0
                     item.__hidden = true
