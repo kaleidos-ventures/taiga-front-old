@@ -16,9 +16,9 @@
 class TasksViewController extends TaigaPageController
     @.$inject = ['$scope', '$location', '$rootScope', '$routeParams', '$q',
                  '$confirm', 'resource', "$data", "$gmFlash", "$i18next",
-                 "$favico"]
+                 "$favico", "selectOptions"]
     constructor: (@scope, @location, @rootScope, @routeParams, @q, @confirm,
-                  @rs, @data, @gmFlash, @i18next, @favico) ->
+                  @rs, @data, @gmFlash, @i18next, @favico, @selectOptions) ->
         super(scope, rootScope, favico)
 
     debounceMethods: ->
@@ -59,19 +59,19 @@ class TasksViewController extends TaigaPageController
             multiple: true
             simple_tags: true
             tags: @getTagsList
-            formatSelection: @tagsSelectOptionsShowColorizedTags
+            formatSelection: @selectOptions.colorizedTags
             containerCssClass: "tags-selector"
         }
 
         @scope.assignedToSelectOptions = {
-            formatResult: @assignedToSelectOptionsShowMember
-            formatSelection: @assignedToSelectOptionsShowMember
+            formatResult: @selectOptions.member
+            formatSelection: @selectOptions.member
         }
 
         @scope.watcherSelectOptions = {
             allowClear: true
-            formatResult: @watcherSelectOptionsShowMember
-            formatSelection: @watcherSelectOptionsShowMember
+            formatResult: @selectOptions.member
+            formatSelection: @selectOptions.member
             containerCssClass: "watchers-selector"
         }
 
@@ -169,39 +169,8 @@ class TasksViewController extends TaigaPageController
             task.remove().then =>
                 @location.url("/project/#{@scope.projectSlug}/taskboard/#{task.milestone_slug}")
 
-    tagsSelectOptionsShowColorizedTags: (option, container) ->
-        hash = hex_sha1(option.text.trim().toLowerCase())
-        color = hash
-            .substring(0,6)
-            .replace('8','0')
-            .replace('9','1')
-            .replace('a','2')
-            .replace('b','3')
-            .replace('c','4')
-            .replace('d','5')
-            .replace('e','6')
-            .replace('f','7')
-
-        container.parent().css('background', "##{color}")
-        container.text(option.text)
-        return
-
-    assignedToSelectOptionsShowMember: (option, container) =>
-        if option.id
-            member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
-            # TODO: make me more beautiful and elegant
-            return "<span style=\"padding: 0px 5px;
-                                  border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
-         return "<span\">#{option.text}</span>"
-
-    watcherSelectOptionsShowMember: (option, container) =>
-        member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
-        # TODO: Make me more beautiful and elegant
-        return "<span style=\"padding: 0px 5px;
-                              border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
-
 
 moduleDeps = ['gmConfirm', 'taiga.services.resource', "taiga.services.data",
-              "gmFlash", "i18next", "favico"]
+              "gmFlash", "i18next", "favico", "taiga.services.selectOptions"]
 module = angular.module("taiga.controllers.tasks", moduleDeps)
 module.controller("TasksViewController", TasksViewController)

@@ -16,8 +16,9 @@
 class UserStoryViewController extends TaigaPageController
     @.$inject = ["$scope", "$location", "$rootScope", "$routeParams", "$q",
                  "resource", "$data", "$confirm", "$gmFlash", "$i18next",
-                 "$favico"]
-    constructor: (@scope, @location, @rootScope, @routeParams, @q, @rs, @data, @confirm, @gmFlash, @i18next, @favico) ->
+                 "$favico", "selectOptions"]
+    constructor: (@scope, @location, @rootScope, @routeParams, @q, @rs, @data,
+                  @confirm, @gmFlash, @i18next, @favico, @selectOptions) ->
         super(scope, rootScope, favico)
 
     debounceMethods: ->
@@ -59,19 +60,19 @@ class UserStoryViewController extends TaigaPageController
             multiple: true
             simple_tags: true
             tags: @getTagsList
-            formatSelection: @tagsSelectOptionsShowColorizedTags
+            formatSelection: @selectOptions.colorizedTags
             containerCssClass: "tags-selector"
         }
 
         @scope.assignedToSelectOptions = {
-            formatResult: @assignedToSelectOptionsShowMember
-            formatSelection: @assignedToSelectOptionsShowMember
+            formatResult: @selectOptions.member
+            formatSelection: @selectOptions.member
         }
 
         @scope.watcherSelectOptions = {
             allowClear: true
-            formatResult: @watcherSelectOptionsShowMember
-            formatSelection: @watcherSelectOptionsShowMember
+            formatResult: @selectOptions.member
+            formatSelection: @selectOptions.member
             containerCssClass: "watchers-selector"
         }
 
@@ -197,36 +198,6 @@ class UserStoryViewController extends TaigaPageController
             userStory.remove().then =>
                 @location.url("/project/#{@scope.projectSlug}/backlog")
 
-    tagsSelectOptionsShowColorizedTags: (option, container) ->
-        hash = hex_sha1(option.text.trim().toLowerCase())
-        color = hash
-            .substring(0,6)
-            .replace('8','0')
-            .replace('9','1')
-            .replace('a','2')
-            .replace('b','3')
-            .replace('c','4')
-            .replace('d','5')
-            .replace('e','6')
-            .replace('f','7')
-
-        container.parent().css('background', "##{color}")
-        container.text(option.text)
-        return
-
-    assignedToSelectOptionsShowMember: (option, container) =>
-        if option.id
-            member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
-            # TODO: make me more beautiful and elegant
-            return "<span style=\"padding: 0px 5px;
-                                  border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
-         return "<span\">#{option.text}</span>"
-
-    watcherSelectOptionsShowMember: (option, container) =>
-        member = _.find(@scope.project.active_memberships, {user: parseInt(option.id, 10)})
-        # TODO: Make me more beautiful and elegant
-        return "<span style=\"padding: 0px 5px;
-                              border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
 
 moduleDeps = ["taiga.services.resource", "taiga.services.data", "gmConfirm",
               "gmFlash", "i18next", "favico"]

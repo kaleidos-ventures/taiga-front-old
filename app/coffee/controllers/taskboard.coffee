@@ -14,8 +14,10 @@
 
 class TaskboardController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$routeParams', '$q', 'resource',
-                 '$data', '$modal', "$model", "$i18next", "$favico"]
-    constructor: (@scope, @rootScope, @routeParams, @q, @rs, @data, @modal, @model, @i18next, @favico) ->
+                 '$data', '$modal', "$model", "$i18next", "$favico",
+                 "selectOptions"]
+    constructor: (@scope, @rootScope, @routeParams, @q, @rs, @data, @modal,
+                  @model, @i18next, @favico, @selectOptions) ->
         super(scope, rootScope, favico)
 
     section: 'dashboard'
@@ -181,13 +183,13 @@ class TaskboardTaskModalController extends ModalBaseController
             multiple: true
             simple_tags: true
             tags: @getTagsList
-            formatSelection: @tagsSelectOptionsShowColorizedTags
+            formatSelection: @selectOptions.colorizedTags
             containerCssClass: "tags-selector"
         }
 
         @scope.assignedToSelectOptions = {
-            formatResult: @assignedToSelectOptionsShowMember
-            formatSelection: @assignedToSelectOptionsShowMember
+            formatResult: @selectOptions.member
+            formatSelection: @selectOptions.member
         }
 
         super()
@@ -229,32 +231,6 @@ class TaskboardTaskModalController extends ModalBaseController
 
         promise.then null, (data) =>
             @scope.checksleyErrors = data
-
-
-    tagsSelectOptionsShowColorizedTags: (option, container) ->
-        hash = hex_sha1(option.text.trim().toLowerCase())
-        color = hash
-            .substring(0,6)
-            .replace('8','0')
-            .replace('9','1')
-            .replace('a','2')
-            .replace('b','3')
-            .replace('c','4')
-            .replace('d','5')
-            .replace('e','6')
-            .replace('f','7')
-
-        container.parent().css('background', "##{color}")
-        container.text(option.text)
-        return
-
-    assignedToSelectOptionsShowMember: (option, container) =>
-        if option.id
-            member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
-            # TODO: make me more beautiful and elegant
-            return "<span style=\"padding: 0px 5px;
-                                  border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
-         return "<span\">#{option.text}</span>"
 
 
 class TaskboardBulkTasksModalController extends ModalBaseController
@@ -312,7 +288,7 @@ class TaskboardTaskController extends TaigaBaseController
 
 moduleDeps = ['taiga.services.resource', 'taiga.services.data', 'gmModal',
               "taiga.services.model", "i18next", "favico", 'gmOverlay',
-              'gmFlash']
+              'gmFlash', "taiga.services.selectOptions"]
 module = angular.module("taiga.controllers.taskboard", moduleDeps)
 module.controller("TaskboardController", TaskboardController)
 module.controller("TaskboardTaskModalController", TaskboardTaskModalController)

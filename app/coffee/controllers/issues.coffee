@@ -184,9 +184,10 @@ class IssuesController extends TaigaPageController
 class IssuesViewController extends TaigaPageController
     @.$inject = ["$scope", "$location", "$rootScope", "$routeParams", "$q",
                  "resource", "$data", "$confirm", "$gmFlash", "$i18next",
-                 "$favico", "$modal", "$gmFilters"]
+                 "$favico", "$modal", "$gmFilters", "selectOptions"]
     constructor: (@scope, @location, @rootScope, @routeParams, @q, @rs, @data,
-                  @confirm, @gmFlash, @i18next, @favico, @modal, @gmFilters) ->
+                  @confirm, @gmFlash, @i18next, @favico, @modal, @gmFilters,
+                  @selectOptions) ->
         super(scope, rootScope, favico)
 
     debounceMethods: ->
@@ -226,20 +227,20 @@ class IssuesViewController extends TaigaPageController
             multiple: true
             simple_tags: true
             tags: @getTagsList
-            formatSelection: @tagsSelectOptionsShowColorizedTags
+            formatSelection: @selectOptions.colorizedTags
             containerCssClass: "tags-selector"
         }
 
         @scope.watcherSelectOptions = {
             allowClear: true
-            formatResult: @watcherSelectOptionsShowMember
-            formatSelection: @watcherSelectOptionsShowMember
+            formatResult: @selectOptions.member
+            formatSelection: @selectOptions.member
             containerCssClass: "watchers-selector"
         }
 
         @scope.assignedToSelectOptions = {
-            formatResult: @assignedToSelectOptionsShowMember
-            formatSelection: @assignedToSelectOptionsShowMember
+            formatResult: @selectOptions.member
+            formatSelection: @selectOptions.member
         }
 
     issuesQueryParams: ->
@@ -338,37 +339,6 @@ class IssuesViewController extends TaigaPageController
             issue.remove().then =>
                 @location.url("/project/#{@scope.projectSlug}/issues/")
 
-    tagsSelectOptionsShowColorizedTags: (option, container) ->
-        hash = hex_sha1(option.text.trim().toLowerCase())
-        color = hash
-            .substring(0,6)
-            .replace("8","0")
-            .replace("9","1")
-            .replace("a","2")
-            .replace("b","3")
-            .replace("c","4")
-            .replace("d","5")
-            .replace("e","6")
-            .replace("f","7")
-
-        container.parent().css("background", "##{color}")
-        container.text(option.text)
-        return
-
-    watcherSelectOptionsShowMember: (option, container) =>
-        member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
-        # TODO: Make me more beautiful and elegant
-        return "<span style=\"padding: 0px 5px;
-                              border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
-
-    assignedToSelectOptionsShowMember: (option, container) =>
-        if option.id
-            member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
-            # TODO: Make me more beautiful and elegant
-            return "<span style=\"padding: 0px 5px;
-                                  border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
-        return "<span\">#{option.text}</span>"
-
     openCreateUserStoryForm: () ->
         initializeForm = () =>
             result = {}
@@ -397,8 +367,8 @@ class IssuesViewController extends TaigaPageController
 
 class IssuesModalController extends ModalBaseController
     @.$inject = ["$scope", "$rootScope", "$gmOverlay", "resource", "$gmFlash",
-                 "$i18next", "$confirm", "$q"]
-    constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next, @confirm, @q) ->
+                 "$i18next", "$confirm", "$q", "selectOptions"]
+    constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next, @confirm, @q, @selectOptions) ->
         super(scope)
 
     initialize: ->
@@ -410,13 +380,13 @@ class IssuesModalController extends ModalBaseController
             multiple: true
             simple_tags: true
             tags: @getTagsList
-            formatSelection: @tagsSelectOptionsShowColorizedTags
+            formatSelection: @selectOptions.colorizedTags
             containerCssClass: "tags-selector"
         }
 
         @scope.assignedToSelectOptions = {
-            formatResult: @assignedToSelectOptionsShowMember
-            formatSelection: @assignedToSelectOptionsShowMember
+            formatResult: @selectOptions.member
+            formatSelection: @selectOptions.member
         }
         super()
 
@@ -501,36 +471,11 @@ class IssuesModalController extends ModalBaseController
         promise.then null, (data) =>
             @scope.checksleyErrors = data
 
-    tagsSelectOptionsShowColorizedTags: (option, container) ->
-        hash = hex_sha1(option.text.trim().toLowerCase())
-        color = hash
-            .substring(0,6)
-            .replace("8","0")
-            .replace("9","1")
-            .replace("a","2")
-            .replace("b","3")
-            .replace("c","4")
-            .replace("d","5")
-            .replace("e","6")
-            .replace("f","7")
-
-        container.parent().css("background", "##{color}")
-        container.text(option.text)
-        return
-
-    assignedToSelectOptionsShowMember: (option, container) =>
-        if option.id
-            member = _.find(@rootScope.constants.users, {id: parseInt(option.id, 10)})
-            # TODO: make me more beautiful and elegant
-            return "<span style=\"padding: 0px 5px;
-                                  border-left: 15px solid #{member.color}\">#{member.full_name}</span>"
-        return "<span\">#{option.text}</span>"
-
 
 class IssueUserStoryModalController extends ModalBaseController
     @.$inject = ["$scope", "$rootScope", "$gmOverlay", "resource", "$gmFlash",
-                 "$i18next"]
-    constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next) ->
+                 "$i18next", "selectOptions"]
+    constructor: (@scope, @rootScope, @gmOverlay, @rs, @gmFlash, @i18next, @selectOptions) ->
         super(scope)
 
     initialize: ->
@@ -538,7 +483,7 @@ class IssueUserStoryModalController extends ModalBaseController
             multiple: true
             simple_tags: true
             tags: @getTagsList
-            formatSelection: @tagsSelectOptionsShowColorizedTags
+            formatSelection: @selectOptions.colorizedTags
             containerCssClass: "tags-selector"
         }
         super()
@@ -575,26 +520,10 @@ class IssueUserStoryModalController extends ModalBaseController
         promise.then null, (data) =>
             @scope.checksleyErrors = data
 
-    tagsSelectOptionsShowColorizedTags: (option, container) ->
-        hash = hex_sha1(option.text.trim().toLowerCase())
-        color = hash
-            .substring(0,6)
-            .replace("8","0")
-            .replace("9","1")
-            .replace("a","2")
-            .replace("b","3")
-            .replace("c","4")
-            .replace("d","5")
-            .replace("e","6")
-            .replace("f","7")
-
-        container.parent().css("background", "##{color}")
-        container.text(option.text)
-        return
 
 moduleDeps = ["gmModal", "taiga.services.filters", "taiga.services.resource",
               "taiga.services.data", "gmConfirm", "favico", "gmOverlay",
-              "gmFlash", "i18next"]
+              "gmFlash", "i18next", "taiga.services.selectOptions"]
 module = angular.module("taiga.controllers.issues", moduleDeps)
 module.controller("IssuesController", IssuesController)
 module.controller("IssuesViewController", IssuesViewController)
