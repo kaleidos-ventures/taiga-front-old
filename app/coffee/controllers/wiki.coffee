@@ -87,7 +87,8 @@ class WikiController extends TaigaPageController
 
         promise = @q.all(promises)
         promise.then =>
-            @loadAttachments(@scope.page)
+            gm.safeApply @scope, =>
+                @loadAttachments(@scope.page)
 
         promise.then null, (data) =>
             @loadAttachments(@scope.page)

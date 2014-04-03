@@ -284,18 +284,25 @@ class IssuesViewController extends TaigaPageController
 
     saveNewAttachments: =>
         if @scope.newAttachments.length == 0
-            return
+            return null
 
         promises = []
-        for attachment in @scope.newAttachments
+        for attachment in _.clone(@scope.newAttachments)
             promise = @rs.uploadIssueAttachment(@scope.projectId, @scope.issueId, attachment)
+            promise.then =>
+                @scope.newAttachments = _.without(@scope.newAttachments, attachment)
             promises.push(promise)
 
         promise = @q.all(promises)
         promise.then =>
             gm.safeApply @scope, =>
-                @scope.newAttachments = []
                 @loadAttachments()
+
+        promise.then null, =>
+            @loadAttachments()
+            @gmFlash.error(@i18next.t("issue.upload-attachment-error"))
+
+        return promise
 
     # Debounced Method (see debounceMethods method)
     submit: =>
