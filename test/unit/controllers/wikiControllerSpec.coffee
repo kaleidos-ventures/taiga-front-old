@@ -238,3 +238,72 @@ describe "wikiController", ->
             ctrl.scope.attachments = [$model.make_model('wiki/attachments', {"id": "test", "content": "test"})]
             ctrl.deleteNewAttachment(ctrl.scope.attachments[0])
             expect(ctrl.scope.newAttachments).to.be.deep.equal([])
+
+    describe "WikiHistoricalController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $routeParams) ->
+            scope = $rootScope.$new()
+            $routeParams.slug = "test"
+            $routeParams.pslug = "ptest"
+            ctrl = $controller("WikiHistoricalController", {
+                $scope: scope
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET("http://localhost:8000/api/v1/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("http://localhost:8000/api/v1/resolver?project=ptest").respond(200, {project: 1})
+            httpBackend.whenGET("http://localhost:8000/api/v1/projects/1?").respond(200, {id: 1, ref: "2", points: []})
+            httpBackend.whenGET("http://localhost:8000/api/v1/wiki?project=1&slug=test").respond(200, [{id: "test", content: "test-content"}])
+            httpBackend.whenGET("http://localhost:8000/api/v1/wiki-attachments?object_id=test&project=1").respond(200, [])
+            httpBackend.whenGET("http://localhost:8000/api/v1/wiki/test/historical?page=1").respond(200, [{"test1": "test1"}])
+            httpBackend.whenGET("http://localhost:8000/api/v1/users?project=1").respond(200, [])
+            httpBackend.whenGET("http://localhost:8000/api/v1/roles?project=1").respond(200, [])
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should have section login", ->
+            expect(ctrl.section).to.be.equal("wiki")
+
+        it "should have a title", ->
+            expect(ctrl.getTitle).to.be.ok
+
+        it "should reload the page after a restore", inject ($model) ->
+            ctrl.scope.content = "other-content"
+            ctrl.scope.page = $model.make_model('wiki', {"id": "other", "content": "other"})
+            httpBackend.expectGET("http://localhost:8000/api/v1/wiki?project=1&slug=test").respond(200, [{id: "test", content: "test-content"}])
+            httpBackend.expectGET("http://localhost:8000/api/v1/wiki/test/historical?page=1").respond(200, [])
+            ctrl.scope.$emit("wiki:restored")
+            httpBackend.flush()
+            expect(ctrl.scope.page.getAttrs()).to.be.deep.equal({id: "test", content: "test-content"})
+            expect(ctrl.scope.content).to.be.equal("test-content")
+
+        it "should allow to load more historical", inject ($model) ->
+            httpBackend.expectGET(
+                "http://localhost:8000/api/v1/wiki/test/historical?page=1"
+            ).respond(200, [{"test1": "test1"}, {"test2": "test2"}])
+            promise = ctrl.loadHistorical()
+            httpBackend.flush()
+            promise.then ->
+                expect(ctrl.scope.historical.models.length).to.be.equal(1)
+
+            httpBackend.expectGET(
+                "http://localhost:8000/api/v1/wiki/test/historical?page=2"
+            ).respond(200, [{"test3": "test3"}])
+            promise = ctrl.loadMoreHistorical()
+            httpBackend.flush()
+            promise.then ->
+                expect(ctrl.scope.historical.models.length).to.be.equal(2)
+
+        it "should load the first page historical on loadMorehistorical when no historical", inject ($model) ->
+            ctrl.scope.historical = null
+            httpBackend.expectGET(
+                "http://localhost:8000/api/v1/wiki/test/historical?page=1"
+            ).respond(200, [{"test1": "test1"}, {"test2": "test2"}])
+            promise = ctrl.loadMoreHistorical()
+            httpBackend.flush()
