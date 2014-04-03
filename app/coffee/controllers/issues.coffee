@@ -47,7 +47,7 @@ class IssuesController extends TaigaPageController
 
         @scope.setPage = (n) =>
             @scope.page = n
-            @filterIssues()
+            @.refreshIssues()
 
         # Load initial data
         @rs.resolve(pslug: @routeParams.pslug).then (data) =>
