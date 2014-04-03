@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-class TasksViewController extends TaigaPageController
+class TasksViewController extends TaigaDetailPageController
     @.$inject = ['$scope', '$location', '$rootScope', '$routeParams', '$q',
                  '$confirm', 'resource', "$data", "$gmFlash", "$i18next",
                  "$favico", "selectOptions"]
@@ -29,8 +29,14 @@ class TasksViewController extends TaigaPageController
     getTitle: ->
         @i18next.t("common.tasks")
 
+    uploadAttachmentMethod: "uploadTaskAttachment"
+    getAttachmentsMethod: "getTaskAttachments"
+    getHistoricalMethod: "getTaskHistorical"
+    objectIdAttribute: "taskId"
+
     initialize: ->
         @debounceMethods()
+
         @rootScope.pageBreadcrumb = [
             ["", ""],
             [@i18next.t("common.tasks"), null],
@@ -50,7 +56,8 @@ class TasksViewController extends TaigaPageController
 
             @data.loadProject(@scope).then =>
                 @data.loadUsersAndRoles(@scope).then =>
-                    @loadTask()
+                    @loadTask().then () =>
+                        @onRemoveUrl = "/project/#{@scope.projectSlug}/taskboard/#{@scope.task.milestone_slug}"
                     @loadAttachments()
                     @loadHistorical()
                     @loadProjectTags()
@@ -75,17 +82,6 @@ class TasksViewController extends TaigaPageController
             containerCssClass: "watchers-selector"
         }
 
-    loadAttachments: ->
-        @rs.getTaskAttachments(@scope.projectId, @scope.taskId).then (attachments) =>
-            @scope.attachments = attachments
-
-    loadProjectTags: ->
-        @rs.getProjectTags(@scope.projectId).then (data) =>
-            @projectTags = data
-
-    getTagsList: =>
-        @projectTags or []
-
     loadTask: ->
         @rs.getTask(@scope.projectId, @scope.taskId).then (task) =>
             @scope.task = task
@@ -100,40 +96,6 @@ class TasksViewController extends TaigaPageController
             @rootScope.pageTitle = "#{@i18next.t("common.tasks")} - ##{task.ref}"
 
             @rootScope.pageBreadcrumb = breadcrumb
-
-    loadHistorical: (page=1) ->
-        @rs.getTaskHistorical(@scope.taskId, {page: page}).then (historical) =>
-            if @scope.historical and page != 1
-                historical.models = @scope.historical.models.concat(historical.models)
-
-            @scope.showMoreHistoricaButton = historical.models.length < historical.count
-            @scope.historical = historical
-
-    loadMoreHistorical: ->
-        page = if @scope.historical then @scope.historical.current + 1 else 1
-        @loadHistorical(page=page)
-
-    saveNewAttachments: ->
-        if @scope.newAttachments.length == 0
-            return null
-
-        promises = []
-        for attachment in @scope.newAttachments
-            promise = @rs.uploadTaskAttachment(@scope.projectId, @scope.taskId, attachment)
-            promise.then =>
-                @scope.newAttachments = _.without(@scope.newAttachments, attachment)
-            promises.push(promise)
-
-        promise = @q.all(promises)
-        promise.then =>
-            gm.safeApply @scope, =>
-                @loadAttachments()
-
-        promise.then null, (data) =>
-            @loadAttachments()
-            @gmFlash.error(@i18next.t("task.upload-attachment-error"))
-
-        return promise
 
     # Debounced Method (see debounceMethods method)
     submit: =>
@@ -151,23 +113,6 @@ class TasksViewController extends TaigaPageController
 
         promise.then null, (data) =>
             @scope.checksleyErrors = data
-
-    removeAttachment: (attachment) ->
-        promise = @confirm.confirm(@i18next.t("common.are-you-sure"))
-        promise.then =>
-            @scope.attachments = _.without(@scope.attachments, attachment)
-            attachment.remove()
-
-        return promise
-
-    removeNewAttachment: (attachment) ->
-        @scope.newAttachments = _.without(@scope.newAttachments, attachment)
-
-    removeTask: (task) ->
-        promise = @confirm.confirm(@i18next.t("common.are-you-sure"))
-        promise.then =>
-            task.remove().then =>
-                @location.url("/project/#{@scope.projectSlug}/taskboard/#{task.milestone_slug}")
 
 
 moduleDeps = ['gmConfirm', 'taiga.services.resource', "taiga.services.data",

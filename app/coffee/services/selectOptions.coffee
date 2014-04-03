@@ -4,7 +4,7 @@ class SelectOptionsService extends TaigaBaseService
     constructor: (@rootScope) ->
         super()
 
-    colorizedTag: (option, container) ->
+    colorizedTags: (option, container) ->
         hash = hex_sha1(option.text.trim().toLowerCase())
         color = hash
             .substring(0,6)

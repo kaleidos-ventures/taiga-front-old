@@ -181,7 +181,7 @@ class IssuesController extends TaigaPageController
         @location.url("/project/#{projectSlug}/issues/#{issueRef}")
 
 
-class IssuesViewController extends TaigaPageController
+class IssuesViewController extends TaigaDetailPageController
     @.$inject = ["$scope", "$location", "$rootScope", "$routeParams", "$q",
                  "resource", "$data", "$confirm", "$gmFlash", "$i18next",
                  "$favico", "$modal", "$gmFilters", "selectOptions"]
@@ -198,8 +198,14 @@ class IssuesViewController extends TaigaPageController
     getTitle: ->
         @i18next.t("common.issues")
 
+    uploadAttachmentMethod: "uploadIssueAttachment"
+    getAttachmentsMethod: "getIssueAttachments"
+    getHistoricalMethod: "getIssueHistorical"
+    objectIdAttribute: "issueId"
+
     initialize: ->
         @debounceMethods()
+
         @rootScope.pageBreadcrumb = [
             ["", ""],
             [@i18next.t("common.issues"), null],
@@ -215,6 +221,8 @@ class IssuesViewController extends TaigaPageController
             @rootScope.projectSlug = @routeParams.pslug
             @rootScope.projectId = data.project
             @rootScope.issueId = data.issue
+
+            @onRemoveUrl = "/project/#{@scope.projectSlug}/issues/"
 
             @data.loadProject(@scope).then =>
                 @data.loadUsersAndRoles(@scope).then =>
@@ -259,52 +267,6 @@ class IssuesViewController extends TaigaPageController
 
             @rootScope.pageBreadcrumb = breadcrumb
 
-    loadHistorical: (page=1) ->
-        @rs.getIssueHistorical(@scope.issueId, {page: page}).then (historical) =>
-            if @scope.historical and page != 1
-                historical.models = _.union(@scope.historical.models, historical.models)
-
-            @scope.showMoreHistoricaButton = historical.models.length < historical.count
-            @scope.historical = historical
-
-    loadMoreHistorical: ->
-        page = if @scope.historical then @scope.historical.current + 1 else 1
-        @loadHistorical(page=page)
-
-    loadProjectTags: ->
-        @rs.getProjectTags(@scope.projectId).then (data) =>
-            @projectTags = data
-
-    getTagsList: =>
-        @projectTags or []
-
-    loadAttachments: ->
-        promise = @rs.getIssueAttachments(@scope.projectId, @scope.issueId)
-        promise.then (attachments) =>
-            @scope.attachments = attachments
-
-    saveNewAttachments: =>
-        if @scope.newAttachments.length == 0
-            return null
-
-        promises = []
-        for attachment in _.clone(@scope.newAttachments)
-            promise = @rs.uploadIssueAttachment(@scope.projectId, @scope.issueId, attachment)
-            promise.then =>
-                @scope.newAttachments = _.without(@scope.newAttachments, attachment)
-            promises.push(promise)
-
-        promise = @q.all(promises)
-        promise.then =>
-            gm.safeApply @scope, =>
-                @loadAttachments()
-
-        promise.then null, =>
-            @loadAttachments()
-            @gmFlash.error(@i18next.t("issue.upload-attachment-error"))
-
-        return promise
-
     # Debounced Method (see debounceMethods method)
     submit: =>
         for key, value of @scope.form
@@ -323,21 +285,6 @@ class IssuesViewController extends TaigaPageController
 
             promise.then null, (data) =>
                 @scope.checksleyErrors = data
-
-    removeAttachment: (attachment) ->
-        promise = @confirm.confirm(@i18next.t("common.are-you-sure"))
-        promise.then () =>
-            @scope.attachments = _.without(@scope.attachments, attachment)
-            attachment.remove()
-
-    removeNewAttachment: (attachment) ->
-        @scope.newAttachments = _.without(@scope.newAttachments, attachment)
-
-    removeIssue: (issue) ->
-        promise = @confirm.confirm(@i18next.t("common.are-you-sure"))
-        promise.then =>
-            issue.remove().then =>
-                @location.url("/project/#{@scope.projectSlug}/issues/")
 
     openCreateUserStoryForm: () ->
         initializeForm = () =>

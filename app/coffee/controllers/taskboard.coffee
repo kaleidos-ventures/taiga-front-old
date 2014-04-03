@@ -173,8 +173,8 @@ class TaskboardController extends TaigaPageController
 
 class TaskboardTaskModalController extends ModalBaseController
     @.$inject = ['$scope', '$rootScope', '$gmOverlay', '$gmFlash', 'resource',
-                 '$i18next']
-    constructor: (@scope, @rootScope, @gmOverlay, @gmFlash, @rs, @i18next) ->
+                 '$i18next', "selectOptions"]
+    constructor: (@scope, @rootScope, @gmOverlay, @gmFlash, @rs, @i18next, @selectOptions) ->
         super(scope)
 
     initialize: ->

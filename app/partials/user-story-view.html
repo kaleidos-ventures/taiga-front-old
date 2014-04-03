@@ -11,7 +11,7 @@
                i18next="pagination.next"
                ng-show="userStory.neighbors.next.ref"
                ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.next.ref, false, ctrl.getQueryParams())}}">Next</a>
-            <a class="button button-delete" ng-click="ctrl.removeUserStory(form)" i18next="user-story.delete-user-story">
+            <a class="button button-delete" ng-click="ctrl.removeObject(form)" i18next="user-story.delete-user-story">
                 Delete user story
             </a>
         </div>
@@ -288,7 +288,7 @@
                        i18next="pagination.next"
                        ng-show="userStory.neighbors.next.ref"
                        ng-href="{{urls.userStoryUrl(projectSlug, userStory.neighbors.next.ref)}}">Next</a>
-                    <a class="button button-delete" ng-click="ctrl.removeUserStory(userStory)" i18next="user-story.delete-user-story">Delete user story</a>
+                    <a class="button button-delete" ng-click="ctrl.removeObject(userStory)" i18next="user-story.delete-user-story">Delete user story</a>
                 </div>
             </div>
         </div>

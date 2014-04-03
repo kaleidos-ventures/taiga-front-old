@@ -11,7 +11,7 @@
                i18next="pagination.next"
                ng-show="issue.neighbors.next.ref"
                ng-href="{{ urls.issuesUrl(projectSlug, issue.neighbors.next.ref, false) }}">Next</a>
-            <a class="button button-delete" ng-click="ctrl.removeIssue(issue)" i18next="issue.delete-issue">Delete issue</a>
+            <a class="button button-delete" ng-click="ctrl.removeObject(issue)" i18next="issue.delete-issue">Delete issue</a>
         </div>
     </div>
     <ul class="tags-list">
@@ -296,7 +296,7 @@
                        i18next="pagination.next"
                        ng-show="issue.neighbors.next.ref"
                        ng-href="{{urls.issuesUrl(projectSlug, issue.neighbors.next.ref)}}">Next</a>
-                    <a class="button button-delete" ng-click="ctrl.removeIssue(issue)" i18next="issue.delete-issue">Delete issue</a>
+                    <a class="button button-delete" ng-click="ctrl.removeObject(issue)" i18next="issue.delete-issue">Delete issue</a>
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@
     <div class="view-header">
         <p class="title">{{ 'task.task-ref'|i18next:{ref: task.ref} }}</p>
         <div class="buttons">
-            <a class="button button-delete" ng-click="ctrl.removeTask(task)" i18next="task.delete-task">Delete task</a>
+            <a class="button button-delete" ng-click="ctrl.removeObject(task)" i18next="task.delete-task">Delete task</a>
         </div>
     </div>
 
@@ -238,7 +238,7 @@
             <div class="view-footer">
                 <p class="title">Task #{{ task.ref }}</p>
                 <div class="buttons">
-                    <a class="button button-delete" ng-click="ctrl.removeTask(task)" i18next="task.delete-task">Delete task</a>
+                    <a class="button button-delete" ng-click="ctrl.removeObject(task)" i18next="task.delete-task">Delete task</a>
                 </div>
             </div>
         </div>

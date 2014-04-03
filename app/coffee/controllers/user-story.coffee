@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-class UserStoryViewController extends TaigaPageController
+class UserStoryViewController extends TaigaDetailPageController
     @.$inject = ["$scope", "$location", "$rootScope", "$routeParams", "$q",
                  "resource", "$data", "$confirm", "$gmFlash", "$i18next",
                  "$favico", "selectOptions"]
@@ -28,6 +28,11 @@ class UserStoryViewController extends TaigaPageController
     section: 'user-stories'
     getTitle: ->
         @i18next.t("user-story.user-story")
+
+    uploadAttachmentMethod: "uploadUserStoryAttachment"
+    getAttachmentsMethod: "getUserStoryAttachments"
+    getHistoricalMethod: "getUserStoryHistorical"
+    objectIdAttribute: "userStoryId"
 
     initialize: ->
         @debounceMethods()
@@ -48,6 +53,8 @@ class UserStoryViewController extends TaigaPageController
             @rootScope.projectSlug = @routeParams.pslug
             @rootScope.projectId = data.project
             @rootScope.userStoryId = data.us
+
+            @onRemoveUrl = "/project/#{@scope.projectSlug}/backlog"
 
             @data.loadProject(@scope).then =>
                 @data.loadUsersAndRoles(@scope).then =>
@@ -81,10 +88,6 @@ class UserStoryViewController extends TaigaPageController
         for roleId, pointId of us.points
             total += @scope.constants.points[pointId].value
         return total
-
-    loadAttachments: ->
-        @rs.getUserStoryAttachments(@scope.projectId, @scope.userStoryId).then (attachments) =>
-            @scope.attachments = attachments
 
     loadUserStory: ->
         params = @location.search()
@@ -123,47 +126,6 @@ class UserStoryViewController extends TaigaPageController
             for roleId, pointId of userStory.points
                 @scope.points[roleId] = @scope.constants.points[pointId].name
 
-    loadHistorical: (page=1) ->
-        @rs.getUserStoryHistorical(@scope.userStoryId, {page: page}).then (historical) =>
-            if @scope.historical and page != 1
-                historical.models = _.union(@scope.historical.models, historical.models)
-
-            @scope.showMoreHistoricaButton = historical.models.length < historical.count
-            @scope.historical = historical
-
-    loadMoreHistorical: ->
-        page = if @scope.historical then @scope.historical.current + 1 else 1
-        @loadHistorical(page=page)
-
-    loadProjectTags: ->
-        @rs.getProjectTags(@scope.projectId).then (data) =>
-            @projectTags = data
-
-    getTagsList: =>
-        @projectTags or []
-
-    saveNewAttachments: ->
-        if @scope.newAttachments.length == 0
-            return null
-
-        promises = []
-        for attachment in @scope.newAttachments
-            promise = @rs.uploadUserStoryAttachment(@scope.projectId, @scope.userStoryId, attachment)
-            promise.then =>
-                @scope.newAttachments = _.without(@scope.newAttachments, attachment)
-            promises.push(promise)
-
-        promise = @q.all(promises)
-        promise.then =>
-            gm.safeApply @scope, =>
-                @loadAttachments()
-
-        promise.then null, =>
-            @loadAttachments()
-            @gmFlash.error(@i18next.t("user-story.upload-attachment-error"))
-
-        return promise
-
     # Debounced Method (see debounceMethods method)
     submit: =>
         @scope.$emit("spinner:start")
@@ -182,21 +144,6 @@ class UserStoryViewController extends TaigaPageController
 
     getQueryParams: ->
         @location.search()
-
-    removeAttachment: (attachment) ->
-        promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
-        promise.then () =>
-            @scope.attachments = _.without(@scope.attachments, attachment)
-            attachment.remove()
-
-    removeNewAttachment: (attachment) ->
-        @scope.newAttachments = _.without(@scope.newAttachments, attachment)
-
-    removeUserStory: (userStory) ->
-        promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
-        promise.then () =>
-            userStory.remove().then =>
-                @location.url("/project/#{@scope.projectSlug}/backlog")
 
 
 moduleDeps = ["taiga.services.resource", "taiga.services.data", "gmConfirm",
