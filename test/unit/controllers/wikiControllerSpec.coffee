@@ -22,8 +22,8 @@ describe "wikiController", ->
             httpBackend.verifyNoOutstandingExpectation()
             httpBackend.verifyNoOutstandingRequest()
 
-        it "should have section login", ->
-            expect(ctrl.section).to.be.equal("wiki")
+        it 'should have section wiki', ->
+            expect(ctrl.section).to.be.equal('wiki')
 
         it "should have a title", ->
             expect(ctrl.getTitle).to.be.ok
