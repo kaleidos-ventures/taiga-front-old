@@ -254,6 +254,8 @@ class WikiHistoricalItemController extends TaigaBaseController
             promise.then null, (data, status) =>
                 @gmFlash.error(@i18next.t("wiki-historical.gone-back-error"))
 
+        return promise
+
 moduleDeps = ['taiga.services.data', 'taiga.services.resource', "gmConfirm",
               "i18next", "favico", 'gmFlash']
 module = angular.module("taiga.controllers.wiki", moduleDeps)

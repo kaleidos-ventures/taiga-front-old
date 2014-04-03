@@ -307,3 +307,82 @@ describe "wikiController", ->
             ).respond(200, [{"test1": "test1"}, {"test2": "test2"}])
             promise = ctrl.loadMoreHistorical()
             httpBackend.flush()
+
+    describe "WikiHistoricalItemController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $routeParams, $q) ->
+            scope = $rootScope.$new()
+            confirmMock = {
+                confirm: (text) ->
+                    defered = $q.defer()
+                    defered.resolve("test")
+                    return defered.promise
+            }
+            ctrl = $controller("WikiHistoricalItemController", {
+                $scope: scope
+                $confirm: confirmMock
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET("http://localhost:8000/api/v1/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to show changes", ->
+            expect(ctrl.scope.showChanges).to.be.false
+            ctrl.toggleShowChanges()
+            expect(ctrl.scope.showChanges).to.be.true
+
+        it "should allow to show historical item content", ->
+            ctrl.showContent = false
+            expect(ctrl.scope.showPreviousDiff).to.be.false
+            expect(ctrl.scope.showCurrentDiff).to.be.false
+            ctrl.activeShowContent()
+            expect(ctrl.scope.showContent).to.be.true
+            expect(ctrl.scope.showPreviousDiff).to.be.false
+            expect(ctrl.scope.showCurrentDiff).to.be.false
+
+        it "should allow to show historical differences with previous version", ->
+            expect(ctrl.scope.showContent).to.be.true
+            expect(ctrl.scope.showPreviousDiff).to.be.false
+            expect(ctrl.scope.showCurrentDiff).to.be.false
+            ctrl.activeShowPreviousDiff()
+            expect(ctrl.scope.showContent).to.be.false
+            expect(ctrl.scope.showPreviousDiff).to.be.true
+            expect(ctrl.scope.showCurrentDiff).to.be.false
+
+        it "should allow to show historical differences with current version", ->
+            expect(ctrl.scope.showContent).to.be.true
+            expect(ctrl.scope.showPreviousDiff).to.be.false
+            expect(ctrl.scope.showCurrentDiff).to.be.false
+            ctrl.activeShowCurrentDiff()
+            expect(ctrl.scope.showContent).to.be.false
+            expect(ctrl.scope.showPreviousDiff).to.be.false
+            expect(ctrl.scope.showCurrentDiff).to.be.true
+
+        it "should allow to restoreWikiPage", ->
+            sinon.spy(ctrl.gmFlash, "info")
+            sinon.spy(ctrl.gmFlash, "error")
+            sinon.spy(ctrl.scope, "$emit")
+
+            hitem = {created_date: "2014-01-01", object_id: "test", id: 1}
+            httpBackend.expectPOST(
+                "http://localhost:8000/api/v1/wiki/test/restore?version=1"
+            ).respond(200)
+            ctrl.restoreWikiPage(hitem)
+            httpBackend.flush()
+            ctrl.scope.$emit.should.have.been.calledWith("wiki:restored")
+            ctrl.gmFlash.info.should.have.been.calledOnce
+
+            httpBackend.expectPOST(
+                "http://localhost:8000/api/v1/wiki/test/restore?version=1"
+            ).respond(400)
+            ctrl.restoreWikiPage(hitem)
+            httpBackend.flush()
+            ctrl.gmFlash.error.should.have.been.calledOnce
