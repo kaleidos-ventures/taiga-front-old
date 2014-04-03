@@ -10,15 +10,22 @@ describe "tasksController", ->
         scope = null
         ctrl = null
 
-        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q) ->
             scope = $rootScope.$new()
             routeParams = {
                 pslug: "test"
                 ref: "1"
             }
+            confirmMock = {
+                confirm: (text) ->
+                    defered = $q.defer()
+                    defered.resolve("test")
+                    return defered.promise
+            }
             ctrl = $controller("TasksViewController", {
-                $scope: scope,
-                $routeParams: routeParams,
+                $scope: scope
+                $routeParams: routeParams
+                $confirm: confirmMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
@@ -172,3 +179,94 @@ describe "tasksController", ->
         it "should have section tasks", ->
             expect(ctrl.section).to.be.equal("tasks")
 
+        it "should allow to load more historical", inject ($model) ->
+            httpBackend.expectGET(
+                "#{APIURL}/tasks/1/historical?page=1"
+            ).respond(200, [{"test1": "test1"}, {"test2": "test2"}])
+            promise = ctrl.loadHistorical()
+            httpBackend.flush()
+            promise.then ->
+                expect(ctrl.scope.historical.models.length).to.be.equal(2)
+
+            httpBackend.expectGET(
+                "#{APIURL}/tasks/1/historical?page=2"
+            ).respond(200, [{"test3": "test3"}])
+            promise = ctrl.loadMoreHistorical()
+            httpBackend.flush()
+            promise.then ->
+                expect(ctrl.scope.historical.models.length).to.be.equal(3)
+
+        it "should load the first page historical on loadMorehistorical when no historical", inject ($model) ->
+            ctrl.scope.historical = null
+            httpBackend.expectGET(
+                "#{APIURL}/tasks/1/historical?page=1"
+            ).respond(200, [{"test1": "test1"}, {"test2": "test2"}])
+            promise = ctrl.loadMoreHistorical()
+            httpBackend.flush()
+
+        it "should allow to save a new attachment", inject ($q) ->
+            ctrl.rs.uploadTaskAttachment = (projectId, taskId, attachment) ->
+                defered = $q.defer()
+                if attachment == "good"
+                    defered.resolve("good")
+                else if attachment == "bad"
+                    defered.reject("bad")
+                return defered.promise
+
+            ctrl.scope.projectId = 1
+            ctrl.scope.taskId = 1
+            ctrl.scope.newAttachments = []
+            result = ctrl.saveNewAttachments()
+            expect(result).to.be.null
+
+            httpBackend.expectGET("#{APIURL}/task-attachments?object_id=1&project=1").respond(200)
+            ctrl.scope.projectId = 1
+            ctrl.scope.taskId = 1
+            ctrl.scope.newAttachments = ["good", "good", "good"]
+            promise = ctrl.saveNewAttachments()
+            httpBackend.flush()
+            promise.should.have.been.fulfilled
+            promise.then ->
+                expect(ctrl.scope.newAttachments).to.be.deep.equal([])
+
+        it "should allow to save a new attachment (taking care on errors)", inject ($q) ->
+            sinon.spy(ctrl.gmFlash, "error")
+
+            ctrl.rs.uploadTaskAttachment = (projectId, taskId, attachment) ->
+                defered = $q.defer()
+                if attachment == "good"
+                    defered.resolve("good")
+                else if attachment == "bad"
+                    defered.reject("bad")
+                return defered.promise
+
+            httpBackend.expectGET("#{APIURL}/task-attachments?object_id=1&project=1").respond(200)
+            ctrl.scope.projectId = 1
+            ctrl.scope.taskId = 1
+            ctrl.scope.newAttachments = ["bad", "bad", "bad"]
+            promise = ctrl.saveNewAttachments()
+            httpBackend.flush()
+            promise.should.have.been.rejected
+            ctrl.gmFlash.error.should.have.been.calledOnce
+
+            httpBackend.expectGET("#{APIURL}/task-attachments?object_id=1&project=1").respond(200)
+            ctrl.scope.projectId = 1
+            ctrl.scope.taskId = 1
+            ctrl.scope.newAttachments = ["good", "good", "bad"]
+            promise = ctrl.saveNewAttachments()
+            httpBackend.flush()
+            promise.should.have.been.rejected
+            ctrl.gmFlash.error.should.have.been.calledTwice
+
+        it 'should allow to delete a task attachment', inject ($model) ->
+            ctrl.scope.attachments = [$model.make_model('tasks/attachments', {"id": "test", "content": "test"})]
+            httpBackend.expectDELETE("#{APIURL}/task-attachments/test").respond(200)
+            promise = ctrl.removeAttachment(ctrl.scope.attachments[0])
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.attachments).to.be.deep.equal([])
+
+        it 'should allow to delete a not uploaded attachment', inject ($model) ->
+            ctrl.scope.attachments = [$model.make_model('tasks/attachments', {"id": "test", "content": "test"})]
+            ctrl.removeNewAttachment(ctrl.scope.attachments[0])
+            expect(ctrl.scope.newAttachments).to.be.deep.equal([])

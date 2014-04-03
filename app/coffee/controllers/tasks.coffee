@@ -115,19 +115,25 @@ class TasksViewController extends TaigaPageController
 
     saveNewAttachments: ->
         if @scope.newAttachments.length == 0
-            return
+            return null
 
         promises = []
         for attachment in @scope.newAttachments
             promise = @rs.uploadTaskAttachment(@scope.projectId, @scope.taskId, attachment)
+            promise.then =>
+                @scope.newAttachments = _.without(@scope.newAttachments, attachment)
             promises.push(promise)
 
         promise = @q.all(promises)
         promise.then =>
             gm.safeApply @scope, =>
-                @scope.newAttachments = []
                 @loadAttachments()
 
+        promise.then null, (data) =>
+            @loadAttachments()
+            @gmFlash.error(@i18next.t("task.upload-attachment-error"))
+
+        return promise
 
     # Debounced Method (see debounceMethods method)
     submit: =>
@@ -148,9 +154,11 @@ class TasksViewController extends TaigaPageController
 
     removeAttachment: (attachment) ->
         promise = @confirm.confirm(@i18next.t("common.are-you-sure"))
-        promise.then () =>
+        promise.then =>
             @scope.attachments = _.without(@scope.attachments, attachment)
             attachment.remove()
+
+        return promise
 
     removeNewAttachment: (attachment) ->
         @scope.newAttachments = _.without(@scope.newAttachments, attachment)
