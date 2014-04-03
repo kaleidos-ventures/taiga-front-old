@@ -65,6 +65,7 @@ class SearchController extends TaigaPageController
             when "tasks" then @rootScope.urls.tasksUrl(projectSlug, item.ref)
             when "issues" then @rootScope.urls.issuesUrl(projectSlug, item.ref)
             when "wikipages" then @rootScope.urls.wikiUrl(projectSlug, item.slug)
+            else ""
 
     translateTypeTitle: (type, item) ->
         return switch type
@@ -72,6 +73,7 @@ class SearchController extends TaigaPageController
             when "tasks" then item.subject
             when "issues" then item.subject
             when "wikipages" then item.slug
+            else ""
 
     translateTypeDescription: (type, item) ->
         return switch type
@@ -79,6 +81,7 @@ class SearchController extends TaigaPageController
             when "tasks" then item.description
             when "issues" then item.description
             when "wikipages" then item.content
+            else ""
 
     isTypeActive: (type) ->
         return type == @scope.activeType
