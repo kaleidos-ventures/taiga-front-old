@@ -40,11 +40,15 @@ describe "wikiController", ->
             scope = $rootScope.$new()
             $routeParams.slug = "test"
             $routeParams.pslug = "ptest"
-            resourceMock = {
-                getWikiPage: (projectId, slug) ->
+            confirmMock = {
+                confirm: (text) ->
+                    defered = $q.defer()
+                    defered.resolve("test")
+                    return defered.promise
             }
             ctrl = $controller("WikiController", {
                 $scope: scope
+                $confirm: confirmMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET("http://localhost:8000/api/v1/sites").respond(200, {test: "test"})
@@ -209,3 +213,28 @@ describe "wikiController", ->
                 expect(ctrl.scope.page.getAttrs()).to.be.deep.equal({"id": "test", "content": "test-content"})
                 expect(ctrl.scope.formOpened).to.be.false
                 expect(ctrl.scope.content).to.be.equal("test-content")
+
+        it 'should allow to delete a wiki page', inject ($model) ->
+            ctrl.scope.page = $model.make_model('wiki', {"id": "test", "content": "test"})
+            httpBackend.expectDELETE("http://localhost:8000/api/v1/wiki/test").respond(200)
+            promise = ctrl.deletePage()
+            promise.should.be.fulfilled
+            httpBackend.flush()
+            expect(ctrl.scope.page).to.be.undefined
+            expect(ctrl.scope.content).to.be.equal("")
+            expect(ctrl.scope.attachments).to.be.deep.equal([])
+            expect(ctrl.scope.newAttachments).to.be.deep.equal([])
+            expect(ctrl.scope.formOpened).to.be.true
+
+        it 'should allow to delete a wiki page attachment', inject ($model) ->
+            ctrl.scope.attachments = [$model.make_model('wiki/attachments', {"id": "test", "content": "test"})]
+            httpBackend.expectDELETE("http://localhost:8000/api/v1/wiki-attachments/test").respond(200)
+            promise = ctrl.deleteAttachment(ctrl.scope.attachments[0])
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.attachments).to.be.deep.equal([])
+
+        it 'should allow to delete a not uploaded attachment', inject ($model) ->
+            ctrl.scope.attachments = [$model.make_model('wiki/attachments', {"id": "test", "content": "test"})]
+            ctrl.deleteNewAttachment(ctrl.scope.attachments[0])
+            expect(ctrl.scope.newAttachments).to.be.deep.equal([])

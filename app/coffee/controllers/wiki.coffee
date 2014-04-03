@@ -82,8 +82,7 @@ class WikiController extends TaigaPageController
         for attachment in @scope.newAttachments
             promise = @rs.uploadWikiPageAttachment(@scope.projectId, @scope.page.id, attachment)
             promise.then =>
-                index = @scope.newAttachments.indexOf(attachment)
-                @scope.newAttachments.splice(index, 1)
+                @scope.newAttachments = _.without(@scope.newAttachments, attachment)
             promises.push(promise)
 
         promise = @q.all(promises)
@@ -137,6 +136,7 @@ class WikiController extends TaigaPageController
                 @scope.attachments = []
                 @scope.newAttachments = []
                 @scope.formOpened = true
+        return promise
 
     deleteAttachment: (attachment) ->
         promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
