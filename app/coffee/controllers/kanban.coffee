@@ -262,12 +262,13 @@ class KanbanUsController extends TaigaBaseController
     updateUsAssignation: (us, id) ->
         us.assigned_to = id || null
         us._moving = true
-        us.save().then((us) ->
+
+        onSuccess = -> us._moving = false
+        onFail = ->
             us._moving = false
-        , ->
             us.revert()
-            us._moving = false
-        )
+
+        us.save().then(onSuccess, onFail)
 
     openUs: (projectSlug, usRef) ->
         @location.url("/project/#{projectSlug}/user-story/#{usRef}")

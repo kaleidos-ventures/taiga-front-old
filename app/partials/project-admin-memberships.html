@@ -56,8 +56,16 @@
                         <tr ng-repeat="mbr in project.memberships">
                             <td class="user"><span class="user" gm-colorize-user="constants.users[mbr.user]">{{ ctrl.memberName(mbr) }}</span></td>
                             <td class="email"><span class="email">{{ ctrl.memberEmail(mbr) }}</span></td>
-                            <td class="role"><span class="role">[<a href="" gm-popover="ctrl.updateMemberRole(mbr, selectedId)"
-                                        data-tmpl="#role-popover">{{ mbr.role_name }}</a>]</span></td>
+                            <td class="role">
+                                <span class="role">[
+                                    <a href=""
+                                       gm-generic-choice-popover="ctrl.updateMemberRole(mbr, selectedId)"
+                                       gm-popover-model="constants.rolesList"
+                                       gm-popover-class-name="role-popover"
+                                       gm-popover-title="admin.select-role">{{ mbr.role_name }}
+                                    </a>]
+                                </span>
+                            </td>
 
                             <td class="status"><span class="status">{{ ctrl.memberStatus(mbr) }}</span></td>
                             <td class="options">

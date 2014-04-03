@@ -6,16 +6,24 @@
     <div class="title">#{{ task.ref }} {{ task.subject }}</div>
 
     <div class="assign-to">
-        <a href="" gm-popover="taskCtrl.updateTaskAssignation(task, selectedId)"
-            data-tmpl="#developers-popover"
-            gm-colorize-user="constants.users[task.assigned_to]">
-                {{ constants.users[task.assigned_to].full_name || t("taskboard.unassigned") }}</a>
+        <a href=""
+           gm-user-choice-popover="taskCtrl.updateTaskAssignation(task, selectedId)"
+           gm-popover-class-name="developers-popover"
+           gm-popover-title="taskboard.select-user"
+           gm-popover-model="project.active_memberships"
+           gm-popover-model-transformer="membersToChoicesTransformer"
+           gm-popover-empty-item="taskboard.unassigned"
+           gm-colorize-user="constants.users[task.assigned_to]">
+            {{ constants.users[task.assigned_to].full_name || t("taskboard.unassigned") }}</a>
     </div>
     <div class="us-options clearfix">
         <a data-icon="j" ng-click="ctrl.openEditTaskForm(task.us, task)" class="edit-task"></a>
         <a data-icon="l" href="{{ urls.tasksUrl(projectSlug, task.ref) }}" class="view-task"></a>
         <a data-icon="o" class="icon blocked" ng-show="task.is_blocked"
-              gm-popover data-tmpl="#task-blocked-popover"></a>
+           gm-markdown-preview-popover=""
+           gm-popover-model="task.blocked_note"
+           gm-popover-class-name="task-blocked-popover">
+        </a>
         <span data-icon="r" class="icon iocaine" ng-show="task.is_iocaine"></span>
         <a class="us-tag" ng-repeat="tag in task.tags" gm-colorize-tag title="{{ tag }}"></a>
     </div>

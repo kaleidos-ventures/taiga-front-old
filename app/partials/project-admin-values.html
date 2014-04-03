@@ -36,8 +36,8 @@
                                 <input type="text" name="color" ng-model="status.color"
                                         data-required="true" data-error-message="Required" />
                                 <div class="color-sample pointer"
-                                    style="background-color: {{ status.color }}"
-                                    gm-popover="" data-tmpl="#status-color-picker-popover"></div>
+                                     style="background-color: {{ status.color }}"
+                                     gm-color-picker-popov="status.color = $color"></div>
                             </fieldset>
                             <fieldset class="item wip-limit" ng-show="project.is_kanban_activated">
                                 <input type="input" name="wip_limit" ng-model="status.wip_limit"/>
@@ -87,7 +87,7 @@
                                                     data-required="true" data-error-message="Required" />
                                             <div class="color-sample pointer"
                                                 style="background-color: {{ status.color }}"
-                                                gm-popover="" data-tmpl="#status-color-picker-popover"></div>
+                                                gm-color-picker-popover="status.color = $color"></div>
                                         </fieldset>
                                         <fieldset class="item wip-limit" ng-show="project.is_kanban_activated">
                                             <input type="text" name="wip_limit" ng-model="status.wip_limit"/>
@@ -208,8 +208,9 @@
                                 <input type="text" name="color" ng-model="status.color"
                                        data-required="true" data-error-message="Required" />
                                 <div class="color-sample pointer"
-                                    style="background-color: {{ status.color }}"
-                                    gm-popover="" data-tmpl="#status-color-picker-popover"></div>
+                                     style="background-color: {{ status.color }}"
+                                     gm-color-picker-popover="status.color = $color">
+                                </div>
                             </fieldset>
                             <fieldset class="options">
                                 <button class="btn-small btn-save" data-icon="z"
@@ -254,7 +255,8 @@
                                                    data-required="true" data-error-message="Required" />
                                             <div class="color-sample pointer"
                                                 style="background-color: {{ status.color }}"
-                                                gm-popover="" data-tmpl="#status-color-picker-popover"></div>
+                                                gm-color-picker-popover="status.color = $color">
+                                            </div>
                                         </fieldset>
                                         <fieldset class="options">
                                             <button class="btn-small btn-save" data-icon="z"
@@ -301,7 +303,8 @@
                                         data-required="true" data-error-message="Required" />
                                 <div class="color-sample pointer"
                                     style="background-color: {{ status.color }}"
-                                    gm-popover="" data-tmpl="#status-color-picker-popover"></div>
+                                    gm-color-picker-popover="status.color = $color">
+                                </div>
                             </fieldset>
                             <fieldset class="options">
                                 <button class="btn-small btn-save" data-icon="z"
@@ -345,8 +348,9 @@
                                             <input type="text" name="color"ng-model="status.color"
                                                     data-required="true" data-error-message="Required" />
                                             <div class="color-sample pointer"
-                                                style="background-color: {{ status.color }}"
-                                                gm-popover="" data-tmpl="#status-color-picker-popover"></div>
+                                                 style="background-color: {{ status.color }}"
+                                                 gm-color-picker-popover="status.color = $color">
+                                            </div>
                                         </fieldset>
                                         <fieldset class="options">
                                             <button class="btn-small btn-save" data-icon="z"
@@ -388,8 +392,9 @@
                                 <input type="text" name="color" ng-model="type.color"
                                        data-required="true" data-error-message="Required" />
                                 <div class="color-sample pointer"
-                                    style="background-color: {{ type.color }}"
-                                    gm-popover="" data-tmpl="#type-color-picker-popover"></div>
+                                     style="background-color: {{ type.color }}"
+                                     gm-color-picker-popover="status.color = $color">
+                                </div>
                             </fieldset>
                             <fieldset class="options">
                                 <button class="btn-small btn-save" data-icon="z"
@@ -428,8 +433,9 @@
                                             <input type="text" name="color" ng-model="type.color"
                                                    data-required="true" data-error-message="Required" />
                                             <div class="color-sample pointer"
-                                                style="background-color: {{ type.color }}"
-                                                gm-popover="" data-tmpl="#type-color-picker-popover"></div>
+                                                 style="background-color: {{ type.color }}"
+                                                 gm-color-picker-popover="type.color = $color">
+                                            </div>
                                         </fieldset>
                                         <fieldset class="options">
                                             <button class="btn-small btn-save" data-icon="z"
@@ -471,8 +477,9 @@
                                 <input type="text" name="color" ng-model="priority.color"
                                         data-required="true" data-error-message="Required" />
                                 <div class="color-sample pointer"
-                                    style="background-color: {{ priority.color }}"
-                                    gm-popover="" data-tmpl="#priority-color-picker-popover"></div>
+                                     style="background-color: {{ priority.color }}"
+                                     gm-color-picker-popover="priority.color = $color">
+                                </div>
                             </fieldset>
                             <fieldset class="options">
                                 <button class="btn-small btn-save" data-icon="z"
@@ -511,8 +518,9 @@
                                             <input type="text" name="color" ng-model="priority.color"
                                                     data-required="true" data-error-message="Required" />
                                             <div class="color-sample pointer"
-                                                style="background-color: {{ priority.color }}"
-                                                gm-popover="" data-tmpl="#priority-color-picker-popover"></div>
+                                                 style="background-color: {{ priority.color }}"
+                                                 gm-color-picker-popover="priority.color = $color">
+                                            </div>
                                         </fieldset>
                                         <fieldset class="options">
                                             <button class="btn-small btn-save" data-icon="z"
@@ -554,8 +562,9 @@
                                 <input type="text" name="color" ng-model="severity.color"
                                         data-required="true" data-error-message="Required" />
                                 <div class="color-sample pointer"
-                                    style="background-color: {{ severity.color }}"
-                                    gm-popover="" data-tmpl="#severity-color-picker-popover"></div>
+                                     style="background-color: {{ severity.color }}"
+                                     gm-color-picker-popover="severity.color = $color">
+                                </div>
                             </fieldset>
                             <fieldset class="options">
                                 <button class="btn-small btn-save" data-icon="z"
@@ -588,14 +597,15 @@
                                             gm-checksley-form="editCtrl.update(severity)">
                                         <fieldset class="item name">
                                             <input type="text" name="name" ng-model="severity.name"
-                                                    data-required="true" data-error-message="Required" />
+                                                   data-required="true" data-error-message="Required" />
                                         </fieldset>
                                         <fieldset class="item color">
                                             <input type="text" name="color" ng-model="severity.color"
-                                                    data-required="true" data-error-message="Required" />
+                                                   data-required="true" data-error-message="Required" />
                                             <div class="color-sample pointer"
-                                                style="background-color: {{ severity.color }}"
-                                                gm-popover="" data-tmpl="#severity-color-picker-popover"></div>
+                                                 style="background-color: {{ severity.color }}"
+                                                 gm-color-picker-popover="severity.color = $color">
+                                            </div>
                                         </fieldset>
                                         <fieldset class="options">
                                             <button class="btn-small btn-save" data-icon="z"
@@ -614,22 +624,3 @@
     </div>
 </main>
 
-<script type="text/template" id="status-color-picker-popover">
-    <div class="colorSelector" coffee-color-picker="status.color = $color"
-        coffee-color-picker-options="{color: {hue:100, sat: 100, lit: 25}}"></div>
-</script>
-
-<script type="text/template" id="severity-color-picker-popover">
-    <div class="colorSelector" coffee-color-picker="severity.color = $color"
-        coffee-color-picker-options="{color: {hue:100, sat: 100, lit: 25}}"></div>
-</script>
-
-<script type="text/template" id="priority-color-picker-popover">
-    <div class="colorSelector" coffee-color-picker="priority.color = $color"
-        coffee-color-picker-options="{color: {hue:100, sat: 100, lit: 25}}"></div>
-</script>
-
-<script type="text/template" id="type-color-picker-popover">
-    <div class="colorSelector" coffee-color-picker="type.color = $color"
-        coffee-color-picker-options="{color: {hue:100, sat: 100, lit: 25}}"></div>
-</script>

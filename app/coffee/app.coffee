@@ -446,6 +446,7 @@ modules = [
     "taiga.directives.history",
     "taiga.directives.backlog",
     "taiga.directives.issues",
+    "taiga.directives.popovers",
     "taiga.localconfig",
 
     "coffeeColorPicker",

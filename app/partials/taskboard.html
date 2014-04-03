@@ -95,9 +95,10 @@
                                             <a href="{{ urls.userStoryUrl(projectSlug, us.ref, false, {milestone: milestone.id}) }}">#{{ us.ref }} {{ us.subject }}</a>
                                             <ul class="us-points-per-role">
                                                 <li ng-repeat="role in constants.computableRolesList"
-                                                    class="us-point"
-                                                    gm-popover="ctrl.saveUsPoints(us, role, selectedId)"
-                                                    data-tmpl="#points-popover">
+                                                    gm-generic-choice-popover="ctrl.saveUsPoints(us, role, selectedId)"
+                                                    gm-popover-model="constants.pointsList"
+                                                    gm-popover-class-name="us-points-popover"
+                                                    class="us-point">
                                                     {{ role.name }}: {{ constants.points[us.points[role.id]].name }}
                                                 </li>
                                             </ul>
@@ -113,12 +114,17 @@
                                             <div class="icon" data-icon="N"
                                                  ng-show="us.team_requirement"></div>
                                             <div class="label"
-                                                 gm-popover="ctrl.saveUsStatus(us, selectedId)"
-                                                 data-tmpl="#usstatuses-popover"
+                                                 gm-generic-choice-popover="ctrl.saveUsStatus(us, selectedId)"
+                                                 gm-popover-class-name="us-status-popover"
+                                                 gm-popover-model="constants.usStatusesList"
                                                  style="background-color: {{ constants.usStatuses[us.status].color }}">
                                                 {{ constants.usStatuses[us.status].name }}</div>
                                             <div data-icon="o" class="icon blocked" ng-show="us.is_blocked"
-                                                 gm-popover data-tmpl="#us-blocked-popover"></div>
+                                                 gm-markdown-preview-popover=""
+                                                 gm-popover-model="us.blocked_note"
+                                                 gm-popover-class-name="us-blocked-popover"
+                                                 gm-popover-title="taskboard.blocking-reasons-popover">
+                                            </div>
                                         </div>
                                     </div>
                                     <a href="" data-icon="A" class="add-new-task"
@@ -303,50 +309,12 @@
     </div>
 </div>
 
-<script type="text/template" id="developers-popover">
-    <div class="developers-popover">
-        <h3 i18next="taskboard.select-user">Select a user:</h3>
-        <ul>
-            <li class="btn-accept"><a data-id="" href="" i18next="taskboard.unassigned">Unassigned</a>
-            <li ng-repeat="obj in project.active_memberships" class="btn-accept" data-id="{{ obj.user }}">
-                <a href="" gm-colorize-user="constants.users[obj.user]">{{ obj.full_name }}</a>
+<script type="text/ng-template" id="points-for-role">
+    <div class="points-per-role-popover">
+        <ul class="us-points-per-role">
+            <li ng-repeat="role in constants.computableRolesList" class="us-point">
+                {{ role.name }}: {{ constants.points[us.points[role.id]].name }}
             </li>
         </ul>
     </div>
-</script>
-<script type="text/template" id="points-popover">
-    <div class="us-points-popover">
-        <ul>
-            <li class="item btn-accept" ng-repeat="obj in constants.pointsList" data-id="{{ obj.id }}">
-                <a href="">{{ obj.name }}</a>
-            </li>
-        </ul>
-    </div>
-</script>
-<script type="text/template" id="usstatuses-popover">
-    <div class="us-status-popover">
-        <ul>
-            <li class="item btn-accept" ng-repeat="obj in constants.usStatusesList" data-id="{{ obj.id }}"
-                style="background-color: {{ obj.color }}">
-                <a href="">{{ obj.name }}</a>
-            </li>
-        </ul>
-    </div>
-</script>
-
-<script type="text/template" id="us-blocked-popover">
-    <div class="us-blocked-popover">
-        <section>
-            <strong i18next="taskboard.blocking-reasons-popover">reasons of blocking:</strong>
-            <div gm-render-markdown="us.blocked_note"></div>
-        </section>
-    </div>
-</script>
-<script type="text/template" id="task-blocked-popover">
-    <div class="task-blocked-popover">
-        <section>
-            <strong i18next="taskboard.blocking-reasons-popover">reasons of blocking:</strong>
-            <div gm-render-markdown="task.blocked_note"></div>
-        </section>
-    </div>
-</script>
+<script>

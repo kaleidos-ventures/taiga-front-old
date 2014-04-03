@@ -224,15 +224,18 @@
                 </div>
                 <div class="issue-item" ng-repeat="issue in issues" ng-dblclick="ctrl.openIssue(projectSlug, issue.ref)">
                     <div class="issue-severity">
-                        <a href="" gm-popover="ctrl.updateIssueSeverity(issue, selectedId)"
-                            data-tmpl="#severity-popover"
-                                class="severity-{{ constants.severities[issue.severity].name|lowercase }}">
+                        <a href="" gm-generic-choice-popover="ctrl.updateIssueSeverity(issue, selectedId)"
+                           gm-popover-class-name="severity-popover"
+                           gm-popover-title="issues.select-severity-popover"
+                           gm-popover-model="constants.severitiesList"
+                           class="severity-{{ constants.severities[issue.severity].name|lowercase }}">
                             {{ constants.severities[issue.severity].name|lowercase }}
                         </a>
                     </div>
                     <div class="issue-info-icons">
                         <a href="" ng-show="issue.attachments"
-                           gm-popover data-tmpl="#attachments-popover">
+                           gm-template-popover="attachments-popover"
+                           gm-popover-model="issue">
                             <span data-icon="E"></span>
                         </a>
                     </div>
@@ -259,45 +262,75 @@
                         <span>{{ issue.modified_date|momentFormat:"lll" }}</span>
                     </div>
                     <div class="issue-state">
-                        <a href="" gm-popover="ctrl.updateIssueStatus(issue, selectedId)"
-                            data-tmpl="#status-popover">{{ constants.issueStatuses[issue.status].name }}</a>
+                        <a href=""
+                           gm-generic-choice-popover="ctrl.updateIssueStatus(issue, selectedId)"
+                           gm-popover-class-name="status-popover"
+                           gm-popover-title="issues.select-status-popover"
+                           gm-popover-model="constants.issueStatusesList">
+                            {{ constants.issueStatuses[issue.status].name }}
+                        </a>
 
                         <span data-icon="o" class="icon blocked" ng-show="issue.is_blocked"
-                              gm-popover data-tmpl="#issue-blocked-popover"></span>
+                              gm-markdown-preview-popover=""
+                              gm-popover-model="issue.blocked_note"
+                              gm-popover-class-name="issue-blocked-popover"
+                              gm-popover-title="issues.blocking-reasons-popover">
+                        </span>
                     </div>
                     <div class="issue-priority">
-                        <a href="" gm-popover="ctrl.updateIssuePriority(issue, selectedId)"
-                            class="priority-{{ constants.priorities[issue.priority].name|lowercase }}"
-                                    data-tmpl="#priority-popover">{{ constants.priorities[issue.priority].name }}</a>
+                        <a href=""
+                           gm-generic-choice-popover="ctrl.updateIssuePriority(issue, selectedId)"
+                           gm-popover-class-name="priority-popover"
+                           gm-popover-title="issues.select-priority-popover"
+                           gm-popover-model="constants.prioritiesList"
+                           class="priority-{{ constants.priorities[issue.priority].name|lowercase }}">
+                            {{ constants.priorities[issue.priority].name }}
+                        </a>
                     </div>
                     <div class="issue-assigned-to">
                         <div class="button-item" ng-show="issue.assigned_to" >
                             <i class="icon-user"></i>
-                            <a href="" gm-popover="ctrl.updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-placement="left">
+                            <a href=""
+                               gm-user-choice-popover="ctrl.updateIssueAssignation(issue, selectedId)"
+                               gm-popover-class-name="developers-popover"
+                               gm-popover-title="issues.select-user-popover"
+                               gm-popover-model="project.active_memberships"
+                               gm-popover-model-transformer="membersToChoicesTransformer"
+                               gm-popover-empty-item="issues.unassigned-popover">
+
                                <span gm-colorize-user="constants.users[issue.assigned_to]">
                                    {{ constants.users[issue.assigned_to].full_name }}
                                </span>
+
                             </a>
                         </div>
                         <div class="button-item" ng-show="!issue.assigned_to">
                             <i class="icon-question-sign"></i>
-                            <a href="" gm-popover="ctrl.updateIssueAssignation(issue, selectedId)" data-tmpl="#developers-popover" data-placement="left">
+                            <a href=""
+                               gm-user-choice-popover="ctrl.updateIssueAssignation(issue, selectedId)"
+                               gm-popover-class-name="developers-popover"
+                               gm-popover-title="issues.select-user-popover"
+                               gm-popover-model="project.active_memberships"
+                               gm-popover-model-transformer="membersToChoicesTransformer"
+                               gm-popover-empty-item="issues.unassigned-popover">
+
                                 <span i18next="issues.unassigned">Unassigned</span>
                             </a>
                         </div>
                     </div>
                     <div class="issue-options extra-options">
-                        <a data-icon="l" class="btn-small-preview option" gm-popover
-                                data-tmpl="#issue-preview-popover"
-                                data-placement="left">
+                        <a data-icon="l" class="btn-small-preview option"
+                           gm-template-popover="issue-preview-popover"
+                           gm-popover-model="issue">
                             <span class="help-box" i18next="issues.preview">Preview</span>
                         </a>
                         <a data-icon="j" class="btn-small-edit option" ng-click="ctrl.openEditIssueForm(issue)">
                             <span class="help-box" i18next="issues.edit">Edit</span>
                         </a>
-                        <a data-icon="h" class="btn-small-remove option" gm-popover="ctrl.removeIssue(issue)"
-                                data-tmpl="#issue-remove-popover"
-                                data-placement="left">
+                        <a data-icon="h" class="btn-small-remove option"
+                           gm-generic-dialog-popover="ctrl.removeIssue(issue)"
+                           gm-popover-model="issue"
+                           gm-popover-title-bind="'issues.issue-delete-sure'|i18next:{subject: issue.subject}">
                             <span class="help-box" i18next="issues.remove">Remove</span>
                         </a>
                     </div>
@@ -307,6 +340,7 @@
         </div>
     </div>
 </div>
+
 <div ng-show="formOpened" ng-controller="IssuesModalController as modalCtrl" gm-modal="issue-form">
     <div class="new-issue-modal modal">
         <form class="inline-form issue-form" gm-checksley-form="modalCtrl.submit()">
@@ -441,7 +475,7 @@
     </div>
 </div>
 
-<script type="text/template" id="attachments-popover">
+<script type="text/ng-template" id="attachments-popover">
     <div class="issue-attachments-popover">
         <section ng-show="issue.attachments">
             <strong i18next="issues.attachments-popover">Attachments:</strong>
@@ -455,97 +489,34 @@
     </div>
 </script>
 
-<script type="text/template" id="issue-preview-popover">
-    <div class="issue-preview-popover">
-        <section>
-            <strong i18next="issues.id-popover">ID:</strong> #{{ issue.ref }}
-        </section>
-        <section>
-            <strong i18next="issues.created-by-popover">Created by:</strong><br />
-            <span gm-colorize-user="constants.users[issue.owner]">{{ constants.users[issue.owner].full_name }}</span>
-        </section>
-        <section>
-            <strong i18next="issues.subject-popover">Subject:</strong><br />{{ issue.subject }}
-        </section>
-        <section>
-            <strong i18next="issues.description-popover">Description:</strong>
-            <div gm-render-markdown="issue.description"></div>
-        </section>
-        <section ng-show="issue.attachments">
-            <strong i18next="issues.attachments-popover">Attachments:</strong>
-            <ul class="attachments-items">
-                <li class="attachments-item" ng-repeat="attachment in issue.attachments">
-                    <a href="{{ attachment.url }}" target="_blank">{{ attachment.name }}</a>
+<script id="issue-preview-popover" type="text/ng-template">
+    <div>
+        <div class="issue-preview-popover btn-accept">
+            <section>
+                <strong i18next="issues.id-popover">ID:</strong> #{{ issue.ref }}
+            </section>
+            <section>
+                <strong i18next="issues.created-by-popover">Created by:</strong><br />
+                <span gm-colorize-user="constants.users[issue.owner]">{{ constants.users[issue.owner].full_name }}</span>
+            </section>
+            <section>
+                <strong i18next="issues.subject-popover">Subject:</strong><br />{{ issue.subject }}
+            </section>
+            <section>
+                <strong i18next="issues.description-popover">Description:</strong>
+                <div gm-render-markdown="issue.description"></div>
+            </section>
+            <section ng-show="issue.attachments">
+                <strong i18next="issues.attachments-popover">Attachments:</strong>
+                <ul class="attachments-items">
+                    <li class="attachments-item" ng-repeat="attachment in issue.attachments">
+                        <a href="{{ attachment.url }}" target="_blank">{{ attachment.name }}</a>
                     <span>[{{ attachment.size|sizeFormat }}]</span>
-                </li>
-            </ul>
-        </section>
+                    </li>
+                </ul>
+            </section>
+        </div>
     </div>
 </script>
 
-<script type="text/template" id="issue-remove-popover">
-    <div class="issue-remove-popover">
-        <section>
-            <p ng-bind-html="'issues.issue-delete-sure'|i18next:{subject: issue.subject}"></p>
-        </section>
-        <section>
-            <input type="button" class="button button-success" value="Delete" i18next="value:issues.delete-popover" />
-            <input type="button" class="button button-delete" value="Cancel" i18next="value:issues.cancel-popover" />
-        </section>
-    </div>
-</script>
 
-<script type="text/template" id="developers-popover">
-    <div class="developers-popover">
-        <p class="title" i18next="issues.select-user-popover">Select a user:</p>
-        <ul>
-            <li><a class="btn-accept" href="" i18next="issues.unassigned-popover">Unassigned</a>
-            <li ng-repeat="obj in project.active_memberships">
-                <a class="btn-accept" href="" data-id="{{ obj.user }}"
-                   gm-colorize-user="constants.users[obj.user]">{{ obj.full_name }}</a>
-            </li>
-        </ul>
-    </div>
-</script>
-
-<script type="text/template" id="severity-popover">
-    <div class="severity-popover">
-        <p class="title" i18next="issues.select-severity-popover">Select severity:</p>
-        <ul>
-            <li ng-repeat="obj in constants.severitiesList">
-                <a class="btn-accept" data-id="{{ obj.id }}" href="">{{ obj.name }}</a>
-            </li>
-        </ul>
-    </div>
-</script>
-
-<script type="text/template" id="priority-popover">
-    <div class="priority-popover">
-        <p class="title" i18next="issues.select-priority-popover">Select priority:</p>
-        <ul>
-            <li ng-repeat="obj in constants.prioritiesList">
-                <a href="" data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
-            </li>
-        </ul>
-    </div>
-</script>
-
-<script type="text/template" id="status-popover">
-    <div class="status-popover">
-        <p class="title" i18next="issues.select-status-popover">Select status:</p>
-        <ul>
-            <li ng-repeat="obj in constants.issueStatusesList">
-                <a href="" data-id="{{ obj.id }}" class="btn-accept">{{ obj.name }}</a>
-            </li>
-        </ul>
-    </div>
-</script>
-
-<script type="text/template" id="issue-blocked-popover">
-    <div class="issue-blocked-popover">
-        <section>
-            <strong i18next="issues.blocking-reasons-popover">Reasons of blocking:</strong>
-            <div gm-render-markdown="issue.blocked_note"></div>
-        </section>
-    </div>
-</script>
