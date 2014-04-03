@@ -39,7 +39,7 @@ describe "projectsController", ->
         httpBackend = null
         scope = null
         ctrl = null
-        projectListIsEmpty = false
+        getProjectsHasError = false
 
         beforeEach(inject(($rootScope, $controller, $httpBackend) ->
             scope = $rootScope.$new()
@@ -49,8 +49,8 @@ describe "projectsController", ->
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.whenGET(APIURL+"/projects").respond(() ->
-                if projectListIsEmpty
-                    return [200, []]
+                if getProjectsHasError
+                    return [404, []]
                 return [200, [{name: "test proj 1", slug: "test-proj-1"},
                               {name: "test proj 2", slug: "test-proj-2"}]]
             )
@@ -62,7 +62,7 @@ describe "projectsController", ->
             httpBackend.verifyNoOutstandingRequest()
 
         it "should have the project list when call showProjects", ->
-            projectListIsEmpty = false
+            getProjectsHasError = false
             ctrl.scope.showProjects()
             httpBackend.flush()
 
@@ -71,8 +71,10 @@ describe "projectsController", ->
             expect(ctrl.scope.myProjects[1].slug).to.be.equal("test-proj-2")
 
         it "should have an empty project list when call showProjects and ther server have no projects", ->
-            projectListIsEmpty = true
+            getProjectsHasError = true
             ctrl.scope.showProjects()
             httpBackend.flush()
 
             expect(ctrl.scope.myProjects).to.be.lengthOf(0)
+
+
