@@ -143,18 +143,25 @@ class UserStoryViewController extends TaigaPageController
 
     saveNewAttachments: ->
         if @scope.newAttachments.length == 0
-            return
+            return null
 
         promises = []
         for attachment in @scope.newAttachments
             promise = @rs.uploadUserStoryAttachment(@scope.projectId, @scope.userStoryId, attachment)
+            promise.then =>
+                @scope.newAttachments = _.without(@scope.newAttachments, attachment)
             promises.push(promise)
 
         promise = @q.all(promises)
         promise.then =>
             gm.safeApply @scope, =>
-                @scope.newAttachments = []
                 @loadAttachments()
+
+        promise.then null, =>
+            @loadAttachments()
+            @gmFlash.error(@i18next.t("user-story.upload-attachment-error"))
+
+        return promise
 
     # Debounced Method (see debounceMethods method)
     submit: =>
