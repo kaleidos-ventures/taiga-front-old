@@ -21,10 +21,17 @@ describe "issuesController", ->
                 pslug: "test"
                 ref: "1"
             }
+            modalMock = {
+                open: ->
+                    defered = $q.defer()
+                    defered.resolve()
+                    return defered.promise
+            }
             ctrl = $controller("IssuesViewController", {
-                $scope: scope,
-                $routeParams: routeParams,
+                $scope: scope
+                $routeParams: routeParams
                 $confirm: confirmMock
+                $modal: modalMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
@@ -259,3 +266,26 @@ describe "issuesController", ->
             ctrl.scope.attachments = [$model.make_model('issues/attachments', {"id": "test", "content": "test"})]
             ctrl.removeNewAttachment(ctrl.scope.attachments[0])
             expect(ctrl.scope.newAttachments).to.be.deep.equal([])
+
+        it 'should allow open the generate user story form', inject ($model) ->
+            ctrl.scope.constants.computableRolesList = [{id: 1}, {id: 2}]
+            httpBackend.expectGET(
+                "#{APIURL}/issues/1/historical?page=1"
+            ).respond(200, [{"test1": "test1"}, {"test2": "test2"}])
+            ctrl.openCreateUserStoryForm()
+            httpBackend.flush()
+
+            httpBackend.expectGET(
+                "#{APIURL}/issues/1/historical?page=1"
+            ).respond(200, [{"test1": "test1"}, {"test2": "test2"}])
+            ctrl.scope.issue = null
+            ctrl.openCreateUserStoryForm()
+            httpBackend.flush()
+
+        it 'should allow submit the issue form', inject ($model) ->
+            ctrl.scope.form = {}
+            ctrl.scope.issue = $model.make_model('issues', {id: 1, ref: "1", description: "test"})
+            httpBackend.expectPATCH("#{APIURL}/issues/1", {description: "test2"}).respond(200)
+            ctrl.scope.form.description = "test2"
+            ctrl._submit()
+            httpBackend.flush()

@@ -191,8 +191,8 @@ class IssuesViewController extends TaigaDetailPageController
         super(scope, rootScope, favico)
 
     debounceMethods: ->
-        submit = @submit
-        @submit = gm.utils.safeDebounced @scope, 500, submit
+        @_submit = @submit
+        @submit = gm.utils.safeDebounced @scope, 500, @_submit
 
     section: "issues"
     getTitle: ->
@@ -256,7 +256,7 @@ class IssuesViewController extends TaigaDetailPageController
 
     loadIssue: ->
         params = @.issuesQueryParams()
-        @rs.getIssue(@scope.projectId, @scope.issueId, params).then (issue) =>
+        promise = @rs.getIssue(@scope.projectId, @scope.issueId, params).then (issue) =>
             @scope.issue = issue
             @scope.form = _.extend({}, @scope.issue._attrs)
 
@@ -266,6 +266,7 @@ class IssuesViewController extends TaigaDetailPageController
             @rootScope.pageTitle = "#{@i18next.t('common.issues')} - ##{issue.ref}"
 
             @rootScope.pageBreadcrumb = breadcrumb
+        return promise
 
     # Debounced Method (see debounceMethods method)
     submit: =>
@@ -274,17 +275,20 @@ class IssuesViewController extends TaigaDetailPageController
 
         @scope.$emit("spinner:start")
 
-        gm.safeApply @scope, =>
-            promise = @scope.issue.save()
-            promise.then =>
+        promise = @scope.issue.save()
+        promise.then =>
+            gm.safeApply @scope, =>
                 @scope.$emit("spinner:stop")
                 @loadIssue()
                 @loadHistorical()
                 @saveNewAttachments()
                 @gmFlash.info(@i18next.t("issue.issue-saved"))
 
-            promise.then null, (data) =>
+        promise.then null, (data) =>
+            gm.safeApply @scope, =>
                 @scope.checksleyErrors = data
+
+        return promise
 
     openCreateUserStoryForm: () ->
         initializeForm = () =>
@@ -295,6 +299,7 @@ class IssuesViewController extends TaigaDetailPageController
                 result["is_blocked"] = @scope.issue.is_blocked
                 result["blocked_note"] = @scope.issue.blocked_note
                 result["tags"] = @scope.issue.tags
+                result["generated_from_issue"] = @scope.issue.id
 
             points = {}
             for role in @scope.constants.computableRolesList
@@ -303,7 +308,6 @@ class IssuesViewController extends TaigaDetailPageController
             result["project"] = @scope.projectId
             result["status"] = @scope.project.default_us_status
 
-            result["generated_from_issue"] = @scope.issue.id
             return result
 
         promise = @modal.open("generate-user-story-form", {"us": initializeForm(), "type": "create"})

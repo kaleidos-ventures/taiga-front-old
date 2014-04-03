@@ -22,8 +22,8 @@ class UserStoryViewController extends TaigaDetailPageController
         super(scope, rootScope, favico)
 
     debounceMethods: ->
-        submit = @submit
-        @submit = gm.utils.safeDebounced @scope, 500, submit
+        @_submit = @submit
+        @submit = gm.utils.safeDebounced @scope, 500, @_submit
 
     section: 'user-stories'
     getTitle: ->
@@ -92,8 +92,8 @@ class UserStoryViewController extends TaigaDetailPageController
     loadUserStory: ->
         params = @location.search()
         @rs.getUserStory(@scope.projectId, @scope.userStoryId, params).then (userStory) =>
-            @scope.userStory = _.cloneDeep(userStory)
-            @scope.form = userStory
+            @scope.form = _.cloneDeep(userStory)
+            @scope.userStory = userStory
 
             # TODO: More general solution must be found.
             # This hack is used to take care on save user story as PATCH requests
@@ -129,8 +129,10 @@ class UserStoryViewController extends TaigaDetailPageController
     # Debounced Method (see debounceMethods method)
     submit: =>
         @scope.$emit("spinner:start")
+        for key, value of @scope.form
+            @scope.userStory[key] = value
 
-        promise = @scope.form.save()
+        promise = @scope.userStory.save()
 
         promise.then (userStory) =>
             @scope.$emit("spinner:stop")
