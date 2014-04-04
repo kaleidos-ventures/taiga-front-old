@@ -471,6 +471,16 @@ GmKanbanSize = ($window) ->
             setElementWidth()
             setColumnsWidth()
 
+        scope.$watch "filtersOpened", ->
+            setElementHeight()
+            setElementWidth()
+            setColumnsWidth()
+
+        scope.$on "kanban:redraw", ->
+            setElementHeight()
+            setElementWidth()
+            setColumnsWidth()
+
         $($window).resize ->
             setElementHeight()
             setElementWidth()

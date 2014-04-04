@@ -113,6 +113,7 @@ class KanbanController extends TaigaPageController
     formatUserStories: ->
         @.filterUserStories()
         @.prepareForRenderUserStories()
+        @scope.$broadcast("kanban:redraw")
 
     saveUsPoints: (us, role, ref) ->
         points = _.clone(us.points)
