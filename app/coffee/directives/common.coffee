@@ -440,6 +440,42 @@ GmEqualColumnWidth = ->
 
             $(tds).attr('width', "#{width}px")
 
+GmKanbanSize = ($window) ->
+    link: (scope, element, attrs) ->
+        setElementWidth = ->
+            optimalWidth = $($window).width() - 20
+            element.css('width', "#{optimalWidth}px")
+
+        setColumnsWidth = ->
+            tds = element.find('thead tr td')
+            if tds.length == 0
+                return
+            minWidth = attrs.minWidth or 0
+            optimalWidth = $(element).width() / tds.length
+            if optimalWidth < minWidth
+                width = minWidth
+            else
+                width = optimalWidth
+
+            element.find('table thead tr td').attr('width', "#{width}px")
+            element.find('table tbody tr td').attr('width', "#{width}px")
+
+        setElementHeight = ->
+            headerHeight = $('.header-container').height()
+            filtersHeight = $('.filters-container').height()
+            optimalHeight = $($window).height() - headerHeight - filtersHeight - 10
+            element.css('height', "#{optimalHeight}px")
+
+        scope.$watch attrs.watch, ->
+            setElementHeight()
+            setElementWidth()
+            setColumnsWidth()
+
+        $($window).resize ->
+            setElementHeight()
+            setElementWidth()
+            setColumnsWidth()
+
 GmSortableDirective = ($log, $rootScope) ->
     scope: true
     link: (scope, element, attrs) ->
@@ -491,3 +527,4 @@ module.directive('gmSpinner', ['$parse', '$rootScope', GmSpinner])
 module.directive('gmSelectFix', GmSelectFix)
 module.directive('gmSortable', ["$log", "$rootScope", GmSortableDirective])
 module.directive('gmEqualColumnWidth', GmEqualColumnWidth)
+module.directive('gmKanbanSize', ["$window", GmKanbanSize])

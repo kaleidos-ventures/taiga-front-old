@@ -1,5 +1,6 @@
 <header class="header-container" ng-include="'/partials/header.html'"></header>
-<div class="middle-container">
+
+<div class="middle-container filters-container">
     <div class="filters-container">
         <div class="filters-bar-sbox">
             <div class="title-sbox">
@@ -99,38 +100,36 @@
 <div class="middle-container dashboard-content">
     <div class="row-fluid">
         <div class="span12">
-            <div class="kanban-container kanban">
-                <div class="header">
-                    <table gm-equal-column-width min-width="250" watch="constants.usStatusesList">
-                        <thead>
-                            <tr>
-                                <td class="" ng-repeat="status in constants.usStatusesList|orderBy:'order'"
-                                        style="border-right-color: {{ status.color }}">
-                                    <div class="badge" style="background-color: {{ status.color }};">
-                                        {{ status.name }}
-                                        <a class="plus" ng-click="ctrl.openCreateUsForm(status.id)" data-icon="A"></a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="col-task-status col-task-{{ status.name|slugify }} tasks"
-                                        ng-repeat="status in constants.usStatusesList|orderBy:'order'"
-                                        gm-sortable="userstories"
-                                        gm-sortable-selector=".task-box"
-                                        gm-sortable-item-name="us" gm-sortable-on-add="ctrl.sortableOnAdd"
-                                        gm-sortable-on-update="ctrl.sortableOnUpdate"
-                                        gm-sortable-on-remove="ctrl.sortableOnRemove">
+            <div class="kanban-container kanban" gm-kanban-size watch="userstories" min-width="250">
+                <table>
+                    <thead>
+                        <tr>
+                            <td class="" ng-repeat="status in constants.usStatusesList|orderBy:'order'"
+                                    style="border-right-color: {{ status.color }}">
+                                <div class="badge" style="background-color: {{ status.color }};">
+                                    {{ status.name }}
+                                    <a class="plus" ng-click="ctrl.openCreateUsForm(status.id)" data-icon="A"></a>
+                                </div>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-task-status col-task-{{ status.name|slugify }} tasks"
+                                    ng-repeat="status in constants.usStatusesList|orderBy:'order'"
+                                    gm-sortable="userstories"
+                                    gm-sortable-selector=".task-box"
+                                    gm-sortable-item-name="us" gm-sortable-on-add="ctrl.sortableOnAdd"
+                                    gm-sortable-on-update="ctrl.sortableOnUpdate"
+                                    gm-sortable-on-remove="ctrl.sortableOnRemove">
 
-                                    <div class="task-box" ng-repeat="us in ctrl.uss[status.id]|onlyVisible">
-                                        <div ng-include="'/partials/kanban-us.html'"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                                <div class="task-box" ng-repeat="us in ctrl.uss[status.id]|onlyVisible">
+                                    <div ng-include="'/partials/kanban-us.html'"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

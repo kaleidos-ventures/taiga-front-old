@@ -4,6 +4,9 @@
 
  /* Helpers */
 
+body.kanban {
+    overflow-y: hidden;
+}
 
 .button{
     background: #999;
@@ -3267,7 +3270,7 @@ body.login {
  * ========================== */
 
 .dashboard-content {
-    padding: 10px;
+    padding: 0px 10px;
     .stats-container {
         overflow: hidden;
         padding: 5px;
@@ -3449,7 +3452,6 @@ body.login {
         overflow-x: auto;
         width: 100%;
         table {
-            width: 100%;
             border-collapse: collapse;
             margin: 0;
             padding: 0;
@@ -3458,8 +3460,6 @@ body.login {
                 margin: 0;
                 padding: 0;
             }
-        }
-        table {
             thead {
                 td {
                     min-width: 200px;
