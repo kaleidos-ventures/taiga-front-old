@@ -366,7 +366,8 @@
         "show-permissions": "Mostrar permisos",
         "hide-permissions": "Ocultar permisos",
         "add-new-role": "Añadir nuevo rol",
-        "roles-saved-success": "Roles guardados correctamente"
+        "roles-saved-success": "Roles guardados correctamente",
+        "us-status-wip-limit": "Limite de WIP"
     },
     "projects": {
         "saved-success": "Proyecto guardado correctamente",

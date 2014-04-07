@@ -14,11 +14,12 @@
                             Add new US status</a>
                     </div>
                 </div>
-                <div class="value-list us-statuses-values">
+                <div class="value-list us-statuses-values" ng-class="{'with-kanban': project.is_kanban_activated}">
                     <div class="flex-header">
                         <div class="item name" i18next="admin.us-status-name">Name</div>
                         <div class="item is-closed" i18next="admin.us-status-is-closed">Is closed</div>
                         <div class="item color" i18next="admin.us-status-color">Color</div>
+                        <div ng-show="project.is_kanban_activated" class="item wip-limit" i18next="admin.us-status-wip-limit">Wip limit</div>
                         <div class="options"></div>
                     </div>
                     <div class="flex-body">
@@ -37,6 +38,9 @@
                                 <div class="color-sample pointer"
                                     style="background-color: {{ status.color }}"
                                     gm-popover="" data-tmpl="#status-color-picker-popover"></div>
+                            </fieldset>
+                            <fieldset class="item wip-limit" ng-show="project.is_kanban_activated">
+                                <input type="input" name="wip_limit" ng-model="status.wip_limit"/>
                             </fieldset>
                             <fieldset class="options">
                                 <button class="btn-small btn-save" data-icon="z"
@@ -58,6 +62,9 @@
                                         <div class="item color">
                                             <div class="color-sample"
                                                     style="background-color: {{ status.color }}"></div>
+                                        </div>
+                                        <div class="item wip-limit" ng-show="project.is_kanban_activated">
+                                            <div>{{ status.wip_limit }}</div>
                                         </div>
                                         <div class="options">
                                             <a class="btn-small btn-edit" data-icon="j"
@@ -81,6 +88,9 @@
                                             <div class="color-sample pointer"
                                                 style="background-color: {{ status.color }}"
                                                 gm-popover="" data-tmpl="#status-color-picker-popover"></div>
+                                        </fieldset>
+                                        <fieldset class="item wip-limit" ng-show="project.is_kanban_activated">
+                                            <input type="text" name="wip_limit" ng-model="status.wip_limit"/>
                                         </fieldset>
                                         <fieldset class="options">
                                             <button class="btn-small btn-save" data-icon="z"

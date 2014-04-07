@@ -108,3 +108,91 @@ describe "GmHeaderMenuDirective", ->
         $rootScope.pageSection = "backlog"
         $compile(element)($rootScope)
         expect(element.find(".kanban").hasClass('selected')).to.be.false
+
+describe "GmKanbanWip", ->
+    element = null
+    $rootScope = null
+    $compile = null
+
+    template = """
+    <div gm-kanban-wip="3" gm-kanban-wip-element-selector=".test-element" gm-kanban-watch="test">
+        <div class='test-element'></div>
+        <div class='test-element'></div>
+        <div class='test-element'></div>
+        <div class='test-element'></div>
+        <div class='test-element'></div>
+        <div class='test-element'></div>
+    </div>
+    """
+
+    beforeEach(inject((_$compile_, _$rootScope_) ->
+        element = angular.element(template)
+        $compile = _$compile_
+        $rootScope = _$rootScope_
+    ))
+
+    it "should select put a line on the correct position", ->
+        $compile(element)($rootScope)
+        expect(angular.element(element.find("div")[0]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[1]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[2]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[3]).hasClass('wipline')).to.be.true
+        expect(angular.element(element.find("div")[4]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[5]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[6]).hasClass('test-element')).to.be.true
+
+    it "should redraw the line when the wipline:redraw signal is emitted", ->
+        $compile(element)($rootScope)
+        angular.element(element.find("div")[0]).remove()
+        expect(angular.element(element.find("div")[0]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[1]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[2]).hasClass('wipline')).to.be.true
+        expect(angular.element(element.find("div")[3]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[4]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[5]).hasClass('test-element')).to.be.true
+
+        $rootScope.$broadcast("wipline:redraw")
+        expect(angular.element(element.find("div")[0]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[1]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[2]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[3]).hasClass('wipline')).to.be.true
+        expect(angular.element(element.find("div")[4]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[5]).hasClass('test-element')).to.be.true
+
+    it "should redraw the line when the watched model is changed", ->
+        $compile(element)($rootScope)
+        angular.element(element.find("div")[0]).remove()
+        expect(angular.element(element.find("div")[0]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[1]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[2]).hasClass('wipline')).to.be.true
+        expect(angular.element(element.find("div")[3]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[4]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[5]).hasClass('test-element')).to.be.true
+
+        $rootScope.$apply ->
+            $rootScope.test = "test"
+        expect(angular.element(element.find("div")[0]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[1]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[2]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[3]).hasClass('wipline')).to.be.true
+        expect(angular.element(element.find("div")[4]).hasClass('test-element')).to.be.true
+        expect(angular.element(element.find("div")[5]).hasClass('test-element')).to.be.true
+
+    it "shouldn't draw the line on a list with less or equal items than the WIP", ->
+        $compile(element)($rootScope)
+        angular.element(element.find("div")[0]).remove()
+        angular.element(element.find("div")[0]).remove()
+        angular.element(element.find("div")[0]).remove()
+
+        $rootScope.$broadcast("wipline:redraw")
+        expect(element.find("div.wipline")).to.have.length(0)
+
+        angular.element(element.find("div")[0]).remove()
+
+        $rootScope.$broadcast("wipline:redraw")
+        expect(element.find("div.wipline")).to.have.length(0)
+
+        angular.element(element.find("div")[0]).remove()
+        angular.element(element.find("div")[0]).remove()
+
+        expect(element.find("div.wipline")).to.have.length(0)

@@ -517,6 +517,34 @@ GmSortableDirective = ($log, $rootScope) ->
                 onRemove(item.scope()[itemName], scope)
         }
 
+GmKanbanWip = ->
+    link: (scope, elm, attrs) ->
+        removeWiplineDom = ->
+            elm.find(".wipline").remove()
+
+        addWiplineDom = (element) ->
+            element?.after("<div class='wipline'></div>")
+
+        generateWipline = (elements) ->
+            wip = scope.$eval(attrs.gmKanbanWip)
+            if (elements.length > wip)
+                addWiplineDom(elements[wip - 1])
+
+        getUsItems = ->
+            return _.map(elm.find(attrs.gmKanbanWipElementSelector), (x) -> angular.element(x))
+
+        reloadWiplineLocation = ->
+            removeWiplineDom()
+            generateWipline(getUsItems())
+
+        reloadWiplineLocation()
+
+        scope.$watch attrs.gmKanbanWipWatch, ->
+            reloadWiplineLocation()
+
+        scope.$on "wipline:redraw", ->
+            reloadWiplineLocation()
+
 
 module = angular.module('taiga.directives.common', [])
 module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
@@ -538,3 +566,4 @@ module.directive('gmSelectFix', GmSelectFix)
 module.directive('gmSortable', ["$log", "$rootScope", GmSortableDirective])
 module.directive('gmEqualColumnWidth', GmEqualColumnWidth)
 module.directive('gmKanbanSize', ["$window", GmKanbanSize])
+module.directive('gmKanbanWip', GmKanbanWip)

@@ -3679,6 +3679,12 @@ body.login {
                         }
                         &.tasks {
                             padding: 3px;
+                            .wipline {
+                                border-bottom: 2px solid red;
+                                width: 100%;
+                                float: left;
+                                margin: 5px 0px;
+                            }
                             .task-box {
                                 &.sortable-ghost {
                                     opacity: 0.5;
@@ -4290,6 +4296,26 @@ fieldset{
                     }
                 }
                 .us-statuses-values {
+                    &.with-kanban {
+                        .name {
+                            width: 45%;
+                        }
+                        .is-closed {
+                            width: 15%;
+                        }
+                        .color {
+                            width: 15%;
+                            input {
+                                width: 50%
+                            }
+                        }
+                        .wip-limit {
+                            width: 15%;
+                            input {
+                                width: 90%;
+                            }
+                        }
+                    }
                     .name {
                         width: 50%;
                     }

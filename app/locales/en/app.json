@@ -366,7 +366,8 @@
         "show-permissions": "Show permissions",
         "hide-permissions": "Hide permissions",
         "add-new-role": "Add new role",
-        "roles-saved-success": "Roles saved successful"
+        "roles-saved-success": "Roles saved successful",
+        "us-status-wip-limit": "WIP limit"
     },
     "projects": {
         "saved-success": "Project saved successful",

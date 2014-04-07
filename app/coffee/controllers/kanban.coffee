@@ -179,12 +179,15 @@ class KanbanController extends TaigaPageController
         if @scope.project.is_backlog_activated
             @data.loadUserStories(@scope).then =>
                 @.formatUserStories()
+                @scope.$broadcast("wipline:redraw")
         else
             @.uss[sortableScope.status.id] = uss
-            @.resortUserStories(sortableScope.status.id)
+            @.resortUserStories(sortableScope.status.id).then =>
+                @scope.$broadcast("wipline:redraw")
 
     sortableOnRemove: (us, sortableScope) =>
         _.remove(@.uss[sortableScope.status.id], us)
+        @scope.$broadcast("wipline:redraw")
 
 
 class KanbanUsModalController extends ModalBaseController

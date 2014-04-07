@@ -121,7 +121,10 @@
                                     gm-sortable-selector=".task-box"
                                     gm-sortable-item-name="us" gm-sortable-on-add="ctrl.sortableOnAdd"
                                     gm-sortable-on-update="ctrl.sortableOnUpdate"
-                                    gm-sortable-on-remove="ctrl.sortableOnRemove">
+                                    gm-sortable-on-remove="ctrl.sortableOnRemove"
+                                    gm-kanban-wip="status.wip_limit" watch="ctrl.uss[status.id]"
+                                    gm-kanban-wip-element-selector=".task-box"
+                                    gm-kanban-wip-watch="userstories">
 
                                 <div class="task-box" ng-repeat="us in ctrl.uss[status.id]|onlyVisible">
                                     <div ng-include="'/partials/kanban-us.html'"></div>
