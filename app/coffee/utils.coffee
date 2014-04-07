@@ -38,6 +38,12 @@ gm.safeApply = (scope, fn) ->
     else
         scope.$apply(fn)
 
+gm.format = (fmt, obj, named) ->
+    obj = _.clone(obj)
+    if named
+        return fmt.replace /%\(\w+\)s/g, (match) -> String(obj[match.slice(2,-2)])
+    else
+        return fmt.replace /%s/g, (match) -> String(obj.shift())
 
 # Function that return debounced function
 # but wrapping in safe $digest process.

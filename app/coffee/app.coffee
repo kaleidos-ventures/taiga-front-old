@@ -15,14 +15,6 @@
 @taiga = {}
 @gm = @taiga
 
-gm = @gm
-gm.format = (fmt, obj, named) ->
-    obj = _.clone(obj)
-    if named
-        return fmt.replace /%\(\w+\)s/g, (match) -> String(obj[match.slice(2,-2)])
-    else
-        return fmt.replace /%s/g, (match) -> String(obj.shift())
-
 configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider, $gmUrlsProvider) ->
     $routeProvider.when('/',
         {templateUrl: 'partials/project-list.html', controller: "ProjectListController as ctrl"})
