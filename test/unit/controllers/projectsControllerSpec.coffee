@@ -73,6 +73,56 @@ FIXTURES = {
         issue_statuses: [],
         issue_types: [],
     }
+    users: [
+        {
+            id: 1,
+            username: "admin",
+            first_name: "",
+            last_name: "",
+            full_name: "admin",
+            email: "admin@taiga.io",
+            is_active: true,
+        },
+        {
+            id: 2,
+            username: "user-0",
+            first_name: "Marina",
+            last_name: "Medina",
+            full_name: "Marina Medina",
+            email: "ducimus@maiores.net",
+            is_active: true,
+        }
+    ]
+    permissions: [
+        {
+            id: 90,
+            name: "Can add issue",
+            codename: "add_issue"
+        },
+        {
+            id: 91,
+            name: "Can change issue",
+            codename: "change_issue"
+        }
+    ]
+    roles: [
+        {
+            id: 4,
+            name: "Back",
+            permissions: [90, 91],
+            computable: true,
+            project: 1,
+            order: 40
+        },
+        {
+            id: 5,
+            name: "Product Owner",
+            permissions: [90, 91],
+            computable: false,
+            project: 1,
+            order: 50
+        }
+    ]
 }
 
 describe "projectsController", ->
@@ -175,7 +225,7 @@ describe "projectsController", ->
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
-            httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES["project"])
+            httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
             httpBackend.whenPATCH("#{APIURL}/projects/1", {name:"New name"}).respond(
                                                              202, {detail: "success"})
             httpBackend.whenPATCH("#{APIURL}/projects/1", {total_milestones: "Error"}).respond(
@@ -244,10 +294,8 @@ describe "projectsController", ->
             })
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
-            httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {
-                project: 1
-            })
-            httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES["project"])
+            httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
+            httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
             httpBackend.flush()
         ))
 
@@ -274,3 +322,146 @@ describe "projectsController", ->
 
         it "should be actived", ->
             expect(ctrl.isActive("values")).to.be.true
+
+
+    describe "ProjecAdminMilestonesController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+            scope = $rootScope.$new()
+            routeParams = {
+                pslug: "test"
+            }
+            ctrl = $controller("ProjectAdminMilestonesController", {
+                $scope: scope,
+                $routeParams: routeParams,
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
+            httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should have section projects", ->
+            expect(ctrl.section).to.be.equal("admin")
+
+        it "should have a title", ->
+            expect(ctrl.getTitle()).to.be.equal("common.admin-panel")
+
+        it "should change the location", ->
+            sinon.spy(ctrl.location, "url")
+
+            ctrl.goTo("milestones")
+
+            ctrl.location.url.should.have.been.calledOnce
+            ctrl.location.url.should.have.been.calledWith("/project/test/admin/milestones")
+
+        it "should set the breadcrumb", ->
+            expect(ctrl.rootScope.pageBreadcrumb).to.be.lengthOf(2)
+
+        it "should be actived", ->
+            expect(ctrl.isActive("milestones")).to.be.true
+
+
+    describe "ProjecAdminMembershipsController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+            scope = $rootScope.$new()
+            routeParams = {
+                pslug: "test"
+            }
+            ctrl = $controller("ProjectAdminMembershipsController", {
+                $scope: scope,
+                $routeParams: routeParams,
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
+            httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
+            httpBackend.whenGET("#{APIURL}/users?project=1").respond(200, FIXTURES.users)
+            httpBackend.whenGET("#{APIURL}/roles?project=1").respond(200, FIXTURES.roles)
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should have section projects", ->
+            expect(ctrl.section).to.be.equal("admin")
+
+        it "should have a title", ->
+            expect(ctrl.getTitle()).to.be.equal("common.admin-panel")
+
+        it "should change the location", ->
+            sinon.spy(ctrl.location, "url")
+
+            ctrl.goTo("memberships")
+
+            ctrl.location.url.should.have.been.calledOnce
+            ctrl.location.url.should.have.been.calledWith("/project/test/admin/memberships")
+
+        it "should set the breadcrumb", ->
+            expect(ctrl.rootScope.pageBreadcrumb).to.be.lengthOf(2)
+
+        it "should be actived", ->
+            expect(ctrl.isActive("memberships")).to.be.true
+
+
+    describe "ProjecAdminRolesController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+            scope = $rootScope.$new()
+            routeParams = {
+                pslug: "test"
+            }
+            ctrl = $controller("ProjectAdminRolesController", {
+                $scope: scope,
+                $routeParams: routeParams,
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
+            httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
+            httpBackend.whenGET("#{APIURL}/users?project=1").respond(200, FIXTURES.users)
+            httpBackend.whenGET("#{APIURL}/permissions").respond(200, FIXTURES.permissions)
+            httpBackend.whenGET("#{APIURL}/roles?project=1").respond(200, FIXTURES.roles)
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should have section projects", ->
+            expect(ctrl.section).to.be.equal("admin")
+
+        it "should have a title", ->
+            expect(ctrl.getTitle()).to.be.equal("common.admin-panel")
+
+        it "should change the location", ->
+            sinon.spy(ctrl.location, "url")
+
+            ctrl.goTo("roles")
+
+            ctrl.location.url.should.have.been.calledOnce
+            ctrl.location.url.should.have.been.calledWith("/project/test/admin/roles")
+
+        it "should set the breadcrumb", ->
+            expect(ctrl.rootScope.pageBreadcrumb).to.be.lengthOf(2)
+
+        it "should be actived", ->
+            expect(ctrl.isActive("roles")).to.be.true
