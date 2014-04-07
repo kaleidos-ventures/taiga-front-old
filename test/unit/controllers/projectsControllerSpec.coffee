@@ -432,6 +432,9 @@ describe "projectsController", ->
         it "should have section projects", ->
             expect(ctrl.section).to.be.equal("admin")
 
+        it "should have the form closed", ->
+            expect(ctrl.scope.formOpened).to.be.false
+
         it "should have a title", ->
             expect(ctrl.getTitle()).to.be.equal("common.admin-panel")
 
@@ -448,6 +451,21 @@ describe "projectsController", ->
 
         it "should be actived", ->
             expect(ctrl.isActive("memberships")).to.be.true
+
+        it "should allow to open and close form", ->
+            expect(ctrl.scope.formOpened).to.be.false
+            expect(ctrl.scope.membership).to.be.undefined
+
+            ctrl.toggleForm()
+
+            expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope.membership.project).to.be.equal(FIXTURES.project.id)
+
+            ctrl.toggleForm()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        #TODO: Finish me
 
 
     describe "ProjecAdminRolesController", ->
@@ -497,3 +515,388 @@ describe "projectsController", ->
 
         it "should be actived", ->
             expect(ctrl.isActive("roles")).to.be.true
+
+        #TODO: Finish me
+
+
+    describe "UserStoryStatusesAdminController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+            scope = $rootScope.$new()
+            $rootScope.projectId = FIXTURES.project.id
+            ctrl = $controller("UserStoryStatusesAdminController", {
+                $scope: scope,
+                $rootScope: $rootScope
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to open and close form", ->
+            expect(ctrl.scope.formOpened).to.be.false
+            expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
+
+            ctrl.openForm()
+
+            expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
+
+            ctrl.closeForm()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on success", ->
+            httpBackend.expectPOST(APIURL+"/userstory-statuses?", {
+                         project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
+            httpBackend.expectGET(APIURL+"/userstory-statuses?project=1").respond(200, [{
+                                               project: FIXTURES.project.id, name: "test"}])
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+    describe "PointsAdminController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+            scope = $rootScope.$new()
+            $rootScope.projectId = FIXTURES.project.id
+            ctrl = $controller("PointsAdminController", {
+                $scope: scope,
+                $rootScope: $rootScope
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to open and close form", ->
+            expect(ctrl.scope.formOpened).to.be.false
+            expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
+
+            ctrl.openForm()
+
+            expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
+
+            ctrl.closeForm()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on success", ->
+            httpBackend.expectPOST(APIURL+"/points?", {
+                         project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
+            httpBackend.expectGET(APIURL+"/points?project=1").respond(200, [{
+                                               project: FIXTURES.project.id, name: "test"}])
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        #TODO: Finish me
+
+    describe "TaskStatusesAdminController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+            scope = $rootScope.$new()
+            $rootScope.projectId = FIXTURES.project.id
+            ctrl = $controller("TaskStatusesAdminController", {
+                $scope: scope,
+                $rootScope: $rootScope
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to open and close form", ->
+            expect(ctrl.scope.formOpened).to.be.false
+            expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
+
+            ctrl.openForm()
+
+            expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
+
+            ctrl.closeForm()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on success", ->
+            httpBackend.expectPOST(APIURL+"/task-statuses?", {
+                         project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
+            httpBackend.expectGET(APIURL+"/task-statuses?project=1").respond(200, [{
+                                               project: FIXTURES.project.id, name: "test"}])
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        #TODO: Finish me
+
+    describe "IssueStatusesAdminController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+            scope = $rootScope.$new()
+            $rootScope.projectId = FIXTURES.project.id
+            ctrl = $controller("IssueStatusesAdminController", {
+                $scope: scope,
+                $rootScope: $rootScope
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to open and close form", ->
+            expect(ctrl.scope.formOpened).to.be.false
+            expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
+
+            ctrl.openForm()
+
+            expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
+
+            ctrl.closeForm()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on success", ->
+            httpBackend.expectPOST(APIURL+"/issue-statuses?", {
+                         project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
+            httpBackend.expectGET(APIURL+"/issue-statuses?project=1").respond(200, [{
+                                               project: FIXTURES.project.id, name: "test"}])
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        #TODO: Finish me
+
+    describe "IssueTypesAdminController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+            scope = $rootScope.$new()
+            $rootScope.projectId = FIXTURES.project.id
+            ctrl = $controller("IssueTypesAdminController", {
+                $scope: scope,
+                $rootScope: $rootScope
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to open and close form", ->
+            expect(ctrl.scope.formOpened).to.be.false
+            expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
+
+            ctrl.openForm()
+
+            expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
+
+            ctrl.closeForm()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on success", ->
+            httpBackend.expectPOST(APIURL+"/issue-types?", {
+                         project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
+            httpBackend.expectGET(APIURL+"/issue-types?project=1").respond(200, [{
+                                               project: FIXTURES.project.id, name: "test"}])
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        #TODO: Finish me
+
+    describe "PrioritiesAdminController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+            scope = $rootScope.$new()
+            $rootScope.projectId = FIXTURES.project.id
+            ctrl = $controller("PrioritiesAdminController", {
+                $scope: scope,
+                $rootScope: $rootScope
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to open and close form", ->
+            expect(ctrl.scope.formOpened).to.be.false
+            expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
+
+            ctrl.openForm()
+
+            expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
+
+            ctrl.closeForm()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on success", ->
+            httpBackend.expectPOST(APIURL+"/priorities?", {
+                         project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
+            httpBackend.expectGET(APIURL+"/priorities?project=1").respond(200, [{
+                                               project: FIXTURES.project.id, name: "test"}])
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        #TODO: Finish me
+
+    describe "SeveritiesAdminController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+            scope = $rootScope.$new()
+            $rootScope.projectId = FIXTURES.project.id
+            ctrl = $controller("SeveritiesAdminController", {
+                $scope: scope,
+                $rootScope: $rootScope
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to open and close form", ->
+            expect(ctrl.scope.formOpened).to.be.false
+            expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
+
+            ctrl.openForm()
+
+            expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
+
+            ctrl.closeForm()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on success", ->
+            httpBackend.expectPOST(APIURL+"/severities?", {
+                         project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
+            httpBackend.expectGET(APIURL+"/severities?project=1").respond(200, [{
+                                               project: FIXTURES.project.id, name: "test"}])
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        #TODO: Finish me
+
+    describe "ChoiceController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+            scope = $rootScope.$new()
+            ctrl = $controller("ChoiceController", {
+                $scope: scope,
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+        #TODO: Finish me
