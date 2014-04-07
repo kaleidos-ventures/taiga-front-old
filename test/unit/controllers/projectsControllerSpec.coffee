@@ -21,7 +21,18 @@ FIXTURES = {
         default_question_status: 1,
         members: []
         tags: "",
-        list_of_milestones: [],
+        list_of_milestones: [
+            {
+                id: 1
+                name: "Sprint 1",
+                finish_date: "2014-02-13",
+                closed: true,
+                total_points: {},
+                closed_points: {},
+                client_increment_points: {},
+                team_increment_points: {}
+            }
+        ],
         roles: [],
         active_memberships: [],
         memberships: [],
@@ -329,14 +340,21 @@ describe "projectsController", ->
         scope = null
         ctrl = null
 
-        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q) ->
             scope = $rootScope.$new()
             routeParams = {
                 pslug: "test"
             }
+            confirmMock = {
+                confirm: (text) ->
+                    defered = $q.defer()
+                    defered.resolve("test")
+                    return defered.promise
+            }
             ctrl = $controller("ProjectAdminMilestonesController", {
                 $scope: scope,
                 $routeParams: routeParams,
+                $confirm: confirmMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
@@ -368,6 +386,20 @@ describe "projectsController", ->
 
         it "should be actived", ->
             expect(ctrl.isActive("milestones")).to.be.true
+
+        it "should allow to delete a milestone", ->
+            milestone = ctrl.scope.project.list_of_milestones[0]
+            newProject = _.clone(FIXTURES.project, true)
+            newProject.list_of_milestones = []
+
+            httpBackend.expectDELETE("#{APIURL}/milestones/#{milestone.id}").respond(200)
+            httpBackend.expectGET("#{APIURL}/projects/1?").respond(200, newProject)
+
+            promise = ctrl.deleteMilestone(milestone)
+            httpBackend.flush()
+
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.project.list_of_milestones).to.be.lengthOf(0)
 
 
     describe "ProjecAdminMembershipsController", ->
