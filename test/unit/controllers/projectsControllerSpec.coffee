@@ -518,7 +518,7 @@ describe "projectsController", ->
 
         #TODO: Finish me
 
-
+    # FIRST
     describe "UserStoryStatusesAdminController", ->
         httpBackend = null
         scope = null
@@ -527,9 +527,13 @@ describe "projectsController", ->
         beforeEach(inject(($rootScope, $controller, $httpBackend) ->
             scope = $rootScope.$new()
             $rootScope.projectId = FIXTURES.project.id
+            gmFlashMock = {
+                error: (text) ->
+            }
             ctrl = $controller("UserStoryStatusesAdminController", {
                 $scope: scope,
-                $rootScope: $rootScope
+                $rootScope: $rootScope,
+                $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
@@ -554,6 +558,7 @@ describe "projectsController", ->
             expect(ctrl.scope.formOpened).to.be.false
 
         it "should create on success", ->
+            sinon.spy(ctrl.gmFlash, "error")
             httpBackend.expectPOST(APIURL+"/userstory-statuses?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
             httpBackend.expectGET(APIURL+"/userstory-statuses?project=1").respond(200, [{
@@ -567,7 +572,28 @@ describe "projectsController", ->
             ctrl.create()
             httpBackend.flush()
 
+            ctrl.gmFlash.error.should.have.not.been.called
+            expect(ctrl.scope.checksleyErrors).to.be.undefined
             expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on error", ->
+            sinon.spy(ctrl.gmFlash, "error")
+            httpBackend.expectPOST(APIURL+"/userstory-statuses?",
+                    {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "error test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            ctrl.gmFlash.error.should.have.been.calledOnce
+            ctrl.gmFlash.error.should.have.been.calledWith("error")
+            expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
+            expect(ctrl.scope.formOpened).to.be.true
+
 
     describe "PointsAdminController", ->
         httpBackend = null
@@ -577,9 +603,13 @@ describe "projectsController", ->
         beforeEach(inject(($rootScope, $controller, $httpBackend) ->
             scope = $rootScope.$new()
             $rootScope.projectId = FIXTURES.project.id
+            gmFlashMock = {
+                error: (text) ->
+            }
             ctrl = $controller("PointsAdminController", {
                 $scope: scope,
-                $rootScope: $rootScope
+                $rootScope: $rootScope,
+                $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
@@ -604,6 +634,7 @@ describe "projectsController", ->
             expect(ctrl.scope.formOpened).to.be.false
 
         it "should create on success", ->
+            sinon.spy(ctrl.gmFlash, "error")
             httpBackend.expectPOST(APIURL+"/points?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
             httpBackend.expectGET(APIURL+"/points?project=1").respond(200, [{
@@ -617,7 +648,27 @@ describe "projectsController", ->
             ctrl.create()
             httpBackend.flush()
 
+            ctrl.gmFlash.error.should.have.not.been.called
+            expect(ctrl.scope.checksleyErrors).to.be.undefined
             expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on error", ->
+            sinon.spy(ctrl.gmFlash, "error")
+            httpBackend.expectPOST(APIURL+"/points?",
+                    {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "error test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            ctrl.gmFlash.error.should.have.been.calledOnce
+            ctrl.gmFlash.error.should.have.been.calledWith("error")
+            expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
+            expect(ctrl.scope.formOpened).to.be.true
 
         #TODO: Finish me
 
@@ -629,9 +680,13 @@ describe "projectsController", ->
         beforeEach(inject(($rootScope, $controller, $httpBackend) ->
             scope = $rootScope.$new()
             $rootScope.projectId = FIXTURES.project.id
+            gmFlashMock = {
+                error: (text) ->
+            }
             ctrl = $controller("TaskStatusesAdminController", {
                 $scope: scope,
-                $rootScope: $rootScope
+                $rootScope: $rootScope,
+                $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
@@ -656,6 +711,7 @@ describe "projectsController", ->
             expect(ctrl.scope.formOpened).to.be.false
 
         it "should create on success", ->
+            sinon.spy(ctrl.gmFlash, "error")
             httpBackend.expectPOST(APIURL+"/task-statuses?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
             httpBackend.expectGET(APIURL+"/task-statuses?project=1").respond(200, [{
@@ -669,7 +725,27 @@ describe "projectsController", ->
             ctrl.create()
             httpBackend.flush()
 
+            ctrl.gmFlash.error.should.have.not.been.called
+            expect(ctrl.scope.checksleyErrors).to.be.undefined
             expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on error", ->
+            sinon.spy(ctrl.gmFlash, "error")
+            httpBackend.expectPOST(APIURL+"/task-statuses?",
+                    {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "error test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            ctrl.gmFlash.error.should.have.been.calledOnce
+            ctrl.gmFlash.error.should.have.been.calledWith("error")
+            expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
+            expect(ctrl.scope.formOpened).to.be.true
 
         #TODO: Finish me
 
@@ -681,9 +757,13 @@ describe "projectsController", ->
         beforeEach(inject(($rootScope, $controller, $httpBackend) ->
             scope = $rootScope.$new()
             $rootScope.projectId = FIXTURES.project.id
+            gmFlashMock = {
+                error: (text) ->
+            }
             ctrl = $controller("IssueStatusesAdminController", {
                 $scope: scope,
-                $rootScope: $rootScope
+                $rootScope: $rootScope,
+                $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
@@ -708,6 +788,7 @@ describe "projectsController", ->
             expect(ctrl.scope.formOpened).to.be.false
 
         it "should create on success", ->
+            sinon.spy(ctrl.gmFlash, "error")
             httpBackend.expectPOST(APIURL+"/issue-statuses?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
             httpBackend.expectGET(APIURL+"/issue-statuses?project=1").respond(200, [{
@@ -721,7 +802,28 @@ describe "projectsController", ->
             ctrl.create()
             httpBackend.flush()
 
+            ctrl.gmFlash.error.should.have.not.been.called
+            expect(ctrl.scope.checksleyErrors).to.be.undefined
             expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on error", ->
+            sinon.spy(ctrl.gmFlash, "error")
+            httpBackend.expectPOST(APIURL+"/issue-statuses?",
+                    {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "error test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            ctrl.gmFlash.error.should.have.been.calledOnce
+            ctrl.gmFlash.error.should.have.been.calledWith("error")
+            expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
+            expect(ctrl.scope.formOpened).to.be.true
+
 
         #TODO: Finish me
 
@@ -733,9 +835,13 @@ describe "projectsController", ->
         beforeEach(inject(($rootScope, $controller, $httpBackend) ->
             scope = $rootScope.$new()
             $rootScope.projectId = FIXTURES.project.id
+            gmFlashMock = {
+                error: (text) ->
+            }
             ctrl = $controller("IssueTypesAdminController", {
                 $scope: scope,
-                $rootScope: $rootScope
+                $rootScope: $rootScope,
+                $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
@@ -760,6 +866,7 @@ describe "projectsController", ->
             expect(ctrl.scope.formOpened).to.be.false
 
         it "should create on success", ->
+            sinon.spy(ctrl.gmFlash, "error")
             httpBackend.expectPOST(APIURL+"/issue-types?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
             httpBackend.expectGET(APIURL+"/issue-types?project=1").respond(200, [{
@@ -773,7 +880,27 @@ describe "projectsController", ->
             ctrl.create()
             httpBackend.flush()
 
+            ctrl.gmFlash.error.should.have.not.been.called
+            expect(ctrl.scope.checksleyErrors).to.be.undefined
             expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on error", ->
+            sinon.spy(ctrl.gmFlash, "error")
+            httpBackend.expectPOST(APIURL+"/issue-types?",
+                    {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "error test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            ctrl.gmFlash.error.should.have.been.calledOnce
+            ctrl.gmFlash.error.should.have.been.calledWith("error")
+            expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
+            expect(ctrl.scope.formOpened).to.be.true
 
         #TODO: Finish me
 
@@ -785,9 +912,13 @@ describe "projectsController", ->
         beforeEach(inject(($rootScope, $controller, $httpBackend) ->
             scope = $rootScope.$new()
             $rootScope.projectId = FIXTURES.project.id
+            gmFlashMock = {
+                error: (text) ->
+            }
             ctrl = $controller("PrioritiesAdminController", {
                 $scope: scope,
-                $rootScope: $rootScope
+                $rootScope: $rootScope,
+                $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
@@ -812,6 +943,7 @@ describe "projectsController", ->
             expect(ctrl.scope.formOpened).to.be.false
 
         it "should create on success", ->
+            sinon.spy(ctrl.gmFlash, "error")
             httpBackend.expectPOST(APIURL+"/priorities?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
             httpBackend.expectGET(APIURL+"/priorities?project=1").respond(200, [{
@@ -825,7 +957,27 @@ describe "projectsController", ->
             ctrl.create()
             httpBackend.flush()
 
+            ctrl.gmFlash.error.should.have.not.been.called
+            expect(ctrl.scope.checksleyErrors).to.be.undefined
             expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on error", ->
+            sinon.spy(ctrl.gmFlash, "error")
+            httpBackend.expectPOST(APIURL+"/priorities?",
+                    {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "error test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            ctrl.gmFlash.error.should.have.been.calledOnce
+            ctrl.gmFlash.error.should.have.been.calledWith("error")
+            expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
+            expect(ctrl.scope.formOpened).to.be.true
 
         #TODO: Finish me
 
@@ -837,9 +989,13 @@ describe "projectsController", ->
         beforeEach(inject(($rootScope, $controller, $httpBackend) ->
             scope = $rootScope.$new()
             $rootScope.projectId = FIXTURES.project.id
+            gmFlashMock = {
+                error: (text) ->
+            }
             ctrl = $controller("SeveritiesAdminController", {
                 $scope: scope,
-                $rootScope: $rootScope
+                $rootScope: $rootScope,
+                $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
@@ -864,6 +1020,7 @@ describe "projectsController", ->
             expect(ctrl.scope.formOpened).to.be.false
 
         it "should create on success", ->
+            sinon.spy(ctrl.gmFlash, "error")
             httpBackend.expectPOST(APIURL+"/severities?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
             httpBackend.expectGET(APIURL+"/severities?project=1").respond(200, [{
@@ -877,7 +1034,27 @@ describe "projectsController", ->
             ctrl.create()
             httpBackend.flush()
 
+            ctrl.gmFlash.error.should.have.not.been.called
+            expect(ctrl.scope.checksleyErrors).to.be.undefined
             expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create on error", ->
+            sinon.spy(ctrl.gmFlash, "error")
+            httpBackend.expectPOST(APIURL+"/severities?",
+                    {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
+
+            ctrl.openForm()
+            ctrl.scope[ctrl.instanceModel].name = "error test"
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.create()
+            httpBackend.flush()
+
+            ctrl.gmFlash.error.should.have.been.calledOnce
+            ctrl.gmFlash.error.should.have.been.calledWith("error")
+            expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
+            expect(ctrl.scope.formOpened).to.be.true
 
         #TODO: Finish me
 
