@@ -355,10 +355,10 @@ class ChoiceController extends TaigaBaseController
     refreshEvent: "choices:refresh"
 
     constructor: (@scope, @gmFlash, @rs, @confirm, @i18next) ->
-        scope.formOpened = false
+        super(scope)
 
     initialize: ->
-        scope.formOpened = false
+        @scope.formOpened = false
 
     openForm: ->
         @scope.$broadcast("checksley:reset")
@@ -376,11 +376,14 @@ class ChoiceController extends TaigaBaseController
         promise = @confirm.confirm(@i18next.t("common.are-you-sure"))
 
         promise.then () =>
-            object.remove().then () =>
+            onSuccess = =>
                 @scope.$emit(@refreshEvent)
 
-        promise.then null, (data) =>
-            @gmFlash.error(@i18next.t("common.error-on-delete"))
+            onError = =>
+                @gmFlash.error(@i18next.t("common.error-on-delete"))
+
+            promise = object.remove().then(onSuccess, onError)
+
 
 class UserStoryStatusesAdminController extends ChoicesAdminController
     refreshEvent: "choices:refresh"

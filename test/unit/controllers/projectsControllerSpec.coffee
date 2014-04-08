@@ -979,7 +979,16 @@ describe "projectsController", ->
             expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
             expect(ctrl.scope.formOpened).to.be.true
 
-        #TODO: Finish me
+        it "should allow to save resorted", inject ($model) ->
+            itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
+            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) -> $model.make_model("choices/priorities", o))
+
+            httpBackend.expectPOST(APIURL+"/priorities/bulk_update_order", {project: FIXTURES.project.id, bulk_priorities: [[1,0],[2,1],[3,2]]}).respond(200)
+            promise = ctrl.resort(ctrl.instanceModel)
+            httpBackend.flush()
+
+            promise.should.be.fulfilled
+
 
     describe "SeveritiesAdminController", ->
         httpBackend = null
@@ -1056,7 +1065,16 @@ describe "projectsController", ->
             expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
             expect(ctrl.scope.formOpened).to.be.true
 
-        #TODO: Finish me
+        it "should allow to save resorted", inject ($model) ->
+            itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
+            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) -> $model.make_model("choices/severities", o))
+
+            httpBackend.expectPOST(APIURL+"/severities/bulk_update_order", {project: FIXTURES.project.id, bulk_severities: [[1,0],[2,1],[3,2]]}).respond(200)
+            promise = ctrl.resort(ctrl.instanceModel)
+            httpBackend.flush()
+
+            promise.should.be.fulfilled
+
 
     describe "ChoiceController", ->
         httpBackend = null
@@ -1064,11 +1082,22 @@ describe "projectsController", ->
         ctrl = null
         object = null
 
-        beforeEach(inject(($rootScope, $controller, $httpBackend, $model) ->
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $model, $q) ->
             object = $model.make_model("choices/priorities", {id: 1, name: "Test status"})
             scope = $rootScope.$new()
+            gmFlashMock = {
+                error: (text) ->
+            }
+            confirmMock = {
+                confirm: (text) ->
+                    defered = $q.defer()
+                    defered.resolve("test")
+                    return defered.promise
+            }
             ctrl = $controller("ChoiceController", {
                 $scope: scope,
+                $gmFlash: gmFlashMock,
+                $confirm: confirmMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
@@ -1080,7 +1109,7 @@ describe "projectsController", ->
             httpBackend.verifyNoOutstandingRequest()
 
         it "should allow to open and close form", ->
-            httpBackend.expectGET(APIURL+"/priorities/1").respond(200, {id: 1, name: "Test status"})
+            httpBackend.expectGET(APIURL+"/priorities/#{object.id}").respond(200, {id: 1, name: "Test status"})
 
             expect(ctrl.scope.formOpened).to.be.false
             expect(object.name).to.be.equal("Test status")
@@ -1097,9 +1126,9 @@ describe "projectsController", ->
             expect(ctrl.scope.formOpened).to.be.false
             expect(object.name).to.be.equal("Test status")
 
-        it "should allow to update an object on success", ->
-            httpBackend.expectPATCH(APIURL+"/priorities/1", {name: "New status"}).respond(202, "Ok")
-            httpBackend.expectGET(APIURL+"/priorities/1").respond(200, {id: 1, name: "New status"})
+        it "should allow to update an object", ->
+            httpBackend.expectPATCH(APIURL+"/priorities/#{object.id}", {name: "New status"}).respond(202, "Ok")
+            httpBackend.expectGET(APIURL+"/priorities/#{object.id}").respond(200, {id: 1, name: "New status"})
 
             expect(ctrl.scope.formOpened).to.be.false
             expect(object.name).to.be.equal("Test status")
@@ -1116,4 +1145,21 @@ describe "projectsController", ->
             expect(ctrl.scope.formOpened).to.be.false
             expect(object.name).to.be.equal("New status")
 
-        #TODO: Finish me
+        it "should allow to delete an object on success", ->
+            sinon.spy(ctrl.gmFlash, "error")
+            httpBackend.expectDELETE("#{APIURL}/priorities/#{object.id}").respond(200, "ok")
+
+            promise = ctrl.delete(object)
+            httpBackend.flush()
+
+            ctrl.gmFlash.error.should.have.not.been.called
+
+        it "should allow to delete an object on error", ->
+            sinon.spy(ctrl.gmFlash, "error")
+            httpBackend.expectDELETE("#{APIURL}/priorities/#{object.id}").respond(404, "error")
+
+            promise = ctrl.delete(object)
+            httpBackend.flush()
+
+            ctrl.gmFlash.error.should.have.been.calledOnce
+            ctrl.gmFlash.error.should.have.been.calledWith("common.error-on-delete")
