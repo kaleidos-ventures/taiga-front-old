@@ -47,8 +47,8 @@ class BacklogController extends TaigaPageController
 
     reloadStats: ->
         @data.loadProjectStats(@scope).then =>
-            closedPoints = @scope.projectStats.closed_points
-            totalPoints = @scope.projectStats.total_points
+            closedPoints = @scope.projectStats.closed_points or 0
+            totalPoints = @scope.projectStats.total_points or 0
             if totalPoints > 0
                 @scope.percentageClosedPoints = (closedPoints * 100) / totalPoints
             else
@@ -57,7 +57,7 @@ class BacklogController extends TaigaPageController
             @scope.percentageBarCompleted = @scope.percentageClosedPoints
 
             if @scope.percentageBarCompleted > 100
-                @scope.percentageBarCompleted = 99
+                @scope.percentageBarCompleted = 100
 
 
 class BacklogUserStoriesController extends TaigaBaseController
@@ -152,10 +152,16 @@ class BacklogUserStoriesController extends TaigaBaseController
 
     refreshBacklog: ->
         @scope.refreshing = true
-        @.loadUserStories().then =>
+        promise = @.loadUserStories()
+        promise.then =>
             @.filterUsBySelectedTags()
             @.calculateStats()
             @scope.refreshing = false
+
+        promise.then null, =>
+            @scope.refreshing = false
+
+        return promise
 
     calculateStoryPoints: (selectedUserStories) ->
         total = 0
@@ -165,7 +171,7 @@ class BacklogUserStoriesController extends TaigaBaseController
         for us in selectedUserStories
             for roleId, pointId of us.points
                 pointsValue = @scope.constants.points[pointId].value
-                if pointsValue is null
+                if not pointsValue?
                     pointsValue = 0
                 total += pointsValue
 
@@ -174,13 +180,13 @@ class BacklogUserStoriesController extends TaigaBaseController
     getSelectedUserStories: ->
         selected = _.filter(@scope.unassignedUs, "selected")
         if selected.length == 0
-            return null
+            return []
         return selected
 
     getUnselectedUserStories: ->
         selected = _.reject(@scope.unassignedUs, "selected")
         if selected.length == 0
-            return null
+            return []
         return selected
 
     moveSelectedUserStoriesToCurrentSprint: ->
