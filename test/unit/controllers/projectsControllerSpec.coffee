@@ -1062,8 +1062,10 @@ describe "projectsController", ->
         httpBackend = null
         scope = null
         ctrl = null
+        object = null
 
-        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $model) ->
+            object = $model.make_model("choices/priorities", {id: 1, name: "Test status"})
             scope = $rootScope.$new()
             ctrl = $controller("ChoiceController", {
                 $scope: scope,
@@ -1076,4 +1078,42 @@ describe "projectsController", ->
         afterEach ->
             httpBackend.verifyNoOutstandingExpectation()
             httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to open and close form", ->
+            httpBackend.expectGET(APIURL+"/priorities/1").respond(200, {id: 1, name: "Test status"})
+
+            expect(ctrl.scope.formOpened).to.be.false
+            expect(object.name).to.be.equal("Test status")
+
+            ctrl.openForm()
+            object.setAttr("name", "New status")
+
+            expect(ctrl.scope.formOpened).to.be.true
+            expect(object.name).to.be.equal("New status")
+
+            ctrl.closeForm(object)
+            httpBackend.flush()
+
+            expect(ctrl.scope.formOpened).to.be.false
+            expect(object.name).to.be.equal("Test status")
+
+        it "should allow to update an object on success", ->
+            httpBackend.expectPATCH(APIURL+"/priorities/1", {name: "New status"}).respond(202, "Ok")
+            httpBackend.expectGET(APIURL+"/priorities/1").respond(200, {id: 1, name: "New status"})
+
+            expect(ctrl.scope.formOpened).to.be.false
+            expect(object.name).to.be.equal("Test status")
+
+            ctrl.openForm()
+            object.setAttr("name", "New status")
+
+            expect(ctrl.scope.formOpened).to.be.true
+            expect(object.name).to.be.equal("New status")
+
+            ctrl.update(object)
+            httpBackend.flush()
+
+            expect(ctrl.scope.formOpened).to.be.false
+            expect(object.name).to.be.equal("New status")
+
         #TODO: Finish me
