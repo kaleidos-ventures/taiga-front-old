@@ -45,6 +45,14 @@ else in the doc, define the link:
 
   [id]: http://example.com/  "Title"
 
+### URL autolinking
+
+```markdown
+Go to http://example.com
+```
+
+Go to http://example.com
+
 ### Inter-page links
 ```markdown
 An [example](page-name-in-slug-format "Page") of inter-page link.
@@ -182,6 +190,65 @@ Lists
     3. burper
 *   Cunning
 
+Tables
+------
+
+This is a Tables.
+
+```markdown
+ Header 1  | Header 2
+---------- | ----------
+Cell 1.1   | Cell 1.2
+Cell 2.1   | Cell 2.2
+```
+
+ Header 1  | Header 2
+---------- | ----------
+Cell 1.1   | Cell 1.2
+Cell 2.1   | Cell 2.2
+
+Another example with extra pipes on the ends:
+
+```markdown
+| Header 1  | Header 2  |
+|---------- | ----------|
+| Cell 1.1  | Cell 1.2  |
+| Cell 2.1  | Cell 2.2  |
+```
+
+| Header 1  | Header 2  |
+|---------- | ----------|
+| Cell 1.1  | Cell 1.2  |
+| Cell 2.1  | Cell 2.2  |
+
+An example with inline Markdown.
+
+```markdown
+| Header 1  | Header 2  |
+|---------- | ----------|
+| *Cell 1.1*  | http://cell12.com  |
+| Cell 2.1  | ~~Cell 2.2~~  |
+```
+
+| Header 1  | Header 2  |
+|---------- | ----------|
+| *Cell 1.1*  | http://cell12.com  |
+| Cell 2.1  | ~~Cell 2.2~~  |
+
+Align columns
+
+```markdown
+| Header 1      |     Header 2     |     Header 3 |
+| :------------ | :--------------: | -----------: |
+| Cell 1.1      |     Cell 1.2     |     Cell 1.3 |
+| Cell 2.1      |     Cell 2.2     |     Cell 2.3 |
+```
+
+| Header 1      |     Header 2     |     Header 3 |
+| :------------ | :--------------: | -----------: |
+| Cell 1.1      |     Cell 1.2     |     Cell 1.3 |
+| Cell 2.1      |     Cell 2.2     |     Cell 2.3 |
+
 Blockquotes
 -----------
 
@@ -300,6 +367,78 @@ Violets are blue.
 ```
 Roses are red,   
 Violets are blue.
+
+Autocompletion
+--------------
+
+### US
+
+Type **:us#_ref_** where **_ref_** is the referencce number of a user story.
+
+For example:
+
+``
+:us#1
+``
+
+```markdown
+[US #1](:us:1 "US #1 - Example User Story")
+```
+
+[US #1](:us:1 "US #1 - Example User Story")
+
+### Task
+
+Type **:task#_ref_** where **_ref_** is the referencce number of a task.
+
+For example:
+
+``
+:task#1
+``
+
+```markdown
+[Task #1](:task:1 "Task #1 - Example Task.")
+```
+
+[Task #1](:task:1 "Task #1 - Example Task.")
+
+### Issues
+
+Type **:issue#_ref_** where **_ref_** is the referencce number of an issue.
+
+For example:
+
+``
+:issue#1
+``
+
+```markdown
+[Issue #1](:issue:1 "Issue #1 - Example Issue.")
+```
+
+[Issue #1](:issue:1 "Issue #1 - Example Issue.")
+
+### Member
+
+Type **@_text_ ** where **@_text_** is part of the name, email or full name of a member.
+
+For example:
+
+``
+@taiga use
+``
+
+```markdown
+_**@Taiga User**_
+```
+
+_**@Taiga User**_
+
+### Emojii
+
+See **Emoticons** section.
+
             </div>
         </div>
     </div>
