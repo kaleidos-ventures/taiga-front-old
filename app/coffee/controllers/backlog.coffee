@@ -245,13 +245,15 @@ class BacklogUserStoriesController extends TaigaBaseController
             @loadUserStories()
 
     removeUs: (us) ->
-        us.remove().then =>
+        promise = us.remove()
+        promise.then =>
             index = @scope.unassignedUs.indexOf(us)
             @scope.unassignedUs.splice(index, 1)
 
             @calculateStats()
             @generateTagList()
             @filterUsBySelectedTags()
+        return promise
 
     saveUsPoints: (us, role, ref) ->
         points = _.clone(us.points)

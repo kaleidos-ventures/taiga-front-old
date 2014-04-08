@@ -60,7 +60,7 @@ describe "backlogController", ->
         it "should have section issues", ->
             expect(ctrl.section).to.be.equal("backlog")
 
-        it "should reload the stats on 'status:update' event emitted", ->
+        it "should reload the stats on status:update event emitted", ->
             httpBackend.expectGET("#{APIURL}/projects/1/stats").respond(200)
             ctrl.scope.$emit "stats:update"
             httpBackend.flush()
@@ -148,7 +148,7 @@ describe "backlogController", ->
             expect(ctrl.scope.milestones).to.be.deep.equal([{test: "test"}])
 
         it "should allow to recalculate stats (by emitting stats:updated)", ->
-            sinon.spy(ctrl.scope, '$emit')
+            sinon.spy(ctrl.scope, "$emit")
             ctrl.calculateStats()
             expect(ctrl.scope.$emit).have.been.calledWith("stats:update")
 
@@ -192,7 +192,7 @@ describe "backlogController", ->
             expect(ctrl.scope.unassignedUs).to.be.deep.equal([{id: 1, tags: ["test1"], __hidden: true}, {id: 2, tags: ["test2"], __hidden: false}])
 
         it "should allow to save resorted user stories", inject ($model) ->
-            ctrl.scope.unassignedUs = _.map([{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}], (us) -> $model.make_model('userstories', us))
+            ctrl.scope.unassignedUs = _.map([{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}], (us) -> $model.make_model("userstories", us))
 
             httpBackend.expectPOST("http://localhost:8000/api/v1/userstories/bulk_update_order", {"bulkStories":[[1,0],[2,1],[3,2]]}).respond(200)
             promise = ctrl.resortUserStories()
@@ -251,7 +251,7 @@ describe "backlogController", ->
             scope.milestones = [{id: 1, user_stories: []}, {id: 2, user_stories: []}]
             ctrl.scope.unassignedUs = _.map(
                 [{id: 1, order: 2, selected: true}, {id: 2, order: 1, selected: true}, {id: 3, order: 3, selected: false}],
-                (us) -> $model.make_model('userstories', us)
+                (us) -> $model.make_model("userstories", us)
             )
             ctrl.moveSelectedUserStoriesToCurrentSprint()
             expect(_.map(ctrl.scope.milestones[0].user_stories, (x) -> x.getAttrs())).to.be.deep.equal([{id: 1, order: 2, selected: true}, {id: 2, order: 1, selected: true}])
@@ -262,7 +262,104 @@ describe "backlogController", ->
             scope.milestones = []
             ctrl.scope.unassignedUs = _.map(
                 [{id: 1, order: 2, selected: true}, {id: 2, order: 1, selected: true}, {id: 3, order: 3, selected: false}],
-                (us) -> $model.make_model('userstories', us)
+                (us) -> $model.make_model("userstories", us)
             )
             ctrl.moveSelectedUserStoriesToCurrentSprint()
             expect(ctrl.scope.unassignedUs).to.have.length(3)
+
+        it "should recalc selected user stories and selected stories points", ->
+            ctrl.scope.unassignedUs = [{id:1, selected: true, points: {1:1, 2:1}}, {id:2, selected:false, points: {1:2, 2:2, 3:3}}]
+            ctrl.scope.selectedUserStories = []
+            ctrl.scope.selectedStoryPoints = 0
+            ctrl.scope.constants.points = []
+            ctrl.scope.constants.points[1] = {value: 10}
+            ctrl.scope.constants.points[2] = {value: 20}
+
+            ctrl.changeUserStoriesSelection()
+            expect(ctrl.scope.selectedUserStories).to.have.length(1)
+            expect(ctrl.scope.selectedStoryPoints).to.be.equal(20)
+
+        it "should allow to open a user story", ->
+            sinon.spy(ctrl.location, "url")
+            ctrl.openUserStory("test", 1)
+            expect(ctrl.location.url).have.been.calledWith("/project/test/user-story/1")
+
+        it "should allow to get the user story query params", ->
+            expect(ctrl.getUserStoryQueryParams()).to.be.deep.equal({milestone: "null"})
+
+        it "should allow to initialize the us form", ->
+            expect(ctrl.initializeUsForm({test: "test"})).to.be.deep.equal({test: "test"})
+
+            ctrl.scope.constants.computableRolesList = [{id: 1}, {id: 2}]
+            ctrl.scope.project = {}
+            ctrl.scope.project.default_points = 2
+            ctrl.scope.project.default_us_status = 1
+            ctrl.scope.projectId = 1
+            console.log ctrl.initializeUsForm()
+            expect(ctrl.initializeUsForm()).to.be.deep.equal({points: {1: 2, 2: 2}, project: 1, status: 1})
+
+        it "should allow to open bulk user stories form", ->
+            sinon.spy(ctrl.modal, "open")
+            ctrl.loadUserStories = ->
+            sinon.spy(ctrl, "loadUserStories")
+            promise = ctrl.openBulkUserStoriesForm()
+
+            expect(ctrl.modal.open).have.been.calledWith("bulk-user-stories-form", {})
+
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.loadUserStories).have.been.called.once
+
+        it "should allow to open create user stories form", ->
+            ctrl.loadUserStories = ->
+            ctrl.scope.constants.computableRolesList = [{id: 1}, {id: 2}]
+            ctrl.scope.project = {}
+            ctrl.scope.project.default_points = 2
+            ctrl.scope.project.default_us_status = 1
+            ctrl.scope.projectId = 1
+
+            sinon.spy(ctrl.modal, "open")
+            sinon.spy(ctrl, "loadUserStories")
+
+            promise = ctrl.openCreateUserStoryForm()
+
+            expect(ctrl.modal.open).have.been.calledWith("user-story-form", {us: {points: {1: 2, 2: 2}, project: 1, status: 1}, type: "create"})
+
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.loadUserStories).have.been.called.once
+
+        it "should allow to open edit user stories form", ->
+            ctrl.loadUserStories = ->
+
+            sinon.spy(ctrl.modal, "open")
+            sinon.spy(ctrl, "loadUserStories")
+
+            promise = ctrl.openEditUserStoryForm({test: "test"})
+
+            expect(ctrl.modal.open).have.been.calledWith("user-story-form", {us: {test: "test"}, type: "edit"})
+
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.loadUserStories).have.been.called.once
+
+        it "should allow to remove a user story", inject ($model) ->
+            ctrl.calculateStats = ->
+            ctrl.generateTagList = ->
+            ctrl.filterUsBySelectedTags = ->
+
+            sinon.spy(ctrl, "calculateStats")
+            sinon.spy(ctrl, "generateTagList")
+            sinon.spy(ctrl, "filterUsBySelectedTags")
+
+            ctrl.scope.unassignedUs = _.map([{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}], (us) -> $model.make_model("userstories", us))
+            us = ctrl.scope.unassignedUs[0]
+
+            httpBackend.expectDELETE("http://localhost:8000/api/v1/userstories/1").respond(200)
+
+            promise = ctrl.removeUs(us)
+            httpBackend.flush()
+
+            promise.should.be.fulfilled. then ->
+                expect(ctrl.scope.unassignedUs).to.have.length(2)
+                expect(ctrl.calculateStats).have.been.called.once
+                expect(ctrl.generateTagList).have.been.called.once
+                expect(ctrl.filterUsBySelectedTags).have.been.called.once
+
