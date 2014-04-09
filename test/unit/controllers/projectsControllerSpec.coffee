@@ -136,6 +136,7 @@ FIXTURES = {
     ]
 }
 
+
 describe "projectsController", ->
     APIURL = "http://localhost:8000/api/v1"
 
@@ -153,9 +154,8 @@ describe "projectsController", ->
                 $scope: scope
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
-            httpBackend.whenGET(APIURL+"/projects").respond(200, [
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/projects").respond(200, [
                 {name: "test proj 1", slug: "test-proj-1"},
                 {name: "test proj 2", slug: "test-proj-2"}
             ])
@@ -180,6 +180,7 @@ describe "projectsController", ->
             expect(ctrl.scope.projects[0].slug).to.be.equal("test-proj-1")
             expect(ctrl.scope.projects[1].slug).to.be.equal("test-proj-2")
 
+
     describe "ShowProjectsController", ->
         httpBackend = null
         scope = null
@@ -191,8 +192,7 @@ describe "projectsController", ->
                 $scope: scope
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
 
@@ -201,7 +201,7 @@ describe "projectsController", ->
             httpBackend.verifyNoOutstandingRequest()
 
         it "should have the project list when call showProjects", ->
-            httpBackend.expectGET(APIURL+"/projects").respond(200, [{name: "test proj 1", slug: "test-proj-1"},
+            httpBackend.expectGET("#{APIURL}/projects").respond(200, [{name: "test proj 1", slug: "test-proj-1"},
                                                                     {name: "test proj 2", slug: "test-proj-2"}])
             ctrl.scope.showProjects()
             httpBackend.flush()
@@ -211,11 +211,12 @@ describe "projectsController", ->
             expect(ctrl.scope.myProjects[1].slug).to.be.equal("test-proj-2")
 
         it "should have an empty project list when call showProjects and ther server have no projects", ->
-            httpBackend.expectGET(APIURL+"/projects").respond(400, [])
+            httpBackend.expectGET("#{APIURL}/projects").respond(400, [])
             ctrl.scope.showProjects()
             httpBackend.flush()
 
             expect(ctrl.scope.myProjects).to.be.lengthOf(0)
+
 
     describe "ProjecAdminMainController", ->
         httpBackend = null
@@ -236,8 +237,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
             httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
             httpBackend.whenPATCH("#{APIURL}/projects/1", {name:"New name"}).respond(
@@ -307,8 +307,7 @@ describe "projectsController", ->
                 $routeParams: routeParams,
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
             httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
             httpBackend.flush()
@@ -361,8 +360,7 @@ describe "projectsController", ->
                 $confirm: confirmMock
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
             httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
             httpBackend.flush()
@@ -422,8 +420,7 @@ describe "projectsController", ->
                 $routeParams: routeParams,
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
             httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
             httpBackend.whenGET("#{APIURL}/users?project=1").respond(200, FIXTURES.users)
@@ -489,8 +486,7 @@ describe "projectsController", ->
                 $routeParams: routeParams,
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
             httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
             httpBackend.whenGET("#{APIURL}/users?project=1").respond(200, FIXTURES.users)
@@ -525,7 +521,7 @@ describe "projectsController", ->
 
         #TODO: Finish me
 
-    # FIRST
+
     describe "UserStoryStatusesAdminController", ->
         httpBackend = null
         scope = null
@@ -543,8 +539,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
 
@@ -567,9 +562,9 @@ describe "projectsController", ->
 
         it "should create on success", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/userstory-statuses?", {
+            httpBackend.expectPOST("#{APIURL}/userstory-statuses?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
-            httpBackend.expectGET(APIURL+"/userstory-statuses?project=1").respond(200, [{
+            httpBackend.expectGET("#{APIURL}/userstory-statuses?project=1").respond(200, [{
                                                project: FIXTURES.project.id, name: "test"}])
 
             ctrl.openForm()
@@ -586,7 +581,7 @@ describe "projectsController", ->
 
         it "should create on error", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/userstory-statuses?",
+            httpBackend.expectPOST("#{APIURL}/userstory-statuses?",
                     {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
 
             ctrl.openForm()
@@ -604,13 +599,16 @@ describe "projectsController", ->
 
         it "should allow to save resorted", inject ($model) ->
             itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
-            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
-                $model.make_model("choices/userstory-statuses", o))
+            modelList = _.map(itemList, (o) -> $model.make_model("choices/userstory-statuses", o))
 
-            httpBackend.expectPOST(APIURL+"/userstory-statuses/bulk_update_order",
+            httpBackend.expectPOST("#{APIURL}/userstory-statuses/bulk_update_order",
                     {project: FIXTURES.project.id, bulk_userstory_statuses: [[1,0],[2,1],[3,2]]}).respond(200)
-            promise = ctrl.resort(ctrl.instanceModel)
+
+            promise = ctrl.sortableOnUpdate(modelList)
             httpBackend.flush()
+
+            promise.should.be.fulfilled.then =>
+                expect(ctrl.scope[ctrl.model]).to.be.equal(modelList)
 
 
     describe "PointsAdminController", ->
@@ -630,8 +628,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
 
@@ -654,9 +651,9 @@ describe "projectsController", ->
 
         it "should create on success", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/points?", {
+            httpBackend.expectPOST("#{APIURL}/points?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
-            httpBackend.expectGET(APIURL+"/points?project=1").respond(200, [{
+            httpBackend.expectGET("#{APIURL}/points?project=1").respond(200, [{
                                                project: FIXTURES.project.id, name: "test"}])
 
             ctrl.openForm()
@@ -673,7 +670,7 @@ describe "projectsController", ->
 
         it "should create on error", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/points?",
+            httpBackend.expectPOST("#{APIURL}/points?",
                     {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
 
             ctrl.openForm()
@@ -691,15 +688,16 @@ describe "projectsController", ->
 
         it "should allow to save resorted", inject ($model) ->
             itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
-            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
-                $model.make_model("choices/points", o))
+            modelList = _.map(itemList, (o) -> $model.make_model("choices/points", o))
 
-            httpBackend.expectPOST(APIURL+"/points/bulk_update_order",
+            httpBackend.expectPOST("#{APIURL}/points/bulk_update_order",
                     {project: FIXTURES.project.id, bulk_points: [[1,0],[2,1],[3,2]]}).respond(200)
-            promise = ctrl.resort(ctrl.instanceModel)
+
+            promise = ctrl.sortableOnUpdate(modelList)
             httpBackend.flush()
 
-            promise.should.be.fulfilled
+            promise.should.be.fulfilled.then =>
+                expect(ctrl.scope[ctrl.model]).to.be.equal(modelList)
 
 
     describe "TaskStatusesAdminController", ->
@@ -719,8 +717,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
 
@@ -743,9 +740,9 @@ describe "projectsController", ->
 
         it "should create on success", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/task-statuses?", {
+            httpBackend.expectPOST("#{APIURL}/task-statuses?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
-            httpBackend.expectGET(APIURL+"/task-statuses?project=1").respond(200, [{
+            httpBackend.expectGET("#{APIURL}/task-statuses?project=1").respond(200, [{
                                                project: FIXTURES.project.id, name: "test"}])
 
             ctrl.openForm()
@@ -762,7 +759,7 @@ describe "projectsController", ->
 
         it "should create on error", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/task-statuses?",
+            httpBackend.expectPOST("#{APIURL}/task-statuses?",
                     {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
 
             ctrl.openForm()
@@ -780,15 +777,16 @@ describe "projectsController", ->
 
         it "should allow to save resorted", inject ($model) ->
             itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
-            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
-                $model.make_model("choices/task-statuses", o))
+            modelList= _.map(itemList, (o) -> $model.make_model("choices/task-statuses", o))
 
-            httpBackend.expectPOST(APIURL+"/task-statuses/bulk_update_order",
+            httpBackend.expectPOST("#{APIURL}/task-statuses/bulk_update_order",
                     {project: FIXTURES.project.id, bulk_task_statuses: [[1,0],[2,1],[3,2]]}).respond(200)
-            promise = ctrl.resort(ctrl.instanceModel)
+
+            promise = ctrl.sortableOnUpdate(modelList)
             httpBackend.flush()
 
-            promise.should.be.fulfilled
+            promise.should.be.fulfilled.then =>
+                expect(ctrl.scope[ctrl.model]).to.be.equal(modelList)
 
 
     describe "IssueStatusesAdminController", ->
@@ -808,8 +806,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
 
@@ -832,9 +829,9 @@ describe "projectsController", ->
 
         it "should create on success", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/issue-statuses?", {
+            httpBackend.expectPOST("#{APIURL}/issue-statuses?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
-            httpBackend.expectGET(APIURL+"/issue-statuses?project=1").respond(200, [{
+            httpBackend.expectGET("#{APIURL}/issue-statuses?project=1").respond(200, [{
                                                project: FIXTURES.project.id, name: "test"}])
 
             ctrl.openForm()
@@ -851,7 +848,7 @@ describe "projectsController", ->
 
         it "should create on error", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/issue-statuses?",
+            httpBackend.expectPOST("#{APIURL}/issue-statuses?",
                     {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
 
             ctrl.openForm()
@@ -869,15 +866,16 @@ describe "projectsController", ->
 
         it "should allow to save resorted", inject ($model) ->
             itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
-            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
-                $model.make_model("choices/issue-statuses", o))
+            modelList = _.map(itemList, (o) -> $model.make_model("choices/issue-statuses", o))
 
-            httpBackend.expectPOST(APIURL+"/issue-statuses/bulk_update_order",
+            httpBackend.expectPOST("#{APIURL}/issue-statuses/bulk_update_order",
                     {project: FIXTURES.project.id, bulk_issue_statuses: [[1,0],[2,1],[3,2]]}).respond(200)
-            promise = ctrl.resort(ctrl.instanceModel)
+
+            promise = ctrl.sortableOnUpdate(modelList)
             httpBackend.flush()
 
-            promise.should.be.fulfilled
+            promise.should.be.fulfilled.then =>
+                expect(ctrl.scope[ctrl.model]).to.be.equal(modelList)
 
 
     describe "IssueTypesAdminController", ->
@@ -897,8 +895,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
 
@@ -921,9 +918,9 @@ describe "projectsController", ->
 
         it "should create on success", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/issue-types?", {
+            httpBackend.expectPOST("#{APIURL}/issue-types?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
-            httpBackend.expectGET(APIURL+"/issue-types?project=1").respond(200, [{
+            httpBackend.expectGET("#{APIURL}/issue-types?project=1").respond(200, [{
                                                project: FIXTURES.project.id, name: "test"}])
 
             ctrl.openForm()
@@ -940,7 +937,7 @@ describe "projectsController", ->
 
         it "should create on error", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/issue-types?",
+            httpBackend.expectPOST("#{APIURL}/issue-types?",
                     {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
 
             ctrl.openForm()
@@ -958,15 +955,16 @@ describe "projectsController", ->
 
         it "should allow to save resorted", inject ($model) ->
             itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
-            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
-                $model.make_model("choices/issue-types", o))
+            modelList = _.map(itemList, (o) -> $model.make_model("choices/issue-types", o))
 
-            httpBackend.expectPOST(APIURL+"/issue-types/bulk_update_order",
+            httpBackend.expectPOST("#{APIURL}/issue-types/bulk_update_order",
                     {project: FIXTURES.project.id, bulk_issue_types: [[1,0],[2,1],[3,2]]}).respond(200)
-            promise = ctrl.resort(ctrl.instanceModel)
+
+            promise = ctrl.sortableOnUpdate(modelList)
             httpBackend.flush()
 
-            promise.should.be.fulfilled
+            promise.should.be.fulfilled.then =>
+                expect(ctrl.scope[ctrl.model]).to.be.equal(modelList)
 
 
     describe "PrioritiesAdminController", ->
@@ -986,8 +984,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
 
@@ -1010,9 +1007,9 @@ describe "projectsController", ->
 
         it "should create on success", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/priorities?", {
+            httpBackend.expectPOST("#{APIURL}/priorities?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
-            httpBackend.expectGET(APIURL+"/priorities?project=1").respond(200, [{
+            httpBackend.expectGET("#{APIURL}/priorities?project=1").respond(200, [{
                                                project: FIXTURES.project.id, name: "test"}])
 
             ctrl.openForm()
@@ -1029,7 +1026,7 @@ describe "projectsController", ->
 
         it "should create on error", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/priorities?",
+            httpBackend.expectPOST("#{APIURL}/priorities?",
                     {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
 
             ctrl.openForm()
@@ -1047,15 +1044,16 @@ describe "projectsController", ->
 
         it "should allow to save resorted", inject ($model) ->
             itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
-            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
-                $model.make_model("choices/priorities", o))
+            modelList = _.map(itemList, (o) -> $model.make_model("choices/priorities", o))
 
-            httpBackend.expectPOST(APIURL+"/priorities/bulk_update_order",
+            httpBackend.expectPOST("#{APIURL}/priorities/bulk_update_order",
                     {project: FIXTURES.project.id, bulk_priorities: [[1,0],[2,1],[3,2]]}).respond(200)
-            promise = ctrl.resort(ctrl.instanceModel)
+
+            promise = ctrl.sortableOnUpdate(modelList)
             httpBackend.flush()
 
-            promise.should.be.fulfilled
+            promise.should.be.fulfilled.then =>
+                expect(ctrl.scope[ctrl.model]).to.be.equal(modelList)
 
 
     describe "SeveritiesAdminController", ->
@@ -1075,8 +1073,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
 
@@ -1099,9 +1096,9 @@ describe "projectsController", ->
 
         it "should create on success", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/severities?", {
+            httpBackend.expectPOST("#{APIURL}/severities?", {
                          project: FIXTURES.project.id, name: "test"}).respond(202, {test: "test"})
-            httpBackend.expectGET(APIURL+"/severities?project=1").respond(200, [{
+            httpBackend.expectGET("#{APIURL}/severities?project=1").respond(200, [{
                                                project: FIXTURES.project.id, name: "test"}])
 
             ctrl.openForm()
@@ -1118,7 +1115,7 @@ describe "projectsController", ->
 
         it "should create on error", ->
             sinon.spy(ctrl.gmFlash, "error")
-            httpBackend.expectPOST(APIURL+"/severities?",
+            httpBackend.expectPOST("#{APIURL}/severities?",
                     {project: FIXTURES.project.id, name: "error test"}).respond(400, {_error_message: "error"})
 
             ctrl.openForm()
@@ -1136,15 +1133,16 @@ describe "projectsController", ->
 
         it "should allow to save resorted", inject ($model) ->
             itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
-            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
-                $model.make_model("choices/severities", o))
+            modelList = _.map(itemList, (o) -> $model.make_model("choices/severities", o))
 
-            httpBackend.expectPOST(APIURL+"/severities/bulk_update_order",
+            httpBackend.expectPOST("#{APIURL}/severities/bulk_update_order",
                 {project: FIXTURES.project.id, bulk_severities: [[1,0],[2,1],[3,2]]}).respond(200)
-            promise = ctrl.resort(ctrl.instanceModel)
+
+            promise = ctrl.sortableOnUpdate(modelList)
             httpBackend.flush()
 
-            promise.should.be.fulfilled
+            promise.should.be.fulfilled.then =>
+                expect(ctrl.scope[ctrl.model]).to.be.equal(modelList)
 
 
     describe "ChoiceController", ->
@@ -1171,8 +1169,7 @@ describe "projectsController", ->
                 $confirm: confirmMock
             })
             httpBackend = $httpBackend
-            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
-            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
 
@@ -1181,7 +1178,7 @@ describe "projectsController", ->
             httpBackend.verifyNoOutstandingRequest()
 
         it "should allow to open and close form", ->
-            httpBackend.expectGET(APIURL+"/priorities/#{object.id}").respond(200, {id: 1, name: "Test status"})
+            httpBackend.expectGET("#{APIURL}/priorities/#{object.id}").respond(200, {id: 1, name: "Test status"})
 
             expect(ctrl.scope.formOpened).to.be.false
             expect(object.name).to.be.equal("Test status")
@@ -1199,8 +1196,8 @@ describe "projectsController", ->
             expect(object.name).to.be.equal("Test status")
 
         it "should allow to update an object", ->
-            httpBackend.expectPATCH(APIURL+"/priorities/#{object.id}", {name: "New status"}).respond(202, "Ok")
-            httpBackend.expectGET(APIURL+"/priorities/#{object.id}").respond(200, {id: 1, name: "New status"})
+            httpBackend.expectPATCH("#{APIURL}/priorities/#{object.id}", {name: "New status"}).respond(202, "Ok")
+            httpBackend.expectGET("#{APIURL}/priorities/#{object.id}").respond(200, {id: 1, name: "New status"})
 
             expect(ctrl.scope.formOpened).to.be.false
             expect(object.name).to.be.equal("Test status")
