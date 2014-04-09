@@ -603,3 +603,72 @@ describe "backlogController", ->
                 expect(ctrl.scope.$emit).have.been.calledWith("spinner:stop")
                 expect(ctrl.scope.$emit).have.been.called.twice
                 expect(ctrl.scope.checksleyErrors).to.be.deep.equal({test: "test"})
+
+    describe "BacklogBulkUserStoriesModalController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q, $gmFilters) ->
+            scope = $rootScope.$new()
+            ctrl = $controller("BacklogBulkUserStoriesModalController", {
+                $scope: scope
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to open the modal", inject ($q) ->
+            sinon.spy(ctrl.scope, "$broadcast")
+
+            ctrl.gmOverlay.open = ->
+                defered = $q.defer()
+                defered.resolve()
+                return defered.promise
+
+            promise = ctrl.openModal()
+            expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope.form).to.be.deep.equal({})
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.formOpened).to.be.false
+            expect(ctrl.scope.$broadcast).have.been.calledWith("checksley:reset")
+            expect(ctrl.scope.$broadcast).have.been.called.once
+
+        it "should allow to save the form of the modal", inject ($model) ->
+            ctrl.gmOverlay.close = ->
+            ctrl.scope.defered = {}
+            ctrl.scope.defered.resolve = ->
+            sinon.spy(ctrl.scope, "$emit")
+            sinon.spy(ctrl.scope.defered, "resolve")
+            sinon.spy(ctrl.gmOverlay, "close")
+            sinon.spy(ctrl.gmFlash, "info")
+            sinon.spy(ctrl, "closeModal")
+
+            ctrl.scope.form = {test: "test"}
+
+            httpBackend.expectPOST("http://localhost:8000/api/v1/userstories/bulk_create", {test: "test"}).respond(200, [{id: 1, test: "test"}])
+            promise = ctrl._submit()
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.formOpened).to.be.false
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:start")
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:stop")
+                expect(ctrl.scope.$emit).have.been.called.twice
+                expect(ctrl.gmFlash.info).have.been.called.once
+                expect(ctrl.gmOverlay.close).have.been.called.once
+                expect(ctrl.scope.defered.resolve).have.been.called.once
+
+        it "should allow to save the form of the modal (on error)", ->
+            sinon.spy(ctrl.scope, "$emit")
+
+            ctrl.scope.form = {test: "test"}
+
+            httpBackend.expectPOST("http://localhost:8000/api/v1/userstories/bulk_create", {test: "test"}).respond(400, {})
+            promise = ctrl._submit()
+            httpBackend.flush()
+            promise.should.be.rejected

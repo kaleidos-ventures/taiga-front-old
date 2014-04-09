@@ -380,10 +380,14 @@ class BacklogBulkUserStoriesModalController extends ModalBaseController
 
     openModal: ->
         @scope.formOpened = true
+        @scope.form = {}
         @scope.$broadcast("checksley:reset")
 
-        @gmOverlay.open().then =>
+        promise = @gmOverlay.open()
+        promise.then =>
             @scope.formOpened = false
+
+        return promise
 
     # Debounced Method (see debounceMethods method)
     submit: =>
@@ -400,6 +404,8 @@ class BacklogBulkUserStoriesModalController extends ModalBaseController
 
         promise.then null, (data) =>
             @scope.checksleyErrors = data
+
+        return promise
 
 
 class BacklogMilestonesController extends TaigaBaseController
