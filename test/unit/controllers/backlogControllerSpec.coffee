@@ -748,3 +748,164 @@ describe "backlogController", ->
             promise = ctrl._sprintSubmit()
             httpBackend.flush()
             promise.should.be.rejected
+
+    describe "BacklogMilestoneController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q, $gmFilters) ->
+            scope = $rootScope.$new()
+            scope.ml = {user_stories: []}
+            ctrl = $controller("BacklogMilestoneController", {
+                $scope: scope
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to calculate total points of an us", ->
+            ctrl.scope.constants.points = []
+            ctrl.scope.constants.points[1] = {value: 10}
+            ctrl.scope.constants.points[2] = {value: 20}
+            expect(ctrl.calculateTotalPoints({points: {1: 1, 2: 2}})).to.be.equal(30)
+
+        it "should allow to calculate stats", ->
+            ctrl.scope.constants.points = []
+            ctrl.scope.constants.points[1] = {value: 10}
+            ctrl.scope.constants.points[2] = {value: 20}
+            ctrl.scope.ml.user_stories = [
+                {points: {1: 1}, is_closed: false},
+                {points: {2: 2}, is_closed: true},
+                {points: {1: 1, 2: 2}, is_closed: true}
+            ]
+            ctrl.calculateStats()
+            expect(ctrl.scope.stats.total).to.be.equal(60)
+            expect(ctrl.scope.stats.closed).to.be.equal(50)
+            expect(ctrl.scope.stats.percentage).to.be.equal("83.3")
+
+        it "should allow to normalize milestones", inject ($model) ->
+            ctrl.scope.constants.points = []
+            ctrl.scope.constants.points[1] = {value: 10}
+            ctrl.scope.constants.points[2] = {value: 20}
+
+            ctrl.scope.ml.user_stories = [
+                $model.make_model("userstories", {id: 1, points: {1: 1}, is_closed: false, order: 2}),
+                $model.make_model("userstories", {id: 2, points: {2: 2}, is_closed: true, order: 1}),
+                $model.make_model("userstories", {id: 3, points: {1: 1, 2: 2}, is_closed: true, order: 0})
+            ]
+            ctrl.scope.ml.user_stories[0].is_closed = true
+
+            httpBackend.expectPATCH("http://localhost:8000/api/v1/userstories/1", {is_closed: true}).respond(200)
+            httpBackend.expectPOST(
+                "http://localhost:8000/api/v1/userstories/bulk_update_order",
+                {"bulkStories":[[1, 0],[2, 1],[3, 2]]}
+            ).respond(200)
+            promise = ctrl.normalizeMilestones()
+            httpBackend.flush()
+            promise.should.be.fulfilled
+
+        it "should allow show edit form", ->
+            ctrl.scope.editFormOpened = false
+            ctrl.showEditForm()
+            expect(ctrl.scope.editFormOpened).to.be.true
+
+        it "should allow toggle view uss", ->
+            ctrl.scope.viewUSs = false
+            ctrl.toggleViewUSs()
+            expect(ctrl.scope.viewUSs).to.be.true
+            ctrl.toggleViewUSs()
+            expect(ctrl.scope.viewUSs).to.be.false
+
+        it "should allow to save the form of the mileston", inject ($model) ->
+            sinon.spy(ctrl.gmFlash, "info")
+
+            ctrl.scope.ml = $model.make_model("milestones", {id: 1, test: "test"})
+            ctrl.scope.ml.test = "test1"
+
+            httpBackend.expectPATCH("http://localhost:8000/api/v1/milestones/1", {test: "test1"}).respond(200)
+            promise = ctrl._submit()
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.editFormOpened).to.be.false
+                expect(ctrl.gmFlash.info).have.been.called.once
+
+        it "should allow to save the form of the modal (on error)", inject ($model) ->
+            ctrl.scope.ml = $model.make_model("milestones", {id: 1, test: "test"})
+            ctrl.scope.ml.test = "test1"
+
+            httpBackend.expectPATCH("http://localhost:8000/api/v1/milestones/1", {test: "test1"}).respond(400)
+            promise = ctrl._submit()
+            httpBackend.flush()
+            promise.should.be.rejected
+
+        it "should allow to close the edit form", inject ($model) ->
+            ctrl.scope.editFormOpened = true
+            ctrl.scope.ml = $model.make_model("milestones", {id: 1, test: "test"})
+            ctrl.scope.ml.test = "test1"
+            ctrl.closeEditForm()
+            expect(ctrl.scope.editFormOpened).to.be.false
+            expect(ctrl.scope.ml.test).to.be.equal("test")
+
+        it "should allow to move user story to the list of milestone user stories", inject ($model) ->
+            ctrl.scope.ml = {}
+            ctrl.scope.ml.id = 1
+            ctrl.scope.ml.user_stories = _.map(
+                [{id: 1, milestone: 1}, {id: 2, milestone: 1}],
+                (us) -> $model.make_model("userstories", us)
+            )
+            ctrl.normalizeMilestones = ->
+            sinon.spy(ctrl, "normalizeMilestones")
+
+            us = $model.make_model("userstories", {id: 3, milestone: 2})
+
+            httpBackend.expectPATCH("http://localhost:8000/api/v1/userstories/3", {milestone: 1}).respond(200)
+            promise = ctrl.sortableOnAdd(us, 1)
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(
+                    _.map(ctrl.scope.ml.user_stories, (us) -> us.getAttrs())
+                ).to.be.deep.equal(
+                    [{id: 1, milestone: 1}, {id: 3, milestone: 1}, {id: 2, milestone: 1}]
+                )
+                expect(ctrl.normalizeMilestones).have.been.called.once
+
+        it "should allow to move user story in the list of milestone user stories", inject ($model) ->
+            ctrl.scope.ml = {}
+            ctrl.scope.ml.user_stories = _.map(
+                [{id: 1, milestone: 1}, {id: 2, milestone: 1}, {id: 3, milestone: 1}],
+                (us) -> $model.make_model("userstories", us)
+            )
+            uss = _.map(
+                [{id: 3, milestone: 1}, {id: 2, milestone: 1}, {id: 1, milestone: 1}],
+                (us) -> $model.make_model("userstories", us)
+            )
+            ctrl.normalizeMilestones = ->
+            sinon.spy(ctrl, "normalizeMilestones")
+
+            ctrl.sortableOnUpdate(uss)
+            expect(
+                _.map(ctrl.scope.ml.user_stories, (us) -> us.getAttrs())
+            ).to.be.deep.equal(
+                [{id: 3, milestone: 1}, {id: 2, milestone: 1}, {id: 1, milestone: 1}]
+            )
+            expect(ctrl.normalizeMilestones).have.been.called.once
+
+        it "should allow to remove user story from the list of milestone user stories", inject ($model) ->
+            ctrl.scope.ml = {}
+            ctrl.scope.ml.user_stories = _.map(
+                [{id: 1, milestone: 1}, {id: 2, milestone: 1}, {id: 3, milestone: 1}],
+                (us) -> $model.make_model("userstories", us)
+            )
+
+            ctrl.sortableOnRemove(ctrl.scope.ml.user_stories[0])
+            expect(
+                _.map(ctrl.scope.ml.user_stories, (us) -> us.getAttrs())
+            ).to.be.deep.equal(
+                [{id: 2, milestone: 1}, {id: 3, milestone: 1}]
+            )

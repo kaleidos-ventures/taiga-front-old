@@ -468,8 +468,8 @@ class BacklogMilestoneController extends TaigaBaseController
         super(scope)
 
     debounceMethods: ->
-        submit = @submit
-        @submit = gm.utils.safeDebounced @scope, 500, submit
+        @_submit = @submit
+        @submit = gm.utils.safeDebounced @scope, 500, @_submit
 
     initialize: ->
         @debounceMethods()
@@ -525,10 +525,16 @@ class BacklogMilestoneController extends TaigaBaseController
 
             return null
 
+        defered = @q.defer()
+
         @q.when(saveChangedMilestone())
           .then(saveChangedOrder)
           .then(markAsSaved)
           .then(@calculateStats)
+          .then ->
+              defered.resolve()
+
+        return defered.promise
 
     showEditForm: ->
         @scope.editFormOpened = true
@@ -547,15 +553,20 @@ class BacklogMilestoneController extends TaigaBaseController
         promise.then null, (data) =>
             @scope.checksleyErrors = data
 
+        return promise
+
     closeEditForm: ->
         @scope.editFormOpened = false
-        @scope.ml.refresh()
+        return @scope.ml.revert()
 
     sortableOnAdd: (us, index) ->
         us.milestone = @scope.ml.id
-        us.save().then =>
+        promise = us.save()
+        promise.then =>
             @scope.ml.user_stories.splice(index, 0, us)
             @normalizeMilestones()
+
+        return promise
 
     sortableOnUpdate: (uss) ->
         @scope.ml.user_stories = uss
