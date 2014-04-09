@@ -318,8 +318,10 @@ class BacklogUserStoryModalController extends ModalBaseController
         super()
 
     loadProjectTags: ->
-        @rs.getProjectTags(@scope.projectId).then (data) =>
+        promise = @rs.getProjectTags(@scope.projectId).then (data) =>
             @projectTags = data
+
+        return promise
 
     getTagsList: =>
         @projectTags or []
@@ -340,11 +342,16 @@ class BacklogUserStoryModalController extends ModalBaseController
         @scope.$broadcast("checksley:reset")
         @scope.$broadcast("wiki:clean-previews")
 
-        @gmOverlay.open().then =>
+        promise = @gmOverlay.open()
+        promise.then =>
             @scope.formOpened = false
+
+        return promise
 
     # Debounced Method (see debounceMethods method)
     submit: =>
+        # FIXME: This Behavior depends on form be of diferent type, a plain
+        # object or a model instance
         if @scope.form.id?
             promise = @scope.form.save()
         else
@@ -359,7 +366,10 @@ class BacklogUserStoryModalController extends ModalBaseController
             @gmFlash.info(@i18next.t("backlog.user-story-saved"))
 
         promise.then null, (data) =>
+            @scope.$emit("spinner:stop")
             @scope.checksleyErrors = data
+
+        return promise
 
 
 class BacklogBulkUserStoriesModalController extends ModalBaseController

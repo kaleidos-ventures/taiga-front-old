@@ -25,8 +25,8 @@ class TaigaBaseService extends TaigaBase
 
 class ModalBaseController extends TaigaBaseController
     debounceMethods: ->
-        submit = @submit
-        @submit = gm.utils.safeDebounced @scope, 500, submit
+        @_submit = @submit
+        @submit = gm.utils.safeDebounced @scope, 500, @_submit
 
     initialize: ->
         @debounceMethods()
