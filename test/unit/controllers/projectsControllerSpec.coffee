@@ -535,8 +535,6 @@ describe "projectsController", ->
             ctrl.updateMemberRole(member, newRole)
             httpBackend.flush()
 
-            expect(member.role).to.be.equal(newRole)
-
         it "should show the member status", ->
             memberA = {user: 0}
             memberB = {user: null}
