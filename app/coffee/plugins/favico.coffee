@@ -36,7 +36,7 @@ class FavicoService extends TaigaBaseService
             false
 
     badge: (num) ->
-        @_favico.badge(num)
+        @_favico?.badge(num)
 
     reset: () ->
         try

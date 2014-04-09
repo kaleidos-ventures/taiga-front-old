@@ -22,8 +22,8 @@ class IssuesController extends TaigaPageController
         super(scope, rootScope, favico)
 
     debounceMethods: ->
-        toggleShowGraphs = @toggleShowGraphs
-        @toggleShowGraphs = gm.utils.safeDebounced @scope, 500, toggleShowGraphs
+        @_toggleShowGraphs = @toggleShowGraphs
+        @toggleShowGraphs = gm.utils.safeDebounced @scope, 500, @_toggleShowGraphs
 
     section: "issues"
     getTitle: ->
@@ -63,18 +63,28 @@ class IssuesController extends TaigaPageController
     #####
 
     refreshIssues: ->
-        return @.loadStats().then =>
-            return @.loadIssues()
+        defered = @q.defer()
+        @.loadStats().then =>
+            @.loadIssues().then =>
+                defered.resolve()
+        return defered.promise
 
     refreshFilters: ->
-        return @.loadIssuesFiltersData().then =>
+        defered = @q.defer()
+        @.loadIssuesFiltersData().then =>
             @.initializeSelectedFilters()
+            defered.resolve()
+        return defered.promise
 
     refreshAll: ->
         @scope.refreshing = true
-        return @.refreshFilters().then =>
-            return @.refreshIssues().then =>
-                @scope.refreshing = false
+        promise = @q.all([
+            @.refreshFilters(),
+            @.refreshIssues()
+        ])
+        promise.then =>
+            @scope.refreshing = false
+        return promise
 
     #####
     ## Filters/Sorting scope functions
@@ -86,13 +96,15 @@ class IssuesController extends TaigaPageController
         return @gmFilters.isFilterSelected(projectId, namespace, filterTag)
 
     toggleFilter: (filterTag) ->
-        position = @.selectedFilters.indexOf(filterTag)
-        if position == -1
-            @.selectedFilters.push(filterTag)
+        ft = _.clone(filterTag, true)
+        item = _.find(@.selectedFilters, {type: ft.type, id: ft.id})
+
+        if item is undefined
             @gmFilters.selectFilter(@rootScope.projectId, "issues", filterTag)
+            @.selectedFilters.push(ft)
         else
-            @.selectedFilters.splice(position, 1)
             @gmFilters.unselectFilter(@rootScope.projectId, "issues", filterTag)
+            @.selectedFilters = _.reject(@.selectedFilters, item)
 
         @scope.currentPage = 0
 
@@ -115,11 +127,13 @@ class IssuesController extends TaigaPageController
         @scope.$emit("spinner:start")
         params = @gmFilters.makeIssuesQueryParams(@rootScope.projectId, "issues",
                                                   @scope.filters, {page: @scope.page})
-        @rs.getIssues(@scope.projectId, params).then (result) =>
+        promise = @rs.getIssues(@scope.projectId, params).then (result) =>
             @scope.issues = result.models
             @scope.count = result.count
             @scope.paginatedBy = result.paginatedBy
             @scope.$emit("spinner:stop")
+
+        return promise
 
     loadIssuesFiltersData: ->
         return @rs.getIssuesFiltersData(@scope.projectId).then (data) =>
@@ -140,11 +154,13 @@ class IssuesController extends TaigaPageController
         promise.then (issue) =>
             @scope.issues.push(issue)
             @refreshIssues()
+        return promise
 
     openEditIssueForm: (issue) ->
         promise = @modal.open("issue-form", {"issue": issue, "type": "edit"})
         promise.then =>
             @refreshIssues()
+        return promise
 
     # Debounced Method (see debounceMethods method)
     toggleShowGraphs: =>
@@ -152,24 +168,38 @@ class IssuesController extends TaigaPageController
 
     updateIssueAssignation: (issue, id) ->
         issue.assigned_to = id || null
-        issue.save().then =>
+
+        promise = issue.save()
+        promise.then =>
             @refreshIssues()
+
+        return promise
 
     updateIssueStatus: (issue, id) ->
         issue.status = id
-        issue.save().then =>
+        promise = issue.save()
+        promise.then =>
             @refreshIssues()
+
+        return promise
 
     updateIssueSeverity: (issue, id) ->
         issue.severity = id
 
-        issue.save().then =>
+        promise = issue.save()
+        promise.then =>
             @refreshIssues()
+
+        return promise
 
     updateIssuePriority: (issue, id) ->
         issue.priority = id
-        issue.save().then =>
+
+        promise = issue.save()
+        promise.then =>
             @refreshIssues()
+
+        return promise
 
     removeIssue: (issue) ->
         issue.remove().then =>

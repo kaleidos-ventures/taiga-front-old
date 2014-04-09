@@ -175,6 +175,9 @@ describe "issuesController", ->
         it "should have section issues", ->
             expect(ctrl.section).to.be.equal("issues")
 
+        it 'should have a title', ->
+            expect(ctrl.getTitle).to.be.ok
+
         it "should allow to load more historical", inject ($model) ->
             httpBackend.expectGET(
                 "#{APIURL}/issues/1/historical?page=1"
@@ -289,3 +292,282 @@ describe "issuesController", ->
             ctrl.scope.form.description = "test2"
             ctrl._submit()
             httpBackend.flush()
+
+    describe "IssuesController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q, $gmFilters) ->
+            scope = $rootScope.$new()
+            confirmMock = {
+                confirm: (text) ->
+                    defered = $q.defer()
+                    defered.resolve("test")
+                    return defered.promise
+            }
+            routeParams = {
+                pslug: "test"
+                ref: "1"
+            }
+            modalMock = {
+                open: ->
+                    defered = $q.defer()
+                    defered.resolve()
+                    return defered.promise
+            }
+            gmFiltersMock = {
+                generateTagsFromUserStoriesList: ->
+                    ["test1", "test2", "test3"]
+                generateFiltersForIssues: ->
+                    ["test1", "test2", "test3"]
+                getSelectedFiltersList: ->
+                    ["test2"]
+                isFilterSelected: ->
+                    true
+                selectFilter: ->
+                unselectFilter: ->
+                plainTagsToObjectTags: $gmFilters.plainTagsToObjectTags
+                filterToText: $gmFilters.filterToText
+                makeIssuesQueryParams: ->
+            }
+            ctrl = $controller("IssuesController", {
+                $scope: scope
+                $routeParams: routeParams
+                $modal: modalMock
+                $gmFilters: gmFiltersMock
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
+            httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, {
+                id: 1,
+                members: []
+                tags: "",
+                list_of_milestones: [],
+                roles: [],
+                active_memberships: [],
+                memberships: [],
+                us_statuses: [],
+                points: [],
+                task_statuses: [],
+                priorities: [],
+                severities: [],
+                issue_statuses: [],
+                issue_types: [],
+            })
+            httpBackend.whenGET("#{APIURL}/users?project=1").respond(200, [])
+            httpBackend.whenGET("#{APIURL}/roles?project=1").respond(200, [])
+            httpBackend.whenGET("#{APIURL}/issues/?project=1").respond(200, [])
+            httpBackend.whenGET("#{APIURL}/projects/1/issue_filters_data").respond(200, [])
+            httpBackend.whenGET("#{APIURL}/projects/1/issues_stats").respond(200, [])
+            httpBackend.whenGET("#{APIURL}/issues?order_by=-severity&page=1&project=1").respond(200, [])
+            httpBackend.whenGET("#{APIURL}/issues?project=1").respond(200, [])
+
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should have section issues", ->
+            expect(ctrl.section).to.be.equal("issues")
+
+        it 'should have a title', ->
+            expect(ctrl.getTitle).to.be.ok
+
+        it 'should allow to refresh issues', ->
+            httpBackend.expectGET("#{APIURL}/projects/1/issues_stats").respond(200, [])
+            httpBackend.expectGET("#{APIURL}/issues?project=1").respond(200, [])
+            promise = ctrl.refreshIssues()
+            httpBackend.flush()
+            promise.should.be.fulfilled
+
+        it 'should allow to refresh filters', ->
+            httpBackend.expectGET("#{APIURL}/projects/1/issue_filters_data").respond(200, [])
+            promise = ctrl.refreshFilters()
+            httpBackend.flush()
+            promise.should.be.fulfilled
+
+        it 'should allow to refresh all', ->
+            httpBackend.expectGET("#{APIURL}/projects/1/issue_filters_data").respond(200, [])
+            httpBackend.expectGET("#{APIURL}/projects/1/issues_stats").respond(200, [])
+            httpBackend.expectGET("#{APIURL}/issues?project=1").respond(200, [])
+
+            promise = ctrl.refreshAll()
+            expect(ctrl.scope.refreshing).to.be.true
+            httpBackend.flush()
+
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.refreshing).to.be.false
+
+        it "should allow to check if a filter is selected", ->
+            expect(ctrl.isFilterSelected("test")).to.be.true
+
+        it "should allow toggle a filter", ->
+            ctrl.refreshIssues = ->
+
+            sinon.spy(ctrl.gmFilters, "selectFilter")
+            sinon.spy(ctrl.gmFilters, "unselectFilter")
+            sinon.spy(ctrl, "refreshIssues")
+
+            ctrl.selectedFilters = [{type: "test1", id: "test1"}, {type:"test2", id: "test2"}]
+
+            ctrl.toggleFilter({type: "test", id: "test"})
+            expect(ctrl.gmFilters.selectFilter).have.been.called.once
+            expect(ctrl.selectedFilters).to.be.deep.equal([{type: "test1", id: "test1"}, {type:"test2", id: "test2"}, {type: "test", id: "test"}])
+
+            ctrl.selectedFilters = [{type: "test1", id: "test1"}, {type:"test2", id: "test2"}, {type: "test", id: "test"}]
+            ctrl.toggleFilter({type: "test", id: "test"})
+            expect(ctrl.gmFilters.unselectFilter).have.been.called.once
+            expect(ctrl.selectedFilters).to.be.deep.equal([{type: "test1", id: "test1"}, {type:"test2", id: "test2"}])
+
+            expect(ctrl.refreshIssues).have.been.called.twice
+
+        it "should allow initialize the filters", ->
+            ctrl.initializeSelectedFilters()
+            expect(ctrl.selectedFilters).to.be.deep.equal(["test2"])
+
+        it "should allow load issues", ->
+            sinon.spy(ctrl.scope, "$emit")
+            httpBackend.expectGET("#{APIURL}/issues?project=1").respond(
+                200,
+                [{test: "test"}],
+                {
+                    "x-pagination-count": 5
+                    "x-pagination-current": 2
+                    "x-paginated-by": 10
+                }
+            )
+            promise = ctrl.loadIssues()
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(_.map(ctrl.scope.issues, (issue) -> issue.getAttrs())).to.be.deep.equal([{test: "test"}])
+                expect(ctrl.scope.count).to.be.equal(5)
+                expect(ctrl.scope.paginatedBy).to.be.equal(10)
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:start")
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:stop")
+                expect(ctrl.scope.$emit).have.been.called.twice
+
+        it "should allow load issues filters data", ->
+            httpBackend.expectGET("#{APIURL}/projects/1/issue_filters_data").respond(200, [])
+            promise = ctrl.loadIssuesFiltersData()
+            httpBackend.flush()
+            promise.should.be.fulfilled
+
+        it "should allow load stats", ->
+            httpBackend.expectGET("#{APIURL}/projects/1/issues_stats").respond(200, [])
+            promise = ctrl.loadStats()
+            httpBackend.flush()
+            promise.should.be.fulfilled
+
+        it "should allow to open create issue form", ->
+            ctrl.refreshIssues = ->
+            ctrl.scope.projectId = 1
+
+            sinon.spy(ctrl.modal, "open")
+            sinon.spy(ctrl, "refreshIssues")
+
+            promise = ctrl.openCreateIssueForm()
+
+            expect(ctrl.modal.open).have.been.calledWith("issue-form", {type: "create"})
+
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.refreshIssues).have.been.called.once
+
+        it "should allow to open edit issue form", ->
+            ctrl.refreshIssues = ->
+            ctrl.scope.projectId = 1
+
+            sinon.spy(ctrl.modal, "open")
+            sinon.spy(ctrl, "refreshIssues")
+
+            promise = ctrl.openEditIssueForm({test: "test"})
+
+            expect(ctrl.modal.open).have.been.calledWith("issue-form", {issue: {test: "test"}, type: "edit"})
+
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.refreshIssues).have.been.called.once
+
+        it "should allow to toggle show graphs", ->
+            ctrl.scope.showGraphs = false
+            ctrl._toggleShowGraphs()
+            expect(ctrl.scope.showGraphs).to.be.true
+            ctrl._toggleShowGraphs()
+            expect(ctrl.scope.showGraphs).to.be.false
+
+        it "should allow to update issue assignation", inject ($model) ->
+            ctrl.refreshIssues = ->
+            sinon.spy(ctrl, "refreshIssues")
+
+            issue = $model.make_model("issues", {id: 1, assigned_to: 1})
+
+            httpBackend.expectPATCH("#{APIURL}/issues/1", {assigned_to: 10}).respond(200)
+            promise = ctrl.updateIssueAssignation(issue, 10)
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.refreshIssues).have.been.called.once
+
+            httpBackend.expectPATCH("#{APIURL}/issues/1", {assigned_to: null}).respond(200)
+            promise = ctrl.updateIssueAssignation(issue)
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.refreshIssues).have.been.called.twice
+
+        it "should allow to update issue status", inject ($model) ->
+            ctrl.refreshIssues = ->
+            sinon.spy(ctrl, "refreshIssues")
+
+            issue = $model.make_model("issues", {id: 1, status: 1})
+
+            httpBackend.expectPATCH("#{APIURL}/issues/1", {status: 10}).respond(200)
+            promise = ctrl.updateIssueStatus(issue, 10)
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.refreshIssues).have.been.called.once
+
+        it "should allow to update issue severity", inject ($model) ->
+            ctrl.refreshIssues = ->
+            sinon.spy(ctrl, "refreshIssues")
+
+            issue = $model.make_model("issues", {id: 1, severity: 1})
+
+            httpBackend.expectPATCH("#{APIURL}/issues/1", {severity: 10}).respond(200)
+            promise = ctrl.updateIssueSeverity(issue, 10)
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.refreshIssues).have.been.called.once
+
+        it "should allow to update issue priority", inject ($model) ->
+            ctrl.refreshIssues = ->
+            sinon.spy(ctrl, "refreshIssues")
+
+            issue = $model.make_model("issues", {id: 1, priority: 1})
+
+            httpBackend.expectPATCH("#{APIURL}/issues/1", {priority: 10}).respond(200)
+            promise = ctrl.updateIssuePriority(issue, 10)
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.refreshIssues).have.been.called.once
+
+        it "should allow to remove a issue", inject ($model) ->
+            ctrl.refreshIssues = ->
+            sinon.spy(ctrl, "refreshIssues")
+
+            ctrl.scope.issues = _.map([{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}], (us) -> $model.make_model("issues", us))
+            issue = ctrl.scope.issues[0]
+
+            httpBackend.expectDELETE("http://localhost:8000/api/v1/issues/1").respond(200)
+
+            promise = ctrl.removeIssue(issue)
+            httpBackend.flush()
+
+            promise.should.be.fulfilled. then ->
+                expect(ctrl.scope.issues).to.have.length(2)
+                expect(ctrl.refreshIssues).have.been.called.once
+
+        it "should allow to open a issue", ->
+            sinon.spy(ctrl.location, "url")
+            ctrl.openIssue("test", 1)
+            expect(ctrl.location.url).have.been.calledWith("/project/test/issues/1")
