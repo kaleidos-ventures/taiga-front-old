@@ -299,6 +299,8 @@
         "project-members": "Project members",
         "add-member": "Add member",
         "add-new-member": "Add new member",
+        "member-active": "Active",
+        "member-inactive": "Inactive",
         "role": "Role",
         "user": "User",
         "full-name": "Full name",

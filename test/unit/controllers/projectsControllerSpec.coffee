@@ -410,14 +410,26 @@ describe "projectsController", ->
         scope = null
         ctrl = null
 
-        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q) ->
             scope = $rootScope.$new()
             routeParams = {
                 pslug: "test"
             }
+            gmFlashMock = {
+                info: (text) ->
+                error: (text) ->
+            }
+            confirmMock = {
+                confirm: (text) ->
+                    defered = $q.defer()
+                    defered.resolve("test")
+                    return defered.promise
+            }
             ctrl = $controller("ProjectAdminMembershipsController", {
                 $scope: scope,
                 $routeParams: routeParams,
+                $gmFlash: gmFlashMock,
+                $confirm: confirmMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
@@ -468,7 +480,121 @@ describe "projectsController", ->
 
             expect(ctrl.scope.formOpened).to.be.false
 
-        #TODO: Finish me
+        it "should create memberships on success", ->
+            httpBackend.expectPOST("#{APIURL}/memberships?",
+                    {email: "Test membership", role: 4}).respond(202, "Ok")
+
+            ctrl.openForm()
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.scope.membership = {
+                email: "Test membership"
+                role: 4
+            }
+
+            ctrl.submitMembership()
+            httpBackend.flush()
+
+            expect(ctrl.scope.formOpened).to.be.false
+
+        it "should create memberships on error", ->
+            sinon.spy(ctrl.gmFlash, "error")
+            httpBackend.expectPOST("#{APIURL}/memberships?",
+                    {email: "Test membership", role: 10}).respond(400, {_error_message: "error"})
+
+            ctrl.openForm()
+
+            expect(ctrl.scope.formOpened).to.be.true
+
+            ctrl.scope.membership = {
+                email: "Test membership"
+                role: 10
+            }
+
+            ctrl.submitMembership()
+            httpBackend.flush()
+
+            ctrl.gmFlash.error.should.have.been.calledOnce
+            ctrl.gmFlash.error.should.have.been.calledWith("error")
+            expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
+            expect(ctrl.scope.formOpened).to.be.true
+
+        it "should delete a member", ->
+            member = {id: 1, project: 1}
+            httpBackend.expectDELETE("#{APIURL}/memberships/#{member.id}").respond(200, "ok")
+
+            ctrl.deleteMember(member)
+            httpBackend.flush()
+
+        it "should update the role of a membership", ->
+            member = {id: 1, project: 1, role: 3}
+            newRole = 4
+            httpBackend.expectPATCH("#{APIURL}/memberships/#{member.id}", {role: newRole}).respond(202, "ok")
+
+            ctrl.updateMemberRole(member, newRole)
+            httpBackend.flush()
+
+            expect(member.role).to.be.equal(newRole)
+
+        it "should show the member status", ->
+            memberA = {user: 0}
+            memberB = {user: null}
+
+            expect(ctrl.memberStatus(memberA)).to.be.equal("admin.active")
+            expect(ctrl.memberStatus(memberB)).to.be.equal("admin.inactive")
+
+        it "should show the member full_name", ->
+            memberA = {user: 1, email: "email_not_show"}
+            memberB = {email: "email_show"}
+            memberC = undefined
+            scope.constants.users[1] = {email: "email_show"}
+
+            expect(ctrl.memberEmail(memberA)).to.be.equal("email_show")
+            expect(ctrl.memberEmail(memberB)).to.be.equal("email_show")
+            expect(ctrl.memberEmail(memberC)).to.be.undefined
+
+        it "should show the member email", ->
+            memberA = {full_name: "test"}
+            memberB = {}
+            memberC = undefined
+
+            expect(ctrl.memberName(memberA)).to.be.equal("test")
+            expect(ctrl.memberName(memberB)).to.be.undefined
+            expect(ctrl.memberName(memberC)).to.be.undefined
+
+        it "should show the invitation url", ->
+            locationMock = {
+                protocol: -> "http"
+                host: -> "host"
+                port: -> 80
+            }
+            ctrl.location = locationMock
+            expect(ctrl.getAbsoluteUrl("/test")).to.be.equal("http://host/test")
+
+            locationMock = {
+                protocol: -> "https"
+                host: -> "host"
+                port: -> 443
+            }
+            ctrl.location = locationMock
+            expect(ctrl.getAbsoluteUrl("/test")).to.be.equal("https://host/test")
+
+            locationMock = {
+                protocol: -> "http"
+                host: -> "host"
+                port: -> 8080
+            }
+            ctrl.location = locationMock
+            expect(ctrl.getAbsoluteUrl("/test")).to.be.equal("http://host:8080/test")
+
+            locationMock = {
+                protocol: -> "https"
+                host: -> "host"
+                port: -> 4433
+            }
+            ctrl.location = locationMock
+            expect(ctrl.getAbsoluteUrl("/test")).to.be.equal("https://host:4433/test")
 
 
     describe "ProjecAdminRolesController", ->

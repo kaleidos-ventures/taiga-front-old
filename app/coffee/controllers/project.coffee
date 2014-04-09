@@ -182,9 +182,9 @@ class ProjectAdminMembershipsController extends ProjectAdminController
 
     memberStatus: (member) ->
         if member?.user != null
-            return "Active"
+            return @i18next.t('admin.active')
         else
-            return "Inactive"
+            return @i18next.t('admin.inactive')
 
     memberName: (member) ->
         return member?.full_name
