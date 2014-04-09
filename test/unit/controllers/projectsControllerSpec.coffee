@@ -128,7 +128,7 @@ FIXTURES = {
         {
             id: 5,
             name: "Product Owner",
-            permissions: [90, 91],
+            permissions: [91],
             computable: false,
             project: 1,
             order: 50
@@ -481,9 +481,13 @@ describe "projectsController", ->
             routeParams = {
                 pslug: "test"
             }
+            gmFlashMock = {
+                info: (text) ->
+            }
             ctrl = $controller("ProjectAdminRolesController", {
                 $scope: scope,
                 $routeParams: routeParams,
+                $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
@@ -519,7 +523,61 @@ describe "projectsController", ->
         it "should be actived", ->
             expect(ctrl.isActive("roles")).to.be.true
 
-        #TODO: Finish me
+        it "should have the actual role  list", ->
+            for role in FIXTURES.roles
+                for permission in FIXTURES.permissions
+                    expect(ctrl.scope.rolePermissions[role.id][permission.id]).to.be.equal(
+                                                          permission.id in role.permissions)
+
+        it "should have the new modal of a role", ->
+            for permission in FIXTURES.permissions
+                expect(ctrl.scope.newRolePermissions[permission.id]).to.be.false
+
+        it "should submit a new role on success", ->
+            sinon.spy(ctrl.gmFlash, "info")
+            httpBackend.expectPOST("#{APIURL}/roles?",
+                    {name:"New role", permissions:["91"], project:1}).respond(202, "Ok")
+            httpBackend.expectPATCH("#{APIURL}/roles/4", {order: 0}).respond(202, "Ok")
+            httpBackend.expectPATCH("#{APIURL}/roles/5", {order: 1, permissions: ["90"]}).respond(202, "Ok")
+            ctrl.scope.newRole = {name: "New role"}
+            ctrl.scope.newRolePermissions[91] = true
+
+            ctrl.scope.rolePermissions[5] = {90: true, 91: false}
+
+            ctrl.submitRoles()
+            httpBackend.flush()
+
+            ctrl.gmFlash.info.should.have.been.calledOnce
+            ctrl.gmFlash.info.should.have.been.calledWith("admin.roles-saved-success")
+            expect(ctrl.scope.checksleyErrors).to.be.undefined
+
+        it "should submit a new role on error in PATCH", ->
+            sinon.spy(ctrl.gmFlash, "info")
+            httpBackend.expectPOST("#{APIURL}/roles?",
+                    {name:"New role", permissions:[], project:1}).respond(202, "Ok")
+            httpBackend.expectPATCH("#{APIURL}/roles/4", {order: 0}).respond(400, "error")
+            httpBackend.expectPATCH("#{APIURL}/roles/5", {order: 1}).respond(202, "Ok")
+            ctrl.scope.newRole = {name: "New role"}
+
+            ctrl.submitRoles()
+            httpBackend.flush()
+
+            ctrl.gmFlash.info.should.have.not.been.calledOnce
+            expect(ctrl.scope.checksleyErrors).to.be.equal("error")
+
+        it "should submit a new role on error in POST", ->
+            sinon.spy(ctrl.gmFlash, "info")
+            httpBackend.expectPOST("#{APIURL}/roles?",
+                    {name:"New role", permissions:[], project:1}).respond(400, "error")
+            httpBackend.expectPATCH("#{APIURL}/roles/4", {order: 0}).respond(202, "Ok")
+            httpBackend.expectPATCH("#{APIURL}/roles/5", {order: 1}).respond(202, "Ok")
+            ctrl.scope.newRole = {name: "New role"}
+
+            ctrl.submitRoles()
+            httpBackend.flush()
+
+            ctrl.gmFlash.info.should.have.not.been.calledOnce
+            expect(ctrl.scope.checksleyErrors).to.be.equal("error")
 
 
     describe "UserStoryStatusesAdminController", ->
