@@ -415,8 +415,8 @@ class BacklogMilestonesController extends TaigaBaseController
         super(scope)
 
     debounceMethods: ->
-        sprintSubmit = @sprintSubmit
-        @sprintSubmit = gm.utils.safeDebounced @scope, 500, sprintSubmit
+        @_sprintSubmit = @sprintSubmit
+        @sprintSubmit = gm.utils.safeDebounced @scope, 500, @_sprintSubmit
 
     initialize: ->
         @debounceMethods()
@@ -441,34 +441,25 @@ class BacklogMilestonesController extends TaigaBaseController
 
     # Debounced Method (see debounceMethods method)
     sprintSubmit: =>
+        newSprint = false
         if @scope.form.save is undefined
             promise = @rs.createMilestone(@scope.projectId, @scope.form)
-
-            promise.then (milestone) =>
-                @scope.milestones.unshift(milestone)
-                # Clear the current form after creating
-                # of new sprint is completed
-                @scope.form = {}
-                @scope.sprintFormOpened = false
-                # Update the sprintId value for correct
-                # linking of dashboard menu item to the
-                # last created milestone
-                @rootScope.sprintId = milestone.id
-                # Show a success message
-                @gmFlash.info(@i18next.t("backlog.sprint-saved"))
-
-            promise.then null, (data) =>
-                @scope.checksleyErrors = data
+            newSprint = true
         else
             promise = @scope.form.save()
 
-            promise.then (data) =>
-                @scope.form = {}
-                @scope.sprintFormOpened = false
-                @gmFlash.info(@i18next.t("backlog.sprint-saved"))
+        promise.then (milestone) =>
+            if newSprint
+                @scope.milestones.unshift(milestone)
+                @rootScope.sprintId = @scope.milestones[0].id
+            @scope.form = {}
+            @scope.sprintFormOpened = false
+            @gmFlash.info(@i18next.t("backlog.sprint-saved"))
 
-            promise.then null, (data) =>
-                @scope.checksleyErrors = data
+        promise.then null, (data) =>
+            @scope.checksleyErrors = data
+
+        return promise
 
 
 class BacklogMilestoneController extends TaigaBaseController

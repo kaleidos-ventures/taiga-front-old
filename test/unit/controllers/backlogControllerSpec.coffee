@@ -664,11 +664,87 @@ describe "backlogController", ->
                 expect(ctrl.scope.defered.resolve).have.been.called.once
 
         it "should allow to save the form of the modal (on error)", ->
-            sinon.spy(ctrl.scope, "$emit")
-
             ctrl.scope.form = {test: "test"}
 
             httpBackend.expectPOST("http://localhost:8000/api/v1/userstories/bulk_create", {test: "test"}).respond(400, {})
             promise = ctrl._submit()
+            httpBackend.flush()
+            promise.should.be.rejected
+
+    describe "BacklogMilestonesController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q, $gmFilters) ->
+            scope = $rootScope.$new()
+            ctrl = $controller("BacklogMilestonesController", {
+                $scope: scope
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should reload milestons on points:loaded signal", ->
+            ctrl.calculateStats = ->
+            sinon.spy(ctrl, "calculateStats")
+            ctrl.rootScope.projectId = 1
+            httpBackend.expectGET("http://localhost:8000/api/v1/milestones?project=1").respond(200, [{}, {}])
+            ctrl.scope.$emit("points:loaded")
+            httpBackend.flush()
+            expect(ctrl.calculateStats).have.been.called.once
+
+        it "should allow to calculate the stats", ->
+            sinon.spy(ctrl.scope, "$emit")
+            ctrl.calculateStats()
+            expect(ctrl.scope.$emit).have.been.calledWith("stats:update")
+
+        it "should allow to open a user story", ->
+            sinon.spy(ctrl.location, "url")
+            ctrl.openUserStory("test", 1)
+            expect(ctrl.location.url).have.been.calledWith("/project/test/user-story/1")
+
+        it "should allow to save a new milestone", inject ($model) ->
+            sinon.spy(ctrl.scope, "$emit")
+            sinon.spy(ctrl.gmFlash, "info")
+
+            ctrl.scope.form = {id: 8, test: "test"}
+            ctrl.scope.sprintFormOpened = true
+            ctrl.scope.milestones = []
+
+            httpBackend.expectPOST("http://localhost:8000/api/v1/milestones", {id: 8, test: "test"}).respond(200, {id: 8, test: "test"})
+            promise = ctrl._sprintSubmit()
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.rootScope.sprintId).to.be.equal(8)
+                expect(ctrl.scope.sprintFormOpened).to.be.false
+                expect(ctrl.scope.form).to.be.deep.equal({})
+                expect(ctrl.gmFlash.info).have.been.called.once
+
+        it "should allow to edit a milestone", inject ($model) ->
+            sinon.spy(ctrl.scope, "$emit")
+            sinon.spy(ctrl.gmFlash, "info")
+
+            ctrl.scope.form = $model.make_model("milestones", {id: 8, test: "test"})
+            ctrl.scope.form.test = "test1"
+
+            httpBackend.expectPATCH("http://localhost:8000/api/v1/milestones/8", {test: "test1"}).respond(200, {id: 8, test: "test1"})
+            promise = ctrl._sprintSubmit()
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.sprintFormOpened).to.be.false
+                expect(ctrl.scope.form).to.be.deep.equal({})
+                expect(ctrl.gmFlash.info).have.been.called.once
+
+        it "should allow to save the form of the modal (on error)", ->
+            ctrl.scope.form = {id: 8, test: "test"}
+
+            httpBackend.expectPOST("http://localhost:8000/api/v1/milestones", {id: 8, test: "test"}).respond(400, {})
+            promise = ctrl._sprintSubmit()
             httpBackend.flush()
             promise.should.be.rejected
