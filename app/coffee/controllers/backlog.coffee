@@ -275,8 +275,14 @@ class BacklogUserStoriesController extends TaigaBaseController
     saveUsStatus: (us, id) ->
         us.status = id
         us._moving = true
-        us.save().then (data) ->
+        promise = us.save()
+
+        promise.then (data) ->
             data._moving = false
+
+        promise.then null, (data, status) ->
+            us._moving = false
+            us.revert()
 
     sortableOnAdd: (us, index) ->
         us.milestone = null

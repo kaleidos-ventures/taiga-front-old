@@ -363,3 +363,121 @@ describe "backlogController", ->
                 expect(ctrl.generateTagList).have.been.called.once
                 expect(ctrl.filterUsBySelectedTags).have.been.called.once
 
+        it "should allow to save user story points", inject ($model) ->
+            ctrl.calculateStats = ->
+            sinon.spy(ctrl, "calculateStats")
+            sinon.spy(ctrl.scope, "$broadcast")
+            us = $model.make_model("userstories", {id: 1, points: {}})
+
+            httpBackend.expectPATCH("http://localhost:8000/api/v1/userstories/1", {points: {1: 5}}).respond(200)
+            promise = ctrl.saveUsPoints(us, {id: 1}, 5)
+            expect(us._moving).to.be.true
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(us.points[1]).to.be.equal(5)
+                expect(us._moving).to.be.false
+                expect(ctrl.calculateStats).have.been.called.once
+                expect(ctrl.scope.$broadcast).have.been.calledWith("points:changed")
+
+        it "should allow to save user story points (on error)", inject ($model) ->
+            us = $model.make_model("userstories", {id: 1, points: {}})
+            sinon.spy(us, "revert")
+
+            httpBackend.expectPATCH("http://localhost:8000/api/v1/userstories/1", {points: {1: 5}}).respond(400)
+            promise = ctrl.saveUsPoints(us, {id: 1}, 5)
+            expect(us._moving).to.be.true
+            httpBackend.flush()
+            promise.then ->
+                expect(us._moving).to.be.false
+                expect(us.revert).have.been.called.once
+                expect(us.points).to.be.deep.equal({})
+
+        it "should allow to save user story status", inject ($model) ->
+            us = $model.make_model("userstories", {id: 1, status: 1})
+
+            httpBackend.expectPATCH("http://localhost:8000/api/v1/userstories/1", {status: 5}).respond(200)
+            promise = ctrl.saveUsStatus(us, 5)
+            expect(us._moving).to.be.true
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(us.status).to.be.equal(5)
+                expect(us._moving).to.be.false
+
+        it "should allow to save user story status (on error)", inject ($model) ->
+            us = $model.make_model("userstories", {id: 1, status: 1})
+            sinon.spy(us, "revert")
+
+            httpBackend.expectPATCH("http://localhost:8000/api/v1/userstories/1", {status: 5}).respond(400)
+            promise = ctrl.saveUsStatus(us, 5)
+            expect(us._moving).to.be.true
+            httpBackend.flush()
+            promise.then ->
+                expect(us.status).to.be.equal(1)
+                expect(us._moving).to.be.false
+                expect(us.revert).have.been.called.once
+
+        it "should allow to move user story to the list of unassigned user stories", inject ($model) ->
+            ctrl.scope.unassignedUs = _.map(
+                [{id: 1, milestone: null}, {id: 2, milestone: null}],
+                (us) -> $model.make_model("userstories", us)
+            )
+            ctrl.resortUserStories = ->
+            sinon.spy(ctrl, "resortUserStories")
+
+            us = $model.make_model("userstories", {id: 3, milestone: 1})
+
+            httpBackend.expectPATCH("http://localhost:8000/api/v1/userstories/3", {milestone: null}).respond(200)
+            promise = ctrl.sortableOnAdd(us, 1)
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(
+                    _.map(ctrl.scope.unassignedUs, (us) -> us.getAttrs())
+                ).to.be.deep.equal(
+                    [{id: 1, milestone: null}, {id: 3, milestone: null}, {id: 2, milestone: null}]
+                )
+                expect(ctrl.resortUserStories).have.been.called.once
+
+        it "should allow to move user story in the list of unassigned user stories", inject ($model) ->
+            ctrl.scope.unassignedUs = _.map(
+                [{id: 1, milestone: null}, {id: 2, milestone: null}, {id: 3, milestone: null}],
+                (us) -> $model.make_model("userstories", us)
+            )
+            uss = _.map(
+                [{id: 3, milestone: null}, {id: 2, milestone: null}, {id: 1, milestone: null}],
+                (us) -> $model.make_model("userstories", us)
+            )
+            ctrl.resortUserStories = ->
+            sinon.spy(ctrl, "resortUserStories")
+
+            ctrl.sortableOnUpdate(uss)
+            expect(
+                _.map(ctrl.scope.unassignedUs, (us) -> us.getAttrs())
+            ).to.be.deep.equal(
+                [{id: 3, milestone: null}, {id: 2, milestone: null}, {id: 1, milestone: null}]
+            )
+            expect(ctrl.resortUserStories).have.been.called.once
+
+        it "should allow to remove user story from the list of unassigned user stories", inject ($model) ->
+            ctrl.scope.unassignedUs = _.map(
+                [{id: 1, milestone: null}, {id: 2, milestone: null}, {id: 3, milestone: null}],
+                (us) -> $model.make_model("userstories", us)
+            )
+
+            ctrl.getSelectedUserStories = ->
+                "test"
+            sinon.spy(ctrl, "getSelectedUserStories")
+
+            ctrl.calculateStoryPoints = ->
+                10
+            sinon.spy(ctrl, "calculateStoryPoints")
+
+            ctrl.sortableOnRemove(ctrl.scope.unassignedUs[0])
+            expect(
+                _.map(ctrl.scope.unassignedUs, (us) -> us.getAttrs())
+            ).to.be.deep.equal(
+                [{id: 2, milestone: null}, {id: 3, milestone: null}]
+            )
+            expect(ctrl.getSelectedUserStories).have.been.called.once
+            expect(ctrl.calculateStoryPoints).have.been.called.once
+            expect(ctrl.scope.selectedUserStories).to.be.equal("test")
+            expect(ctrl.scope.selectedStoryPoints).to.be.equal(10)
