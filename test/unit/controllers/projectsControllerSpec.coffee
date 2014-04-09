@@ -476,7 +476,7 @@ describe "projectsController", ->
         scope = null
         ctrl = null
 
-        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q) ->
             scope = $rootScope.$new()
             routeParams = {
                 pslug: "test"
@@ -484,10 +484,17 @@ describe "projectsController", ->
             gmFlashMock = {
                 info: (text) ->
             }
+            confirmMock = {
+                confirm: (text) ->
+                    defered = $q.defer()
+                    defered.resolve("test")
+                    return defered.promise
+            }
             ctrl = $controller("ProjectAdminRolesController", {
                 $scope: scope,
                 $routeParams: routeParams,
-                $gmFlash: gmFlashMock
+                $gmFlash: gmFlashMock,
+                $confirm: confirmMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
@@ -578,6 +585,25 @@ describe "projectsController", ->
 
             ctrl.gmFlash.info.should.have.not.been.calledOnce
             expect(ctrl.scope.checksleyErrors).to.be.equal("error")
+
+        it "should to delete a role", inject ($model) ->
+            sinon.spy(ctrl.gmFlash, "info")
+
+            role = $model.make_model("roles", FIXTURES.roles[4])
+            httpBackend.expectDELETE("#{APIURL}/roles/#{role.id}").respond(200, "ok")
+
+            promise = ctrl.deleteRole(role)
+            httpBackend.flush()
+
+            ctrl.gmFlash.info.should.have.been.calledOnce
+            ctrl.gmFlash.info.should.have.been.calledWith("admin.role-deleted")
+
+        it "should to update constant roles when update", ->
+            newRoles = [1, 2, 3]
+
+            ctrl.sortableOnUpdate(newRoles)
+
+            expect(ctrl.scope.constants.rolesList).to.be.equal(newRoles)
 
 
     describe "UserStoryStatusesAdminController", ->
