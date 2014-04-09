@@ -153,6 +153,7 @@ describe "projectsController", ->
                 $scope: scope
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.whenGET(APIURL+"/projects").respond(200, [
                 {name: "test proj 1", slug: "test-proj-1"},
@@ -190,6 +191,7 @@ describe "projectsController", ->
                 $scope: scope
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
@@ -234,6 +236,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
             httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
@@ -304,6 +307,7 @@ describe "projectsController", ->
                 $routeParams: routeParams,
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
             httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
@@ -357,6 +361,7 @@ describe "projectsController", ->
                 $confirm: confirmMock
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
             httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
@@ -417,6 +422,7 @@ describe "projectsController", ->
                 $routeParams: routeParams,
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
             httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
@@ -483,6 +489,7 @@ describe "projectsController", ->
                 $routeParams: routeParams,
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.whenGET("#{APIURL}/resolver?project=test").respond(200, {project: 1})
             httpBackend.whenGET("#{APIURL}/projects/1?").respond(200, FIXTURES.project)
@@ -536,6 +543,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
@@ -594,6 +602,16 @@ describe "projectsController", ->
             expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
             expect(ctrl.scope.formOpened).to.be.true
 
+        it "should allow to save resorted", inject ($model) ->
+            itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
+            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
+                $model.make_model("choices/userstory-statuses", o))
+
+            httpBackend.expectPOST(APIURL+"/userstory-statuses/bulk_update_order",
+                    {project: FIXTURES.project.id, bulk_userstory_statuses: [[1,0],[2,1],[3,2]]}).respond(200)
+            promise = ctrl.resort(ctrl.instanceModel)
+            httpBackend.flush()
+
 
     describe "PointsAdminController", ->
         httpBackend = null
@@ -612,6 +630,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
@@ -670,7 +689,18 @@ describe "projectsController", ->
             expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
             expect(ctrl.scope.formOpened).to.be.true
 
-        #TODO: Finish me
+        it "should allow to save resorted", inject ($model) ->
+            itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
+            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
+                $model.make_model("choices/points", o))
+
+            httpBackend.expectPOST(APIURL+"/points/bulk_update_order",
+                    {project: FIXTURES.project.id, bulk_points: [[1,0],[2,1],[3,2]]}).respond(200)
+            promise = ctrl.resort(ctrl.instanceModel)
+            httpBackend.flush()
+
+            promise.should.be.fulfilled
+
 
     describe "TaskStatusesAdminController", ->
         httpBackend = null
@@ -689,6 +719,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
@@ -747,7 +778,18 @@ describe "projectsController", ->
             expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
             expect(ctrl.scope.formOpened).to.be.true
 
-        #TODO: Finish me
+        it "should allow to save resorted", inject ($model) ->
+            itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
+            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
+                $model.make_model("choices/task-statuses", o))
+
+            httpBackend.expectPOST(APIURL+"/task-statuses/bulk_update_order",
+                    {project: FIXTURES.project.id, bulk_task_statuses: [[1,0],[2,1],[3,2]]}).respond(200)
+            promise = ctrl.resort(ctrl.instanceModel)
+            httpBackend.flush()
+
+            promise.should.be.fulfilled
+
 
     describe "IssueStatusesAdminController", ->
         httpBackend = null
@@ -766,6 +808,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
@@ -824,8 +867,18 @@ describe "projectsController", ->
             expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
             expect(ctrl.scope.formOpened).to.be.true
 
+        it "should allow to save resorted", inject ($model) ->
+            itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
+            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
+                $model.make_model("choices/issue-statuses", o))
 
-        #TODO: Finish me
+            httpBackend.expectPOST(APIURL+"/issue-statuses/bulk_update_order",
+                    {project: FIXTURES.project.id, bulk_issue_statuses: [[1,0],[2,1],[3,2]]}).respond(200)
+            promise = ctrl.resort(ctrl.instanceModel)
+            httpBackend.flush()
+
+            promise.should.be.fulfilled
+
 
     describe "IssueTypesAdminController", ->
         httpBackend = null
@@ -844,6 +897,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
@@ -902,7 +956,18 @@ describe "projectsController", ->
             expect(ctrl.scope.checksleyErrors).to.be.deep.equal({_error_message: "error"})
             expect(ctrl.scope.formOpened).to.be.true
 
-        #TODO: Finish me
+        it "should allow to save resorted", inject ($model) ->
+            itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
+            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
+                $model.make_model("choices/issue-types", o))
+
+            httpBackend.expectPOST(APIURL+"/issue-types/bulk_update_order",
+                    {project: FIXTURES.project.id, bulk_issue_types: [[1,0],[2,1],[3,2]]}).respond(200)
+            promise = ctrl.resort(ctrl.instanceModel)
+            httpBackend.flush()
+
+            promise.should.be.fulfilled
+
 
     describe "PrioritiesAdminController", ->
         httpBackend = null
@@ -921,6 +986,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
@@ -981,9 +1047,11 @@ describe "projectsController", ->
 
         it "should allow to save resorted", inject ($model) ->
             itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
-            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) -> $model.make_model("choices/priorities", o))
+            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
+                $model.make_model("choices/priorities", o))
 
-            httpBackend.expectPOST(APIURL+"/priorities/bulk_update_order", {project: FIXTURES.project.id, bulk_priorities: [[1,0],[2,1],[3,2]]}).respond(200)
+            httpBackend.expectPOST(APIURL+"/priorities/bulk_update_order",
+                    {project: FIXTURES.project.id, bulk_priorities: [[1,0],[2,1],[3,2]]}).respond(200)
             promise = ctrl.resort(ctrl.instanceModel)
             httpBackend.flush()
 
@@ -1007,6 +1075,7 @@ describe "projectsController", ->
                 $gmFlash: gmFlashMock
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
@@ -1067,9 +1136,11 @@ describe "projectsController", ->
 
         it "should allow to save resorted", inject ($model) ->
             itemList = [{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}]
-            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) -> $model.make_model("choices/severities", o))
+            ctrl.scope[ctrl.instanceModel] = _.map(itemList, (o) ->
+                $model.make_model("choices/severities", o))
 
-            httpBackend.expectPOST(APIURL+"/severities/bulk_update_order", {project: FIXTURES.project.id, bulk_severities: [[1,0],[2,1],[3,2]]}).respond(200)
+            httpBackend.expectPOST(APIURL+"/severities/bulk_update_order",
+                {project: FIXTURES.project.id, bulk_severities: [[1,0],[2,1],[3,2]]}).respond(200)
             promise = ctrl.resort(ctrl.instanceModel)
             httpBackend.flush()
 
@@ -1100,6 +1171,7 @@ describe "projectsController", ->
                 $confirm: confirmMock
             })
             httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/locales/en/app.json").respond(200, {})
             httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
             httpBackend.flush()
         ))
