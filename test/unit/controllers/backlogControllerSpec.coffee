@@ -295,7 +295,6 @@ describe "backlogController", ->
             ctrl.scope.project.default_points = 2
             ctrl.scope.project.default_us_status = 1
             ctrl.scope.projectId = 1
-            console.log ctrl.initializeUsForm()
             expect(ctrl.initializeUsForm()).to.be.deep.equal({points: {1: 2, 2: 2}, project: 1, status: 1})
 
         it "should allow to open bulk user stories form", ->
