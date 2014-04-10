@@ -162,7 +162,7 @@ describe "kanbanController", ->
         scope = null
         ctrl = null
 
-        beforeEach(inject(($rootScope, $controller, $httpBackend, $gmFilters) ->
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $gmFilters, $q) ->
             scope = $rootScope.$new()
             routeParams = {
                 pslug: "test"
@@ -183,10 +183,17 @@ describe "kanbanController", ->
                 generateFiltersForKanban: $gmFilters.generateFiltersForKanban
                 getFiltersForUserStory: $gmFilters.getFiltersForUserStory
             }
+            modalMock = {
+                open: ->
+                    defered = $q.defer()
+                    defered.resolve()
+                    return defered.promise
+            }
             ctrl = $controller("KanbanController", {
                 $scope: scope,
                 $routeParams: routeParams,
-                $gmFilters: gmFiltersMock
+                $gmFilters: gmFiltersMock,
+                $modal: modalMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
@@ -276,6 +283,88 @@ describe "kanbanController", ->
                 {id: 1, tags: ["test1"], assigned_to: 1, __hidden: true},
                 {id: 2, tags: ["test2"], assigned_to: 2, __hidden: false}
             ])
+
+        it "should allow to open create user stories form", ->
+            ctrl.formatUserStories = ->
+            ctrl.scope.constants.computableRolesList = [{id: 1}, {id: 2}]
+            ctrl.scope.project = {}
+            ctrl.scope.project.default_points = 2
+            ctrl.scope.project.default_us_status = 1
+            ctrl.scope.projectId = 1
+
+            sinon.spy(ctrl.modal, "open")
+            sinon.spy(ctrl, "formatUserStories")
+
+            promise = ctrl.openCreateUsForm(1)
+
+            expect(ctrl.modal.open).have.been.calledWith("us-form", {us: {
+                    points: {1: 2, 2: 2}, project: 1, status: 1}, type: "create"})
+
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.formatUserStories).have.been.called.once
+
+        it "should allow to open edit user stories form", ->
+            ctrl.formatUserStories = ->
+
+            sinon.spy(ctrl.modal, "open")
+            sinon.spy(ctrl, "formatUserStories")
+
+            promise = ctrl.openEditUsForm({test: "test"})
+
+            expect(ctrl.modal.open).have.been.calledWith("us-form", {us: {test: "test"}, type: "edit"})
+
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.formatUserStories).have.been.called.once
+
+        it "should allow to save user story points", inject ($model) ->
+            sinon.spy(ctrl.scope, "$broadcast")
+            us = $model.make_model("userstories", {id: 1, points: {}})
+
+            httpBackend.expectPATCH("#{APIURL}/userstories/1", {points: {1: 5}}).respond(200)
+            promise = ctrl.saveUsPoints(us, {id: 1}, 5)
+            expect(us._moving).to.be.true
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(us.points[1]).to.be.equal(5)
+                expect(us._moving).to.be.false
+                expect(ctrl.scope.$broadcast).have.been.calledWith("points:changed")
+
+        it "should allow to save user story points (on error)", inject ($model) ->
+            us = $model.make_model("userstories", {id: 1, points: {}})
+            sinon.spy(us, "revert")
+
+            httpBackend.expectPATCH("#{APIURL}/userstories/1", {points: {1: 5}}).respond(400)
+            promise = ctrl.saveUsPoints(us, {id: 1}, 5)
+            expect(us._moving).to.be.true
+            httpBackend.flush()
+            promise.then ->
+                expect(us._moving).to.be.false
+                expect(us.revert).have.been.called.once
+                expect(us.points).to.be.deep.equal({})
+
+        it "should allow to save user story status", inject ($model) ->
+            us = $model.make_model("userstories", {id: 1, status: 1})
+
+            httpBackend.expectPATCH("#{APIURL}/userstories/1", {status: 5}).respond(200)
+            promise = ctrl.saveUsStatus(us, 5)
+            expect(us._moving).to.be.true
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(us.status).to.be.equal(5)
+                expect(us._moving).to.be.false
+
+        it "should allow to save user story status (on error)", inject ($model) ->
+            us = $model.make_model("userstories", {id: 1, status: 1})
+            sinon.spy(us, "revert")
+
+            httpBackend.expectPATCH("#{APIURL}/userstories/1", {status: 5}).respond(400)
+            promise = ctrl.saveUsStatus(us, 5)
+            expect(us._moving).to.be.true
+            httpBackend.flush()
+            promise.then ->
+                expect(us.status).to.be.equal(1)
+                expect(us._moving).to.be.false
+                expect(us.revert).have.been.called.once
 
 
     describe "KanbanUsModalController", ->
@@ -372,7 +461,8 @@ describe "kanbanController", ->
             ctrl.scope.form = $model.make_model("userstories", {id: 3, test: "test"})
             ctrl.scope.form.test = "test1"
 
-            httpBackend.expectPUT("#{APIURL}/userstories/3", {id: 3, test: "test1"}).respond(200, {id: 1, test: "test1"})
+            httpBackend.expectPUT("#{APIURL}/userstories/3", {id: 3, test: "test1"}).respond(
+                                                                  200, {id: 1, test: "test1"})
             promise = ctrl._submit()
             httpBackend.flush()
             promise.should.be.fulfilled.then ->

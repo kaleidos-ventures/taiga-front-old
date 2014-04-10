@@ -123,9 +123,8 @@ class KanbanController extends TaigaPageController
 
         us._moving = true
         promise = us.save()
-        promise.then ->
+        promise.then =>
             us._moving = false
-            calculateStats()
             @scope.$broadcast("points:changed")
 
         promise.then null, (data, status) ->
@@ -159,7 +158,7 @@ class KanbanController extends TaigaPageController
             @.formatUserStories()
 
     openEditUsForm: (us) ->
-        promise = @modal.open("us-form", {"us": us, "type": "edit"})
+        promise = @modal.open("us-form", {"us": @initializeUsForm(us, us.status or null), "type": "edit"})
         promise.then =>
             @formatUserStories()
 
