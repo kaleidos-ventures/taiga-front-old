@@ -16,10 +16,10 @@ GmDoomlineDirective = ->
     priority: -20
     link: (scope, elm, attrs) ->
         removeDoomlineDom = ->
-            elm.find(".doomline").removeClass("doomline")
+            elm.find(".doomline").remove()
 
         addDoomlienDom = (element) ->
-            element.addClass("doomline")
+            element?.before("<div class='doomline'></div>")
 
         generateDoomline = (elements) ->
             if not scope.projectStats?
@@ -31,27 +31,33 @@ GmDoomlineDirective = ->
 
             for element in elements
                 scope = element.scope()
-                if scope.us
-                    current_sum += scope.us.total_points
 
+                if not scope.us?
+                    continue
+
+                current_sum += scope.us.total_points
                 if current_sum > total_points and not added
-                    addDoomlienDom(element.prev())
+                    addDoomlienDom(element)
                     added = true
+                    break
 
             if current_sum <= total_points
                 removeDoomlineDom()
 
         getUsItems = ->
-            return _.map(elm.find("div.us-item"), (x) -> angular.element(x))
+            return _.map(elm.find(attrs.gmDoomlineElementSelector), (x) -> angular.element(x))
 
         reloadDoomlineLocation = ->
             removeDoomlineDom()
-            gm.utils.delay 500, ->
-                generateDoomline(getUsItems())
+            generateDoomline(getUsItems())
 
+        reloadDoomlineLocation()
+
+        scope.$watch(attrs.gmDoomlineWatch, reloadDoomlineLocation)
         scope.$on("userstories:loaded", reloadDoomlineLocation)
         scope.$on("points:changed", reloadDoomlineLocation)
         scope.$on("project_stats:loaded", reloadDoomlineLocation)
+        scope.$on("doomline:redraw", reloadDoomlineLocation)
 
 module = angular.module("taiga.directives.backlog", [])
 module.directive('gmDoomline', GmDoomlineDirective)

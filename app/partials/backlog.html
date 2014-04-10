@@ -139,7 +139,9 @@
                 <div class="flex-body" gm-sortable="userstories"
                     gm-sortable-selector=".us-item" gm-sortable-on-add="blCtrl.sortableOnAdd"
                     gm-sortable-on-update="blCtrl.sortableOnUpdate" gm-sortable-item-name="us"
-                    gm-sortable-on-remove="blCtrl.sortableOnRemove" gm-doomline>
+                    gm-sortable-on-remove="blCtrl.sortableOnRemove" gm-doomline
+                    gm-doomline-element-selector="div.us-item"
+                    gm-doomline-watch="unassignedUs">
                     <div class="us-item nga-us-item" ng-repeat="us in unassignedUs|onlyVisible"
                         ng-class="{selected:us.selected}"
                         ng-dblclick="blCtrl.openUserStory(projectSlug, us.ref)"
