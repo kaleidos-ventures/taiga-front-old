@@ -261,6 +261,37 @@ describe "kanbanController", ->
 
             expect(ctrl.filterUserStories).have.been.called.twice
 
+        it "should allow to re-sort uss", inject ($model)->
+            ctrl.uss = []
+            ctrl.uss[1] = _.map(
+                [{id: 1, status: 1, order: 0}, {id: 4, status: 1, order: 1}],
+                (us) -> $model.make_model("userstories", us)
+            )
+            ctrl.uss[2] = _.map(
+                [{id: 2, status: 2, order: 0}, {id: 3, status: 2, order: 2}, {id: 5, status: 2, order: 1}],
+                (us) -> $model.make_model("userstories", us)
+            )
+
+            httpBackend.expectPOST("#{APIURL}/userstories/bulk_update_order", {
+                    projectId: 1, bulkStories: [[1,0], [4,1]]}).respond(200)
+            ctrl.resortUserStories(1)
+            httpBackend.flush()
+            expect(
+                _.map(ctrl.uss[1], (us) -> us.getAttrs())
+            ).to.be.deep.equal(
+                [{id: 1, status: 1, order: 0}, {id: 4, status: 1, order: 1}]
+            )
+
+            httpBackend.expectPOST("#{APIURL}/userstories/bulk_update_order", {
+                    projectId: 1, bulkStories: [[2,0],[3,1],[5,2]]}).respond(200)
+            ctrl.resortUserStories(2)
+            httpBackend.flush()
+            expect(
+                _.map(ctrl.uss[2], (us) -> us.getAttrs())
+            ).to.be.deep.equal(
+                [{id: 2, status: 2, order: 0}, {id: 3, status: 2, order: 1}, {id: 5, status: 2, order: 2}],
+            )
+
         it "should allow to filter uss by selected tags", ->
             ctrl.selectedFilters = []
             ctrl.scope.userstories = [
@@ -284,6 +315,41 @@ describe "kanbanController", ->
                 {id: 2, tags: ["test2"], assigned_to: 2, __hidden: false}
             ])
 
+        it "allow to prepare uss for render", ->
+            ctrl.scope.constants.usStatusesList = [
+                {id: 1},
+                {id: 2}
+            ]
+            ctrl.scope.userstories = [
+                {id: 1, status: 1},
+                {id: 2, status: 2},
+                {id: 3, status: 2},
+                {id: 4, status: 1},
+                {id: 5, status: 2},
+            ]
+
+            ctrl.prepareForRenderUserStories()
+
+            expect(ctrl.uss[1]).to.be.deep.equal([
+                {id: 1, status: 1},
+                {id: 4, status: 1}
+            ])
+            expect(ctrl.uss[2]).to.be.deep.equal([
+                {id: 2, status: 2},
+                {id: 3, status: 2},
+                {id: 5, status: 2}
+            ])
+
+        it "shouldn allow to formatted the uss", ->
+            sinon.spy(ctrl, "filterUserStories")
+            sinon.spy(ctrl, "prepareForRenderUserStories")
+            sinon.spy(ctrl.scope, "$broadcast")
+
+            ctrl.formatUserStories()
+
+            expect(ctrl.filterUserStories).have.been.called.once
+            expect(ctrl.prepareForRenderUserStories).have.been.called.once
+            expect(ctrl.scope.$broadcast).have.been.calledWith("kanban:redraw")
         it "should allow to open create user stories form", ->
             ctrl.formatUserStories = ->
             ctrl.scope.constants.computableRolesList = [{id: 1}, {id: 2}]
@@ -315,6 +381,7 @@ describe "kanbanController", ->
 
             promise.should.be.fulfilled.then ->
                 expect(ctrl.formatUserStories).have.been.called.once
+
 
         it "should allow to save user story points", inject ($model) ->
             sinon.spy(ctrl.scope, "$broadcast")
