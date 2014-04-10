@@ -174,7 +174,7 @@ class KanbanController extends TaigaPageController
                 @.resortUserStories(sortableScope.status.id)
             us._moving = false
 
-    sortableOnUpdate: (uss, sortableScope, us) =>
+    sortableOnUpdate: (uss, sortableScope) =>
         if @scope.project.is_backlog_activated
             @data.loadUserStories(@scope).then =>
                 @.formatUserStories()

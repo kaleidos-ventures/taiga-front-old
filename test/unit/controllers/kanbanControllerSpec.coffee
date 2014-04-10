@@ -366,6 +366,146 @@ describe "kanbanController", ->
                 expect(us._moving).to.be.false
                 expect(us.revert).have.been.called.once
 
+        it "should allow to sort a status colunm when added one us if backlog is deactivate", inject ($model) ->
+            ctrl.scope.project.is_backlog_activated = false
+            sortableScope = {status: {id: 1}}
+
+            ctrl.resortUserStories = ->
+            sinon.spy(ctrl, "resortUserStories")
+
+            ctrl.uss = []
+            ctrl.uss[1] = _.map(
+                [{id: 1, status: 1}, {id: 2, status: 1}],
+                (us) -> $model.make_model("userstories", us)
+            )
+
+            us = $model.make_model("userstories", {id: 3, status: 2})
+            httpBackend.expectPATCH("#{APIURL}/userstories/3", {status: 1}).respond(200)
+
+            promise = ctrl.sortableOnAdd(us, 3, sortableScope)
+            httpBackend.flush()
+
+            promise.should.be.fulfilled.then ->
+                expect(
+                    _.map(ctrl.uss[1], (us) -> us.getAttrs())
+                ).to.be.deep.equal(
+                    [{id: 1, status: 1}, {id: 2, status: 1}, {id: 3, status: 1}]
+                )
+                expect(ctrl.resortUserStories).have.been.called.once
+
+        it "shouldn't sort a status colunm when added one if backlog is activate", inject ($model) ->
+            ctrl.scope.project.is_backlog_activated = true
+            sortableScope = {status: {id: 1}}
+
+            ctrl.resortUserStories = ->
+            sinon.spy(ctrl, "resortUserStories")
+
+            ctrl.uss = []
+            ctrl.uss[1] = _.map(
+                [{id: 1, status: 1}, {id: 2, status: 1}],
+                (us) -> $model.make_model("userstories", us)
+            )
+
+            us = $model.make_model("userstories", {id: 3, status: 2})
+            httpBackend.expectPATCH("#{APIURL}/userstories/3", {status: 1}).respond(200)
+
+            promise = ctrl.sortableOnAdd(us, 3, sortableScope)
+            httpBackend.flush()
+
+            promise.should.be.fulfilled.then ->
+                expect(
+                    _.map(ctrl.uss[1], (us) -> us.getAttrs())
+                ).to.be.deep.equal(
+                    [{id: 3, status: 1}, {id: 1, status: 1}, {id: 2, status: 1}]
+                )
+                expect(ctrl.resortUserStories).have.not.been.called
+
+        it "should allow to move us in a status colum if backlog is deactivate", inject ($model, $q) ->
+            ctrl.scope.project.is_backlog_activated = false
+            sortableScope = {status: {id: 1}}
+
+            ctrl.resortUserStories = ->
+                defered = $q.defer()
+                defered.resolve()
+                return defered.promise
+            sinon.spy(ctrl, "resortUserStories")
+            sinon.spy(ctrl, "formatUserStories")
+            sinon.spy(ctrl.scope, "$broadcast")
+
+            ctrl.uss = []
+            ctrl.uss[1] = _.map(
+                [{id: 1, status: 1}, {id: 2, status: 1}, {id: 3, status: 1}],
+                (us) -> $model.make_model("userstories", us)
+            )
+            uss = _.map(
+                [{id: 3, status: 1}, {id: 1, status: 1}, {id: 2, status: 1}],
+                (us) -> $model.make_model("userstories", us)
+            )
+
+            promise = ctrl.sortableOnUpdate(uss, sortableScope)
+
+            promise.should.be.fulfilled.then ->
+                expect(
+                    _.map(ctrl.uss[1], (us) -> us.getAttrs())
+                ).to.be.deep.equal(
+                    [{id: 3, status: 1}, {id: 1, status: 1}, {id: 2, status: 1}]
+                )
+                expect(ctrl.formatUserStories).have.not.been.called
+                expect(ctrl.resortUserStories).have.been.called.once
+                expect(ctrl.scope.$broadcast).have.been.calledWith("wipline:redraw")
+
+        #it "shouldn't allow to move us in a status colum if backlog is activate", inject ($model, $q) ->
+        #    ctrl.scope.project.is_backlog_activated = false
+        #    sortableScope = {status: {id: 1}}
+
+        #    ctrl.formatUserStories = ->
+        #    sinon.spy(ctrl, "resortUserStories")
+        #    sinon.spy(ctrl, "formatUserStories")
+        #    sinon.spy(ctrl.scope, "$broadcast")
+
+        #    uss = _.map(
+        #        [{id: 3, status: 1}, {id: 1, status: 1}, {id: 2, status: 1}],
+        #        (us) -> $model.make_model("userstories", us)
+        #    )
+
+        #    promise = ctrl.sortableOnUpdate(uss, sortableScope)
+        #    httpBackend.flush()
+
+        #    promise.should.be.fulfilled.then ->
+        #        expect(
+        #            _.map(ctrl.uss[1], (us) -> us.getAttrs())
+        #        ).to.be.deep.equal(
+        #            [{id: 3, status: 1}, {id: 1, status: 1}, {id: 2, status: 1}]
+        #        )
+        #        expect(ctrl.formatUserStories).have.been.called.once
+        #        expect(ctrl.resortUserStories).have.not.been.called
+        #        expect(ctrl.scope.$broadcast).have.been.calledWith("wipline:redraw")
+
+        #it "should allow to remove user story from the list of unassigned user stories", inject ($model) ->
+        #    ctrl.scope.userstories = _.map(
+        #        [{id: 1, milestone: null}, {id: 2, milestone: null}, {id: 3, milestone: null}],
+        #        (us) -> $model.make_model("userstories", us)
+        #    )
+
+        #    ctrl.getSelectedUserStories = ->
+        #        "test"
+        #    sinon.spy(ctrl, "getSelectedUserStories")
+
+        #    ctrl.calculateStoryPoints = ->
+        #        10
+        #    sinon.spy(ctrl, "calculateStoryPoints")
+
+        #    ctrl.sortableOnRemove(ctrl.scope.unassignedUs[0])
+        #    expect(
+        #        _.map(ctrl.scope.userstories, (us) -> us.getAttrs())
+        #    ).to.be.deep.equal(
+        #        [{id: 2, milestone: null}, {id: 3, milestone: null}]
+        #    )
+        #    expect(ctrl.getSelectedUserStories).have.been.called.once
+        #    expect(ctrl.calculateStoryPoints).have.been.called.once
+        #    expect(ctrl.scope.selectedUserStories).to.be.equal("test")
+        #    expect(ctrl.scope.selectedStoryPoints).to.be.equal(10)
+
 
     describe "KanbanUsModalController", ->
         httpBackend = null
