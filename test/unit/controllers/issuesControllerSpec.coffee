@@ -830,3 +830,111 @@ describe "issuesController", ->
             ctrl.scope.attachments = [$model.make_model('issues/attachments', {"id": "test", "content": "test"})]
             ctrl.removeNewAttachment(ctrl.scope.attachments[0])
             expect(ctrl.scope.newAttachments).to.be.deep.equal([])
+
+    describe "IssueUserStoryModalController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q, $gmFilters) ->
+            scope = $rootScope.$new()
+            confirmMock = {
+                confirm: (text) ->
+                    defered = $q.defer()
+                    defered.resolve("test")
+                    return defered.promise
+            }
+            ctrl = $controller("IssueUserStoryModalController", {
+                $scope: scope
+                $confirm: confirmMock
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to load project tags", ->
+            ctrl.scope.projectId = 1
+            httpBackend.expectGET("http://localhost:8000/api/v1/projects/1/tags").respond(200, "test")
+            promise = ctrl.loadProjectTags()
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.projectTags).to.be.equal("test")
+
+        it "should allow to get the tags list", ->
+            ctrl.projectTags = undefined
+            expect(ctrl.getTagsList()).to.be.deep.equal([])
+            ctrl.projectTags = ["test"]
+            expect(ctrl.getTagsList()).to.be.deep.equal(["test"])
+
+        it "should allow to open the modal", inject ($q) ->
+            ctrl.loadProjectTags = ->
+            sinon.spy(ctrl, "loadProjectTags")
+            sinon.spy(ctrl.scope, "$broadcast")
+
+            ctrl.scope.context = {us: {id:1, points: {1: 1, 2: 2}}}
+
+            ctrl.gmOverlay.open = ->
+                defered = $q.defer()
+                defered.resolve()
+                return defered.promise
+
+            promise = ctrl.openModal()
+            expect(ctrl.scope.formOpened).to.be.true
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.formOpened).to.be.false
+            expect(ctrl.scope.form).to.be.deep.equal({id: 1, points: {1: 1, 2: 2}})
+            expect(ctrl.scope.$broadcast).have.been.calledWith("checksley:reset")
+            expect(ctrl.scope.$broadcast).have.been.calledWith("wiki:clean-previews")
+            expect(ctrl.scope.$broadcast).have.been.called.twice
+            expect(ctrl.loadProjectTags).have.been.called.once
+
+        it "should allow to save the form of the modal", inject ($model) ->
+            ctrl.gmOverlay.close = ->
+            ctrl.scope.defered = {}
+            ctrl.scope.defered.resolve = ->
+            sinon.spy(ctrl.scope, "$emit")
+            sinon.spy(ctrl.scope.defered, "resolve")
+            sinon.spy(ctrl.gmOverlay, "close")
+            sinon.spy(ctrl.gmFlash, "info")
+            sinon.spy(ctrl, "closeModal")
+
+            ctrl.scope.form = {test: "test"}
+
+            httpBackend.expectPOST(
+                "http://localhost:8000/api/v1/userstories?",
+                {test: "test"}
+            ).respond(200, {id: 1, test: "test"})
+            promise = ctrl._submit()
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.formOpened).to.be.false
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:start")
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:stop")
+                expect(ctrl.scope.$emit).have.been.called.twice
+                expect(ctrl.gmFlash.info).have.been.called.once
+                expect(ctrl.gmOverlay.close).have.been.called.once
+                expect(ctrl.scope.defered.resolve).have.been.called.once
+
+        it "should allow to save the form of the modal (on error)", ->
+            sinon.spy(ctrl.scope, "$emit")
+
+            ctrl.scope.form = {test: "test"}
+
+            httpBackend.expectPOST(
+                "http://localhost:8000/api/v1/userstories?",
+                {test: "test"}
+            ).respond(400)
+            promise = ctrl._submit()
+            httpBackend.flush()
+            promise.should.be.rejected
+            promise.then ->
+                expect(ctrl.scope.formOpened).to.be.true
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:start")
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:stop")
+                expect(ctrl.scope.$emit).have.been.called.twice
+                expect(ctrl.scope.checksleyErrors).to.be.deep.equal({test: "test"})

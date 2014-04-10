@@ -517,6 +517,8 @@ class IssueUserStoryModalController extends ModalBaseController
         promise.then null, (data) =>
             @scope.checksleyErrors = data
 
+        return promise
+
 
 moduleDeps = ["gmModal", "taiga.services.filters", "taiga.services.resource",
               "taiga.services.data", "gmConfirm", "favico", "gmOverlay",
