@@ -316,3 +316,63 @@ describe "kanbanController", ->
                 expect(ctrl.scope.$emit).have.been.calledWith("spinner:stop")
                 expect(ctrl.scope.$emit).have.been.called.twice
                 expect(ctrl.scope.checksleyErrors).to.be.deep.equal({test: "test"})
+
+
+    describe "KanbanUsController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q, $gmFilters) ->
+            scope = $rootScope.$new()
+            ctrl = $controller("KanbanUsController", {
+                $scope: scope
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET(APIURL+"/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to change the assigned of a US on success", inject ($model) ->
+            us = $model.make_model("userstories", {id: 3, test: "test", assigned_to: 1})
+            newAssigned = 3
+
+            sinon.spy(us, "revert")
+            httpBackend.expectPATCH("#{APIURL}/userstories/#{us.id}", {assigned_to: newAssigned}).respond(
+                                                                                               200, "ok")
+
+            ctrl.updateUsAssignation(us, newAssigned)
+            httpBackend.flush()
+
+            expect(us.revert).have.not.been.called
+            expect(us.assigned_to).to.be.equal(newAssigned)
+
+        it "should allow to change the assigned of a US on success", inject ($model) ->
+            us = $model.make_model("userstories", {id: 3, test: "test", assigned_to: 1})
+            newAssigned = 3
+
+            sinon.spy(us, "revert")
+            httpBackend.expectPATCH("#{APIURL}/userstories/#{us.id}", {assigned_to: newAssigned}).respond(
+                                                                                              400, "error")
+
+            ctrl.updateUsAssignation(us, newAssigned)
+            httpBackend.flush()
+
+            expect(us.revert).have.been.calledOnce
+            expect(us.assigned_to).to.be.equal(1)
+
+        it "should go to the US detail page", ->
+            sinon.spy(ctrl.location, "url")
+            projectSlug = "test"
+            usRef = "1"
+
+            ctrl.openUs(projectSlug, usRef)
+            ctrl.location.url.should.have.been.calledOnce
+            ctrl.location.url.should.have.been.calledWith("/project/test/user-story/1")
+
+
+
