@@ -19,7 +19,7 @@ FIXTURES = {
         default_issue_status: 1,
         default_issue_type: 1,
         default_question_status: 1,
-        members: []
+        members: [1, 2]
         tags: "",
         list_of_milestones: [
             {
@@ -145,6 +145,7 @@ FIXTURES = {
             total_points: 0
             assigned_to: 2
             subject: "Create the user model"
+            tags: ["test1", "test2", "test3"]
         }
     ]
 }
@@ -161,14 +162,31 @@ describe "kanbanController", ->
         scope = null
         ctrl = null
 
-        beforeEach(inject(($rootScope, $controller, $httpBackend) ->
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $gmFilters) ->
             scope = $rootScope.$new()
             routeParams = {
                 pslug: "test"
             }
+            gmFiltersMock = {
+                generateTagsFromUserStoriesList: ->
+                    ["test1", "test2", "test3"]
+                generatePersonFiltersFromUserStories: ->
+                    [1]
+                getSelectedFiltersList: ->
+                    ["test2"]
+                isFilterSelected: (p, n, t)->
+                    return t is "test2"
+                selectFilter: ->
+                unselectFilter: ->
+                plainTagsToObjectTags: $gmFilters.plainTagsToObjectTags
+                filterToText: $gmFilters.filterToText
+                generateFiltersForKanban: $gmFilters.generateFiltersForKanban
+                getFiltersForUserStory: $gmFilters.getFiltersForUserStory
+            }
             ctrl = $controller("KanbanController", {
                 $scope: scope,
-                $routeParams: routeParams
+                $routeParams: routeParams,
+                $gmFilters: gmFiltersMock
             })
             httpBackend = $httpBackend
             httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
@@ -192,6 +210,72 @@ describe "kanbanController", ->
 
         it "should set the breadcrumb", ->
             expect(ctrl.rootScope.pageBreadcrumb).to.be.lengthOf(2)
+
+        it "should allow initialize the filters", ->
+            ctrl.initializeFilters()
+            expect(ctrl.filters).to.be.deep.equal({tags: ["test1", "test2", "test3"], assignedTo: [1]})
+            expect(ctrl.selectedFilters).to.be.deep.equal(["test2"])
+
+        it "should allow to check if a filter is selected", ->
+            expect(ctrl.isFilterSelected("test2")).to.be.true
+            expect(ctrl.isFilterSelected("test6")).to.be.false
+
+        it "should allow toggle a filter", ->
+            ctrl.filterUserStories = ->
+
+            sinon.spy(ctrl.gmFilters, "selectFilter")
+            sinon.spy(ctrl.gmFilters, "unselectFilter")
+            sinon.spy(ctrl, "filterUserStories")
+
+            ctrl.selectedFilters = [
+                {type: "test1", id: "test1"},
+                {type:"test2", id: "test2"}
+            ]
+
+            ctrl.toggleFilter({type: "test", id: "test"})
+            expect(ctrl.gmFilters.selectFilter).have.been.called.once
+            expect(ctrl.selectedFilters).to.be.deep.equal([
+                {type: "test1", id: "test1"},
+                {type:"test2", id: "test2"},
+                {type: "test", id: "test"}
+            ])
+
+            ctrl.selectedFilters = [
+                {type: "test1", id: "test1"},
+                {type:"test2", id: "test2"},
+                {type: "test", id: "test"}
+            ]
+            ctrl.toggleFilter({type: "test", id: "test"})
+            expect(ctrl.gmFilters.unselectFilter).have.been.called.once
+            expect(ctrl.selectedFilters).to.be.deep.equal([
+                {type: "test1", id: "test1"},
+                {type:"test2", id: "test2"}
+            ])
+
+            expect(ctrl.filterUserStories).have.been.called.twice
+
+        it "should allow to filter uss by selected tags", ->
+            ctrl.selectedFilters = []
+            ctrl.scope.userstories = [
+                {id: 1, tags: ["test1"], assigned_to: 1},
+                {id: 2, tags: ["test2"], assigned_to: 2}
+            ]
+            ctrl.filterUserStories()
+            expect(ctrl.scope.userstories).to.be.deep.equal([
+                {id: 1, tags: ["test1"], assigned_to: 1, __hidden: false},
+                {id: 2, tags: ["test2"], assigned_to: 2, __hidden: false}
+            ])
+
+            ctrl.selectedFilters = [{type: "tags", id: "test2"}]
+            ctrl.scope.userstories = [
+                {id: 1, tags: ["test1"], assigned_to: 1},
+                {id: 2, tags: ["test2"], assigned_to: 2}
+            ]
+            ctrl.filterUserStories()
+            expect(ctrl.scope.userstories).to.be.deep.equal([
+                {id: 1, tags: ["test1"], assigned_to: 1, __hidden: true},
+                {id: 2, tags: ["test2"], assigned_to: 2, __hidden: false}
+            ])
 
 
     describe "KanbanUsModalController", ->
@@ -308,7 +392,6 @@ describe "kanbanController", ->
             httpBackend.expectPOST("#{APIURL}/userstories?", {test: "test"}).respond(400)
             promise = ctrl._submit()
             httpBackend.flush()
-            # TODO: Fix me
             promise.should.be.rejected
             promise.then ->
                 expect(ctrl.scope.formOpened).to.be.true
@@ -373,6 +456,3 @@ describe "kanbanController", ->
             ctrl.openUs(projectSlug, usRef)
             ctrl.location.url.should.have.been.calledOnce
             ctrl.location.url.should.have.been.calledWith("/project/test/user-story/1")
-
-
-
