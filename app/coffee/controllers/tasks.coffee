@@ -114,6 +114,8 @@ class TasksViewController extends TaigaDetailPageController
         promise.then null, (data) =>
             @scope.checksleyErrors = data
 
+        return promise
+
 
 moduleDeps = ['gmConfirm', 'taiga.services.resource', "taiga.services.data",
               "gmFlash", "i18next", "favico", "taiga.services.selectOptions"]

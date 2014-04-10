@@ -277,3 +277,12 @@ describe "tasksController", ->
             ctrl.scope.form.description = "test2"
             ctrl._submit()
             httpBackend.flush()
+
+            ctrl.scope.form = {}
+            ctrl.scope.issue = $model.make_model('tasks', {id: 1, ref: "1", description: "test"})
+            httpBackend.expectPATCH("#{APIURL}/tasks/1", {description: "test2"}).respond(400)
+            ctrl.scope.form.description = "test2"
+            promise = ctrl._submit()
+            httpBackend.flush()
+            promise.should.be.rejected
+            
