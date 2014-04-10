@@ -558,7 +558,7 @@ describe "issuesController", ->
             ctrl.scope.issues = _.map([{id: 1, order: 2}, {id: 2, order: 1}, {id: 3, order: 3}], (us) -> $model.make_model("issues", us))
             issue = ctrl.scope.issues[0]
 
-            httpBackend.expectDELETE("http://localhost:8000/api/v1/issues/1").respond(200)
+            httpBackend.expectDELETE("#{APIURL}/issues/1").respond(200)
 
             promise = ctrl.removeIssue(issue)
             httpBackend.flush()
@@ -571,3 +571,262 @@ describe "issuesController", ->
             sinon.spy(ctrl.location, "url")
             ctrl.openIssue("test", 1)
             expect(ctrl.location.url).have.been.calledWith("/project/test/issues/1")
+
+    describe "IssuesModalController", ->
+        httpBackend = null
+        scope = null
+        ctrl = null
+
+        beforeEach(inject(($rootScope, $controller, $httpBackend, $q, $gmFilters) ->
+            scope = $rootScope.$new()
+            confirmMock = {
+                confirm: (text) ->
+                    defered = $q.defer()
+                    defered.resolve("test")
+                    return defered.promise
+            }
+            ctrl = $controller("IssuesModalController", {
+                $scope: scope
+                $confirm: confirmMock
+            })
+            httpBackend = $httpBackend
+            httpBackend.whenGET("#{APIURL}/sites").respond(200, {test: "test"})
+            httpBackend.flush()
+        ))
+
+        afterEach ->
+            httpBackend.verifyNoOutstandingExpectation()
+            httpBackend.verifyNoOutstandingRequest()
+
+        it "should allow to load project tags", ->
+            ctrl.scope.projectId = 1
+            httpBackend.expectGET("http://localhost:8000/api/v1/projects/1/tags").respond(200, "test")
+            promise = ctrl.loadProjectTags()
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.projectTags).to.be.equal("test")
+
+        it "should allow to get the tags list", ->
+            ctrl.projectTags = undefined
+            expect(ctrl.getTagsList()).to.be.deep.equal([])
+            ctrl.projectTags = ["test"]
+            expect(ctrl.getTagsList()).to.be.deep.equal(["test"])
+
+        it "should allow to open the modal", inject ($q) ->
+            ctrl.loadProjectTags = ->
+            ctrl.loadAttachments = ->
+            sinon.spy(ctrl, "loadProjectTags")
+            sinon.spy(ctrl, "loadAttachments")
+            sinon.spy(ctrl.scope, "$broadcast")
+
+            ctrl.scope.context = {issue: {id:1}}
+            ctrl.scope.project = {
+                default_issue_status: 1
+                default_issue_type: 2
+                default_priority: 3
+                default_severity: 4
+            }
+
+            ctrl.gmOverlay.open = ->
+                defered = $q.defer()
+                defered.resolve()
+                return defered.promise
+
+            promise = ctrl.openModal()
+            expect(ctrl.scope.formOpened).to.be.true
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.formOpened).to.be.false
+            expect(ctrl.scope.form).to.be.deep.equal({id:1})
+            expect(ctrl.scope.$broadcast).have.been.calledWith("checksley:reset")
+            expect(ctrl.scope.$broadcast).have.been.calledWith("wiki:clean-previews")
+            expect(ctrl.scope.$broadcast).have.been.called.twice
+            expect(ctrl.loadProjectTags).have.been.called.once
+            expect(ctrl.loadAttachments).have.been.called.once
+
+        it "should allow to open the modal without issue", inject ($q) ->
+            ctrl.loadProjectTags = ->
+            ctrl.loadAttachments = ->
+            sinon.spy(ctrl, "loadProjectTags")
+            sinon.spy(ctrl, "loadAttachments")
+            sinon.spy(ctrl.scope, "$broadcast")
+
+            ctrl.scope.context = {issue: null}
+            ctrl.scope.project = {
+                default_issue_status: 1
+                default_issue_type: 2
+                default_priority: 3
+                default_severity: 4
+            }
+
+            ctrl.gmOverlay.open = ->
+                defered = $q.defer()
+                defered.resolve()
+                return defered.promise
+
+            promise = ctrl.openModal()
+            expect(ctrl.scope.formOpened).to.be.true
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.formOpened).to.be.false
+            expect(ctrl.scope.form).to.be.deep.equal({status: 1, type: 2, priority: 3, severity: 4})
+            expect(ctrl.scope.$broadcast).have.been.calledWith("checksley:reset")
+            expect(ctrl.scope.$broadcast).have.been.calledWith("wiki:clean-previews")
+            expect(ctrl.scope.$broadcast).have.been.called.twice
+            expect(ctrl.loadProjectTags).have.been.called.once
+            expect(ctrl.loadAttachments).have.not.been.called
+
+        it "should allow to save the form of the modal", inject ($model) ->
+            ctrl.gmOverlay.close = ->
+            ctrl.scope.defered = {}
+            ctrl.scope.defered.resolve = ->
+            sinon.spy(ctrl.scope, "$emit")
+            sinon.spy(ctrl.scope.defered, "resolve")
+            sinon.spy(ctrl.gmOverlay, "close")
+            sinon.spy(ctrl.gmFlash, "info")
+            sinon.spy(ctrl, "closeModal")
+
+            ctrl.scope.form = {test: "test"}
+
+            httpBackend.expectPOST("http://localhost:8000/api/v1/issues", {test: "test"}).respond(200, {id: 1, test: "test"})
+            promise = ctrl._submit()
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.formOpened).to.be.false
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:start")
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:stop")
+                expect(ctrl.scope.$emit).have.been.called.twice
+                expect(ctrl.gmFlash.info).have.been.called.once
+                expect(ctrl.gmOverlay.close).have.been.called.once
+                expect(ctrl.scope.defered.resolve).have.been.called.once
+
+        it "should allow to save the form of the modal with attachments", inject ($model, $q) ->
+            ctrl.gmOverlay.close = ->
+            ctrl.scope.defered = {}
+            ctrl.scope.defered.resolve = ->
+            ctrl.saveNewAttachments = ->
+                defered = $q.defer()
+                defered.resolve()
+                return defered.promise
+
+            ctrl.scope.newAttachments = ["test", "test"]
+
+            sinon.spy(ctrl.scope, "$emit")
+            sinon.spy(ctrl.scope.defered, "resolve")
+            sinon.spy(ctrl.gmOverlay, "close")
+            sinon.spy(ctrl.gmFlash, "info")
+            sinon.spy(ctrl, "closeModal")
+            sinon.spy(ctrl, "saveNewAttachments")
+
+            ctrl.scope.form = {test: "test"}
+
+            httpBackend.expectPOST("http://localhost:8000/api/v1/issues", {test: "test"}).respond(200, {id: 1, test: "test"})
+            promise = ctrl._submit()
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.formOpened).to.be.false
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:start")
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:stop")
+                expect(ctrl.scope.$emit).have.been.called.twice
+                expect(ctrl.gmFlash.info).have.been.called.once
+                expect(ctrl.gmOverlay.close).have.been.called.once
+                expect(ctrl.scope.defered.resolve).have.been.called.once
+                expect(ctrl.saveNewAttachments).have.been.called.twice
+
+        it "should allow to save the form of the modal (on edit)", inject ($model) ->
+            ctrl.gmOverlay.close = ->
+            ctrl.scope.defered = {}
+            ctrl.scope.defered.resolve = ->
+            sinon.spy(ctrl.scope, "$emit")
+            sinon.spy(ctrl.scope.defered, "resolve")
+            sinon.spy(ctrl.gmOverlay, "close")
+            sinon.spy(ctrl.gmFlash, "info")
+            sinon.spy(ctrl, "closeModal")
+
+            ctrl.scope.form = $model.make_model("issues", {id: 3, test: "test"})
+            ctrl.scope.form.test = "test1"
+
+            httpBackend.expectPUT("http://localhost:8000/api/v1/issues/3", {id: 3, test: "test1"}).respond(200, {id: 1, test: "test1"})
+            promise = ctrl._submit()
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.formOpened).to.be.false
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:start")
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:stop")
+                expect(ctrl.scope.$emit).have.been.called.twice
+                expect(ctrl.gmFlash.info).have.been.called.once
+                expect(ctrl.gmOverlay.close).have.been.called.once
+                expect(ctrl.scope.defered.resolve).have.been.called.once
+
+        it "should allow to save the form of the modal (on error)", ->
+            sinon.spy(ctrl.scope, "$emit")
+
+            ctrl.scope.form = {test: "test"}
+
+            httpBackend.expectPOST("http://localhost:8000/api/v1/issues", {test: "test"}).respond(400)
+            promise = ctrl._submit()
+            httpBackend.flush()
+            promise.should.be.rejected
+            promise.then ->
+                expect(ctrl.scope.formOpened).to.be.true
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:start")
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:stop")
+                expect(ctrl.scope.$emit).have.been.called.twice
+                expect(ctrl.scope.checksleyErrors).to.be.deep.equal({test: "test"})
+
+        it "should allow to save a new attachment", inject ($q) ->
+            ctrl.rs.uploadIssueAttachment = (projectId, issueId, attachment) ->
+                defered = $q.defer()
+                if attachment == "good"
+                    defered.resolve("good")
+                else if attachment == "bad"
+                    defered.reject("bad")
+                return defered.promise
+
+            ctrl.scope.newAttachments = []
+            result = ctrl.saveNewAttachments(1, 1)
+            expect(result).to.be.null
+
+            httpBackend.expectGET("#{APIURL}/issue-attachments?object_id=1&project=1").respond(200, [])
+            ctrl.scope.newAttachments = ["good", "good", "good"]
+            promise = ctrl.saveNewAttachments(1, 1)
+            httpBackend.flush()
+            promise.should.have.been.fulfilled
+            promise.then ->
+                expect(ctrl.scope.newAttachments).to.be.deep.equal([])
+
+        it "should allow to save a new attachment (taking care on errors)", inject ($q) ->
+            sinon.spy(ctrl.gmFlash, "error")
+
+            ctrl.rs.uploadIssueAttachment = (projectId, issueId, attachment) ->
+                defered = $q.defer()
+                if attachment == "good"
+                    defered.resolve("good")
+                else if attachment == "bad"
+                    defered.reject("bad")
+                return defered.promise
+
+            httpBackend.expectGET("#{APIURL}/issue-attachments?object_id=1&project=1").respond(200, [])
+            ctrl.scope.newAttachments = ["bad", "bad", "bad"]
+            promise = ctrl.saveNewAttachments(1, 1)
+            httpBackend.flush()
+            promise.should.have.been.rejected
+            ctrl.gmFlash.error.should.have.been.calledOnce
+
+            httpBackend.expectGET("#{APIURL}/issue-attachments?object_id=1&project=1").respond(200, [])
+            ctrl.scope.newAttachments = ["good", "good", "bad"]
+            promise = ctrl.saveNewAttachments(1, 1)
+            httpBackend.flush()
+            promise.should.have.been.rejected
+            ctrl.gmFlash.error.should.have.been.calledTwice
+
+        it 'should allow to delete a issue attachment', inject ($model) ->
+            ctrl.scope.attachments = [$model.make_model('issues/attachments', {"id": "test", "content": "test"})]
+            httpBackend.expectDELETE("#{APIURL}/issue-attachments/test").respond(200)
+            promise = ctrl.removeAttachment(ctrl.scope.attachments[0])
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.attachments).to.be.deep.equal([])
+
+        it 'should allow to delete a not uploaded attachment', inject ($model) ->
+            ctrl.scope.attachments = [$model.make_model('issues/attachments', {"id": "test", "content": "test"})]
+            ctrl.removeNewAttachment(ctrl.scope.attachments[0])
+            expect(ctrl.scope.newAttachments).to.be.deep.equal([])

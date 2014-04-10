@@ -373,17 +373,24 @@ class IssuesModalController extends ModalBaseController
 
     saveNewAttachments: (projectId, issueId) =>
         if @scope.newAttachments.length == 0
-            return
+            return null
 
         promises = []
         for attachment in @scope.newAttachments
             promise = @rs.uploadIssueAttachment(projectId, issueId, attachment)
+            promise.then =>
+                @scope.newAttachments = _.without(@scope.newAttachments, attachment)
             promises.push(promise)
 
         promise = @q.all(promises)
         promise.then =>
             gm.safeApply @scope, =>
-                @scope.newAttachments = []
+                @loadAttachments(projectId, issueId)
+
+        promise.then null, (data) =>
+            @loadAttachments(projectId, issueId)
+            @gmFlash.error(@i18next.t("common.upload-attachment-error"))
+
         return promise
 
     removeAttachment: (attachment) ->
@@ -397,8 +404,9 @@ class IssuesModalController extends ModalBaseController
 
     loadAttachments: (projectId, issueId) ->
         promise = @rs.getIssueAttachments(projectId, issueId)
-        promise.then (attachments) ->
+        promise.then (attachments) =>
             @scope.attachments = attachments
+        return promise
 
     loadProjectTags: =>
         @rs.getProjectTags(@scope.projectId).then (data) =>
@@ -424,11 +432,15 @@ class IssuesModalController extends ModalBaseController
         @scope.$broadcast("checksley:reset")
         @scope.$broadcast("wiki:clean-previews")
 
-        @gmOverlay.open().then =>
+        promise = @gmOverlay.open()
+        promise.then =>
             @scope.formOpened = false
+        return promise
 
     # Debounced Method (see debounceMethods method)
     submit: =>
+        defered = @q.defer()
+
         if @scope.form.id?
             promise = @scope.form.save(false)
         else
@@ -442,6 +454,7 @@ class IssuesModalController extends ModalBaseController
                 @gmOverlay.close()
                 @scope.defered.resolve(@scope.form)
                 @gmFlash.info(@i18next.t("issue.issue-saved"))
+                defered.resolve(data)
 
             if @scope.newAttachments.length > 0
                 @saveNewAttachments(@scope.projectId, data.id).then ->
@@ -451,6 +464,9 @@ class IssuesModalController extends ModalBaseController
 
         promise.then null, (data) =>
             @scope.checksleyErrors = data
+            defered.reject(data)
+
+        return promise
 
 
 class IssueUserStoryModalController extends ModalBaseController
