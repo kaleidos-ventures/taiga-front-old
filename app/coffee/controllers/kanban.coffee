@@ -251,6 +251,8 @@ class KanbanUsModalController extends ModalBaseController
         promise.then null, (data) =>
             @scope.checksleyErrors = data
 
+        return promise
+
 
 class KanbanUsController extends TaigaBaseController
     @.$inject = ["$scope", "$rootScope", "$q", "$location"]

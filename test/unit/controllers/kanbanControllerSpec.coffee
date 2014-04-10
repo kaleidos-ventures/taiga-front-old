@@ -309,10 +309,10 @@ describe "kanbanController", ->
             promise = ctrl._submit()
             httpBackend.flush()
             # TODO: Fix me
-            #promise.should.be.rejected
-            #promise.then ->
-            #    expect(ctrl.scope.formOpened).to.be.true
-            #    expect(ctrl.scope.$emit).have.been.calledWith("spinner:start")
-            #    expect(ctrl.scope.$emit).have.been.calledWith("spinner:stop")
-            #    expect(ctrl.scope.$emit).have.been.called.twice
-            #    expect(ctrl.scope.checksleyErrors).to.be.deep.equal({test: "test"})
+            promise.should.be.rejected
+            promise.then ->
+                expect(ctrl.scope.formOpened).to.be.true
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:start")
+                expect(ctrl.scope.$emit).have.been.calledWith("spinner:stop")
+                expect(ctrl.scope.$emit).have.been.called.twice
+                expect(ctrl.scope.checksleyErrors).to.be.deep.equal({test: "test"})
