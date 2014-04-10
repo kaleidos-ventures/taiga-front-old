@@ -79,7 +79,7 @@ class TaskboardController extends TaigaPageController
                 percentageCompletedPoints: if totalPoints == 0 then 0 else percentageCompletedPoints
                 totalUss: milestoneStats.total_userstories
                 compledUss: milestoneStats.completed_userstories
-                remainingUss: milestoneStats.completed_userstories - milestoneStats.completed_userstories
+                remainingUss: milestoneStats.total_userstories - milestoneStats.completed_userstories
                 totalTasks: milestoneStats.total_tasks
                 completedTasks: milestoneStats.completed_tasks
                 remainingTasks: milestoneStats.total_tasks - milestoneStats.completed_tasks
@@ -142,11 +142,15 @@ class TaskboardController extends TaigaPageController
             @formatUserStoryTasks()
             @calculateStats()
 
+        return promise
+
     openEditTaskForm: (us, task) ->
         promise = @modal.open("task-form", {'task': task, 'type': 'edit'})
         promise.then =>
             @formatUserStoryTasks()
             @calculateStats()
+
+        return promise
 
     sortableOnAdd: (task, index, sortableScope) ->
         if sortableScope.us?
@@ -232,6 +236,7 @@ class TaskboardTaskModalController extends ModalBaseController
         promise.then null, (data) =>
             @scope.checksleyErrors = data
 
+        return promise
 
 class TaskboardBulkTasksModalController extends ModalBaseController
     @.$inject = ['$scope', '$rootScope', '$gmOverlay', 'resource', '$gmFlash',
@@ -240,6 +245,7 @@ class TaskboardBulkTasksModalController extends ModalBaseController
         super(scope)
 
     openModal: ->
+        @scope.form = {}
         @scope.formOpened = true
         @scope.$broadcast("checksley:reset")
 
@@ -263,6 +269,7 @@ class TaskboardBulkTasksModalController extends ModalBaseController
         promise.then null, (data) =>
             @scope.checksleyErrors = data
 
+        return promise
 
 class TaskboardTaskController extends TaigaBaseController
     @.$inject = ['$scope', '$location']
@@ -281,6 +288,8 @@ class TaskboardTaskController extends TaigaBaseController
         promise.then null, ->
             task.revert()
             task._moving = false
+
+        return promise
 
     openTask: (projectSlug, taskRef) ->
         @location.url("/project/#{projectSlug}/tasks/#{taskRef}")
