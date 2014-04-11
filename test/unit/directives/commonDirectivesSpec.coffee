@@ -64,7 +64,7 @@ describe "GmHeaderMenuDirective", ->
     $compile = null
 
     template = """
-    <ul gm-header-menu>
+    <ul gm-header-menu="pageSection">
         <li class='backlog'></li>
         <li class='kanban'></li>
         <li class='issues'></li>

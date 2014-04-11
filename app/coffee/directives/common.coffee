@@ -1,21 +1,10 @@
 GmHeaderMenuDirective = ($rootScope) ->
     return (scope, elm, attrs) ->
         element = angular.element(elm)
-        menuSection = $rootScope.pageSection
+        menuSection = scope.$eval(attrs.gmHeaderMenu)
 
         element.find(".selected").removeClass("selected")
-        if menuSection is "backlog"
-            element.find("li.backlog").addClass("selected")
-        else if menuSection is "kanban"
-            element.find("li.kanban").addClass("selected")
-        else if menuSection is "issues"
-            element.find("li.issues").addClass("selected")
-        else if menuSection is "questions"
-            element.find("li.questions").addClass("selected")
-        else if menuSection is "wiki"
-            element.find("li.wiki").addClass("selected")
-        else if menuSection is "admin"
-            element.find("li.admin").addClass("selected")
+        element.find(".#{menuSection}").addClass("selected")
 
 
 GmBreadcrumbDirective = ($rootScope) ->
