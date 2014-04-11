@@ -200,3 +200,91 @@ describe "GmKanbanWip", ->
         angular.element(element.find("div")[0]).remove()
 
         expect(element.find("div.wipline")).to.have.length(0)
+
+describe "GmBreadcrumDirective", ->
+    element = null
+    $rootScope = null
+    $compile = null
+
+    template = """<ul gm-breadcrumb="testBreadcrumb">test</ul>"""
+
+    beforeEach(inject((_$compile_, _$rootScope_) ->
+        element = angular.element(template)
+        $compile = _$compile_
+        $rootScope = _$rootScope_
+    ))
+
+    it "should work with an empty breadcrum", ->
+        $rootScope.testBreadcrumb = []
+        $compile(element)($rootScope)
+        expect(element.children()).to.have.length(0)
+        expect(element.text()).to.have.equal("")
+
+    it "should work well with only text links", ->
+        $rootScope.testBreadcrumb = ["test1", "test2"]
+        $compile(element)($rootScope)
+        expect(element.children()).to.have.length(2)
+        expect(element.children().first().hasClass('first-breadcrumb')).to.be.true
+        expect(element.children().first().text()).to.be.equal("test1")
+        expect(element.children().first().data('icon')).to.be.undefined
+        expect($(element.children()[1]).hasClass('first-breadcrumb')).to.be.false
+        expect($(element.children()[1]).text()).to.be.equal("test2")
+        expect($(element.children()[1]).data('icon')).to.be.equal("G")
+
+    it "should work well with only list links without href", ->
+        $rootScope.testBreadcrumb = [["test1"], ["test2"]]
+        $compile(element)($rootScope)
+        expect(element.children()).to.have.length(2)
+        expect(element.children().first().hasClass('first-breadcrumb')).to.be.true
+        expect(element.children().first().text()).to.be.equal("test1")
+        expect(element.children().first().data('icon')).to.be.undefined
+        expect($(element.children()[1]).hasClass('first-breadcrumb')).to.be.false
+        expect($(element.children()[1]).text()).to.be.equal("test2")
+        expect($(element.children()[1]).data('icon')).to.be.equal("G")
+
+    it "should work well with only list links with href", ->
+        $rootScope.testBreadcrumb = [["test1", "link1"], ["test2", "link2"]]
+        $compile(element)($rootScope)
+        expect(element.children()).to.have.length(2)
+        expect(element.children().first().hasClass('first-breadcrumb')).to.be.true
+        expect(element.children().first().text()).to.be.equal("test1")
+        expect(element.children().first().data('icon')).to.be.undefined
+        expect(element.children().first().children().first().attr('href')).to.be.equal("link1")
+        expect($(element.children()[1]).hasClass('first-breadcrumb')).to.be.false
+        expect($(element.children()[1]).text()).to.be.equal("test2")
+        expect($(element.children()[1]).data('icon')).to.be.equal("G")
+        expect($(element.children()[1]).children().first().attr('href')).to.be.equal("link2")
+
+    it "should work well with mixed type of list links", ->
+        $rootScope.testBreadcrumb = ["test1", ["test2"], ["test3", "link3"]]
+        $compile(element)($rootScope)
+        expect(element.children()).to.have.length(3)
+        expect(element.children().first().hasClass('first-breadcrumb')).to.be.true
+        expect(element.children().first().text()).to.be.equal("test1")
+        expect(element.children().first().data('icon')).to.be.undefined
+        expect(element.children().first().children()).to.have.length(0)
+
+        expect($(element.children()[1]).hasClass('first-breadcrumb')).to.be.false
+        expect($(element.children()[1]).text()).to.be.equal("test2")
+        expect($(element.children()[1]).data('icon')).to.be.equal("G")
+        expect($(element.children()[1]).children()).to.have.length(0)
+
+        expect($(element.children()[2]).hasClass('first-breadcrumb')).to.be.false
+        expect($(element.children()[2]).text()).to.be.equal("test3")
+        expect($(element.children()[2]).data('icon')).to.be.equal("G")
+        expect($(element.children()[2]).children().first().attr('href')).to.be.equal("link3")
+
+    it "should reload on change the monitorized variable", ->
+        $rootScope.testBreadcrumb = []
+        $compile(element)($rootScope)
+        expect(element.children()).to.have.length(0)
+
+        $rootScope.$apply ->
+            $rootScope.testBreadcrumb = ["test1", "test2"]
+
+        expect(element.children()).to.have.length(2)
+
+    it "should do nothing on monitorized variable not defined", ->
+        $rootScope.testBreadcrumb = undefined
+        $compile(element)($rootScope)
+        expect(element.text()).to.have.equal("test")

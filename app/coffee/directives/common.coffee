@@ -7,30 +7,35 @@ GmHeaderMenuDirective = ($rootScope) ->
         element.find(".#{menuSection}").addClass("selected")
 
 
-GmBreadcrumbDirective = ($rootScope) ->
+GmBreadcrumbDirective = ->
     link: (scope, element, attrs) ->
-        scope.$watch "pageBreadcrumb", (breadcrumb) ->
-            if breadcrumb is undefined
-                return
+        drawBreadcrumb = (breadcrumb) =>
+            if not breadcrumb?
+                return null
 
-            total = breadcrumb.length-1
             element.empty()
 
             items = []
             for item, index in breadcrumb
-                if item[1] == null
-                    li = angular.element('<li data-icon="G" class="title-item"></li>').text(item[0])
-                else
+                li = angular.element('<li data-icon="G" class="title-item"></li>')
+                if (typeof item) == "string"
+                    li.text(item)
+                else if item[1]?
                     link = angular.element('<a></a>').text(item[0]).attr('href', item[1])
-                    li = angular.element('<li data-icon="G" class="title-item"></li>').append(link)
+                    li.append(link)
+                else
+                    li.text(item[0])
                 items.push(li)
 
-            if not _.isEmpty(items)
-                first = items[0]
-                first.addClass('first-breadcrumb').removeAttr('data-icon')
+            items[0]?.addClass('first-breadcrumb').removeAttr('data-icon')
 
             for item in items
                 element.append(item)
+
+        scope.$watch attrs.gmBreadcrumb, (breadcrumb) ->
+            drawBreadcrumb(breadcrumb)
+
+        drawBreadcrumb(scope.$eval(attrs.gmBreadcrumb))
 
 
 SearchBoxDirective = ($rootScope, $location) ->
@@ -536,7 +541,7 @@ GmKanbanWip = ->
 
 
 module = angular.module('taiga.directives.common', [])
-module.directive('gmBreadcrumb', ["$rootScope", GmBreadcrumbDirective])
+module.directive('gmBreadcrumb', GmBreadcrumbDirective)
 module.directive('gmHeaderMenu', ["$rootScope", GmHeaderMenuDirective])
 module.directive('gmNinjaGraph', GmNinjaGraphDirective)
 module.directive('gmColorizeTag', GmColorizeTagDirective)
