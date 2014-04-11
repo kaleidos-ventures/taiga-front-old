@@ -163,8 +163,6 @@ describe "issuesController", ->
             httpBackend.whenGET("#{APIURL}/projects/1/tags").respond(200, ["tag1", "tag2", "tag3"])
             httpBackend.whenGET("#{APIURL}/issues/1?order_by=status&project=1").respond(200)
             httpBackend.whenGET("#{APIURL}/issue-attachments?object_id=1&project=1").respond(200)
-            #httpBackend.whenGET("#{APIURL}/...").respond(200, {...})
-            #httpBackend.whenPOST("#{APIURL}/...", {...}).respond(200, {...})
             httpBackend.flush()
         ))
 
@@ -571,6 +569,18 @@ describe "issuesController", ->
             sinon.spy(ctrl.location, "url")
             ctrl.openIssue("test", 1)
             expect(ctrl.location.url).have.been.calledWith("/project/test/issues/1")
+
+        it "should allow to change to an other page", ->
+            ctrl.refreshIssues = ->
+            sinon.spy(ctrl, "refreshIssues")
+
+            expect(ctrl.scope.page).to.be.equal(1)
+
+            ctrl.scope.setPage(6)
+
+            expect(ctrl.scope.page).to.be.equal(6)
+            expect(ctrl.refreshIssues).have.been.called.once
+
 
     describe "IssuesModalController", ->
         httpBackend = null
