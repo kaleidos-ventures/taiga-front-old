@@ -109,6 +109,10 @@ describe "GmHeaderMenuDirective", ->
         $compile(element)($rootScope)
         expect(element.find(".kanban").hasClass('selected')).to.be.false
 
+        $rootScope.pageSection = "other"
+        $compile(element)($rootScope)
+        expect(element.find(".selected")).to.have.length(0)
+
 describe "GmKanbanWip", ->
     element = null
     $rootScope = null
