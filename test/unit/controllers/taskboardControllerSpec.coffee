@@ -245,7 +245,6 @@ describe "taskboardController", ->
             promise = ctrl.calculateStats()
             httpBackend.flush()
             promise.should.be.fulfilled.then ->
-                console.log ctrl.scope.stats
                 expect(ctrl.scope.stats).to.be.deep.equal({
                     totalPoints: 0
                     completedPoints: 0
