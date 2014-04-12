@@ -468,12 +468,14 @@ describe "projectsController", ->
             expect(ctrl.isActive("memberships")).to.be.true
 
         it "should allow to open and close form", ->
+            sinon.spy(ctrl.scope, "$broadcast")
             expect(ctrl.scope.formOpened).to.be.false
             expect(ctrl.scope.membership).to.be.undefined
 
             ctrl.toggleForm()
 
             expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope.$broadcast).have.been.calledWith("checksley:reset")
             expect(ctrl.scope.membership.project).to.be.equal(FIXTURES.project.id)
 
             ctrl.toggleForm()
