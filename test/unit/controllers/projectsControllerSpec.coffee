@@ -758,12 +758,14 @@ describe "projectsController", ->
             httpBackend.verifyNoOutstandingRequest()
 
         it "should allow to open and close form", ->
+            sinon.spy(ctrl.scope, "$broadcast")
             expect(ctrl.scope.formOpened).to.be.false
             expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
 
             ctrl.openForm()
 
             expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope.$broadcast).have.been.calledWith("checksley:reset")
             expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
 
             ctrl.closeForm()
@@ -847,12 +849,14 @@ describe "projectsController", ->
             httpBackend.verifyNoOutstandingRequest()
 
         it "should allow to open and close form", ->
+            sinon.spy(ctrl.scope, "$broadcast")
             expect(ctrl.scope.formOpened).to.be.false
             expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
 
             ctrl.openForm()
 
             expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope.$broadcast).have.been.calledWith("checksley:reset")
             expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
 
             ctrl.closeForm()
@@ -936,12 +940,14 @@ describe "projectsController", ->
             httpBackend.verifyNoOutstandingRequest()
 
         it "should allow to open and close form", ->
+            sinon.spy(ctrl.scope, "$broadcast")
             expect(ctrl.scope.formOpened).to.be.false
             expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
 
             ctrl.openForm()
 
             expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope.$broadcast).have.been.calledWith("checksley:reset")
             expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
 
             ctrl.closeForm()
@@ -1025,12 +1031,14 @@ describe "projectsController", ->
             httpBackend.verifyNoOutstandingRequest()
 
         it "should allow to open and close form", ->
+            sinon.spy(ctrl.scope, "$broadcast")
             expect(ctrl.scope.formOpened).to.be.false
             expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
 
             ctrl.openForm()
 
             expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope.$broadcast).have.been.calledWith("checksley:reset")
             expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
 
             ctrl.closeForm()
@@ -1114,12 +1122,14 @@ describe "projectsController", ->
             httpBackend.verifyNoOutstandingRequest()
 
         it "should allow to open and close form", ->
+            sinon.spy(ctrl.scope, "$broadcast")
             expect(ctrl.scope.formOpened).to.be.false
             expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
 
             ctrl.openForm()
 
             expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope.$broadcast).have.been.calledWith("checksley:reset")
             expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
 
             ctrl.closeForm()
@@ -1203,12 +1213,14 @@ describe "projectsController", ->
             httpBackend.verifyNoOutstandingRequest()
 
         it "should allow to open and close form", ->
+            sinon.spy(ctrl.scope, "$broadcast")
             expect(ctrl.scope.formOpened).to.be.false
             expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
 
             ctrl.openForm()
 
             expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope.$broadcast).have.been.calledWith("checksley:reset")
             expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
 
             ctrl.closeForm()
@@ -1292,12 +1304,14 @@ describe "projectsController", ->
             httpBackend.verifyNoOutstandingRequest()
 
         it "should allow to open and close form", ->
+            sinon.spy(ctrl.scope, "$broadcast")
             expect(ctrl.scope.formOpened).to.be.false
             expect(ctrl.scope[ctrl.instanceModel]).to.be.deep.equal({})
 
             ctrl.openForm()
 
             expect(ctrl.scope.formOpened).to.be.true
+            expect(ctrl.scope.$broadcast).have.been.calledWith("checksley:reset")
             expect(ctrl.scope[ctrl.instanceModel].project).to.be.equal(FIXTURES.project.id)
 
             ctrl.closeForm()
