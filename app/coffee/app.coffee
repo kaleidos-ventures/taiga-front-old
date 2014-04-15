@@ -443,10 +443,9 @@ modules = [
     "taiga.directives.generic",
     "taiga.directives.common",
     "taiga.directives.graphs",
-    "taiga.directives.tasks",
-    "taiga.directives.issues",
     "taiga.directives.history",
     "taiga.directives.backlog",
+    "taiga.directives.issues",
     "taiga.localconfig",
 
     "coffeeColorPicker",
