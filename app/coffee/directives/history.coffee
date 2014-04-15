@@ -23,13 +23,13 @@ GmHistoryDirective = ($compile, $rootScope, $i18next, gmWiki) ->
                     when "tags"
                         if value
                             return value.join(", ")
-                        else null
+                        return null
                     when "team_requirement", "client_requirement", "is_blocked"
                         if value is true
                             return $i18next.t("common.yes")
                         else if value is false
                             return $i18next.t("common.no")
-                        else null
+                        return null
                     when "watchers"
                         if value
                             watchers_ids = _.map(value, (v) -> parseInt(v, 10))
@@ -74,7 +74,7 @@ GmHistoryDirective = ($compile, $rootScope, $i18next, gmWiki) ->
                     when "tags"
                         if value
                             return value.join(", ")
-                        else null
+                        return null
                     when "assigned_to"
                         if value
                             try
@@ -87,7 +87,7 @@ GmHistoryDirective = ($compile, $rootScope, $i18next, gmWiki) ->
                             return $i18next.t("common.yes")
                         else if value is false
                             return $i18next.t("common.no")
-                        else null
+                        return null
                     when "watchers"
                         if value
                             watchers_ids = _.map(value, (v) -> parseInt(v, 10))
@@ -104,7 +104,7 @@ GmHistoryDirective = ($compile, $rootScope, $i18next, gmWiki) ->
                     when "tags"
                         if value
                             return value.join(", ")
-                        else null
+                        return null
                     when "status"
                         if value
                             try
@@ -124,7 +124,7 @@ GmHistoryDirective = ($compile, $rootScope, $i18next, gmWiki) ->
                             return $i18next.t("common.yes")
                         else if value is false
                             return $i18next.t("common.no")
-                        else null
+                        return null
                     when "watchers"
                         if value
                             watchers_ids = _.map(value, (v) -> parseInt(v, 10))
