@@ -61,6 +61,16 @@ describe "GmHistoryDirective", ->
     }
 
 
+    userStoryOnlyCommentHistorical = [
+        {
+            id: 1277,
+            content_type: "userstory",
+            created_date: "2014-03-14T21:24:33.099Z",
+            user: 1,
+            comment: "",
+            changed_fields: {}
+        }
+    ]
     userStoryHistorical = [
         {
             id: 1277,
@@ -456,10 +466,29 @@ describe "GmHistoryDirective", ->
         element = angular.element(template)
         $compile = _$compile_
         $rootScope = _$rootScope_
-
-
         $rootScope.constants = constants
     ))
+
+    it "should allow to draw an empty historical",  inject ($model)->
+        $rootScope.testHistorical = {models : []}
+        $rootScope.testType = ""
+
+        element = $compile(element)($rootScope)
+        $rootScope.$digest()
+
+        #TODO ...
+
+    it "should allow to draw a user story historical 2",  inject ($model)->
+        $rootScope.testHistorical = {
+            models : _.map(userStoryOnlyCommentHistorical, (item) =>
+                $model.make_model("userstory-history", item))
+        }
+        $rootScope.testType = "userstory"
+
+        element = $compile(element)($rootScope)
+        $rootScope.$digest()
+
+        #TODO ...
 
     it "should allow to draw a user story historical",  inject ($model)->
         $rootScope.testHistorical = {
