@@ -52,19 +52,6 @@ SearchBoxDirective = ($rootScope, $location) ->
                 $location.path(path).search({term: value})
 
 
-GmNinjaGraphDirective = ->
-    directive =
-        restrict: "A"
-        link: (scope, elm, attrs) ->
-            element = angular.element(elm)
-            graph = angular.element(".graph-box")
-
-            element.on "click", (event) ->
-                event.preventDefault()
-                graph.slideToggle()
-
-    return directive
-
 CoffeeColorPickerDirective = ->
     directive =
         restrict: "A"
@@ -543,7 +530,6 @@ GmKanbanWip = ->
 module = angular.module('taiga.directives.common', [])
 module.directive('gmBreadcrumb', GmBreadcrumbDirective)
 module.directive('gmHeaderMenu', ["$rootScope", GmHeaderMenuDirective])
-module.directive('gmNinjaGraph', GmNinjaGraphDirective)
 module.directive('gmColorizeTag', GmColorizeTagDirective)
 module.directive('gmKalendae', GmKalendaeDirective)
 module.directive('gmPopover', ['$parse', '$compile', GmPopoverDirective])
