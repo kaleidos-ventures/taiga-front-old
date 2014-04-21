@@ -100,84 +100,6 @@ GmKalendaeDirective = ->
     return directive
 
 
-GmPopoverDirective = ($parse, $compile) ->
-    restrict: "A"
-    link: (scope, element, attrs) ->
-        fn = $parse(attrs.gmPopover)
-
-        autoHide = element.data('auto-hide')
-        placement = element.data('placement') or 'right'
-
-        defaultAcceptSelector = '.popover-content .button-success, .popover-content .btn-accept'
-        defaultCancelSelector = '.popover-content .button-delete'
-
-        acceptSelector = element.data('accept-selector') or defaultAcceptSelector
-        cancelSelector = element.data('cancel-selector') or defaultCancelSelector
-
-
-        element.on "click", (event) ->
-            event.preventDefault()
-
-            template = _.str.trim($(element.data('tmpl')).html())
-            template = angular.element($.parseHTML(template))
-
-            scope.$apply ->
-                template = $compile(template)(scope)
-
-
-            element.popover({
-                content: template,
-                html:true,
-                animation: false,
-                delay: 0,
-                trigger: "manual",
-                placement: placement
-            })
-
-            element.popover("show")
-
-            closeHandler = ->
-                state = element.data('state')
-
-                if state == "closing"
-                    element.popover('destroy')
-                    element.data('state', 'closed')
-
-
-            next = element.next()
-            next.on "click", acceptSelector, (event) ->
-                event.preventDefault()
-
-                target = angular.element(event.currentTarget)
-                id = target.data('id')
-
-                scope.$apply ->
-                    fn(scope, {"selectedId": id})
-
-                element.popover('destroy')
-                next.off()
-
-            next.on "click", cancelSelector, (event) ->
-                element.popover('destroy')
-                next.off()
-
-            $('body').on "click", (event)->
-                if not (element.has(event.target).length > 0 or element.is(event.target))
-                    element.data('state', 'closing')
-                    closeHandler()
-
-            if autoHide
-                element.data('state', 'closing')
-                _.delay(closeHandler, 2000)
-
-                next.on "mouseleave", ".popover-content", (event) ->
-                    element.data('state', 'closing')
-                    _.delay(closeHandler, 200)
-
-                next.on "mouseenter", ".popover-content", (event) ->
-                    element.data('state', 'open')
-
-
 GmForwardClickDirective = ->
     restrict: "A"
     link: (scope, element, attrs) ->
@@ -532,7 +454,6 @@ module.directive('gmBreadcrumb', GmBreadcrumbDirective)
 module.directive('gmHeaderMenu', ["$rootScope", GmHeaderMenuDirective])
 module.directive('gmColorizeTag', GmColorizeTagDirective)
 module.directive('gmKalendae', GmKalendaeDirective)
-module.directive('gmPopover', ['$parse', '$compile', GmPopoverDirective])
 module.directive('gmForwardClick', GmForwardClickDirective)
 module.directive('gmChecksleyForm', ['$parse', '$compile', '$window', GmChecksleyFormDirective])
 module.directive('gmChecksleySubmitButton', [GmChecksleySubmitButtonDirective])

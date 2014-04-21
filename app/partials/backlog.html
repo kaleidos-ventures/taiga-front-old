@@ -17,22 +17,22 @@
                     </div>
 
                     <div class="item with-popover"
-                            gm-popover
-                            data-tmpl="#project-defined-points-popover">
+                         gm-template-popover="project-defined-points-popover"
+                         gm-popover-model="projectStats">
                         <div class="indicator">{{ projectStats.defined_points }}</div>
                         <div class="help" i18next="backlog.defined-points">defined points</div>
                     </div>
 
                     <div class="item with-popover"
-                            gm-popover
-                            data-tmpl="#project-assigned-points-popover">
+                         gm-template-popover="project-assigned-points-popover"
+                         gm-popover-model="projectStats">
                         <div class="indicator">{{ projectStats.assigned_points }}</div>
                         <div class="help" i18next="backlog.assigned-points">assigned points</div>
                     </div>
 
                     <div class="item with-popover"
-                            gm-popover
-                            data-tmpl="#project-closed-points-popover">
+                         gm-template-popover="project-closed-points-popover"
+                         gm-popover-model="projectStats">
                         <div class="indicator">{{ projectStats.closed_points }}</div>
                         <div class="help" i18next="backlog.closed-points">closed points</div>
                     </div>
@@ -415,39 +415,40 @@
     </div>
 </div>
 
+<!-- Template popovers -->
 
-<script type="text/template" id="points-popover">
-    <div class="us-points-popover">
+<script type="text/ng-template" id="project-defined-points-popover">
+    <div class="project-defined-points-popover btn-accept">
         <ul>
-            <li class="item btn-accept" ng-repeat="obj in constants.pointsList" data-id="{{ obj.id }}">
-                <a href="">{{ obj.name }}</a>
+            <li ng-repeat="role in constants.computableRolesList">
+                <span>{{  role.name }}:</span> {{ projectStats.defined_points_per_role[role.id] || 0 }}
             </li>
         </ul>
     </div>
 </script>
 
-<script type="text/template" id="usstatuses-popover">
-    <div class="us-status-popover">
+<script type="text/ng-template" id="project-assigned-points-popover">
+    <div class="project-assigned-points-popover btn-accept">
         <ul>
-            <li class="item btn-accept" ng-repeat="obj in constants.usStatusesList" data-id="{{ obj.id }}"
-                style="background-color: {{ obj.color }}">
-                <a href="">{{ obj.name }}</a>
+            <li ng-repeat="role in constants.computableRolesList">
+                <span>{{  role.name }}:</span> {{ projectStats.assigned_points_per_role[role.id] || 0 }}
             </li>
         </ul>
     </div>
 </script>
 
-<script type="text/template" id="us-blocked-popover">
-    <div class="us-blocked-popover">
-        <section>
-            <strong i18next="backlog.blocking-reasons-popover">Reasons of blocking:</strong>
-            <div gm-render-markdown="us.blocked_note"></div>
-        </section>
+<script type="text/ng-template" id="project-closed-points-popover">
+    <div class="project-closed-points-popover btn-accept">
+        <ul>
+            <li ng-repeat="role in constants.computableRolesList">
+                <span>{{  role.name }}:</span> {{ projectStats.closed_points_per_role[role.id] || 0 }}
+            </li>
+        </ul>
     </div>
 </script>
 
-<script type="text/template" id="us-preview-popover">
-    <div class="us-preview-popover">
+<script type="text/ng-template" id="us-preview-popover">
+    <div class="us-preview-popover btn-accept">
         <section>
             <strong i18next="backlog.subject-popover">Subject:</strong><br />{{ us.subject }}
         </section>
@@ -458,41 +459,3 @@
     </div>
 </script>
 
-<script type="text/template" id="us-remove-popover">
-    <div class="us-remove-popover">
-        <section>
-            <p ng-bind-html="'backlog.us-delete-sure'|i18next:{subject: us.subject}"></p>
-        </section>
-        <section>
-            <input type="button" class="button button-success" i18next="value:backlog.delete-popover" value="Delete" />
-            <input type="button" class="button button-delete" i18next="value:backlog.cancel-popover" value="Cancel" />
-        </section>
-    </div>
-</script>
-<script type="text/template" id="project-defined-points-popover">
-    <div class="project-defined-points-popover">
-        <ul>
-            <li ng-repeat="role in constants.computableRolesList">
-                <span>{{  role.name }}:</span> {{ projectStats.defined_points_per_role[role.id] || 0 }}
-            </li>
-        </ul>
-    </div>
-</script>
-<script type="text/template" id="project-assigned-points-popover">
-    <div class="project-assigned-points-popover">
-        <ul>
-            <li ng-repeat="role in constants.computableRolesList">
-                <span>{{  role.name }}:</span> {{ projectStats.assigned_points_per_role[role.id] || 0 }}
-            </li>
-        </ul>
-    </div>
-</script>
-<script type="text/template" id="project-closed-points-popover">
-    <div class="project-closed-points-popover">
-        <ul>
-            <li ng-repeat="role in constants.computableRolesList">
-                <span>{{  role.name }}:</span> {{ projectStats.closed_points_per_role[role.id] || 0 }}
-            </li>
-        </ul>
-    </div>
-</script>

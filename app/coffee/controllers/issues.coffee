@@ -58,6 +58,11 @@ class IssuesController extends TaigaPageController
                 @data.loadUsersAndRoles(@scope).then =>
                     @.refreshAll()
 
+    # This method is used on template for provide
+    # a proper membership list compatible with
+    getActiveProjectMembership: ->
+        return _.map project.active_memberships, (member) ->
+            return {name: member.full_name, id: member.user}
     #####
     ## Refresh page operations
     #####
@@ -171,7 +176,7 @@ class IssuesController extends TaigaPageController
 
         promise = issue.save()
         promise.then =>
-            @refreshIssues()
+            @refreshFilters()
 
         return promise
 
@@ -179,7 +184,7 @@ class IssuesController extends TaigaPageController
         issue.status = id
         promise = issue.save()
         promise.then =>
-            @refreshIssues()
+            @refreshFilters()
 
         return promise
 
@@ -188,7 +193,7 @@ class IssuesController extends TaigaPageController
 
         promise = issue.save()
         promise.then =>
-            @refreshIssues()
+            @refreshFilters()
 
         return promise
 
@@ -197,7 +202,7 @@ class IssuesController extends TaigaPageController
 
         promise = issue.save()
         promise.then =>
-            @refreshIssues()
+            @refreshFilters()
 
         return promise
 

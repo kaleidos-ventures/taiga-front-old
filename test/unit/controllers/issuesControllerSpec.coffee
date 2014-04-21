@@ -503,15 +503,16 @@ describe "issuesController", ->
 
             httpBackend.expectPATCH("#{APIURL}/issues/1", {assigned_to: 10}).respond(200)
             promise = ctrl.updateIssueAssignation(issue, 10)
+
             httpBackend.flush()
             promise.should.be.fulfilled.then ->
-                expect(ctrl.refreshIssues).have.been.called.once
+                expect(ctrl.refreshIssues).not.called
 
             httpBackend.expectPATCH("#{APIURL}/issues/1", {assigned_to: null}).respond(200)
             promise = ctrl.updateIssueAssignation(issue)
             httpBackend.flush()
             promise.should.be.fulfilled.then ->
-                expect(ctrl.refreshIssues).have.been.called.twice
+                expect(ctrl.refreshIssues).not.called
 
         it "should allow to update issue status", inject ($model) ->
             ctrl.refreshIssues = ->
@@ -523,7 +524,7 @@ describe "issuesController", ->
             promise = ctrl.updateIssueStatus(issue, 10)
             httpBackend.flush()
             promise.should.be.fulfilled.then ->
-                expect(ctrl.refreshIssues).have.been.called.once
+                expect(ctrl.refreshIssues).not.called
 
         it "should allow to update issue severity", inject ($model) ->
             ctrl.refreshIssues = ->
@@ -535,7 +536,7 @@ describe "issuesController", ->
             promise = ctrl.updateIssueSeverity(issue, 10)
             httpBackend.flush()
             promise.should.be.fulfilled.then ->
-                expect(ctrl.refreshIssues).have.been.called.once
+                expect(ctrl.refreshIssues).not.called
 
         it "should allow to update issue priority", inject ($model) ->
             ctrl.refreshIssues = ->
@@ -547,7 +548,7 @@ describe "issuesController", ->
             promise = ctrl.updateIssuePriority(issue, 10)
             httpBackend.flush()
             promise.should.be.fulfilled.then ->
-                expect(ctrl.refreshIssues).have.been.called.once
+                expect(ctrl.refreshIssues).not.called
 
         it "should allow to remove a issue", inject ($model) ->
             ctrl.refreshIssues = ->

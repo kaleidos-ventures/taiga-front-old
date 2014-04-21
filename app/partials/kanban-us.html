@@ -4,23 +4,33 @@
         <span ng-class="{spinner: us._moving}" data-icon="x"></span>
     </div>
 
-    <div class="us-points" gm-popover data-tmpl="#us-points-per-role-popover">
+    <div class="us-points"
+         gm-template-popover="points-for-role"
+         gm-popover-model="us">
         <span>Points: </span><span class="total">{{ us.total_points }}</span>
     </div>
 
     <div class="title">#{{ us.ref }} {{ us.subject }}</div>
 
     <div class="assign-to">
-        <a href="" gm-popover="usCtrl.updateUsAssignation(us, selectedId)"
-            data-tmpl="#developers-popover"
-            gm-colorize-user="constants.users[us.assigned_to]">
-                {{ constants.users[us.assigned_to].full_name || t("kanban.unassigned") }}</a>
+        <a href=""
+           gm-user-choice-popover="usCtrl.updateUsAssignation(us, selectedId)"
+           gm-popover-class-name="developers-popover"
+           gm-popover-title="kanban.select-user"
+           gm-popover-model="project.active_memberships"
+           gm-popover-empty-item="kanban.unassigned"
+           gm-popover-model-transformer="membersToChoicesTransformer"
+           gm-colorize-user="constants.users[us.assigned_to]">
+            {{ constants.users[us.assigned_to].full_name || t("kanban.unassigned") }}</a>
     </div>
     <div class="us-options clearfix">
         <a data-icon="j" ng-click="ctrl.openEditUsForm(us)" class="edit-task"></a>
         <a data-icon="l" href="{{ urls.userStoryUrl(projectSlug, us.ref, false, {status: status.id}) }}" class="view-task"></a>
         <a data-icon="o" class="icon blocked" ng-show="us.is_blocked"
-              gm-popover data-tmpl="#us-blocked-popover"></a>
+           gm-markdown-preview-popover=""
+           gm-popover-model="us.blocked_note"
+           gm-popover-class-name="us-blocked-popover"
+           gm-popover-title="kanban.blocking-reasons-popover"></a>
         <a class="us-tag" ng-repeat="tag in us.tags" gm-colorize-tag title="{{ tag }}"></a>
     </div>
 </div>

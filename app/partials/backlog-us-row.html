@@ -9,9 +9,16 @@
     <div class="title">
         <span data-icon="J" class="icon" ng-show="us.client_requirement"></span>
         <span data-icon="N" class="icon" ng-show="us.team_requirement"></span>
-        <span data-icon="o" class="icon blocked sprint-us" ng-show="us.is_blocked" gm-popover data-tmpl="#us-blocked-popover"></span>
 
-        <a href="{{ urls.userStoryUrl(projectSlug, us.ref, false, blCtrl.getUserStoryQueryParams()) }}" class="backlog-us">
+        <span data-icon="o" class="icon blocked sprint-us" ng-show="us.is_blocked"
+              gm-markdown-preview-popover=""
+              gm-popover-model="us.blocked_note"
+              gm-popover-class-name="us-blocked-popover"
+              gm-popover-title="backlog.blocking-reasons-popover">
+        </span>
+
+        <a href="{{ urls.userStoryUrl(projectSlug, us.ref, false, blCtrl.getUserStoryQueryParams()) }}"
+           class="backlog-us">
             #{{ us.ref }} {{ us.subject }}
         </a>
         <span class="sprint-us">#{{ us.ref }} {{ us.subject }}</span>
@@ -23,17 +30,25 @@
 <div class="us-points sprint-us">{{ us.total_points }}</div>
 <div class="us-status backlog-us">
     <div class="label"
-            gm-popover="blCtrl.saveUsStatus(us, selectedId)"
-            data-tmpl="#usstatuses-popover"
-            style="background-color: {{ constants.usStatuses[us.status].color }}">
+         gm-generic-choice-popover="blCtrl.saveUsStatus(us, selectedId)"
+         gm-popover-class-name="us-status-popover"
+         gm-popover-color-enabled="true"
+         gm-popover-model="constants.usStatusesList"
+         style="background-color: {{ constants.usStatuses[us.status].color }}">
         {{ constants.usStatuses[us.status].name }}</div>
+
     <span data-icon="o" class="icon blocked" ng-show="us.is_blocked"
-          gm-popover data-tmpl="#us-blocked-popover"></span>
+          gm-markdown-preview-popover=""
+          gm-popover-model="us.blocked_note"
+          gm-popover-class-name="us-blocked-popover"
+          gm-popover-title="backlog.blocking-reasons-popover">
+    </span>
 </div>
 <div class="us-points backlog-us">
     <div ng-repeat="role in constants.computableRolesList" class="role-point"
-            gm-popover="blCtrl.saveUsPoints(us, role, selectedId)"
-            data-tmpl="#points-popover">
+         gm-generic-choice-popover="blCtrl.saveUsPoints(us, role, selectedId)"
+         gm-popover-model="constants.pointsList"
+         gm-popover-class-name="us-points-popover">
         {{ constants.points[us.points[role.id]].name }}
     </div>
     <div class="role-point total">
@@ -41,15 +56,19 @@
     </div>
 </div>
 <div class="us-options extra-options backlog-us">
-    <a class="btn-small-preview option" data-icon="l" gm-popover data-tmpl="#us-preview-popover">
+    <a class="btn-small-preview option" data-icon="l"
+       gm-template-popover="us-preview-popover"
+       gm-popover-model="us">
         <!-- TODO: Review this spanish translation, used Resumen because the Previsualizar was too long -->
         <span class="help-box" i18next="backlog.preview">Preview</span>
     </a>
     <a class="btn-small-edit option" data-icon="j" ng-click="blCtrl.openEditUserStoryForm(us)">
         <span class="help-box" i18next="backlog.edit">Edit</span>
     </a>
-    <a class="btn-small-remove option" data-icon="h" gm-popover="blCtrl.removeUs(us)"
-        data-tmpl="#us-remove-popover">
+    <a class="btn-small-remove option" data-icon="h"
+       gm-generic-dialog-popover="blCtrl.removeUs(us)"
+       gm-popover-model="us"
+       gm-popover-title-bind="'backlog.us-delete-sure'|i18next:{subject: us.subject}">
         <span class="help-box" i18next="backlog.remove">Remove</span>
     </a>
 </div>

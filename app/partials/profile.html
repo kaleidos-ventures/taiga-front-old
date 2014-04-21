@@ -46,7 +46,9 @@
 
                     <fieldset class="colorPicker">
                         <label i18next="profile.color">Color:</label>
-                        <div class="colorSample" style="background-color: {{authForm.color}}" gm-popover="" data-tmpl="#color-picker-popover"></div>
+                        <div class="colorSample" style="background-color: {{authForm.color}}" 
+                             gm-template-popover="color-picker-popover"
+                             gm-popover-model="authForm" ></div>
                         <input type="text" name="color" data-required="true" value="" ng-model="authForm.color"></input>
                     </fieldset>
 
@@ -76,6 +78,6 @@
     </div>
 </div>
 
-<script type="text/template" id="color-picker-popover">
+<script type="text/ng-template" id="color-picker-popover">
     <div class="colorSelector" coffee-color-picker="authForm.color = $color" coffee-color-picker-options="{color: {hue:100, sat: 100, lit: 25}}"></div>
 </script>
