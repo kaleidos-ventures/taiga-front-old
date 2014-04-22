@@ -499,7 +499,6 @@ class BacklogMilestoneController extends TaigaBaseController
 
     normalizeMilestones: =>
         saveChangedMilestone = =>
-            console.log "saveChangedMilestone"
             for item, index in @scope.ml.user_stories
                 item.milestone = @scope.ml.id
 
@@ -509,7 +508,6 @@ class BacklogMilestoneController extends TaigaBaseController
             return @q.all(pchain)
 
         saveChangedOrder = =>
-            console.log "saveChangedOrder"
             for item, index in @scope.ml.user_stories
                 item.order = index
                 if item.isModified()
