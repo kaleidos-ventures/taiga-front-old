@@ -1,13 +1,20 @@
 {
   "name": "taiga-front",
   "version": "0.1.0",
-  "homepage": "https://github.com/kaleidos/taiga-front",
+  "homepage": "https://github.com/taiga.io/taiga-front",
   "authors": [
-    "Jesús Espino <jesus.espino@kaleidos.net>"
+    { "name": "Andrey Antukh", "email": "niwi@niwi.be" },
+    { "name": "Jesus Espino Garcia", "email": "jespinog@gmail.com" },
+    { "name": "David Barragán Merino", "email": "dbarragan@dbarragan.com" },
+    { "name": "Xavi Julian", "email": "xavier.julian@kaleidos.net" },
+    { "name": "Alejandro Alonso", "email": "alejandro.alonso@kaleidos.net" }
   ],
   "description": "Taiga project management system (frontend)",
-  "license": "MIT",
-  "private": true,
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:taigaio/taiga-front.git"
+  },
   "ignore": [
     "**/.*",
     "node_modules",
@@ -48,5 +55,6 @@
     "lodash": "~2.4.1",
     "moment": "~2.5.1",
     "jquery": "~2.1.0"
-  }
+  },
+  "private": true
 }
