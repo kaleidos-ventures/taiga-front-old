@@ -242,6 +242,9 @@ class ResourceService extends TaigaBaseService
     # Get a site
     getSite: -> @_queryOne("sites")
 
+    # Get project templates
+    getProjectTemplates: -> @_queryMany("project-templates")
+
     # Get a members list
     getSiteMembers: -> @_queryMany("site-members")
 

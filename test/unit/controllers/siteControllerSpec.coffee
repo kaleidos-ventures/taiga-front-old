@@ -32,6 +32,7 @@ describe 'siteController', ->
             httpBackend = $httpBackend
             httpBackend.whenGET('http://localhost:8000/api/v1/sites').respond(200, {test: "test"})
             httpBackend.whenGET('http://localhost:8000/api/v1/site-members').respond(200, {test: "test"})
+            httpBackend.whenGET('http://localhost:8000/api/v1/project-templates').respond(200, [{test: "test"}])
             httpBackend.flush()
         ))
 
@@ -55,6 +56,15 @@ describe 'siteController', ->
             expect(ctrl.isActive("test")).to.be.true
             ctrl.setActive("bad")
             expect(ctrl.isActive("test")).to.be.false
+
+        it 'should not modify the newProjectTemplate on loadSite if newProjectTemplate is modified', ->
+            httpBackend.expectGET('http://localhost:8000/api/v1/sites').respond(200, {test: "test"})
+            httpBackend.expectGET('http://localhost:8000/api/v1/project-templates').respond(200, [{test: "test"}])
+            ctrl.scope.newProjectTemplate = "test"
+            promise = ctrl.loadSite()
+            httpBackend.flush()
+            promise.should.be.fulfilled.then ->
+                expect(ctrl.scope.newProjectTemplate).to.be.equal("test")
 
         it 'should set member role', inject ($model) ->
             sinon.spy(ctrl.gmFlash, "info")

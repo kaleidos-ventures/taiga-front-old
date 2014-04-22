@@ -19,9 +19,10 @@
 class SiteAdminController extends TaigaPageController
     @.$inject = ["$scope", "$rootScope", "$routeParams", "$data", "$gmFlash",
                  "$model", "resource", "$confirm", "$location", "$i18next",
-                 "$gmConfig", "$gmUrls", "$favico"]
+                 "$gmConfig", "$gmUrls", "$favico", "$q"]
     constructor: (@scope, @rootScope, @routeParams, @data, @gmFlash, @model,
-                  @rs, @confirm, @location, @i18next, @gmConfig, @gmUrls, @favico) ->
+                  @rs, @confirm, @location, @i18next, @gmConfig, @gmUrls,
+                  @favico, @q) ->
         super(scope, rootScope, favico)
 
     section: 'admin'
@@ -37,7 +38,7 @@ class SiteAdminController extends TaigaPageController
 
         @scope.languageOptions = @gmConfig.get("languageOptions")
 
-        @scope.addProjectFormOpened = true
+        @scope.addProjectFormOpened = false
         @scope.newProjectName = ""
         @scope.newProjectDescription = ""
         @scope.newProjectSprints = ""
@@ -130,8 +131,16 @@ class SiteAdminController extends TaigaPageController
             @scope.members = members
 
     loadSite: ->
+        defered = @q.defer()
+
         @rs.getSite().then (site) =>
             @scope.currentSite = site
+            @rs.getProjectTemplates().then (templates) =>
+                @scope.projectTemplates = templates
+                if not @scope.newProjectTemplate
+                    @scope.newProjectTemplate = @scope.currentSite.default_project_template
+                defered.resolve()
+        return defered.promise
 
 
 moduleDeps = ["taiga.services.data", "gmFlash", "taiga.services.model",

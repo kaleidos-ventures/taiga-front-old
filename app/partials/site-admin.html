@@ -114,9 +114,8 @@
                         </fieldset>
                         <fieldset class="project-template">
                             <label class="control-label" for="template" i18next="admin-site.template">Template</label>
-                            <select ng-model="newProjectTemplate">
-                                <option value="" i18next="admin-site.default">Default</option>
-                                <option value="pure_kanban" i18next="admin-site.pure-kanban">Pure kanban</option>
+                            <select type="text" id="newProjectTemplate" name="newProjectTemplate" ng-model="newProjectTemplate"
+                                ng-options="template.slug as template.name for template in projectTemplates" gm-select-fix>
                             </select>
                         </fieldset>
                         <fieldset>

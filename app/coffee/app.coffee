@@ -166,6 +166,7 @@ configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compil
         "choices/severities/bulk-update-order": "/api/v1/severities/bulk_update_order"
         "search": "/api/v1/search"
         "sites": "/api/v1/sites"
+        "project-templates": "/api/v1/project-templates"
         "site-members": "/api/v1/site-members"
         "site-projects": "/api/v1/site-projects"
         "users": "/api/v1/users"
