@@ -633,7 +633,127 @@ describe "GmHistoryDirective", ->
         historyItems = element.find("li.history-item")
         expect(historyItems).to.be.lengthOf(2)
 
-        #TODO ...
+        item = _jqo(historyItems[0])
+        changeFields = _jqo(item.find(".changes")[0]).children()
+        comment = _jqo(item.find(".comment")[0])
+        user = _jqo(item.find(".user")[0])
+        date = _jqo(item.find(".date")[0])
+
+        expect(user.html()).to.be.equal("User 1")
+        expect(date.html()).to.be.equal("2014-03-14T21:24:33.099Z")
+        expect(comment.html()).to.be.equal("A test comment")
+        expect(changeFields).to.be.lengthOf(10)
+
+        field = _jqo(changeFields[0])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("type")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("Type 1")
+
+        field = _jqo(changeFields[1])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("status")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("Issue status 1")
+
+        field = _jqo(changeFields[2])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("priority")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("Priority 1")
+
+        field = _jqo(changeFields[3])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("severity")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("Severity 1")
+
+        field = _jqo(changeFields[4])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("assigned to")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("common.unassigned")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("User 1")
+
+        field = _jqo(changeFields[5])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("tags")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("sequi, a")
+
+        field = _jqo(changeFields[6])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("subject")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("test subject")
+
+        field = _jqo(changeFields[7])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("description")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("&lt;p&gt;test description&lt;/p&gt;\n")
+
+        field = _jqo(changeFields[8])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("is blocked")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("common.yes")
+
+        field = _jqo(changeFields[9])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("blocked note")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("test")
+
+        item = _jqo(historyItems[1])
+        changeFields = _jqo(item.find(".changes")[0]).children()
+        comment = _jqo(item.find(".comment")[0])
+        user = _jqo(item.find(".user")[0])
+        date = _jqo(item.find(".date")[0])
+
+        expect(user.html()).to.be.equal("The Observer")
+        expect(date.html()).to.be.equal("2014-04-14T21:24:33.099Z")
+        expect(comment.html()).to.be.equal("A test comment")
+        expect(changeFields).to.be.lengthOf(10)
+
+        field = _jqo(changeFields[0])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("type")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("Type 1")
+
+        field = _jqo(changeFields[1])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("status")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("Issue status 1")
+
+        field = _jqo(changeFields[2])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("priority")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("Priority 1")
+
+        field = _jqo(changeFields[3])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("severity")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("Severity 1")
+
+        field = _jqo(changeFields[4])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("assigned to")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("User 1")
+
+        field = _jqo(changeFields[5])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("tags")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("sequi, a")
+
+        field = _jqo(changeFields[6])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("subject")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("test subject")
+
+        field = _jqo(changeFields[7])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("description")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("&lt;p&gt;test description&lt;/p&gt;\n")
+
+        field = _jqo(changeFields[8])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("is blocked")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("common.no")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("common.yes")
+
+        field = _jqo(changeFields[9])
+        expect(_jqo(field.find(".field")[0]).html()).to.be.equal("blocked note")
+        expect(_jqo(field.find(".old")[0]).html()).to.be.equal("")
+        expect(_jqo(field.find(".new")[0]).html()).to.be.equal("test")
 
     it "should allow to draw a task historical",  inject ($model)->
         $rootScope.testHistorical = {
