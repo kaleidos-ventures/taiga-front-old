@@ -2,7 +2,7 @@ The PRIMARY AUTHORS are:
 
 - Andrey Antukh <niwi@niwi.be>
 - Jesus Espino Garcia <jespinog@gmail.com>
-- David Barragán Merino <dbarragan@dbarragan.com>
+- David Barragán Merino <bameda@dbarragan.com>
 - Xavi Julian <xavier.julian@kaleidos.net>
 - Alejandro Alonso <alejandro.alonso@kaleidos.net>
 
