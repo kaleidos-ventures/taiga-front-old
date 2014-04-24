@@ -28,7 +28,7 @@
                 <fieldset class="site-defaul-language">
                     <label class="control-label" for="defaultLanguage" i18next="admin-site.default-language">Default language</label>
                     <select type="text" id="defaultLanguage" name="defaultLanguage" ng-model="currentSite.default_language"
-                        ng-options="key as value for (key, value) in languageOptions" gm-select-fix>
+                        ng-options="key as value for (key, value) in languageOptions">
                         <option value="" i18next="admin-site.use-system-language">Use system language</option>
                     </select>
                 </fieldset>

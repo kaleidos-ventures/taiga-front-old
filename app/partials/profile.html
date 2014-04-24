@@ -39,14 +39,14 @@
                     <fieldset>
                         <label i18next="profile.language">Language:</label>
                         <select type="text" name="default_language" ng-model="authForm.default_language"
-                            ng-options="key as value for (key, value) in languageOptions" gm-select-fix>
+                            ng-options="key as value for (key, value) in languageOptions">
                             <option value="" i18next="profile.use-site-language">Use site language</option>
                         </select>
                     </fieldset>
 
                     <fieldset class="colorPicker">
                         <label i18next="profile.color">Color:</label>
-                        <div class="colorSample" style="background-color: {{authForm.color}}" 
+                        <div class="colorSample" style="background-color: {{authForm.color}}"
                              gm-template-popover="color-picker-popover"
                              gm-popover-model="authForm" ></div>
                         <input type="text" name="color" data-required="true" value="" ng-model="authForm.color"></input>

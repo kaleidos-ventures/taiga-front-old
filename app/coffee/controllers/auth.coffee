@@ -134,6 +134,9 @@ class ChangePasswordController extends TaigaPageController
 
 
 class ProfileController extends TaigaPageController
+    #TODO:  Hi, I'm the controller class for the user profile form and u have to
+    #       write me from scratch after the UX refactor, please, please!!!
+
     @.$inject = ['$scope', '$rootScope', '$gmAuth', '$gmFlash', 'resource',
                  '$gmConfig', '$i18next', "$favico"]
 
@@ -157,10 +160,7 @@ class ProfileController extends TaigaPageController
         @scope.languageOptions = @gmConfig.get("languageOptions")
 
         @scope.formData = {}
-        @scope.authForm = @scope.auth
-
-        @scope.authForm.notify_level = @scope.authForm.notify_level or _.keys(@scope.notificationLevelOptions)[0]
-        @scope.authForm.default_language = @scope.authForm.default_language or _.keys(@scope.languageOptions)[0]
+        @scope.authForm = @scope.auth       # NOTE: WTF!!
 
     submitProfile: (form) ->
         promise = form.save()
@@ -182,6 +182,7 @@ class ProfileController extends TaigaPageController
             @scope.checksleyErrors = data
 
         return promise
+
 
 class PublicRegisterController extends TaigaPageController
     @.$inject = ["$scope", "$rootScope", "$location", "resource", "$data",

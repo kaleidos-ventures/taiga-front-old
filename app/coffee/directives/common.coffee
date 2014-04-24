@@ -316,14 +316,6 @@ GmPaginator = ($parse) ->
             _.defer(renderPaginator)
 
 
-GmSelectFix = ->
-    require: 'ngModel',
-    link: (scope, element, attrs, ngModel) ->
-        ngModel.$parsers.push (value) ->
-            if (value == null)
-                value = ''
-            return value
-
 GmEqualColumnWidth = ->
     link: (scope, element, attrs) ->
         scope.$watch attrs.watch, ->
@@ -458,7 +450,6 @@ module.directive('gmRolePointsEdition', GmRolePointsEditionDirective)
 module.directive('gmColorizeUser', ["$parse", GmColorizeUserDirective])
 module.directive('gmPaginator', ['$parse', GmPaginator])
 module.directive('gmSpinner', ['$parse', '$rootScope', GmSpinner])
-module.directive('gmSelectFix', GmSelectFix)
 module.directive('gmSortable', ["$log", "$rootScope", GmSortableDirective])
 module.directive('gmEqualColumnWidth', GmEqualColumnWidth)
 module.directive('gmKanbanSize', ["$window", GmKanbanSize])
