@@ -25,6 +25,6 @@
            gm-popover-class-name="task-blocked-popover">
         </a>
         <span data-icon="r" class="icon iocaine" ng-show="task.is_iocaine"></span>
-        <a class="us-tag" ng-repeat="tag in task.tags" gm-colorize-tag title="{{ tag }}"></a>
+        <a class="us-tag" ng-repeat="tag in task.tags" gm-colorize-tag="tag" title="{{ tag }}"></a>
     </div>
 </div>

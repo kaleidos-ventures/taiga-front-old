@@ -24,7 +24,7 @@
         <span class="sprint-us">#{{ us.ref }} {{ us.subject }}</span>
     </div>
     <div class="tags" ng-hide="!showTags">
-        <span ng-repeat="tag in us.tags track by $index" class="label" gm-colorize-tag>{{ tag }}</span>
+        <span ng-repeat="tag in us.tags track by $index" class="label" gm-colorize-tag="tag">{{ tag }}</span>
     </div>
 </div>
 <div class="us-points sprint-us">{{ us.total_points }}</div>

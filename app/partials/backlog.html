@@ -72,7 +72,7 @@
                 <div class="tags-list-sbox">
                     <div class="tag selected"
                          ng-repeat="tag in blCtrl.selectedFilters track by tag.id"
-                         ng-click="blCtrl.toggleFilter(tag)" gm-colorize-tag>
+                         ng-click="blCtrl.toggleFilter(tag)" gm-colorize-tag="tag">
                         <div class="name">{{ tag.name }}</div>
                         <div class="count">{{ tag.count }}</div>
                     </div>
@@ -80,7 +80,7 @@
                 <div class="filters-visual-box" ng-show="filtersOpened">
                     <div class="tags-list-sbox">
                         <div class="tag" ng-repeat="tag in blCtrl.filters.tags" ng-click="blCtrl.toggleFilter(tag)"
-                                ng-class="{selected: blCtrl.isFilterSelected(tag)}" gm-colorize-tag>
+                                ng-class="{selected: blCtrl.isFilterSelected(tag)}" gm-colorize-tag="tag">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>

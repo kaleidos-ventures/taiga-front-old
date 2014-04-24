@@ -84,25 +84,34 @@ CoffeeColorPickerDirective = ->
     return directive
 
 
-GmColorizeTagDirective = -> (scope, elm, attrs) ->
-    element = angular.element(elm)
-    if _.isObject(scope.tag)
-        hash = hex_sha1(scope.tag.name.toLowerCase())
-    else
-        hash = hex_sha1(scope.tag.toLowerCase())
+GmColorizeTagDirective = ($parse) ->
+    restrict: "A"
+    link: (scope, elm, attrs) ->
+        updateColor = ->
+            tag = $parse(attrs.gmColorizeTag)(scope)
 
-    color = hash
-        .substring(0,6)
-        .replace('8','0')
-        .replace('9','1')
-        .replace('a','2')
-        .replace('b','3')
-        .replace('c','4')
-        .replace('d','5')
-        .replace('e','6')
-        .replace('f','7')
+            if tag
+                if _.isObject(tag)
+                    hash = hex_sha1(tag.name.toLowerCase())
+                else
+                    hash = hex_sha1(tag.toLowerCase())
 
-    element.css('background-color', '#' + color)
+                color = hash
+                    .substring(0,6)
+                    .replace('8','0')
+                    .replace('9','1')
+                    .replace('a','2')
+                    .replace('b','3')
+                    .replace('c','4')
+                    .replace('d','5')
+                    .replace('e','6')
+                    .replace('f','7')
+
+                element = angular.element(elm)
+                element.css('background-color', '#' + color)
+
+        scope.$watch attrs.gmColorizeTag, () ->
+            updateColor()
 
 
 GmKalendaeDirective = ->
@@ -470,7 +479,7 @@ GmKanbanWip = ->
 module = angular.module('taiga.directives.common', [])
 module.directive('gmBreadcrumb', GmBreadcrumbDirective)
 module.directive('gmHeaderMenu', ["$rootScope", GmHeaderMenuDirective])
-module.directive('gmColorizeTag', GmColorizeTagDirective)
+module.directive('gmColorizeTag', ["$parse", GmColorizeTagDirective])
 module.directive('gmKalendae', GmKalendaeDirective)
 module.directive('gmForwardClick', GmForwardClickDirective)
 module.directive('gmChecksleyForm', ['$parse', '$compile', '$window', GmChecksleyFormDirective])

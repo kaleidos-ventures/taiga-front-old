@@ -8,7 +8,7 @@
     </div>
 
     <ul class="tags-list">
-        <li class="tag" ng-repeat="tag in task.tags" gm-colorize-tag>{{ tag }}</li>
+        <li class="tag" ng-repeat="tag in task.tags" gm-colorize-tag="tag">{{ tag }}</li>
     </ul>
 
     <div class="row-fluid task-data">
@@ -58,11 +58,15 @@
             <ul class="info-rows">
                 <li data-icon="t">
                     <strong i18next="task.added-by">Added by:</strong>
-                    <span gm-colorize-user="constants.users[task.owner]">{{ constants.users[task.owner].full_name }}</span>
+                    <span gm-colorize-user="constants.users[task.owner]">
+                        {{ constants.users[task.owner].full_name }}
+                    </span>
                 </li>
                 <li data-icon="u">
                     <strong i18next="task.assigned-to">Assigned to:</strong>
-                    <span gm-colorize-user="constants.users[task.assigned_to]">{{ constants.users[task.assigned_to].full_name || "Unassigned" }}</span>
+                    <span gm-colorize-user="constants.users[task.assigned_to]">
+                        {{ constants.users[task.assigned_to].full_name || "Unassigned" }}
+                    </span>
                 </li>
                 <li data-icon="w">
                     <strong i18next="task.created">Created:</strong>
@@ -152,13 +156,15 @@
                             <textarea class="blocked-note" name="blocked_note"
                                       placeholder="Some reasons..."
                                       i18next="placeholder:task.blocking-reasons-placeholder"
-                                      ng-model="form.blocked_note" gm-markitup preview-id="blocked-preview"></textarea>
+                                      ng-model="form.blocked_note"
+                                      gm-markitup preview-id="blocked-preview"></textarea>
                             <div id="blocked-preview" class="preview"></div>
                         </fieldset>
                     </div>
 
                     <div ng-hide="_showHiddenGroups">
-                        <p style="cursor: pointer" ng-click="_showHiddenGroups=true" i18next="task.edit-subject-description">
+                        <p style="cursor: pointer" ng-click="_showHiddenGroups=true"
+                           i18next="task.edit-subject-description">
                             Edit <b>Subject</b> and <b>Description</b>...
                         </p>
                     </div>
@@ -170,7 +176,8 @@
 
                     <fieldset class="task-description" ng-show="_showHiddenGroups">
                         <label for="inputEmail" i18next="task.description-label">Description</label>
-                        <textarea name="description" ng-model="form.description" gm-markitup preview-id="description-preview"></textarea>
+                        <textarea name="description" ng-model="form.description"
+                                  gm-markitup preview-id="description-preview"></textarea>
                         <div id="description-preview" class="preview"></div>
                     </fieldset>
 
@@ -187,13 +194,15 @@
 
                     <fieldset class="task-comment">
                         <label for="inputEmail" i18next="task.comment-label">Comment</label>
-                        <textarea name="comment" ng-model="form.comment" gm-markitup preview-id="comment-preview"></textarea>
+                        <textarea name="comment" ng-model="form.comment"
+                                  gm-markitup preview-id="comment-preview"></textarea>
                         <div id="comment-preview"></div>
                     </fieldset>
 
                     <fieldset class="task-attachment">
                         <a class="add-attachment" data-icon="E" title="Add attachments"
-                            gm-forward-click="#attachment_file_input" href="" i18next="title:task.add-attachment,task.add-attachments">
+                           gm-forward-click="#attachment_file_input" href=""
+                           i18next="title:task.add-attachment,task.add-attachments">
                             Add attachments
                         </a>
                         <ul class="attachments-items">
@@ -214,7 +223,9 @@
 
                     <fieldset class="task-edit-submit submit">
                         <button type="submit" class="button button-edit"
-                                gm-checksley-submit-button i18next="task.save">Save</button>
+                                gm-checksley-submit-button i18next="task.save">
+                            Save
+                        </button>
                         <div gm-spinner class="spinner-container"></div>
                     </fieldset>
                 </form>
@@ -238,7 +249,10 @@
             <div class="view-footer">
                 <p class="title">Task #{{ task.ref }}</p>
                 <div class="buttons">
-                    <a class="button button-delete" ng-click="ctrl.removeObject(task)" i18next="task.delete-task">Delete task</a>
+                    <a class="button button-delete" ng-click="ctrl.removeObject(task)"
+                       i18next="task.delete-task">
+                        Delete task
+                    </a>
                 </div>
             </div>
         </div>
@@ -255,8 +269,9 @@
                 <div class="changes">
                     <div class="change" ng-repeat="change in hitem.changes">
                         <strong>{{ change.name|capitalize }}</strong>:
-                        <span ng-show="change.old != '' && change.old != null" ng-bind-html="'task.change-from'|i18next:{value: change.old}"></span>
-                        <span ng-bind-html="'task.change-to'|i18next:{value: change.new||''}"></span></span>
+                        <span ng-show="change.old != '' && change.old != null"
+                              ng-bind-html="'task.change-from'|i18next:{value: change.old}"></span>
+                        <span ng-bind-html="'task.change-to'|i18next:{value: change.new||''}"></span>
                     </div>
                 </div>
                 <div class="comment" ng-show="hitem.comment">

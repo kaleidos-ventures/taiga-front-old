@@ -84,7 +84,7 @@
                     <div class="tags-list-sbox">
                         <div class="tag" ng-repeat="tag in ctrl.filters.tags track by $index"
                              ng-click="ctrl.toggleFilter(tag)"
-                             ng-class="{selected: ctrl.isFilterSelected(tag)}" gm-colorize-tag>
+                             ng-class="{selected: ctrl.isFilterSelected(tag)}" gm-colorize-tag="tag">
                             <div class="name">{{ tag.name }}</div>
                             <div class="count">{{ tag.count }}</div>
                         </div>

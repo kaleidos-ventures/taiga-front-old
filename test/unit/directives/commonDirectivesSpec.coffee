@@ -288,3 +288,61 @@ describe "GmBreadcrumDirective", ->
         $rootScope.testBreadcrumb = undefined
         $compile(element)($rootScope)
         expect(element.text()).to.have.equal("test")
+
+
+describe "GmColorizeTagDirective", ->
+    element = null
+    $rootScope = null
+    $compile = null
+
+    template = """
+        <div>
+            <span class="tag" gm-colorize-tag="tag"></span>
+        </div>
+    """
+
+    beforeEach(inject((_$compile_, _$rootScope_) ->
+        $compile = _$compile_
+        $rootScope = _$rootScope_
+        element = $compile(template)($rootScope)
+    ))
+
+    it "test simple render withiout tag", ->
+        $rootScope.$digest()
+        expect(element.find("span").attr("style")).to.be.undeffined
+
+    it "test simple render with tag as undeffined", ->
+        $rootScope.tag = undefined
+        $rootScope.$digest()
+        expect(element.find("span").attr("style")).to.be.undeffined
+
+    it "test simple render with tag as null", ->
+        $rootScope.tag = null
+        $rootScope.$digest()
+
+        expect(element.find("span").attr("style")).to.be.undeffined
+
+    it "test simple render with tag as string", ->
+        $rootScope.tag = "AEIOUaeiou"
+        $rootScope.$digest()
+
+        expect(element.find("span").attr("style")).to.be.equal("background-color: rgb(0, 103, 62); ")
+
+    it "test simple render with tag as object", ->
+        $rootScope.tag = {
+            name: "AEIOUaeiou4645646"
+        }
+        $rootScope.$digest()
+
+        expect(element.find("span").attr("style")).to.be.equal("background-color: rgb(66, 6, 37); ")
+
+    it "test simple render when update the scope", ->
+        $rootScope.tag = "AEIOUaeiou"
+        $rootScope.$digest()
+
+        expect(element.find("span").attr("style")).to.be.equal("background-color: rgb(0, 103, 62); ")
+
+        $rootScope.tag = "AEIOUaeiou4645646"
+        $rootScope.$digest()
+
+        expect(element.find("span").attr("style")).to.be.equal("background-color: rgb(66, 6, 37); ")
