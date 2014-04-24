@@ -172,37 +172,6 @@ GmChecksleySubmitButtonDirective = ->
             element.closest("form").trigger("submit")
 
 
-GmTagsInputDirective = ->
-    restrict: "A"
-    require: "ngModel"
-    link: (scope, elm, attrs, ctrl) ->
-        trimList = (list) ->
-            return _.map(list, (i) -> i.trim())
-
-        parser = (value) ->
-            value = value.replace(/,\s/, ",")
-            value = value.replace(/\./, ",")
-
-            if _.isEmpty(value)
-                return undefined
-
-            value = trimList(value.split(","))
-            return value
-
-        formatter = (value) ->
-            if value is undefined
-                return value
-            if _.isString(value)
-                return value
-
-
-            value = value.join(", ")
-            return value
-
-        ctrl.$parsers.push(parser)
-        ctrl.$formatters.push(formatter)
-
-
 GmRolePointsEditionDirective = ->
     compile: (element, attrs) ->
         template = """
@@ -484,7 +453,6 @@ module.directive('gmKalendae', GmKalendaeDirective)
 module.directive('gmForwardClick', GmForwardClickDirective)
 module.directive('gmChecksleyForm', ['$parse', '$compile', '$window', GmChecksleyFormDirective])
 module.directive('gmChecksleySubmitButton', [GmChecksleySubmitButtonDirective])
-module.directive('gmTagsInput', [GmTagsInputDirective])
 module.directive('gmSearchBox', ["$rootScope", "$location", SearchBoxDirective])
 module.directive('gmRolePointsEdition', GmRolePointsEditionDirective)
 module.directive('gmColorizeUser', ["$parse", GmColorizeUserDirective])
