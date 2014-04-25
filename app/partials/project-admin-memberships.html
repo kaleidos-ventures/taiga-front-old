@@ -42,17 +42,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="user">
-                                <span class="user" gm-colorize-user="constants.users[project.owner]">
-                                    {{ ctrl.memberName(constants.users[project.owner]) }}
-                                </span>
-                            </td>
-                            <td class="email"><span class="email">{{ ctrl.memberEmail(constants.users[project.owner]) }}</span></td>
-                            <td class="role"><span class="role">Project Owner</span></td>
-                            <td class="status"></td>
-                            <td class="options"></td>
-                        </tr>
                         <tr ng-repeat="mbr in project.memberships">
                             <td class="user"><span class="user" gm-colorize-user="constants.users[mbr.user]">{{ ctrl.memberName(mbr) }}</span></td>
                             <td class="email"><span class="email">{{ ctrl.memberEmail(mbr) }}</span></td>
