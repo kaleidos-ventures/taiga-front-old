@@ -632,12 +632,18 @@
         "points": "Points",
         "project-created": "Project created.",
         "error-creating-project": "Error creating the project.",
+        "template-created": "Project template created.",
+        "error-creating-template": "Error creating the project template.",
         "saved-success": "Site saved successful.",
         "set-as-owner": "Set as owner",
         "set-as-staff": "Set as staff",
         "set-as-normal-user": "Set as normal user",
         "template": "Template",
         "default": "Default",
-        "pure-kanban": "Pure kanban"
+        "pure-kanban": "Pure kanban",
+        "create-template-from-project": "Create template from this project",
+        "template-name": "Template name",
+        "template-description": "Template description",
+        "create": "Create"
     }
 }

@@ -136,7 +136,16 @@
             <ul class="project-list">
                 <li class="project" ng-repeat="pr in currentSite.projects">
                     <a href="" data-icon="h" title="Delete project" i18next="title:admin-site.delete-project" ng-click="ctrl.deleteProject(pr)"></a>
-                    <a href="#/project/{{pr.slug}}/admin">{{ pr.name }}</a>
+                    <a href="#/project/{{pr.slug}}/admin/main">{{ pr.name }}</a>
+                    [<a ng-click="ctrl.toggleCreateTemplateProjectForm(pr)" i18next="admin-site.create-template-from-project">Create template from project</a>]
+                    <form ng-submit="ctrl.createTemplateFromProject(pr)" ng-show="pr.createTemplateFormOpened" class="create-template-form">
+                        <label for="{{pr.id}}_templateName" i18next="admin-site.template-name">Template name</label>
+                        <input id="{{pr.id}}_templateName" name="templateName" ng-model="pr.templateName" />
+                        <label for="{{pr.id}}_templateDescription" i18next="admin-site.template-description">Template description</label>
+                        <textarea id="{{pr.id}}_templateDescription" name="templateDescription" ng-model="pr.templateDescription"></textarea>
+                        <input type="submit" value="create" i18next="value:admin-site.create" />
+                        <input type="button" value="cancel" i18next="value:admin-site.cancel" ng-click="ctrl.toggleCreateTemplateProjectForm(pr)" />
+                    </form>
                 </li>
             </ul>
         </div>

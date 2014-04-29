@@ -110,6 +110,21 @@ class SiteAdminController extends TaigaPageController
     closeNewProjectForm: ->
         @scope.addProjectFormOpened = false
 
+    toggleCreateTemplateProjectForm: (pr) ->
+        if pr.createTemplateFormOpened?
+            pr.createTemplateFormOpened = not pr.createTemplateFormOpened
+        else
+            pr.createTemplateFormOpened = true
+
+    createTemplateFromProject: (pr) ->
+        promise = @rs.createProjectTemplateFromProject(pr.id, pr.templateName, pr.templateDescription)
+        promise.then (template) =>
+            @gmFlash.info(@i18next.t("admin-site.template-created"))
+            @rs.getProjectTemplates().then (templates) =>
+                @scope.projectTemplates = templates
+        promise.then null, =>
+            @gmFlash.error(@i18next.t("admin-site.error-creating-template"))
+
     submitProject: ->
         projectData = {
             name: @scope.newProjectName,
@@ -123,7 +138,7 @@ class SiteAdminController extends TaigaPageController
             @scope.addProjectFormOpened = false
             @loadSite()
         promise.then null, =>
-            @gmFlash.info(@i18next.t("admin-site.error-creating-project"))
+            @gmFlash.error(@i18next.t("admin-site.error-creating-project"))
         return promise
 
     loadMembers: ->

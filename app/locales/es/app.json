@@ -629,12 +629,18 @@
         "points": "Puntos",
         "project-created": "Proyecto creado.",
         "error-creating-project": "Error al crear el proyecto.",
+        "template-created": "Plantilla de proyecto creada.",
+        "error-creating-template": "Error al crear la plantilla de proyecto.",
         "saved-success": "Sitio guardado correctamente.",
         "set-as-owner": "Establecer como propietario",
         "set-as-staff": "Establecer como staff",
         "set-as-normal-user": "Establecer como usuario normal",
         "template": "Plantilla",
         "default": "Por defecto",
-        "pure-kanban": "Kanban puro"
+        "pure-kanban": "Kanban puro",
+        "create-template-from-project": "Crear plantilla desde este proyecto",
+        "template-name": "Nombre de la plantilla",
+        "template-description": "Descripción de la plantilla",
+        "create": "Crear"
     }
 }

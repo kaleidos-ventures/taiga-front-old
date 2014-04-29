@@ -245,6 +245,23 @@ class ResourceService extends TaigaBaseService
     # Get project templates
     getProjectTemplates: -> @_queryMany("project-templates")
 
+    # Get project templates
+    createProjectTemplateFromProject: (projectId, templateName, templateDescription) ->
+        defered = @q.defer()
+        obj = {
+            project_id: projectId,
+            template_name: templateName,
+            template_description: templateDescription
+        }
+        promise = @http.post("#{@gmUrls.api("project-templates")}/create_from_project", obj, {headers:@_headers()})
+        promise.success (data, status) =>
+            defered.resolve(@model.make_model("project-templates", data))
+
+        promise.error (data, status) ->
+            defered.reject()
+
+        return defered.promise
+
     # Get a members list
     getSiteMembers: -> @_queryMany("site-members")
 
