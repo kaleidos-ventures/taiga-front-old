@@ -443,6 +443,7 @@
         "blocking-reasons-popover": "Motivos del bloqueo:",
         "blocking-reasons-placeholder": "Algunas razones...",
         "tags": "Etiquetas",
+        "tags-placeholder": "Escoja etiquetas",
         "description": "Descripción",
         "save": "Guardar",
         "close": "Cerrar",
