@@ -231,16 +231,16 @@ assignNavegationUrls = ($rootScope, $gmUrls) ->
         projectsUrl: ->
             return '/#/'
 
-        projectHomeUrl: (project) ->
+        projectHomeUrl: (project, raw) ->
             if project.is_backlog_activated
-                return $rootScope.urls.backlogUrl(project.slug)
+                return $rootScope.urls.backlogUrl(project.slug, raw)
             else if project.is_kanban_activated
-                return $rootScope.urls.kanbanUrl(project.slug)
+                return $rootScope.urls.kanbanUrl(project.slug, raw)
             else if project.is_issues_activated
-                return $rootScope.urls.issuesUrl(project.slug)
+                return $rootScope.urls.issuesUrl(project.slug, raw)
             else if project.is_wiki_activated
-                return $rootScope.urls.wikiUrl(project.slug, "home")
-            return $rootScope.urls.adminUrl(project.slug)
+                return $rootScope.urls.wikiUrl(project.slug, "home", raw)
+            return $rootScope.urls.adminUrl(project.slug, null, raw)
 
         backlogUrl: (projectId, raw) ->
             url = gm.format($rootScope.baseUrls.backlog, [projectId])

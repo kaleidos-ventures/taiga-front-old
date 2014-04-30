@@ -54,9 +54,8 @@ class UserStoryViewController extends TaigaDetailPageController
             @rootScope.projectId = data.project
             @rootScope.userStoryId = data.us
 
-            @onRemoveUrl = "/project/#{@scope.projectSlug}/backlog"
-
             @data.loadProject(@scope).then =>
+                @onRemoveUrl = @rootScope.urls.projectHomeUrl(@scope.project, true)
                 @data.loadUsersAndRoles(@scope).then =>
                     @loadUserStory()
                     @loadAttachments()
