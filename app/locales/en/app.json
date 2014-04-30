@@ -441,6 +441,7 @@
         "blocking-reasons-popover": "Reasons for blocking:",
         "blocking-reasons-placeholder": "Some reasons...",
         "tags": "Tags",
+        "tags-placeholder": "Pick tags",
         "description": "Description",
         "save": "Save",
         "close": "Close",
