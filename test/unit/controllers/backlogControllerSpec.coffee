@@ -250,11 +250,11 @@ describe "backlogController", ->
         it "should allow move the selected user stories to the current sprint", inject ($model) ->
             scope.milestones = [{id: 1, user_stories: []}, {id: 2, user_stories: []}]
             ctrl.scope.unassignedUs = _.map(
-                [{id: 1, order: 2, selected: true}, {id: 2, order: 1, selected: true}, {id: 3, order: 3, selected: false}],
+                [{id: 1, selected: true}, {id: 2, selected: true}, {id: 3, selected: false}],
                 (us) -> $model.make_model("userstories", us)
             )
             ctrl.moveSelectedUserStoriesToCurrentSprint()
-            expect(_.map(ctrl.scope.milestones[0].user_stories, (x) -> x.getAttrs())).to.be.deep.equal([{id: 1, order: 2, selected: true}, {id: 2, order: 1, selected: true}])
+            expect(_.map(ctrl.scope.milestones[0].user_stories, (x) -> x.getAttrs())).to.be.deep.equal([{id: 1, selected: true}, {id: 2, selected: true}])
             expect(ctrl.scope.milestones[0].user_stories[0].milestone).to.be.equal(1)
             expect(ctrl.scope.milestones[0].user_stories[1].milestone).to.be.equal(1)
             expect(ctrl.scope.unassignedUs).to.have.length(1)
