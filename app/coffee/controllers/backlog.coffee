@@ -197,14 +197,19 @@ class BacklogUserStoriesController extends TaigaBaseController
             return
 
         milestone = @scope.milestones[0]
+        if milestone.user_stories.length > 0
+            max_order = _.max(_.map(milestone.user_stories, (us) -> us.order))
+        else
+            max_order = 1
 
         selected = @getSelectedUserStories()
         unselected = @getUnselectedUserStories()
 
         for us in selected
-            milestone.user_stories.push(us)
-            us.milestone = milestone.id
-            us.save()
+             milestone.user_stories.push(us)
+             us.milestone = milestone.id
+             us.order = max_order++
+             us.save()
 
         @scope.unassignedUs = unselected
 
