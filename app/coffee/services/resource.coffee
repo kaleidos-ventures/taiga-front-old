@@ -34,11 +34,11 @@ class ResourceService extends TaigaBaseService
 
         return data
 
-    _queryMany: (name, params, options) ->
+    _queryMany: (name, params, options, urlparams) ->
         defaultHttpParams = {
             method: "GET",
             headers:  @_headers(),
-            url: @gmUrls.api(name, urlParams)
+            url: @gmUrls.api(name, urlparams)
         }
 
         httpParams = _.extend({}, defaultHttpParams, options)
@@ -57,14 +57,14 @@ class ResourceService extends TaigaBaseService
 
         return defered.promise
 
-    _queryRaw: (name, id, params, options) ->
+    _queryRaw: (name, id, params, options, urlparams) ->
         defaultHttpParams = {method: "GET", headers:  @_headers()}
         httpParams =  _.extend({}, defaultHttpParams, options)
 
         if id
-            httpParams.url = "#{@gmUrls.api(name)}/#{id}"
+            httpParams.url = "#{@gmUrls.api(name, urlparams)}/#{id}"
         else
-            httpParams.url = "#{@gmUrls.api(name)}"
+            httpParams.url = "#{@gmUrls.api(name, urlparams)}"
 
         if not _.isEmpty(params)
             httpParams.params = params
@@ -80,7 +80,7 @@ class ResourceService extends TaigaBaseService
 
         return defered.promise
 
-    _queryOne: (name, id, params, options, cls) ->
+    _queryOne: (name, id, params, options, urlparams, cls) ->
         defaultHttpParams = {method: "GET", headers:  @_headers()}
         httpParams =  _.extend({}, defaultHttpParams, options)
 
@@ -88,9 +88,9 @@ class ResourceService extends TaigaBaseService
             httpParams.params = params
 
         if id
-            httpParams.url = "#{@gmUrls.api(name)}/#{id}"
+            httpParams.url = "#{@gmUrls.api(name, urlparams)}/#{id}"
         else
-            httpParams.url = "#{@gmUrls.api(name)}"
+            httpParams.url = "#{@gmUrls.api(name, urlparams)}"
 
         defered = @q.defer()
         promise = @http(httpParams)
@@ -103,11 +103,11 @@ class ResourceService extends TaigaBaseService
 
         return defered.promise
 
-    _queryManyPaginated: (name, params, options, cls, urlParams) ->
+    _queryManyPaginated: (name, params, options, urlparams, cls) ->
         defaultHttpParams = {
             method: "GET",
             headers: @_headers(false),
-            url: @gmUrls.api(name, urlParams)
+            url: @gmUrls.api(name, urlparams)
         }
 
         httpParams =  _.extend({}, defaultHttpParams, options)
@@ -330,9 +330,8 @@ class ResourceService extends TaigaBaseService
         # Second step: make user story models
         _makeUserStoryModels = (objects) =>
             for milestone in objects
-                objects = _.map milestone.user_stories, (obj) =>
-                    @model.make_model("userstories", obj)
-                milestone.user_stories = objects
+                milestone.user_stories = _.map milestone.user_stories, (obj) => @model.make_model("userstories", obj)
+
             return objects
 
         # Third step: make milestone models
@@ -361,9 +360,7 @@ class ResourceService extends TaigaBaseService
 
         # Second step: make user story models
         _makeUserStoryModels = (milestone) =>
-            objects = _.map milestone.user_stories, (obj) =>
-                @model.make_model("userstories", obj)
-            milestone.user_stories = objects
+            milestone.user_stories = _.map milestone.user_stories, (obj) => @model.make_model("userstories", obj)
 
             return milestone
 
@@ -394,9 +391,9 @@ class ResourceService extends TaigaBaseService
         return @_queryOne("userstories", userStoryId, params)
 
     getUserStoryHistorical: (userStoryId, filters={}) ->
-        urlParams = [userStoryId]
+        urlparams = [userStoryId]
         parameters = _.extend({}, filters)
-        return @_queryManyPaginated("userstories-historical", parameters, null , null, urlParams)
+        return @_queryManyPaginated("userstories-historical", parameters, null , urlparams)
 
     getTasks: (projectId, sprintId) ->
         params = {project:projectId}
@@ -414,17 +411,17 @@ class ResourceService extends TaigaBaseService
         return @_queryOne("issues", issueId, params)
 
     getIssueHistorical: (issueId, filters={}) ->
-        urlParams = [issueId]
+        urlparams = [issueId]
         parameters = _.extend({}, filters)
-        return @_queryManyPaginated("issues-historical", parameters, null , null, urlParams)
+        return @_queryManyPaginated("issues-historical", parameters, null , urlparams)
 
     getTask: (projectId, taskId) ->
         return @_queryOne("tasks", taskId, {project:projectId})
 
     getTaskHistorical: (taskId, filters={}) ->
-        urlParams = [taskId]
+        urlparams = [taskId]
         parameters = _.extend({}, filters)
-        return @_queryManyPaginated("tasks-historical", parameters, null , null, urlParams)
+        return @_queryManyPaginated("tasks-historical", parameters, null , urlparams)
 
     search: (projectId, term, getAll) ->
         defered = @q.defer()
@@ -541,9 +538,9 @@ class ResourceService extends TaigaBaseService
         return defered.promise
 
     getWikiPageHistorical: (wikiId, filters={}) ->
-        urlParams = [wikiId]
+        urlparams = [wikiId]
         parameters = _.extend({}, filters)
-        return @_queryManyPaginated("wiki-historical", parameters, null , null, urlParams)
+        return @_queryManyPaginated("wiki-historical", parameters, null, urlparams)
 
     createTask: (form) ->
         return @model.create("tasks", form)
