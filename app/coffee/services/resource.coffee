@@ -34,74 +34,72 @@ class ResourceService extends TaigaBaseService
 
         return data
 
-    _queryMany: (name, params, options, urlParams) ->
+    _queryMany: (name, params, options) ->
         defaultHttpParams = {
             method: "GET",
             headers:  @_headers(),
             url: @gmUrls.api(name, urlParams)
         }
 
-        if not _.isEmpty(params)
-            defaultHttpParams.params = params
-
         httpParams = _.extend({}, defaultHttpParams, options)
-        defered = @q.defer()
+        if not _.isEmpty(params)
+            httpParams.params = params
 
+        defered = @q.defer()
         promise = @http(httpParams)
+
         promise.success (data, status) =>
             models = _.map data, (attrs) => @model.make_model(name, attrs)
             defered.resolve(models)
 
         promise.error (data, status) ->
-            defered.reject(data, status)
+            defered.reject(data)
 
         return defered.promise
 
-    _queryRaw: (name, id, params, options, cls) ->
+    _queryRaw: (name, id, params, options) ->
         defaultHttpParams = {method: "GET", headers:  @_headers()}
-
-        if id
-            defaultHttpParams.url = "#{@gmUrls.api(name)}/#{id}"
-        else
-            defaultHttpParams.url = "#{@gmUrls.api(name)}"
-
-        if not _.isEmpty(params)
-            defaultHttpParams.params = params
-
         httpParams =  _.extend({}, defaultHttpParams, options)
 
-        defered = @q.defer()
+        if id
+            httpParams.url = "#{@gmUrls.api(name)}/#{id}"
+        else
+            httpParams.url = "#{@gmUrls.api(name)}"
 
+        if not _.isEmpty(params)
+            httpParams.params = params
+
+        defered = @q.defer()
         promise = @http(httpParams)
+
         promise.success (data, status) ->
-            defered.resolve(data, cls)
+            defered.resolve(data)
 
         promise.error (data, status) ->
-            defered.reject()
+            defered.reject(data)
 
         return defered.promise
 
     _queryOne: (name, id, params, options, cls) ->
         defaultHttpParams = {method: "GET", headers:  @_headers()}
-
-        if id
-            defaultHttpParams.url = "#{@gmUrls.api(name)}/#{id}"
-        else
-            defaultHttpParams.url = "#{@gmUrls.api(name)}"
-
-        if not _.isEmpty(params)
-            defaultHttpParams.params = params
-
         httpParams =  _.extend({}, defaultHttpParams, options)
 
-        defered = @q.defer()
+        if not _.isEmpty(params)
+            httpParams.params = params
 
+        if id
+            httpParams.url = "#{@gmUrls.api(name)}/#{id}"
+        else
+            httpParams.url = "#{@gmUrls.api(name)}"
+
+        defered = @q.defer()
         promise = @http(httpParams)
+
         promise.success (data, status) =>
             defered.resolve(@model.make_model(name, data, cls))
 
         promise.error (data, status) ->
-            defered.reject()
+            defered.reject(data)
 
         return defered.promise
 
@@ -111,13 +109,14 @@ class ResourceService extends TaigaBaseService
             headers: @_headers(false),
             url: @gmUrls.api(name, urlParams)
         }
-        if not _.isEmpty(params)
-            defaultHttpParams.params = params
 
         httpParams =  _.extend({}, defaultHttpParams, options)
-        defered = @q.defer()
+        if not _.isEmpty(params)
+            httpParams.params = params
 
+        defered = @q.defer()
         promise = @http(httpParams)
+
         promise.success (data, status, headersFn) =>
             currentHeaders = headersFn()
 
@@ -331,8 +330,9 @@ class ResourceService extends TaigaBaseService
         # Second step: make user story models
         _makeUserStoryModels = (objects) =>
             for milestone in objects
-                milestone.user_stories = _.map milestone.user_stories, (obj) => @model.make_model("userstories", obj)
-
+                objects = _.map milestone.user_stories, (obj) =>
+                    @model.make_model("userstories", obj)
+                milestone.user_stories = objects
             return objects
 
         # Third step: make milestone models
@@ -361,7 +361,9 @@ class ResourceService extends TaigaBaseService
 
         # Second step: make user story models
         _makeUserStoryModels = (milestone) =>
-            milestone.user_stories = _.map milestone.user_stories, (obj) => @model.make_model("userstories", obj)
+            objects = _.map milestone.user_stories, (obj) =>
+                @model.make_model("userstories", obj)
+            milestone.user_stories = objects
 
             return milestone
 
@@ -489,7 +491,10 @@ class ResourceService extends TaigaBaseService
 
         obj = { milestone: milestoneId }
 
-        promise = @http({method: "PATCH", url: "#{@gmUrls.api("userstories")}/#{usId}", data: obj, headers:@_headers()})
+        promise = @http({
+            method: "PATCH",
+            url: "#{@gmUrls.api("userstories")}/#{usId}",
+            data: obj, headers:@_headers()})
 
         promise.success (data, status) =>
             defered.resolve(@model.make_model("userstories", data))
@@ -500,7 +505,6 @@ class ResourceService extends TaigaBaseService
         return defered.promise
 
     createMilestone: (projectId, form) ->
-        #return @model.create("milestones", data)
         obj = _.extend({}, form, {project: projectId})
         defered = @q.defer()
 
