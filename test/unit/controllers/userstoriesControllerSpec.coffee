@@ -152,7 +152,7 @@ describe "userstoriesController", ->
                 tags: "",
                 watchers: []
             })
-            httpBackend.whenGET("#{APIURL}/userstory-attachments?object_id=1&project=1").respond(200, [
+            httpBackend.whenGET("#{APIURL}/userstories/attachments?object_id=1&project=1").respond(200, [
                 id: 1,
                 object_id: 1,
                 project: 1,
@@ -164,10 +164,7 @@ describe "userstoriesController", ->
                 size: 11992,
                 owner: 9,
             ])
-            httpBackend.whenGET("#{APIURL}/userstories/1/historical?page=1").respond(200, [])
             httpBackend.whenGET("#{APIURL}/projects/1/tags").respond(200, ["tag1", "tag2", "tag3"])
-            #httpBackend.whenGET("#{APIURL}/...").respond(200, {...})
-            #httpBackend.whenPOST("#{APIURL}/...", {...}).respond(200, {...})
             httpBackend.flush()
         ))
 
@@ -177,31 +174,6 @@ describe "userstoriesController", ->
 
         it "should have section userstories", ->
             expect(ctrl.section).to.be.equal("user-stories")
-
-        it "should allow to load more historical", inject ($model) ->
-            httpBackend.expectGET(
-                "#{APIURL}/userstories/1/historical?page=1"
-            ).respond(200, [{"test1": "test1"}, {"test2": "test2"}])
-            promise = ctrl.loadHistorical()
-            httpBackend.flush()
-            promise.then ->
-                expect(ctrl.scope.historical.models.length).to.be.equal(2)
-
-            httpBackend.expectGET(
-                "#{APIURL}/userstories/1/historical?page=2"
-            ).respond(200, [{"test3": "test3"}])
-            promise = ctrl.loadMoreHistorical()
-            httpBackend.flush()
-            promise.then ->
-                expect(ctrl.scope.historical.models.length).to.be.equal(3)
-
-        it "should load the first page historical on loadMorehistorical when no historical", inject ($model) ->
-            ctrl.scope.historical = null
-            httpBackend.expectGET(
-                "#{APIURL}/userstories/1/historical?page=1"
-            ).respond(200, [{"test1": "test1"}, {"test2": "test2"}])
-            promise = ctrl.loadMoreHistorical()
-            httpBackend.flush()
 
         it "should allow to save a new attachment", inject ($q) ->
             ctrl.rs.uploadUserStoryAttachment = (projectId, usId, attachment) ->
@@ -218,7 +190,7 @@ describe "userstoriesController", ->
             result = ctrl.saveNewAttachments()
             expect(result).to.be.null
 
-            httpBackend.expectGET("#{APIURL}/userstory-attachments?object_id=1&project=1").respond(200)
+            httpBackend.expectGET("#{APIURL}/userstories/attachments?object_id=1&project=1").respond(200)
             ctrl.scope.projectId = 1
             ctrl.scope.usId = 1
             ctrl.scope.newAttachments = ["good", "good", "good"]
@@ -239,7 +211,7 @@ describe "userstoriesController", ->
                     defered.reject("bad")
                 return defered.promise
 
-            httpBackend.expectGET("#{APIURL}/userstory-attachments?object_id=1&project=1").respond(200)
+            httpBackend.expectGET("#{APIURL}/userstories/attachments?object_id=1&project=1").respond(200)
             ctrl.scope.projectId = 1
             ctrl.scope.usId = 1
             ctrl.scope.newAttachments = ["bad", "bad", "bad"]
@@ -248,7 +220,7 @@ describe "userstoriesController", ->
             promise.should.have.been.rejected
             ctrl.gmFlash.error.should.have.been.calledOnce
 
-            httpBackend.expectGET("#{APIURL}/userstory-attachments?object_id=1&project=1").respond(200)
+            httpBackend.expectGET("#{APIURL}/userstories/attachments?object_id=1&project=1").respond(200)
             ctrl.scope.projectId = 1
             ctrl.scope.usId = 1
             ctrl.scope.newAttachments = ["good", "good", "bad"]
@@ -259,7 +231,7 @@ describe "userstoriesController", ->
 
         it 'should allow to delete a us attachment', inject ($model) ->
             ctrl.scope.attachments = [$model.make_model('userstories/attachments', {"id": "test", "content": "test"})]
-            httpBackend.expectDELETE("#{APIURL}/userstory-attachments/test").respond(200)
+            httpBackend.expectDELETE("#{APIURL}/userstories/attachments/test").respond(200)
             promise = ctrl.removeAttachment(ctrl.scope.attachments[0])
             httpBackend.flush()
             promise.should.be.fulfilled.then ->

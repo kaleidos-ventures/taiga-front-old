@@ -133,18 +133,6 @@ class TaigaDetailPageController extends TaigaPageController
         @rs[@getAttachmentsMethod](@scope.projectId, @scope[@objectIdAttribute]).then (attachments) =>
             @scope.attachments = attachments
 
-    loadHistorical: (page=1) ->
-        @rs[@getHistoricalMethod](@scope[@objectIdAttribute], {page: page}).then (historical) =>
-            if @scope.historical and page != 1
-                historical.models = @scope.historical.models.concat(historical.models)
-
-            @scope.showMoreHistoricaButton = historical.models.length < historical.count
-            @scope.historical = historical
-
-    loadMoreHistorical: ->
-        page = if @scope.historical then @scope.historical.current + 1 else 1
-        @loadHistorical(page=page)
-
 
 @.TaigaBaseController = TaigaBaseController
 @.TaigaPageController = TaigaPageController

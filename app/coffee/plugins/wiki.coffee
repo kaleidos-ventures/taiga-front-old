@@ -16,15 +16,16 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
-gmMarkitupConstructor = ($rootScope, $parse, $i18next, $location, rs) ->
+gmMarkitupConstructor = ($rootScope, $parse, $i18next, $location, rs, gmWiki) ->
     require: "?ngModel",
     link: (scope, elm, attrs, ngModel) ->
         openHelp = () ->
             window.open($rootScope.urls.wikiHelpUrl(), '_blank')
 
         preview = () ->
-            $("##{attrs.previewId}").show()
-            $("##{attrs.previewId}").html($.emoticons.replaceExcludingPre(marked(elm.val())))
+            gmWiki.render($rootScope.projectId, elm.val()).then (result) ->
+                $("##{attrs.previewId}").show()
+                $("##{attrs.previewId}").html(result)
 
         markdownSettings =
             nameSpace: 'markdown'
@@ -327,85 +328,26 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $location, rs) ->
             $("##{attrs.previewId}").hide()
             $("##{attrs.previewId}").html("")
 
-GmRenderMarkdownDirective = ($rootScope, $parse, gmWiki) ->
-    return (scope, elm, attrs) ->
-        element = angular.element(elm)
-        projectId = scope.projectId
+class GmRenderMarkdownService extends TaigaBaseService
+    @.$inject = ["resource", "$q"]
 
-        if attrs.gmRenderMarkdown
-            data = scope.$eval(attrs.gmRenderMarkdown)
-            if data != undefined
-                result = gmWiki.render(data)
-                element.html(result)
-        else
-            result = gmWiki.render(element.text())
-            element.html(result)
+    constructor: (@rs, @q) ->
+        super()
 
-        scope.$watch attrs.gmRenderMarkdown, ->
-            data = scope.$eval(attrs.gmRenderMarkdown)
-            if data != undefined
-                result = gmWiki.render(data)
-                element.html(result)
+    render: (projectId, text) ->
+        defered = @q.defer()
 
-class GmRenderMarkdownService
-    @.$inject = []
+        @rs.renderWiki(projectId, text).then (response) ->
+            defered.resolve(response.data)
 
-    render: (text) ->
-        return $.emoticons.replaceExcludingPre(marked(text))
+        @rs.renderWiki(projectId, text).then null, () ->
+            defered.reject()
 
-GmRenderMarkdownFilter = (gmWiki) ->
-    return (input) ->
-        return gmWiki.render(input)
+        return defered.promise
 
-wikiInit = ($routeParams, $rootScope) ->
-    hljs.initHighlightingOnLoad()
-
-    renderer = new marked.Renderer()
-
-    renderer.realLink = renderer.link
-    renderer.link = (href, title, text) ->
-        if href == _.string.slugify(href)
-            # It's an internal link to a wiki page
-            renderer.realLink($rootScope.urls.wikiUrl($routeParams.pslug, href), title, text)
-        else if href.indexOf(':us:') == 0
-            renderer.realLink($rootScope.urls.userStoryUrl($routeParams.pslug, href.substring(4)), title, text)
-        else if href.indexOf(':task:') == 0
-            renderer.realLink($rootScope.urls.tasksUrl($routeParams.pslug, href.substring(6)), title, text)
-        else if href.indexOf(':issue:') == 0
-            renderer.realLink($rootScope.urls.issuesUrl($routeParams.pslug, href.substring(7)), title, text)
-        else if href.indexOf(':sprint:') == 0
-            renderer.realLink($rootScope.urls.taskboardUrl($routeParams.pslug, href.substring(8)), title, text)
-        else
-            renderer.realLink(href, title, text)
-
-    renderer.realImage = renderer.image
-    renderer.image = (href, title, text) ->
-        if href.indexOf(':att:') == 0
-            renderer.realImage(
-                $rootScope.urls.attachmentUrl(
-                    $routeParams.pslug,
-                    'wikipage',
-                    href.substring(5)
-                ),
-                title,
-                text
-            )
-        else
-            renderer.realImage(href, title, text)
-
-    marked.setOptions {
-        highlight: (code, lang) ->
-            if lang
-                return hljs.highlight(lang, code).value
-            return hljs.highlightAuto(code).value
-        sanitize: true
-        renderer: renderer
-    }
-
-moduleDeps = ['i18next', 'taiga.services.resource', 'ngRoute']
-module = angular.module('gmWiki', moduleDeps).run ['$routeParams', '$rootScope', wikiInit ]
+moduleDeps = ['i18next', 'taiga.services.resource']
+module = angular.module('gmWiki', moduleDeps)
 module.directive('gmMarkitup', ["$rootScope", "$parse", "$i18next",
-                                "$location", "resource", gmMarkitupConstructor])
-module.directive("gmRenderMarkdown", ["$rootScope", "$parse", "gmWiki", GmRenderMarkdownDirective])
+                                "$location", "resource", "gmWiki",
+                                gmMarkitupConstructor])
 module.service("gmWiki", GmRenderMarkdownService)
-module.filter("wiki", ["gmWiki", GmRenderMarkdownFilter])

@@ -21,6 +21,7 @@ describe "PopoverDirectivesTests", ->
     """
 
     beforeEach(module("taiga.directives.popovers"))
+    beforeEach(module("ngSanitize"))
     beforeEach(module("gmWiki"))
 
     beforeEach(inject((_$compile_, _$rootScope_) ->
@@ -62,7 +63,7 @@ describe "PopoverDirectivesTests", ->
         template = """
         <div>
         <span data-icon="o" class="icon blocked"
-            gm-markdown-preview-popover=""
+            gm-wiki-preview-popover=""
             gm-popover-model="note"
             gm-popover-title="issues.select-status-popover"
             gm-popover-class-name="issue-blocked-popover"
@@ -73,7 +74,7 @@ describe "PopoverDirectivesTests", ->
 
         element = $compile(template)($rootScope)
 
-        $rootScope.note = "*foo*"
+        $rootScope.note = "<b>foo</b>"
         $rootScope.$digest()
 
         element.find("span.blocked").click()

@@ -16,9 +16,9 @@
             <h2>{{ task.subject }}</h2>
             <div class="blocked-alert" ng-show="task.is_blocked">
                 <div class="icon blocked"data-icon="o"></div>
-                <div class="reasons" gm-render-markdown="task.blocked_note"></div>
+                <div class="reasons" ng-bind-html="task.blocked_note_html"></div>
             </div>
-            <div gm-render-markdown="task.description"></div>
+            <div ng-bind-html="task.description_html"></div>
             <div class="attachments" ng-show="attachments.length > 0 || newAttachments[0].status != undefined">
                 <h3 i18next="task.attachments">Attachments</h3>
                 <ul class="attachments-items">
@@ -233,13 +233,11 @@
         </div>
     </div>
 
-    <div class="row-fluid" ng-show="historical">
+    <div class="row-fluid">
         <div class="span12">
-            <div class="history" gm-history="task" ng-model="historical">
-                <h3 i18next="task.history">History</h3>
-                <div class="history-items-container"></div>
-                <a class="more" data-icon="C" href="" ng-click="ctrl.loadMoreHistorical()"
-                   ng-show="showMoreHistoricaButton" i18next="task.see-more">See More</a>
+            <div class="history" gm-history="task"
+                 data-history-type="task"
+                 data-object-id="taskId">
             </div>
         </div>
     </div>

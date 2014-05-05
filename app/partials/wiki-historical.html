@@ -2,7 +2,7 @@
 <div class="middle-container container-fluid wiki">
     <div class="row-fluid" ng-show="!formOpened">
         <div class="span12">
-            <div class="wiki-container" gm-render-markdown="content"></div>
+            <div class="wiki-container" ng-bind-html="page.html"></div>
             <div class="attachments" ng-show="attachments">
                 <h3 data-icon="E" i18next="wiki-historical.attachments">Attachments</h3>
                 <ul class="attachments-items">
@@ -29,57 +29,9 @@
             <div class="history">
                 <h3 i18next="wiki-historical.history">History</h3>
                 <div class="history-items-container">
-                    <ul class="history-items">
-                        <li ng-show="historical.models.length == 0" class="empty">
-                            <span i18next="wiki-historical.no-historical-items">This wiki page has no past yet</span>
-                        </li>
-                        <li class="history-item" ng-repeat="hitem in historical.models"
-                            ng-controller="WikiHistoricalItemController as historyCtrl">
-                            <div class="title">
-                                <a href="" data-icon="C" ng-show="showChanges" class="show-button"
-                                    ng-click="historyCtrl.toggleShowChanges()"></a>
-                                <a href="" data-icon="B" ng-hide="showChanges" class="hide-button"
-                                    ng-click="historyCtrl.toggleShowChanges()"></a>
-
-                                <span class="updated">
-                                    <span i18next="wiki-historical.updated-by-history">
-                                        Updated by
-                                    </span>
-                                    <span gm-colorize-user="constants.users[hitem.user]">
-                                        {{ constants.users[hitem.user].full_name }}
-                                    </span>
-                                </span>
-                                <span class="date">{{ hitem.created_date|momentFromNow }}</span>
-                            </div>
-                            <div class="changes" ng-show="showChanges">
-                                <div gm-render-markdown="hitem.fields.content"
-                                     ng-show="showContent" class="content" ></div>
-                                <div ng-bind-html="hitem.changed_fields.content.new|diff:hitem.changed_fields.content.old"
-                                     ng-show="showPreviousDiff" class="previous-diff" ></div>
-                                <div ng-bind-html="content|diff:hitem.changed_fields.content.new"
-                                     ng-show="showCurrentDiff" class="current-diff" ></div>
-
-                                <a href="" ng-click="historyCtrl.restoreWikiPage(hitem)"
-                                   class="button button-restore" i18next="wiki-historical.restore">Restore</a>
-
-                                <a href="" ng-click="historyCtrl.activeShowCurrentDiff()"
-                                   i18next="wiki-historical.show-current-diff"
-                                   ng-class="showCurrentDiff && 'selected'"
-                                   class="button button-current-diff">show diff with current version</a>
-                                <a href="" ng-click="historyCtrl.activeShowPreviousDiff()"
-                                   i18next="wiki-historical.show-previous-diff"
-                                   ng-class="showPreviousDiff && 'selected'"
-                                   class="button button-previous-diff">Show diff with previous version</a>
-                                <a href="" ng-click="historyCtrl.activeShowContent()"
-                                   i18next="wiki-historical.show-content"
-                                   ng-class="showContent && 'selected'"
-                                   class="button button-content selected">Show content</a>
-                            </div>
-                        </li>
-                    </ul>
+                    TODO: should be implemented new directive or use parametrized history directive
+                    when new design and layour are ready.
                 </div>
-                <a class="more" data-icon="C" href="" ng-click="ctrl.loadMoreHistorical()"
-                   ng-show="showMoreHistoricaButton" i18next="wiki-historical.see-more">See more</a>
             </div>
         </div>
     </div>

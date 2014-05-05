@@ -24,8 +24,6 @@
     "tests"
   ],
   "dependencies": {
-    "highlight.js": "~7.3.0",
-    "marked": "~0.3.0",
     "lodash": "~2.4.1",
     "emoticons": "~0.1.7",
     "jquery-flot": "~0.8.2",

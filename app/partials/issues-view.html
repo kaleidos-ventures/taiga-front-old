@@ -22,9 +22,9 @@
             <h2>{{ issue.subject }}</h2>
             <div class="blocked-alert" ng-show="issue.is_blocked">
                 <div class="icon blocked"data-icon="o"></div>
-                <div class="reasons" gm-render-markdown="issue.blocked_note"></div>
+                <div class="reasons" ng-bind-html="issue.blocked_note_html"></div>
             </div>
-            <div gm-render-markdown="issue.description"></div>
+            <div ng-bind-html="issue.description_html"></div>
             <div class="attachments" ng-show="attachments.length > 0 || newAttachments[0].status != undefined">
                 <h3 data-icon="E" i18next="issue.attachments">Attachments</h3>
                 <ul class="attachments-items">
@@ -272,13 +272,11 @@
         </div>
     </div>
 
-    <div class="row-fluid" ng-show="historical">
+    <div class="row-fluid">
         <div class="span12">
-            <div class="history" gm-history="issue" ng-model="historical">
-                <h3 i18next="issue.history">History</h3>
-                <div class="history-items-container"></div>
-                <a class="more" data-icon="C" href="" ng-click="ctrl.loadMoreHistorical()"
-                   ng-show="showMoreHistoricaButton" i18next="issue.see-more">See more</a>
+            <div class="history" gm-history="issue"
+                 data-history-type="issue"
+                 data-object-id="issueId">
             </div>
         </div>
     </div>
@@ -418,7 +416,7 @@
             </div>
             <div class="comment" ng-show="hitem.comment">
                 <strong i18next="issue.comment-history">Comment:</strong>
-                <div gm-render-markdown="hitem.comment"></div>
+                <div gm-render-markdown="hitem.comment_html"></div>
             </div>
         </li>
     </ul>

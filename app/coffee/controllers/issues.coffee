@@ -239,7 +239,6 @@ class IssuesViewController extends TaigaDetailPageController
 
     uploadAttachmentMethod: "uploadIssueAttachment"
     getAttachmentsMethod: "getIssueAttachments"
-    getHistoricalMethod: "getIssueHistorical"
     objectIdAttribute: "issueId"
 
     initialize: ->
@@ -267,7 +266,6 @@ class IssuesViewController extends TaigaDetailPageController
                 @data.loadUsersAndRoles(@scope).then =>
                     @.loadIssue()
                     @.loadAttachments()
-                    @.loadHistorical()
                     @.loadProjectTags()
 
         @scope.tagsSelectOptions = {
@@ -318,9 +316,10 @@ class IssuesViewController extends TaigaDetailPageController
         promise.then =>
             gm.safeApply @scope, =>
                 @scope.$emit("spinner:stop")
-                @loadIssue()
-                @loadHistorical()
-                @saveNewAttachments()
+                @scope.$emit("history:reload")
+
+                @.loadIssue()
+                @.saveNewAttachments()
                 @gmFlash.info(@i18next.t("issue.issue-saved"))
 
         promise.then null, (data) =>
@@ -352,7 +351,6 @@ class IssuesViewController extends TaigaDetailPageController
         promise = @modal.open("generate-user-story-form", {"us": initializeForm(), "type": "create"})
         promise.then =>
             @loadIssue()
-            @loadHistorical()
 
 
 class IssuesModalController extends ModalBaseController

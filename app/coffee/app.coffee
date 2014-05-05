@@ -134,22 +134,14 @@ configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compil
         "userstories": "/api/v1/userstories"
         "bulk-create-us": "/api/v1/userstories/bulk_create"
         "bulk-update-us-order": "/api/v1/userstories/bulk_update_order"
-        "userstories-historical": "/api/v1/userstories/%s/historical"
         "userstories-restore": "/api/v1/userstories/%s/restore"
-        "userstories/attachments": "/api/v1/userstory-attachments"
         "tasks": "/api/v1/tasks"
         "bulk-create-tasks": "/api/v1/tasks/bulk_create"
-        "tasks-historical": "/api/v1/tasks/%s/historical"
         "tasks-restore": "/api/v1/tasks/%s/restore"
-        "tasks/attachments": "/api/v1/task-attachments"
         "issues": "/api/v1/issues"
-        "issues-historical": "/api/v1/issues/%s/historical"
         "issues-restore": "/api/v1/issues/%s/restore"
-        "issues/attachments": "/api/v1/issue-attachments"
         "wiki": "/api/v1/wiki"
-        "wiki-historical": "/api/v1/wiki/%s/historical"
         "wiki-restore": "/api/v1/wiki/%s/restore"
-        "wiki/attachments": "/api/v1/wiki/attachments"
         "choices/userstory-statuses": "/api/v1/userstory-statuses"
         "choices/userstory-statuses/bulk-update-order": "/api/v1/userstory-statuses/bulk_update_order"
         "choices/points": "/api/v1/points"
@@ -175,6 +167,18 @@ configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compil
         "users-change-password": "/api/v1/users/change_password"
         "resolver": "/api/v1/resolver"
         "wiki-attachment": "/media/attachment-files/%s/wikipage/%s"
+
+        # History
+        "history/userstory": "/api/v1/history/userstory"
+        "history/issue": "/api/v1/history/issue"
+        "history/task": "/api/v1/history/task"
+        "history/wiki": "/api/v1/history/wiki"
+
+        # Attachments
+        "userstories/attachments": "/api/v1/userstories/attachments"
+        "issues/attachments": "/api/v1/issues/attachments"
+        "tasks/attachments": "/api/v1/tasks/attachments"
+        "wiki/attachments": "/api/v1/wiki/attachments"
     }
 
     $gmUrlsProvider.setUrls("api", apiUrls)

@@ -390,11 +390,6 @@ class ResourceService extends TaigaBaseService
         params = _.extend({}, params, {project: projectId})
         return @_queryOne("userstories", userStoryId, params)
 
-    getUserStoryHistorical: (userStoryId, filters={}) ->
-        urlparams = [userStoryId]
-        parameters = _.extend({}, filters)
-        return @_queryManyPaginated("userstories-historical", parameters, null , urlparams)
-
     getTasks: (projectId, sprintId) ->
         params = {project:projectId}
         if sprintId != undefined
@@ -410,18 +405,8 @@ class ResourceService extends TaigaBaseService
         params = _.extend({}, params, {project: projectId})
         return @_queryOne("issues", issueId, params)
 
-    getIssueHistorical: (issueId, filters={}) ->
-        urlparams = [issueId]
-        parameters = _.extend({}, filters)
-        return @_queryManyPaginated("issues-historical", parameters, null , urlparams)
-
     getTask: (projectId, taskId) ->
         return @_queryOne("tasks", taskId, {project:projectId})
-
-    getTaskHistorical: (taskId, filters={}) ->
-        urlparams = [taskId]
-        parameters = _.extend({}, filters)
-        return @_queryManyPaginated("tasks-historical", parameters, null , urlparams)
 
     search: (projectId, term, getAll) ->
         defered = @q.defer()
@@ -537,10 +522,24 @@ class ResourceService extends TaigaBaseService
 
         return defered.promise
 
-    getWikiPageHistorical: (wikiId, filters={}) ->
-        urlparams = [wikiId]
-        parameters = _.extend({}, filters)
-        return @_queryManyPaginated("wiki-historical", parameters, null, urlparams)
+    renderWiki: (projectId, text) ->
+        defered = @q.defer()
+
+        httpParams = {
+            method: "POST"
+            headers: @_headers()
+            url: "#{@gmUrls.api("wiki")}/render"
+            data: {project_id: projectId, content: text }
+        }
+
+        promise = @http(httpParams)
+        promise.success (data) =>
+            defered.resolve(data)
+
+        promise.error ->
+            defered.reject()
+
+        return defered.promise
 
     createTask: (form) ->
         return @model.create("tasks", form)
@@ -576,18 +575,6 @@ class ResourceService extends TaigaBaseService
             defered.reject()
 
         return defered.promise
-
-    getIssueAttachments: (projectId, issueId) ->
-        return @_queryMany("issues/attachments", {project: projectId, object_id: issueId})
-
-    getTaskAttachments: (projectId, taskId) ->
-        return @_queryMany("tasks/attachments", {project: projectId, object_id: taskId})
-
-    getUserStoryAttachments: (projectId, userStoryId) ->
-        return @_queryMany("userstories/attachments", {project: projectId, object_id: userStoryId})
-
-    getWikiPageAttachments: (projectId, wikiPageId) ->
-        return @_queryMany("wiki/attachments", {project: projectId, object_id: wikiPageId})
 
     _uploadAttachment: (projectId, objectId, file, progress, apiUrlKey) ->
         defered = @q.defer()
@@ -649,6 +636,18 @@ class ResourceService extends TaigaBaseService
 
     uploadWikiPageAttachment: (projectId, wikiPageId, file, progress=true) ->
         @_uploadAttachment(projectId, wikiPageId, file, progress, "wiki/attachments")
+
+    getIssueAttachments: (projectId, issueId) ->
+        return @_queryMany("issues/attachments", {project: projectId, object_id: issueId})
+
+    getTaskAttachments: (projectId, taskId) ->
+        return @_queryMany("tasks/attachments", {project: projectId, object_id: taskId})
+
+    getUserStoryAttachments: (projectId, userStoryId) ->
+        return @_queryMany("userstories/attachments", {project: projectId, object_id: userStoryId})
+
+    getWikiPageAttachments: (projectId, wikiPageId) ->
+        return @_queryMany("wiki/attachments", {project: projectId, object_id: wikiPageId})
 
     getSiteInfo: () ->
         httpParams = {
@@ -765,6 +764,10 @@ class ResourceService extends TaigaBaseService
         }
         return @http.post(@gmUrls.api("choices/severities/bulk-update-order"), obj, {headers:@_headers()})
 
+    getHistory: (type, pk, params) ->
+        return @_queryRaw("history/#{type}", pk, params)
 
-module = angular.module("taiga.services.resource", ['taiga.services.auth', 'gmUrls', 'taiga.services.model', 'i18next'])
+
+module = angular.module("taiga.services.resource", ["taiga.services.auth", "gmUrls",
+                                                    "taiga.services.model", "i18next"])
 module.service("resource", ResourceService)

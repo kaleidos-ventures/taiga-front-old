@@ -248,12 +248,12 @@ GmGenericDialogPopover = ($compile, $i18next) ->
             controller.initialize(data)
 
 
-GmMarkdownPreviewPopover = ($compile, $i18next) ->
+GmWikiPreviewPopover = ($compile, $i18next) ->
     template = """
     <div class="<%= className %>">
         <section class="btn-accept">
             <strong i18next="issues.blocking-reasons-popover"><?= title %></strong>
-            <div gm-render-markdown="<%= model %>"></div>
+            <div ng-bind-html="<%= model %>"></div>
         </section>
     </div>
     """
@@ -303,6 +303,6 @@ module = angular.module("taiga.directives.popovers", ["i18next"])
 module.directive("gmGenericChoicePopover", ["$compile", "$i18next", GmGenericChoicePopover])
 module.directive("gmUserChoicePopover", ["$compile", "$i18next", GmUserChoicePopover])
 module.directive("gmGenericDialogPopover", ["$compile", "$i18next", GmGenericDialogPopover])
-module.directive("gmMarkdownPreviewPopover", ["$compile", "$i18next", GmMarkdownPreviewPopover])
+module.directive("gmWikiPreviewPopover", ["$compile", "$i18next", GmWikiPreviewPopover])
 module.directive("gmColorPickerPopover", ["$compile", "$i18next", GmColorPickerPopover])
 module.directive("gmTemplatePopover", ["$compile", "$templateCache", "$i18next", GmTemplatePopover])

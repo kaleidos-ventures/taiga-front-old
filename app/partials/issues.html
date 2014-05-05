@@ -271,8 +271,8 @@
                         </a>
 
                         <span data-icon="o" class="icon blocked" ng-show="issue.is_blocked"
-                              gm-markdown-preview-popover=""
-                              gm-popover-model="issue.blocked_note"
+                              gm-wiki-preview-popover=""
+                              gm-popover-model="issue.blocked_note_html"
                               gm-popover-class-name="issue-blocked-popover"
                               gm-popover-title="issues.blocking-reasons-popover">
                         </span>
@@ -504,7 +504,7 @@
             </section>
             <section>
                 <strong i18next="issues.description-popover">Description:</strong>
-                <div gm-render-markdown="issue.description"></div>
+                <div ng-bind-html="issue.description_html"></div>
             </section>
             <section ng-show="issue.attachments">
                 <strong i18next="issues.attachments-popover">Attachments:</strong>

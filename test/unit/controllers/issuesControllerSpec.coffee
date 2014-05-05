@@ -159,10 +159,9 @@ describe "issuesController", ->
                 tags: "",
                 watchers: []
             })
-            httpBackend.whenGET("#{APIURL}/issues/1/historical?page=1").respond(200, [])
             httpBackend.whenGET("#{APIURL}/projects/1/tags").respond(200, ["tag1", "tag2", "tag3"])
             httpBackend.whenGET("#{APIURL}/issues/1?order_by=status&project=1").respond(200)
-            httpBackend.whenGET("#{APIURL}/issue-attachments?object_id=1&project=1").respond(200)
+            httpBackend.whenGET("#{APIURL}/issues/attachments?object_id=1&project=1").respond(200)
             httpBackend.flush()
         ))
 
@@ -175,31 +174,6 @@ describe "issuesController", ->
 
         it 'should have a title', ->
             expect(ctrl.getTitle).to.be.ok
-
-        it "should allow to load more historical", inject ($model) ->
-            httpBackend.expectGET(
-                "#{APIURL}/issues/1/historical?page=1"
-            ).respond(200, [{"test1": "test1"}, {"test2": "test2"}])
-            promise = ctrl.loadHistorical()
-            httpBackend.flush()
-            promise.then ->
-                expect(ctrl.scope.historical.models.length).to.be.equal(2)
-
-            httpBackend.expectGET(
-                "#{APIURL}/issues/1/historical?page=2"
-            ).respond(200, [{"test3": "test3"}])
-            promise = ctrl.loadMoreHistorical()
-            httpBackend.flush()
-            promise.then ->
-                expect(ctrl.scope.historical.models.length).to.be.equal(3)
-
-        it "should load the first page historical on loadMorehistorical when no historical", inject ($model) ->
-            ctrl.scope.historical = null
-            httpBackend.expectGET(
-                "#{APIURL}/issues/1/historical?page=1"
-            ).respond(200, [{"test1": "test1"}, {"test2": "test2"}])
-            promise = ctrl.loadMoreHistorical()
-            httpBackend.flush()
 
         it "should allow to save a new attachment", inject ($q) ->
             ctrl.rs.uploadIssueAttachment = (projectId, issueId, attachment) ->
@@ -216,7 +190,7 @@ describe "issuesController", ->
             result = ctrl.saveNewAttachments()
             expect(result).to.be.null
 
-            httpBackend.expectGET("#{APIURL}/issue-attachments?object_id=1&project=1").respond(200)
+            httpBackend.expectGET("#{APIURL}/issues/attachments?object_id=1&project=1").respond(200)
             ctrl.scope.projectId = 1
             ctrl.scope.issueId = 1
             ctrl.scope.newAttachments = ["good", "good", "good"]
@@ -237,7 +211,7 @@ describe "issuesController", ->
                     defered.reject("bad")
                 return defered.promise
 
-            httpBackend.expectGET("#{APIURL}/issue-attachments?object_id=1&project=1").respond(200)
+            httpBackend.expectGET("#{APIURL}/issues/attachments?object_id=1&project=1").respond(200)
             ctrl.scope.projectId = 1
             ctrl.scope.issueId = 1
             ctrl.scope.newAttachments = ["bad", "bad", "bad"]
@@ -246,7 +220,7 @@ describe "issuesController", ->
             promise.should.have.been.rejected
             ctrl.gmFlash.error.should.have.been.calledOnce
 
-            httpBackend.expectGET("#{APIURL}/issue-attachments?object_id=1&project=1").respond(200)
+            httpBackend.expectGET("#{APIURL}/issues/attachments?object_id=1&project=1").respond(200)
             ctrl.scope.projectId = 1
             ctrl.scope.issueId = 1
             ctrl.scope.newAttachments = ["good", "good", "bad"]
@@ -257,7 +231,7 @@ describe "issuesController", ->
 
         it 'should allow to delete a issue attachment', inject ($model) ->
             ctrl.scope.attachments = [$model.make_model('issues/attachments', {"id": "test", "content": "test"})]
-            httpBackend.expectDELETE("#{APIURL}/issue-attachments/test").respond(200)
+            httpBackend.expectDELETE("#{APIURL}/issues/attachments/test").respond(200)
             promise = ctrl.removeAttachment(ctrl.scope.attachments[0])
             httpBackend.flush()
             promise.should.be.fulfilled.then ->
@@ -270,15 +244,9 @@ describe "issuesController", ->
 
         it 'should allow open the generate user story form', inject ($model) ->
             ctrl.scope.constants.computableRolesList = [{id: 1}, {id: 2}]
-            httpBackend.expectGET(
-                "#{APIURL}/issues/1/historical?page=1"
-            ).respond(200, [{"test1": "test1"}, {"test2": "test2"}])
             ctrl.openCreateUserStoryForm()
             httpBackend.flush()
 
-            httpBackend.expectGET(
-                "#{APIURL}/issues/1/historical?page=1"
-            ).respond(200, [{"test1": "test1"}, {"test2": "test2"}])
             ctrl.scope.issue = null
             ctrl.openCreateUserStoryForm()
             httpBackend.flush()
@@ -796,7 +764,7 @@ describe "issuesController", ->
             result = ctrl.saveNewAttachments(1, 1)
             expect(result).to.be.null
 
-            httpBackend.expectGET("#{APIURL}/issue-attachments?object_id=1&project=1").respond(200, [])
+            httpBackend.expectGET("#{APIURL}/issues/attachments?object_id=1&project=1").respond(200, [])
             ctrl.scope.newAttachments = ["good", "good", "good"]
             promise = ctrl.saveNewAttachments(1, 1)
             httpBackend.flush()
@@ -815,14 +783,14 @@ describe "issuesController", ->
                     defered.reject("bad")
                 return defered.promise
 
-            httpBackend.expectGET("#{APIURL}/issue-attachments?object_id=1&project=1").respond(200, [])
+            httpBackend.expectGET("#{APIURL}/issues/attachments?object_id=1&project=1").respond(200, [])
             ctrl.scope.newAttachments = ["bad", "bad", "bad"]
             promise = ctrl.saveNewAttachments(1, 1)
             httpBackend.flush()
             promise.should.have.been.rejected
             ctrl.gmFlash.error.should.have.been.calledOnce
 
-            httpBackend.expectGET("#{APIURL}/issue-attachments?object_id=1&project=1").respond(200, [])
+            httpBackend.expectGET("#{APIURL}/issues/attachments?object_id=1&project=1").respond(200, [])
             ctrl.scope.newAttachments = ["good", "good", "bad"]
             promise = ctrl.saveNewAttachments(1, 1)
             httpBackend.flush()
@@ -831,7 +799,7 @@ describe "issuesController", ->
 
         it 'should allow to delete a issue attachment', inject ($model) ->
             ctrl.scope.attachments = [$model.make_model('issues/attachments', {"id": "test", "content": "test"})]
-            httpBackend.expectDELETE("#{APIURL}/issue-attachments/test").respond(200)
+            httpBackend.expectDELETE("#{APIURL}/issues/attachments/test").respond(200)
             promise = ctrl.removeAttachment(ctrl.scope.attachments[0])
             httpBackend.flush()
             promise.should.be.fulfilled.then ->

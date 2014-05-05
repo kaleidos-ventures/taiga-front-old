@@ -26,9 +26,9 @@
             <h2>{{ userStory.subject }}</h2>
             <div class="blocked-alert" ng-show="userStory.is_blocked">
                 <div class="icon blocked"data-icon="o"></div>
-                <div class="reasons" gm-render-markdown="userStory.blocked_note"></div>
+                <div class="reasons" ng-bind-html="userStory.blocked_note_html"></div>
             </div>
-            <div gm-render-markdown="userStory.description"></div>
+            <div ng-bind-html="userStory.description_html"></div>
             <div class="attachments" ng-show="attachments.length > 0 || newAttachments[0].status != undefined">
                 <h3 i18next="user-story.attachments">Attachments</h3>
                 <ul class="attachments-items">
@@ -264,13 +264,10 @@
         </div>
     </div>
 
-    <div class="row-fluid" gm-history="userstory" ng-model="historical">
+    <div class="row-fluid">
         <div class="span12">
-            <div class="history">
-                <h3 i18next="user-story.history">History</h3>
-                <div class="history-items-container"></div>
-                <a class="more" data-icon="C" href="" ng-click="ctrl.loadMoreHistorical()"
-                   ng-show="showMoreHistoricaButton" i18next="user-story.see-more">See More</a>
+            <div class="history" gm-history="userstory" data-history-type="userstory"
+                 data-object-id="userStoryId">
             </div>
         </div>
     </div>

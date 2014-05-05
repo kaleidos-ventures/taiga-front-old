@@ -50,6 +50,8 @@
         "password-change-title": "Password change"
     },
     "common": {
+        "history": "History",
+        "see-more": "See more",
         "administer-site": "Administer site",
         "loading": "Loading",
         "dashboard": "Dashboard",
@@ -247,8 +249,6 @@
         "add-attachments": "Add attachments",
         "delete-new-attachment": "Delete the new attachment",
         "save": "Save",
-        "history": "History",
-        "see-more": "See more",
         "updated-by-history": "Updated by",
         "comment-history": "Comment:",
         "issue-saved": "The issue has been saved",
@@ -494,15 +494,12 @@
         "add-attachments": "Add attachments",
         "delete-new-attachment": "Delete the new attachment",
         "save": "Save",
-        "history": "History",
-        "see-more": "See more",
         "updated-by-history": "Updated by",
         "comment-history": "Comment:",
         "file-upload-data": "__upload__ of __total__"
     },
     "wiki-historical": {
         "on-date": "on __date__",
-        "history": "History",
         "historical": "Historical",
         "attachments": "Attachments",
         "no-historical-items": "This wiki page has no past yet",
@@ -512,7 +509,6 @@
         "show-current-diff": "Show diff with current version",
         "show-previous-diff": "Show diff with previous version",
         "restore": "Restore",
-        "see-more": "See more",
         "gone-back-sure": "Are you sure you want to go back to '__date__'?",
         "gone-back-success": "The flux capacitor works correctly and now yow gone back to '__date__'",
         "gone-back-error": "An error happened. Maybe the flux capacitor is broken..."
@@ -574,8 +570,6 @@
         "add-attachments": "Add attachments",
         "delete-new-attachment": "Delete the new attachment",
         "save": "Save",
-        "history": "History",
-        "see-more": "See more",
         "updated-by-history": "Updated by",
         "comment": "Comment:",
         "file-upload-data": "__upload__ of __total__"

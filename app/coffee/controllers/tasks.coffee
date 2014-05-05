@@ -34,7 +34,6 @@ class TasksViewController extends TaigaDetailPageController
 
     uploadAttachmentMethod: "uploadTaskAttachment"
     getAttachmentsMethod: "getTaskAttachments"
-    getHistoricalMethod: "getTaskHistorical"
     objectIdAttribute: "taskId"
 
     initialize: ->
@@ -62,7 +61,6 @@ class TasksViewController extends TaigaDetailPageController
                     @loadTask().then () =>
                         @onRemoveUrl = "/project/#{@scope.projectSlug}/taskboard/#{@scope.task.milestone_slug}"
                     @loadAttachments()
-                    @loadHistorical()
                     @loadProjectTags()
 
         @scope.tagsSelectOptions = {
@@ -103,16 +101,18 @@ class TasksViewController extends TaigaDetailPageController
     # Debounced Method (see debounceMethods method)
     submit: =>
         @scope.$emit("spinner:start")
+        @scope.$emit("history:reload")
+
         for key, value of @scope.form
             @scope.task[key] = value
 
         promise = @scope.task.save()
         promise.then (task) =>
-            @scope.$emit("spinner:stop")
-            @saveNewAttachments()
-            @loadTask()
-            @loadHistorical()
             @gmFlash.info(@i18next.t("task.task-saved"))
+            @scope.$emit("spinner:stop")
+            @scope.$emit("history:reload")
+            @.saveNewAttachments()
+            @.loadTask()
 
         promise.then null, (data) =>
             @scope.checksleyErrors = data

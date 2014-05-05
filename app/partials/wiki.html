@@ -2,7 +2,7 @@
 <div class="middle-container container-fluid wiki">
     <div class="row-fluid" ng-show="!formOpened">
         <div class="span12">
-            <div class="wiki-container" gm-render-markdown="content"></div>
+            <div class="wiki-container" ng-bind-html="page.html"></div>
             <div class="attachments" ng-show="attachments.length > 0 || newAttachments[0].status != undefined">
                 <h3 data-icon="E" i18next="wiki.attachments">Attachments</h3>
                 <ul class="attachments-items">

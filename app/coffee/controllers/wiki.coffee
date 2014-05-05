@@ -156,12 +156,17 @@ class WikiController extends TaigaPageController
 class WikiHistoricalController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$location', '$routeParams', '$data',
                  'resource', "$confirm", "$q", "$i18next", "$favico"]
-    constructor: (@scope, @rootScope, @location, @routeParams, @data, @rs, @confirm, @q, @i18next, @favico) ->
+
+    constructor: (@scope, @rootScope, @location, @routeParams,
+                  @data, @rs, @confirm, @q, @i18next, @favico) ->
         super(scope, rootScope, favico)
 
     section: 'wiki'
     getTitle: ->
-        "#{@i18next.t("common.wiki")} - #{@routeParams.slug} - #{@i18next.t("wiki-historical.historical")}"
+        return """
+        #{@i18next.t("common.wiki")} - #{@routeParams.slug}
+        - #{@i18next.t("wiki-historical.historical")}
+        """
 
     initialize: ->
         @rootScope.pageBreadcrumb = [
@@ -187,79 +192,10 @@ class WikiHistoricalController extends TaigaPageController
                         @loadAttachments(page)
                         @loadHistorical()
 
-        @scope.$on "wiki:restored", (ctx, data) =>
-            promise = @rs.getWikiPage(@scope.projectId, @rootScope.slug)
-            promise.then (page) =>
-                @scope.page = page
-                @scope.content = page.content
-                @loadAttachments(page)
-                @loadHistorical()
-
     loadAttachments: (page) ->
         @rs.getWikiPageAttachments(@scope.projectId, page.id).then (attachments) =>
             @scope.attachments = attachments
 
-    loadHistorical: (page=1) ->
-        @rs.getWikiPageHistorical(@scope.page.id, {page: page}).then (historical) =>
-            if page == 1
-                @scope.currentVersion = _.first(historical.models)
-                historical.models = _.rest(historical.models)
-            else
-                historical.models = _.union(@scope.historical.models, historical.models)
-
-            @scope.showMoreHistoricaButton = historical.models.length < historical.count - 1
-            @scope.historical = historical
-
-    loadMoreHistorical: ->
-        page = if @scope.historical then @scope.historical.current + 1 else 1
-        @loadHistorical(page=page)
-
-
-class WikiHistoricalItemController extends TaigaBaseController
-    @.$inject = ['$scope', '$rootScope', 'resource', '$confirm', '$gmFlash',
-                 '$q', "$i18next"]
-    constructor: (@scope, @rootScope, @rs, @confirm, @gmFlash, @q, @i18next) ->
-        super(scope)
-
-    initialize: ->
-        @scope.showChanges = false
-        @scope.showContent = true
-        @scope.showPreviousDiff = false
-        @scope.showCurrentDiff = false
-
-    toggleShowChanges: ->
-        @scope.showChanges = not @scope.showChanges
-
-    activeShowContent: ->
-        @scope.showContent = true
-        @scope.showPreviousDiff = false
-        @scope.showCurrentDiff = false
-
-    activeShowPreviousDiff: ->
-        @scope.showContent = false
-        @scope.showPreviousDiff = true
-        @scope.showCurrentDiff = false
-
-    activeShowCurrentDiff: ->
-        @scope.showContent = false
-        @scope.showPreviousDiff = false
-        @scope.showCurrentDiff = true
-
-    restoreWikiPage: (hitem) ->
-        date = moment(hitem.created_date).format("llll")
-
-        promise = @confirm.confirm @i18next.t("wiki-historical.gone-back-sure", {'date': date})
-        promise.then () =>
-            promise = @rs.restoreWikiPage(hitem.object_id, hitem.id)
-
-            promise.then (data) =>
-                @scope.$emit("wiki:restored")
-                @gmFlash.info(@i18next.t("wiki-historical.gone-back-success", {'date': date}))
-
-            promise.then null, (data, status) =>
-                @gmFlash.error(@i18next.t("wiki-historical.gone-back-error"))
-
-        return promise
 
 moduleDeps = ['taiga.services.data', 'taiga.services.resource', "gmConfirm",
               "i18next", "favico", 'gmFlash']
@@ -267,4 +203,3 @@ module = angular.module("taiga.controllers.wiki", moduleDeps)
 module.controller("WikiController", WikiController)
 module.controller("WikiHelpController", WikiHelpController)
 module.controller("WikiHistoricalController", WikiHistoricalController)
-module.controller("WikiHistoricalItemController", WikiHistoricalItemController)

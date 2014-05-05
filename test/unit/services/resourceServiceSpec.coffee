@@ -352,22 +352,6 @@ describe "resourceService", ->
             promise.should.be.rejected
             httpBackend.flush()
 
-        it "should allow to get a userstory history", inject (resource) ->
-            httpBackend.expectGET("#{APIURL}/userstories/1/historical").respond(200)
-            promise = resource.getUserStoryHistorical(1)
-            promise.should.be.fullfilled
-            httpBackend.flush()
-
-            httpBackend.expectGET("#{APIURL}/userstories/100/historical").respond(400)
-            promise = resource.getUserStoryHistorical(100)
-            promise.should.be.rejected
-            httpBackend.flush()
-
-            httpBackend.expectGET("#{APIURL}/userstories/1/historical?filter=test").respond(200)
-            promise = resource.getUserStoryHistorical(1, {"filter": "test"})
-            promise.should.be.fullfilled
-            httpBackend.flush()
-
         it "should allow to get the tasks of a milestone", inject (resource) ->
             httpBackend.expectGET("#{APIURL}/tasks?milestone=1&project=1").respond(200)
             promise = resource.getTasks(1, 1)
@@ -411,22 +395,6 @@ describe "resourceService", ->
             promise.should.be.rejected
             httpBackend.flush()
 
-        it "should allow to get a issue history", inject (resource) ->
-            httpBackend.expectGET("#{APIURL}/issues/1/historical").respond(200)
-            promise = resource.getIssueHistorical(1)
-            promise.should.be.fullfilled
-            httpBackend.flush()
-
-            httpBackend.expectGET("#{APIURL}/issues/100/historical").respond(400)
-            promise = resource.getIssueHistorical(100)
-            promise.should.be.rejected
-            httpBackend.flush()
-
-            httpBackend.expectGET("#{APIURL}/issues/1/historical?filter=test").respond(200)
-            promise = resource.getIssueHistorical(1, {"filter": "test"})
-            promise.should.be.fullfilled
-            httpBackend.flush()
-
         it "should allow to get a task", inject (resource) ->
             httpBackend.expectGET("#{APIURL}/tasks/1?project=1").respond(200)
             promise = resource.getTask(1, 1)
@@ -436,22 +404,6 @@ describe "resourceService", ->
             httpBackend.expectGET("#{APIURL}/tasks/100?project=1").respond(400)
             promise = resource.getTask(1, 100)
             promise.should.be.rejected
-            httpBackend.flush()
-
-        it "should allow to get a task history", inject (resource) ->
-            httpBackend.expectGET("#{APIURL}/tasks/1/historical").respond(200)
-            promise = resource.getTaskHistorical(1)
-            promise.should.be.fullfilled
-            httpBackend.flush()
-
-            httpBackend.expectGET("#{APIURL}/tasks/100/historical").respond(400)
-            promise = resource.getTaskHistorical(100)
-            promise.should.be.rejected
-            httpBackend.flush()
-
-            httpBackend.expectGET("#{APIURL}/tasks/1/historical?filter=test").respond(200)
-            promise = resource.getTaskHistorical(1, {"filter": "test"})
-            promise.should.be.fullfilled
             httpBackend.flush()
 
         it "should allow to search", inject (resource) ->
@@ -591,22 +543,6 @@ describe "resourceService", ->
             promise.should.be.rejected
             httpBackend.flush()
 
-        it "should allow to get a wiki page historical", inject (resource) ->
-            httpBackend.expectGET("#{APIURL}/wiki/test/historical").respond(200)
-            promise = resource.getWikiPageHistorical("test")
-            httpBackend.flush()
-            promise.should.be.fullfilled
-
-            httpBackend.expectGET("#{APIURL}/wiki/test/historical?filters=test").respond(200)
-            promise = resource.getWikiPageHistorical("test", {"filters": "test"})
-            httpBackend.flush()
-            promise.should.be.fullfilled
-
-            httpBackend.expectGET("#{APIURL}/wiki/bad/historical?filters=test").respond(400)
-            promise = resource.getWikiPageHistorical("bad", {"filters": "test"})
-            promise.should.be.rejected
-            httpBackend.flush()
-
         it "should allow to create a task", inject (resource) ->
             httpBackend.expectPOST("#{APIURL}/tasks?", {"test": "test"}).respond(200)
             promise = resource.createTask({"test": "test"})
@@ -641,46 +577,46 @@ describe "resourceService", ->
             httpBackend.flush()
 
         it "should allow to get the attachments of an issue", inject (resource) ->
-            httpBackend.expectGET("#{APIURL}/issue-attachments?object_id=1&project=1").respond(200)
+            httpBackend.expectGET("#{APIURL}/issues/attachments?object_id=1&project=1").respond(200)
             promise = resource.getIssueAttachments(1, 1)
             httpBackend.flush()
             promise.should.be.fullfilled
 
-            httpBackend.expectGET("#{APIURL}/issue-attachments?object_id=1&project=100").respond(400)
+            httpBackend.expectGET("#{APIURL}/issues/attachments?object_id=1&project=100").respond(400)
             promise = resource.getIssueAttachments(100, 1)
             promise.should.be.rejected
             httpBackend.flush()
 
         it "should allow to get the attachments of a task", inject (resource) ->
-            httpBackend.expectGET("#{APIURL}/task-attachments?object_id=1&project=1").respond(200)
+            httpBackend.expectGET("#{APIURL}/tasks/attachments?object_id=1&project=1").respond(200)
             promise = resource.getTaskAttachments(1, 1)
             httpBackend.flush()
             promise.should.be.fullfilled
 
-            httpBackend.expectGET("#{APIURL}/task-attachments?object_id=1&project=100").respond(400)
+            httpBackend.expectGET("#{APIURL}/tasks/attachments?object_id=1&project=100").respond(400)
             promise = resource.getTaskAttachments(100, 1)
             promise.should.be.rejected
             httpBackend.flush()
 
         it "should allow to get the attachments of an issue", inject (resource) ->
-            httpBackend.expectGET("#{APIURL}/userstory-attachments?object_id=1&project=1").respond(200)
+            httpBackend.expectGET("#{APIURL}/userstories/attachments?object_id=1&project=1").respond(200)
             promise = resource.getUserStoryAttachments(1, 1)
             httpBackend.flush()
             promise.should.be.fullfilled
 
-            httpBackend.expectGET("#{APIURL}/userstory-attachments?object_id=1&project=100").respond(400)
+            httpBackend.expectGET("#{APIURL}/userstories/attachments?object_id=1&project=100").respond(400)
             promise = resource.getUserStoryAttachments(100, 1)
             promise.should.be.rejected
             httpBackend.flush()
 
         it "should allow to get the attachments of an issue", inject (resource) ->
-            httpBackend.expectGET("#{APIURL}/wiki-attachments?object_id=1&project=1").respond(200)
+            httpBackend.expectGET("#{APIURL}/wiki/attachments?object_id=1&project=1").respond(200)
 
             promise = resource.getWikiPageAttachments(1, 1)
             httpBackend.flush()
             promise.should.be.fullfilled
 
-            httpBackend.expectGET("#{APIURL}/wiki-attachments?object_id=1&project=100").respond(400)
+            httpBackend.expectGET("#{APIURL}/wiki/attachments?object_id=1&project=100").respond(400)
             promise = resource.getWikiPageAttachments(100, 1)
             promise.should.be.rejected
             httpBackend.flush()

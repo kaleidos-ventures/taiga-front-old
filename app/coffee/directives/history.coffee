@@ -16,230 +16,205 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
-_.mixin({
-    findByValues: (collection, property, values) ->
-        return _.filter(collection, (item) ->
-            return _.contains(values, item[property])
-        )
-})
+GmHistoryRendererDirective = ($compile, rs) ->
+    genericChangeTemplate = """
+    <div class="change">
+        <strong><%- field %></strong>:
+        <span><%- oldValue %></span> ->
+        <span><%- newValue %></span>
+    </div>
+    """
 
+    htmlChangeTemplate = """
+    <div class="change">
+        <strong><%- field %></strong>:
+        <span><%= oldValue %></span> ->
+        <span><%= newValue %></span>
+    </div>
+    """
 
-GmHistoryDirective = ($compile, $rootScope, $i18next, gmWiki) ->
-    restrict: "A"
-    require: "?ngModel"
-    link: (scope, elm, attrs, ngModel) ->
-        resolvers = {
-            userstory: (name, value) ->
-                return switch name
-                    when "status"
-                        if value
-                            try
-                                return scope.constants.usStatuses[value].name
-                            catch
-                                return null
-                        return null
-                    when "tags"
-                        if value
-                            return value.join(", ")
-                        return null
-                    when "team_requirement", "client_requirement", "is_blocked"
-                        if value is true
-                            return $i18next.t("common.yes")
-                        else if value is false
-                            return $i18next.t("common.no")
-                        return null
-                    when "watchers"
-                        if value
-                            watchers_ids = _.map(value, (v) -> parseInt(v, 10))
-                            watchers = _.findByValues(scope.constants.users, "id", watchers_ids)
-                            return _.map(watchers, "full_name").join(", ")
-                        return null
-                    when "description"
-                        if value
-                            return gmWiki.render(value)
-                        return null
-                    else value
-            issue: (name, value) ->
-                return switch name
-                    when "type"
-                        if value
-                            try
-                                return scope.constants.issueTypes[value].name
-                            catch
-                                return null
-                        return null
-                    when "priority"
-                        if value
-                            try
-                                return scope.constants.priorities[value].name
-                            catch
-                                return null
-                        return null
-                    when "status"
-                        if value
-                            try
-                                return scope.constants.issueStatuses[value].name
-                            catch
-                                return null
-                        return null
-                    when "severity"
-                        if value
-                            try
-                                return scope.constants.severities[value].name
-                            catch
-                                return null
-                        return null
-                    when "tags"
-                        if value
-                            return value.join(", ")
-                        return null
-                    when "assigned_to"
-                        if value
-                            try
-                                return scope.constants.users[value].full_name
-                            catch
-                                return null
-                        return $i18next.t("common.unassigned")
-                    when "is_blocked"
-                        if value is true
-                            return $i18next.t("common.yes")
-                        else if value is false
-                            return $i18next.t("common.no")
-                        return null
-                    when "watchers"
-                        if value
-                            watchers_ids = _.map(value, (v) -> parseInt(v, 10))
-                            watchers = _.findByValues(scope.constants.users, "id", watchers_ids)
-                            return _.map(watchers, "full_name").join(", ")
-                        return null
-                    when "description"
-                        if value
-                            return gmWiki.render(value)
-                        return null
-                    else value
-            task: (name, value) ->
-                return switch name
-                    when "tags"
-                        if value
-                            return value.join(", ")
-                        return null
-                    when "status"
-                        if value
-                            try
-                                return scope.constants.taskStatuses[value].name
-                            catch
-                                return null
-                        return null
-                    when "assigned_to"
-                        if value
-                            try
-                                return scope.constants.users[value].full_name
-                            catch
-                                return null
-                        return $i18next.t("common.unassigned")
-                    when "is_iocaine", "is_blocked"
-                        if value is true
-                            return $i18next.t("common.yes")
-                        else if value is false
-                            return $i18next.t("common.no")
-                        return null
-                    when "watchers"
-                        if value
-                            watchers_ids = _.map(value, (v) -> parseInt(v, 10))
-                            watchers = _.findByValues(scope.constants.users, "id", watchers_ids)
-                            return _.map(watchers, "full_name").join(", ")
-                        return null
-                    when "description"
-                        if value
-                            return gmWiki.render(value)
-                        return null
-                    else value
+    pointsChangeTemplate = """
+    <div class="change">
+        <strong><%- field %></strong>:
+        <% _.each(points, function(value, key) { %>
+        <span>
+            <strong><%- key %></strong>
+            <span><%- value[0] %></span> ->
+            <span><%- value[1] %></span>
+        </span>
+        <% }); %>
+    </div>
+    """
+
+    itemTemplate = """
+    <li class="history-item ng-scope">
+        <div class="title">
+            <span class="updated">
+                <span i18next="user-story.updated-by-history">Updated by</span>
+                <span gm-colorize-user="hitem.by"><%= changer %></span>
+            </span>
+            <span class="date ng-binding"><%= timeago %></span>
+        </div>
+        <div class="changes">
+            <%= changes %>
+        </div>
+        <% if (comment) { %>
+        <div class="comment"><%= comment %></div>
+        <% } %>
+    </li>
+    """
+
+    template = """
+    <div class="history">
+        <h3 i18next="common.history">History</h3>
+        <div class="history-items-container">
+            <div class="history-items"></div>
+            <a class="more" data-icon="C" href="" i18next="common.see-more">See More</a>
+        </div>
+    </div>
+    """
+
+    page = 1
+    hasNext = false
+    historyItems = []
+
+    ##########################################################
+    ## Data loading functions
+    ##########################################################
+
+    _load = (type, pk, pagenum, scope, element, ctrl) ->
+        params = {page: pagenum, page_size: 30}
+        promise = rs.getHistory(type, pk, params)
+        promise.then (data) ->
+            hasNext = (data.next != null)
+            historyItems = _.union(historyItems, data.results)
+            return historyItems
+        return promise
+
+    initialize = (type, pk, scope, element, ctrl) ->
+        page = 1
+        historyItems = []
+        return _load(type, pk, page, scope, element, ctrl)
+
+    loadNextPage = (type, pk, scope, element, ctrl) ->
+        page = page + 1
+        return _load(type, pk, page, scope, element, ctrl)
+
+    ##########################################################
+    ## Tempates rendering functions
+    ##########################################################
+
+    translateFieldToName = (field) ->
+        # TODO: use i18next in future
+        return switch field
+                   when "points" then "Points"
+                   when "description_html" then "Description"
+                   when "description_diff" then "Description diferences"
+                   when "status" then "Status"
+                   else field
+
+    genericFieldToHtml = (field, changes) ->
+        ctx = {
+            oldValue: changes[0]
+            newValue: changes[1]
+            field: translateFieldToName(field)
         }
 
-        fields = {
-            userstory: ["status", "tags", "subject", "description", "client_requirement",
-                        "team_requirement", "is_blocked", "blocked_note", "watchers"]
-            issue: ["type", "status", "priority",  "severity", "assigned_to", "tags"
-                    "subject", "description", "is_blocked", "blocked_note", "watchers"]
-            task: ["status", "assigned_to", "tags", "subject", "description", "is_iocaine",
-                   "is_blocked", "blocked_note", "watchers"]
+        if field == "description_html" or field == "content_html" or field == "description_diff"
+            tmpl = _.template(htmlChangeTemplate)
+        else
+            tmpl = _.template(genericChangeTemplate)
+        return tmpl(ctx)
+
+    pointsFieldToHtml = (field, changes) ->
+        ctx = {
+            field: translateFieldToName(field)
+            points: changes
         }
 
-        makeChangeItem = (name, field, type) ->
-            new_val = resolvers[type](name, field.new)
-            old_val = resolvers[type](name, field.old)
+        tmpl = _.template(pointsChangeTemplate)
+        return tmpl(ctx)
 
-            if new_val or old_val
-                change = {
-                    name: field.name
-                    new: new_val
-                    old: old_val
-                }
-                return change
-            return null
+    historyItemToHtml = (item, element, ctrl) ->
+        changes = []
 
-        makeHistoryItem = (item, type) ->
-            changes = _(fields[type]).map((name) -> {name: name, field: item.changed_fields[name]})
-                                     .reject((x) -> _.isEmpty(x["field"]))
-                                     .map((x) -> makeChangeItem(x["name"], x["field"], type))
-                                     .reject((x) -> x is null)
-            changesArray = changes.value()
+        for field in _.keys(item.values_diff)
+            if field == "description" or field == "content"
+                continue
+            value = item.values_diff[field]
+            html = switch field
+                       when "points" then pointsFieldToHtml(field, value)
+                       else genericFieldToHtml(field, value)
+            changes.push(html)
 
-            if item.comment.length == 0 and changesArray.length == 0
-                return null
+        tmpl = _.template(itemTemplate)
+        ctx = {
+            changes: changes.join("\n")
+            changer: item.user.name
+            timeago: moment(item.created_at).fromNow()
+            comment: item.comment_html
+        }
+        return tmpl(ctx)
 
-            user = scope.constants.users[item.user]
-            if user?
-                changed_by = user
-            else
-                changed_by = {full_name: "The Observer"}
+    # Transform loaded historyItems to html dom nodes
+    # and put it visible in a main dom.
+    render = (scope, element, ctrl) ->
+        htmls = []
 
-            historyItem = {
-                changes: changesArray
-                by: changed_by
-                modified_date: item.created_date
-                comment: item.comment
-            }
+        for item in historyItems
+            htmls.push(historyItemToHtml(item))
 
-            return historyItem
+        domNodes = angular.element.parseHTML(htmls.join("\n"))
+        domNodes = $compile(domNodes)(scope)
 
-        makeHistoryItems = (rawItems, type)  ->
-            return _(rawItems).map((x) -> makeHistoryItem(x, type))
-                              .reject((x) -> _.isNull(x))
-                              .value()
+        dom = element.find(".history-items")
+        dom.empty()
+        dom.html(domNodes)
+
+        if hasNext
+            element.find("a.more").show()
+        else
+            element.find("a.more").hide()
+
+    ##########################################################
+    ## Events & Directive linking function
+    ##########################################################
+
+    link = (scope, element, attrs, ctrl) ->
+        # Do nothing if history type is not defined
+        if attrs.historyType is undefined
+            return
+
+        renderHistory = (pk) ->
+            promise = initialize(attrs.historyType, pk, scope, element, attrs)
+            promise.then ->
+                render(scope, element, ctrl)
+
+        scope.$watch attrs.objectId, (pk) ->
+            if pk == null or pk == undefined
+                return
+
+            renderHistory(pk)
+
+        scope.$on "history:reload", ->
+            pk = scope.$eval(attrs.objectId)
+            renderHistory(pk)
+
+        element.on "$destroy", ->
+            element.off(".history")
+
+        element.on "click.history", "a.more", (event) ->
+            pk = scope.$eval(attrs.objectId)
+            promise = loadNextPage(attrs.historyType, pk, scope, element, attrs)
+            promise.then ->
+                render(scope, element, ctrl)
+
+    return {
+        link:link
+        replace: true
+        template: template
+    }
 
 
-        baseTemplate = _.str.trim(angular.element("#change-template").html())
-
-        element = angular.element(elm)
-        target = element.find(".history-items-container")
-
-        type = attrs.gmHistory
-        cachedScope = null
-
-        render = (items) ->
-            # Initial Clear
-            cachedScope.$destroy() if cachedScope != null
-
-            # Make new list
-            historyItems = makeHistoryItems(items.models, type)
-
-            if historyItems.length == 0
-                element.hide()
-            else
-                target.empty()
-                element.show()
-
-                cachedScope = $scope = scope.$new(true)
-                template = angular.element($.parseHTML(baseTemplate))
-
-                $scope.historyItems = historyItems
-                $compile(template)($scope)
-
-                target.append(template)
-
-        ngModel.$render = () ->
-            render(ngModel.$viewValue or [])
-
-module = angular.module('taiga.directives.history', ['i18next'])
-module.directive("gmHistory", ['$compile', '$rootScope', '$i18next', 'gmWiki', GmHistoryDirective])
+module = angular.module("taiga.directives.history", ["i18next"])
+module.directive("gmHistory", ["$compile", "resource", GmHistoryRendererDirective])

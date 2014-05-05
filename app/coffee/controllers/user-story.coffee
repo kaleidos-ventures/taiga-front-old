@@ -34,7 +34,6 @@ class UserStoryViewController extends TaigaDetailPageController
 
     uploadAttachmentMethod: "uploadUserStoryAttachment"
     getAttachmentsMethod: "getUserStoryAttachments"
-    getHistoricalMethod: "getUserStoryHistorical"
     objectIdAttribute: "userStoryId"
 
     initialize: ->
@@ -62,7 +61,6 @@ class UserStoryViewController extends TaigaDetailPageController
                 @data.loadUsersAndRoles(@scope).then =>
                     @loadUserStory()
                     @loadAttachments()
-                    @loadHistorical()
                     @loadProjectTags()
 
         @scope.tagsSelectOptions = {
@@ -138,8 +136,9 @@ class UserStoryViewController extends TaigaDetailPageController
 
         promise.then (userStory) =>
             @scope.$emit("spinner:stop")
+            @scope.$emit("history:reload")
+
             @loadUserStory()
-            @loadHistorical()
             @saveNewAttachments()
             @gmFlash.info(@i18next.t('user-story.user-story-saved'))
 
