@@ -25,12 +25,12 @@ class ResourceService extends TaigaBaseService
         _cache = @cacheFactory("httpCache", 512)
         super()
 
-    _headers: (diablePagination=true) ->
+    _headers: (disablePagination=true) ->
         data = {}
         token = @gmAuth.getToken()
 
         data["Authorization"] = "Bearer #{token}" if token
-        data["X-Disable-Pagination"] = "true" if diablePagination
+        data["X-Disable-Pagination"] = "true" if disablePagination
 
         return data
 
