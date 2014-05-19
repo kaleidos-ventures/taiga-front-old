@@ -149,7 +149,7 @@ configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compil
         "wiki": "/api/v1/wiki"
         "wiki-historical": "/api/v1/wiki/%s/historical"
         "wiki-restore": "/api/v1/wiki/%s/restore"
-        "wiki/attachments": "/api/v1/wiki-attachments"
+        "wiki/attachments": "/api/v1/wiki/attachments"
         "choices/userstory-statuses": "/api/v1/userstory-statuses"
         "choices/userstory-statuses/bulk-update-order": "/api/v1/userstory-statuses/bulk_update_order"
         "choices/points": "/api/v1/points"
