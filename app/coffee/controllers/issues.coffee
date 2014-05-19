@@ -367,7 +367,7 @@ class IssuesModalController extends ModalBaseController
 
     loadAttachments: (projectId, issueId) ->
         promise = @rs.getIssueAttachments(projectId, issueId)
-        promise.then (attachments) ->
+        promise.then (attachments) =>
             @scope.attachments = attachments
 
     loadProjectTags: =>
