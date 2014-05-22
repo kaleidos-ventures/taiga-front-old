@@ -15,21 +15,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-
 defaultOptions = {
-    postProcess: "lodashTemplate"
+    ns: "app"
     fallbackLng: "en"
-    useLocalStorage: false
-    localStorageExpirationTime: 60*60*24*1000 # 1 day
-    ns: 'app'
-    resGetPath: 'locales/__lng__/__ns__.json'
-    getAsync: false
+    async: false
 }
 
 class I18NextService extends TaigaBaseService
-    @.$inject = ["$rootScope", "$q"]
+    @.$inject = ["$rootScope", "$q", "locales.en", "locales.es"]
 
-    constructor: (@rootScope, @q) ->
+    constructor: (@rootScope, @q, @localeEn, @localeEs) ->
         i18n.addPostProcessor "lodashTemplate", (value, key, options) ->
             template = _.template(value)
             return template(options.scope)
@@ -47,31 +42,19 @@ class I18NextService extends TaigaBaseService
     translate: (key, options)->
         return i18n.t(key, options)
 
-    initialize: (async=false, defaultLang="en") ->
+    initialize: (defaultLang="en") ->
         # Put to rootScope a initial values
         options = _.clone(defaultOptions, true)
         options.lng = @rootScope.currentLang = defaultLang
+        options.resStore = {
+            en: { app: @localeEn }
+            es: { app: @localeEs }
+        }
 
-        if async
-            options.getAsync = true
-            defer = @q.defer()
-
-            onI18nextInit = (t) =>
-                @rootScope.$apply =>
-                    @rootScope.translate = t
-                    @rootScope.t = t
-                    defer.resolve(t)
-                    @rootScope.$broadcast("i18next:loadComplete", t)
-
-                return defer.promise
-
-            i18n.init(options, onI18nextInit)
-
-        else
-            i18n.init(options)
-            @rootScope.translate = i18n.t
-            @rootScope.t = i18n.t
-            @rootScope.$broadcast("i18next:loadComplete", i18n.t)
+        i18n.init(options)
+        @rootScope.translate = i18n.t
+        @rootScope.t = i18n.t
+        @rootScope.$broadcast("i18next:loadComplete", i18n.t)
 
 
 I18NextDirective = ($parse, $rootScope) ->
@@ -97,7 +80,8 @@ I18NextTranslateFilter = ($i18next) ->
     return (key, options) ->
         return $i18next.t(key, options)
 
-module = angular.module('i18next', [])
+
+module = angular.module('i18next', ["locales.es", "locales.en"])
 module.service("$i18next", I18NextService)
 module.directive('i18next', ['$parse', '$rootScope', I18NextDirective])
 module.filter('i18next', ['$i18next', I18NextTranslateFilter])

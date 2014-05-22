@@ -15,6 +15,8 @@ var protractor = require("gulp-protractor").protractor;
 var coveralls = require('gulp-coveralls');
 var clean = require('gulp-clean');
 var plumber = require('gulp-plumber');
+var wrap = require("gulp-wrap");
+var rename = require("gulp-rename");
 
 var externalSources = [
     "app/components/jquery/dist/jquery.js",
@@ -70,9 +72,9 @@ var e2eTestSources = [
 // define tasks here
 gulp.task("default", ["dev", "watch", "connect"]);
 
-gulp.task("dev", ["coffee", "less", "libs", "template"]);
+gulp.task("dev", ["locales", "coffee", "less", "libs", "template"]);
 
-gulp.task("pro", ["less", "template"], function() {
+gulp.task("pro", ["less", "template",], function() {
     gulp.src(coffeeSources)
         .pipe(coffee().on("error", gutil.log))
         .pipe(concat("app.js"))
@@ -82,6 +84,18 @@ gulp.task("pro", ["less", "template"], function() {
         .pipe(concat("libs.js"))
         .pipe(uglify())
         .pipe(gulp.dest("app/dist/"));
+});
+
+gulp.task("locales", function() {
+    gulp.src("app/locales/en/app.json")
+        .pipe(wrap("angular.module('locales.en', []).constant('locales.en', <%= contents %>);"))
+        .pipe(rename("locale.en.coffee"))
+        .pipe(gulp.dest("app/coffee/"));
+
+    gulp.src("app/locales/es/app.json")
+        .pipe(wrap("angular.module('locales.es', []).constant('locales.es', <%= contents %>);"))
+        .pipe(rename("locale.es.coffee"))
+        .pipe(gulp.dest("app/coffee/"));
 });
 
 gulp.task("coffee", function() {

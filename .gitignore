@@ -1,6 +1,8 @@
 *.swp
 *.pyc
 app/index.html
+index.html
+app/coffee/locale.*.coffee
 app/js/extern.min.js
 app/js/taiga.min.js
 app/less/style.css
