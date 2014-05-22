@@ -126,7 +126,7 @@ gulp.task("template", function() {
     return gulp.src("app/index.template.html")
         .pipe(template({stamp: (new Date()).getTime()}))
         .pipe(concat("index.html"))
-        .pipe(gulp.dest("app"));
+        .pipe(gulp.dest("."));
 });
 
 gulp.task("build-tests", function() {
@@ -166,7 +166,7 @@ gulp.task("watch", function () {
 });
 
 gulp.task("connect", connect.server({
-    root: "app",
+    root: "",
     port: 9001,
     livereload: false,
 }));
