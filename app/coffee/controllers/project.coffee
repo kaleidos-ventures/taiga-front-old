@@ -134,11 +134,16 @@ class ProjectAdminMilestonesController extends ProjectAdminController
 
     activeTab: "milestones"
 
+    initialize: ->
+        super().then =>
+            @rs.getMilestones(@rootScope.projectId).then (data) =>
+                @scope.milestones = data
+
     deleteMilestone: (milestone) ->
         promise = @confirm.confirm(@i18next.t('common.are-you-sure'))
         promise.then () =>
-            @model.make_model('milestones', milestone).remove().then () =>
-                @data.loadProject(@scope)
+            milestone.remove().then () =>
+                _.remove(@scope.milestones, milestone)
 
 class ProjectAdminMembershipsController extends ProjectAdminController
     @.$inject = ["$scope", "$rootScope", "$routeParams", "$data", "$gmFlash",

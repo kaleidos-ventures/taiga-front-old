@@ -6,7 +6,7 @@
         <div class="sprint-list-container">
             <h3 data-icon="q" i18next="admin.created-sprints">Created sprints</h3>
             <ul class="sprint-list">
-                <li class="sprint" ng-repeat="ml in project.list_of_milestones">
+                <li class="sprint" ng-repeat="ml in milestones">
                     <a href="" data-icon="h" title="Delete sprint" i18next="title:admin.delete-sprint" ng-click="ctrl.deleteMilestone(ml)"></a>
                     {{ ml.name }}
                 </li>
