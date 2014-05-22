@@ -138,7 +138,7 @@ gulp.task("template", function() {
     return gulp.src("app/index.template.html")
         .pipe(template({stamp: (new Date()).getTime()}))
         .pipe(concat("index.html"))
-        .pipe(gulp.dest("."));
+        .pipe(gulp.dest("app"));
 });
 
 gulp.task("build-tests", function() {
@@ -178,7 +178,7 @@ gulp.task("watch", function () {
 });
 
 gulp.task("connect", connect.server({
-    root: "",
+    root: "app",
     port: 9001,
     livereload: false,
 }));
