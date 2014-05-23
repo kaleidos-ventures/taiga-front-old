@@ -115,7 +115,7 @@ gulp.task("express", function() {
         res.sendfile('index.html', { root: __dirname + '/app/' });
     });
 
-    app.listen(3006);
+    app.listen(9001);
 });
 
 gulp.task("coffee", function() {
