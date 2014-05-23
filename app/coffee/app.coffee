@@ -21,22 +21,22 @@
 
 configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compileProvider, $gmUrlsProvider) ->
     $routeProvider.when('/',
-        {templateUrl: 'partials/project-list.html', controller: "ProjectListController as ctrl"})
+        {templateUrl: '/partials/project-list.html', controller: "ProjectListController as ctrl"})
 
     $routeProvider.when('/login',
-        {templateUrl: 'partials/login.html', controller: "LoginController as ctrl"})
+        {templateUrl: '/partials/login.html', controller: "LoginController as ctrl"})
 
     $routeProvider.when('/recovery',
-        {templateUrl: 'partials/recovery.html', controller: "RecoveryController as ctrl"})
+        {templateUrl: '/partials/recovery.html', controller: "RecoveryController as ctrl"})
 
     $routeProvider.when('/change-password',
-        {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController as ctrl"})
+        {templateUrl: '/partials/change-password.html', controller: "ChangePasswordController as ctrl"})
 
     $routeProvider.when('/change-password/:token',
-        {templateUrl: 'partials/change-password.html', controller: "ChangePasswordController as ctrl"})
+        {templateUrl: '/partials/change-password.html', controller: "ChangePasswordController as ctrl"})
 
     $routeProvider.when('/profile',
-        {templateUrl: 'partials/profile.html', controller: "ProfileController as ctrl"})
+        {templateUrl: '/partials/profile.html', controller: "ProfileController as ctrl"})
 
     $routeProvider.when("/register",
         {controller: "PublicRegisterController as ctrl", templateUrl: "partials/register.html"})
@@ -45,59 +45,60 @@ configure = ($routeProvider, $locationProvider, $httpProvider, $provide, $compil
         {controller: "InvitationRegisterController as ctrl", templateUrl: "partials/invitation-register.html"})
 
     $routeProvider.when('/project/:pslug/backlog',
-        {templateUrl: 'partials/backlog.html', controller: "BacklogController as ctrl"})
+        {templateUrl: '/partials/backlog.html', controller: "BacklogController as ctrl"})
 
     $routeProvider.when('/project/:pslug/kanban',
-        {templateUrl: 'partials/kanban.html', controller: "KanbanController as ctrl"})
+        {templateUrl: '/partials/kanban.html', controller: "KanbanController as ctrl"})
 
     $routeProvider.when('/project/:pslug/user-story/:ref',
-        {templateUrl: 'partials/user-story-view.html', controller: "UserStoryViewController as ctrl"})
+        {templateUrl: '/partials/user-story-view.html', controller: "UserStoryViewController as ctrl"})
 
     $routeProvider.when('/project/:pslug/issues',
-        {templateUrl: 'partials/issues.html', controller: "IssuesController as ctrl"})
+        {templateUrl: '/partials/issues.html', controller: "IssuesController as ctrl"})
 
     $routeProvider.when('/project/:pslug/issues/:ref',
-        {templateUrl: 'partials/issues-view.html', controller: "IssuesViewController as ctrl"})
+        {templateUrl: '/partials/issues-view.html', controller: "IssuesViewController as ctrl"})
 
     $routeProvider.when('/project/:pslug/tasks/:ref',
-        {templateUrl: 'partials/tasks-view.html', controller: "TasksViewController as ctrl"})
+        {templateUrl: '/partials/tasks-view.html', controller: "TasksViewController as ctrl"})
 
     $routeProvider.when('/project/:pslug/taskboard/:sslug',
-        {templateUrl: 'partials/taskboard.html', controller: "TaskboardController as ctrl"})
+        {templateUrl: '/partials/taskboard.html', controller: "TaskboardController as ctrl"})
 
     $routeProvider.when('/wiki-help',
-        {templateUrl: 'partials/wiki-help.html', controller: "WikiHelpController as ctrl"})
+        {templateUrl: '/partials/wiki-help.html', controller: "WikiHelpController as ctrl"})
 
     $routeProvider.when('/project/:pslug/wiki/:slug',
-        {templateUrl: 'partials/wiki.html', controller: "WikiController as ctrl"})
+        {templateUrl: '/partials/wiki.html', controller: "WikiController as ctrl"})
 
     $routeProvider.when('/project/:pslug/wiki/:slug/historical',
-        {templateUrl: 'partials/wiki-historical.html', controller: "WikiHistoricalController as ctrl"})
+        {templateUrl: '/partials/wiki-historical.html', controller: "WikiHistoricalController as ctrl"})
 
     $routeProvider.when('/project/:pslug/search',
-        {controller: "SearchController as ctrl", templateUrl: "partials/search.html"})
+        {controller: "SearchController as ctrl", templateUrl: "/partials/search.html"})
 
     $routeProvider.when('/project/:pslug/admin/main',
-        {controller: "ProjectAdminMainController as ctrl", templateUrl: "partials/project-admin-main.html"})
+        {controller: "ProjectAdminMainController as ctrl", templateUrl: "/partials/project-admin-main.html"})
 
     $routeProvider.when('/project/:pslug/admin/values',
-        {controller: "ProjectAdminValuesController as ctrl", templateUrl: "partials/project-admin-values.html"})
+        {controller: "ProjectAdminValuesController as ctrl", templateUrl: "/partials/project-admin-values.html"})
 
     $routeProvider.when('/project/:pslug/admin/milestones',
-        {controller: "ProjectAdminMilestonesController as ctrl", templateUrl: "partials/project-admin-milestones.html"})
+        {controller: "ProjectAdminMilestonesController as ctrl", templateUrl: "/partials/project-admin-milestones.html"})
 
     $routeProvider.when('/project/:pslug/admin/roles',
-        {controller: "ProjectAdminRolesController as ctrl", templateUrl: "partials/project-admin-roles.html"})
+        {controller: "ProjectAdminRolesController as ctrl", templateUrl: "/partials/project-admin-roles.html"})
 
     $routeProvider.when('/project/:pslug/admin/memberships', {
         controller: "ProjectAdminMembershipsController as ctrl",
-        templateUrl: "partials/project-admin-memberships.html"
+        templateUrl: "/partials/project-admin-memberships.html"
     })
 
     $routeProvider.when('/admin',
         {controller: "SiteAdminController as ctrl", templateUrl: "partials/site-admin.html"})
 
     $routeProvider.otherwise({redirectTo: '/login'})
+    $locationProvider.html5Mode(true);
 
     defaultHeaders = {
         "Content-Type": "application/json"
@@ -215,7 +216,7 @@ assignInitialConstants = ($rootScope) ->
 assignNavegationUrls = ($rootScope, $gmUrls) ->
     conditionalUrl = (url, raw) ->
         return url if raw
-        return "/##{url}"
+        return "#{url}"
 
     $rootScope.baseUrls = {
         projects: "/"
@@ -238,7 +239,7 @@ assignNavegationUrls = ($rootScope, $gmUrls) ->
 
     $rootScope.urls =
         projectsUrl: ->
-            return '/#/'
+            return '/'
 
         projectHomeUrl: (project, raw) ->
             if project.is_backlog_activated

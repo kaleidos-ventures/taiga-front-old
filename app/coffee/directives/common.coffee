@@ -237,7 +237,7 @@ GmPaginator = ($parse) ->
 
     restrict: "A"
     require: "?ngModel"
-    templateUrl: "partials/paginator.html"
+    templateUrl: "/partials/paginator.html"
     link: (scope, elm, attrs, ctrl) ->
         element = angular.element(elm)
         element.hide()

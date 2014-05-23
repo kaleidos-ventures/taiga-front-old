@@ -12,6 +12,7 @@
     "chai": "^1.9.1",
     "chai-as-promised": "^4.1.1",
     "coffee-script": "^1.7.1",
+    "express": "^4.3.0",
     "gulp": "~3.5.5",
     "gulp-clean": "^0.2.4",
     "gulp-coffee": "~1.4.1",

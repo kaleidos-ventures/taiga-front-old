@@ -70,7 +70,7 @@ var e2eTestSources = [
 ];
 
 // define tasks here
-gulp.task("default", ["dev", "watch", "connect"]);
+gulp.task("default", ["dev", "watch", "express"]);
 
 gulp.task("dev", ["locales", "coffee", "less", "libs", "template"]);
 
@@ -96,6 +96,26 @@ gulp.task("locales", function() {
         .pipe(wrap("angular.module('locales.es', []).constant('locales.es', <%= contents %>);"))
         .pipe(rename("locale.es.coffee"))
         .pipe(gulp.dest("app/coffee/"));
+});
+
+gulp.task("express", function() {
+    var express = require('express');
+    var app = express();
+
+    app.use('/js', express.static(__dirname + '/app/js'));
+    app.use('/components', express.static(__dirname + '/app/components'));
+    app.use('/dist', express.static(__dirname + '/app/dist'));
+    app.use('/less', express.static(__dirname + '/app/less'));
+    app.use('/img', express.static(__dirname + '/app/img'));
+    app.use('/partials', express.static(__dirname + '/app/partials'));
+    app.use('/fonts', express.static(__dirname + '/app/fonts'));
+
+    app.all('/*', function(req, res, next) {
+        // Just send the index.html for other files to support HTML5Mode
+        res.sendfile('index.html', { root: __dirname + '/app/' });
+    });
+
+    app.listen(3006);
 });
 
 gulp.task("coffee", function() {
