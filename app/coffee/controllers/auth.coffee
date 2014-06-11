@@ -18,9 +18,10 @@
 
 class LoginController extends TaigaPageController
     @.$inject = ['$scope', '$rootScope', '$location', '$routeParams',
-                 'resource', '$gmAuth', '$i18next', '$favico']
+                 'resource', '$gmAuth', '$i18next', '$favico', '$gmConfig']
 
-    constructor: (@scope, @rootScope, @location, @routeParams, @rs, @gmAuth, @i18next, @favico) ->
+    constructor: (@scope, @rootScope, @location, @routeParams, @rs, @gmAuth,
+                  @i18next, @favico, @gmConfig) ->
         super(scope, rootScope, favico)
 
     section: 'login'
@@ -34,6 +35,17 @@ class LoginController extends TaigaPageController
         @scope.error = false
         @scope.errorMessage = ''
 
+        if @routeParams.state == "github"
+            @.submitWithGithub()
+
+    redirectToGitHubAuth: () ->
+        gitHubHost =  @gmConfig.get("gitHubAuthUrl")
+        gitHubClientId = @gmConfig.get("gitHubClientId")
+        gitHubRedirectUri = "http://localhost:9001/login"
+        url = "#{gitHubHost}?client_id=#{gitHubClientId}&redirect_uri=#{gitHubRedirectUri}&state=github&scope=user:email"
+
+        window.location.href = url
+
     submit: ->
         username = @scope.form.username
         password = @scope.form.password
@@ -44,12 +56,21 @@ class LoginController extends TaigaPageController
             .then =>
                 @.loading = false
 
-    onError: (data) ->
+    submitWithGithub: ->
+        code = @routeParams.code
+
+        @scope.loading = true
+        @rs.gitHubLogin(code)
+            .then(@onSuccess, @onError)
+            .then =>
+                @.loading = false
+
+    onError: (data) =>
         @scope.error = true
         @scope.errorMessage = data.detail
 
-    onSuccess: (user) ->
-        if @routeParams['next'] and @routeParams['next'] != '/login'
+    onSuccess: (user) =>
+        if @routeParams and @routeParams['next'] and @routeParams['next'] != '/login'
             @location.url(@routeParams['next'])
         else
             @location.url("/")

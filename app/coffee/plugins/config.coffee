@@ -23,16 +23,18 @@ class ConfigService
         defaultLanguage: "en"
         debug: false
         notificationLevelOptions: {
-            "all_owned_projects": "All events on my projects"
-            "only_watching": "Only events for objects i watch"
-            "only_assigned": "Only events for objects assigned to me"
-            "only_owner": "Only events for objects owned by me"
-            "no_events": "No events"
+            all_owned_projects: "All events on my projects"
+            only_watching: "Only events for objects i watch"
+            only_assigned: "Only events for objects assigned to me"
+            only_owner: "Only events for objects owned by me"
+            no_events: "No events"
         }
         languageOptions: {
-            "es": "Spanish"
-            "en": "English"
+            es: "Spanish"
+            en: "English"
         }
+        gitHubClientId: undefined
+        gitHubAuthUrl: "https://github.com/login/oauth/authorize"
     }
 
     initialize: (localconfig) ->

@@ -20,4 +20,5 @@ angular.module('taiga.localconfig', []).value('localconfig', {
     host: "localhost:8000"
     scheme: "http"
     debug: true
+    gitHubClientID: null
 })

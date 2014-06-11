@@ -168,8 +168,33 @@ class ResourceService extends TaigaBaseService
             defered.reject(data)
 
         postData = {
-            "username": username
-            "password": password
+            username: username
+            password: password
+            type: "normal"
+        }
+
+        @http({method:"POST", url: @gmUrls.api("auth"), data: JSON.stringify(postData)})
+            .success(onSuccess)
+            .error(onError)
+
+        return defered.promise
+
+    gitHubLogin: (code) ->
+        defered = @q.defer()
+
+        onSuccess = (data, status) =>
+            user = @model.make_model("users", data)
+            @gmAuth.setToken(data["auth_token"])
+            @gmAuth.setUser(user)
+
+            defered.resolve(user)
+
+        onError = (data, status) ->
+            defered.reject(data)
+
+        postData = {
+            code: code
+            type: "github"
         }
 
         @http({method:"POST", url: @gmUrls.api("auth"), data: JSON.stringify(postData)})
