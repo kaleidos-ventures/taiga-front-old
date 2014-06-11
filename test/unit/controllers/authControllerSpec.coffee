@@ -15,8 +15,8 @@ describe 'authController', ->
             })
             httpBackend = $httpBackend
             httpBackend.whenGET('http://localhost:8000/api/v1/sites').respond(200, {test: "test"})
-            httpBackend.whenPOST("http://localhost:8000/api/v1/auth", {"username": "test", "password": "test"}).respond(200, {"auth_token": "test"})
-            httpBackend.whenPOST("http://localhost:8000/api/v1/auth", {"username": "bad", "password": "bad"}).respond(400, {'detail': 'test'})
+            httpBackend.whenPOST("http://localhost:8000/api/v1/auth", {"username": "test", "password": "test", "type": "normal"}).respond(200, {"auth_token": "test"})
+            httpBackend.whenPOST("http://localhost:8000/api/v1/auth", {"username": "bad", "password": "bad", "type": "normal"}).respond(400, {'detail': 'test'})
             httpBackend.flush()
         ))
 
@@ -48,14 +48,14 @@ describe 'authController', ->
             ctrl.location.url.getCall(2).calledWith('/test').should.be.ok
 
         it 'should send a login request on submit', ->
-            httpBackend.expectPOST("http://localhost:8000/api/v1/auth", {"username": "test", "password": "test"})
+            httpBackend.expectPOST("http://localhost:8000/api/v1/auth", {"username": "test", "password": "test", "type": "normal"})
             ctrl.scope.form.username = "test"
             ctrl.scope.form.password = "test"
             ctrl.submit()
             httpBackend.flush()
             expect(ctrl.scope.error).to.be.false
 
-            httpBackend.expectPOST("http://localhost:8000/api/v1/auth", {"username": "bad", "password": "bad"})
+            httpBackend.expectPOST("http://localhost:8000/api/v1/auth", {"username": "bad", "password": "bad", "type": "normal"})
             ctrl.scope.form.username = "bad"
             ctrl.scope.form.password = "bad"
             ctrl.submit()
