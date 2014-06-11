@@ -160,8 +160,6 @@ gmMarkitupConstructor = ($rootScope, $parse, $i18next, $location, rs, gmWiki) ->
                 filterUser = (regexp, user) ->
                     return _.any [
                         regexp.test(user.full_name)
-                        regexp.test(user.first_name)
-                        regexp.test(user.last_name)
                         regexp.test(user.username)
                         regexp.test(user.email)
                     ]
